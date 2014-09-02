@@ -1,0 +1,62 @@
+@import url(http://fonts.googleapis.com/css?family=Crimson+Text:400,700);
+p {
+  font-family: "Crimson Text", serif;
+  font-size: 16px; }
+
+.material-tile-content p {
+  font-size: 1em; }
+
+material-toolbar span {
+  font-family: "Crimson Text", serif;
+  font-weight: 700; }
+
+material-button span {
+  font-family: "RobotoDraft", "Helvetica Neue", Helvetica, Arial;
+  font-weight: 400; }
+
+body {
+  color: rgba(0, 0, 0, 0.87); }
+
+material-toolbar {
+  background-color: #004890;
+  color: #fafafa; }
+  material-toolbar material-button:hover {
+    background-color: #b1bb1c; }
+
+material-button.material-button-fab {
+  background-color: #b1bb1c; }
+  material-button.material-button-fab:hover {
+    background-color: #8f9a27; }
+
+material-button.material-button-raised.material-button-colored {
+  background-color: #b1bb1c;
+  color: rgba(0, 0, 0, 0.54);
+  margin-top: 10px; }
+  material-button.material-button-raised.material-button-colored:hover {
+    background-color: #8f9a27; }
+
+.material-theme-light {
+  background-color: #c3d0e2 !important;
+  color: rgba(0, 0, 0, 0.54) !important; }
+
+main {
+  margin-top: 40px; }
+
+.logo {
+  width: 450px;
+  height: 182px; }
+
+.face {
+  width: 48px;
+  margin: 16px;
+  border-radius: 48px;
+  border: 1px solid #b1bb1c; }
+
+.projects {
+  margin-top: 40px; }
+
+material-card {
+  min-height: 150px; }
+
+.main-project-card {
+  margin: 50px 0; }

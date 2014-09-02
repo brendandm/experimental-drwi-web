@@ -1,0 +1,17 @@
+<nav layout="vertical" layout-fill>
+  <material-toolbar scroll-shrink>
+
+    <div class="material-toolbar-tools">
+    	<span data-ng-if="goBack" data-ng-click="back()" class="glyphicon glyphicon-arrow-left"></span>
+		<span data-ng-if="!goBack">National Fish and Wildlife Federation</span>
+
+		<!-- fill up the space between left and right area -->
+		<span flex></span>
+
+		<material-button>
+			Log Out
+		</material-button>
+    </div>
+
+  </material-toolbar>
+</nav>

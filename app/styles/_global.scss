@@ -1,0 +1,35 @@
+body {
+	color: $text;
+}
+
+material-toolbar {
+	background-color: $primary;
+	color: $white;
+
+	material-button:hover {
+		background-color: $accent;
+	}
+}
+
+material-button.material-button-fab {
+	background-color: $accent;
+
+	&:hover {
+		background-color: $accent-dark;
+	}
+}
+
+material-button.material-button-raised.material-button-colored {
+	background-color: $accent;
+	color: $icon;
+	margin-top: 10px;
+
+	&:hover {
+		background-color: $accent-dark;
+	}
+}
+
+.material-theme-light {
+	background-color: $primary-light !important;
+	color: $icon !important;
+}

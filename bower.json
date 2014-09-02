@@ -1,0 +1,14 @@
+{
+  "name": "ngBones",
+  "version": "0.0.1",
+  "dependencies": {
+    "angular": "1.2.15",
+    "jquery": "~1.11.0",
+    "bootstrap": "~3.1.0",
+    "angular-resource": "1.2.15",
+    "angular-route": "1.2.15"
+  },
+  "resolutions": {
+    "angular": "1.3.0-build.3121+sha.a4520a7"
+  }
+}

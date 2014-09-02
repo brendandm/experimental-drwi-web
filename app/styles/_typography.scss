@@ -1,0 +1,18 @@
+p {
+	font-family: $serif;
+	font-size: 16px;
+}
+
+.material-tile-content p {
+	font-size: 1em;
+}
+
+material-toolbar span {
+	font-family: $serif;
+	font-weight: 700;
+}
+
+material-button span {
+	font-family: $sans;
+	font-weight: 400;
+}
