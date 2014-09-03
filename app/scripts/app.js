@@ -9,7 +9,7 @@
 		'ngMaterial'
 	])
 
-	.config(function($routeProvider){
+	.config(function($routeProvider) {
 		$routeProvider
 			.when('/', {
 				templateUrl: '/partials/main.html',
