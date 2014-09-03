@@ -9,7 +9,7 @@
     $scope.gravatar = 'http://www.gravatar.com/avatar/11800567938b3ec912c283bbc9c23938?s=80';
 
     $scope.page = {
-      name: "Monitoring &amp; Assessment"
+      name: "Monitoring and Assessment"
     };
 
     $scope.getProject = function(){

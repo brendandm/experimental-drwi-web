@@ -19,7 +19,7 @@
       </div>
  -->
       <span data-ng-if="goBack" data-ng-click="back()" class="glyphicon glyphicon-arrow-left"></span>
-      <span data-ng-bind-html="page.name" data-ng-if="!goBack"></span>
+      <span data-ng-if="!goBack">{{ page.name }}</span>
 
       <!-- fill up the space between left and right area -->
       <span flex></span>
