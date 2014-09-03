@@ -1,25 +1,25 @@
-<nav layout="vertical" layout-fill data-ng-controller="NavigationCtrl">
-  <material-sidenav layout="vertical" class="material-sidenav-left material-whiteframe-z3" component-id="left">
-    <material-toolbar class="material-theme-light material-medium-tall">
+<nav layout="vertical" layout-fill>
+<!--   <material-sidenav class="material-sidenav-left" component-id="left">
+    <material-toolbar class="material-medium-tall">
       <h1 class="material-toolbar-tools" style="padding-top:25px;">
-        <a href="#" ng-click="goHome()">Monitoring &amp; Assessment</a>
+        <a href="#" ng-click="goHome()">{{ page.name }}</a>
       </h1>
     </material-toolbar>
 
     <material-content flex="">
      asdfsafsafasd
     </material-content>
-  </material-sidenav>
+  </material-sidenav> -->
 
   <material-toolbar scroll-shrink>
 
     <div class="material-toolbar-tools">
-      <div class="menu-icon" hide-md="">
-        <div class="icon retinaicon-essentials-108"></div>
+<!--       <div data-ng-click="toggleMenu()" class="menu-icon" hide-md="">
+        <material-icon icon="/assets/icon-menu-toggle.svg"></material-icon>
       </div>
-
+ -->
       <span data-ng-if="goBack" data-ng-click="back()" class="glyphicon glyphicon-arrow-left"></span>
-      <span data-ng-if="!goBack">Monitoring &amp; Assessment</span>
+      <span data-ng-bind-html="page.name" data-ng-if="!goBack"></span>
 
       <!-- fill up the space between left and right area -->
       <span flex></span>
