@@ -12,8 +12,8 @@
       name: "Monitoring and Assessment"
     };
 
-    $scope.getProject = function(){
-      $location.url('/project');
+    $scope.getProject = function(project_id){
+      $location.url('/projects/' + project_id);
     };
 
     var getListData = function(){

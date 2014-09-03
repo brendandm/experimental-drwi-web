@@ -11,14 +11,14 @@
 					<div class="material-tile-left">
 						<img ng-src="{{ gravatar }}" class="face">
 					</div>
-					<div class="material-tile-content content-link" data-ng-click="getProject()">
+					<div class="material-tile-content content-link" data-ng-click="getProject(1)">
 						<h2>{{project.project_title}}</h2>
 						<h3>{{project.type_271e6f04e893436588c8cd84da851a97[0].name}}</h3>
 						<p>Proposed Start Date: {{project.proposed_start_date | date}}</p>
 						<p>Proposed End Date: {{project.proposed_end_date | date}}</p>
 					</div>
 					<div class="material-tile-right">
-						<material-button class="material-button-fab" data-ng-click="getProject()">
+						<material-button class="material-button-fab" data-ng-click="getProject(1)">
 				            <material-icon icon="assets/ic_mode_edit_24px.svg" style="width: 24px; height: 24px;"></material-icon>
 				        </material-button>
 					</div>
