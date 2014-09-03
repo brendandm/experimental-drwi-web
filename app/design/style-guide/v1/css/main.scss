@@ -151,6 +151,11 @@ a:visited {
   padding: 4px 16px 0;
 }
 
+.navbar-inverse .navbar-toggle {
+  border-color: transparent;
+  margin-left: 4px;
+}
+
 .reverse {
   background-color: $color-black-base;
   padding: 12px 0;

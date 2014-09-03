@@ -1,16 +1,32 @@
-<nav layout="vertical" layout-fill>
+<nav layout="vertical" layout-fill data-ng-controller="NavigationCtrl">
+  <material-sidenav layout="vertical" class="material-sidenav-left material-whiteframe-z3" component-id="left">
+    <material-toolbar class="material-theme-light material-medium-tall">
+      <h1 class="material-toolbar-tools" style="padding-top:25px;">
+        <a href="#" ng-click="goHome()">Monitoring &amp; Assessment</a>
+      </h1>
+    </material-toolbar>
+
+    <material-content flex="">
+     asdfsafsafasd
+    </material-content>
+  </material-sidenav>
+
   <material-toolbar scroll-shrink>
 
     <div class="material-toolbar-tools">
-    	<span data-ng-if="goBack" data-ng-click="back()" class="glyphicon glyphicon-arrow-left"></span>
-		<span data-ng-if="!goBack">Monitoring &amp; Assessment</span>
+      <div class="menu-icon" hide-md="">
+        <div class="icon retinaicon-essentials-108"></div>
+      </div>
 
-		<!-- fill up the space between left and right area -->
-		<span flex></span>
+      <span data-ng-if="goBack" data-ng-click="back()" class="glyphicon glyphicon-arrow-left"></span>
+      <span data-ng-if="!goBack">Monitoring &amp; Assessment</span>
 
-		<material-button>
-			Log Out
-		</material-button>
+      <!-- fill up the space between left and right area -->
+      <span flex></span>
+
+      <material-button>
+        Log Out
+      </material-button>
     </div>
 
   </material-toolbar>
