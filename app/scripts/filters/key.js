@@ -1,20 +1,19 @@
 (function () {
-	
+
 	'use strict';
 
 	angular.module('app')
 
 	.filter('key', function(){
 		return function(input){
-			var capitalizeFirstLetter = function(string){
+			var formatted = function(string){
 				var str = string.replace(/_/g, ' ');
-				return str.charAt(0).toUpperCase() + str.slice(1);
+
+				return str.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
 			};
 
-			var output = capitalizeFirstLetter(input);
-
-			return output;
+			return formatted(input);
 		};
 	});
-	
+
 }());
