@@ -3743,6 +3743,16 @@ material-button.material-button-raised.material-button-colored {
 .material-tile-content.content-link {
   cursor: pointer; }
 
+material-button:hover {
+  background-color: #b1bb1c; }
+
+material-button,
+.material-button {
+  display: block;
+  width: 10em;
+  margin: 2em auto;
+  line-height: 25px; }
+
 main {
   margin-top: 40px; }
 

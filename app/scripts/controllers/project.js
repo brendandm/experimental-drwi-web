@@ -8,11 +8,11 @@
     $scope.image = 'assets/wetlands.jpg';
     $scope.goBack = true;
 
-      $scope.page = {
-        name: "BMP Monitoring and Assessment Collection"
-      };
+    $scope.page = {
+      name: "BMP Monitoring and Assessment Collection"
+    };
 
-      $scope.back = function(){
+    $scope.back = function(){
       window.history.back();
     };
 
