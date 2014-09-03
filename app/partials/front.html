@@ -7,7 +7,7 @@
 			<material-list layout="vertical" layout-align="space-around" class="projects">
 				<material-item ng-repeat="project in projects">
 					<div class="material-tile-left">
-						<img ng-src="{{gravatar}}" class="face">
+						<img ng-src="{{ gravatar }}" class="face">
 					</div>
 					<div class="material-tile-content content-link" data-ng-click="getProject()">
 						<h2>{{project.project_title}}</h2>
