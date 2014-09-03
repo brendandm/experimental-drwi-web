@@ -1,12 +1,13 @@
 (function () {
-	
+
 	'use strict';
 
 	angular.module('app', [
 		'ngResource',
 		'ngRoute',
 		'ngAnimate',
-		'ngMaterial'
+		'ngMaterial',
+		'commons'
 	])
 
 	.config(function($routeProvider) {
@@ -23,5 +24,5 @@
 				redirectTo: '/'
 			});
 	});
-	
+
 }());

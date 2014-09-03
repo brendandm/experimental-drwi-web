@@ -6,8 +6,8 @@
 <material-content class="container">
 	<section layout="vertical">
 		<material-card class="main-project-card">
-<!-- 			<img src="{{image}}" class="material-card-image img-responsive" width="450">
- -->			<h2>{{project.project_title}}</h2>
+			<!--<img src="{{image}}" class="material-card-image img-responsive" width="450">-->
+			<h2>{{project.project_title}}</h2>
 			<h3>{{project.type_271e6f04e893436588c8cd84da851a97[0].name}}</h3>
 			<h5>Proposed Start Date: {{project.proposed_start_date | date}}</h5>
 			<h5>Proposed End Date: {{project.proposed_end_date | date}}</h5>
@@ -20,13 +20,18 @@
 		        </material-button>
 	    	</div>
 	    </material-card>
+	    <form>
+	    	<div class="group" data-ng-repeat="field in fields | orderBy: 'label'">
+	    		<input type="text" required>
+	    		<span class="highlight"></span>
+	    		<span class="bar"></span>
+	    		<label>{{field.label}}</label>
+	    	</div>
+	    </form>
 	    <material-list data-ng-show="showKeys">
-			<material-item ng-repeat="(key, value) in project">
+			<material-item ng-repeat="field in fields | orderBy: 'label'">
 			<div class="material-tile-content">
-			  <h2>{{key | key}}</h2>
-			  <p>
-			    {{value}}
-			  </p>
+			  <h2>{{field.label}}</h2>
 			</div>
 			</material-item>
 		</material-list>

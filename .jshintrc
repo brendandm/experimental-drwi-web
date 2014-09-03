@@ -1,0 +1,6 @@
+{
+	"globalstrict": true,
+	"predef": [
+		"angular"
+	]
+}
