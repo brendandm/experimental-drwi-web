@@ -3,7 +3,7 @@
 
   angular.module('app')
 
-  .controller('MainCtrl', function($scope, $http, $location, $log, $materialSidenav){
+  .controller('MainCtrl', function($scope, $http, $location, $log, Project){
     $scope.templateUrl = '/partials/front.html';
     $scope.gravatar = 'http://www.gravatar.com/avatar/11800567938b3ec912c283bbc9c23938?s=80';
 
@@ -20,11 +20,6 @@
 
     $scope.getProject = function(project_id){
       $location.url('/projects/' + project_id);
-    };
-
-    $scope.toggleMenu = function() {
-        $materialSidenav('left').toggle();
-        $log.log("$materialSidenav('left').toggle()");
     };
 
     getListData();

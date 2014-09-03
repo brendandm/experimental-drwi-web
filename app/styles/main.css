@@ -3709,8 +3709,7 @@ p {
   font-size: 1em; }
 
 material-toolbar span {
-  font-family: "Crimson Text", serif;
-  font-weight: 700; }
+  font-family: "RobotoDraft", "Helvetica Neue", Helvetica, Arial; }
 
 material-button span {
   font-family: "RobotoDraft", "Helvetica Neue", Helvetica, Arial;
@@ -3740,6 +3739,19 @@ material-button.material-button-raised.material-button-colored {
 .material-theme-light {
   background-color: #c3d0e2 !important;
   color: rgba(0, 0, 0, 0.54) !important; }
+
+.material-tile-content.content-link {
+  cursor: pointer; }
+
+material-button:hover {
+  background-color: #b1bb1c; }
+
+material-button,
+.material-button {
+  display: block;
+  width: 10em;
+  margin: 2em auto;
+  line-height: 25px; }
 
 * {
   box-sizing: border-box; }
