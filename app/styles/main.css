@@ -3741,6 +3741,9 @@ material-button.material-button-raised.material-button-colored {
   background-color: #c3d0e2 !important;
   color: rgba(0, 0, 0, 0.54) !important; }
 
+.material-tile-content.content-link {
+  cursor: pointer; }
+
 main {
   margin-top: 40px; }
 

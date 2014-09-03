@@ -33,3 +33,11 @@ material-button.material-button-raised.material-button-colored {
 	background-color: $primary-light !important;
 	color: $icon !important;
 }
+
+.material-tile-content {
+	
+	// When the entire content area needs to link to the next page
+	&.content-link {
+		cursor: pointer;
+	}
+}
