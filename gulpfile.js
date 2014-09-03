@@ -3,7 +3,8 @@
 var gulp = require('gulp'),
 	connect = require('gulp-connect'),
 	jshint = require('gulp-jshint'),
-	sass = require('gulp-ruby-sass');
+	sass = require('gulp-ruby-sass'),
+	open = require('gulp-open');
 
 gulp.task('html', function(){
 	gulp.src('./app/**/*.html')
@@ -29,6 +30,9 @@ gulp.task('serve', function(){
 		root: 'app',
 		livereload: true
 	});
+
+	gulp.src('./app/index.html')
+      .pipe(open('', { url: 'http://127.0.0.1:8080' }));
 });
 
 gulp.task('watch', function(){

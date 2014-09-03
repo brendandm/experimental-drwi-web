@@ -42,10 +42,6 @@ material-button.material-button-raised.material-button-colored {
 main {
   margin-top: 40px; }
 
-.logo {
-  width: 450px;
-  height: 182px; }
-
 .face {
   width: 48px;
   margin: 16px;
@@ -60,3 +56,5 @@ material-card {
 
 .main-project-card {
   margin: 50px 0; }
+
+/*# sourceMappingURL=main.css.map */
