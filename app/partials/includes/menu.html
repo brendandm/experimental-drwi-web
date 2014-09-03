@@ -1,16 +1,32 @@
 <nav layout="vertical" layout-fill>
+<!--   <material-sidenav class="material-sidenav-left" component-id="left">
+    <material-toolbar class="material-medium-tall">
+      <h1 class="material-toolbar-tools" style="padding-top:25px;">
+        <a href="#" ng-click="goHome()">{{ page.name }}</a>
+      </h1>
+    </material-toolbar>
+
+    <material-content flex="">
+     asdfsafsafasd
+    </material-content>
+  </material-sidenav> -->
+
   <material-toolbar scroll-shrink>
 
     <div class="material-toolbar-tools">
-    	<span data-ng-if="goBack" data-ng-click="back()" class="glyphicon glyphicon-arrow-left"></span>
-		<span data-ng-if="!goBack">Monitoring &amp; Assessment</span>
+<!--       <div data-ng-click="toggleMenu()" class="menu-icon" hide-md="">
+        <material-icon icon="/assets/icon-menu-toggle.svg"></material-icon>
+      </div>
+ -->
+      <span data-ng-if="goBack" data-ng-click="back()" class="glyphicon glyphicon-arrow-left"></span>
+      <span data-ng-if="!goBack">{{ page.name }}</span>
 
-		<!-- fill up the space between left and right area -->
-		<span flex></span>
+      <!-- fill up the space between left and right area -->
+      <span flex></span>
 
-		<material-button>
-			Log Out
-		</material-button>
+      <material-button data-ng-if="page.name !== 'Login'" data-ng-href="/#/">
+        Log Out
+      </material-button>
     </div>
 
   </material-toolbar>

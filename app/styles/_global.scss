@@ -33,3 +33,28 @@ material-button.material-button-raised.material-button-colored {
 	background-color: $primary-light !important;
 	color: $icon !important;
 }
+
+.material-tile-content {
+	
+	// When the entire content area needs to link to the next page
+	&.content-link {
+		cursor: pointer;
+	}
+}
+
+material-button:hover {
+	background-color: $accent;
+}
+
+material-button,
+.material-button {
+  display: block;
+  width: 10em;
+  margin: 2em auto;
+  line-height: 25px;
+}
+
+material-button-default,
+.material-button-default {
+	
+}
