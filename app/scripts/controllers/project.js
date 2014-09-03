@@ -1,5 +1,5 @@
 (function () {
-	
+
 	'use strict';
 	angular.module('app')
 
@@ -10,6 +10,10 @@
 
 		$scope.back = function(){
 			window.history.back();
+		};
+
+		$scope.edit = function(){
+			$scope.showKeys = true;
 		};
 
 		var getListData = function(){

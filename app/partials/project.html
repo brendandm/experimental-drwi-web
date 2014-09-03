@@ -15,12 +15,12 @@
 			Bacon ipsum dolor sit amet chicken fatback salami capicola, pork belly ribeye meatball tongue landjaeger t-bone pancetta. Turducken ground round chuck, ribeye boudin short loin prosciutto turkey leberkas biltong pork shankle cow. Porchetta strip steak ham hock, turkey beef swine tail jerky meatball sirloin andouille brisket. Sirloin corned beef kielbasa tri-tip, filet mignon hamburger ball tip sausage andouille spare ribs landjaeger short loin doner. Pastrami cow pork short loin. Bresaola meatball ribeye ground round, doner bacon venison jowl pig. Kevin short ribs cow, shoulder pork loin meatball chuck tri-tip strip steak.
 			</p>
 			<div layout="vertical" layout-align="center center">
-				<material-button class="material-button-fab">
+				<material-button class="material-button-fab" data-ng-click="edit()">
 		            <material-icon icon="assets/ic_mode_edit_24px.svg" style="width: 24px; height: 24px;"></material-icon>
 		        </material-button>
 	    	</div>
 	    </material-card>
-	    <material-list>
+	    <material-list data-ng-show="showKeys">
 			<material-item ng-repeat="(key, value) in project">
 			<div class="material-tile-content">
 			  <h2>{{key | key}}</h2>
