@@ -3888,4 +3888,241 @@ material-card {
 .main-project-card {
   margin: 50px 0; }
 
+form {
+  background-color: transparent;
+  box-shadow: none;
+  margin: 0 auto;
+  padding: 0; }
+
+form.form-inline {
+  margin-bottom: 8px; }
+
+form.standalone-form {
+  background-color: whitesmoke;
+  box-shadow: 0 0.2em 0 gainsboro;
+  margin: 0;
+  padding: 30px 40px; }
+
+form#login_user_form,
+form#register_user_form {
+  background-color: #f2f2f2;
+  box-shadow: none;
+  margin: 96px auto;
+  max-width: 480px;
+  padding: 48px; }
+
+.form-narrow {
+  margin-bottom: 64px;
+  margin-top: 64px;
+  max-width: 660px; }
+
+.form-group {
+  margin-bottom: 32px; }
+
+label,
+label.control-label {
+  color: #999999;
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1;
+  margin-bottom: 0; }
+
+label.alt {
+  font-weight: normal;
+  letter-spacing: -0.025em;
+  font-size: 16px;
+  font-family: "DIN Next W01 Medium";
+  color: #585858; }
+
+.helper.glyphicon {
+  color: #dddddd;
+  font-size: 48px; }
+
+.help-block {
+  font-size: 12px;
+  margin-bottom: 16px; }
+
+.non-label {
+  margin-bottom: 4px;
+  margin-top: 16px; }
+
+.button,
+.button:hover {
+  background-color: #70b300;
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
+  color: white;
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 100;
+  font-style: normal;
+  letter-spacing: 0.025em;
+  padding: 10px 20px;
+  text-decoration: none;
+  text-align: center;
+  text-shadow: none;
+  text-transform: uppercase; }
+
+.button:hover {
+  background-color: #76bd00; }
+
+.button:active {
+  position: relative;
+  top: 1px; }
+
+.button.button-default,
+.button.button-default:hover {
+  background-color: #fcfcfc;
+  color: #3a3a3a; }
+
+.button.button-info,
+.button.button-info:hover {
+  background-color: #19a6d7;
+  color: #fcfcfc; }
+
+.button.button-link,
+.button.button-link:hover {
+  background-color: #fcfcfc;
+  border-bottom: 2px solid #fcfcfc;
+  box-shadow: none;
+  color: #40ac18;
+  margin: 10px 20px;
+  padding: 0; }
+
+.button.button-link:hover {
+  border-bottom: 2px solid #40ac18; }
+
+.button.button-cancel,
+.button.button-cancel:hover {
+  color: #7c7c7c;
+  font-size: 1em;
+  margin-top: 8px;
+  text-decoration: underline; }
+
+.button.button-cancel:hover {
+  text-decoration: none; }
+
+.button.small {
+  font-size: 12px;
+  padding: 2px 10px 3px; }
+
+.btn.btn-link {
+  color: #555555;
+  font-size: 13px;
+  padding-left: 0;
+  padding-right: 0; }
+
+.btn {
+  text-decoration: none; }
+
+.btn:hover {
+  text-decoration: none; }
+
+.btn.btn-link {
+  text-decoration: underline; }
+
+.btn.btn-link:hover {
+  text-decoration: none; }
+
+.checkbox.inline {
+  margin-top: 32px; }
+
+.table td.reorder {
+  color: #c4c4c4;
+  vertical-align: middle; }
+
+.table td.reorder:hover {
+  color: #404040; }
+
+.sidebar .button {
+  display: block;
+  margin: 16px auto 0; }
+
+.button.success {
+  background-color: #6cc40e;
+  box-shadow: 0 0.2em 0 #52940b; }
+
+.button.success:active,
+.button.success:focus {
+  box-shadow: 0 0.1em 0 #52940b; }
+
+.button.danger {
+  background-color: #bb1111;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border: 1px solid #931111; }
+
+select {
+  height: 35px; }
+
+textarea {
+  height: 34px;
+  max-width: 100%;
+  width: 100%; }
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #0082a8;
+  outline: none !important; }
+
+.form-control,
+.form-control.input-lg,
+select.form-control,
+select.form-control.input-lg {
+  background: 0;
+  border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  box-shadow: none;
+  font-size: 16px;
+  font-weight: 300;
+  height: 34px;
+  line-height: 1.5;
+  padding: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none; }
+
+select.form-control {
+  background: url(/assets/Retina-Icons-v_1.0_Arrow7-16x8.png) no-repeat 98% 13px; }
+
+.form-control:focus {
+  border-bottom-width: 1px;
+  box-shadow: none; }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0; }
+
+.features {
+  float: right;
+  width: 300px;
+  padding-left: 20px; }
+
+.features .heading {
+  font-size: 14px;
+  font-weight: bold; }
+
+.form-geocoder .find-me .icon {
+  display: block;
+  font-size: 16px;
+  margin: 0;
+  padding-top: 8px; }
+.form-geocoder .address {
+  border-bottom: 1px solid #cccccc; }
+.form-geocoder .form-control {
+  border-bottom: 0;
+  width: 100%; }
+.form-geocoder .button.button-link {
+  margin: 10px 0 0; }
+
 /*# sourceMappingURL=main.css.map */
