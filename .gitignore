@@ -3,6 +3,5 @@
 # Ignore Dependencies
 node_modules
 .sass-cache
-bower_components
 
 app/styles/main.css.map

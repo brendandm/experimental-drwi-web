@@ -1,0 +1,15 @@
+{
+  "name": "commons-cloud",
+  "version": "0.1.0",
+  "dependencies": {
+    "angular": "^1.2.x",
+    "angular-resource": "^1.2.x",
+    "angular-route": "^1.2.x"
+  },
+  "authors": [
+    "Ryan Hamley <rshamley@gmail.com>"
+  ],
+  "main": "./commons.js",
+  "license": "MIT",
+  "homepage": "http://www.viableindustries.com"
+}
