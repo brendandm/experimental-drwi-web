@@ -2,14 +2,14 @@
 	'use strict';
 	angular.module('app')
 
-	.controller('ProjectCtrl', function($scope, $http, $routeParams, $log, Project, Field){
+	.controller('ProjectCtrl', function($scope, $http, $routeParams, $log, $location, Project, Field){
 		var app = 147;
 		var temp = 121;
 		$scope.templateUrl = '/partials/project.html';
 		$scope.image = 'assets/wetlands.jpg';
 		$scope.goBack = true;
 		$scope.page = {
- 			name: "BMP Monitoring and Assessment Collection"
+ 			name: ""
 		};
 
 		var id = $routeParams.projectId;
@@ -28,6 +28,10 @@
 
 			return ok.indexOf(weight) > -1;
 		};
+
+    $scope.getSite = function(siteId) {
+      $location.url('/projects/' + $routeParams.projectId + '/sites/' + siteId);
+    };
 
 		Project.get({id:id}, function(data){
 			$scope.project = data.response;
