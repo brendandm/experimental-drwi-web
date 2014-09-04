@@ -4,7 +4,7 @@
   
   angular.module('app')
 
-  .controller('PracticeCtrl', function($scope, $http, $location, $log){
+  .controller('PracticeCtrl', function($scope, $http, $location, $log, $routeParams){
 
     $scope.templateUrl = '/partials/practice.html';
     $scope.goBack = true;
@@ -13,8 +13,8 @@
       name: "Practices"
     };
 
-    $scope.getMetric = function(practice_id) {
-      $location.url('/projects/' + $routeParams.projectId + '/sites/' + $routeParams.siteId + '/practices/' + $routeParams.practiceId);
+    $scope.getMetric = function(metricId) {
+      $location.url('/projects/' + $routeParams.projectId + '/sites/' + $routeParams.siteId + '/practices/' + $routeParams.practiceId + '/metrics/' + metricId);
     };
 
     $scope.back = function(){

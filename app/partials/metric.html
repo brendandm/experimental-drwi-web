@@ -1,8 +1,31 @@
 <div data-ng-include="'/partials/includes/menu.html'"></div>
 
-<main class="container">
-	<material-content>
-		<section layout="vertical">
-		</section>
-	</material-content>
-</main>
+<material-content class="container">
+
+  <span ng-init="page.name='Metric'"></span>
+
+  <section layout="vertical">
+    <material-card class="main-project-card">
+      <div layout="vertical">
+        <h2>Measurement Period</h2>
+        <p>Variable</p>
+        <p>Variable</p>
+        <p>Variable</p>
+        <p>Variable</p>
+        <p>Variable</p>
+        <p>Variable</p>
+        <p>Variable</p>
+        <p>Variable</p>
+        <p>Variable</p>
+        <p>Variable</p>
+        <p>Variable</p>
+        <p>Variable</p>
+        <p>Variable</p>
+        <material-button class="material-button-fab" data-ng-click="edit()">
+          <material-icon icon="assets/ic_mode_edit_24px.svg" style="width: 24px; height: 24px;"></material-icon>
+        </material-button>
+      </div>
+    </material-card>
+  </section>
+
+</material-content>
