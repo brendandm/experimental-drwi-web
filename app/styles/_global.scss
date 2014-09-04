@@ -2,6 +2,10 @@ body {
 	color: $text;
 }
 
+main {
+	margin-bottom: 64px;
+}
+
 material-toolbar {
 	background-color: $primary;
 	color: $white;
