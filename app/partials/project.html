@@ -3,20 +3,20 @@
 <material-content class="container">
 	<section layout="vertical">
 		<material-card class="main-project-card">
-			<div data-ng-repeat="field in fields | orderBy: 'weight'">
+<!-- 			<div data-ng-repeat="field in fields | orderBy: 'weight'">
 				<h2 data-ng-if="field.weight===1">{{project[field.name]}}</h2>
 				<h3 data-ng-if="field.weight===2"><span class="key">{{field.name | key}}:</span> {{project[field.name]}}</h3>
 				<h5 data-ng-if="filterh5(field.weight) && field.data_type==='date'"><span class="key">{{field.name | key}}:</span> {{project[field.name] | date}}</h5>
 				<h5 data-ng-if="filterh5(field.weight) && field.data_type==='float'"><span class="key">{{field.name | key}}:</span> {{project[field.name] | number}}</h5>
 				<p data-ng-if="field.weight===11 || field.weight===12"><span class="key">{{field.name | key}}:</span> {{project[field.name]}}</p>
-			</div>
+			</div> -->
 			<div layout="vertical" layout-align="center center">
 				<material-button class="material-button-fab" data-ng-click="edit()">
 		            <material-icon icon="assets/ic_mode_edit_24px.svg" style="width: 24px; height: 24px;"></material-icon>
 		        </material-button>
 	    	</div>
 	    </material-card>
-	    <form data-ng-show="showFields">
+<!-- 	    <form data-ng-show="showFields">
 	    	<div class="group" data-ng-repeat="field in fields | orderBy: 'weight'">
 	    		<input data-ng-model="project[field.name]" type="text" required value="project[field.name]" />
  				<input data-ng-model="project[field.name]" data-ng-if="field.data_type === 'email'" type="email" required />
@@ -24,6 +24,6 @@
 	    		<span class="bar"></span>
 	    		<label>{{field.label}}</label>
 	    	</div>
-	    </form>
+	    </form> -->
 	</section>
 </material-content>
