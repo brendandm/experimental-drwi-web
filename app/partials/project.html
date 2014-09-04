@@ -2,6 +2,8 @@
 
 <material-content class="container">
 
+  <span ng-init="page.name='Expanding Brook Trout Habitat in the Shenandoah Valley, VA'"></span>
+
 	<section layout="vertical">
 		<material-card class="main-project-card">
 			<div data-ng-hide="showEdit">
@@ -156,6 +158,39 @@
 	    		<label>{{field.label}}</label>
 	    	</div>
 	    </form> -->
+        <material-item>
+          <div class="material-tile-content content-link" data-ng-click="getSite(1)">
+		        <h2>Site Number</h2>
+		        <p>2 barriers on headwater streams in Passage Creek (1) and Mountain Run (1) and will be removed. Opening up 5 miles of habitat</p>
+		        <p>City</p>
+		        <p>County</p>
+		        <p>Congressional District</p>
+          </div>
+        </material-item>
+
+        <material-item>
+          <div class="material-tile-content content-link" data-ng-click="getSite(2)">
+		        <h2>Site Number</h2>
+		        <p>2 barriers on headwater streams in Passage Creek (1) and Mountain Run (1) and will be removed. Opening up 5 miles of habitat</p>
+		        <p>City</p>
+		        <p>County</p>
+		        <p>Congressional District</p>
+          </div>
+        </material-item>
+
+        <material-item>
+          <div class="material-tile-content content-link" data-ng-click="getSite(2)">
+		        <h2>Site Number</h2>
+		        <p>2 barriers on headwater streams in Passage Creek (1) and Mountain Run (1) and will be removed. Opening up 5 miles of habitat</p>
+		        <p>City</p>
+		        <p>County</p>
+		        <p>Congressional District</p>
+          </div>
+        </material-item>
+
+        <material-item layout-align="center center">
+          <p><material-button class="material-button-raised" data-ng-href="/#/projects/1/sites/new">Add a site</material-button></p>
+        </material-item>
 	</section>
 
 </material-content>
