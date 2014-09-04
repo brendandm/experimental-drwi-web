@@ -2,7 +2,7 @@
 	'use strict';
 	angular.module('app')
 
-	.controller('ProjectCtrl', function($scope, $http, $log, Project, Field){
+	.controller('ProjectCtrl', function($scope, $http, $routeParams, $log, Project, Field){
 		var app = 147;
 		var temp = 121;
 		$scope.templateUrl = '/partials/project.html';
@@ -12,15 +12,24 @@
  			name: "BMP Monitoring and Assessment Collection"
 		};
 
+		var id = $routeParams.projectId;
+		$log.log('id', id);
+
 		$scope.back = function(){
 			window.history.back();
 		};
 
 		$scope.edit = function(){
-			$scope.showKeys = true;
+			$scope.showFields = true;
 		};
 
-		Project.get({id:1}, function(data){
+		$scope.filterh5 = function(weight){
+			var ok = [3, 4, 5, 6, 7, 8, 9, 10];
+
+			return ok.indexOf(weight) > -1;
+		};
+
+		Project.get({id:id}, function(data){
 			$scope.project = data.response;
 			$log.log('project', data.response);
 		});
@@ -29,5 +38,6 @@
 			$scope.fields = data;
 			$log.log('fields', data);
 		});
+
 	});
 }());
