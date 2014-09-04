@@ -3,6 +3,7 @@
 /* form starting stylings ------------------------------- */
 .group {
   position:relative;
+  margin-top: 25px;
   margin-bottom:45px;
 }
 input {
@@ -33,7 +34,7 @@ label {
 
 /* active state */
 input:focus ~ label, input:valid ~ label {
-  top:55px;
+  top:-15px;
   font-size:14px;
   color:#5264AE;
 }
