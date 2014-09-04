@@ -3716,7 +3716,9 @@ material-button span {
   font-weight: 400; }
 
 .key {
-  font-weight: 700; }
+  font-weight: 700;
+  font-family: "RobotoDraft", "Helvetica Neue", Helvetica, Arial;
+  color: rgba(0, 0, 0, 0.54); }
 
 body {
   color: rgba(0, 0, 0, 0.87); }
