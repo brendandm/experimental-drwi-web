@@ -6,24 +6,98 @@
 
 	<section layout="vertical">
 		<material-card class="main-project-card">
-			<h1 style="text-align:center">Expanding Brook Trout Habitat in the Shenandoah Valley, VA</h1>
-			<hr />
-			<h2><span class="key">Organization:</span> Trout Unlimited, Inc.</h2>
-			<h4><span class="key">Proposed Start Date:</span> October 1, 2013</h4>
-			<h4><span class="key">Proposed End Date:</span> September 30, 2015</h4>
-			<h4><span class="key">Easy Grants ID:</span> 40267</h4>
-			<h4><span class="key">Grant Type:</span> Small Watershed Grant</h4>
-			<h4><span class="key">Funders:</span>
-				Massanutten TU Embrace A Stream grant, Virginia Department of Game and Inland Fisheries, Landowner Cost Share, Landowner Donations of Rootwads and Logs, Trout Unlimited Grassroots Volunteers, WCS Climate Change Adaptation Grant
-			</h4>
-			<h4><span class="key">Award:</span> Pending</h4>
-			<h4><span class="key">Matching Contributions:</span> $128,426.00</h4>
-			<p><span class="key">Project Abstract:</span>
-				This project will increase the number of and size of Eastern brook trout patches in the Shenandoah Valley, focusing on extirpated and less-than-intact spring fed streams. TU will provide enhanced technical assistance to landowners on cold-water spring creeks in an effort to drive down the cost of repairing degraded streams. TU's stream restoration expertise and offer of restoring native brook trout are incentives for landowner participation and help leverage state and federal cost share. TU will restore base level stream functions such as flood plain connectivity, stream bank stability and habitat diversity, resulting in 8 new acres of riparian buffer, 7,500 feet of stream banks stabilized and a 95-ton annual reduction in sedimentation from stream bank erosion. TU will partner with the Virginia Department of Game and Inland Fisheries and local TU grassroots volunteers to monitor restoration projects and reintroduce native brook trout to restored streams. TU will also partner with the Natural Resources Conservation Service and Soil and Water Conservation Districts to assist landowners participating in cost share programs.
-			</p>
-			<p><span class="key">Project Location:</span>
-				Shenandoah Valley counties of Augusta, Rockingham, Clarke, Shenandoah, Frederick and Page. Watersheds include Smith Creek, Mossy Creek, Spout Run, Passage Creek, Beaver Creek and Meadowbrook.
-			</p>
+			<div data-ng-hide="showEdit">
+				<h1 style="text-align:center">{{project.title}}</h1>
+				<hr />
+				<h2><span class="key">Organization:</span> {{project.organization}}</h2>
+				<h4><span class="key">Proposed Start Date:</span> {{project.start | date}}</h4>
+				<h4><span class="key">Proposed End Date:</span> {{project.end | date}}</h4>
+				<h4><span class="key">Easy Grants ID:</span> {{project.id}}</h4>
+				<h4><span class="key">Grant Type:</span> {{project.grantType}}</h4>
+				<h4><span class="key">Funders:</span> {{project.funders}}</h4>
+				<h4><span class="key">Award:</span> {{project.award}}</h4>
+				<h4><span class="key">Matching Contributions:</span> {{project.match | currency}}</h4>
+				<p><span class="key">Project Abstract:</span> {{project.abstract}}</p>
+				<p><span class="key">Project Location:</span> {{project.location}}</p>
+			</div>
+			<form data-ng-show="showEdit">
+				<div class="group">
+					<input data-ng-model="project.title" type="text" required />
+					<span class="highlight"></span>
+					<span class="bar"></span>
+					<label>Project Title</label>
+				</div>
+
+				<div class="group">
+					<input data-ng-model="project.organization" type="text" required />
+					<span class="highlight"></span>
+					<span class="bar"></span>
+					<label>Organization</label>
+				</div>
+
+				<div class="group">
+					<input data-ng-model="project.start" type="text" required />
+					<span class="highlight"></span>
+					<span class="bar"></span>
+					<label>Proposed Start Date</label>
+				</div>
+
+				<div class="group">
+					<input data-ng-model="project.end" type="text" required />
+					<span class="highlight"></span>
+					<span class="bar"></span>
+					<label>Proposed End Date</label>
+				</div>
+
+				<div class="group">
+					<input data-ng-model="project.id" type="text" required />
+					<span class="highlight"></span>
+					<span class="bar"></span>
+					<label>Easy Grants ID</label>
+				</div>
+
+				<div class="group">
+					<input data-ng-model="project.grantType" type="text" required />
+					<span class="highlight"></span>
+					<span class="bar"></span>
+					<label>Grant Type</label>
+				</div>
+
+				<div class="group">
+					<input data-ng-model="project.funders" type="text" required />
+					<span class="highlight"></span>
+					<span class="bar"></span>
+					<label>Funders</label>
+				</div>
+
+				<div class="group">
+					<input data-ng-model="project.award" type="text" required />
+					<span class="highlight"></span>
+					<span class="bar"></span>
+					<label>Award</label>
+				</div>
+
+				<div class="group">
+					<input data-ng-model="project.match" type="text" required />
+					<span class="highlight"></span>
+					<span class="bar"></span>
+					<label>Matching Contributions</label>
+				</div>
+
+				<div class="group">
+					<input data-ng-model="project.abstract" type="text" required />
+					<span class="highlight"></span>
+					<span class="bar"></span>
+					<label>Project Abstract</label>
+				</div>
+
+				<div class="group">
+					<input data-ng-model="project.location" type="text" required />
+					<span class="highlight"></span>
+					<span class="bar"></span>
+					<label>Project Location</label>
+				</div>
+			</form>
 <!-- 			<div data-ng-repeat="field in fields | orderBy: 'weight'">
 				<h2 data-ng-if="field.weight===1">{{project[field.name]}}</h2>
 				<h3 data-ng-if="field.weight===2"><span class="key">{{field.name | key}}:</span> {{project[field.name]}}</h3>
@@ -32,11 +106,49 @@
 				<p data-ng-if="field.weight===11 || field.weight===12"><span class="key">{{field.name | key}}:</span> {{project[field.name]}}</p>
 			</div> -->
 			<div layout="vertical" layout-align="center center">
-				<material-button class="material-button-fab" data-ng-click="edit()">
+				<material-button data-ng-hide="showEdit" class="material-button-fab" data-ng-click="edit()">
 		            <material-icon icon="assets/ic_mode_edit_24px.svg" style="width: 24px; height: 24px;"></material-icon>
+		        </material-button>
+		        <material-button data-ng-show="showEdit" class="material-button-fab" data-ng-click="save()">
+		            <material-icon icon="assets/ic_save_24px.svg" style="width: 24px; height: 24px;"></material-icon>
 		        </material-button>
 	    	</div>
 	    </material-card>
+	    <section layout="vertical">
+		      <material-list layout="vertical" layout-align="space-around" class="projects">
+		        <material-item>
+		          <div class="material-tile-content content-link" data-ng-click="getSite(1)">
+		            <h2>Site</h2>
+		            <p>Location</p>
+		            <div>Description</div>
+		          </div>
+		        </material-item>
+
+		        <material-item>
+		          <div class="material-tile-content content-link" data-ng-click="getSite(2)">
+		            <h2>Site</h2>
+		            <p>Location</p>
+		            <div>Description</div>
+		          </div>
+		        </material-item>
+
+		        <material-item>
+		          <div class="material-tile-content content-link" data-ng-click="getSite(3)">
+		            <h2>Site</h2>
+		            <p>Location</p>
+		            <div>Description</div>
+		          </div>
+		        </material-item>
+
+		        <material-item>
+		          <div class="material-tile-content content-link" data-ng-click="getSite(4)">
+		            <h2>Site</h2>
+		            <p>Location</p>
+		            <div>Description</div>
+		          </div>
+		        </material-item>
+		      </material-list>
+		  </section>
 <!-- 	    <form data-ng-show="showFields">
 	    	<div class="group" data-ng-repeat="field in fields | orderBy: 'weight'">
 	    		<input data-ng-model="project[field.name]" type="text" required value="project[field.name]" />
