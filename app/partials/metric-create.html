@@ -1,10 +1,36 @@
 <div data-ng-include="'/partials/includes/menu.html'"></div>
 
-<material-content class="container">
+<material-content class="container" flex>
 
   <span ng-init="page.name='Add a new metric'"></span>
 
-  <section layout="vertical">
+  <section data-ng-if="1===1" layout="vertical">
+
+    <form>
+      <div class="form-group">
+        <label for="" class="control-label">Select a Metric</label>
+        <select id="" name="" class="form-control">
+          <optgroup label="Practice Metric">
+            <option>Forest Buffers</option>
+            <option>Grass Buffers</option>
+            <option>Livestock Exclusion</option>
+            <option>Instream Habitat</option>
+            <option>Channel Restoration</option>
+          </optgroup>
+          <optgroup label="Other Metric">
+            <option>Biological</option>
+            <option>Habitat</option>
+            <option>Water Quality</option>
+            <option>Erosion</option>
+            <option>Pollutant Load</option>
+            <option>CBSF</option>
+            <option>Periphyton</option>
+            <option>Fish</option>
+          </optgroup>
+        </select>
+      </div>
+
+    </form>
 
   </section>
 
