@@ -7,7 +7,8 @@
 		'ngRoute',
 		'ngAnimate',
 		'ngMaterial',
-		'commons'
+		'commons',
+		'leaflet-directive'
 	])
 
 	.config(function($routeProvider, $locationProvider) {

@@ -8,6 +8,7 @@
     "angular-resource": "1.2.15",
     "angular-route": "1.2.15",
     "angular-sanitize": "~1.2.23",
-    "commons-cloud": "~0.1.0"
+    "commons-cloud": "~0.1.0",
+    "angular-leaflet-directive": "~0.7.8"
   }
 }

@@ -1,8 +1,53 @@
 <div data-ng-include="'/partials/includes/menu.html'"></div>
 
-<main class="container">
-	<material-content>
-		<section layout="vertical">
-		</section>
-	</material-content>
-</main>
+<material-content class="container">
+
+  <span ng-init="page.name='My Lengthy BMP name'"></span>
+
+  <section layout="vertical">
+    <material-card class="main-project-card">
+      <div layout="vertical">
+        <h2>BMP Type</h2>
+        <p>BMP Type (SWG)</p>
+        <div>Description</div>
+        <material-button class="material-button-fab" data-ng-click="edit()">
+          <material-icon icon="assets/ic_mode_edit_24px.svg" style="width: 24px; height: 24px;"></material-icon>
+        </material-button>
+        </div>
+      </material-card>
+      <material-list layout="vertical" layout-align="space-around" class="projects">
+        <material-item>
+          <div class="material-tile-content content-link" data-ng-click="getBMP(1)">
+            <h2>Metric/BMP</h2>
+            <p>Measurement Period</p>
+            <p>Report Date</p>
+          </div>
+        </material-item>
+
+        <material-item>
+          <div class="material-tile-content content-link" data-ng-click="getBMP(1)">
+            <h2>Metric/BMP</h2>
+            <p>Measurement Period</p>
+            <p>Report Date</p>
+          </div>
+        </material-item>
+
+        <material-item>
+          <div class="material-tile-content content-link" data-ng-click="getBMP(1)">
+            <h2>Metric/BMP</h2>
+            <p>Measurement Period</p>
+            <p>Report Date</p>
+          </div>
+        </material-item>
+
+        <material-item>
+          <div class="material-tile-content content-link" data-ng-click="getBMP(1)">
+            <h2>Metric/BMP</h2>
+            <p>Measurement Period</p>
+            <p>Report Date</p>
+          </div>
+        </material-item>
+      </material-list>
+  </section>
+
+</material-content>
