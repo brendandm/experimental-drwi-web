@@ -3723,9 +3723,16 @@ material-button span {
 body {
   color: rgba(0, 0, 0, 0.87); }
 
+main {
+  margin-bottom: 64px; }
+
 material-toolbar {
   background-color: #004890;
   color: #fafafa; }
+  material-toolbar material-button,
+  material-toolbar .material-button {
+    width: auto;
+    min-width: 5em; }
   material-toolbar material-button:hover {
     background-color: #b1bb1c; }
 
@@ -3748,15 +3755,19 @@ material-button.material-button-raised.material-button-colored {
 .material-tile-content.content-link {
   cursor: pointer; }
 
-material-button:hover {
-  background-color: #b1bb1c; }
-
 material-button,
 .material-button {
   display: block;
   width: 10em;
   margin: 2em auto;
   line-height: 25px; }
+
+material-button.material-button-fab,
+material-button.material-button-fab:hover,
+material-button.material-button-raised,
+material-button.material-button-raised:hover {
+  background-color: #b1bb1c;
+  color: #f2f2f2; }
 
 * {
   box-sizing: border-box; }
