@@ -9,14 +9,14 @@
 			<div data-ng-hide="showEdit">
 				<h1 style="text-align:center">{{project.title}}</h1>
 				<hr />
-				<h2><span class="key">Organization:</span> {{project.organization}}</h2>
-				<h4><span class="key">Proposed Start Date:</span> {{project.start | date}}</h4>
-				<h4><span class="key">Proposed End Date:</span> {{project.end | date}}</h4>
-				<h4><span class="key">Easy Grants ID:</span> {{project.id}}</h4>
-				<h4><span class="key">Grant Type:</span> {{project.grantType}}</h4>
-				<h4><span class="key">Funders:</span> {{project.funders}}</h4>
-				<h4><span class="key">Award:</span> {{project.award}}</h4>
-				<h4><span class="key">Matching Contributions:</span> {{project.match | currency}}</h4>
+				<p><span class="key">Organization:</span> {{project.organization}}</p>
+				<p><span class="key">Proposed Start Date:</span> {{project.start | date}}</p>
+				<p><span class="key">Proposed End Date:</span> {{project.end | date}}</p>
+				<p><span class="key">Easy Grants ID:</span> {{project.id}}</p>
+				<p><span class="key">Grant Type:</span> {{project.grantType}}</p>
+				<p><span class="key">Funders:</span> {{project.funders}}</p>
+				<p><span class="key">Award:</span> {{project.award}}</p>
+				<p><span class="key">Matching Contributions:</span> {{project.match | currency}}</p>
 				<p><span class="key">Project Abstract:</span> {{project.abstract}}</p>
 				<p><span class="key">Project Location:</span> {{project.location}}</p>
 			</div>
@@ -101,8 +101,8 @@
 <!-- 			<div data-ng-repeat="field in fields | orderBy: 'weight'">
 				<h2 data-ng-if="field.weight===1">{{project[field.name]}}</h2>
 				<h3 data-ng-if="field.weight===2"><span class="key">{{field.name | key}}:</span> {{project[field.name]}}</h3>
-				<h4 data-ng-if="filterh4(field.weight) && field.data_type==='date'"><span class="key">{{field.name | key}}:</span> {{project[field.name] | date}}</h4>
-				<h4 data-ng-if="filterh4(field.weight) && field.data_type==='float'"><span class="key">{{field.name | key}}:</span> {{project[field.name] | number}}</h4>
+				<p data-ng-if="filterp(field.weight) && field.data_type==='date'"><span class="key">{{field.name | key}}:</span> {{project[field.name] | date}}</p>
+				<p data-ng-if="filterp(field.weight) && field.data_type==='float'"><span class="key">{{field.name | key}}:</span> {{project[field.name] | number}}</p>
 				<p data-ng-if="field.weight===11 || field.weight===12"><span class="key">{{field.name | key}}:</span> {{project[field.name]}}</p>
 			</div> -->
 			<div layout="vertical" layout-align="center center">

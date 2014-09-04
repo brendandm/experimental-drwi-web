@@ -6,56 +6,101 @@
 
   <section layout="vertical">
     <material-card class="main-project-card">
-      <div layout="vertical">
-        <h2>Site Number</h2>
-        <p>2 barriers on headwater streams in Passage Creek (1) and Mountain Run (1) and will be removed. Opening up 5 miles of habitat</p>
-        <p>City</p>
-        <p>County</p>
-        <p>Congressional District</p>
-        <leaflet defaults="map.defaults" markers="map.markers" center="map.center" width="100%" height="425"></leaflet>
-        <material-button class="material-button-fab" data-ng-click="edit()">
+      <div data-ng-hide="showEdit">
+        <h1 style="text-align:center">{{site.project}}</h1>
+        <hr style="width:100%" />
+        <p><span class="key">Site Number:</span> {{site.number}}</p>
+        <p><span class="key">Description:</span> {{site.description}}</p>
+        <p><span class="key">City:</span> {{site.description}}</p>
+        <p><span class="key">County:</span> {{site.county}}</p>
+        <p><span class="key">Congressional District:</span> {{site.district}}</p>
+      </div>
+      <form data-ng-show="showEdit">
+        <div class="group">
+          <input type="text" data-ng-model="site.project" required="">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label>Project</label>
+        </div>
+        <div class="group">
+          <input type="text" data-ng-model="site.number" required="">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label>Site Number</label>
+        </div>
+        <div class="group">
+          <input type="text" data-ng-model="site.description" required="">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label>Description</label>
+        </div>
+        <div class="group">
+          <input type="text" data-ng-model="site.city" required="">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label>City</label>
+        </div>
+        <div class="group">
+          <input type="text" data-ng-model="site.county" required="">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label>County</label>
+        </div>
+        <div class="group">
+          <input type="text" data-ng-model="site.district" required="">
+          <span class="highlight"></span>
+          <span class="bar"></span>
+          <label>Congressional District</label>
+        </div>
+      </form>
+      <leaflet defaults="map.defaults" markers="map.markers" center="map.center" width="100%" height="425"></leaflet>
+      <div layout="vertical" layout-align="center center">
+        <material-button data-ng-hide="showEdit" class="material-button-fab" data-ng-click="edit()">
           <material-icon icon="assets/ic_mode_edit_24px.svg" style="width: 24px; height: 24px;"></material-icon>
         </material-button>
+        <material-button data-ng-show="showEdit" class="material-button-fab" data-ng-click="save()">
+          <material-icon icon="assets/ic_save_24px.svg" style="width: 24px; height: 24px;"></material-icon>
+        </material-button>
+      </div>
+    </material-card>
+
+    <material-list layout="vertical" layout-align="space-around" class="projects">
+      <material-item>
+        <div class="material-tile-content content-link" data-ng-click="getBMP(1)">
+          <h2>BMP Type</h2>
+          <p>BMP Type (SWG)</p>
+          <div>Description</div>
         </div>
-      </material-card>
-      <material-list layout="vertical" layout-align="space-around" class="projects">
-        <material-item>
-          <div class="material-tile-content content-link" data-ng-click="getBMP(1)">
-            <h2>BMP Type</h2>
-            <p>BMP Type (SWG)</p>
-            <div>Description</div>
-          </div>
-        </material-item>
+      </material-item>
 
-        <material-item>
-          <div class="material-tile-content content-link" data-ng-click="getBMP(2)">
-            <h2>BMP Type</h2>
-            <p>BMP Type (SWG)</p>
-            <div>Description</div>
-          </div>
-        </material-item>
+      <material-item>
+        <div class="material-tile-content content-link" data-ng-click="getBMP(2)">
+          <h2>BMP Type</h2>
+          <p>BMP Type (SWG)</p>
+          <div>Description</div>
+        </div>
+      </material-item>
 
-        <material-item>
-          <div class="material-tile-content content-link" data-ng-click="getBMP(3)">
-            <h2>BMP Type</h2>
-            <p>BMP Type (SWG)</p>
-            <div>Description</div>
-          </div>
-        </material-item>
+      <material-item>
+        <div class="material-tile-content content-link" data-ng-click="getBMP(3)">
+          <h2>BMP Type</h2>
+          <p>BMP Type (SWG)</p>
+          <div>Description</div>
+        </div>
+      </material-item>
 
-        <material-item>
-          <div class="material-tile-content content-link" data-ng-click="getBMP(4)">
-            <h2>BMP Type</h2>
-            <p>BMP Type (SWG)</p>
-            <div>Description</div>
-          </div>
-        </material-item>
+      <material-item>
+        <div class="material-tile-content content-link" data-ng-click="getBMP(4)">
+          <h2>BMP Type</h2>
+          <p>BMP Type (SWG)</p>
+          <div>Description</div>
+        </div>
+      </material-item>
 
-        <material-item layout-align="center center">
-          <p><material-button class="material-button-raised" data-ng-href="/#/projects/1/sites/1/practices/new">Add a practice</material-button></p>
-        </material-item>
+      <material-item layout-align="center center">
+        <p><material-button class="material-button-raised" data-ng-href="/#/projects/1/sites/1/practices/new">Add a practice</material-button></p>
+      </material-item>
+    </material-list>
 
-      </material-list>
   </section>
-
 </material-content>
