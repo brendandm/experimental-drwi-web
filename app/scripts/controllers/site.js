@@ -22,8 +22,8 @@
 
     $scope.map = {
       center: {
-        lat: 38.93779385450555,
-        lng: -78.21406781673431,
+        lat: 38.649135,
+        lng: -78.709399,
         zoom: 18,
       },
       defaults: {
@@ -37,8 +37,8 @@
       },
       markers: {
         marker_1: {
-          lat: 38.93779385450555,
-          lng: -78.21406781673431,
+          lat: 38.649135,
+          lng: -78.709399,
           message: "",
           icon: default_icon
         }
@@ -47,7 +47,7 @@
 
     $scope.site = {
       project: 'Expanding Brook Trout Habitat in the Shenandoah Valley, VA',
-      number: 1,
+      number: "Habitat Restoration",
       description: 'Two barriers on headwater streams in Passage Creek and Mountain Run will be removed, opening up 5 miles of habitat.',
       city: 'Harrisonburg',
       county: 'Rockingham',

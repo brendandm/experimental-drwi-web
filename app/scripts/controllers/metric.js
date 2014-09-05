@@ -16,8 +16,8 @@
 
     $scope.metric = {
       name: 'Habitat',
-      period: '',
-      date: '',
+      period: 'Planned',
+      date: 'June 19, 2014',
       stability: '',
       protection: '',
       alteration: '',

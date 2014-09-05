@@ -15,11 +15,11 @@
     };
 
     $scope.bmp = {
-      site: 'Site Name',
-      type: '',
-      description: '',
-      installation: '',
-      mature: ''
+      site: 'Habitat Restoration, Harrisonburg',
+      type: 'In-stream Habitat',
+      description: 'CBSF - Fish passage improvements - # passage barriers rectified, Enter the number of fish passage barriers rectified',
+      installation: 'No photos',
+      mature: 'No photos'
     };
 
     $scope.getMetric = function(metricId) {

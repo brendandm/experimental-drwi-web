@@ -2,14 +2,14 @@
 
 <material-content class="container">
 
-  <span ng-init="page.name='Site Number'"></span>
+  <span ng-init="page.name='Habitat Restoration, Rockingham'"></span>
 
   <section layout="vertical">
     <material-card class="main-project-card">
       <div data-ng-hide="showEdit">
         <h1 style="text-align:center">{{site.project}}</h1>
         <hr style="width:100%" />
-        <p><span class="key">Site Number:</span> {{site.number}}</p>
+        <p><span class="key">Site:</span> {{site.number}}</p>
         <p><span class="key">Description:</span> {{site.description}}</p>
         <p><span class="key">City:</span> {{site.description}}</p>
         <p><span class="key">County:</span> {{site.county}}</p>
@@ -64,36 +64,13 @@
       </div>
     </material-card>
 
+    <h3>Practices Implemented at this Site</h3>
+
     <material-list layout="vertical" layout-align="space-around" class="projects">
       <material-item>
         <div class="material-tile-content content-link" data-ng-click="getBMP(1)">
-          <h2>BMP Type</h2>
-          <p>BMP Type (SWG)</p>
-          <div>Description</div>
-        </div>
-      </material-item>
-
-      <material-item>
-        <div class="material-tile-content content-link" data-ng-click="getBMP(2)">
-          <h2>BMP Type</h2>
-          <p>BMP Type (SWG)</p>
-          <div>Description</div>
-        </div>
-      </material-item>
-
-      <material-item>
-        <div class="material-tile-content content-link" data-ng-click="getBMP(3)">
-          <h2>BMP Type</h2>
-          <p>BMP Type (SWG)</p>
-          <div>Description</div>
-        </div>
-      </material-item>
-
-      <material-item>
-        <div class="material-tile-content content-link" data-ng-click="getBMP(4)">
-          <h2>BMP Type</h2>
-          <p>BMP Type (SWG)</p>
-          <div>Description</div>
+          <h2>In-stream Habitat</h2>
+          <div>CBSF - Fish passage improvements - # passage barriers rectified, Enter the number of fish passage barriers rectified</div>
         </div>
       </material-item>
 
