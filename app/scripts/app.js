@@ -17,7 +17,8 @@ angular
     'ipCookie',
     'ui.gravatar',
     'leaflet-directive',
-    'angularFileUpload',
+    'ng-file-upload',
+    'ng-file-upload-shim',
     'geolocation',
     'angular-loading-bar',
     'monospaced.elastic'
