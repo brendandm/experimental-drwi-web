@@ -30,7 +30,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     if (session_cookie && session_cookie !== undefined && session_cookie !== 'undefined') {
       $location.hash('');
-      $location.path('/applications');
+      $location.path('/projects');
     } else {
       ipCookie.remove('COMMONS_SESSION');
       ipCookie.remove('COMMONS_SESSION', { path: '/' });

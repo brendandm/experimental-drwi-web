@@ -14,7 +14,7 @@ angular.module('practiceMonitoringAssessmentApp')
     // Setup basic page variables
     //
     $scope.page = {
-      template: '/views/projects.html',
+      template: 'views/projects.html',
       title: 'Projects',
       back: '/'
     };

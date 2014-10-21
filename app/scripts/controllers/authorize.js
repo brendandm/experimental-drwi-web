@@ -24,7 +24,7 @@ angular.module('practiceMonitoringAssessmentApp').controller('AuthorizeCtrl', ['
       ipCookie('COMMONS_SESSION', cleanToken, cookieOptions);
 
       $location.hash('');
-      $location.path('/applications');
+      $location.path('/projects');
     };
 
 
