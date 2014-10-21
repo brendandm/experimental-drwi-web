@@ -13,19 +13,25 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ngTouch',
+    'ipCookie',
+    'ui.gravatar',
+    'leaflet-directive',
+    'angularFileUpload',
+    'geolocation',
+    'angular-loading-bar',
+    'monospaced.elastic'
   ])
-  .config(function ($routeProvider) {
+  .config(['$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
+
+    //
+    // Base template URL for piecing together all partial views
+    //
+    var templateUrl = '/views/main.html';
+
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
-      })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
       });
   });
