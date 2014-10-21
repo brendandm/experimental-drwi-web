@@ -39,7 +39,7 @@ angular
           }
         }
       })
-      .when('/authorize', {
+      .when('authorize', {
         templateUrl: '/views/authorize.html',
         controller: 'AuthorizeCtrl'
       })
@@ -67,9 +67,15 @@ angular
         templateUrl: templateUrl,
         controller: 'SitesCtrl'
       })
-      .when('/projects', {
+      .when('projects', {
         templateUrl: templateUrl,
         controller: 'ProjectsCtrl'
+      // })
+      // .otherwise({
+      //   templateUrl: '/views/errors/404.html'
       });
+
+    // If you remove this, you break the whole application
+    // $locationProvider.html5Mode(true);
 
   }]);

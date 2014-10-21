@@ -11,7 +11,7 @@ angular.module('practiceMonitoringAssessmentApp')
   .provider('Feature', function () {
 
 
-    this.$get = ['$resource', 'Template', function ($resource, Template) {
+    this.$get = ['$resource', '$rootScope', 'Template', function ($resource, $rootScope, Template) {
 
       var Feature = $resource('//api.commonscloud.org/v2/:storage.json', {
 
@@ -52,7 +52,7 @@ angular.module('practiceMonitoringAssessmentApp')
         });
         
         return promise;     
-      }
+      };
 
       Feature.GetSingleFeatures = function(templateId, featureId) {
         
@@ -61,7 +61,7 @@ angular.module('practiceMonitoringAssessmentApp')
         });
         
         return promise;     
-      }
+      };
 
       Feature.GetTemplate = function(templateId, page) {
   
@@ -92,6 +92,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
         return promise;
       };
+
       Feature.GetFeatures = function(options) {
 
         var promise = Feature.query({
@@ -130,7 +131,7 @@ angular.module('practiceMonitoringAssessmentApp')
           });
 
         return promise;
-      }
+      };
 
       return Feature;
     }];

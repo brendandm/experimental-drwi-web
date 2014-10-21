@@ -54,7 +54,7 @@ angular.module('practiceMonitoringAssessmentApp')
         });
 
         return processed_fields;
-      }
+      };
 
       Field.GetPreparedFields = function(templateId) {
 
@@ -65,7 +65,7 @@ angular.module('practiceMonitoringAssessmentApp')
             return Field.PrepareFields(response);
           });
 
-        return promise
+        return promise;
       };
 
 
@@ -78,7 +78,7 @@ angular.module('practiceMonitoringAssessmentApp')
             return response;
           });
 
-        return promise
+        return promise;
       };
 
       Field.GetField = function(templateId, fieldId) {
@@ -91,7 +91,7 @@ angular.module('practiceMonitoringAssessmentApp')
             return response.response;
           });
 
-        return promise
+        return promise;
       };
 
       return Field;
