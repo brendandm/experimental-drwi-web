@@ -32,7 +32,7 @@ angular
 
     $routeProvider
       .when('/', {
-        templateUrl: '/views/index.html',
+        templateUrl: '/views/main.html',
         controller: 'IndexCtrl',
         resolve: {
           user: function(User) {
@@ -50,27 +50,57 @@ angular
       })
       .when('/users', {
         templateUrl: templateUrl,
-        controller: 'UsersCtrl'
+        controller: 'UsersCtrl',
+        resolve: {
+          user: function(User) {
+            return User.getUser();
+          }
+        }
       })
       .when('/reports', {
         templateUrl: templateUrl,
-        controller: 'ReportsCtrl'
+        controller: 'ReportsCtrl',
+        resolve: {
+          user: function(User) {
+            return User.getUser();
+          }
+        }
       })
       .when('/metrics', {
         templateUrl: templateUrl,
-        controller: 'MetricsCtrl'
+        controller: 'MetricsCtrl',
+        resolve: {
+          user: function(User) {
+            return User.getUser();
+          }
+        }
       })
       .when('/practices', {
         templateUrl: templateUrl,
-        controller: 'PracticesCtrl'
+        controller: 'PracticesCtrl',
+        resolve: {
+          user: function(User) {
+            return User.getUser();
+          }
+        }
       })
       .when('/sites', {
         templateUrl: templateUrl,
-        controller: 'SitesCtrl'
+        controller: 'SitesCtrl',
+        resolve: {
+          user: function(User) {
+            return User.getUser();
+          }
+        }
       })
       .when('/projects', {
         templateUrl: templateUrl,
-        controller: 'ProjectsCtrl'
+        controller: 'ProjectsCtrl',
+        resolve: {
+          user: function(User) {
+            return User.getUser();
+          }
+        }
       })
       .otherwise({
         templateUrl: '/views/errors/404.html'

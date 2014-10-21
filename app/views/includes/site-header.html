@@ -1,22 +1,16 @@
-<header role="banner" class="site-header row">
+<header role="banner" class="site-header">
+  <div class="container">  
+    <div class="row">
+      <section class="site-brand column-8">
+        <a href="/projects"><img src="/images/logo-NFWF-reverse.png" width="100" title="Commons Cloud Data Explorer" alt="Commons Cloud Data Explorer" class="img-responsive" /></a>
+      </section>
 
-  <section class="site-brand column-9">
-    <a href="/" title="Return to the {{ $root.site.title }} home page">
-      <img data-ng-if="page.header.size !== 'small' && $root.site.logo.large !== null" src="{{ $root.site.logo.large }}" alt="{{ $root.site.title }} Logo" width="250" />
-      <img data-ng-if="page.header.size === 'small' && $root.site.logo.small !== null" src="{{ $root.site.logo.small }}" alt="{{ $root.site.title }} Logo" width="250" />
-    </a>
-  </section>
-
-  <div data-ng-if="page.header.size !== 'small'" class="column-1"></div>
-
-  <section data-ng-if="page.header.size !== 'small'" class="site-navigation column-6">
-    <nav role="navigation">
-      <ul class="navigation-global">
-        <li data-ng-repeat="item in menu | toArray | orderBy:'order':false" class="{{ item.class }}">
-          <a href="{{ item.href }}" title="{{ item.title }}" class="{{ item.active }}">{{ item.name }}</a>
-        </li>
-      </ul>
-    </nav>
-  </section>
-
+      <nav class="site-navigation-utility column-8 align-right">
+        <ul class="utility-navigation">
+          <li><a href="/logout" class="logout">Logout</a></li>
+          <li><a href="//api.commonscloud.org/user/profile" class="user"><img data-ng-if="$root.user.email" gravatar-src="'{{ $root.user.email }}'" gravatar-size="24" /></a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
 </header>

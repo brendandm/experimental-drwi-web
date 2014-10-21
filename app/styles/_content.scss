@@ -1,0 +1,41 @@
+//
+// _content.scss
+//
+// This stylesheet is written in SASS(1) and contains site specific layout
+// elements.
+//
+// @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
+//
+
+//
+// Site Header
+//
+.site-header {
+  background-color: $color-blue-base;
+}
+
+//
+// Site Footer
+//
+.security-label {
+  opacity: 0.25;
+}
+
+//
+// Page Content
+//
+
+  //
+  // Login Element
+  //
+  .login {
+    background-color: $color-white-base;
+    border: 1px solid $color-white-darker;
+    margin: 48px 0;
+    padding: 48px 0;
+
+    img {
+      padding-bottom: 16px;
+    }
+  }
+

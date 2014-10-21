@@ -10,7 +10,7 @@
 //
 // Global Navigation
 //
-nav {
+.primary-navigation {
   margin-top: 32px;
 
   ul {
@@ -39,4 +39,59 @@ nav {
       }
     }
   }
+}
+
+
+//
+// Utility Navigation
+//
+.utility-navigation {
+  background-color: transparent;
+  border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  margin: 4px 0 0;
+  padding: 0;
+
+  .user img {
+    border-radius: 24px;
+    -moz-border-radius: 24px;
+    -webkit-border-radius: 24px;
+    margin-top: 0;
+    vertical-align: text-top;
+  }
+
+  > li {
+    display: inline;
+    display: inline-block;
+    font-family: $font-sans;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    margin-left: 8px;
+    -webkit-font-smoothing: antialiased;
+    text-transform: uppercase;
+    vertical-align: middle;
+
+    &.active {
+      font-weight: 700;
+    }
+
+    > a {
+      background-color: transparent;
+      color: $color-white-base;
+      padding: 0;
+
+      &:hover {
+        color: $color-white-base;
+        text-decoration: none;
+      }
+    }
+
+    .glyphicon {
+      font-size: 16px;
+      margin-right: 8px;
+    }
+  }
+  
 }

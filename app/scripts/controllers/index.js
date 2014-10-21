@@ -12,6 +12,18 @@ angular.module('practiceMonitoringAssessmentApp')
 
     var session_cookie = ipCookie('COMMONS_SESSION');
 
+    //
+    // Setup basic page variables
+    //
+    $scope.page = {
+      template: '/views/index.html',
+      title: 'NFWF Grant Monitoring and Assessment',
+      back: '/',
+      header: {
+        hidden: true
+      }
+    };
+
     $scope.setupLoginPage = function() {
       var host = $location.host();
 
