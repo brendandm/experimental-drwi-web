@@ -2,20 +2,20 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:MainCtrl
+ * @name practiceMonitoringAssessmentApp.controller:ProjectsCtrl
  * @description
- * # MainCtrl
+ * # ProjectsCtrl
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('MainCtrl', ['$rootScope', '$scope', function ($rootScope, $scope) {
+  .controller('ProjectsCtrl', ['$rootScope', '$scope', function ($rootScope, $scope) {
 
     //
     // Setup basic page variables
     //
     $scope.page = {
-      template: '/views/index.html',
-      title: 'Welcome',
+      template: '/views/projects.html',
+      title: 'Projects',
       back: '/'
     };
 

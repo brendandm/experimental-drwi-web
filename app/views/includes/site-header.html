@@ -2,8 +2,8 @@
 
   <section class="site-brand column-9">
     <a href="/" title="Return to the {{ $root.site.title }} home page">
-      <img data-ng-if="page.header.size !== 'small'" src="/images/logo-CleanWaterCommunities-Color-Final.png" alt="{{ $root.site.title }} Logo" width="250" />
-      <img data-ng-if="page.header.size === 'small'" src="/images/logo-CleanWaterCommunities-TypeOnly.png" alt="{{ $root.site.title }} Logo" width="250" />
+      <img data-ng-if="page.header.size !== 'small' && $root.site.logo.large" src="{{ $root.site.logo.large }}" alt="{{ $root.site.title }} Logo" width="250" />
+      <img data-ng-if="page.header.size === 'small' && $root.site.logo.small" src="{{ $root.site.logo.small }}" alt="{{ $root.site.title }} Logo" width="250" />
     </a>
   </section>
 
