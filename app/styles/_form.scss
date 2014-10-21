@@ -1,0 +1,324 @@
+//
+// _form.scss
+//
+// This stylesheet is written in SASS(1) and contains site wide form
+// specifications.
+//
+// @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
+//
+
+
+//
+// Form
+//
+.form {
+  margin: 32px auto;
+
+  &.form-narrow {
+    width: 80%;
+  }
+
+  &.form-wide {
+    width: 100%;
+  }
+}
+
+.form-group {
+  margin-bottom: 32px;
+}
+
+.control-label {
+  
+}
+
+.form-control {
+  
+}
+
+
+//
+// Input fields
+//
+input.form-control {
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid lighten($color-black-lighter, 25%);
+
+  color: $color-black-lighter;
+
+  font-family: $font-sans-plain;
+  font-size: 1em;
+  font-weight: 300;
+
+  line-height: 1.2;
+
+  margin: 0;
+  padding: 0;
+
+  width: 100%;
+
+  &:focus {
+    border-bottom: 1px solid $color-blue-base;
+    outline: 0;
+    box-shadow: none;
+  }
+
+  &.input-lg {
+    font-size: 1.25em;
+    height: 34px;
+  }
+
+  &.input-xl {
+    font-size: 1.5em;
+    height: 36px;
+  }
+
+  &.readonly {
+    border-bottom: 1px dashed lighten($color-black-lighter, 45%);
+    color: lighten($color-black-lighter, 25%);
+    cursor: not-allowed;
+  }
+
+  &.highlight {
+    color: $color-blue-base;
+    font-weight: 600;
+  }
+}
+
+  //
+  // Input Placeholder Text
+  //
+  ::-webkit-input-placeholder {
+    color: lighten($color-black-lighter, 40%);
+    font-family: $font-sans-plain;
+    font-size: 1em;
+    font-weight: 300;
+  }
+
+  :-moz-placeholder { /* Firefox 18- */
+    color: lighten($color-black-lighter, 40%);
+    font-family: $font-sans-plain;
+    font-size: 1em;
+    font-weight: 300;
+  }
+
+  ::-moz-placeholder {  /* Firefox 19+ */
+    color: lighten($color-black-lighter, 40%);
+    font-family: $font-sans-plain;
+    font-size: 1em;
+    font-weight: 300;
+  }
+
+  :-ms-input-placeholder {  
+    color: lighten($color-black-lighter, 40%);
+    font-family: $font-sans-plain;
+    font-size: 1em;
+    font-weight: 300;
+  }
+
+
+//
+// Select/Drop Down fields
+//
+select.form-control {
+  background: url(/images/Retina-Icons-v_1.0_Arrow7-16x8.png) transparent no-repeat 98% 13px;
+  
+  border-radius: 0;
+  -moz-border-radius: 0;
+  -o-border-radius: 0;
+  -webkit-border-radius: 0;
+  border: 0;
+  border-bottom: 1px solid lighten($color-black-lighter, 25%);
+
+  color: $color-black-lighter;
+
+  font-family: $font-sans-plain;
+  font-size: 1em;
+  font-weight: 300;
+
+  line-height: 1.2;
+
+  margin: 0;
+  padding: 0;
+
+  width: 100%;
+
+  -webkit-appearance: none;
+
+  &:focus {
+    border-bottom: 1px solid $color-blue-base;
+    outline: 0;
+    box-shadow: none;
+  }
+
+  &.select-lg {
+    font-size: 1.25em;
+    height: 34px;
+  }
+
+  &.select-xl {
+    font-size: 1.5em;
+    height: 37px;
+  }
+}
+
+
+//
+// Labels
+//
+.control-label,
+label.control-label {
+  font-family: $font-sans-plain;
+  color: rgb(153,153,153);
+  font-size: 0.75em;
+  font-weight: 300;
+  line-height: 1;
+  margin-bottom: 0;
+  text-transform: none;
+}
+
+label.control-label {
+  text-transform: uppercase;
+}
+
+//
+// Help Text
+//
+.help-text {
+  font-family: $font-sans-plain;
+  color: rgb(153,153,153);
+  font-size: 0.6875em;
+  font-weight: 300;
+  line-height: 1;
+  margin-top: 2px;
+  margin-bottom: 0;
+}
+
+//
+// Buttons
+//
+a.button,
+a.button:hover,
+.button,
+.button:hover {
+  background-color: darken($color-green-base, 10%);
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  box-shadow: 0px 2px 3px rgba(0,0,0,0.2);
+  color: rgb(255, 255, 255);
+  display: inline-block;
+  font-family: $font-sans;
+  font-size: 0.875em;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0.025em;
+  padding: 10px 20px;
+  text-decoration: none;
+  text-align: center;
+  text-shadow: none;
+  text-transform: uppercase;
+  &:hover {
+    background-color: $color-green-base;
+  }
+}
+
+.button.button-inverse,
+.button.button-inverse:hover {
+  background-color: $color-white-base;
+  border: 2px solid darken($color-green-base, 10%);
+  color: darken($color-green-base, 10%);
+
+  &:hover {
+    background-color: $color-white-base;
+    border: 2px solid $color-green-base;
+  }
+}
+
+.button:active {
+  position:relative;
+  top: 1px;
+}
+
+.button.button-default,
+.button.button-default:hover {
+  background-color: rgb(252,252,252);
+  color: rgb(58,58,58);
+}
+
+.button.button-info,
+.button.button-info:hover {
+  background-color: darken($color-blue-base, 5%);
+  color: rgb(252,252,252);
+  &:hover {
+    background-color: $color-blue-base;
+  }
+}
+  .button.button-info.button-inverse,
+  .button.button-info.button-inverse:hover {
+    background-color: $color-white-base;
+    border: 2px solid darken($color-blue-base, 5%);
+    color: darken($color-blue-base, 5%);
+
+    &:hover {
+      background-color: $color-white-base;
+      border: 2px solid $color-blue-base;
+    }
+  }
+
+.button.button-link,
+.button.button-link:hover {
+  background-color: rgb(252,252,252);
+  border-bottom: 2px solid rgb(252,252,252);
+  box-shadow: none;
+  color: rgb(64, 172, 24);
+  margin: 10px 20px;
+  padding: 0;
+}
+
+.button.button-link:hover {
+  border-bottom: 2px solid rgb(64, 172, 24);
+}
+
+.button.button-cancel,
+.button.button-cancel:hover {
+  background-color: darken($color-red-base, 5%);
+  color: rgb(252,252,252);
+  &:hover {
+    background-color: $color-red-base;
+  }
+}
+  .button.button-cancel.button-inverse,
+  .button.button-cancel.button-inverse:hover {
+    background-color: $color-white-base;
+    border: 2px solid darken($color-red-base, 5%);
+    color: darken($color-red-base, 5%);
+
+    &:hover {
+      background-color: $color-white-base;
+      border: 2px solid $color-red-base;
+    }
+  }
+
+.button.small {
+  font-size: 12px;
+  padding: 2px 10px 3px;
+}
+
+.button.success {
+    background-color: rgb(108,196,14);
+    box-shadow: 0 0.2em 0 darken(rgb(108,196,14), 10%);
+}
+.button.success:active,
+.button.success:focus {
+    box-shadow: 0 0.1em 0 darken(rgb(108,196,14), 10%);
+}
+
+.button.danger {
+  background-color: rgb(187, 17, 17);
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border: 1px solid rgb(147, 17, 17);
+}

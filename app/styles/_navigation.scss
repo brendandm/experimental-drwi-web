@@ -1,0 +1,42 @@
+//
+// _navigation.scss
+//
+// This stylesheet is written in SASS(1) and contains site wide navigation
+// specifications.
+//
+// @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
+//
+
+//
+// Global Navigation
+//
+nav {
+  margin-top: 32px;
+
+  ul {
+      padding: 0;
+
+    li {
+      border-bottom: 1px solid rgba($color-black-base, 0.5);
+      font-family: $font-sans;
+      letter-spacing: 0.25em;
+      list-style: none;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+
+      a,
+      a:active,
+      a:link,
+      a:visited {
+        color: $color-black-base;
+        text-decoration: none;
+
+        &.active,
+        &:hover {
+          color: $color-blue-base;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}

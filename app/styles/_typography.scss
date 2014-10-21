@@ -1,0 +1,180 @@
+//
+// _typography.scss
+//
+// This stylesheet is written in SASS(1) and contains site wide typographic
+// specifications.
+//
+
+
+$base-font-size: 1em;
+
+
+body {
+  font-size: 100.00%; // This makes $base-font-size 16px
+}
+
+
+//
+// Calculating Font Sizes from PX to EM
+//
+// [Desired Pixel Size]/[Base Pixel Size]=[EM Font Size Value]
+//
+// Examples:
+//
+//     24 / 16 = 1.500em
+//     18 / 16 = 1.125em
+//     12 / 16 = 0.750em
+//     10 / 16 = 0.625em
+//
+
+//
+// Calculating Line Height and Margins from PX to EM
+//
+// Example:
+// 
+//     body {
+//       font-size: 100%; // 100% body font-size is the same as saying 16px
+//     }
+//
+//     h1 {
+//       font-size: 3.000em; // 48px (body-font-size*font-size)
+//       line-height: 1; // 48px (1*font-size)
+//       margin-bottom: 0.333em; // 12px (0.250*font-size)
+//       margin-top: 0; // 0px (0*font-size)
+//     }
+//
+//
+
+
+//
+// Global Typeographic Styles
+//
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+li {
+  font-family: $font-serif;
+  color: $color-black-base;
+  line-height: 1.5;
+  letter-spacing: 0.025em;
+}
+
+h1 {
+  font-size: 3em;
+  font-weight: 200;
+  line-height: 1;
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+h2, p.lead {
+  font-size: 1.8em;
+  line-height: 1.3;
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+p.introduction {
+  font-size: 2em;
+  line-height: 1.4;
+  max-width: 70%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+h2.sans {
+  font-family: $font-sans;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+h3 {
+  font-family: $font-sans;
+  font-size: 1.000em;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin: 0 0 16px;
+}
+
+h3.alt {
+  color: $color-blue-base;
+  font-family: $font-sans;
+  font-size: 1.250em;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+h4 {
+  font-size: 1.250em;
+  font-weight: 100;
+  margin: 0 0 24px;
+}
+
+h5 {
+  font-size: 1.000em;
+  font-weight: 500;
+  margin: 0 0 24px;
+}
+
+h6 {
+  font-size: 0.750em;
+  font-weight: bold;
+  margin: 0 0 24px;
+}
+
+p,
+address {
+  font-size: 1em;
+  font-weight: 100;
+  font-style: normal;
+  margin: 0 0 16px;
+}
+
+em {
+  font-style: italic;
+}
+
+ul {
+  list-style-type: square;
+  margin: 0 0 32px;
+}
+
+ol {
+  // default settings
+}
+
+li {
+  font-size: 1.000em;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid rgb(225,225,225);
+  clear: both;
+  float: left;
+  margin-top: 32px;
+  margin-bottom: 32px;
+  width: 100%;
+}
+
+
+//
+// Global Hyperlink Styles
+// 
+a,
+a:active,
+a:link,
+a:visited {
+  color: $color-blue-base;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a:hover {
+  color: $color-blue-base;
+  text-decoration: underline;
+}

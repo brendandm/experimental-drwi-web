@@ -1,0 +1,467 @@
+//
+// _layout.scss
+//
+// This stylesheet is written in SASS(1) and contains site wide layout
+// specifications. The grid system within this page was generated using
+// the Susy(2) build tool.
+//
+// @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
+// @see (2) http://susydocs.oddbird.net/en/latest/
+//
+
+// bower:scss
+@import "susy/sass/_susy.scss";
+// endbower
+
+
+//
+// Default Screen Sizes
+//
+$screen-xl-min: 100em; // Large devices 1280px and up
+$screen-xl-min-container: 90em;
+
+$screen-lg-min: 80em; // Large devices 1280px and up
+
+$screen-md-min: 55em; // Medium devices 880px and up
+$screen-md-min-container: 80em;
+
+$screen-sm-min: 48em; // Small devices 768px and up
+
+$screen-xs-landscape-min: 30em; // Extra small device, landscape orientation up to 480px
+$screen-xs-portrait-min: 20em; // Extra small device, portrait orientation up to 320px
+
+
+//
+// Grid System
+//
+$susy: (
+  flow: ltr,
+  math: fluid,
+  output: float,
+  gutter-position: split,
+  container: auto,
+  container-position: center,
+  columns: 16,
+  gutters: 0.25,
+  column-width: 4em,
+  global-box-sizing: border-box
+);
+
+
+//
+// Default to a small device size, such as a smart phone
+//
+.container {
+  @include container($screen-sm-min); // Base pixel size is 16px, so 80em === 1280px
+  margin: 0;
+  padding: 0 1em;
+}
+
+.element-invisible {
+  display: none;
+}
+
+.element-hidden {
+  visibility: hidden;
+}
+
+//
+// Show the grid layout
+//
+.show-grid {
+  [class*="row"] {
+    border-bottom: 1px solid $color-grid-border !important;
+    border-top: 1px solid $color-grid-border !important;
+  }
+  [class*="column-"] {
+    background-color: $color-grid-background !important;
+
+    border-left: 1px solid $color-grid-border !important;
+    border-right: 1px solid $color-grid-border !important;
+
+    min-height: 12px !important;
+
+    opacity: 0.5 !important;
+
+  }
+}
+
+  .row {
+    float: left;
+    margin: 8px 0;
+    padding: 0;
+    width: 100%;
+
+    .row {
+      margin: 0;
+    }
+  }
+
+  [class*="column-"] {
+    box-sizing: border-box;
+    min-height: 1px;
+  }
+
+  //
+  // Extra Small Device sizes
+  //
+  //  Nexus 5 phone and iPhone
+  //
+  @media screen and (min-width: $screen-xs-landscape-min) {
+    body {
+      
+    }
+
+    .hidden-sm {
+      display: none;
+    }
+  }
+
+  @media screen and (min-width: $screen-xs-portrait-min) {
+    body {
+
+    }
+
+    .hidden-sm {
+      display: none;
+    }
+  }
+
+  //
+  // Small Device sizes
+  //
+  //  Tablets such as the Nexus or iPad
+  //
+  @media screen and (min-width: $screen-sm-min) {
+    .container {
+      @include container($screen-sm-min);
+    }
+
+    .hidden-sm {
+      display: none;
+    }
+
+    .visible-sm {
+      display: block;
+    }
+
+    [class*="column-"] {
+      box-sizing: border-box;
+    }
+
+    .column-1 {
+      @include span(4);
+    }
+    .column-2 {
+      @include span(4);
+    }
+    .column-3 {
+      @include span(4);
+    }
+    .column-4 {
+      @include span(4);
+    }
+    .column-5 {
+      @include span(8);
+    }
+    .column-6 {
+      @include span(8);
+    }
+    .column-7 {
+      @include span(8);
+    }
+    .column-8 {
+      @include span(8);
+    }
+    .column-9 {
+      @include span(12);
+    }
+    .column-10 {
+      @include span(12);
+    }
+    .column-11 {
+      @include span(12);
+    }
+    .column-12 {
+      @include span(12);
+    }
+    .column-13 {
+      @include span(16);
+    }
+    .column-14 {
+      @include span(16);
+    }
+    .column-15 {
+      @include span(16);
+    }
+    .column-16 {
+      @include span(16);
+    }
+  }  
+
+  //
+  // Medium Device sizes
+  //
+  //   Medium desktop displays such as 13" and below laptops
+  //
+  @media screen and (min-width: $screen-md-min) {
+    .container {
+      @include container($screen-md-min-container);
+    }
+
+    .hidden-md {
+      display: none;
+    }
+
+    .hidden-sm,
+    .visible-md,
+    .hidden-lg {
+      display: block;
+    }
+
+    .map {
+      display: inline-block;
+      height: 40em;
+      width: 100%;
+    }
+
+    .column-1 {
+      @include span(1);
+    }
+    .column-2 {
+      @include span(2);
+    }
+    .column-3 {
+      @include span(3);
+    }
+    .column-4 {
+      @include span(4);
+    }
+    .column-5 {
+      @include span(5);
+    }
+    .column-6 {
+      @include span(6);
+    }
+    .column-7 {
+      @include span(7);
+    }
+    .column-8 {
+      @include span(8);
+    }
+    .column-9 {
+      @include span(9);
+    }
+    .column-10 {
+      @include span(10);
+    }
+    .column-11 {
+      @include span(11);
+    }
+    .column-12 {
+      @include span(12);
+    }
+    .column-13 {
+      @include span(13);
+    }
+    .column-14 {
+      @include span(14);
+    }
+    .column-15 {
+      @include span(15);
+    }
+    .column-16 {
+      @include span(16);
+    }
+
+  }
+
+  //
+  // Large Device sizes
+  //
+  //   Large desktop displays of 1280px and higher, for example Macbook Pro, Macbook Air, and other desktops
+  //
+  @media screen and (min-width: $screen-lg-min) {
+    .container {
+      @include container($screen-lg-min);
+    }
+
+    .hidden-lg {
+      display: none;
+    }
+
+    .map {
+      display: inline-block;
+      height: 40em;
+      width: 100%;
+    }
+
+    .visible-lg,
+    .hidden-sm,
+    .hidden-md {
+      display: block;
+    }
+
+    .column-1 {
+      @include span(1);
+    }
+    .column-2 {
+      @include span(2);
+    }
+    .column-3 {
+      @include span(3);
+    }
+    .column-4 {
+      @include span(4);
+    }
+    .column-5 {
+      @include span(5);
+    }
+    .column-6 {
+      @include span(6);
+    }
+    .column-7 {
+      @include span(7);
+    }
+    .column-8 {
+      @include span(8);
+    }
+    .column-9 {
+      @include span(9);
+    }
+    .column-10 {
+      @include span(10);
+    }
+    .column-11 {
+      @include span(11);
+    }
+    .column-12 {
+      @include span(12);
+    }
+    .column-13 {
+      @include span(13);
+    }
+    .column-14 {
+      @include span(14);
+    }
+    .column-15 {
+      @include span(15);
+    }
+    .column-16 {
+      @include span(16);
+    }
+  }
+
+
+  //
+  // Large Device sizes
+  //
+  //   Large desktop displays of 1600px and higher, for example Apple Cinema Displays and Televisions
+  //
+  @media screen and (min-width: $screen-xl-min) {
+    body {
+      font-size: 118%;
+    }
+    
+    .container {
+      @include container($screen-lg-min);
+    }
+
+    .map {
+      display: inline-block;
+      height: 60em;
+      width: 100%;
+    }
+
+    .hidden-lg {
+      display: none;
+    }
+
+    .visible-lg,
+    .hidden-sm,
+    .hidden-md {
+      display: block;
+    }
+
+    .column-1 {
+      @include span(1);
+    }
+    .column-2 {
+      @include span(2);
+    }
+    .column-3 {
+      @include span(3);
+    }
+    .column-4 {
+      @include span(4);
+    }
+    .column-5 {
+      @include span(5);
+    }
+    .column-6 {
+      @include span(6);
+    }
+    .column-7 {
+      @include span(7);
+    }
+    .column-8 {
+      @include span(8);
+    }
+    .column-9 {
+      @include span(9);
+    }
+    .column-10 {
+      @include span(10);
+    }
+    .column-11 {
+      @include span(11);
+    }
+    .column-12 {
+      @include span(12);
+    }
+    .column-13 {
+      @include span(13);
+    }
+    .column-14 {
+      @include span(14);
+    }
+    .column-15 {
+      @include span(15);
+    }
+    .column-16 {
+      @include span(16);
+    }
+  }
+
+//
+// Generic
+//
+body {
+  background-color: $color-white-base;
+  color: $color-black-base;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.rule-above {
+  border: 0;
+  border-top: 1px solid $color-white-dark;
+}
+
+.rule-right {
+  border-right: 1px solid $color-white-dark;
+}
+
+.rule-below {
+  border: 0;
+  border-bottom: 1px solid $color-white-dark;
+}
+
+.rule-left {
+  border-left: 1px solid $color-white-dark;
+}
+
+.no-rule {
+  border: 0 !important;
+}
