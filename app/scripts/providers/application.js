@@ -8,7 +8,7 @@
  * Service in the practiceMonitoringAssessmentApp.
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .provider('application', function application() {
+  .provider('Application', function application() {
     
     this.$get = ['$resource', '$location', '$rootScope', function($resource, $location, $rootScope) {
 

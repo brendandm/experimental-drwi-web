@@ -8,7 +8,7 @@
  * Provider in the practiceMonitoringAssessmentApp.
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .provider('feature', function () {
+  .provider('Feature', function () {
 
 
     this.$get = ['$resource', 'Template', function ($resource, Template) {

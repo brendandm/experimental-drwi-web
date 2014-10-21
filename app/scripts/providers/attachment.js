@@ -8,7 +8,7 @@
  * Service in the practiceMonitoringAssessmentApp.
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .provider('attachment', function attachment() {
+  .provider('Attachment', function attachment() {
 
     this.$get = ['$resource', function ($resource) {
 

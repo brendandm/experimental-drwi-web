@@ -1,0 +1,506 @@
+@import url(http://fonts.googleapis.com/css?family=Crimson+Text:400,400italic,700,700italic);
+@import url(https://fonts.googleapis.com/css?family=RobotoDraft:400,500,700,400italic);
+
+//
+// Color Variables
+//
+$color-black-base: rgb(31,33,32);
+$color-black-light: rgb(77,77,77);
+$color-white-base: rgb(242,242,242);
+
+$color-blue-base: rgb(1, 62, 129);
+$color-green-base: rgb(177, 193, 29);
+
+
+//
+// Typography Variables
+//
+$font-serif: "Crimson Text", "Times New Roman", "Times", serif;;
+$font-sans: "RobotoDraft", "helvetica neue", "helvetica", arial, sans-serif;
+
+
+//
+// Global Layout Styles
+//
+body {
+  background-color: $color-white-base;
+  color: $color-black-base;
+  margin: 72px auto 0;
+}
+
+.page-header {
+  padding-bottom: 32px;
+  margin-bottom: 32px;
+  border: 0;
+  border-bottom: 1px solid rgb(225,225,225);
+}
+
+//
+// Global Typeographic Styles
+//
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+li {
+  font-family: $font-serif;
+  color: $color-black-base;
+  line-height: 1.5;
+}
+
+h1 {
+  font-size: 48px;
+  font-weight: 200;
+  margin-top: 0;
+}
+
+h2, p.lead {
+  font-size: 24px;
+  line-height: 1.4;
+}
+
+p.introduction {
+  font-size: 32px;
+  line-height: 1.4;
+  max-width: 70%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+h2.sans {
+  font-family: $font-sans;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+h3 {
+  font-family: $font-sans;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+h4 {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+h5 {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+h6 {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+p {
+  font-size: 16px;
+  margin: 0 0 32px;
+}
+
+ul {
+  list-style-type: square;
+  margin: 0 0 32px;
+}
+
+ol {
+  // default settings
+}
+
+li {
+  font-size: 16px;
+}
+
+hr {
+  margin-top: 32px;
+  margin-bottom: 32px;
+  border: 0;
+  border-top: 1px solid rgb(225,225,225);
+}
+
+
+//
+// Link Styles
+// 
+a,
+a:active,
+a:link {
+  color: $color-blue-base;
+  text-decoration: none;
+}
+
+a:hover {
+  color: darken($color-blue-base, 5%);
+  text-decoration: underline;
+}
+
+a:visited {
+  color: darken($color-blue-base, 10%);
+  text-decoration: underline;
+}
+
+//
+// Brand
+//
+.navbar-brand {
+  padding: 4px 16px 0;
+}
+
+.navbar-inverse .navbar-toggle {
+  border-color: transparent;
+  margin-left: 4px;
+}
+
+.reverse {
+  background-color: $color-black-base;
+  padding: 12px 0;
+}
+
+.branding .img-responsive {
+  margin: 0 auto;
+}
+
+//
+// Color Chips
+//
+.color-chip {
+  border: 1px solid rgb(225,225,225);
+  display: block;
+  min-height: 120px;
+  margin: 0 auto;
+  width: 120px;
+
+  &.chip-1 {
+    background-color: $color-black-base;
+  }
+
+  &.chip-2 {
+    background-color: $color-white-base;
+  }
+
+  &.chip-3 {
+    background-color: $color-blue-base;
+  }
+
+  &.chip-4 {
+    background-color: $color-green-base;
+  }
+}
+
+//
+// Navigation
+//
+.navbar {
+
+  ul {
+
+    li {
+      font-family: $font-sans;
+
+      a,
+      a:active,
+      a:link,
+      a:visited {
+        color: $color-white-base;
+        text-decoration: none;
+
+        &:hover {
+          color: darken($color-white-base, 15%);
+          text-decoration: none;
+        }
+      }
+    }
+  }
+}
+
+
+//
+// Icon Overrides
+//
+.icon-button,
+.icon-button:active,
+.icon-button:link,
+.icon-button:visited {
+  background-color: rgb(255,255,255);
+/*  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+*/ 
+  color: $color-blue-base;
+  padding: 6px 12px;
+  font-family: $font-sans;
+  font-weight: 100;
+  text-align: center;
+  text-transform: uppercase;
+
+  .icon-button-label {
+    margin-right: 8px;
+  }
+
+  &:hover {
+    background-color: $color-blue-base;
+    color: rgb(255,255,255);
+    text-decoration: none;
+  }
+}
+
+.icon-matrix {
+  font-size: 32px;
+  line-height: 2.0;
+  padding-top: 64px;
+  .icon-large {
+    font-size: 48px;
+    line-height: 1.0;
+  }
+}
+
+.icon {
+  &.icon-blue {
+    color: $color-blue-base;
+  }
+  &.icon-blue-dark {
+    color: darken($color-blue-base, 15%);
+  }
+  &.icon-green {
+    color: $color-green-base;
+  }
+  &.icon-green-dark {
+    color: darken($color-green-base, 15%);
+  }
+  &.icon-green-darker {
+    color: darken($color-green-base, 25%);
+  }
+  &.icon-gray {
+    color: $color-black-base;
+  }
+}
+
+
+//
+// Form
+//
+.form-group {
+  margin-bottom: 32px;
+}
+
+//
+// Styling for the labels for our various forms
+//
+label,
+label.control-label {
+  color: rgb(153,153,153);
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1;
+  margin-bottom: 0;
+}
+
+label.alt {
+  font-weight: normal;
+  letter-spacing: -0.025em;
+  font-size: 16px;
+  font-family: "DIN Next W01 Medium";
+  color: rgb(88, 88, 88);
+}
+
+.helper.glyphicon {
+  color: rgb(221, 221, 221);
+  font-size: 48px;
+}
+
+.help-block {
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.non-label {
+  margin-bottom: 4px;
+  margin-top: 16px;
+}
+
+.button,
+.button:hover {
+  background-color: rgb(112, 179, 0);
+  border: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  box-shadow: 0px 2px 3px rgba(0,0,0,0.2);
+  color: rgb(255, 255, 255);
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 100;
+  font-style: normal;
+  letter-spacing: 0.025em;
+  padding: 10px 20px;
+  text-decoration: none;
+  text-align: center;
+  text-shadow: none;
+  text-transform: uppercase;
+}
+
+.button:hover {
+  background-color: lighten(rgb(112, 179, 0), 2%);
+}
+
+.button:active {
+  position:relative;
+  top: 1px;
+}
+
+.button.button-default,
+.button.button-default:hover {
+  background-color: rgb(252,252,252);
+  color: rgb(58,58,58);
+}
+
+.button.button-info,
+.button.button-info:hover {
+  background-color: rgb(25, 166, 215);
+  color: rgb(252,252,252);
+}
+
+.button.button-link,
+.button.button-link:hover {
+  background-color: rgb(252,252,252);
+  border-bottom: 2px solid rgb(252,252,252);
+  box-shadow: none;
+  color: rgb(64, 172, 24);
+  margin: 10px 20px;
+  padding: 0;
+}
+
+.button.button-link:hover {
+  border-bottom: 2px solid rgb(64, 172, 24);
+}
+
+.button.button-cancel,
+.button.button-cancel:hover {
+    color: rgb(124,124,124);
+    font-size: 1em;
+    margin-top: 8px;
+    text-decoration: underline;
+}
+
+.button.button-cancel:hover {
+    text-decoration: none;
+}
+
+.button.small {
+  font-size: 12px;
+  padding: 2px 10px 3px;
+}
+
+.btn.btn-link {
+  color: rgb(85,85,85);
+  font-size: 13px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.btn {
+  text-decoration: none;
+}
+
+.btn:hover {
+  text-decoration: none;
+}
+
+.btn.btn-link {
+  text-decoration: underline;
+}
+
+.btn.btn-link:hover {
+  text-decoration: none;
+}
+
+.checkbox {}
+
+  .checkbox.inline {
+    margin-top: 32px;
+  }
+
+  .table td.reorder {
+    color: rgb(196,196,196);
+    vertical-align: middle;
+  }
+  .table td.reorder:hover {
+    color: rgb(64,64,64);
+  }
+
+.sidebar .button {
+  display: block;
+  margin: 16px auto 0;
+}
+
+
+.button.success {
+    background-color: rgb(108,196,14);
+    box-shadow: 0 0.2em 0 darken(rgb(108,196,14), 10%);
+}
+.button.success:active,
+.button.success:focus {
+    box-shadow: 0 0.1em 0 darken(rgb(108,196,14), 10%);
+}
+
+.button.danger {
+  background-color: rgb(187, 17, 17);
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border: 1px solid rgb(147, 17, 17);
+}
+
+
+select {
+  height: 35px;
+}
+
+textarea {
+  height: 34px;
+  max-width: 100%;
+  width: 100%;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: rgb(0, 130, 168);
+  outline: none !important;
+}
+
+.form-control,
+.form-control.input-lg,
+select.form-control,
+select.form-control.input-lg {
+  background: 0;
+  border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+  border-top: 0;
+  box-shadow: none;
+  font-size: 16px;
+  font-weight: 300;
+  height: 34px;
+  line-height: 1.5;
+  padding: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+select.form-control {
+  background: url(../img/Retina-Icons-v_1.0_Arrow7-16x8.png) no-repeat 98% 13px;
+}
+
+.form-control:focus {
+  border-bottom-width: 1px;
+  box-shadow: none;
+}

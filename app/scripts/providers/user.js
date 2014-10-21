@@ -8,7 +8,7 @@
  * Provider in the practiceMonitoringAssessmentApp.
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .provider('user', function () {
+  .provider('User', function () {
 
     this.$get = ['$resource', '$rootScope', '$location', '$q', 'ipCookie', '$timeout', function($resource, $rootScope, $location, $q, ipCookie, $timeout) {
 
