@@ -28,7 +28,10 @@ angular
     //
     // Base template URL for piecing together all partial views
     //
-    var templateUrl = '/views/main.html';
+    var templateUrl = '/views/main.html',
+        storage    = {
+          projects: 'type_061edec30db54fa0b96703b40af8d8ca'
+        };
 
     $routeProvider
       .when('/', {
@@ -57,27 +60,33 @@ angular
           }
         }
       })
-      .when('/reports', {
+      .when('/projects', {
         templateUrl: templateUrl,
-        controller: 'ReportsCtrl',
+        controller: 'ProjectsCtrl',
+        resolve: {
+          user: function(User) {
+            return User.getUser();
+          },
+          projects: function(Feature, $route) {
+            return Feature.GetFeatures({
+              storage: storage.projects,
+              page: $route.current.params.page
+            });
+          }
+        }
+      })
+      .when('/projects/new', {
+        templateUrl: templateUrl,
+        controller: 'ProjectcreateCtrl',
         resolve: {
           user: function(User) {
             return User.getUser();
           }
         }
       })
-      .when('/metrics', {
+      .when('/projects/:projectId', {
         templateUrl: templateUrl,
-        controller: 'MetricsCtrl',
-        resolve: {
-          user: function(User) {
-            return User.getUser();
-          }
-        }
-      })
-      .when('/practices', {
-        templateUrl: templateUrl,
-        controller: 'PracticesCtrl',
+        controller: 'ProjecteditCtrl',
         resolve: {
           user: function(User) {
             return User.getUser();
@@ -93,9 +102,27 @@ angular
           }
         }
       })
-      .when('/projects', {
+      .when('/practices', {
         templateUrl: templateUrl,
-        controller: 'ProjectsCtrl',
+        controller: 'PracticesCtrl',
+        resolve: {
+          user: function(User) {
+            return User.getUser();
+          }
+        }
+      })
+      .when('/metrics', {
+        templateUrl: templateUrl,
+        controller: 'MetricsCtrl',
+        resolve: {
+          user: function(User) {
+            return User.getUser();
+          }
+        }
+      })
+      .when('/reports', {
+        templateUrl: templateUrl,
+        controller: 'ReportsCtrl',
         resolve: {
           user: function(User) {
             return User.getUser();

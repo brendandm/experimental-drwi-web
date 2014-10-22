@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ProjectsCtrl', ['$rootScope', '$scope', function ($rootScope, $scope) {
+  .controller('ProjectsCtrl', ['$rootScope', '$scope', '$route', 'projects', function ($rootScope, $scope, $route, projects) {
 
     //
     // Setup basic page variables
@@ -16,7 +16,14 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.page = {
       template: 'views/projects.html',
       title: 'Projects',
-      back: '/'
+      back: '/',
+      refresh: function() {
+        $route.reload();
+      }
     };
+
+    $scope.projects = projects;
+
+    console.log('$scope.projects', $scope.projects);
 
   }]);

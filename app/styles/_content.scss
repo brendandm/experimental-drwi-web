@@ -24,13 +24,16 @@
 //
 // Page Content
 //
+.site-content {
+  margin: 0 0 48px;
+}
 
   //
   // Login Element
   //
   .login {
-    background-color: $color-white-base;
-    border: 1px solid $color-white-darker;
+    // background-color: $color-white-base;
+    // border: 1px solid $color-white-darker;
     margin: 48px 0;
     padding: 48px 0;
 
@@ -39,3 +42,117 @@
     }
   }
 
+
+  //
+  // List
+  //
+  .list {
+    .list-item {
+      border-top: 1px solid $color-white-darker;
+      margin: 0;
+      padding: 32px 0 24px;
+
+      &:hover {
+        background-color: rgb(248,248,248);
+      }
+
+      .list-item-content {
+        h1 {
+          font-family: $font-sans;
+          font-size: 1.25em;
+          font-weight: 300;
+          letter-spacing: 0;
+          line-height: 1.2;
+          margin-bottom: 12px;
+        }
+
+        h2 {
+          color: $color-black-lightest;
+          font-family: $font-sans;
+          font-size: 0.875em;
+          font-weight: 300;
+          letter-spacing: 0;
+          line-height: 1.2;
+          margin-bottom: 8px;
+        }
+
+        h4 {
+          color: $color-black-lightest;
+          font-family: $font-sans;
+          font-size: 0.875em;
+          font-weight: 300;
+          letter-spacing: 0;
+          line-height: 1.2;
+          margin-bottom: 8px;
+
+          strong {
+            color: $color-black-lighter;
+            font-weight: 300;
+          }
+        }
+
+      }
+    }
+  }
+
+  //
+  // Toolbox
+  //
+  .toolbox {
+    margin: 36px 0;
+
+    .page-title {
+      font-family: $font-sans;
+      font-size: 1em;
+      font-weight: 500;
+      line-height: 1.5;
+      margin: 0;
+      text-transform: uppercase;
+    }
+  }
+
+
+  //
+  // Pager
+  //
+  .pager, .batch {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      list-style-type: none;
+      &> a {
+        border-radius: 0;
+        -webkit-border-radius: 0;
+        -moz-border-radius: 0;
+        background-color: $color-white-base;
+        border: 1px solid $color-white-dark;
+        color: darken($color-black-base, 5%);
+        display: inline;
+        display: inline-block;
+        padding: 6px 10px;
+
+        &:hover {
+          background-color: darken($color-white-base, 2%);
+        }
+
+        .icon {
+          position: relative;
+        }
+
+        &.refresh {
+          padding: 3px 10px;
+        }
+      }  
+      &.previous a {
+        margin-right: -1px;
+      }
+    }
+    
+    li > span {
+      border: 0;
+      line-height: 2;
+      margin-right: 16px;
+    }
+  }
