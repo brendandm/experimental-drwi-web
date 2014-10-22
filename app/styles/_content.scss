@@ -25,6 +25,7 @@
 // Page Content
 //
 .site-content {
+  float: left;
   margin: 0 0 48px;
 }
 
@@ -103,56 +104,16 @@
 
     .page-title {
       font-family: $font-sans;
-      font-size: 1em;
+      font-size: 1.125em;
       font-weight: 500;
+      letter-spacing: 0;
       line-height: 1.5;
       margin: 0;
       text-transform: uppercase;
     }
   }
 
-
-  //
-  // Pager
-  //
-  .pager, .batch {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-
-    li {
-      list-style-type: none;
-      &> a {
-        border-radius: 0;
-        -webkit-border-radius: 0;
-        -moz-border-radius: 0;
-        background-color: $color-white-base;
-        border: 1px solid $color-white-dark;
-        color: darken($color-black-base, 5%);
-        display: inline;
-        display: inline-block;
-        padding: 6px 10px;
-
-        &:hover {
-          background-color: darken($color-white-base, 2%);
-        }
-
-        .icon {
-          position: relative;
-        }
-
-        &.refresh {
-          padding: 3px 10px;
-        }
-      }  
-      &.previous a {
-        margin-right: -1px;
-      }
-    }
-    
-    li > span {
-      border: 0;
-      line-height: 2;
-      margin-right: 16px;
-    }
+  .site-content .toolbox {
+    margin-top: 0;
   }
+

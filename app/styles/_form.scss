@@ -322,3 +322,42 @@ a.button:hover,
   -webkit-border-radius: 5px;
   border: 1px solid rgb(147, 17, 17);
 }
+
+
+//
+// List Filter Form
+//
+.filter {
+  float: left;
+  margin: 0;
+  width: 100%;
+
+  label.filter-label {
+    padding-right: 8px;
+  }
+
+  input.filter-control {
+    background-color: transparent;
+    border: 0;
+
+    color: $color-black-lighter;
+
+    font-family: $font-sans-plain;
+    font-size: 1em;
+    font-weight: 300;
+
+    line-height: 1.2;
+
+    margin: 0;
+    padding: 8px 12px;
+
+    width: 90%;
+
+    &:focus {
+      background-color: $color-white-base;
+      //border-bottom: 1px solid rgb(25,166,215);
+      outline: 0;
+      box-shadow: none;
+    }
+  }
+}

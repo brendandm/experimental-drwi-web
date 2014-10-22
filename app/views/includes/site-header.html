@@ -5,12 +5,33 @@
         <a href="/projects"><img src="/images/logo-NFWF-reverse.png" width="100" title="Commons Cloud Data Explorer" alt="Commons Cloud Data Explorer" class="img-responsive" /></a>
       </section>
 
-      <nav data-ng-if="$root.user.email" class="site-navigation-utility column-8 align-right">
+      <nav class="site-navigation-utility column-8 align-right">
         <ul class="utility-navigation">
-          <li><a href="/logout" class="logout">Logout</a></li>
-          <li><a href="//api.commonscloud.org/user/profile" class="user"><img gravatar-src="'{{ $root.user.email }}'" gravatar-size="24" /></a></li>
+          <li><a class="button-link" data-ng-if="!$root.user.email" target="_blank" href="https://api.commonscloud.org/account/create">Create Account</a></li>
+          <li><a target="_blank" href="http://docs.commonscloud.org/">Need Help?</a></li>
+          <li><a data-ng-if="$root.user.email" href="/logout" class="logout">Logout</a></li>
+          <li><a target="_blank" data-ng-if="$root.user.email" href="//api.commonscloud.org/user/profile" class="user"><img gravatar-src="'{{ $root.user.email }}'" gravatar-size="24" /></a></li>
         </ul>
       </nav>
     </div>
   </div>
 </header>
+
+<section data-ng-if="$root.user.email" class="container">
+  <article class="row toolbox">
+    <header class="column-8">
+      <h1 class="page-title">
+        {{ page.title }}
+      </h1>
+    </header>
+    <nav class="column-8">
+      <ul class="context-navigation">
+        <li>
+          <a data-ng-repeat="link in page.links" href="{{ link.url }}" class="{{ link.type }}">
+            {{ link.text }}
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </article>
+</section>

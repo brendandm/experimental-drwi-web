@@ -50,7 +50,7 @@
   border-radius: 0;
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
-  margin: 4px 0 0;
+  margin: 6px 0 0;
   padding: 0;
 
   .user img {
@@ -86,6 +86,17 @@
         color: $color-white-base;
         text-decoration: none;
       }
+
+      &.button-link {
+        border: 1px solid $color-white-base;
+        padding: 4px 12px 5px;
+        display: inline-block;
+        font-weight: 400;
+
+        &:active {
+          margin: 4px 0 0;
+        }
+      }
     }
 
     .glyphicon {
@@ -94,4 +105,120 @@
     }
   }
   
+}
+
+
+//
+// Page Level/Contextual Navigation
+//
+.context-navigation {
+  background-color: transparent;
+  border-radius: 0;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+
+  > li {
+    display: inline;
+    display: inline-block;
+    font-family: $font-sans;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    margin-left: 8px;
+    -webkit-font-smoothing: antialiased;
+    text-transform: uppercase;
+    vertical-align: middle;
+
+    &.active {
+      font-weight: 700;
+    }
+
+    > a {
+      background-color: transparent;
+      color: $color-white-base;
+      padding: 0;
+
+      &:hover {
+        color: $color-white-base;
+        text-decoration: none;
+      }
+
+      &.button-link {
+        background-color: $color-green-base;
+        color: $color-white-base;
+        padding: 7px 12px;
+        display: inline-block;
+        font-weight: 400;
+        line-height: 1;
+
+        &:hover {
+          background-color: darken($color-green-base, 3%);
+        }
+
+        &.button-inverse {
+          border: 1px solid $color-green-base;
+          color: $color-green-base;
+
+          &:hover {
+            background-color: transparent;
+            border-color: darken($color-green-base, 3%);
+          }
+        }
+
+      }
+    }
+
+  }
+  
+}
+
+
+//
+// Pagination
+//
+//
+.pager, .batch {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  li {
+    list-style-type: none;
+    &> a {
+      border-radius: 0;
+      -webkit-border-radius: 0;
+      -moz-border-radius: 0;
+      background-color: $color-white-base;
+      border: 1px solid $color-white-dark;
+      color: darken($color-black-base, 5%);
+      display: inline;
+      display: inline-block;
+      padding: 6px 10px;
+
+      &:hover {
+        background-color: darken($color-white-base, 2%);
+        text-decoration: none;
+      }
+
+      .icon {
+        position: relative;
+      }
+
+      &.refresh {
+        padding: 3px 10px;
+      }
+    }  
+    &.previous a {
+      margin-right: -1px;
+    }
+  }
+  
+  li > span {
+    border: 0;
+    line-height: 2;
+    margin-right: 16px;
+  }
 }
