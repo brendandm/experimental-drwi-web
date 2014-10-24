@@ -333,7 +333,26 @@ a.button:hover,
   width: 100%;
 
   label.filter-label {
-    padding-right: 8px;
+    background-color: transparent;
+    color: lighten($color-black-base, 50%);
+
+    display: block;
+    display: inline-block;
+
+    font-family: $font-sans-plain;
+    font-size: 1em;
+    font-weight: 300;
+
+    line-height: 1.2;
+
+    padding: 8px 0;
+    margin: 0;
+
+    text-transform: none;
+
+    .icon {
+      font-size: 0.75em;
+    }
   }
 
   input.filter-control {
@@ -351,13 +370,18 @@ a.button:hover,
     margin: 0;
     padding: 8px 12px;
 
-    width: 90%;
+    width: 100%;
 
     &:focus {
       background-color: $color-white-base;
-      //border-bottom: 1px solid rgb(25,166,215);
+      //border-bottom: 1px solid $color-brightBlue;
       outline: 0;
       box-shadow: none;
     }
+  }
+
+  .filter-group {
+    border-left: 3px solid $color-brightBlue;
+    margin-bottom: 2px;
   }
 }

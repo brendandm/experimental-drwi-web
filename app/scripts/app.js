@@ -29,8 +29,9 @@ angular
     // Base template URL for piecing together all partial views
     //
     var templateUrl = '/views/main.html',
-        storage    = {
-          projects: 'type_061edec30db54fa0b96703b40af8d8ca'
+        project = {
+          templateId: 121,
+          storage: 'type_061edec30db54fa0b96703b40af8d8ca'
         };
 
     $routeProvider
@@ -63,13 +64,20 @@ angular
       .when('/projects', {
         templateUrl: templateUrl,
         controller: 'ProjectsCtrl',
+        reloadOnSearch: false,
         resolve: {
           user: function(User) {
             return User.getUser();
           },
+          template: function(Template, $route) {
+            return Template.GetTemplate(project.templateId);
+          },
+          fields: function(Field, $route) {
+            return Field.GetPreparedFields(project.templateId);
+          },
           projects: function(Feature, $route) {
             return Feature.GetFeatures({
-              storage: storage.projects,
+              storage: project.storage,
               page: $route.current.params.page
             });
           }

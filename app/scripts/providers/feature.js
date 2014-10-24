@@ -114,6 +114,28 @@ angular.module('practiceMonitoringAssessmentApp')
         return promise;
       };
 
+      //
+      // Search a specified Feature Collection
+      //
+      //    storage (string) The storage string for the Feature Collection you wish to search
+      //    criteria (object) An object of filters, order by, and other statements
+      //    page (integer) The page number
+      //    
+      //
+      Feature.SearchFeatures = function(storage, criteria, page) {
+
+        var promise = Feature.query({
+            storage: storage,
+            page: (page === undefined || page === null) ? 1: page,
+            q: criteria,
+            updated: new Date().getTime()
+          }).$promise.then(function(response) {
+            return response;
+          });
+
+        return promise;
+      };
+
       Feature.GetFeature = function(options) {
         var promise = Feature.get({
             storage: options.storage,

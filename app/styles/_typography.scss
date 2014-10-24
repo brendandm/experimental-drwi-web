@@ -10,6 +10,7 @@ $base-font-size: 1em;
 
 
 body {
+  font-family: $font-sans;
   font-size: 100.00%; // This makes $base-font-size 16px
 }
 
@@ -57,7 +58,7 @@ h5,
 h6,
 p,
 li {
-  font-family: $font-serif;
+  font-family: $font-sans;
   color: $color-black-base;
   line-height: 1.5;
   letter-spacing: 0.025em;
