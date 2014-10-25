@@ -17,6 +17,7 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.page = {
       template: 'views/projects.html',
       title: 'Projects',
+      display_title: true,
       back: '/',
       links: [
         // {
@@ -72,13 +73,22 @@ angular.module('practiceMonitoringAssessmentApp')
 
 
     //
+    // Create 
+    //
+    $scope.filters.selected = []
+
+
+    //
     // Filter existing Projects to a specified list based on the user's input
     //
     $scope.search = {};
 
-    $scope.search.projects = function() {
+    $scope.search.select = function ($index) {
+      $scope.filters[$index].active = ! $scope.filters[$index].active;
+      console.log('selected_filter', $scope.filters[$index]);
+    };
 
-      console.log('Start Search');
+    $scope.search.projects = function() {
 
       var Q = Search.getFilters($scope.filters);
 

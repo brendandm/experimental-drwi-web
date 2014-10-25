@@ -385,3 +385,18 @@ a.button:hover,
     margin-bottom: 2px;
   }
 }
+
+
+//
+//
+//
+[contenteditable="true"] {
+  border-bottom: 1px dotted $color-white-dark;
+  outline: 0;
+}
+
+[contenteditable="true"]:active,
+[contenteditable="true"]:focus {
+  border-bottom: 1px solid $color-brightBlue;
+  outline: 0;
+}

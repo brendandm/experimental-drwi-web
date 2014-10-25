@@ -85,7 +85,7 @@ angular
       })
       .when('/projects/new', {
         templateUrl: templateUrl,
-        controller: 'ProjectcreateCtrl',
+        controller: 'ProjectCreateCtrl',
         resolve: {
           user: function(User) {
             return User.getUser();
@@ -94,12 +94,21 @@ angular
       })
       .when('/projects/:projectId', {
         templateUrl: templateUrl,
-        controller: 'ProjecteditCtrl',
+        controller: 'ProjectEditCtrl',
         resolve: {
           user: function(User) {
             return User.getUser();
+          },
+          project: function(Feature, $route) {
+            return Feature.GetFeature({
+              storage: project.storage,
+              featureId: $route.current.params.projectId
+            });
           }
         }
+      })
+      .when('/projects/:projectId/edit', {
+        redirectTo: '/projects/:projectId/edit'
       })
       .when('/sites', {
         templateUrl: templateUrl,

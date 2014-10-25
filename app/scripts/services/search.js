@@ -84,9 +84,6 @@ angular.module('practiceMonitoringAssessmentApp')
       
       });
 
-      console.log('processed filters', filters_);
-
-
       return filters_;
     };
 

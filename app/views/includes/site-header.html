@@ -18,20 +18,30 @@
 </header>
 
 <section data-ng-if="$root.user.email" class="container">
-  <article class="row toolbox">
+  <article data-ng-if="page.display_title" class="row toolbox">
     <header class="column-8">
       <h1 class="page-title">
         {{ page.title }}
       </h1>
     </header>
     <nav class="column-8">
-      <ul class="context-navigation">
-        <li>
-          <a data-ng-repeat="link in page.links" href="{{ link.url }}" class="{{ link.type }}">
+      <ul data-ng-if="page.links" class="context-navigation">
+        <li data-ng-repeat="link in page.links">
+          <a href="{{ link.url }}" class="{{ link.type }}">
             {{ link.text }}
           </a>
         </li>
       </ul>
     </nav>
   </article>
-</section>
+  <article data-ng-if="!page.display_title" class="row">
+    <nav class="column-16">
+      <ul data-ng-if="page.links" class="context-navigation crumbs">
+        <li data-ng-repeat="link in page.links">
+          <a href="{{ link.url }}" class="{{ link.type }}">
+            {{ link.text }}
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </article></section>

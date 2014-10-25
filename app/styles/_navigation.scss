@@ -138,11 +138,11 @@
 
     > a {
       background-color: transparent;
-      color: $color-white-base;
+      color: $color-green-base;
       padding: 0;
 
       &:hover {
-        color: $color-white-base;
+        color: darken($color-green-base, 5%);
         text-decoration: none;
       }
 
@@ -173,6 +173,34 @@
 
   }
   
+}
+
+.crumbs {
+  text-align: left;
+  li {
+    margin-left: 0;
+    font-weight: 500;
+    letter-spacing: -0.0125em;
+    text-transform: none;
+
+    &:after {
+      color: $color-black-lightest;
+      content: "/\00a0";
+    }
+    &:last-child {
+      &:after {
+        content: "";
+      }
+    }
+
+    a {
+      color: $color-black-lightest;
+      &:hover,
+      &.active {
+        color: $color-black-base;
+      }
+    }
+  }
 }
 
 
