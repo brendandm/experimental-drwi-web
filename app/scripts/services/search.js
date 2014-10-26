@@ -162,7 +162,7 @@ angular.module('practiceMonitoringAssessmentApp')
         }
       });
 
-      console.log('filters', filters);
+      console.log('Search_.buildFilters', filters);
       return filters;
     };
 

@@ -58,35 +58,37 @@ angular.module('practiceMonitoringAssessmentApp')
     //
     // Setup project filter functionality
     //
+    var filters_ = Search.buildFilters(fields, $scope.defaults);
+
     $scope.filters = {
       page: null,
       results_per_page: null,
       callback: null,
-      selected: [],
-      available: Search.buildFilters(fields, $scope.defaults)
+      selected: filters_,
+      available: filters_
+    };
+
+    $scope.filters.select = function ($index) {
+      $scope.filters.available[$index].active = true;
+      console.log('$scope.filters.select', $scope.filters.available[$index]);
+    };
+
+    $scope.filters.remove = function ($index) {
+      $scope.filters.available[$index].active = false;
     };
 
     $scope.$watch('filters', function(newValue, oldValue) {
       // Execute a search when the filters change
       $scope.search.projects();
+
+      console.log('filters', $scope.filters);
     });
-
-
-    //
-    // Create 
-    //
-    $scope.filters.selected = []
 
 
     //
     // Filter existing Projects to a specified list based on the user's input
     //
     $scope.search = {};
-
-    $scope.search.select = function ($index) {
-      $scope.filters[$index].active = ! $scope.filters[$index].active;
-      console.log('selected_filter', $scope.filters[$index]);
-    };
 
     $scope.search.projects = function() {
 

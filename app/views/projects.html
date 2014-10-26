@@ -4,7 +4,7 @@
     <div class="row toolbox">
 
       <!-- Filter Tools -->
-      <div class="column-8">
+      <div class="column-12">
         <form class="filter" method="POST">
           <input type="hidden" data-ng-model="filters.page" />
           <input type="hidden" data-ng-model="filters.results_per_page" />
@@ -14,35 +14,52 @@
             <div class="column-3">
               <label class="control-label filter-label"><span class="icon retinaicon-essentials-063"></span> Filter by </label>
             </div>
-            <div class="column-3">
-              <select data-ng-model="filters[$index]" data-ng-change="search.select($index)" data-ng-options="filter.label for filter in filters.available">
-                <option value="">Pick a filter</option>
-              </select>
-              {{ active_filter.active }}
-            </div>
-            <div class="column-10">
-              <div data-ng-if="filter.active" class="filter-group" data-ng-repeat="filter in filters.available track by $index">
-                <!-- Text Field -->
-                <div data-ng-if="filters.available[$index].type === 'text'">
-                  <input class="filter-control" type="text" data-ng-model="filters.available[$index].filter[0].value" data-ng-change="search.projects()" placeholder="{{ filters.available[$index].label }}" autofocus="autofocus" />
+            <div class="column-13">
+              <div data-ng-if="filter.active" class="filter-group row" data-ng-repeat="filter in filters.available track by $index">
+                  <div class="column-4">
+                    <label class="control-label filter-label">{{ filters.available[$index].label }}</label>
+                  </div>
+                  <div class="column-10">
+                  <!-- Text Field -->
+                  <div data-ng-if="filters.available[$index].type === 'text'">
+                    <input class="filter-control" type="text" data-ng-model="filters.available[$index].filter[0].value" data-ng-change="search.projects()" autofocus="autofocus" />
+                  </div>
+
+                  <!-- Numeric Field -->
+                  <div class="row" data-ng-if="filters.available[$index].type === 'number'">
+                    <div class="column-8">
+                      <input class="filter-control" type="number" data-ng-model="filters.available[$index].filter[0].value" data-ng-change="search.projects()" autofocus="autofocus" />
+                      <p class="help-text">Minimum</p>
+                    </div>
+
+                    <div class="column-8">
+                      <input class="filter-control" type="number" data-ng-model="filters.available[$index].filter[1].value" data-ng-change="search.projects()" autofocus="autofocus" />
+                      <p class="help-text">Maximum</p>
+                    </div>
+                  </div>
+
+                  <!-- Date Field -->
+                  <div class="row" data-ng-if="filters.available[$index].type === 'date'">
+                    <div class="column-8">
+                      <input class="filter-control" type="date" data-ng-model="filters.available[$index].filter[0].value" data-ng-change="search.projects()" autofocus="autofocus" />
+                      <p class="help-text">Minimum</p>
+                    </div>
+
+                    <div class="column-8">                  
+                      <input class="filter-control" type="date" data-ng-model="filters.available[$index].filter[1].value" data-ng-change="search.projects()" autofocus="autofocus" />
+                      <p class="help-text">Maximum</p>
+                    </div>
+                  </div>
                 </div>
-
-                <!-- Numeric Field -->
-                <div data-ng-if="filters.available[$index].type === 'number'">
-                  <input class="filter-control" type="number" data-ng-model="filters.available[$index].filter[0].value" data-ng-change="search.projects()" placeholder="{{ filters.available[$index].label }}" autofocus="autofocus" />
-                  <p class="help-text">Minimum</p>
-
-                  <input class="filter-control" type="number" data-ng-model="filters.available[$index].filter[1].value" data-ng-change="search.projects()" placeholder="{{ filters.available[$index].label }}" autofocus="autofocus" />
-                  <p class="help-text">Maximum</p>
+                <div class="column-2">
+                  <a class="filter-action" data-ng-click="filters.remove($index)">Remove</a>
                 </div>
-
-                <!-- Date Field -->
-                <div data-ng-if="filters.available[$index].type === 'date'">
-                  <input class="filter-control" type="date" data-ng-model="filters.available[$index].filter[0].value" data-ng-change="search.projects()" placeholder="{{ filters.available[$index].label }}" autofocus="autofocus" />
-                  <p class="help-text">Minimum</p>
-
-                  <input class="filter-control" type="date" data-ng-model="filters.available[$index].filter[1].value" data-ng-change="search.projects()" placeholder="{{ filters.available[$index].label }}" autofocus="autofocus" />
-                  <p class="help-text">Maximum</p>
+              </div>
+              <div class="row">
+                <div class="column-16">
+                  <select data-ng-model="filters.available[$index]" data-ng-change="filters.select($index)" data-ng-options="filter.label for filter in filters.available">
+                    <option value="">Pick a filter</option>
+                  </select>                                      
                 </div>
               </div>
             </div>
@@ -51,7 +68,7 @@
       </div>
 
       <!-- Pagination Tools -->
-      <div class="column-8">
+      <div class="column-4">
         <ul class="pager pull-right">
           <li class="pull-left">
             <span data-ng-if="projects.properties.total_features === 0">No results</span>
@@ -71,7 +88,7 @@
       <article class="row list-item" data-ng-repeat="project in projects.response.features track by $index">
         <div class="column-16 list-item-content">
           <h4><span data-ng-repeat="type_ in project.type_7713b933a2bf4389b0dcd6c3938b6b9b" class="label">{{ type_.name }}</span> <strong>NFWF ID: </strong>{{ project.name }} <strong>Easy Grants ID: </strong>{{ project.easy_grants_id }}</h4>
-          <h1><a href="/projects/{{ project.id }}" title="{{ project.project_title }} project details">{{ project.project_title }}</a></h1>
+          <h1><a href="/projects/{{ project.id }}#top" title="{{ project.project_title }} project details">{{ project.project_title }}</a></h1>
           <h2>
             <span data-ng-repeat="organization in project.type_271e6f04e893436588c8cd84da851a97">
               {{ organization.name }}
