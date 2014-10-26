@@ -2,8 +2,8 @@
   <form class="row feature">
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
-        <h4><span data-ng-repeat="type_ in project.type_7713b933a2bf4389b0dcd6c3938b6b9b" class="label">{{ type_.name }}</span> <strong>NFWF ID: </strong><span contenteditable="{{ page.editable }}">{{ project.name }}</span> <strong>Easy Grants ID: </strong><span contenteditable="{{ page.editable }}">{{ project.easy_grants_id }}</span></h4>
-        <h1><span contenteditable="{{ page.editable }}" data-ng-model="project.project_title">{{ project.project_title }}</span></h1>
+        <h4><span data-ng-repeat="type_ in project.type_7713b933a2bf4389b0dcd6c3938b6b9b" class="label">{{ type_.name }}</span> <strong>NFWF ID: </strong><span data-ng-model="project.name" contenteditable="{{ page.editable }}">{{ project.name }}</span> <strong>Easy Grants ID: </strong><span data-ng-model="project.easy_grants_id" contenteditable="{{ page.editable }}">{{ project.easy_grants_id }}</span></h4>
+        <h1><span data-ng-model="project.project_title" contenteditable="{{ page.editable }}">{{ project.project_title }}</span></h1>
         <h2>
           <span data-ng-repeat="organization in project.type_271e6f04e893436588c8cd84da851a97">
             {{ organization.name }}
@@ -12,7 +12,7 @@
         </h2>
         <!-- <h6><strong>About</strong> {{ project.project_title }}</h6> -->
         <br />
-        <p><span contenteditable="{{ page.editable }}">{{ project.project_abstract }}</span></p>
+        <p><span data-ng-model="project.project_abstract" contenteditable="{{ page.editable }}">{{ project.project_abstract }}</span></p>
       </div>
       <aside class="column-5 feature-sidebar">
         <h6><strong>Location</strong> Description</h6>
@@ -41,24 +41,34 @@
           <strong>Match</strong><br />
           ${{ project.match | number:2 }}
         </p>      
-      </div>
-    </aside>
-  </article>
-
-  <!-- Project List -->
-  <div class="list">
-    <article class="row list-item" data-ng-repeat="site in sites track by $index">
-      <div class="column-16 list-item-content">
-        <h4>{{ site.name }}</h4>
-        <h1><a href="/projects/{{ project.id }}/sites/{{ site.id }}" title="{{ site.description }} project details">{{ site.description }}</a></h1>
-        <h2>
-          <span data-ng-repeat="organization in project.type_271e6f04e893436588c8cd84da851a97">
-            {{ organization.name }}
-            <span data-ng-if="!$last">, </span>
-          </span>
-        </h2>
-      </div>
+      </aside>
     </article>
-  </div>
 
-</form>
+    <!-- Project List -->
+    <div class="list">
+      <article class="row list-item" data-ng-repeat="site in sites track by $index">
+        <div class="column-16 list-item-content">
+          <h4>{{ site.name }}</h4>
+          <h1><a href="/projects/{{ project.id }}/sites/{{ site.id }}" title="{{ site.description }} project details">{{ site.description }}</a></h1>
+          <h2>
+            <span data-ng-repeat="organization in project.type_271e6f04e893436588c8cd84da851a97">
+              {{ organization.name }}
+              <span data-ng-if="!$last">, </span>
+            </span>
+          </h2>
+        </div>
+      </article>
+    </div>
+  </form>
+</main>
+
+<section role="navigation" class="site-actions">
+  <div class="container">  
+    <div class="row">
+      <div class="column-8"></div>
+      <div class="column-8 align-right">
+        <a class="button" href="" data-ng-click="project.save()">Save Changes</a>
+      </div>
+    </div>
+  </div>
+</section>

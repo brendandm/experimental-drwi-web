@@ -14,7 +14,7 @@ angular.module('practiceMonitoringAssessmentApp')
     // Assign project to a scoped variable
     //
     $scope.project = project;
-    $scope.project_raw = JSON.stringify(project, null, "  ")
+    $scope.project_raw = JSON.stringify(project, null, ' ');
 
     //
     // Setup basic page variables
@@ -39,6 +39,10 @@ angular.module('practiceMonitoringAssessmentApp')
       refresh: function() {
         $route.reload();
       }
+    };
+
+    $scope.project.save = function() {
+      console.log('Project Editied', $scope.project);
     };
 
   }]);
