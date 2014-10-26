@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ProjectEditCtrl', ['$scope', '$route', 'project', function ($scope, $route, project) {
+  .controller('ProjectEditCtrl', ['$scope', '$route', 'project', 'Feature', 'storage', function ($scope, $route, project, Feature, storage) {
 
     //
     // Assign project to a scoped variable
@@ -42,7 +42,11 @@ angular.module('practiceMonitoringAssessmentApp')
     };
 
     $scope.project.save = function() {
-      console.log('Project Editied', $scope.project);
+      Feature.UpdateFeature({
+        storage: storage,
+        featureId: $scope.project.id,
+        data: $scope.project
+      });
     };
 
   }]);

@@ -175,6 +175,26 @@ angular.module('practiceMonitoringAssessmentApp')
         return promise;
       };
 
+
+      Feature.UpdateFeature = function(options) {
+
+        var promise = Feature.update({
+            storage: options.storage,
+            featureId: options.featureId
+          }, options.data).$promise.then(function(response) {
+            return response;
+          }, function(error) {
+            $rootScope.alerts = [];
+            $rootScope.alerts.push({
+              'type': 'error',
+              'title': 'Uh-oh!',
+              'details': 'Mind trying that again? We couldn\'t find the Feature you were looking for.'
+            });
+          });
+
+        return promise;
+      };
+
       return Feature;
     }];
 

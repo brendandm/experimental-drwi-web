@@ -112,6 +112,9 @@ angular
               storage: project.storage,
               featureId: $route.current.params.projectId
             });
+          },
+          storage: function() {
+            return project.storage;
           }
         }
       })
