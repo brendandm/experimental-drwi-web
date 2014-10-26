@@ -89,6 +89,14 @@ angular
         resolve: {
           user: function(User) {
             return User.getUser();
+          },
+          project: function(Feature, $route) {
+            return Feature.CreateFeature({
+              storage: project.storage,
+              data: {
+                project_title: 'New Project'
+              }
+            });
           }
         }
       })

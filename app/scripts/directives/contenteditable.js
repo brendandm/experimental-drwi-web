@@ -7,7 +7,7 @@
  * # contenteditable
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .directive('contenteditable', function () {
+  .directive('contenteditable', ['$sce', function ($sce) {
   return {
     restrict: "A",
     require: "ngModel",
@@ -18,7 +18,9 @@ angular.module('practiceMonitoringAssessmentApp')
       }
 
       ngModel.$render = function() {
-        element.html(ngModel.$viewValue || "");
+        // element.html(ngModel.$viewValue || "");
+        element.html($sce.getTrustedHtml(ngModel.$viewValue || ''));
+
       };
 
       element.bind("blur keyup change", function() {
@@ -26,4 +28,4 @@ angular.module('practiceMonitoringAssessmentApp')
       });
     }
   };
-});
+}]);

@@ -20,12 +20,6 @@ angular.module('practiceMonitoringAssessmentApp')
       display_title: true,
       back: '/',
       links: [
-        // {
-        //   type: 'edit',
-        //   url: '/applications/' + $scope.application.id + '/edit/',
-        //   text: 'Edit this application',
-        //   static: "static"
-        // },
         {
           type: 'button-link new',
           url: '/projects/new/',
