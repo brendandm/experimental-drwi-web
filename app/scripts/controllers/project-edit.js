@@ -14,7 +14,6 @@ angular.module('practiceMonitoringAssessmentApp')
     // Assign project to a scoped variable
     //
     $scope.project = project;
-    $scope.project_raw = JSON.stringify(project, null, ' ');
 
     //
     // Setup basic page variables
@@ -35,11 +34,10 @@ angular.module('practiceMonitoringAssessmentApp')
           url: '/projects/' + $scope.project.id,
           type: 'active'
         }
-      ],
-      refresh: function() {
-        $route.reload();
-      }
+      ]
     };
+
+    $scope.project_title = $scope.project.project_title;
 
     $scope.project.save = function() {
       Feature.UpdateFeature({
