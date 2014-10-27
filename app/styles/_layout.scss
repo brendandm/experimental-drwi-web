@@ -101,6 +101,13 @@ $susy: (
     }
   }
 
+  .column-flex {
+    display: inline-block;
+    float: left;
+    margin-left: 0.625%;
+    margin-right: 0.625%;
+  }
+
   [class*="column-"] {
     box-sizing: border-box;
     min-height: 1px;

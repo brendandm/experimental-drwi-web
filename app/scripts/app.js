@@ -75,11 +75,8 @@ angular
           fields: function(Field, $route) {
             return Field.GetPreparedFields(project.templateId);
           },
-          projects: function(Feature, $route) {
-            return Feature.GetFeatures({
-              storage: project.storage,
-              page: $route.current.params.page
-            });
+          storage: function() {
+            return project.storage;
           }
         }
       })

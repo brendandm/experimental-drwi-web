@@ -16,8 +16,8 @@
             </div>
             <div class="column-13">
               <div data-ng-if="filter.active" class="filter-group row" data-ng-repeat="filter in filters.available track by $index">
-                  <div class="column-4">
-                    <label class="control-label filter-label">{{ filters.available[$index].label }}</label>
+                  <div class="column-flex">
+                    <label class="control-label filter-label">{{ filters.available[$index].label }} <span>contains</span></label>
                   </div>
                   <div class="column-10">
                   <!-- Text Field -->
@@ -76,8 +76,8 @@
             <span data-ng-if="projects.properties.current_page === 1 && projects.properties.total_features > 25">1-25 of {{ projects.properties.total_features | number }}</span>
             <span data-ng-if="projects.properties.current_page && projects.properties.current_page > 1">{{ (projects.properties.current_page*projects.properties.features_per_page)-projects.properties.features_per_page | number }}-{{ (projects.properties.current_page*projects.properties.features_per_page) | number }} of {{ projects.properties.total_features | number }}</span>
           </li>
-          <li data-ng-if="projects.properties.current_page !== projects.properties.total_pages && projects.properties.total_features !== 0" class="next pull-right"><a title="Older" href="/projects?page={{ projects.properties.current_page+1 }}"><div class="icon retinaicon-retina-icons-v-1-5"></div></a></li>
-          <li data-ng-if="projects.properties.current_page !== 1" class="previous pull-right"><a title="Newer" href="/projects?page={{ projects.properties.current_page-1 }}"><div class="icon retinaicon-retina-icons-v-1-4"></div></a></li>
+          <li data-ng-if="projects.properties.current_page !== projects.properties.total_pages && projects.properties.total_features !== 0" class="next pull-right"><a title="Older" data-ng-click="search.paginate(projects.properties.current_page+1)"><div class="icon retinaicon-retina-icons-v-1-5"></div></a></li>
+          <li data-ng-if="projects.properties.current_page !== 1" class="previous pull-right"><a title="Newer" data-ng-click="search.paginate(projects.properties.current_page-1)"><div class="icon retinaicon-retina-icons-v-1-4"></div></a></li>
         </ul>
       </div>
 

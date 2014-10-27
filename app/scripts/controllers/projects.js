@@ -8,8 +8,9 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ProjectsCtrl', ['$rootScope', '$scope', '$route', '$routeParams', '$location', 'Feature', 'Search', 'projects', 'template', 'fields', function ($rootScope, $scope, $route, $routeParams, $location, Feature, Search, projects, template, fields) {
+  .controller('ProjectsCtrl', ['$rootScope', '$scope', '$route', '$routeParams', '$location', '$timeout', 'Feature', 'template', 'fields', 'storage', function ($rootScope, $scope, $route, $routeParams, $location, $timeout, Feature, template, fields, storage) {
 
+    var timeout;
 
     //
     // Setup basic page variables
@@ -33,13 +34,6 @@ angular.module('practiceMonitoringAssessmentApp')
 
 
     //
-    // These are the Projects that populate the list shown to the user, we update this later
-    // on based upon filters that the user applies
-    //
-    $scope.projects = projects;
-
-
-    //
     // We need the Template and it's associated Field list so that we can automatically populate
     // the Filter options for the user and display the Fields/Options specific to this Template,
     // in the case of this specific application and route we are only dealing with a single Template
@@ -50,14 +44,31 @@ angular.module('practiceMonitoringAssessmentApp')
 
 
     //
+    // When the page initially loads, we should check to see if existing filters are present in the
+    // browser's address bar. We should pass those filters along to the Feature Search. The Projects
+    // that populate the list shown to the user, we update this later on based upon filters that the
+    // user applies
+    //
+    Feature.GetFeatures({
+      storage: storage,
+      page: $route.current.params.page,
+      q: $route.current.params.q,
+      location: $scope.defaults,
+      fields: fields
+    }).then(function(response) {
+      $scope.projects = response;
+    });
+
+
+    //
     // Setup project filter functionality
     //
-    var filters_ = Search.buildFilters(fields, $scope.defaults);
+    var filters_ = Feature.buildFilters(fields, $scope.defaults);
 
     $scope.filters = {
-      page: null,
-      results_per_page: null,
-      callback: null,
+      page: ($scope.defaults.page) ? $scope.defaults.page : null,
+      results_per_page: ($scope.defaults.results_per_page) ? $scope.defaults.results_per_page : null,
+      callback: ($scope.defaults.callback) ? $scope.defaults.callback : null,
       selected: filters_,
       available: filters_
     };
@@ -69,14 +80,19 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.filters.remove = function ($index) {
       $scope.filters.available[$index].active = false;
+
+      //
+      // Each Filter can have multiple criteria such as single ilike, or
+      // a combination of gte and lte. We need to null the values of all 
+      // filters in order for the URL to change appropriately
+      //
+      var filters = $scope.filters.available[$index].filter
+      angular.forEach(filters, function(criteria, $_index) {
+        $scope.filters.available[$index].filter[$_index].value = null;
+      }); 
+
+      $scope.search.execute();
     };
-
-    $scope.$watch('filters', function(newValue, oldValue) {
-      // Execute a search when the filters change
-      $scope.search.projects();
-
-      console.log('filters', $scope.filters);
-    });
 
 
     //
@@ -86,12 +102,32 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.search.projects = function() {
 
-      var Q = Search.getFilters($scope.filters);
+      $timeout.cancel(timeout);
+
+      timeout = $timeout(function () {
+        $scope.search.execute();
+      }, 1000);
+      
+    };
+
+    $scope.search.execute = function(page_number) {
+
+      var Q = Feature.getFilters($scope.filters);
+
+      console.log('Q', Q);
+
+      $scope.filters.page = page_number;
 
       Feature.query({
         storage: $scope.template.storage,
         q: {
-          filters: Q
+          filters: Q,
+          order_by: [
+            {
+              field: 'created',
+              direction: 'desc'
+            }
+          ]
         },
         page: ($scope.filters.page) ? $scope.filters.page: null,
         results_per_page: ($scope.filters.results_per_page) ? $scope.filters.results_per_page: null,
@@ -104,22 +140,38 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         $scope.projects = response;
 
-        $location.search({
-          q: angular.toJson({
+        //
+        // Check to see if there are Filters remaining and if not, we should just remove the Q
+        //
+        var Q_ = null;
+
+        if (Q.length) {
+          var Q_ = angular.toJson({
             filters: Q
-          }),
+          })
+        }
+
+        $location.search({
+          q: Q_,
           page: ($scope.filters.page) ? $scope.filters.page: null,
           results_per_page: ($scope.filters.results_per_page) ? $scope.filters.results_per_page: null,
           callback: ($scope.filters.callback) ? $scope.filters.callback: null 
         });
-
-        //
-        // Make sure our user's search criteria gets passed back to the address bar
-        // so that we can keep track of it for saved searches and between pages
-        //
-
-
       });
+    };
+
+    $scope.search.paginate = function(page_number) {
+
+      //
+      // First, we need to make sure we preserve any filters that the user has defined
+      //
+      $scope.search.execute(page_number);
+
+      //
+      // Next we go to the selected page `page_number`
+      //
+
+      console.log('Go to page', page_number);
     };
 
 

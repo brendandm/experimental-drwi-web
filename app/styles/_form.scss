@@ -334,7 +334,7 @@ a.button:hover,
 
   label.filter-label {
     background-color: transparent;
-    color: lighten($color-black-base, 50%);
+    color: lighten($color-black-base, 10%);
 
     display: block;
     display: inline-block;
@@ -352,6 +352,10 @@ a.button:hover,
 
     .icon {
       font-size: 0.75em;
+    }
+
+    span {
+      color: lighten($color-black-base, 50%);
     }
   }
 

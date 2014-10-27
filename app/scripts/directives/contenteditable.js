@@ -7,22 +7,33 @@
  * # contenteditable
  */
 angular.module('practiceMonitoringAssessmentApp')
-    .directive('contenteditable', function() {
+    .directive('contenteditable', ['$sce', function($sce) {
       return {
-        require: "ngModel",
+        restrict: 'A', // only activate on element attribute
+        require: '?ngModel', // get a hold of NgModelController
         link: function(scope, element, attrs, ngModel) {
+          if (!ngModel) return; // do nothing if no ng-model
 
-          function read() {
-            ngModel.$setViewValue(element.html());
-          }
-
+          // Specify how UI should be updated
           ngModel.$render = function() {
-            element.html(ngModel.$viewValue || "");
+            element.html($sce.getTrustedHtml(ngModel.$viewValue || ''));
           };
 
-          element.bind("blur keyup change", function() {
+          // Listen for change events to enable binding
+          element.on('blur keyup change', function() {
             scope.$apply(read);
           });
+
+          // Write data to the model
+          function read() {
+            var html = element.html();
+            // When we clear the content editable the browser leaves a <br> behind
+            // If strip-br attribute is provided then we strip this out
+            if ( attrs.stripBr && html == '<br>' ) {
+              html = '';
+            }
+            ngModel.$setViewValue(html);
+          }
         }
       };
-    });
+    }]);
