@@ -17,7 +17,7 @@
             <div class="column-13">
               <div data-ng-if="filter.active" class="filter-group row" data-ng-repeat="filter in filters.available track by $index">
                   <div class="column-flex">
-                    <label class="control-label filter-label">{{ filters.available[$index].label }} <span>contains</span></label>
+                    <label class="control-label filter-label">{{ filters.available[$index].label }}</label>
                   </div>
                   <div class="column-10">
                   <!-- Text Field -->
@@ -55,9 +55,12 @@
                   <a class="filter-action" data-ng-click="filters.remove($index)">Remove</a>
                 </div>
               </div>
-              <div class="row">
-                <div class="column-16">
-                  <select data-ng-model="filters.available[$index]" data-ng-change="filters.select($index)" data-ng-options="filter.label for filter in filters.available">
+              <div class="filter-group filter-group-readonly row">
+                <div class="column-flex">
+                  <label class="control-label filter-label">Add Filter</label>
+                </div>
+                <div class="column-flex">
+                  <select class="filter-control" data-ng-model="filters.available[$index]" data-ng-change="filters.select($index)" data-ng-options="filter.label for filter in filters.available">
                     <option value="">Pick a filter</option>
                   </select>                                      
                 </div>

@@ -75,7 +75,6 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.filters.select = function ($index) {
       $scope.filters.available[$index].active = true;
-      console.log('$scope.filters.select', $scope.filters.available[$index]);
     };
 
     $scope.filters.remove = function ($index) {

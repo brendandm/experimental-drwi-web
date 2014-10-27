@@ -361,7 +361,7 @@ a.button:hover,
 
   input.filter-control {
     background-color: $color-white-base;
-    border: 0;
+    border: 1px solid $color-white-dark;
 
     color: $color-black-lighter;
 
@@ -382,10 +382,41 @@ a.button:hover,
     }
   }
 
+  select.filter-control {
+    background-color: $color-white-base;
+    border: 1px solid $color-white-dark;
+    border-radius: 0;
+    -moz-border-radius: 0;
+    -o-border-radius: 0;
+    -webkit-border-radius: 0;
+
+    color: $color-black-lighter;
+
+    font-family: $font-sans-plain;
+    font-size: 1em;
+    font-weight: 300;
+
+    height: 2.1875em;
+    line-height: 1.2;
+
+    margin: 0;
+
+    width: 100%;
+
+    &:focus {
+      outline: 0;
+      box-shadow: none;
+    }
+  }
+
   .filter-group {
     border-left: 3px solid $color-brightBlue;
-    margin-bottom: 2px;
-    padding: 16px 0;
+    margin-bottom: 16px;
+    padding: 0;
+
+    &.filter-group-readonly {
+      border-left: 3px solid $color-white-dark;
+    }
   }
 
   .filter-action {
