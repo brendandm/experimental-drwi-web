@@ -34,10 +34,11 @@ angular.module('practiceMonitoringAssessmentApp')
           url: '/projects/' + $scope.project.id,
           type: 'active'
         }
-      ]
+      ],
+      refresh: function() {
+        $route.reload();
+      }
     };
-
-    $scope.project_title = $scope.project.project_title;
 
     $scope.project.save = function() {
       Feature.UpdateFeature({
