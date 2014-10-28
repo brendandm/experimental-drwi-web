@@ -80,29 +80,18 @@ angular
           }
         }
       })
-      .when('/projects/new', {
+      .when('/projects/:projectId', {
         templateUrl: templateUrl,
-        controller: 'ProjectCreateCtrl',
+        controller: 'ProjectViewCtrl',
         resolve: {
           user: function(User) {
             return User.getUser();
           },
-          project: function(Feature, $route) {
-            return Feature.CreateFeature({
-              storage: project.storage,
-              data: {
-                project_title: 'New Project'
-              }
-            });
-          }
-        }
-      })
-      .when('/projects/:projectId', {
-        templateUrl: templateUrl,
-        controller: 'ProjectEditCtrl',
-        resolve: {
-          user: function(User) {
-            return User.getUser();
+          template: function(Template, $route) {
+            return Template.GetTemplate(project.templateId);
+          },
+          fields: function(Field, $route) {
+            return Field.GetPreparedFields(project.templateId, 'object');
           },
           project: function(Feature, $route) {
             return Feature.GetFeature({
@@ -116,7 +105,28 @@ angular
         }
       })
       .when('/projects/:projectId/edit', {
-        redirectTo: '/projects/:projectId/edit'
+        templateUrl: templateUrl,
+        controller: 'ProjectEditCtrl',
+        resolve: {
+          user: function(User) {
+            return User.getUser();
+          },
+          template: function(Template, $route) {
+            return Template.GetTemplate(project.templateId);
+          },
+          fields: function(Field, $route) {
+            return Field.GetPreparedFields(project.templateId, 'object');
+          },
+          project: function(Feature, $route) {
+            return Feature.GetFeature({
+              storage: project.storage,
+              featureId: $route.current.params.projectId
+            });
+          },
+          storage: function() {
+            return project.storage;
+          }
+        }
       })
       .when('/sites', {
         templateUrl: templateUrl,
@@ -153,6 +163,10 @@ angular
             return User.getUser();
           }
         }
+      })
+      .when('/ProjectView', {
+        templateUrl: 'views/projectview.html',
+        controller: 'ProjectviewCtrl'
       })
       .otherwise({
         templateUrl: '/views/errors/404.html'
