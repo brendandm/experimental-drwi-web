@@ -39,10 +39,11 @@
 //
 // Input fields
 //
+textarea.form-control,
 input.form-control {
   background-color: transparent;
   border: 0;
-  border-bottom: 1px solid lighten($color-black-lighter, 25%);
+  border-bottom: 1px solid $color-white-dark;
 
   color: $color-black-lighter;
 
@@ -55,10 +56,12 @@ input.form-control {
   margin: 0;
   padding: 0;
 
+  resize: none;
+
   width: 100%;
 
   &:focus {
-    border-bottom: 1px solid $color-blue-base;
+    border-bottom: 1px solid $color-brightBlue;
     outline: 0;
     box-shadow: none;
   }
@@ -80,7 +83,7 @@ input.form-control {
   }
 
   &.highlight {
-    color: $color-blue-base;
+    color: $color-brightBlue;
     font-weight: 600;
   }
 }
@@ -121,14 +124,14 @@ input.form-control {
 // Select/Drop Down fields
 //
 select.form-control {
-  background: url(/images/Retina-Icons-v_1.0_Arrow7-16x8.png) transparent no-repeat 98% 13px;
+  background: url(/images/Retina-Icons-v_1.0_Arrow7-16x8.png) transparent no-repeat 98% 5px;
   
   border-radius: 0;
   -moz-border-radius: 0;
   -o-border-radius: 0;
   -webkit-border-radius: 0;
   border: 0;
-  border-bottom: 1px solid lighten($color-black-lighter, 25%);
+  border-bottom: 1px solid $color-white-dark;
 
   color: $color-black-lighter;
 
@@ -146,7 +149,7 @@ select.form-control {
   -webkit-appearance: none;
 
   &:focus {
-    border-bottom: 1px solid $color-blue-base;
+    border-bottom: 1px solid $color-brightBlue;
     outline: 0;
     box-shadow: none;
   }

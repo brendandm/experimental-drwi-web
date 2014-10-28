@@ -8,12 +8,16 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ProjectEditCtrl', ['$scope', '$route', 'project', 'Feature', 'storage', function ($scope, $route, project, Feature, storage) {
+  .controller('ProjectEditCtrl', ['$scope', '$route', 'project', 'Feature', 'Field', 'template', 'fields', 'storage', function ($scope, $route, project, Feature, Field, template, fields, storage) {
 
     //
     // Assign project to a scoped variable
     //
     $scope.project = project;
+    $scope.template = template;
+    $scope.fields = fields;
+
+    console.log('$scope.fields', $scope.fields);
 
     //
     // Setup basic page variables
@@ -45,6 +49,21 @@ angular.module('practiceMonitoringAssessmentApp')
         storage: storage,
         featureId: $scope.project.id,
         data: $scope.project
+      }).then(function(response) {
+
+        //
+        // Now that we've successfully saved the Project we need to reinject those changes back into the
+        // page so that things like the breadcrumbs update
+        //
+        // $scope.project = response.response;
+
+        //
+        // Refresh the page so that those things update appropriately.
+        //
+        $scope.page.refresh();
+
+      }).then(function(error) {
+        // Do something with the error
       });
     };
 

@@ -20,8 +20,8 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) /styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
+    <link rel="stylesheet" href="/bower_components/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="/bower_components/angular-loading-bar/build/loading-bar.css" />
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -91,8 +91,13 @@
         <script src="scripts/app.js"></script>
 
         <!-- Controllers -->
+        <script src="scripts/controllers/authorize.js"></script>
+        <script src="scripts/controllers/logout.js"></script>
+        <script src="scripts/controllers/index.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/projects.js"></script>
+        <script src="scripts/controllers/project-view.js"></script>
+        <script src="scripts/controllers/project-edit.js"></script>
         <script src="scripts/controllers/sites.js"></script>
         <script src="scripts/controllers/practices.js"></script>
         <script src="scripts/controllers/metrics.js"></script>
@@ -102,6 +107,7 @@
         <!-- Services -->
         <script src="scripts/services/site.js"></script>
         <script src="scripts/services/navigation.js"></script>
+        <script src="scripts/services/search.js"></script>
 
         <!-- Providers -->
         <script src="scripts/providers/application.js"></script>
@@ -116,13 +122,6 @@
 
         <!-- Filters -->
         <script src="scripts/filters/toarray.js"></script>
-        
-        <script src="scripts/controllers/authorize.js"></script>
-        <script src="scripts/controllers/logout.js"></script>
-        <script src="scripts/controllers/index.js"></script>
-        <script src="scripts/controllers/project-edit.js"></script>
-        <script src="scripts/services/search.js"></script>
-        <script src="scripts/directives/contenteditable.js"></script>
         <!-- endbuild -->
 
   </body>

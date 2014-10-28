@@ -56,13 +56,33 @@ angular.module('practiceMonitoringAssessmentApp')
         return processed_fields;
       };
 
-      Field.GetPreparedFields = function(templateId) {
+      Field.PrepareFieldsObject = function(fields) {
+
+        var processed_fields = {};
+
+        angular.forEach(fields, function(field, index) {
+
+          if (field.data_type === 'list') {
+            field.options = field.options.split(',');
+          }
+
+          processed_fields[field.name] = field;
+        });
+
+        return processed_fields;
+      };
+
+      Field.GetPreparedFields = function(templateId, returnAs) {
 
         var promise = Field.query({
             templateId: templateId,
             updated: new Date().getTime()
           }).$promise.then(function(response) {
-            return Field.PrepareFields(response);
+            if (returnAs && returnAs === 'object') {
+              return Field.PrepareFieldsObject(response);
+            } else {
+              return Field.PrepareFields(response);
+            }
           });
 
         return promise;
