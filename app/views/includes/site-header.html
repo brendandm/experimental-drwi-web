@@ -27,7 +27,10 @@
     <nav class="column-8">
       <ul data-ng-if="page.links" class="context-navigation">
         <li data-ng-repeat="link in page.links">
-          <a href="{{ link.url }}" class="{{ link.type }}">
+          <a data-ng-if="!link.click" href="{{ link.url }}" class="{{ link.type }}">
+            {{ link.text }}
+          </a>
+          <a data-ng-if="link.click === 'create'" data-ng-click="project.create()" class="{{ link.type }}">
             {{ link.text }}
           </a>
         </li>

@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ProjectsCtrl', ['$rootScope', '$scope', '$route', '$routeParams', '$location', '$timeout', 'Feature', 'template', 'fields', 'storage', function ($rootScope, $scope, $route, $routeParams, $location, $timeout, Feature, template, fields, storage) {
+  .controller('ProjectsCtrl', ['$rootScope', '$scope', '$route', '$routeParams', '$location', '$timeout', 'Feature', 'template', 'fields', 'storage', 'user', function ($rootScope, $scope, $route, $routeParams, $location, $timeout, Feature, template, fields, storage, user) {
 
     var timeout;
 
@@ -23,7 +23,8 @@ angular.module('practiceMonitoringAssessmentApp')
       links: [
         {
           type: 'button-link new',
-          url: '/projects/new/',
+          // url: '/projects/new/',
+          click: 'create',
           text: 'Create project'
         }
       ],
@@ -31,6 +32,8 @@ angular.module('practiceMonitoringAssessmentApp')
         $route.reload();
       }
     };
+
+    $scope.user = user;
 
 
     //
@@ -172,5 +175,29 @@ angular.module('practiceMonitoringAssessmentApp')
       console.log('Go to page', page_number);
     };
 
+
+    //
+    // Project functionality
+    //
+    $scope.project = {}
+    
+    $scope.project.create = function() {
+      
+      Feature.CreateFeature({
+        storage: storage,
+        data: {
+          project_title: 'Untitled Project',
+          owner: $scope.user.id
+        }
+      }).then(function(project) {
+
+        console.log('New Project', project);
+
+        //
+        // Forward the user along to the new project
+        //
+        $location.path('/projects/' + project);
+      });
+    };
 
   }]);

@@ -80,23 +80,6 @@ angular
           }
         }
       })
-      .when('/projects/new', {
-        templateUrl: templateUrl,
-        controller: 'ProjectCreateCtrl',
-        resolve: {
-          user: function(User) {
-            return User.getUser();
-          },
-          project: function(Feature, $route) {
-            return Feature.CreateFeature({
-              storage: project.storage,
-              data: {
-                project_title: 'New Project'
-              }
-            });
-          }
-        }
-      })
       .when('/projects/:projectId', {
         templateUrl: templateUrl,
         controller: 'ProjectEditCtrl',
