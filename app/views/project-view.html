@@ -2,6 +2,7 @@
   <form class="row feature">
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
+        <p data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a class="button" href="/projects/{{ project.id }}/edit">Edit</a></p>
         <h4><span data-ng-repeat="type_ in project.type_7713b933a2bf4389b0dcd6c3938b6b9b" class="label">{{ type_.name }}</span> <strong>NFWF ID: </strong><span>{{ project.name }}</span> <strong>Easy Grants ID: </strong><span>{{ project.easy_grants_id }}</span></h4>
         <h1>{{ project.project_title }}</h1>
         <h2 data-ng-if="!project.type_271e6f04e893436588c8cd84da851a97">

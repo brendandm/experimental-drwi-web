@@ -179,7 +179,7 @@ angular.module('practiceMonitoringAssessmentApp')
     //
     // Project functionality
     //
-    $scope.project = {}
+    $scope.project = {};
     
     $scope.project.create = function() {
       
@@ -187,7 +187,8 @@ angular.module('practiceMonitoringAssessmentApp')
         storage: storage,
         data: {
           project_title: 'Untitled Project',
-          owner: $scope.user.id
+          owner: $scope.user.id,
+          status: 'private'
         }
       }).then(function(project) {
 

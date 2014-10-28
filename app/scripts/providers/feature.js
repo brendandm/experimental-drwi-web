@@ -31,6 +31,14 @@ angular.module('practiceMonitoringAssessmentApp')
             'Content-Type': undefined
           }
         },
+        user: {
+          method: 'GET',
+          url: '//api.commonscloud.org/v2/:storage/:featureId/users/:userId.json'
+        },
+        users: {
+          method: 'GET',
+          url: '//api.commonscloud.org/v2/:storage/:featureId/users.json'
+        },
         get: {
           method: 'GET',
           url: '//api.commonscloud.org/v2/:storage/:featureId.json'

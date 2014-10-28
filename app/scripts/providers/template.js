@@ -19,6 +19,14 @@ angular.module('practiceMonitoringAssessmentApp')
           method: 'GET',
           url: '//api.commonscloud.org/v2/templates/:templateId/activity.json'
         },
+        user: {
+          method: 'GET',
+          url: '//api.commonscloud.org/v2/templates/:templateId/users/:userId.json'
+        },
+        users: {
+          method: 'GET',
+          url: '//api.commonscloud.org/v2/templates/:templateId/users.json'
+        },
         get: {
           method: 'GET',
           url: '//api.commonscloud.org/v2/templates/:templateId.json'

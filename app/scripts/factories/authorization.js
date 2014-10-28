@@ -43,32 +43,35 @@ angular.module('practiceMonitoringAssessmentApp')
         if (response && (response.status === 401 || response === 403)) {
           console.error('Couldn\'t retrieve user information from server., need to redirect and clear cookies');
 
-          var session_cookie = ipCookie('COMMONS_SESSION');
+          // var session_cookie = ipCookie('COMMONS_SESSION');
 
-          if (session_cookie && session_cookie !== undefined && session_cookie !== 'undefined') {
-            //
-            // Clear out existing COMMONS_SESSION cookies that may be invalid or
-            // expired. This may happen when a user closes the window and comes back
-            //
-            ipCookie.remove('COMMONS_SESSION');
-            ipCookie.remove('COMMONS_SESSION', { path: '/' });
+          // if (session_cookie && session_cookie !== undefined && session_cookie !== 'undefined') {
+          //   //
+          //   // Clear out existing COMMONS_SESSION cookies that may be invalid or
+          //   // expired. This may happen when a user closes the window and comes back
+          //   //
+          //   ipCookie.remove('COMMONS_SESSION');
+          //   ipCookie.remove('COMMONS_SESSION', { path: '/' });
 
-            //
-            // Start a new Alerts array that is empty, this clears out any previous
-            // messages that may have been presented on another page
-            //
-            $rootScope.alerts = ($rootScope.alerts) ? $rootScope.alerts: [];
+          //   //
+          //   // Start a new Alerts array that is empty, this clears out any previous
+          //   // messages that may have been presented on another page
+          //   //
+          //   $rootScope.alerts = ($rootScope.alerts) ? $rootScope.alerts: [];
 
-            $rootScope.alerts.push({
-              'type': 'info',
-              'title': 'Please sign in again',
-              'details': 'You may only sign in at one location at a time'
-            });
+          //   $rootScope.alerts.push({
+          //     'type': 'info',
+          //     'title': 'Please sign in again',
+          //     'details': 'You may only sign in at one location at a time'
+          //   });
 
 
-            $location.hash('');
-            $location.path('/');
-          }
+          //   $location.hash('');
+          //   $location.path('/');
+          // }
+        }
+        if (response && response.status >= 404) {
+          console.log('ResponseError', response);
         }
         if (response && response.status >= 500) {
           console.log('ResponseError', response);

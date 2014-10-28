@@ -1,5 +1,5 @@
 <main class="container">
-  <form class="row feature" readonly>
+  <form class="row feature" data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator">
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
         <!-- -->
