@@ -2,8 +2,17 @@
   <form class="row feature">
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
-        <h4><span data-ng-repeat="type_ in project.type_7713b933a2bf4389b0dcd6c3938b6b9b" class="label">{{ type_.name }}</span> <strong>NFWF ID: </strong><span data-ng-model="project.name" contenteditable="{{ page.editable }}">{{ project.name }}</span> <strong>Easy Grants ID: </strong><span data-ng-model="project.easy_grants_id" contenteditable="{{ page.editable }}">{{ project.easy_grants_id }}</span></h4>
-        <h1 data-ng-model="project.project_title" contenteditable="{{ page.editable }}" strip-br="true"></h1>
+        <h4>
+          <span data-ng-repeat="type_ in project.type_7713b933a2bf4389b0dcd6c3938b6b9b" class="label">{{ type_.name }}</span> 
+          <strong>NFWF ID: </strong>
+          <textarea rows="1" data-ng-model="project.name" class="form-control animate"  msd-elastic id="name" name="name" placeholder="NFWF ID">{{ project.name }}</textarea>
+          <strong>Easy Grants ID: </strong>
+          <textarea rows="1" data-ng-model="project.easy_grants_id" class="form-control animate"  msd-elastic id="easy_grants_id" name="easy_grants_id" placeholder="Easy Grants ID">{{ project.easy_grants_id }}</textarea>
+        </h4>
+
+        <h1>
+          <textarea rows="1" data-ng-model="project.project_title" class="form-control animate"  msd-elastic id="project_title" name="project_title" placeholder="Project Title">{{ project.project_title }}</textarea>
+        </h1>
         <h2>
           <span data-ng-repeat="organization in project.type_271e6f04e893436588c8cd84da851a97">
             {{ organization.name }}
@@ -11,11 +20,11 @@
           </span>
         </h2>
         <br />
-        <p><span data-ng-model="project.project_abstract" contenteditable="{{ page.editable }}"></span></p>
+        <p data-ng-model="project.project_abstract" contenteditable="{{ page.editable }}" placeholder="Describe the project here"></p>
       </div>
       <aside class="column-5 feature-sidebar">
         <h6><strong>Location</strong> Description</h6>
-        <p>{{ project.location_description }}</p>
+        <p data-ng-model="project.location_description" contenteditable="{{ page.editable }}" placeholder="Describe the project location"></p>
 
         <h6><strong>Important</strong> Dates</h6>
         

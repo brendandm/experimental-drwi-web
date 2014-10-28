@@ -432,16 +432,30 @@ a.button:hover,
 }
 
 
-//
-//
-//
-[contenteditable="true"] {
-  border-bottom: 1px dotted $color-white-dark;
-  outline: 0;
-}
 
-[contenteditable="true"]:active,
-[contenteditable="true"]:focus {
-  border-bottom: 1px solid $color-brightBlue;
-  outline: 0;
+//
+//
+//
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  textarea {
+    background-color: transparent;
+    border: 0;
+    border-bottom: 1px solid $color-white-dark;
+    font-size: 1em;
+    font-weight: 200;
+    line-height: 1;
+    outline: none;
+    resize: none !important;
+    width: 100%;
+
+    &:active,
+    &:focus {
+      border-bottom: 1px solid $color-brightBlue;
+    }
+  }
 }

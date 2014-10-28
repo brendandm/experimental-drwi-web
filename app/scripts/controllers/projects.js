@@ -85,8 +85,7 @@ angular.module('practiceMonitoringAssessmentApp')
       // a combination of gte and lte. We need to null the values of all 
       // filters in order for the URL to change appropriately
       //
-      var filters = $scope.filters.available[$index].filter
-      angular.forEach(filters, function(criteria, $_index) {
+      angular.forEach($scope.filters.available[$index].filter, function(criteria, $_index) {
         $scope.filters.available[$index].filter[$_index].value = null;
       }); 
 
@@ -145,9 +144,9 @@ angular.module('practiceMonitoringAssessmentApp')
         var Q_ = null;
 
         if (Q.length) {
-          var Q_ = angular.toJson({
+          Q_ = angular.toJson({
             filters: Q
-          })
+          });
         }
 
         $location.search({
