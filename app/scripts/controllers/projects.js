@@ -197,7 +197,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         // Forward the user along to the new project
         //
-        $location.path('/projects/' + project);
+        $location.path('/projects/' + project + '/edit');
       });
     };
 
