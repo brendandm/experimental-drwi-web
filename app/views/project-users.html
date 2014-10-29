@@ -1,1 +1,18 @@
-<p>This is the Project-Users view.</p>
+<main class="container">
+  <form class="row feature">
+    <article class="feature-detail">
+      <div class="column-11 feature-detail-content">
+
+      </div>
+      <nav class="column-5">
+        <ul>
+          <!-- Proect Manangement Navigation -->
+          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/edit">Edit</a></li>
+          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/users">Users</a></li>
+        </ul>
+      </nav>
+      <aside class="column-5 feature-sidebar">
+      </aside>
+    </article>
+  </form>
+</main>

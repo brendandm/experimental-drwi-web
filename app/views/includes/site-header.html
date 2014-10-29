@@ -25,7 +25,7 @@
       </h1>
     </header>
     <nav class="column-8">
-      <ul data-ng-if="page.links" class="context-navigation">
+      <ul data-ng-if="page.links" class="breadcrumb-navigation">
         <li data-ng-repeat="link in page.links">
           <a data-ng-if="!link.click" href="{{ link.url }}" class="{{ link.type }}">
             {{ link.text }}
@@ -39,7 +39,7 @@
   </article>
   <article data-ng-if="!page.display_title" class="row">
     <nav class="column-16">
-      <ul data-ng-if="page.links" class="context-navigation crumbs">
+      <ul data-ng-if="page.links" class="breadcrumb-navigation crumbs">
         <li data-ng-repeat="link in page.links">
           <a href="{{ link.url }}" class="{{ link.type }}">
             {{ link.text }}

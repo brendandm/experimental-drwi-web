@@ -109,9 +109,9 @@
 
 
 //
-// Page Level/Contextual Navigation
+// Page Level/Breadcrumb Navigation
 //
-.context-navigation {
+.breadcrumb-navigation {
   background-color: transparent;
   border-radius: 0;
   -moz-border-radius: 0;
@@ -203,6 +203,24 @@
   }
 }
 
+
+//
+// Contextual Navigation
+//
+.contextual-navigation {
+  
+  li {
+
+    a {
+
+      &:hover {
+      
+      }
+
+    }
+
+  }
+}
 
 //
 // Pagination
