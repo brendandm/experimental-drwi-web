@@ -44,45 +44,6 @@ angular.module('practiceMonitoringAssessmentApp')
       }
     };
 
-    $scope.permissions = {};
-
-    $scope.permissions.featureUser = function() {
-      
-      var promise = Feature.user({
-        storage: storage,
-        featureId: $scope.project.id,
-        userId: $scope.user.id
-      }).$promise.then(function(response) {
-        return response.response;
-      });
-
-      return promise;
-    };
-
-    $scope.permissions.featureUsers = function() {
-      
-      var promise = Feature.users({
-        storage: storage,
-        featureId: $scope.project.id
-      }).$promise.then(function(response) {
-        return response.response;
-      });
-
-      return promise;
-    };
-
-    $scope.permissions.template = function() {
-      
-      var promise = Template.user({
-        templateId: $scope.template.id,
-        userId: $scope.user.id
-      }).$promise.then(function(response) {
-        return response.response;
-      });
-
-      return promise;
-    };
-
 
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
@@ -92,7 +53,11 @@ angular.module('practiceMonitoringAssessmentApp')
     if ($scope.user.id === $scope.project.owner) {
       $scope.user.owner = true;
     } else {
-      $scope.permissions.template().then(function(response) {
+      Template.GetTemplateUser({
+        storage: storage,
+        templateId: $scope.template.id,
+        userId: $scope.user.id
+      }).then(function(response) {
 
         $scope.user.template = response;
         
@@ -101,18 +66,22 @@ angular.module('practiceMonitoringAssessmentApp')
         // if there are permissions on the individual Feature
         //
         if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
-          $scope.permissions.featureUser().then(function(response) {
+          Feature.GetFeatureUser({
+            storage: storage,
+            featureId: $scope.project.id,
+            userId: $scope.user.id
+          }).then(function(response) {
             $scope.user.feature = response;
-            if (!$scope.user.feature.is_admin || !$scope.user.feature.read) {
-              console.log('You don\'t have permission to edit this Feature');
+            if ($scope.user.feature.is_admin || $scope.user.feature.write) {
+            } else {
               $location.path('/projects/' + $scope.project.id);
             }
           });
         }
 
       });
-    }    
-
+    }
+    
   }]);
 
 

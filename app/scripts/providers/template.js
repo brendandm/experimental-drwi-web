@@ -91,6 +91,40 @@ angular.module('practiceMonitoringAssessmentApp')
       };
 
 
+      //
+      // User Specific Permissions or User Lists for a specific Feature
+      //
+      //
+      // User Specific Permissions or User Lists for a specific Feature
+      //
+      Template.GetTemplateUsers = function(options) {
+
+        var promise = Template.users({
+          storage: options.storage,
+          templateId: options.templateId
+        }).$promise.then(function(response) {
+          return response.response;
+        });
+
+        return promise;
+
+      };
+
+      Template.GetTemplateUser = function(options) {
+
+        var promise = Template.user({
+          storage: options.storage,
+          templateId: options.templateId,
+          userId: options.userId
+        }).$promise.then(function(response) {
+          return response.response;
+        });
+
+        return promise;
+
+      };
+
+
       return Template;
     }];
 

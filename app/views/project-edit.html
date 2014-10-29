@@ -49,7 +49,17 @@
           <textarea rows="1" data-ng-model="project.project_abstract" class="form-control animate"  msd-elastic id="project_abstract" name="project_abstract" placeholder="Project Abstract">{{ project.project_abstract }}</textarea>
         </div>
       </div>
-      <aside class="column-5 feature-sidebar">
+      <nav class="column-5 contextual-navigation-wrapper">
+        <h6><strong>Tools</strong></h6>
+        <ul class="contextual-navigation">
+          <!-- Proect Manangement Navigation -->
+          <li data-ng-if="user.owner || user.feature.read || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}">Overview</a></li>
+          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator" class="active"><a href="/projects/{{ project.id }}/edit">Edit</a></li>
+          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/users">Users</a></li>
+        </ul>
+      </nav>
+      <aside class="column-5 feature-sidebar pull-right">
+
         <h6><strong>Location</strong> Description</h6>
         <!-- Location Description -->
         <div class="form-group">

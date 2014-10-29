@@ -35,6 +35,10 @@ angular.module('practiceMonitoringAssessmentApp')
           method: 'GET',
           url: '//api.commonscloud.org/v2/:storage/:featureId/users/:userId.json'
         },
+        createUser: {
+          method: 'POST',
+          url: '//api.commonscloud.org/v2/:storage/:featureId/users/:userId.json'
+        },
         users: {
           method: 'GET',
           url: '//api.commonscloud.org/v2/:storage/:featureId/users.json'
@@ -157,6 +161,7 @@ angular.module('practiceMonitoringAssessmentApp')
       };
 
       Feature.GetFeature = function(options) {
+
         var promise = Feature.get({
             storage: options.storage,
             featureId: options.featureId,
@@ -182,7 +187,28 @@ angular.module('practiceMonitoringAssessmentApp')
         var promise = Feature.save({
             storage: options.storage
           }, options.data).$promise.then(function(response) {
-            return response.resource_id;
+
+            var feature_id = response.resource_id;
+
+            //
+            // Before we return the values we should also add the owner of the new Feature
+            // to the Users list by given them project specific permissions
+            //
+            var data = {
+              read: true,
+              write: true,
+              is_admin: true
+            };
+
+            Feature.createUser({
+              storage: options.storage,
+              featureId: feature_id,
+              userId: options.data.owner
+            }, data).$promise.then(function(response) {
+              console.log('Response from createuser', response);
+            });
+
+            return feature_id;
           }, function(error) {
             $rootScope.alerts = [];
             $rootScope.alerts.push({
@@ -215,6 +241,38 @@ angular.module('practiceMonitoringAssessmentApp')
         return promise;
       };
 
+
+      //
+      // User Specific Permissions or User Lists for a specific Feature
+      //
+      Feature.GetFeatureUsers = function(options) {
+
+        var promise = Feature.users({
+          storage: options.storage,
+          featureId: options.featureId
+        }).$promise.then(function(response) {
+          return response.response.users;
+        });
+
+        return promise;
+
+      };
+
+      Feature.GetFeatureUser = function(options) {
+
+        var promise = Feature.user({
+          storage: options.storage,
+          featureId: options.featureId,
+          userId: options.userId
+        }).$promise.then(function(response) {
+          return response.response;
+        });
+
+        return promise;
+
+      };
+
+      
       //
       // From an Angular $location.search() object we need to parse it
       // so that we can produce an appropriate URL for our API

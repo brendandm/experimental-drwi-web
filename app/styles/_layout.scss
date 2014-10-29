@@ -448,11 +448,21 @@ $susy: (
 // Generic
 //
 body {
-  background-color: $color-white-bright;
+  background-color: $color-white-darker;
   color: $color-black-base;
   margin: 0;
   padding: 0;
   width: 100%;
+}
+
+.container.meta {
+  background-color: $color-white-bright;
+}
+
+main.container {
+  background-color: $color-white-bright;
+  margin-bottom: 32px;
+  padding-bottom: 64px;
 }
 
 .rule-above {

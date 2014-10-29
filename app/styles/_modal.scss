@@ -1,0 +1,25 @@
+//
+// _modal.scss
+//
+// This stylesheet is written in SASS(1) and contains site wide typographic
+// specifications.
+//
+.modal {
+  background: $color-white-base;
+  height: 100%;
+  padding: 64px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+
+  .close {
+    cursor: pointer;
+    font-size: 2em;
+    margin-top: 7px;
+
+    &:hover {
+      color: $color-brightBlue;
+    }
+  }
+}

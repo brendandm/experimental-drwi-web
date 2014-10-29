@@ -132,8 +132,20 @@ angular
         templateUrl: templateUrl,
         controller: 'ProjectUsersCtrl',
         resolve: {
-          user: function(User) {
-            return User.getUser();
+          user: function(User, $route) {
+            return User.getUser({
+              featureId: $route.current.params.projectId,
+              templateId: project.templateId
+            });
+          },
+          users: function(User) {
+            return User.GetUsers();
+          },
+          projectUsers: function(Feature, $route) {
+            return Feature.GetFeatureUsers({
+              storage: project.storage,
+              featureId: $route.current.params.projectId
+            });
           },
           template: function(Template, $route) {
             return Template.GetTemplate(project.templateId);

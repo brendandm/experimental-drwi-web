@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ProjectUsersCtrl', ['$rootScope', '$scope', '$route', '$location', 'project', 'Template', 'Feature', 'Field', 'template', 'fields', 'storage', 'user', function ($rootScope, $scope, $route, $location, project, Template, Feature, Field, template, fields, storage, user) {
+  .controller('ProjectUsersCtrl', ['$rootScope', '$scope', '$route', '$location', 'project', 'Template', 'Feature', 'Field', 'template', 'fields', 'storage', 'user', 'users', 'projectUsers', function ($rootScope, $scope, $route, $location, project, Template, Feature, Field, template, fields, storage, user, users, projectUsers) {
 
     //
     // Assign project to a scoped variable
@@ -16,10 +16,32 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.template = template;
     $scope.fields = fields;
     $scope.project = project;
+    $scope.project.users = projectUsers;
     $scope.user = user;
     $scope.user.owner = false;
     $scope.user.feature = {};
     $scope.user.template = {};
+    $scope.users = users;
+
+    //
+    //
+    //
+    $scope.modals = {
+      open: function($index) {
+        console.log('open modal', $scope.modals.windows[$index]);
+        $scope.modals.windows[$index].visible = true;
+      },
+      close: function($index) {
+        $scope.modals.windows[$index].visible = false;
+      },
+      windows: {
+        inviteUser: {
+          title: 'Invite a User',
+          body: '',
+          visible: false
+        }
+      }
+    }
 
     //
     // Setup basic page variables
@@ -45,48 +67,20 @@ angular.module('practiceMonitoringAssessmentApp')
           type: 'active'
         }
       ],
+      actions: [
+        {
+          type: 'button-link new',
+          // url: '/projects/' + $scope.project.id + '/users/invite',
+          modal: function() {
+            console.log('modal');
+            $scope.modals.open('inviteUser');
+          },
+          text: 'Invite User'
+        }
+      ],
       refresh: function() {
         $route.reload();
       }
-    };
-
-    $scope.permissions = {};
-
-    $scope.permissions.featureUser = function() {
-      
-      var promise = Feature.user({
-        storage: storage,
-        featureId: $scope.project.id,
-        userId: $scope.user.id
-      }).$promise.then(function(response) {
-        return response.response;
-      });
-
-      return promise;
-    };
-
-    $scope.permissions.featureUsers = function() {
-      
-      var promise = Feature.users({
-        storage: storage,
-        featureId: $scope.project.id
-      }).$promise.then(function(response) {
-        return response.response;
-      });
-
-      return promise;
-    };
-
-    $scope.permissions.template = function() {
-      
-      var promise = Template.user({
-        templateId: $scope.template.id,
-        userId: $scope.user.id
-      }).$promise.then(function(response) {
-        return response.response;
-      });
-
-      return promise;
     };
 
     //
@@ -97,7 +91,11 @@ angular.module('practiceMonitoringAssessmentApp')
     if ($scope.user.id === $scope.project.owner) {
       $scope.user.owner = true;
     } else {
-      $scope.permissions.template().then(function(response) {
+      Template.GetTemplateUser({
+        storage: storage,
+        templateId: $scope.template.id,
+        userId: $scope.user.id
+      }).then(function(response) {
 
         $scope.user.template = response;
         
@@ -106,11 +104,14 @@ angular.module('practiceMonitoringAssessmentApp')
         // if there are permissions on the individual Feature
         //
         if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
-          $scope.permissions.featureUser().then(function(response) {
+          Feature.GetFeatureUser({
+            storage: storage,
+            featureId: $scope.project.id,
+            userId: $scope.user.id
+          }).then(function(response) {
             $scope.user.feature = response;
             if ($scope.user.feature.is_admin || $scope.user.feature.write) {
             } else {
-              console.log('You don\'t have permission to edit this Feature');
               $location.path('/projects/' + $scope.project.id);
             }
           });

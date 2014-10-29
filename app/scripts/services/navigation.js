@@ -8,6 +8,16 @@
  * Service in the practiceMonitoringAssessmentApp.
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .service('Navigation', function Navigation() {
-    // AngularJS will instantiate a singleton by calling "new" on this function
-  });
+  .service('Navigation', [ function Navigation() {
+    
+    var Navigation_ = {};
+
+    Navigation_.settings = function() {
+      return {
+        contextual: []
+      };
+    };
+
+    return Navigation_;
+
+  }]);

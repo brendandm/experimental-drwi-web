@@ -207,14 +207,45 @@
 //
 // Contextual Navigation
 //
+.contextual-navigation-wrapper {
+  border-bottom: 1px solid $color-white-darker;
+  border-left: 1px solid $color-white-darker;
+  margin: 0;
+  padding: 0 0 32px;
+
+  h6 {
+    padding-left: 32px;
+  }
+}
+
 .contextual-navigation {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
   
   li {
+    border-left: 3px solid transparent;
+    line-height: 3;
+
+    &.active {
+      border-left: 3px solid $color-brightBlue;
+
+      a {
+        color: $color-brightBlue;
+      }
+    }
 
     a {
+      color: $color-black-base;
+      font-size: 1em;
+      font-weight: 300;
+      letter-spacing: 0.0125em;
+      padding: 4px 0 4px 32px;
+      text-decoration: none;
 
       &:hover {
-      
+        color: $color-brightBlue;
+        text-decoration: none;
       }
 
     }

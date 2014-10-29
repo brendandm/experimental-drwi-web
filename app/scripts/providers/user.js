@@ -12,13 +12,37 @@ angular.module('practiceMonitoringAssessmentApp')
 
     this.$get = ['$resource', '$rootScope', '$location', '$q', 'ipCookie', '$timeout', function($resource, $rootScope, $location, $q, ipCookie, $timeout) {
 
-      var User = $resource('//api.commonscloud.org/v2/user/me.json');
+      var User = $resource('//api.commonscloud.org/v2/user/me.json', {
 
-      User.getUser = function () {
+      }, {
+        query: {
+          method: 'GET',
+          url: '//api.commonscloud.org/v2/users.json',
+          isArray: false,
+          transformResponse: function (data, headersGetter) {
+            return angular.fromJson(data);
+          }
+        }
+      });
+
+      User.GetUsers = function() {
+
+        var promise = User.query().$promise.then(function(response) {
+          return response;
+        });
+
+        return promise;
+
+      };
+
+      User.getUser = function (options) {
 
         var promise = User.get().$promise.then(function(response) {
           $rootScope.user = response.response;
-          return response.response;
+
+          var user = response.response;
+
+          return user;
         }, function (response) {
 
           if (response.status === 401 || response.status === 403) {

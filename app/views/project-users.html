@@ -1,18 +1,60 @@
 <main class="container">
-  <form class="row feature">
+  <div class="row feature">
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
-
+        <h1>Users</h1>
+        
+        <!-- List of existing users -->
+        <table class="table table-hover">
+          <thead>
+            <th>User ID</th>
+            <th>Name</th>
+            <th>Email</th>
+          </thead>
+          <tbody>
+            <tr data-ng-repeat="user in project.users">
+              <td>{{ user.id }}</td>
+              <td>{{ user.name }}</td>
+              <td><a href="mailto:{{ user.email }}" target="_blank">{{ user.email }}</a></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <nav class="column-5">
-        <ul>
+      <nav class="column-5 contextual-navigation-wrapper">
+        <h6><strong>Tools</strong></h6>
+        <ul class="contextual-navigation">
           <!-- Proect Manangement Navigation -->
+          <li data-ng-if="user.owner || user.feature.read || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}">Overview</a></li>
           <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/edit">Edit</a></li>
-          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/users">Users</a></li>
+          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator" class="active"><a href="/projects/{{ project.id }}/users">Users</a></li>
         </ul>
       </nav>
-      <aside class="column-5 feature-sidebar">
+      <aside class="column-5 feature-sidebar pull-right">
       </aside>
     </article>
-  </form>
+  </div>
 </main>
+
+<div data-ng-show="modals.windows.inviteUser.visible" class="modal">
+  <div class="container">
+    <div class="row">
+      <div class="column-15">
+        <h1>{{ modals.windows.inviteUser.title }}</h1>
+      </div>
+      <div class="column-1">
+        <div data-ng-click="modals.close('inviteUser')" class="pull-right close icon retinaicon-essentials-045"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column-16">
+        <p>Begin by searching for a user from the </p>
+        desription<br />
+        search field<br />
+        drop down list<br />
+        invitation list<br />
+
+        {{ users }}
+      </div>
+    </div>
+  </div>
+</div>
