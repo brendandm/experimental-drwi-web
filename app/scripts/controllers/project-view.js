@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ProjectViewCtrl', ['$scope', '$route', 'Template', 'Feature', 'project', 'storage', 'user', 'template', function ($scope, $route, Template, Feature, project, storage, user, template) {
+  .controller('ProjectViewCtrl', ['$scope', '$route', '$location', 'Template', 'Feature', 'project', 'storage', 'user', 'template', function ($scope, $route, $location, Template, Feature, project, storage, user, template) {
 
     //
     // Assign project to a scoped variable
@@ -103,8 +103,7 @@ angular.module('practiceMonitoringAssessmentApp')
         if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
           $scope.permissions.featureUser().then(function(response) {
             $scope.user.feature = response;
-            if ($scope.user.feature.is_admin || $scope.user.feature.read) {
-            } else {
+            if (!$scope.user.feature.is_admin || !$scope.user.feature.read) {
               console.log('You don\'t have permission to edit this Feature');
               $location.path('/projects/' + $scope.project.id);
             }

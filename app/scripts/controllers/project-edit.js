@@ -37,7 +37,11 @@ angular.module('practiceMonitoringAssessmentApp')
         },
         {
           text: $scope.project.project_title,
-          url: '/projects/' + $scope.project.id,
+          url: '/projects/' + $scope.project.id
+        },
+        {
+          text: 'Edit',
+          url: '/projects/' + $scope.project.id + '/edit',
           type: 'active'
         }
       ],
