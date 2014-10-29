@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ProjectViewCtrl', ['$scope', '$route', '$location', 'Template', 'Feature', 'project', 'storage', 'user', 'template', function ($scope, $route, $location, Template, Feature, project, storage, user, template) {
+  .controller('ProjectViewCtrl', ['$rootScope', '$scope', '$route', '$location', 'Template', 'Feature', 'project', 'storage', 'user', 'template', function ($rootScope, $scope, $route, $location, Template, Feature, project, storage, user, template) {
 
     //
     // Assign project to a scoped variable
@@ -23,7 +23,7 @@ angular.module('practiceMonitoringAssessmentApp')
     //
     // Setup basic page variables
     //
-    $scope.page = {
+    $rootScope.page = {
       template: 'views/project-view.html',
       title: $scope.project.project_title,
       display_title: false,

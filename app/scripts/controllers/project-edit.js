@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ProjectEditCtrl', ['$scope', '$route', '$location', 'project', 'Template', 'Feature', 'Field', 'template', 'fields', 'storage', 'user', function ($scope, $route, $location, project, Template, Feature, Field, template, fields, storage, user) {
+  .controller('ProjectEditCtrl', ['$rootScope', '$scope', '$route', '$location', 'project', 'Template', 'Feature', 'Field', 'template', 'fields', 'storage', 'user', function ($rootScope, $scope, $route, $location, project, Template, Feature, Field, template, fields, storage, user) {
 
     //
     // Assign project to a scoped variable
@@ -24,7 +24,7 @@ angular.module('practiceMonitoringAssessmentApp')
     //
     // Setup basic page variables
     //
-    $scope.page = {
+    $rootScope.page = {
       template: 'views/project-edit.html',
       title: $scope.project.project_title,
       display_title: false,
@@ -56,22 +56,16 @@ angular.module('practiceMonitoringAssessmentApp')
         featureId: $scope.project.id,
         data: $scope.project
       }).then(function(response) {
-
-        //
-        // Now that we've successfully saved the Project we need to reinject those changes back into the
-        // page so that things like the breadcrumbs update
-        //
-        // $scope.project = response.response;
-
         //
         // Refresh the page so that those things update appropriately.
         //
-        $scope.page.refresh();
+        $rootScope.page.refresh();
 
       }).then(function(error) {
         // Do something with the error
       });
     };
+
 
     $scope.permissions = {};
 
@@ -112,7 +106,6 @@ angular.module('practiceMonitoringAssessmentApp')
       return promise;
     };
 
-
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
     // backend functionality. Even if the user guesses the URL the API will stop them from editing the
@@ -143,12 +136,4 @@ angular.module('practiceMonitoringAssessmentApp')
       });
     }
 
-
-    // $scope.permissions.feature();
-    // $scope.permissions.template();
-
-    // if (!$scope.user.owner || !$scope.user.feature.is_admin || !$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
-    //   console.log('You don\'t have permission to edit this Feature');
-    //   $location.path('/projects/' + $scope.project.id);
-    // }
   }]);

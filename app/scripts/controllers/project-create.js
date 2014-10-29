@@ -10,7 +10,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ProjectCreateCtrl', ['$scope', '$route', '$location', 'project', function ($scope, $route, $location, project) {
+  .controller('ProjectCreateCtrl', ['$rootScope', '$scope', '$route', '$location', 'project', function ($rootScope, $scope, $route, $location, project) {
 
     //
     // Forward the user along to the new project
