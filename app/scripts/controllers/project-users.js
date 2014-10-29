@@ -26,7 +26,7 @@ angular.module('practiceMonitoringAssessmentApp')
     //
     $rootScope.page = {
       template: 'views/project-edit.html',
-      title: $scope.project.project_title + ' > Users',
+      title: $scope.project.project_title + ' Users',
       display_title: false,
       editable: true,
       back: '/',
