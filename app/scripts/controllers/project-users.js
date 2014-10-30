@@ -77,13 +77,24 @@ angular.module('practiceMonitoringAssessmentApp')
             // and refresh the page
             //
             $scope.modals.close('inviteUser');
-            $page.refresh();
+            $scope.page.refresh();
           });
         });
       },
       remove: function(user) {
         var index = $scope.project.users.indexOf(user);
-        $scope.project.users.splice(index, 1);
+        
+        Feature.RemoveUser({
+            storage: storage,
+            featureId: $scope.project.id,
+            userId: user.id
+          }).then(function(response) {
+            //
+            // Once the users have been added to the project, close the modal
+            // and refresh the page
+            //
+            $scope.project.users.splice(index, 1);
+          });
       },
       remove_confirm: false
     }

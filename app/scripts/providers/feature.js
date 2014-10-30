@@ -39,6 +39,10 @@ angular.module('practiceMonitoringAssessmentApp')
           method: 'POST',
           url: '//api.commonscloud.org/v2/:storage/:featureId/users/:userId.json'
         },
+        removeUser: {
+          method: 'DELETE',
+          url: '//api.commonscloud.org/v2/:storage/:featureId/users/:userId.json'
+        },
         users: {
           method: 'GET',
           url: '//api.commonscloud.org/v2/:storage/:featureId/users.json'
@@ -284,7 +288,23 @@ angular.module('practiceMonitoringAssessmentApp')
         return promise;
 
       };
-      
+
+      Feature.RemoveUser = function(options) {
+
+        console.log('options', options)
+
+        var promise = Feature.removeUser({
+          storage: options.storage,
+          featureId: options.featureId,
+          userId: options.userId
+        }).$promise.then(function(response) {
+          return response;
+        });
+
+        return promise;
+
+      };
+
       //
       // From an Angular $location.search() object we need to parse it
       // so that we can produce an appropriate URL for our API
