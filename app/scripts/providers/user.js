@@ -28,7 +28,7 @@ angular.module('practiceMonitoringAssessmentApp')
       User.GetUsers = function() {
 
         var promise = User.query().$promise.then(function(response) {
-          return response;
+          return response.response.users;
         });
 
         return promise;

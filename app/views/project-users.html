@@ -38,22 +38,51 @@
 <div data-ng-show="modals.windows.inviteUser.visible" class="modal">
   <div class="container">
     <div class="row">
-      <div class="column-15">
-        <h1>{{ modals.windows.inviteUser.title }}</h1>
-      </div>
-      <div class="column-1">
+      <div class="column-16">
         <div data-ng-click="modals.close('inviteUser')" class="pull-right close icon retinaicon-essentials-045"></div>
       </div>
     </div>
     <div class="row">
-      <div class="column-16">
-        <p>Begin by searching for a user from the </p>
-        desription<br />
-        search field<br />
-        drop down list<br />
-        invitation list<br />
+      <div class="column-4"></div>
+      <div class="column-8">
+        <h1>{{ modals.windows.inviteUser.title }}</h1>
+        <p>
+          You can invite people to collaborate with you on this Project. Begin by typing in their name and we will lookup their CommonsCloud account for you.
+        </p>
 
-        {{ users }}
+        <form method="POST" id="form-invite-user" name="form-invite-user">
+          <div class="form-group">
+            <input type="text" class="form-control input-xl" data-ng-model="search.text" id="search-text" name="search-text" placeholder="Begin typing the person's name" autofocus="autofocus" />            
+          </div>
+        </form>
+
+        <!-- List of existing users -->
+        <table class="table table-hover">
+          <thead>
+            <th>User ID</th>
+            <th>Name</th>
+            <th>Email</th>
+          </thead>
+          <tbody>
+            <tr data-ng-repeat="user in users | filter:search.text">
+              <td>{{ user.id }}</td>
+              <td>{{ user.name }}</td>
+              <td><a href="mailto:{{ user.email }}" target="_blank">{{ user.email }}</a></td>
+              <td><a class="button" data-ng-click="project.users.invite(user)">Invite</a></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <hr />
+
+        <p>
+          <strong>What happens when I click "Invite"?</strong><br />
+          If they already have account, we'll just send them an email letting them know they've been added to this Project as a collaborator.
+        </p>
+        <p>
+          <strong>What happens if they don't have an account?</strong><br />
+          If they don't already have a CommonsCloud account, they will need to register for one before you can invite them to the collaborate with you on this Project.
+        </p>
       </div>
     </div>
   </div>

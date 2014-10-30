@@ -23,6 +23,10 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.user.template = {};
     $scope.users = users;
 
+    $scope.search = {
+      text: null
+    };
+
     //
     //
     //
@@ -38,10 +42,10 @@ angular.module('practiceMonitoringAssessmentApp')
         inviteUser: {
           title: 'Invite a User',
           body: '',
-          visible: false
+          visible: true
         }
       }
-    }
+    };
 
     //
     // Setup basic page variables
