@@ -10,12 +10,21 @@
             <th>User ID</th>
             <th>Name</th>
             <th>Email</th>
+            <th>&nbsp;</th>
           </thead>
           <tbody>
-            <tr data-ng-repeat="user in project.users">
+            <tr data-ng-repeat="user in project.users track by $index">
               <td>{{ user.id }}</td>
               <td>{{ user.name }}</td>
               <td><a href="mailto:{{ user.email }}" target="_blank">{{ user.email }}</a></td>
+              <td class="action">
+                <a data-ng-if="!project.users[$index].remove_confirm" data-ng-click="project.users[$index].remove_confirm = true;" class="remove">Remove</a>
+                <span data-ng-if="project.users[$index].remove_confirm" class="confirm">
+                  <a data-ng-click="users.remove(user);" class="remove">Remove</a>
+                  <span>or</span>
+                  <a data-ng-click="project.users[$index].remove_confirm = false;" class="cancel">Nevermind</a>
+                </span>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -47,31 +56,52 @@
       <div class="column-8">
         <h1>{{ modals.windows.inviteUser.title }}</h1>
         <p>
-          You can invite people to collaborate with you on this Project. Begin by typing in their name and we will lookup their CommonsCloud account for you.
+          You can add people to collaborate with you on this Project. Begin by typing in their name and we will lookup their CommonsCloud account for you.
         </p>
 
-        <form method="POST" id="form-invite-user" name="form-invite-user">
-          <div class="form-group">
-            <input type="text" class="form-control input-xl" data-ng-model="search.text" id="search-text" name="search-text" placeholder="Begin typing the person's name" autofocus="autofocus" />            
+        <div class="row step first">
+          <div class="column-16 sub-step">
+            <div class="step-indicator">
+              <p>1 of 2</p>
+            </div>
+            <header>
+              <p>1. Begin typing the person's name</p>
+            </header>
+            <article class="step-content">
+              <form method="POST" id="form-invite-user" name="form-invite-user">
+                <div class="form-group autocomplete">
+                  <input type="text" class="form-control input-xl" data-ng-model="users.search" id="search-text" name="search-text" placeholder="Jeff Trandahl" autofocus="autofocus" />
+                  <div data-ng-if="users.search" class="dropdown">
+                    <ul>
+                      <li data-ng-repeat="user in users.list | filter:users.search">
+                        <a data-ng-click="users.invite(user);">{{ user.name }} <span data-ng-if="user.name">, </span> {{ user.email }}</a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </form>
+            </article>
           </div>
-        </form>
+        </div>
 
-        <!-- List of existing users -->
-        <table class="table table-hover">
-          <thead>
-            <th>User ID</th>
-            <th>Name</th>
-            <th>Email</th>
-          </thead>
-          <tbody>
-            <tr data-ng-repeat="user in users | filter:search.text">
-              <td>{{ user.id }}</td>
-              <td>{{ user.name }}</td>
-              <td><a href="mailto:{{ user.email }}" target="_blank">{{ user.email }}</a></td>
-              <td><a class="button" data-ng-click="project.users.invite(user)">Invite</a></td>
-            </tr>
-          </tbody>
-        </table>
+        <div data-ng-if="invite.length" class="row step last">
+          <div class="column-16 sub-step">
+            <div class="step-indicator">
+              <p>2 of 2</p>
+            </div>
+            <header>
+              <p>2. Add people to the project</p>
+            </header>
+            <article class="step-content">
+              <ul>
+                <li data-ng-repeat="user in invite">
+                  {{ user.name }} <span data-ng-if="user.name">, </span> {{ user.email }}
+                </li>
+              </ul>
+              <a class="button" data-ng-click="users.add()">Add Collaborators</a>
+            </article>
+          </div>
+        </div>
 
         <hr />
 

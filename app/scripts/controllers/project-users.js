@@ -11,28 +11,24 @@ angular.module('practiceMonitoringAssessmentApp')
   .controller('ProjectUsersCtrl', ['$rootScope', '$scope', '$route', '$location', 'project', 'Template', 'Feature', 'Field', 'template', 'fields', 'storage', 'user', 'users', 'projectUsers', function ($rootScope, $scope, $route, $location, project, Template, Feature, Field, template, fields, storage, user, users, projectUsers) {
 
     //
-    // Assign project to a scoped variable
+    // Setup necessary Template and Field lists
     //
     $scope.template = template;
     $scope.fields = fields;
+
+
+    //
+    // Setup the Project
+    //
     $scope.project = project;
     $scope.project.users = projectUsers;
-    $scope.user = user;
-    $scope.user.owner = false;
-    $scope.user.feature = {};
-    $scope.user.template = {};
-    $scope.users = users;
 
-    $scope.search = {
-      text: null
-    };
 
     //
-    //
+    // Modal Windows
     //
     $scope.modals = {
       open: function($index) {
-        console.log('open modal', $scope.modals.windows[$index]);
         $scope.modals.windows[$index].visible = true;
       },
       close: function($index) {
@@ -40,12 +36,60 @@ angular.module('practiceMonitoringAssessmentApp')
       },
       windows: {
         inviteUser: {
-          title: 'Invite a User',
+          title: 'Add a collaborator',
           body: '',
-          visible: true
+          visible: false
         }
       }
     };
+
+
+    //
+    // Setup User information
+    //
+    $scope.user = user;
+    $scope.user.owner = false;
+    $scope.user.feature = {};
+    $scope.user.template = {};
+
+    $scope.users = {
+      list: users,
+      search: null,
+      invite: function(user) {
+        $scope.invite.push(user); // Add selected User object to invitation list
+        this.search = null; // Clear search text
+      },
+      add: function() {
+        angular.forEach($scope.invite, function(user_, $index) {
+          Feature.AddUser({
+            storage: storage,
+            featureId: $scope.project.id,
+            userId: user_.id,
+            data: {
+              read: true,
+              write: true,
+              is_admin: false
+            }
+          }).then(function(response) {
+            //
+            // Once the users have been added to the project, close the modal
+            // and refresh the page
+            //
+            $scope.modals.close('inviteUser');
+            $page.refresh();
+          });
+        });
+      },
+      remove: function(user) {
+        var index = $scope.project.users.indexOf(user);
+        $scope.project.users.splice(index, 1);
+      },
+      remove_confirm: false
+    }
+
+
+    $scope.invite = [];
+
 
     //
     // Setup basic page variables
@@ -79,7 +123,7 @@ angular.module('practiceMonitoringAssessmentApp')
             console.log('modal');
             $scope.modals.open('inviteUser');
           },
-          text: 'Invite User'
+          text: 'Add a collaborator'
         }
       ],
       refresh: function() {

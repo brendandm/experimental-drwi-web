@@ -462,3 +462,126 @@ h6 {
     }
   }
 }
+
+//
+// Autocomplete field drop down lists for elements such as the Relationship autocomplete
+// or the Mapbox geocoder/address search
+//
+.autocomplete {
+  position: relative;
+  .dropdown {
+    color: rgb(242, 242, 242);
+    left: 0;
+    position: absolute;
+    top: 36px;
+    width: 100%;
+    z-index: 9999;
+
+    ul {
+      background-color: $color-white-bright;
+      box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+      list-style-type: none;
+      padding: 0;
+      width: 100%;
+    }
+
+    li {
+      font-size: 16px;
+      font-weight: 300;
+      list-style-type: none;
+      margin: 0;
+      padding: 8px 16px;
+
+      a {
+        color: $color-black-base;
+        display: block;
+        width: 100%;
+
+        &:hover {
+          color: $color-brightBlue;
+        }
+      }
+    }
+  }
+}
+
+.relationship-values {
+  padding: 16px 0 0;
+
+  .row {
+    border-bottom: 1px solid rgb(232, 232, 232);
+    margin-bottom: 16px;
+  }
+  .row:last-child {
+    border-bottom: 0;
+    margin-bottom: 0;
+  }
+}
+
+
+//
+// Break Forms into managable steps
+//
+.step {
+
+  &.first {
+    .sub-step {
+    }
+  }
+
+  &.last {
+    .sub-step {
+      margin-bottom: 0;
+    }
+  }
+
+  .sub-step {
+    background-color: $color-white-bright;
+    box-sizing: border-box;
+    float: left;
+    margin: 0 0 32px;
+    padding: 32px;
+    position: relative;
+    width: 100%;
+
+    &.step-info {
+      border: 1px dashed $color-black-base;
+      margin-top: 0;
+    }
+
+    .statistics {
+      border-top: 1px solid darken($color-white-base, 10%);
+      margin-top: 32px;
+      padding-top: 22px;
+    }
+
+    header {
+      p {
+        font-size: 1.4em;
+      }
+    }
+
+    .content {
+      box-sizing: border-box;
+      float: left;
+      width: 100%;
+    }
+
+    .step-indicator {
+      position: absolute;
+      top: 32px;
+      right: 32px;
+
+      p {
+        color: darken($color-white-base, 25%);
+        font-family: $font-sans;
+        font-size: 0.75em;
+        font-weight: 500;
+      }
+    }
+    
+    form {
+      margin: 32px 0;
+    }
+  }
+}

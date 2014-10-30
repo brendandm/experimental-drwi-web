@@ -152,3 +152,39 @@
     margin-top: 0;
   }
 
+//
+// On page actions like deletion
+//
+  .action {
+    font-size: 0.6875em;
+    padding: 8px 6px;
+
+    .confirm {
+      span {
+        font-family: $font-serif;
+        font-style: italic;
+        padding: 0 5px;
+      }
+    }
+
+    * {
+      float: left;
+    }
+
+    .remove {
+      color: $color-red-base;
+
+      &:hover {
+        color: darken($color-red-base, 10%);
+      }
+    }
+
+    .cancel {
+      color: $color-black-base;
+
+      &:hover {
+        color: darken($color-black-base, 10%);
+      }
+    }
+  }
+

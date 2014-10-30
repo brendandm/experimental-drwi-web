@@ -194,18 +194,15 @@ angular.module('practiceMonitoringAssessmentApp')
             // Before we return the values we should also add the owner of the new Feature
             // to the Users list by given them project specific permissions
             //
-            var data = {
-              read: true,
-              write: true,
-              is_admin: true
-            };
-
-            Feature.createUser({
+            Feature.AddUser({
               storage: options.storage,
               featureId: feature_id,
-              userId: options.data.owner
-            }, data).$promise.then(function(response) {
-              console.log('Response from createuser', response);
+              userId: options.data.owner,
+              data: {
+                read: true,
+                write: true,
+                is_admin: true
+              }
             });
 
             return feature_id;
@@ -272,6 +269,21 @@ angular.module('practiceMonitoringAssessmentApp')
 
       };
 
+      Feature.AddUser = function(options) {
+
+        console.log('options', options)
+
+        var promise = Feature.createUser({
+          storage: options.storage,
+          featureId: options.featureId,
+          userId: options.userId
+        }, options.data).$promise.then(function(response) {
+          return response;
+        });
+
+        return promise;
+
+      };
       
       //
       // From an Angular $location.search() object we need to parse it
