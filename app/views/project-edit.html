@@ -2,10 +2,6 @@
   <form class="row feature" data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator">
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
-        <!-- -->
-        <div class="form-group">
-          <label for="" class="control-label"></label>
-        </div>
 
         <!-- Program Type -->
         <div class="form-group">
@@ -36,7 +32,7 @@
         <!-- Project Title -->
         <div class="form-group">
           <label for="type_271e6f04e893436588c8cd84da851a97" class="control-label">Organization</label>
-          <textarea rows="1" data-ng-model="project.type_271e6f04e893436588c8cd84da851a97" class="form-control animate"  msd-elastic id="type_271e6f04e893436588c8cd84da851a97" name="type_271e6f04e893436588c8cd84da851a97" placeholder="@todo, not complete"></textarea>
+          <textarea rows="1" data-ng-model="project.type_271e6f04e893436588c8cd84da851a97" class="form-control animate" msd-elastic id="type_271e6f04e893436588c8cd84da851a97" name="type_271e6f04e893436588c8cd84da851a97" placeholder="@todo, not complete"></textarea>
           <p class="help-text"><span data-ng-repeat="organization in project.type_271e6f04e893436588c8cd84da851a97">
             {{ organization.name }}
             <span data-ng-if="!$last">, </span>
@@ -46,7 +42,7 @@
         <!-- Project Abstract -->
         <div class="form-group">
           <label for="project_abstract" class="control-label">Project Abstract</label>
-          <textarea rows="1" data-ng-model="project.project_abstract" class="form-control animate"  msd-elastic id="project_abstract" name="project_abstract" placeholder="Project Abstract">{{ project.project_abstract }}</textarea>
+          <div class="textarea form-control" medium-editor options='{"placeholder": "Enter a project abstract", "buttons": ["bold", "italic", "underline", "anchor"]}' data-ng-model="project.project_abstract">{{ project.project_abstract }}</div>
         </div>
       </div>
       <nav class="column-5 contextual-navigation-wrapper">
@@ -126,14 +122,3 @@
     </div>
   </form>
 </main>
-
-<section role="navigation" class="site-actions">
-  <div class="container">  
-    <div class="row">
-      <div class="column-8"></div>
-      <div class="column-8 align-right">
-        <a class="button" href="" data-ng-click="project.save()">Save Changes</a>
-      </div>
-    </div>
-  </div>
-</section>

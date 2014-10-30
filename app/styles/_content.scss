@@ -25,8 +25,10 @@
 // Page Content
 //
 .site-content {
+  border-top: 1px solid $color-white-darker;
   float: left;
   margin: 0 0 48px;
+  padding-top: 32px;
   width: 100%;
 }
 
@@ -158,6 +160,7 @@
   .action {
     font-size: 0.6875em;
     padding: 8px 6px;
+    vertical-align: middle !important;
 
     .confirm {
       span {
@@ -165,10 +168,6 @@
         font-style: italic;
         padding: 0 5px;
       }
-    }
-
-    * {
-      float: left;
     }
 
     .remove {
@@ -188,3 +187,9 @@
     }
   }
 
+
+.email-address {
+  display: block;
+  font-size: 0.6875em;
+  font-style: italic;
+}

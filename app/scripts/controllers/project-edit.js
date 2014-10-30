@@ -45,6 +45,18 @@ angular.module('practiceMonitoringAssessmentApp')
           type: 'active'
         }
       ],
+      actions: [
+        {
+          type: 'button-link new',
+          action: function($index) {
+            $scope.project.save();
+            $scope.page.actions[$index].loading = ! $scope.page.actions[$index].loading;
+          },
+          visible: false,
+          loading: false,
+          text: 'Save Changes'
+        }
+      ],
       refresh: function() {
         $route.reload();
       }

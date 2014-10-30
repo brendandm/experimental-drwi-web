@@ -18,25 +18,6 @@
 </header>
 
 <section data-ng-if="$root.user.email" class="container meta">
-  <article data-ng-if="page.display_title" class="row toolbox">
-    <header class="column-8">
-      <h1 class="page-title">
-        {{ page.title }}
-      </h1>
-    </header>
-    <nav class="column-8">
-      <ul data-ng-if="page.links" class="breadcrumb-navigation">
-        <li data-ng-repeat="link in page.links">
-          <a data-ng-if="!link.click" href="{{ link.url }}" class="{{ link.type }}">
-            {{ link.text }}
-          </a>
-          <a data-ng-if="link.click === 'create'" data-ng-click="project.create()" class="{{ link.type }}">
-            {{ link.text }}
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </article>
   <article data-ng-if="!page.display_title" class="row">
     <nav class="column-8">
       <ul data-ng-if="page.links" class="breadcrumb-navigation crumbs">
@@ -48,11 +29,14 @@
       </ul>
     </nav>
     <nav class="column-8">
-      <ul data-ng-if="page.links" class="breadcrumb-navigation">
+      <ul data-ng-if="page.actions" class="breadcrumb-navigation">
         <li data-ng-repeat="action in page.actions track by $index">
-          <a data-ng-click="action.action($index)" class="{{ action.type }}">
+          <a data-ng-if="!action.loading" data-ng-click="action.action($index)" class="{{ action.type }}">
             <span data-ng-if="(!action.visible && action.alt) || (!action.alt)">{{ action.text }}</span>
             <span data-ng-if="action.alt && action.visible">{{ action.alt }}</span>
+          </a>
+          <a data-ng-if="action.loading" class="">
+            <span class="throbber"></span>
           </a>
         </li>
       </ul>

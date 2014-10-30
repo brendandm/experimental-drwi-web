@@ -10,7 +10,7 @@
             <span data-ng-if="!$last">, </span>
           </span>
         </h2>
-        <p data-ng-if="project.project_abstract">{{ project.project_abstract }}</p>
+        <div class="project-abstract" data-ng-bind-html="project.project_abstract"></div>
       </div>
       <nav class="column-5 contextual-navigation-wrapper">
         <h6><strong>Tools</strong></h6>

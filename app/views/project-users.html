@@ -2,22 +2,17 @@
   <div class="row feature">
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
-        <h1>Users</h1>
+        <h1>Collaborators</h1>
         
         <!-- List of existing users -->
         <table class="table table-hover">
-          <thead>
-            <th>User ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>&nbsp;</th>
-          </thead>
           <tbody>
             <tr data-ng-repeat="user in project.users track by $index">
-              <td>{{ user.id }}</td>
-              <td>{{ user.name }}</td>
-              <td><a href="mailto:{{ user.email }}" target="_blank">{{ user.email }}</a></td>
-              <td data-ng-if="project.users_edit" class="action">
+              <td>
+                {{ user.name }}<br />
+                <a class="email-address" href="mailto:{{ user.email }}" target="_blank">{{ user.email }}</a>
+              </td>
+              <td data-ng-if="project.users_edit" class="action align-right">
                 <a data-ng-if="!project.users[$index].remove_confirm" data-ng-click="project.users[$index].remove_confirm = true;" class="remove">Remove</a>
                 <span data-ng-if="project.users[$index].remove_confirm" class="confirm">
                   <a data-ng-click="users.remove(user);" class="remove">Remove</a>

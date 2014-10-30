@@ -275,8 +275,6 @@ angular.module('practiceMonitoringAssessmentApp')
 
       Feature.AddUser = function(options) {
 
-        console.log('options', options)
-
         var promise = Feature.createUser({
           storage: options.storage,
           featureId: options.featureId,
@@ -290,8 +288,6 @@ angular.module('practiceMonitoringAssessmentApp')
       };
 
       Feature.RemoveUser = function(options) {
-
-        console.log('options', options)
 
         var promise = Feature.removeUser({
           storage: options.storage,

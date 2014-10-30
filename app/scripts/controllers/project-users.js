@@ -97,7 +97,7 @@ angular.module('practiceMonitoringAssessmentApp')
           });
       },
       remove_confirm: false
-    }
+    };
 
 
     $scope.invite = [];
@@ -122,7 +122,7 @@ angular.module('practiceMonitoringAssessmentApp')
           url: '/projects/' + $scope.project.id
         },
         {
-          text: 'Users',
+          text: 'Collaborators',
           url: '/projects/' + $scope.project.id + '/users',
           type: 'active'
         }

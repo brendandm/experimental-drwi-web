@@ -20,7 +20,8 @@ angular
     'angularFileUpload',
     'geolocation',
     'angular-loading-bar',
-    'monospaced.elastic'
+    'monospaced.elastic',
+    'angular-medium-editor'
   ])
   .config(['$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
 

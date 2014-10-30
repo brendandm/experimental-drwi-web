@@ -18,13 +18,20 @@ angular.module('practiceMonitoringAssessmentApp')
     $rootScope.page = {
       template: 'views/projects.html',
       title: 'Projects',
-      display_title: true,
       back: '/',
       links: [
         {
+          text: 'Projects',
+          url: '/projects',
+          type: 'active'
+        }
+      ],
+      actions: [
+        {
           type: 'button-link new',
-          // url: '/projects/new/',
-          click: 'create',
+          action: function() {
+            $scope.project.create();
+          },
           text: 'Create project'
         }
       ],
