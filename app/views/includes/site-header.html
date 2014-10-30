@@ -49,9 +49,10 @@
     </nav>
     <nav class="column-8">
       <ul data-ng-if="page.links" class="breadcrumb-navigation">
-        <li data-ng-repeat="action in page.actions">
-          <a data-ng-click="action.modal()" class="{{ action.type }}">
-            {{ action.text }}
+        <li data-ng-repeat="action in page.actions track by $index">
+          <a data-ng-click="action.action($index)" class="{{ action.type }}">
+            <span data-ng-if="(!action.visible && action.alt) || (!action.alt)">{{ action.text }}</span>
+            <span data-ng-if="action.alt && action.visible">{{ action.alt }}</span>
           </a>
         </li>
       </ul>

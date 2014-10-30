@@ -17,7 +17,7 @@
               <td>{{ user.id }}</td>
               <td>{{ user.name }}</td>
               <td><a href="mailto:{{ user.email }}" target="_blank">{{ user.email }}</a></td>
-              <td class="action">
+              <td data-ng-if="project.users_edit" class="action">
                 <a data-ng-if="!project.users[$index].remove_confirm" data-ng-click="project.users[$index].remove_confirm = true;" class="remove">Remove</a>
                 <span data-ng-if="project.users[$index].remove_confirm" class="confirm">
                   <a data-ng-click="users.remove(user);" class="remove">Remove</a>
@@ -25,6 +25,7 @@
                   <a data-ng-click="project.users[$index].remove_confirm = false;" class="cancel">Nevermind</a>
                 </span>
               </td>
+              <td data-ng-if="!project.users_edit">&nbsp;</td>
             </tr>
           </tbody>
         </table>

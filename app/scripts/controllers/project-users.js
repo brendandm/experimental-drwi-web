@@ -22,6 +22,7 @@ angular.module('practiceMonitoringAssessmentApp')
     //
     $scope.project = project;
     $scope.project.users = projectUsers;
+    $scope.project.users_edit = false;
 
 
     //
@@ -117,9 +118,20 @@ angular.module('practiceMonitoringAssessmentApp')
       ],
       actions: [
         {
+          type: 'button-link edit',
+          // url: '/projects/' + $scope.project.id + '/users/invite',
+          action: function($index) {
+            $scope.project.users_edit = ! $scope.project.users_edit;
+            $scope.page.actions[$index].visible = ! $scope.page.actions[$index].visible;
+          },
+          visible: false,
+          text: 'Edit collaborators',
+          alt: 'Done Editing'
+        },
+        {
           type: 'button-link new',
           // url: '/projects/' + $scope.project.id + '/users/invite',
-          modal: function() {
+          action: function() {
             console.log('modal');
             $scope.modals.open('inviteUser');
           },

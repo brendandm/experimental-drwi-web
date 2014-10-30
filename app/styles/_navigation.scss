@@ -147,15 +147,22 @@
       }
 
       &.button-link {
-        background-color: $color-green-base;
+        background-color: $color-black-lightest;
         color: $color-white-base;
         padding: 7px 12px;
         display: inline-block;
         font-weight: 400;
         line-height: 1;
 
-        &:hover {
+        &.new {
+          background-color: $color-green-base;
+          &:hover {
           background-color: darken($color-green-base, 3%);
+          }
+        }
+
+        &:hover {
+          background-color: $color-black-lighter;
         }
 
         &.button-inverse {
