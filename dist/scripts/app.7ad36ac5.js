@@ -20,7 +20,8 @@ angular
     'angularFileUpload',
     'geolocation',
     'angular-loading-bar',
-    'monospaced.elastic'
+    'monospaced.elastic',
+    'angular-medium-editor'
   ])
   .config(['$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
 
@@ -32,7 +33,11 @@ angular
         project = {
           templateId: 121,
           storage: 'type_061edec30db54fa0b96703b40af8d8ca'
-        };
+        },
+        site = {
+          templateId: 122,
+          storage: 'type_646f23aa91a64f7c89a008322f4f1093'
+        }
 
     $routeProvider
       .when('/', {
@@ -92,6 +97,9 @@ angular
           },
           fields: function(Field, $route) {
             return Field.GetPreparedFields(project.templateId, 'object');
+          },
+          site: function() {
+            return site
           },
           project: function(Feature, $route) {
             return Feature.GetFeature({

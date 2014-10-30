@@ -8,13 +8,35 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ProjectViewCtrl', ['$rootScope', '$scope', '$route', '$location', 'Template', 'Feature', 'project', 'storage', 'user', 'template', function ($rootScope, $scope, $route, $location, Template, Feature, project, storage, user, template) {
+  .controller('ProjectViewCtrl', ['$rootScope', '$scope', '$route', '$location', 'Template', 'Feature', 'project', 'storage', 'user', 'template', 'site', function ($rootScope, $scope, $route, $location, Template, Feature, project, storage, user, template, site) {
 
     //
     // Assign project to a scoped variable
     //
     $scope.template = template;
     $scope.project = project;
+    $scope.project.sites = {
+      list: [],
+      create: function() {
+        console.log('Create site');
+        Feature.CreateFeature({
+          storage: site.storage,
+          data: {
+            site_number: 'Untitled Site',
+            owner: $scope.user.id,
+            status: 'private'
+          }
+        }).then(function(site) {
+
+          console.log('New Site', site);
+
+          //
+          // Forward the user along to the new project
+          //
+          $location.path('/projects/' + $scope.project.id + '/sites/' + site.id);
+        });
+      }
+    }
     $scope.user = user;
     $scope.user.owner = false;
     $scope.user.feature = {};
@@ -37,6 +59,15 @@ angular.module('practiceMonitoringAssessmentApp')
           text: $scope.project.project_title,
           url: '/projects/' + $scope.project.id,
           type: 'active'
+        }
+      ],
+      actions: [
+        {
+          type: 'button-link new',
+          action: function() {
+            $scope.project.sites.create();
+          },
+          text: 'Create site'
         }
       ],
       refresh: function() {

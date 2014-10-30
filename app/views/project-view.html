@@ -11,6 +11,20 @@
           </span>
         </h2>
         <div class="project-abstract" data-ng-bind-html="project.project_abstract"></div>
+
+        <hr />
+
+        <section data-ng-if="project.sites" class="sites">
+          <h6><strong>Project</strong> Sites</h6>
+          <div class="list">
+            <article class="row list-item" data-ng-repeat="site in project.sites track by $index">
+              <div class="column-16 list-item-content">
+                <h4>{{ site.name }}</h4>
+                <h1><a href="/projects/{{ project.id }}/sites/{{ site.id }}" title="{{ site.description }} project details">{{ site.description }}</a></h1>
+              </div>
+            </article>
+          </div>
+        </section>
       </div>
       <nav class="column-5 contextual-navigation-wrapper">
         <h6><strong>Tools</strong></h6>
@@ -50,21 +64,5 @@
         </p>      
       </aside>
     </article>
-
-    <!-- Project List -->
-    <div class="list">
-      <article class="row list-item" data-ng-repeat="site in sites track by $index">
-        <div class="column-16 list-item-content">
-          <h4>{{ site.name }}</h4>
-          <h1><a href="/projects/{{ project.id }}/sites/{{ site.id }}" title="{{ site.description }} project details">{{ site.description }}</a></h1>
-          <h2>
-            <span data-ng-repeat="organization in project.type_271e6f04e893436588c8cd84da851a97">
-              {{ organization.name }}
-              <span data-ng-if="!$last">, </span>
-            </span>
-          </h2>
-        </div>
-      </article>
-    </div>
   </form>
 </main>
