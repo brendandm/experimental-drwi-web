@@ -264,6 +264,24 @@ angular.module('practiceMonitoringAssessmentApp')
         return promise;
       };
 
+      Feature.DeleteFeature = function(options) {
+
+        var promise = Feature.delete({
+            storage: options.storage,
+            featureId: options.featureId
+          }).$promise.then(function(response) {
+            return response;
+          }, function(error) {
+            $rootScope.alerts = [];
+            $rootScope.alerts.push({
+              'type': 'error',
+              'title': 'Uh-oh!',
+              'details': 'Mind trying that again? We couldn\'t find the Feature you were looking for.'
+            });
+          });
+
+        return promise;
+      };
 
       //
       // User Specific Permissions or User Lists for a specific Feature

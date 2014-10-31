@@ -180,13 +180,7 @@ angular
         }
       })
       .when('/projects/:projectId/sites', {
-        templateUrl: templateUrl,
-        controller: 'SitesCtrl',
-        resolve: {
-          user: function(User) {
-            return User.getUser();
-          }
-        }
+        redirectTo: '/projects/:projectId',
       })
       .when('/projects/:projectId/sites/:siteId', {
         templateUrl: templateUrl,
@@ -197,9 +191,6 @@ angular
               featureId: $route.current.params.projectId,
               templateId: site.templateId
             });
-          },
-          users: function(User) {
-            return User.GetUsers();
           },
           project: function(Feature, $route) {
             return Feature.GetFeature({
@@ -234,8 +225,11 @@ angular
               templateId: site.templateId
             });
           },
-          users: function(User) {
-            return User.GetUsers();
+          project: function(Feature, $route) {
+            return Feature.GetFeature({
+              storage: project.storage,
+              featureId: $route.current.params.projectId
+            });
           },
           template: function(Template, $route) {
             return Template.GetTemplate(site.templateId);
@@ -248,6 +242,9 @@ angular
               storage: site.storage,
               featureId: $route.current.params.siteId
             });
+          },
+          storage: function() {
+            return project.storage;
           },
           variables: function() {
             return site;

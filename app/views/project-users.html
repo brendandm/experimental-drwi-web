@@ -29,7 +29,7 @@
         <h6><strong>Tools</strong></h6>
         <ul class="contextual-navigation">
           <!-- Proect Manangement Navigation -->
-          <li data-ng-if="user.owner || user.feature.read || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}">Overview</a></li>
+          <li data-ng-if="user.owner || user.feature.read || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}">Project Overview</a></li>
           <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/edit">Edit</a></li>
           <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator" class="active"><a href="/projects/{{ project.id }}/users">Users</a></li>
         </ul>

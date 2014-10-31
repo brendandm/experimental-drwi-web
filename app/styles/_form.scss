@@ -27,13 +27,6 @@
   margin-bottom: 32px;
 }
 
-.control-label {
-  
-}
-
-.form-control {
-  
-}
 
 
 //
@@ -172,17 +165,14 @@ select.form-control {
 //
 .control-label,
 label.control-label {
-  font-family: $font-sans-plain;
   color: rgb(153,153,153);
+  display: block;
+  font-family: $font-sans-plain;
   font-size: 0.75em;
   font-weight: 300;
   line-height: 1;
-  margin-bottom: 0;
+  margin-bottom: 4px;
   text-transform: none;
-}
-
-label.control-label {
-  text-transform: uppercase;
 }
 
 //
@@ -196,6 +186,10 @@ label.control-label {
   line-height: 1;
   margin-top: 2px;
   margin-bottom: 0;
+
+  &.help-lg {
+    font-size: 0.875em;
+  }
 }
 
 //
