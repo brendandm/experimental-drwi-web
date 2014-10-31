@@ -135,12 +135,6 @@ angular.module('practiceMonitoringAssessmentApp')
     //
     var featureGroup = new L.FeatureGroup();
 
-    //
-    // Setup our map with default options, the Mapbox satellite layer, and a default marker that is
-    // centered on the Anne Arundel County extent
-    //
-    L.mapbox.accessToken = Site.settings.services.mapbox.access_token;
-
     $scope.map = {
       defaults: {
         scrollWheelZoom: false,
