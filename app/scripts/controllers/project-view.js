@@ -26,14 +26,14 @@ angular.module('practiceMonitoringAssessmentApp')
             owner: $scope.user.id,
             status: 'private'
           }
-        }).then(function(site) {
+        }).then(function(siteId) {
 
-          console.log('New Site', site);
+          console.log('New Site', siteId);
 
           //
           // Forward the user along to the new project
           //
-          $location.path('/projects/' + $scope.project.id + '/sites/' + site.id);
+          $location.path('/projects/' + $scope.project.id + '/sites/' + siteId);
         });
       }
     }

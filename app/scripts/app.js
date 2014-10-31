@@ -172,12 +172,48 @@ angular
           }
         }
       })
-      .when('/sites', {
+      .when('/projects/:projectId/sites', {
         templateUrl: templateUrl,
         controller: 'SitesCtrl',
         resolve: {
           user: function(User) {
             return User.getUser();
+          }
+        }
+      })
+      .when('/projects/:projectId/sites/:siteId', {
+        templateUrl: templateUrl,
+        controller: 'SiteViewCtrl',
+        resolve: {
+          user: function(User, $route) {
+            return User.getUser({
+              featureId: $route.current.params.projectId,
+              templateId: site.templateId
+            });
+          },
+          users: function(User) {
+            return User.GetUsers();
+          },
+          // projectUsers: function(Feature, $route) {
+          //   return Feature.GetFeatureUsers({
+          //     storage: site.storage,
+          //     featureId: $route.current.params.projectId
+          //   });
+          // },
+          template: function(Template, $route) {
+            return Template.GetTemplate(site.templateId);
+          },
+          fields: function(Field, $route) {
+            return Field.GetPreparedFields(site.templateId, 'object');
+          },
+          site: function(Feature, $route) {
+            return Feature.GetFeature({
+              storage: site.storage,
+              featureId: $route.current.params.projectId
+            });
+          },
+          variables: function() {
+            return site;
           }
         }
       })
