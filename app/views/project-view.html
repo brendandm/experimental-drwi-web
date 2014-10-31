@@ -17,7 +17,7 @@
             <h6 class="rule-above"><strong>Project</strong> Sites</h6>
             <article class="row list-item list-item-thin" data-ng-repeat="site in project.sites.list track by $index">
               <div class="column-16 list-item-content">
-                <img data-ng-if="site.site_thumbnail" src="{{ site.site_thumbnail }}" alt="{{ site.site_description }} location preview" width="80" height="80" />
+                <img data-ng-if="site.site_thumbnail" data-ng-src="{{ site.site_thumbnail }}" alt="{{ site.site_description }} location preview" width="80" height="80" />
                 <h1><a href="/projects/{{ project.id }}/sites/{{ site.id }}" title="{{ site.site_description }} project details">{{ site.site_description }}</a></h1>
                 <h4><strong>Site Number: </strong>{{ site.site_number }}</h4>
               </div>
