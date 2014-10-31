@@ -3,7 +3,7 @@
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
         <h4><span data-ng-repeat="type_ in project.type_7713b933a2bf4389b0dcd6c3938b6b9b" class="label">{{ type_.name }}</span> <strong>NFWF ID: </strong><span>{{ project.name }}</span> <strong>Easy Grants ID: </strong><span>{{ project.easy_grants_id }}</span></h4>
-        <h1>{{ project.project_title }}</h1>
+        <h1 class="large">{{ project.project_title }}</h1>
         <h2 data-ng-if="!project.type_271e6f04e893436588c8cd84da851a97">
           <span data-ng-repeat="organization in project.type_271e6f04e893436588c8cd84da851a97">
             {{ organization.name }}
@@ -12,15 +12,14 @@
         </h2>
         <div class="project-abstract" data-ng-bind-html="project.project_abstract"></div>
 
-        <hr />
-
-        <section data-ng-if="project.sites" class="sites">
-          <h6><strong>Project</strong> Sites</h6>
+        <section data-ng-if="project.sites.list" id="sites">
           <div class="list">
-            <article class="row list-item" data-ng-repeat="site in project.sites track by $index">
+            <h6 class="rule-above"><strong>Project</strong> Sites</h6>
+            <article class="row list-item list-item-thin" data-ng-repeat="site in project.sites.list track by $index">
               <div class="column-16 list-item-content">
-                <h4>{{ site.name }}</h4>
-                <h1><a href="/projects/{{ project.id }}/sites/{{ site.id }}" title="{{ site.description }} project details">{{ site.description }}</a></h1>
+                <img data-ng-if="site.site_thumbnail" src="{{ site.site_thumbnail }}" alt="{{ site.site_description }} location preview" width="80" height="80" />
+                <h1><a href="/projects/{{ project.id }}/sites/{{ site.id }}" title="{{ site.site_description }} project details">{{ site.site_description }}</a></h1>
+                <h4><strong>Site Number: </strong>{{ site.site_number }}</h4>
               </div>
             </article>
           </div>

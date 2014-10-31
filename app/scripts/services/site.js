@@ -12,46 +12,44 @@ angular.module('practiceMonitoringAssessmentApp')
 
     var Site_ = {};
 
-    Site_.settings = function() {
-      return {
-        services: {
-          mapbox: {
-            access_token: 'pk.eyJ1IjoiZGV2ZWxvcGVkc2ltcGxlIiwiYSI6IlZGVXhnM3MifQ.Q4wmA49ggy9i1rLr8-Mc-w',
-            satellite: 'developedsimple.k105bd34',
-            terrain: 'developedsimple.k1054a50',
-            street: 'developedsimple.k1057ndn',
-          }
+    Site_.settings = {
+      services: {
+        mapbox: {
+          access_token: 'pk.eyJ1IjoiZGV2ZWxvcGVkc2ltcGxlIiwiYSI6IlZGVXhnM3MifQ.Q4wmA49ggy9i1rLr8-Mc-w',
+          satellite: 'developedsimple.k105bd34',
+          terrain: 'developedsimple.k1054a50',
+          street: 'developedsimple.k1057ndn',
+        }
+      },
+      links: [
+        {
+          rel: 'canonical',
+          href: 'http://www.nfwf-ma.org/'
+        }
+      ],
+      meta: [
+        {
+          name: 'viewport',
+          content: 'width=device-width, initial-scale=1.0'
         },
-        links: [
-          {
-            rel: 'canonical',
-            href: 'http://www.nfwf-ma.org/'
-          }
-        ],
-        meta: [
-          {
-            name: 'viewport',
-            content: 'width=device-width, initial-scale=1.0'
-          },
-          {
-            name: 'og:locale',
-            content: 'en_US'
-          },
-          {
-            name: 'og:type',
-            content: 'website'
-          },
-          {
-            name: 'og:site_name',
-            content: 'NFWF Monitoring and Assessment'
-          },
-          {
-            name: 'keywords',
-            content: ''
-          }
-        ],
-        partners: []
-      };
+        {
+          name: 'og:locale',
+          content: 'en_US'
+        },
+        {
+          name: 'og:type',
+          content: 'website'
+        },
+        {
+          name: 'og:site_name',
+          content: 'NFWF Monitoring and Assessment'
+        },
+        {
+          name: 'keywords',
+          content: ''
+        }
+      ],
+      partners: []
     };
 
     return Site_;

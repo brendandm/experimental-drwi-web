@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ProjectViewCtrl', ['$rootScope', '$scope', '$route', '$location', 'Template', 'Feature', 'project', 'storage', 'user', 'template', 'site', function ($rootScope, $scope, $route, $location, Template, Feature, project, storage, user, template, site) {
+  .controller('ProjectViewCtrl', ['$rootScope', '$scope', '$route', '$location', 'Site', 'Template', 'Feature', 'project', 'storage', 'user', 'template', 'site', 'sites', function ($rootScope, $scope, $route, $location, Site, Template, Feature, project, storage, user, template, site, sites) {
 
     //
     // Assign project to a scoped variable
@@ -16,13 +16,20 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.template = template;
     $scope.project = project;
     $scope.project.sites = {
-      list: [],
+      list: sites,
       create: function() {
-        console.log('Create site');
+        //
+        // Creating a site is a two step process.
+        //
+        //  1. Create the new site record, including the owner and a new UserFeatures entry
+        //     for the Site table
+        //  2. Update the Project to create a relationship with the Site created in step 1 
+        //
         Feature.CreateFeature({
           storage: site.storage,
           data: {
-            site_number: 'Untitled Site',
+            site_number: '0000',
+            site_description: 'Untitled Site',
             owner: $scope.user.id,
             status: 'private'
           }
@@ -31,16 +38,31 @@ angular.module('practiceMonitoringAssessmentApp')
           console.log('New Site', siteId);
 
           //
-          // Forward the user along to the new project
+          // Create the relationship with the parent, Project, to ensure we're doing this properly we need
+          // to submit all relationships that are created and should remain. If we only submit the new
+          // ID the system will kick out the sites that were added previously.
           //
-          $location.path('/projects/' + $scope.project.id + '/sites/' + siteId);
+          Feature.UpdateFeature({
+            storage: storage,
+            featureId: $route.current.params.projectId,
+            data: {
+              type_646f23aa91a64f7c89a008322f4f1093: $scope.GetAllChildren(siteId),
+            }
+          }).then(function() {
+            //
+            // Forward the user along to the new site now that it has been associated with the Project
+            //
+            $location.path('/projects/' + $route.current.params.projectId + '/sites/' + siteId + '/edit');
+          });
         });
       }
-    }
+    };
+
     $scope.user = user;
     $scope.user.owner = false;
     $scope.user.feature = {};
     $scope.user.template = {};
+
 
     //
     // Setup basic page variables
@@ -57,7 +79,7 @@ angular.module('practiceMonitoringAssessmentApp')
         },
         {
           text: $scope.project.project_title,
-          url: '/projects/' + $scope.project.id,
+          url: '/projects/' + $route.current.params.projectId,
           type: 'active'
         }
       ],
@@ -74,6 +96,40 @@ angular.module('practiceMonitoringAssessmentApp')
         $route.reload();
       }
     };
+
+
+    $scope.GetAllChildren = function(siteId) {
+
+      var existingSites = $scope.project.sites.list,
+          updatedSites = [{
+            id: siteId // Start by adding the newest relationships, then we'll add the existing sites
+          }];
+
+      angular.forEach(existingSites, function(site, $index) {
+        updatedSites.push({
+          id: site.id
+        });
+      });
+
+      return updatedSites;
+    };
+
+
+    $scope.$watch('project.sites.list', function(processedSites, existingSites) {
+      // console.log('$scope.project.sites.list,', $scope.project.sites.list)
+      angular.forEach(processedSites, function(feature, $index) {
+        var coords = [0,0];
+        
+        if (feature.geometry !== null) {
+          console.log('feature.geometry', feature.geometry);
+          if (feature.geometry.geometries[0].type === 'Point') {
+            coords = feature.geometry.geometries[0].coordinates;
+          }
+        }
+        
+        $scope.project.sites.list[$index].site_thumbnail = 'https://api.tiles.mapbox.com/v4/' + Site.settings.services.mapbox.satellite + '/pin-s+b1c11d(' + coords[0] + ',' + coords[1] + ',17)/' + coords[0] + ',' + coords[1] + ',17/80x80@2x.png?access_token=' + Site.settings.services.mapbox.access_token;
+      });      
+    });
 
 
     //
@@ -99,13 +155,13 @@ angular.module('practiceMonitoringAssessmentApp')
         if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
           Feature.GetFeatureUser({
             storage: storage,
-            featureId: $scope.project.id,
+            featureId: $route.current.params.projectId,
             userId: $scope.user.id
           }).then(function(response) {
             $scope.user.feature = response;
             if ($scope.user.feature.is_admin || $scope.user.feature.write) {
             } else {
-              $location.path('/projects/' + $scope.project.id);
+              $location.path('/projects/' + $route.current.params.projectId);
             }
           });
         }

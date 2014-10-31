@@ -23,6 +23,14 @@ angular.module('practiceMonitoringAssessmentApp')
             return angular.fromJson(data);
           }
         },
+        relationship: {
+          method: 'GET',
+          isArray: false,
+          url: '//api.commonscloud.org/v2/:storage/:featureId/:relationship.json',
+          transformResponse: function (data, headersGetter) {
+            return angular.fromJson(data);
+          }
+        },
         postFiles: {
           method: 'PUT',
           url: '//api.commonscloud.org/v2/:storage/:featureId.json',
@@ -137,6 +145,20 @@ angular.module('practiceMonitoringAssessmentApp')
             updated: new Date().getTime()
           }).$promise.then(function(response) {
             return response;
+          });
+
+        return promise;
+      };
+
+      Feature.GetRelatedFeatures = function(options) {
+
+        var promise = Feature.relationship({
+            storage: options.storage,
+            relationship: options.relationship,
+            featureId: options.featureId,
+            updated: new Date().getTime()
+          }).$promise.then(function(response) {
+            return response.response.features;
           });
 
         return promise;

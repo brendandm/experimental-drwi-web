@@ -37,7 +37,7 @@ angular
         site = {
           templateId: 122,
           storage: 'type_646f23aa91a64f7c89a008322f4f1093'
-        }
+        };
 
     $routeProvider
       .when('/', {
@@ -99,11 +99,18 @@ angular
             return Field.GetPreparedFields(project.templateId, 'object');
           },
           site: function() {
-            return site
+            return site;
           },
           project: function(Feature, $route) {
             return Feature.GetFeature({
               storage: project.storage,
+              featureId: $route.current.params.projectId
+            });
+          },
+          sites: function(Feature, $route) {
+            return Feature.GetRelatedFeatures({
+              storage: project.storage,
+              relationship: site.storage,
               featureId: $route.current.params.projectId
             });
           },
@@ -194,12 +201,12 @@ angular
           users: function(User) {
             return User.GetUsers();
           },
-          // projectUsers: function(Feature, $route) {
-          //   return Feature.GetFeatureUsers({
-          //     storage: site.storage,
-          //     featureId: $route.current.params.projectId
-          //   });
-          // },
+          project: function(Feature, $route) {
+            return Feature.GetFeature({
+              storage: project.storage,
+              featureId: $route.current.params.projectId
+            });
+          },
           template: function(Template, $route) {
             return Template.GetTemplate(site.templateId);
           },
@@ -209,7 +216,37 @@ angular
           site: function(Feature, $route) {
             return Feature.GetFeature({
               storage: site.storage,
-              featureId: $route.current.params.projectId
+              featureId: $route.current.params.siteId
+            });
+          },
+          variables: function() {
+            return site;
+          }
+        }
+      })
+      .when('/projects/:projectId/sites/:siteId/edit', {
+        templateUrl: templateUrl,
+        controller: 'SiteEditCtrl',
+        resolve: {
+          user: function(User, $route) {
+            return User.getUser({
+              featureId: $route.current.params.projectId,
+              templateId: site.templateId
+            });
+          },
+          users: function(User) {
+            return User.GetUsers();
+          },
+          template: function(Template, $route) {
+            return Template.GetTemplate(site.templateId);
+          },
+          fields: function(Field, $route) {
+            return Field.GetPreparedFields(site.templateId, 'object');
+          },
+          site: function(Feature, $route) {
+            return Feature.GetFeature({
+              storage: site.storage,
+              featureId: $route.current.params.siteId
             });
           },
           variables: function() {
