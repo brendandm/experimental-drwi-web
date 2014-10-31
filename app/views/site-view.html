@@ -1,0 +1,28 @@
+<main class="container">
+  <form class="row feature">
+    <article class="feature-detail">
+      <div class="column-11 feature-detail-content">
+        <h4><strong>Site Number: </strong><span>{{ site.site_number }}</span> <strong>Easy Grants ID: </strong><span>{{ project.easy_grants_id }}</span></h4>
+        <h1>{{ project.project_title }}</h1>
+        <h2 data-ng-if="!project.type_271e6f04e893436588c8cd84da851a97">
+          <span data-ng-repeat="organization in project.type_271e6f04e893436588c8cd84da851a97">
+            {{ organization.name }}
+            <span data-ng-if="!$last">, </span>
+          </span>
+        </h2>
+      </div>
+      <nav class="column-5 contextual-navigation-wrapper">
+        <h6><strong>Tools</strong></h6>
+        <ul class="contextual-navigation">
+          <!-- Proect Manangement Navigation -->
+          <li data-ng-if="user.owner || user.feature.read || user.feature.is_admin || user.template.is_admin || user.template.is_moderator" class="active"><a href="/projects/{{ project.id }}">Overview</a></li>
+          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/edit">Edit</a></li>
+          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/users">Users</a></li>
+        </ul>
+      </nav>
+      <aside class="column-5 feature-sidebar pull-right">
+            
+      </aside>
+    </article>
+  </form>
+</main>
