@@ -15,7 +15,67 @@
           <textarea rows="1" data-ng-model="site.site_description" class="form-control animate"  msd-elastic id="site_description" name="site_description" placeholder="Site Description">{{ site.site_description }}</textarea>
         </div>
 
-        <h6><strong>Site</strong> Map</h6>
+        <h6><strong>Location</strong> Information</h6>
+
+        <div class="row">
+          <div class="column-10">
+            <!-- Land River Segment -->
+            <div class="form-group">
+              <label for="site_city" class="control-label">City</label>
+              <div data-ng-if="!site.site_city" class="autocomplete">
+                <input type="text" class="form-control" id="address" name="address" data-ng-model="site.geolocation" data-ng-change="geolocation.search()"  placeholder="Enter the name of the nearest city" />
+                <div data-ng-if="geocode_features.length && site.geolocation.length >= 2" class="dropdown">
+                  <ul>
+                    <!-- <li data-ng-if="relationship_focus && !features.length"><p><em>Begin typing to select the {{ field.label }} you want</em></p></li> -->
+                    <li data-ng-repeat="possible_result in geocode_features"><a data-ng-click="geolocation.select(possible_result)">{{ possible_result.place_name }}</a></li>
+                  </ul>
+                </div>
+              </div>
+              <p data-ng-if="site.site_city">
+                {{ site.site_city }}
+                <span data-ng-if="site.site_city" class="help-text action"><a data-ng-click="site.site_city = '';" class="remove">Clear value</a></span>
+              </p>
+            </div>
+          </div>
+          <div class="column-6">
+            <!-- County -->
+            <div class="form-group">
+              <label for="site_county" class="control-label">County</label>
+              <relationship data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8.length" model="site.type_b1baa10ba3ce493d90581a864ec95dc8" table="'type_b1baa10ba3ce493d90581a864ec95dc8'" fields="['name','state_name']" placeholder="'Enter the name of the county'"></relationship>
+              <p data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
+                {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['name'] }},
+                <!-- If the state name is available from the county then use it -->
+                <span data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name']">
+                  {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name'] }}
+                </span>
+                <!-- If not, try and get the site_state field from the site -->
+                <span data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name'] && site.site_state">{{ site.site_state }}</span>
+                <span data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length" class="help-text action"><a data-ng-click="site.type_b1baa10ba3ce493d90581a864ec95dc8 = [];" class="remove">Clear value</a></span>
+              </p>
+            </div>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="column-10">
+           <!-- Land River Segment -->
+            <div class="form-group">
+              <label for="site_city" class="control-label">Land River Segment</label>
+              <p class="form-value" data-ng-if="!site.type_f9d8609090494dac811e6a58eb8ef4be.length">
+                Not Specified, select a City above
+              </p>
+              <p class="form-value" data-ng-if="site.type_f9d8609090494dac811e6a58eb8ef4be.length" data-ng-repeat="segment in site.type_f9d8609090494dac811e6a58eb8ef4be track by $index">
+                {{ segment.name }}
+                <span data-ng-if="site.type_f9d8609090494dac811e6a58eb8ef4be.length" class="help-text action"><a data-ng-click="site.type_f9d8609090494dac811e6a58eb8ef4be = [];" class="remove">Clear value</a></span>
+              </p>
+              <p class="help-text">
+                <em>
+                  Land River Segment is set dynamically based on the location of the map marker to the left, make note of the white outline making sure the pin is as close to the site location as possible to ensure the appropriate segement is selected
+                </em>
+              </p>
+            </div>
+          </div>
+        </div>
 
         <leaflet class="map" markers="map.markers" defaults="map.defaults" layers="map.layers" center="map.center"></leaflet>
 
@@ -30,55 +90,7 @@
         </ul>
       </nav>
 
-      <aside class="column-5 feature-sidebar pull-right">
-
-        <h6><strong>Location</strong> Information</h6>
-        <!-- Land River Segment -->
-        <div class="form-group">
-          <label for="site_landriversegment" class="control-label">Land River Segment</label>
-          <div data-ng-if="!site.type_f9d8609090494dac811e6a58eb8ef4be.length" class="autocomplete">
-            <input type="text" class="form-control" id="address" name="address" data-ng-model="site.geolocation" data-ng-change="geolocation.search()"  placeholder="Begin typing an city name or address" />
-            <div data-ng-if="geocode_features.length && site.geolocation.length >= 2" class="dropdown">
-              <ul>
-                <!-- <li data-ng-if="relationship_focus && !features.length"><p><em>Begin typing to select the {{ field.label }} you want</em></p></li> -->
-                <li data-ng-repeat="possible_result in geocode_features"><a data-ng-click="geolocation.select(possible_result)">{{ possible_result.place_name }}</a></li>
-              </ul>
-            </div>
-          </div>
-          <div data-ng-repeat="segment in site.type_f9d8609090494dac811e6a58eb8ef4be track by $index">
-            <!-- For when we first select the land river segment -->
-            <p data-ng-if="segment.properties.name">{{ segment.properties.name }}</p>
-
-            <!-- For when we want to display an existing one -->
-            <p data-ng-if="segment.name">
-              {{ segment.name }}
-              <span data-ng-if="site.type_f9d8609090494dac811e6a58eb8ef4be.length" class="help-text action"><a data-ng-click="site.type_f9d8609090494dac811e6a58eb8ef4be = [];" class="remove">Clear value</a></span>
-            </p>
-          </div>
-        </div>        
-
-        <!-- City -->
-        <div class="form-group">
-          <label for="site_city" class="control-label">City</label>
-          <textarea rows="1" data-ng-model="site.site_city" class="form-control animate"  msd-elastic id="site_city" name="site_city" placeholder="Enter the name of the closet city">{{ site.site_city }}</textarea>
-        </div>
-
-        <!-- County -->
-        <div class="form-group">
-          <label for="site_county" class="control-label">County</label>
-          <relationship data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8.length" model="site.type_b1baa10ba3ce493d90581a864ec95dc8" table="'type_b1baa10ba3ce493d90581a864ec95dc8'" fields="['name','state_name']"></relationship>
-          <p data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
-            {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['name'] }},
-            <!-- If the state name is available from the county then use it -->
-            <span data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name']">
-              {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name'] }}
-            </span>
-            <!-- If not, try and get the site_state field from the site -->
-            <span data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name'] && site.site_state">{{ site.site_state }}</span>
-            <span data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length" class="help-text action"><a data-ng-click="site.type_b1baa10ba3ce493d90581a864ec95dc8 = [];" class="remove">Clear value</a></span>
-          </p>
-        </div>
-      </aside>
+      <aside class="column-5 feature-sidebar pull-right"></aside>
     </article>
   </form>
 </main>

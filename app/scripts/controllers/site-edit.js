@@ -31,6 +31,12 @@ angular.module('practiceMonitoringAssessmentApp')
         }
       }
 
+      // if ($scope.site.site_city) {
+
+      // }
+
+      console.log('site.geolocation', $scope.site.site_city);
+
       Feature.UpdateFeature({
         storage: variables.storage,
         featureId: $scope.site.id,
@@ -289,7 +295,7 @@ angular.module('practiceMonitoringAssessmentApp')
       },
       select: function(geocode) {
 
-        $scope.site.geolocation = geocode.place_name;
+        $scope.site.site_city = geocode.place_name;
 
         //
         // Move the draggable marker to the newly selected address

@@ -90,7 +90,8 @@ angular.module('practiceMonitoringAssessmentApp')
     scope: {
       table: '=',
       model: '=',
-      fields: '='
+      fields: '=',
+      placeholder: '='
     },
     templateUrl: '/views/includes/relationship.html',
     restrict: 'E',
