@@ -71,15 +71,14 @@
         <!-- County -->
         <div class="form-group">
           <label for="site_county" class="control-label">County</label>
+          <relationship model="site.type_b1baa10ba3ce493d90581a864ec95dc8" field="type_b1baa10ba3ce493d90581a864ec95dc8" feature="site"></relationship>
+        </div>
+
+        <!-- State -->
+        <div class="form-group">
+          <label for="site_county" class="control-label">County</label>
           <textarea rows="1" data-ng-model="site.site_county" class="form-control animate"  msd-elastic id="site_county" name="site_county" placeholder="Enter the name of the county this site is in">{{ site.site_county }}</textarea>
         </div>
-
-        <!-- Congressional District -->
-        <div class="form-group">
-          <label for="site_congressional_district" class="control-label">Congressional District</label>
-          <textarea rows="1" data-ng-model="site.site_congressional_district" class="form-control animate"  msd-elastic id="site_congressional_district" name="site_congressional_district" placeholder="Enter the name of the congressional district this site is in">{{ site.site_congressional_district }}</textarea>
-        </div>
-
       </aside>
     </article>
   </form>
