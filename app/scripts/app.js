@@ -212,6 +212,9 @@ angular
           },
           variables: function() {
             return site;
+          },
+          storage: function() {
+            return project.storage;
           }
         }
       })

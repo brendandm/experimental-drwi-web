@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('SiteViewCtrl', ['$rootScope', '$scope', '$route', 'user', 'template', 'fields', 'project', 'site', 'variables', function ($rootScope, $scope, $route, user, template, fields, project, site, variables) {
+  .controller('SiteViewCtrl', ['$rootScope', '$scope', '$route', '$location', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'storage', 'variables', function ($rootScope, $scope, $route, $location, user, Template, Feature, template, fields, project, site, storage, variables) {
 
     //
     // Assign project to a scoped variable

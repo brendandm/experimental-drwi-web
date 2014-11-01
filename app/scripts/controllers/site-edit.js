@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('SiteEditCtrl', ['$rootScope', '$scope', '$route', '$timeout', '$http', '$location', 'Feature', 'Site', 'user', 'template', 'fields', 'project', 'site', 'storage', 'variables', 'leafletData', function ($rootScope, $scope, $route, $timeout, $http, $location, Feature, Site, user, template, fields, project, site, storage, variables, leafletData) {
+  .controller('SiteEditCtrl', ['$rootScope', '$scope', '$route', '$timeout', '$http', '$location', 'Template', 'Feature', 'Site', 'user', 'template', 'fields', 'project', 'site', 'storage', 'variables', 'leafletData', function ($rootScope, $scope, $route, $timeout, $http, $location, Template, Feature, Site, user, template, fields, project, site, storage, variables, leafletData) {
 
     var timeout;
 
@@ -20,6 +20,17 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.site = site;
     $scope.site.geolocation = null;
     $scope.site.save = function() {
+
+      //
+      // Make sure we've assigned a state to the state field based on user selections in the
+      // site county field.
+      //
+      if ($scope.site.type_b1baa10ba3ce493d90581a864ec95dc8.length) {
+        if ($scope.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].state_name) {
+          $scope.site.site_state = $scope.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].state_name;
+        }
+      }
+
       Feature.UpdateFeature({
         storage: variables.storage,
         featureId: $scope.site.id,
@@ -148,7 +159,7 @@ angular.module('practiceMonitoringAssessmentApp')
             url: 'https://{s}.tiles.mapbox.com/v3/' + Site.settings.services.mapbox.satellite + '/{z}/{x}/{y}.png',
             type: 'xyz',
             layerOptions: {
-              attribution: "<a href='https://www.mapbox.com/about/maps/' target='_blank'>&copy; Mapbox &copy; OpenStreetMap</a>"
+              attribution: '<a href="https://www.mapbox.com/about/maps/" target="_blank">&copy; Mapbox &copy; OpenStreetMap</a>'
             }
           }
         }
@@ -336,7 +347,7 @@ angular.module('practiceMonitoringAssessmentApp')
         }, 200);
 
       }
-    }
+    };
     
 
 
@@ -363,7 +374,7 @@ angular.module('practiceMonitoringAssessmentApp')
           geometries: []
         };
         $scope.site.geometry.geometries.push({
-          type: "Point",
+          type: 'Point',
           coordinates: [
             args.leafletEvent.target._latlng.lng,
             args.leafletEvent.target._latlng.lat
@@ -418,12 +429,10 @@ angular.module('practiceMonitoringAssessmentApp')
     //
     if ($scope.site.type_f9d8609090494dac811e6a58eb8ef4be.length > 0) {
       var json = $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0];
-      console.log('json', json);
       var geojson = {
-        type: "Feature",
+        type: 'Feature',
         geometry: json.geometry
-      }
-      console.log('geojson', geojson);
+      };
       $scope.geolocation.drawSegment(geojson);
     }
 
