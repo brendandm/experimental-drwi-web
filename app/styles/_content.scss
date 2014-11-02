@@ -81,6 +81,12 @@
           letter-spacing: 0;
           line-height: 1.2;
           margin-bottom: 12px;
+
+          &.project-site-title {
+            line-height: 1.2;
+            margin-top: 0;
+            margin-bottom: 4px;
+          }
         }
 
         h2 {
@@ -105,6 +111,15 @@
           strong {
             color: $color-black-lighter;
             font-weight: 300;
+          }
+
+          &.project-site-number {
+            margin-bottom: 0;
+            margin-top: 10px;
+          }
+
+          &.project-site-city {
+            margin-bottom: 0;
           }
         }
 

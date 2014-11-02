@@ -22,8 +22,16 @@
             <article class="row list-item list-item-thin" data-ng-repeat="site in project.sites.list track by $index">
               <div class="column-16 list-item-content">
                 <img data-ng-if="site.site_thumbnail" data-ng-src="{{ site.site_thumbnail }}" alt="{{ site.site_description }} location preview" width="80" height="80" />
-                <h1><a href="/projects/{{ project.id }}/sites/{{ site.id }}" title="{{ site.site_description }} project details">{{ site.site_description }}</a></h1>
-                <h4><strong>Site Number: </strong>{{ site.site_number }}</h4>
+                <h4 class="project-site-number"><strong>Site Number: </strong>{{ site.site_number }}</h4>
+                <h1 class="project-site-title"><a href="/projects/{{ project.id }}/sites/{{ site.id }}" title="{{ site.site_description }} project details">{{ site.site_description }}</a></h1>
+                <h4 class="project-site-city" data-ng-if="site.site_city || site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
+                  {{ site.site_city }}
+                </h4>
+                <h4>
+                  <span data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length && site.site_state">
+                    {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0].name }} County, {{ site.site_state }}
+                  </span>
+                </h4>                
               </div>
             </article>
           </div>
