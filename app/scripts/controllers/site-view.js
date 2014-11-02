@@ -370,6 +370,14 @@ angular.module('practiceMonitoringAssessmentApp')
         color: 'rgb(25,166,215)',
       });
 
+      Feature.GetFeature({
+        storage: 'type_f9d8609090494dac811e6a58eb8ef4be',
+        featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
+      }).then(function(response) {
+        $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0] = response;
+        console.log('$scope.site', $scope.site);
+      });
+
       //
       // Draw the county
       //

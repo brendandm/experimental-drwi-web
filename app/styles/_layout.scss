@@ -99,6 +99,10 @@ $susy: (
     .row {
       margin: 0;
     }
+
+    &.nested-row {
+      margin-bottom: 32px;
+    }
   }
 
   .column-flex {
