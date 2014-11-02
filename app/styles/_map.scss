@@ -104,3 +104,53 @@
 .leaflet-top.leaflet-right {
   display: none !important;
 }
+
+
+//
+// Legend
+//
+.legend {
+  .legend-list {
+    display: table;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      display: table-row;
+      font-size: 0.75em;
+      font-weight: 300;
+
+      img {
+        max-width: 20px;
+        width: 100%;
+      }
+
+      .legend-item-symbol {
+        display: table-cell;
+        height: 40px;
+        margin-bottom: 8px;
+        vertical-align: middle;
+        width: 20px;
+
+        &.legend-item-symbol-polygon {
+          background-image: url("//api.tiles.mapbox.com/v4/developedsimple.k105bd34/-77.8714370727539,39.3727911029975,17/40x40@2x.png?access_token=pk.eyJ1IjoiZGV2ZWxvcGVkc2ltcGxlIiwiYSI6IlZGVXhnM3MifQ.Q4wmA49ggy9i1rLr8-Mc-w");
+        }
+
+        &.legend-item-symbol-county {
+        }
+
+        &.legend-item-symbol-land-river-segment {
+          background-color: rgba($color-brightBlue, 75%);
+        }
+      }
+      .legend-item-label {
+        display: table-cell;
+        margin-bottom: 8px;
+        height: 40px;
+        padding-left: 8px;
+        vertical-align: middle;
+      }
+    }
+  }
+}

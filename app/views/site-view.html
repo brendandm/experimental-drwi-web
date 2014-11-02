@@ -40,8 +40,28 @@
           <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/sites/{{ site.id }}/summary">Summary Report</a></li>
         </ul>
       </nav>
-      <aside class="column-5 feature-sidebar pull-right">
-            
+      <aside class="column-5 feature-sidebar pull-right legend">
+        <h6><strong>Legend</strong></h6>
+        <ul class="legend-list">
+          <li>
+            <span class="legend-item-symbol">
+              <img src="/images/legend-marker-pin-green.png" />
+            </span>
+            <span class="legend-item-label">Site Location</span>
+          </li>
+          <li>
+            <span class="legend-item-symbol">
+              <img src="/images/legend-marker-polygon-bright-blue.png" />
+            </span>
+            <span class="legend-item-label">Land River Segment</span>
+          </li>
+          <li>
+            <span class="legend-item-symbol">
+              <img src="/images/legend-marker-line-white.png" />
+            </span>
+            <span class="legend-item-label">County</span>
+          </li>
+        </ul>
       </aside>
     </article>
   </form>

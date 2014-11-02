@@ -61,8 +61,6 @@ angular.module('practiceMonitoringAssessmentApp')
       }
     };
 
-    var featureGroup = new L.FeatureGroup();
-
     $scope.map = {
       defaults: {
         scrollWheelZoom: false,
@@ -90,8 +88,7 @@ angular.module('practiceMonitoringAssessmentApp')
         LandRiverSegment: {
           lat: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[1] : 38.362,
           lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119, 
-          focus: false,
-          draggable: true,
+          focus: true,
           icon: {
             iconUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d.png?access_token=' + Site.settings.services.mapbox.access_token,
             iconRetinaUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d@2x.png?access_token=' + Site.settings.services.mapbox.access_token,
@@ -106,40 +103,42 @@ angular.module('practiceMonitoringAssessmentApp')
     //
     // Convert a GeoJSON Feature Collection to a valid Leaflet Layer
     //
-    $scope.geojsonToLayer = function (geojson, layer) {
+    $scope.geojsonToLayer = function (geojson, layer, options) {
       layer.clearLayers();
       function add(l) {
         l.addTo(layer);
+      }
+
+      if (options === undefined || options === null) {
+        var options = {
+          stroke: true,
+          fill: false,
+          weight: 1,
+          opacity: 1,
+          color: 'rgb(255,255,255)',
+          lineCap: 'square'
+        };
       }
 
       //
       // Make sure the GeoJSON object is added to the layer with appropriate styles
       //
       L.geoJson(geojson, {
-        style: {
-          stroke: true,
-          fill: false,
-          weight: 2,
-          opacity: 1,
-          color: 'rgb(255,255,255)',
-          lineCap: 'square'
-        }
+        style: options
       }).eachLayer(add);
     };
 
     $scope.geolocation = {
-      drawSegment: function(geojson) {
+      drawPolygon: function(geojson, fitBounds, options) {
           
         leafletData.getMap().then(function(map) {
-          //
-          // Reset the FeatureGroup because we don't want multiple parcels drawn on the map
-          //
-          map.removeLayer(featureGroup);
+          var featureGroup = new L.FeatureGroup();
+
 
           //
           // Convert the GeoJSON to a layer and add it to our FeatureGroup
           //
-          $scope.geojsonToLayer(geojson, featureGroup);
+          $scope.geojsonToLayer(geojson, featureGroup, options);
 
           //
           // Add the FeatureGroup to the map
@@ -150,10 +149,12 @@ angular.module('practiceMonitoringAssessmentApp')
           // If we can getBounds then we can zoom to a specific level, we need to check to see
           // if the FeatureGroup has any bounds first though, otherwise we'll get an error.
           //
-          var bounds = featureGroup.getBounds();
+          if (fitBounds === true) {
+            var bounds = featureGroup.getBounds();
 
-          if (bounds.hasOwnProperty('_northEast')) {
-            map.fitBounds(featureGroup.getBounds());
+            if (bounds.hasOwnProperty('_northEast')) {
+              map.fitBounds(featureGroup.getBounds());
+            }
           }
         });
 
@@ -169,7 +170,7 @@ angular.module('practiceMonitoringAssessmentApp')
         }).
           success(function(data, status, headers, config) {
             console.log('LandRiverSegment Request', data);
-            $scope.geolocation.drawSegment(data);
+            $scope.geolocation.drawPolygon(data, true);
             if (data.features.length > 0) {
               $scope.site.type_f9d8609090494dac811e6a58eb8ef4be = [];
               $scope.site.type_f9d8609090494dac811e6a58eb8ef4be.push(data.features[0].properties);
@@ -352,12 +353,33 @@ angular.module('practiceMonitoringAssessmentApp')
     // selected their property, so we just need to display it on the map for them again.
     //
     if ($scope.site.type_f9d8609090494dac811e6a58eb8ef4be.length > 0) {
+      //
+      // Draw the Land River Segment
+      //
       var json = $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0];
+      
       var geojson = {
         type: 'Feature',
         geometry: json.geometry
       };
-      $scope.geolocation.drawSegment(geojson);
-    }
+
+      $scope.geolocation.drawPolygon(geojson, true, {
+        stroke: false,
+        fill: true,
+        opacity: 0.75,
+        color: 'rgb(25,166,215)',
+      });
+
+      //
+      // Draw the county
+      //
+      var json = $scope.site.type_b1baa10ba3ce493d90581a864ec95dc8[0];
+      
+      var geojson = {
+        type: 'Feature',
+        geometry: json.geometry
+      };
+
+      $scope.geolocation.drawPolygon(geojson, true);    }
 
   }]);
