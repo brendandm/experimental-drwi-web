@@ -235,7 +235,16 @@ angular.module('practiceMonitoringAssessmentApp')
           // Add the FeatureGroup to the map
           //
           map.addLayer(featureGroup);
-          map.fitBounds(featureGroup.getBounds());
+
+          //
+          // If we can getBounds then we can zoom to a specific level, we need to check to see
+          // if the FeatureGroup has any bounds first though, otherwise we'll get an error.
+          //
+          var bounds = featureGroup.getBounds();
+
+          if (bounds.hasOwnProperty('_northEast')) {
+            map.fitBounds(featureGroup.getBounds());
+          }
         });
 
       },
