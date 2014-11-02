@@ -88,7 +88,6 @@ angular.module('practiceMonitoringAssessmentApp')
         LandRiverSegment: {
           lat: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[1] : 38.362,
           lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119, 
-          focus: true,
           icon: {
             iconUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d.png?access_token=' + Site.settings.services.mapbox.access_token,
             iconRetinaUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d@2x.png?access_token=' + Site.settings.services.mapbox.access_token,
@@ -223,7 +222,6 @@ angular.module('practiceMonitoringAssessmentApp')
         $scope.map.markers.LandRiverSegment = {
           lat: geocode.center[1],
           lng: geocode.center[0], 
-          focus: false,
           draggable: true,
           icon: {
             iconUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d.png?access_token=' + Site.settings.services.mapbox.access_token,

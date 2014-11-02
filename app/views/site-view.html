@@ -7,35 +7,12 @@
 
         <div class="row nested-row">
           <div class="column-8">
-            <h6><strong>Location</strong> Information</h6>
-            <h4 data-ng-if="site.site_city || site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
-              {{ site.site_city }}
-            </h4>
-            <h4>
-              <span data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length && site.site_state">
-                {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0].name }} County, {{ site.site_state }}
-              </span>
-            </h4>
           </div>
           <div data-ng-if="site.type_f9d8609090494dac811e6a58eb8ef4be.length" class="column-8">
-            <h6><strong>Hydrologic</strong> Details</h6>
-            <div data-ng-repeat="segment in site.type_f9d8609090494dac811e6a58eb8ef4be">
-              <h4>
-                {{ segment.hgmr_nme }}, ({{ segment.hgmr }})
-              </h4>
-              <h4>
-                {{ segment.rivername }}
-              </h4>
-              <h4>
-                {{ segment.name }}
-              </h4>
-            </div>
           </div>
         </div>
 
         <br />
-
-        <leaflet class="map" markers="map.markers" defaults="map.defaults" layers="map.layers" center="map.center"></leaflet>
 
         <section data-ng-if="site.practices.list" id="practices">
           <div class="list">
@@ -61,6 +38,31 @@
         </ul>
       </nav>
       <aside class="column-5 feature-sidebar pull-right legend">
+        <h6><strong>Location</strong> Information</h6>
+        <p data-ng-if="site.site_city || site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
+          {{ site.site_city }}
+        </p>
+        <p>
+          <span data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length && site.site_state">
+            {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0].name }} County, {{ site.site_state }}
+          </span>
+        </p>
+
+        <h6><strong>Hydrologic</strong> Details</h6>
+        <div data-ng-repeat="segment in site.type_f9d8609090494dac811e6a58eb8ef4be">
+          <p>
+            {{ segment.hgmr_nme }}, ({{ segment.hgmr }})
+          </p>
+          <p>
+            {{ segment.rivername }}
+          </p>
+          <p>
+            {{ segment.name }}
+          </p>
+        </div>
+
+        <leaflet class="map" markers="map.markers" defaults="map.defaults" layers="map.layers" center="map.center"></leaflet>
+
         <h6><strong>Legend</strong></h6>
         <ul class="legend-list">
           <li>
