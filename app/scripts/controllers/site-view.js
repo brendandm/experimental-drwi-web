@@ -296,23 +296,23 @@ angular.module('practiceMonitoringAssessmentApp')
         // selected their property, so we just need to display it on the map for them again.
         //
         if ($scope.site.type_f9d8609090494dac811e6a58eb8ef4be.length > 0) {
+
           //
           // Draw the Land River Segment
           //
-          var json = $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0];
-          
-          var geojson = {
+          $scope.map.drawPolygon({
             type: 'Feature',
-            geometry: json.geometry
-          };
-
-          $scope.map.drawPolygon(geojson, true, {
+            geometry: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].geometry
+          }, true, {
             stroke: false,
             fill: true,
-            opacity: 0.75,
-            color: 'rgb(25,166,215)',
+            fillOpacity: 0.65,
+            color: 'rgb(25,166,215)'
           });
 
+          //
+          // Load Land river segment details
+          //
           Feature.GetFeature({
             storage: variables.land_river_segment.storage,
             featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
@@ -322,16 +322,11 @@ angular.module('practiceMonitoringAssessmentApp')
 
           //
           // Draw the county
-          //
-          var json = $scope.site.type_b1baa10ba3ce493d90581a864ec95dc8[0];
-          
-          var geojson = {
+          //          
+          $scope.map.drawPolygon({
             type: 'Feature',
-            geometry: json.geometry
-          };
-
-          $scope.map.drawPolygon(geojson, true);
-
+            geometry: $scope.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].geometry
+          }, true);
 
         }
       }
