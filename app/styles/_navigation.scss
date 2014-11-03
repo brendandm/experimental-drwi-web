@@ -148,8 +148,9 @@
 
       &.button-link {
         background-color: $color-black-lightest;
+        border-radius: 16px;
         color: $color-white-base;
-        padding: 7px 12px;
+        padding: 7px 12px 8px;
         display: inline-block;
         font-weight: 400;
         line-height: 1;
@@ -163,6 +164,11 @@
 
         &:hover {
           background-color: $color-black-lighter;
+        }
+
+        &:active {
+          margin-bottom: -1px;
+          margin-top: 1px;
         }
 
         &.button-inverse {
