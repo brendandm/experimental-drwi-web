@@ -63,6 +63,10 @@ angular.module('practiceMonitoringAssessmentApp')
       }
     };
 
+    $scope.readings = {
+      forestBuffer: 'type_ed657deb908b483a9e96d3a05e420c50'
+    }
+
     //
     // Modal Windows
     //

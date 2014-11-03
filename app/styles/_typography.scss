@@ -187,13 +187,13 @@ a,
 a:active,
 a:link,
 a:visited {
-  color: $color-blue-base;
+  color: $color-brightBlue;
   cursor: pointer;
   text-decoration: none;
 }
 
 a:hover {
-  color: $color-blue-base;
+  color: darken($color-brightBlue, 5%);
   text-decoration: underline;
 }
 
