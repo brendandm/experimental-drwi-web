@@ -37,6 +37,14 @@ angular
         site = {
           templateId: 122,
           storage: 'type_646f23aa91a64f7c89a008322f4f1093'
+        },
+        practice = {
+          templateId: 123,
+          storage: 'type_77f5c44516674e8da2532939619759dd'
+        },
+        land_river_segment = {
+          templateId: 272,
+          storage: 'type_f9d8609090494dac811e6a58eb8ef4be'
         };
 
     $routeProvider
@@ -202,7 +210,7 @@ angular
             return Template.GetTemplate(site.templateId);
           },
           fields: function(Field, $route) {
-            return Field.GetPreparedFields(site.templateId, 'object');
+            return Field.GetPreparedFields(practice.templateId, 'object');
           },
           site: function(Feature, $route) {
             return Feature.GetFeature({
@@ -210,11 +218,20 @@ angular
               featureId: $route.current.params.siteId
             });
           },
-          variables: function() {
-            return site;
+          practices: function(Feature, $route) {
+            return Feature.GetRelatedFeatures({
+              storage: site.storage,
+              relationship: practice.storage,
+              featureId: $route.current.params.siteId
+            });
           },
-          storage: function() {
-            return project.storage;
+          variables: function() {
+            return {
+              project: project,
+              site: site,
+              practice: practice,
+              land_river_segment: land_river_segment
+            };
           }
         }
       })
