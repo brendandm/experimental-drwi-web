@@ -20,8 +20,53 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.readings = {
       "Forest Buffers": {
-        installation: 'type_ed657deb908b483a9e96d3a05e420c50',
-        monitoring: 'type_ed657deb908b483a9e96d3a05e420c50'
+        Installation: 'type_ed657deb908b483a9e96d3a05e420c50',
+        Monitoring: 'type_ed657deb908b483a9e96d3a05e420c50'
+      },
+      add: function(practice, readingType) {
+        console.log('Create a new', readingType, 'reading at Site', $scope.site.id, 'for the', practice.practice_type, '(', practice.id ,') practice');
+        //
+        // Creating a practice reading is a two step process.
+        //
+        //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
+        //     for the Practice Reading table
+        //  2. Update the Practice to create a relationship with the Reading created in step 1 
+        //
+        var readingStorage = $scope.readings[practice.practice_type][readingType];
+        var today = Date.now();
+
+        Feature.CreateFeature({
+          storage: $scope.readings[practice.practice_type][readingType],
+          data: {
+            measurement_period: readingType,
+            report_date: today,
+            owner: $scope.user.id,
+            status: 'private'
+          }
+        }).then(function(readingId) {
+
+          console.log('readingId', readingId);
+
+          var data = {};
+          data[readingStorage] = $scope.GetAllReadings(readingId);
+
+          //
+          // Create the relationship with the parent, Project, to ensure we're doing this properly we need
+          // to submit all relationships that are created and should remain. If we only submit the new
+          // ID the system will kick out the sites that were added previously.
+          //
+          Feature.UpdateFeature({
+            storage: variables.practice.storage,
+            featureId: practice.id,
+            data: data
+          }).then(function() {
+            //
+            // Once the users have been added to the project, close the modal
+            // and refresh the page
+            //
+            $scope.page.refresh();
+          });
+        });
       }
     };
 
@@ -57,9 +102,9 @@ angular.module('practiceMonitoringAssessmentApp')
           //
           $scope.site.practices.readings({
             storage: variables.practice.storage,
-            relationship: $scope.readings[practice.practice_type]['installation'],
+            relationship: $scope.readings[practice.practice_type]['Installation'],
             featureId: practice.id,
-            readingType: 'installation'
+            readingType: 'Installation'
           }, $index);
 
           //
@@ -67,9 +112,9 @@ angular.module('practiceMonitoringAssessmentApp')
           //
           $scope.site.practices.readings({
             storage: variables.practice.storage,
-            relationship: $scope.readings[practice.practice_type]['monitoring'],
+            relationship: $scope.readings[practice.practice_type]['Monitoring'],
             featureId: practice.id,
-            readingType: 'monitoring'
+            readingType: 'Monitoring'
           }, $index);
 
         });
@@ -349,6 +394,36 @@ angular.module('practiceMonitoringAssessmentApp')
       return updatedSites;
     };
 
+    $scope.GetAllReadings = function(existingReadings, readingId) {
+
+      var updatedReadings = [{
+            id: readingId // Start by adding the newest relationships, then we'll add the existing sites
+          }];
+
+      angular.forEach(existingReadings, function(reading, $index) {
+        updatedReadings.push({
+          id: reading.id
+        });
+      });
+
+      return updatedReadings;
+    };
+
+    // $scope.GetAllReadings = function(practiceId) {
+
+    //   var existingSites = $scope.site.practices.list,
+    //       updatedSites = [{
+    //         id: practiceId // Start by adding the newest relationships, then we'll add the existing sites
+    //       }];
+
+    //   angular.forEach(existingSites, function(site, $index) {
+    //     updatedSites.push({
+    //       id: site.id
+    //     });
+    //   });
+
+    //   return updatedSites;
+    // };
 
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
