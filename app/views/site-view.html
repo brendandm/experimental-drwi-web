@@ -6,9 +6,8 @@
         <h1>{{ site.site_description }}</h1>
 
         <div class="row nested-row">
-          <div class="column-8">
-          </div>
-          <div data-ng-if="site.type_f9d8609090494dac811e6a58eb8ef4be.length" class="column-8">
+          <div class="column-16">
+            <h6><strong>Practices</strong> Installed</h6>
           </div>
         </div>
 
@@ -88,3 +87,64 @@
     </article>
   </form>
 </main>
+
+<div data-ng-show="modals.windows.createPractice.visible" class="modal">
+  <div class="container">
+    <div class="row">
+      <div class="column-16">
+        <div data-ng-click="modals.close('createPractice')" class="pull-right close icon retinaicon-essentials-045"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column-4"></div>
+      <form class="column-8" method="POST" id="form-add-practice" name="form-add-practice">
+        <h1>{{ modals.windows.createPractice.title }}</h1>
+
+        <div class="row step first">
+          <div class="column-16 sub-step">
+            <div class="step-indicator">
+              <p>1 of 3</p>
+            </div>
+            <header>
+              <p>1. Select the practice type</p>
+            </header>
+            <article class="step-content">
+              <div class="form-group">
+                <select class="form-control" id="practice_type" name="practice_type" data-ng-model="practice.practice_type" data-ng-options="option for option in fields.practice_type.options"></select>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div data-ng-if="practice.practice_type" class="row step">
+          <div class="column-16 sub-step">
+            <div class="step-indicator">
+              <p>2 of 3</p>
+            </div>
+            <header>
+              <p>2. Describe the practice being installed</p>
+            </header>
+            <article class="step-content">
+              <textarea rows="1" data-ng-model="practice.description" class="form-control"  msd-elastic id="practice_description" name="practice_description" placeholder="Describe the practice being installed">{{ practice.description }}</textarea>
+            </article>
+          </div>
+        </div>
+
+        <div data-ng-if="practice.description.length" class="row step last">
+          <div class="column-16 sub-step">
+            <div class="step-indicator">
+              <p>3 of 3</p>
+            </div>
+            <header>
+              <p>3. Add the new practice to this site</p>
+            </header>
+            <article class="step-content">
+              <a class="button" data-ng-click="site.practices.create()">Save Practice</a>
+            </article>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
