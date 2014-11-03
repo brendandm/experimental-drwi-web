@@ -5,25 +5,16 @@
         <h4><strong>Site Number: </strong><span>{{ site.site_number }}</span></h4>
         <h1>{{ site.site_description }}</h1>
 
-        <div class="row nested-row">
-          <div class="column-16">
-            <h6><strong>Practices</strong> Installed</h6>
-          </div>
-        </div>
-
         <br />
 
         <section data-ng-if="site.practices.list" id="practices">
-          <div class="list">
-            <h6 class="rule-above"><strong>Practices</strong> Installed at this Site</h6>
-            <article class="row list-item list-item-thin" data-ng-repeat="site in project.sites.list track by $index">
-              <div class="column-16 list-item-content">
-                <img data-ng-if="site.site_thumbnail" data-ng-src="{{ site.site_thumbnail }}" alt="{{ site.site_description }} location preview" width="80" height="80" />
-                <h1><a href="/projects/{{ project.id }}/sites/{{ site.id }}" title="{{ site.site_description }} project details">{{ site.site_description }}</a></h1>
-                <h4><strong>Site Number: </strong>{{ site.site_number }}</h4>
-              </div>
-            </article>
-          </div>
+          <h6 class="rule-above"><strong>Practices</strong> Installed</h6>
+          <article class="row list-item" data-ng-repeat="practice in site.practices.list track by $index">
+            <div class="column-16">
+              <h1>{{ practice.practice_type }}</h1>
+              <h4>{{ practice.description }}</h4>
+            </div>
+          </article>
         </section>
 
       </div>

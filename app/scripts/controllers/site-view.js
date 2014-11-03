@@ -53,9 +53,11 @@ angular.module('practiceMonitoringAssessmentApp')
             }
           }).then(function() {
             //
-            // Forward the user along to the new site now that it has been associated with the Project
+            // Once the users have been added to the project, close the modal
+            // and refresh the page
             //
-            $location.path('/projects/' + $route.current.params.projectId + '/sites/' + $route.current.params.siteId);
+            $scope.modals.close('createPractice');
+            $scope.page.refresh();
           });
         });
       }
