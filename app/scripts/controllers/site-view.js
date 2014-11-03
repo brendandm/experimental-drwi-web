@@ -17,9 +17,65 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.fields = fields;
     $scope.project = project;
     $scope.practice = {};
+
+    $scope.readings = {
+      "Forest Buffers": {
+        installation: 'type_ed657deb908b483a9e96d3a05e420c50',
+        monitoring: 'type_ed657deb908b483a9e96d3a05e420c50'
+      }
+    };
+
     $scope.site = site;
     $scope.site.practices = {
       list: practices,
+      readingType: function(practice_type, reading_type) {
+        return $scope.readings[practice_type][reading_type];
+      },
+      readings: function(options, $index) {
+        Feature.GetRelatedFeatures({
+          storage: options.storage,
+          relationship: options.relationship,
+          featureId: options.featureId
+        }).then(function(response) {
+          $scope.site.practices.list[$index].readings[options.readingType] = response;
+        });
+      },
+      process: function() {
+
+        var readings = [];
+
+        //
+        // Get Readings for all practices
+        //
+        angular.forEach($scope.site.practices.list, function(practice, $index) {
+          
+
+          $scope.site.practices.list[$index].readings = {};
+
+          //
+          // Get installation readings
+          //
+          $scope.site.practices.readings({
+            storage: variables.practice.storage,
+            relationship: $scope.readings[practice.practice_type]['installation'],
+            featureId: practice.id,
+            readingType: 'installation'
+          }, $index);
+
+          //
+          // Get monitoring readings
+          //
+          $scope.site.practices.readings({
+            storage: variables.practice.storage,
+            relationship: $scope.readings[practice.practice_type]['monitoring'],
+            featureId: practice.id,
+            readingType: 'monitoring'
+          }, $index);
+
+        });
+
+        console.log('$scope.site.practices', $scope.site.practices);
+      },
       create: function() {
         //
         // Creating a practice is a two step process.
@@ -60,9 +116,6 @@ angular.module('practiceMonitoringAssessmentApp')
       }
     };
 
-    $scope.readings = {
-      forestBuffer: 'type_ed657deb908b483a9e96d3a05e420c50'
-    }
 
     //
     // Modal Windows
@@ -147,11 +200,7 @@ angular.module('practiceMonitoringAssessmentApp')
           }
         }
       },
-      center: {
-        lat: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[1] : 38.362,
-        lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119, 
-        zoom: 6
-      },
+      center: {},
       markers: {
         LandRiverSegment: {
           lat: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[1] : 38.362,
@@ -240,6 +289,51 @@ angular.module('practiceMonitoringAssessmentApp')
             // or server returns response with an error status.
             return data;
           });
+      },
+      setupMap: function() {
+        //
+        // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
+        // selected their property, so we just need to display it on the map for them again.
+        //
+        if ($scope.site.type_f9d8609090494dac811e6a58eb8ef4be.length > 0) {
+          //
+          // Draw the Land River Segment
+          //
+          var json = $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0];
+          
+          var geojson = {
+            type: 'Feature',
+            geometry: json.geometry
+          };
+
+          $scope.map.drawPolygon(geojson, true, {
+            stroke: false,
+            fill: true,
+            opacity: 0.75,
+            color: 'rgb(25,166,215)',
+          });
+
+          Feature.GetFeature({
+            storage: variables.land_river_segment.storage,
+            featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
+          }).then(function(response) {
+            $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0] = response;
+          });
+
+          //
+          // Draw the county
+          //
+          var json = $scope.site.type_b1baa10ba3ce493d90581a864ec95dc8[0];
+          
+          var geojson = {
+            type: 'Feature',
+            geometry: json.geometry
+          };
+
+          $scope.map.drawPolygon(geojson, true);
+
+
+        }
       }
     };
     
@@ -299,68 +393,10 @@ angular.module('practiceMonitoringAssessmentApp')
     }
 
     //
-    // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
-    // selected their property, so we just need to display it on the map for them again.
+    // Once the page has loaded we need to load in all Reading Features that are associated with
+    // the Practices related to the Site being viewed
     //
-    if ($scope.site.type_f9d8609090494dac811e6a58eb8ef4be.length > 0) {
-      //
-      // Draw the Land River Segment
-      //
-      var json = $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0];
-      
-      var geojson = {
-        type: 'Feature',
-        geometry: json.geometry
-      };
-
-      $scope.map.drawPolygon(geojson, true, {
-        stroke: false,
-        fill: true,
-        opacity: 0.75,
-        color: 'rgb(25,166,215)',
-      });
-
-      Feature.GetFeature({
-        storage: variables.land_river_segment.storage,
-        featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
-      }).then(function(response) {
-        $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0] = response;
-      });
-
-      //
-      // Draw the county
-      //
-      var json = $scope.site.type_b1baa10ba3ce493d90581a864ec95dc8[0];
-      
-      var geojson = {
-        type: 'Feature',
-        geometry: json.geometry
-      };
-
-      $scope.map.drawPolygon(geojson, true);
-
-
-    }
-
-    //
-    // Define our map interactions via the Angular Leaflet Directive
-    //
-    leafletData.getMap().then(function(map) {
-
-      //
-      // Move Zoom Control position to bottom/right
-      //
-      new L.Control.Zoom({
-        position: 'bottomright'
-      }).addTo(map);
-
-      $timeout(function () {
-        leafletData.getMap().then(function(map) {
-          map.invalidateSize();
-        });
-      }, 200);
-
-    });
-
+    $scope.site.practices.process();
+    $scope.map.setupMap();
 
   }]);

@@ -7,17 +7,11 @@
 
         <br />
 
-        <section data-ng-if="site.practices.list" id="practices">
+        <section data-ng-if="site.practices.list" id="practices" class="list action-list">
           <h6 class="rule-above"><strong>Practices</strong> Installed</h6>
           <article class="row list-item" data-ng-repeat="practice in site.practices.list track by $index">
-            <div class="column-10">
-              <h1>{{ practice.practice_type }}</h1>
-              <h4>{{ practice.description }}</h4>
-            </div>
-            <div class="column-6">
-              <p><a class="button" href="">Add Installation Data</a></p>
-              <p><a class="button" href="">Add Monitoring Data</a></p>
-            </div>
+            <h1>{{ practice.practice_type }}</h1>
+            <p><a class="button button-xsmall" href="">Add Installation Data</a></p>
           </article>
         </section>
 

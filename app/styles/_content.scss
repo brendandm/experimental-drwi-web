@@ -168,6 +168,17 @@
       }
     }
   }
+  .list.action-list {
+    .list-item {
+      border-top: 0;
+      border-left: 3px solid $color-green-base;
+      margin-bottom: 8px;
+      padding-left: 16px;
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
 
 
   //

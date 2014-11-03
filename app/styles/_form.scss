@@ -201,14 +201,9 @@ label.control-label {
 // Buttons
 //
 a.button,
-a.button:hover,
-.button,
-.button:hover {
+a.button:hover {
   background-color: $color-green-base;
   border: 0;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
   box-shadow: 0px 2px 3px rgba(0,0,0,0.2);
   color: rgb(255, 255, 255);
   display: inline-block;
@@ -252,21 +247,21 @@ a.button:hover,
 
 .button.button-info,
 .button.button-info:hover {
-  background-color: darken($color-blue-base, 5%);
+  background-color: $color-brightBlue;
   color: rgb(252,252,252);
   &:hover {
-    background-color: $color-blue-base;
+    background-color: darken($color-brightBlue, 5%);
   }
 }
   .button.button-info.button-inverse,
   .button.button-info.button-inverse:hover {
     background-color: $color-white-base;
-    border: 2px solid darken($color-blue-base, 5%);
-    color: darken($color-blue-base, 5%);
+    border: 2px solid $color-brightBlue;
+    color: $color-brightBlue;
 
     &:hover {
       background-color: $color-white-base;
-      border: 2px solid $color-blue-base;
+      border: 2px solid darken($color-brightBlue, 5%);
     }
   }
 
@@ -304,11 +299,6 @@ a.button:hover,
     }
   }
 
-.button.small {
-  font-size: 12px;
-  padding: 2px 10px 3px;
-}
-
 .button.success {
     background-color: rgb(108,196,14);
     box-shadow: 0 0.2em 0 darken(rgb(108,196,14), 10%);
@@ -324,6 +314,27 @@ a.button:hover,
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border: 1px solid rgb(147, 17, 17);
+}
+
+.button.button-small,
+.button.button-small:hover {
+  font-size: 0.6875em;
+  padding: 8px 24px;
+}
+
+.button.button-xsmall,
+.button.button-xsmall:hover {
+  font-size: 0.5em;
+  padding: 4px 16px;
+}
+
+.button.button-round,
+.button.button-round:hover {
+  border-radius: 16px;
+  -moz-border-radius: 16px;
+  -ms-border-radius: 16px;
+  -o-border-radius: 16px;
+  -webkit-border-radius: 16px;
 }
 
 
