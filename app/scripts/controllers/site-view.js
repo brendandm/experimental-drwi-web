@@ -37,9 +37,6 @@ angular.module('practiceMonitoringAssessmentApp')
             status: 'private'
           }
         }).then(function(practiceId) {
-
-          console.log('New Practice', practiceId);
-
           //
           // Create the relationship with the parent, Project, to ensure we're doing this properly we need
           // to submit all relationships that are created and should remain. If we only submit the new
@@ -122,7 +119,6 @@ angular.module('practiceMonitoringAssessmentApp')
         {
           type: 'button-link new',
           action: function() {
-            console.log('modal');
             $scope.modals.open('createPractice');
           },
           text: 'Add a practice'
@@ -233,7 +229,6 @@ angular.module('practiceMonitoringAssessmentApp')
           }
         }).
           success(function(data, status, headers, config) {
-            console.log('LandRiverSegment Request', data);
             $scope.map.drawPolygon(data, true);
             if (data.features.length > 0) {
               $scope.site.type_f9d8609090494dac811e6a58eb8ef4be = [];
@@ -243,8 +238,6 @@ angular.module('practiceMonitoringAssessmentApp')
           error(function(data, status, headers, config) {
             // called asynchronously if an error occurs
             // or server returns response with an error status.
-            console.log('error', data);
-
             return data;
           });
       }
@@ -332,7 +325,6 @@ angular.module('practiceMonitoringAssessmentApp')
         featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
       }).then(function(response) {
         $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0] = response;
-        console.log('$scope.site', $scope.site);
       });
 
       //
