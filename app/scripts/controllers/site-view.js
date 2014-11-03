@@ -72,9 +72,11 @@ angular.module('practiceMonitoringAssessmentApp')
     //
     $scope.modals = {
       open: function($index) {
+        $rootScope.page.class = 'modal-open';
         $scope.modals.windows[$index].visible = true;
       },
       close: function($index) {
+        $rootScope.page.class = null;
         $scope.modals.windows[$index].visible = false;
       },
       windows: {

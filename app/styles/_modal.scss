@@ -4,6 +4,13 @@
 // This stylesheet is written in SASS(1) and contains site wide typographic
 // specifications.
 //
+
+body.modal-open {
+  height: 100%;
+  overflow: hidden;
+  width: 100%;  
+}
+
 .modal {
   background: $color-white-base;
   height: 100%;
