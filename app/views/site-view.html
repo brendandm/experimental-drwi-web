@@ -14,8 +14,11 @@
             <p data-ng-if="!practice.readings.Installation.length"><a class="button button-xsmall" data-ng-click="readings.add(practice, 'Installation')">Add Installation Data</a></p>
             <p data-ng-if="practice.readings.Installation.length"><a class="button button-xsmall" data-ng-click="readings.add(practice, 'Monitoring')">Add Monitoring Data</a></p>
 
-            <ul>
-              <li data-ng-repeat="reading in practice.readings.Installation">
+            <div data-ng-if="!practice.readings.Installation.length">
+              <div class="throbber"></div>
+            </div>
+            <ul data-ng-if="practice.readings.Installation.length || practice.readings.Monitoring.length">
+              <li data-ng-if="practice.readings.Installation.length" data-ng-repeat="reading in practice.readings.Installation">
                 <a data-ng-click="readings.edit(reading)">{{ reading.measurement_period }}, {{ reading.report_date }}</a>
               </li>
               <li data-ng-repeat="reading in practice.readings.Monitoring">

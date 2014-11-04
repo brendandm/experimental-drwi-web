@@ -165,6 +165,10 @@
       .feature-sidebar {
         border-left: 1px solid $color-white-darker;
         padding-left: 32px;
+
+        .map {
+          height: 30em;
+        }
       }
     }
   }
