@@ -51,8 +51,9 @@ angular.module('practiceMonitoringAssessmentApp')
         angular.forEach($scope.site.practices.list, function(practice, $index) {
 
           $scope.site.practices.list[$index].readings = {};
+          console.log('$scope.readings', $scope.readings, 'practice.practice_type', practice);
 
-          if (practice.practice_type && practice.practice_type !== null && practice.practice_type !== '') {
+          if (practice.practice_type && $scope.readings.hasOwnProperty(practice.practice_type) && practice.practice_type !== null && practice.practice_type !== '') {
             //
             // Get installation readings
             //
@@ -75,6 +76,7 @@ angular.module('practiceMonitoringAssessmentApp')
           }
 
         });
+
       },
       create: function() {
         //

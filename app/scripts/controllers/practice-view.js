@@ -33,7 +33,7 @@ angular.module('practiceMonitoringAssessmentApp')
           Monitoring: 'type_ed657deb908b483a9e96d3a05e420c50'
         }
       },
-      get: function(options) {
+      load: function(options) {
         Feature.GetRelatedFeatures({
           storage: options.storage,
           relationship: options.relationship,
@@ -44,26 +44,28 @@ angular.module('practiceMonitoringAssessmentApp')
           $scope.practice.readings[options.readingType] = response;
         });
       },
-      load: function() {
-        //
-        // Get installation readings
-        //
-        $scope.readings.get({
-          storage: variables.practice.storage,
-          relationship: $scope.readings.type[$scope.practice.practice_type].Installation,
-          featureId: $scope.practice.id,
-          readingType: 'Installation'
-        });
+      process: function() {
+        if ($scope.practice.practice_type && $scope.readings.type.hasOwnProperty($scope.practice.practice_type) && practice.practice_type !== null && practice.practice_type !== '') {
+          //
+          // Get installation readings
+          //
+          $scope.readings.load({
+            storage: variables.practice.storage,
+            relationship: $scope.readings.type[$scope.practice.practice_type].Installation,
+            featureId: $scope.practice.id,
+            readingType: 'Installation'
+          });
 
-        //
-        // Get monitoring readings
-        //
-        $scope.readings.get({
-          storage: variables.practice.storage,
-          relationship: $scope.readings.type[$scope.practice.practice_type].Monitoring,
-          featureId: $scope.practice.id,
-          readingType: 'Monitoring'
-        });
+          //
+          // Get monitoring readings
+          //
+          $scope.readings.load({
+            storage: variables.practice.storage,
+            relationship: $scope.readings.type[$scope.practice.practice_type].Monitoring,
+            featureId: $scope.practice.id,
+            readingType: 'Monitoring'
+          });
+        }
       },
       add: function(practice, readingType) {
         //
@@ -218,6 +220,6 @@ angular.module('practiceMonitoringAssessmentApp')
     // Once the page has loaded we need to load in all Reading Features that are associated with
     // the Practices related to the Site being viewed
     //
-    $scope.readings.load();
+    $scope.readings.process();
 
   }]);
