@@ -10,7 +10,11 @@
         <section data-ng-if="site.practices.list" id="practices" class="list action-list">
           <h6 class="rule-above"><strong>Practices</strong> Installed</h6>
           <article class="row list-item" data-ng-repeat="practice in site.practices.list track by $index">
-            <h1>{{ practice.practice_type }}</h1>
+            <h1>
+              <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}">
+                {{ practice.practice_type }}
+              </a>
+            </h1>
             <p data-ng-if="!practice.readings.Installation.length"><a class="button button-xsmall" data-ng-click="readings.add(practice, 'Installation')">Add Installation Data</a></p>
             <p data-ng-if="practice.readings.Installation.length"><a class="button button-xsmall" data-ng-click="readings.add(practice, 'Monitoring')">Add Monitoring Data</a></p>
 
