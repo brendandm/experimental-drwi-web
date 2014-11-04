@@ -17,7 +17,10 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.fields = fields;
     $scope.project = project;
     $scope.practice = {};
-
+    $scope.user = user;
+    $scope.user.owner = false;
+    $scope.user.feature = {};
+    $scope.user.template = {};
     $scope.readings = {
       'Forest Buffers': {
         Planning: 'type_437194b965ea4c94b99aebe22399621f',
@@ -25,7 +28,6 @@ angular.module('practiceMonitoringAssessmentApp')
         Monitoring: 'type_ed657deb908b483a9e96d3a05e420c50'
       }
     };
-
     $scope.site = site;
     $scope.site.practices = {
       list: practices,
@@ -85,7 +87,7 @@ angular.module('practiceMonitoringAssessmentApp')
         Feature.CreateFeature({
           storage: variables.practice.storage,
           data: {
-            practice_type: 'Forest Buffers',
+            practice_type: 'Forest Buffer',
             description: '',
             owner: $scope.user.id,
             status: 'private'
@@ -110,37 +112,6 @@ angular.module('practiceMonitoringAssessmentApp')
         });
       }
     };
-
-
-    //
-    // Modal Windows
-    //
-    $scope.modals = {
-      open: function($index) {
-        $rootScope.page.class = 'modal-open';
-        $scope.modals.windows[$index].visible = true;
-      },
-      close: function($index) {
-        $rootScope.page.class = null;
-        $scope.modals.windows[$index].visible = false;
-      },
-      windows: {
-        createPractice: {
-          title: 'Add a practice',
-          body: '',
-          visible: false
-        }
-      }
-    };
-
-    $scope.user = user;
-    $scope.user.owner = false;
-    $scope.user.feature = {};
-    $scope.user.template = {};
-
-    //
-    // Setup basic page variables
-    //
     $rootScope.page = {
       template: 'views/site-view.html',
       title: $scope.site.site_number,
@@ -177,7 +148,6 @@ angular.module('practiceMonitoringAssessmentApp')
         $route.reload();
       }
     };
-
     $scope.map = {
       defaults: {
         scrollWheelZoom: false,
