@@ -89,7 +89,7 @@ angular.module('practiceMonitoringAssessmentApp')
         Feature.CreateFeature({
           storage: variables.practice.storage,
           data: {
-            practice_type: 'Forest Buffers',
+            practice_type: 'Forest Buffer',
             description: '',
             owner: $scope.user.id,
             status: 'private'

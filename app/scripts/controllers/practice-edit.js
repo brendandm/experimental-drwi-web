@@ -106,6 +106,39 @@ angular.module('practiceMonitoringAssessmentApp')
       });
     };
 
+    $scope.practice.delete = function() {
+
+      //
+      // Before we can remove the Practice we need to remove the relationship it has with the Site
+      //
+      //
+      // Drop the siteId from the list of 
+      //
+      angular.forEach($scope.site.type_77f5c44516674e8da2532939619759dd, function(feature, $index) {
+        if (feature.id === $scope.practice.id) {
+          $scope.site.type_77f5c44516674e8da2532939619759dd.splice($index, 1);
+        }
+      });
+
+      Feature.UpdateFeature({
+        storage: variables.site.storage,
+        featureId: $scope.site.id,
+        data: $scope.site
+      }).then(function(response) {
+        
+        //
+        // Now that the Project <> Site relationship has been removed, we can remove the Site
+        //
+        Feature.DeleteFeature({
+          storage: variables.practice.storage,
+          featureId: $scope.practice.id
+        }).then(function(response) {
+          $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id);
+        });
+
+      });
+
+    };
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
     // backend functionality. Even if the user guesses the URL the API will stop them from editing the
