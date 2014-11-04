@@ -18,17 +18,20 @@
               <thead>
                 <tr>
                   <th>Measurement Period</th>
-                  <th>Report Date</th>
                 </tr>
               </thead>
               <tbody>
-                <tr data-ng-if="practice.readings.Installation.length" data-ng-repeat="reading in practice.readings.Installation">
-                  <td>{{ reading.measurement_period }}</td>
-                  <td>{{ reading.report_date | date:"MMM d, yyyy" }}</td>
+                <tr data-ng-if="practice.readings.Installation.length" data-ng-repeat="report in practice.readings.Installation">
+                  <td>
+                    <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/readings/{{ report.id }}">{{ report.measurement_period }}</a>
+                    <em class="supplemental">Report on {{ report.report_date | date:"MMM d, yyyy" }}</em>
+                  </td>
                 </tr>
-                <tr data-ng-if="practice.readings.Monitoring.length" data-ng-repeat="reading in practice.readings.Monitoring">
-                  <td>{{ reading.measurement_period }}</td>
-                  <td>{{ reading.report_date | date:"MMM d, yyyy" }}</td>
+                <tr data-ng-if="practice.readings.Monitoring.length" data-ng-repeat="report in practice.readings.Monitoring">
+                  <td>
+                    <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/readings/{{ report.id }}">{{ report.measurement_period }}</a>
+                    <em class="supplemental">Report on {{ report.report_date | date:"MMM d, yyyy" }}</em>
+                  </td>
                 </tr>
               </tbody>
             </table>

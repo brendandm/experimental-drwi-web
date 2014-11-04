@@ -272,27 +272,45 @@ angular
           }
         }
       })
-      .when('/practices', {
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/readings/:readingId', {
         templateUrl: templateUrl,
-        controller: 'PracticesCtrl',
+        controller: 'ReportEditCtrl',
         resolve: {
           user: function(User) {
             return User.getUser();
-          }
-        }
-      })
-      .when('/metrics', {
-        templateUrl: templateUrl,
-        controller: 'MetricsCtrl',
-        resolve: {
-          user: function(User) {
-            return User.getUser();
+          },
+          template: function(Template, $route) {
+            return Template.GetTemplate(project.templateId);
+          },
+          fields: function(Field, $route) {
+            return Field.GetPreparedFields(project.templateId);
+          },
+          site: function(Feature, $route) {
+            return Feature.GetFeature({
+              storage: site.storage,
+              featureId: $route.current.params.siteId
+            });
+          },
+          practices: function(Feature, $route) {
+            return Feature.GetRelatedFeatures({
+              storage: site.storage,
+              relationship: practice.storage,
+              featureId: $route.current.params.siteId
+            });
+          },
+          variables: function() {
+            return {
+              project: project,
+              site: site,
+              practice: practice,
+              land_river_segment: land_river_segment
+            };
           }
         }
       })
       .when('/reports', {
         templateUrl: templateUrl,
-        controller: 'ReportsCtrl',
+        controller: 'SummaryCtrl',
         resolve: {
           user: function(User) {
             return User.getUser();

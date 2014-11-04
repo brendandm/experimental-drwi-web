@@ -60,6 +60,22 @@
 
 
   //
+  //
+  //
+  .table {
+
+    td {
+      em {
+        &.supplemental {
+          color: lighten($color-black-base, 50%);
+          font-size: 80%;
+        }
+      }
+    }
+  }
+
+
+  //
   // List
   //
   .list, .feature {
