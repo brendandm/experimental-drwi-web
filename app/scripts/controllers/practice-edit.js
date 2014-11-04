@@ -50,7 +50,8 @@ angular.module('practiceMonitoringAssessmentApp')
         },    
         {
           text: 'Edit',
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/edit'
+          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/edit',
+          type: 'active'
         }   
       ],
       actions: [
