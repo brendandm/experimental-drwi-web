@@ -21,7 +21,8 @@ angular
     'geolocation',
     'angular-loading-bar',
     'monospaced.elastic',
-    'angular-medium-editor'
+    'angular-medium-editor',
+    'angularMoment',
   ])
   .config(['$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
 

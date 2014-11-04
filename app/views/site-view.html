@@ -11,8 +11,17 @@
           <h6 class="rule-above"><strong>Practices</strong> Installed</h6>
           <article class="row list-item" data-ng-repeat="practice in site.practices.list track by $index">
             <h1>{{ practice.practice_type }}</h1>
-            <p data-ng-if="!practice.readings.installation.length"><a class="button button-xsmall" data-ng-click="readings.add(practice, 'Installation')">Add Installation Data</a></p>
-            <p data-ng-if="practice.readings.installation.length"><a class="button button-xsmall" href="">Add Monitoring Data</a></p>
+            <p data-ng-if="!practice.readings.Installation.length"><a class="button button-xsmall" data-ng-click="readings.add(practice, 'Installation')">Add Installation Data</a></p>
+            <p data-ng-if="practice.readings.Installation.length"><a class="button button-xsmall" data-ng-click="readings.add(practice, 'Monitoring')">Add Monitoring Data</a></p>
+
+            <ul>
+              <li data-ng-repeat="reading in practice.readings.Installation">
+                <a data-ng-click="readings.edit(reading)">{{ reading.measurement_period }}, {{ reading.report_date }}</a>
+              </li>
+              <li data-ng-repeat="reading in practice.readings.Monitoring">
+                <a data-ng-click="readings.edit(reading)">{{ reading.measurement_period }}, {{ reading.report_date }}</a>
+              </li>
+            </ul>
           </article>
         </section>
 

@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('SiteViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'user', 'Site', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practices', 'variables', 'leafletData', function ($rootScope, $scope, $route, $location, $timeout, user, Site, Template, Feature, template, fields, project, site, practices, variables, leafletData) {
+  .controller('SiteViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Site', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practices', 'variables', 'leafletData', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Site, Template, Feature, template, fields, project, site, practices, variables, leafletData) {
 
     //
     // Assign project to a scoped variable
@@ -20,11 +20,10 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.readings = {
       "Forest Buffers": {
-        Installation: 'type_ed657deb908b483a9e96d3a05e420c50',
+        Installation: 'type_437194b965ea4c94b99aebe22399621f',
         Monitoring: 'type_ed657deb908b483a9e96d3a05e420c50'
       },
       add: function(practice, readingType) {
-        console.log('Create a new', readingType, 'reading at Site', $scope.site.id, 'for the', practice.practice_type, '(', practice.id ,') practice');
         //
         // Creating a practice reading is a two step process.
         //
@@ -32,26 +31,23 @@ angular.module('practiceMonitoringAssessmentApp')
         //     for the Practice Reading table
         //  2. Update the Practice to create a relationship with the Reading created in step 1 
         //
-        var readingStorage = $scope.readings[practice.practice_type][readingType];
-        var today = Date.now();
-
         Feature.CreateFeature({
           storage: $scope.readings[practice.practice_type][readingType],
           data: {
             measurement_period: readingType,
-            report_date: today,
+            report_date: moment().format('YYYY-MM-DD'),
             owner: $scope.user.id,
             status: 'private'
           }
         }).then(function(readingId) {
 
-          console.log('readingId', readingId);
+          console.log('readingId', readingId)
 
           var data = {};
-          data[readingStorage] = $scope.GetAllReadings(readingId);
+          data[$scope.readings[practice.practice_type][readingType]] = $scope.GetAllReadings(practice.readings[readingType], readingId);
 
           //
-          // Create the relationship with the parent, Project, to ensure we're doing this properly we need
+          // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
           // to submit all relationships that are created and should remain. If we only submit the new
           // ID the system will kick out the sites that were added previously.
           //
@@ -61,8 +57,8 @@ angular.module('practiceMonitoringAssessmentApp')
             data: data
           }).then(function() {
             //
-            // Once the users have been added to the project, close the modal
-            // and refresh the page
+            // Once the new Reading has been associated with the existing Practice we need to
+            // display the form to the user, allowing them to complete it.
             //
             $scope.page.refresh();
           });
@@ -400,6 +396,9 @@ angular.module('practiceMonitoringAssessmentApp')
             id: readingId // Start by adding the newest relationships, then we'll add the existing sites
           }];
 
+      console.log('updatedReadings', updatedReadings);
+      console.log('existingReadings', existingReadings);
+
       angular.forEach(existingReadings, function(reading, $index) {
         updatedReadings.push({
           id: reading.id
@@ -408,22 +407,6 @@ angular.module('practiceMonitoringAssessmentApp')
 
       return updatedReadings;
     };
-
-    // $scope.GetAllReadings = function(practiceId) {
-
-    //   var existingSites = $scope.site.practices.list,
-    //       updatedSites = [{
-    //         id: practiceId // Start by adding the newest relationships, then we'll add the existing sites
-    //       }];
-
-    //   angular.forEach(existingSites, function(site, $index) {
-    //     updatedSites.push({
-    //       id: site.id
-    //     });
-    //   });
-
-    //   return updatedSites;
-    // };
 
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
