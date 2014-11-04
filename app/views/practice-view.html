@@ -4,6 +4,7 @@
       <div class="column-11 feature-detail-content">
 
         <h1>{{ practice.practice_type }}</h1>
+        <p data-ng-if="practice.description" data-ng-bind-html="practice.description"></p>
 
         <table class="table" data-ng-if="practice.readings.Installation.length">
           <thead>

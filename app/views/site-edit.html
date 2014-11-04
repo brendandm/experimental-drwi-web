@@ -86,7 +86,6 @@
           <!-- Proect Manangement Navigation -->
           <li data-ng-if="user.owner || user.feature.read || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/sites/{{ site.id }}">Overview</a></li>
           <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator" class="active"><a href="/projects/{{ project.id }}/sites/{{ site.id }}/edit">Edit</a></li>
-          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/sites/{{ site.id }}/summary">Summary Report</a></li>
         </ul>
       </nav>
 

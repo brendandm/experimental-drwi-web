@@ -335,12 +335,6 @@ angular
               featureId: $route.current.params.projectId
             });
           },
-          template: function(Template, $route) {
-            return Template.GetTemplate(site.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(site.templateId, 'object');
-          },
           site: function(Feature, $route) {
             return Feature.GetFeature({
               storage: site.storage,
@@ -352,6 +346,12 @@ angular
               storage: practice.storage,
               featureId: $route.current.params.practiceId
             });
+          },
+          template: function(Template, $route) {
+            return Template.GetTemplate(practice.templateId);
+          },
+          fields: function(Field, $route) {
+            return Field.GetPreparedFields(practice.templateId, 'object');
           },
           variables: function() {
             return {
