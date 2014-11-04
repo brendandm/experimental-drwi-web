@@ -276,14 +276,23 @@ angular
         templateUrl: templateUrl,
         controller: 'ReportEditCtrl',
         resolve: {
-          user: function(User) {
-            return User.getUser();
+          user: function(User, $route) {
+            return User.getUser({
+              featureId: $route.current.params.projectId,
+              templateId: site.templateId
+            });
+          },
+          project: function(Feature, $route) {
+            return Feature.GetFeature({
+              storage: project.storage,
+              featureId: $route.current.params.projectId
+            });
           },
           template: function(Template, $route) {
-            return Template.GetTemplate(project.templateId);
+            return Template.GetTemplate(site.templateId);
           },
           fields: function(Field, $route) {
-            return Field.GetPreparedFields(project.templateId);
+            return Field.GetPreparedFields(site.templateId, 'object');
           },
           site: function(Feature, $route) {
             return Feature.GetFeature({
