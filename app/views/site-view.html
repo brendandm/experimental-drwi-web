@@ -24,11 +24,11 @@
               <tbody>
                 <tr data-ng-if="practice.readings.Installation.length" data-ng-repeat="reading in practice.readings.Installation">
                   <td>{{ reading.measurement_period }}</td>
-                  <td>{{ reading.report_date | date:"MM d, yyyy" }}</td>
+                  <td>{{ reading.report_date | date:"MMM d, yyyy" }}</td>
                 </tr>
                 <tr data-ng-if="practice.readings.Monitoring.length" data-ng-repeat="reading in practice.readings.Monitoring">
                   <td>{{ reading.measurement_period }}</td>
-                  <td>{{ reading.report_date | date:"MM d, yyyy" }}</td>
+                  <td>{{ reading.report_date | date:"MMM d, yyyy" }}</td>
                 </tr>
               </tbody>
             </table>
