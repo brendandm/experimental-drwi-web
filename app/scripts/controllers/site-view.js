@@ -20,47 +20,9 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.readings = {
       'Forest Buffers': {
+        Planning: 'type_437194b965ea4c94b99aebe22399621f',
         Installation: 'type_437194b965ea4c94b99aebe22399621f',
         Monitoring: 'type_ed657deb908b483a9e96d3a05e420c50'
-      },
-      add: function(practice, readingType) {
-        //
-        // Creating a practice reading is a two step process.
-        //
-        //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
-        //     for the Practice Reading table
-        //  2. Update the Practice to create a relationship with the Reading created in step 1 
-        //
-        Feature.CreateFeature({
-          storage: $scope.readings[practice.practice_type][readingType],
-          data: {
-            measurement_period: readingType,
-            report_date: moment().format('YYYY-MM-DD'),
-            owner: $scope.user.id,
-            status: 'private'
-          }
-        }).then(function(readingId) {
-
-          var data = {};
-          data[$scope.readings[practice.practice_type][readingType]] = $scope.GetAllReadings(practice.readings[readingType], readingId);
-
-          //
-          // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
-          // to submit all relationships that are created and should remain. If we only submit the new
-          // ID the system will kick out the sites that were added previously.
-          //
-          Feature.UpdateFeature({
-            storage: variables.practice.storage,
-            featureId: practice.id,
-            data: data
-          }).then(function() {
-            //
-            // Once the new Reading has been associated with the existing Practice we need to
-            // display the form to the user, allowing them to complete it.
-            //
-            $scope.page.refresh();
-          });
-        });
       }
     };
 
@@ -347,38 +309,8 @@ angular.module('practiceMonitoringAssessmentApp')
         }
       }
     };
-    
 
-    $scope.GetAllChildren = function(practiceId) {
 
-      var existingSites = $scope.site.practices.list,
-          updatedSites = [{
-            id: practiceId // Start by adding the newest relationships, then we'll add the existing sites
-          }];
-
-      angular.forEach(existingSites, function(site, $index) {
-        updatedSites.push({
-          id: site.id
-        });
-      });
-
-      return updatedSites;
-    };
-
-    $scope.GetAllReadings = function(existingReadings, readingId) {
-
-      var updatedReadings = [{
-        id: readingId // Start by adding the newest relationships, then we'll add the existing sites
-      }];
-
-      angular.forEach(existingReadings, function(reading, $index) {
-        updatedReadings.push({
-          id: reading.id
-        });
-      });
-
-      return updatedReadings;
-    };
 
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect

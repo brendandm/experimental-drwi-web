@@ -15,8 +15,6 @@
                 {{ practice.practice_type }}
               </a>
             </h1>
-            <p data-ng-if="!practice.readings.Installation.length"><a class="button button-xsmall" data-ng-click="readings.add(practice, 'Installation')">Add Installation Data</a></p>
-            <p data-ng-if="practice.readings.Installation.length"><a class="button button-xsmall" data-ng-click="readings.add(practice, 'Monitoring')">Add Monitoring Data</a></p>
 
             <table class="table" data-ng-if="practice.readings.Installation.length">
               <thead>
