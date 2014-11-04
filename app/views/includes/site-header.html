@@ -19,7 +19,7 @@
 
 <section data-ng-if="$root.user.email" class="container meta">
   <article data-ng-if="!page.display_title" class="row">
-    <nav class="column-8">
+    <nav class="column-10">
       <ul data-ng-if="page.links" class="breadcrumb-navigation crumbs">
         <li data-ng-repeat="link in page.links">
           <a href="{{ link.url }}" class="{{ link.type }}">
@@ -28,7 +28,7 @@
         </li>
       </ul>
     </nav>
-    <nav class="column-8">
+    <nav class="column-6">
       <ul data-ng-if="page.actions" class="breadcrumb-navigation">
         <li data-ng-repeat="action in page.actions track by $index">
           <a data-ng-if="!action.loading" data-ng-click="action.action($index)" class="{{ action.type }}">

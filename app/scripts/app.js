@@ -189,7 +189,7 @@ angular
         }
       })
       .when('/projects/:projectId/sites', {
-        redirectTo: '/projects/:projectId',
+        redirectTo: '/projects/:projectId'
       })
       .when('/projects/:projectId/sites/:siteId', {
         templateUrl: templateUrl,
@@ -272,7 +272,16 @@ angular
           }
         }
       })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/readings/:readingId', {
+      .when('/projects/:projectId/sites/:siteId/practices', {
+        redirectTo: '/projects/:projectId/sites/:siteId'
+      })
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId', {
+        redirectTo: '/projects/:projectId/sites/:siteId'
+      })
+      .when('/projects/:projectId/sites/:siteId/practices:practiceId/reports', {
+        redirectTo: '/projects/:projectId/sites/:siteId/practices:practiceId'
+      })      
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/reports/:reportId/:reportType', {
         templateUrl: templateUrl,
         controller: 'ReportEditCtrl',
         resolve: {
@@ -300,11 +309,10 @@ angular
               featureId: $route.current.params.siteId
             });
           },
-          practices: function(Feature, $route) {
-            return Feature.GetRelatedFeatures({
-              storage: site.storage,
-              relationship: practice.storage,
-              featureId: $route.current.params.siteId
+          practice: function(Feature, $route) {
+            return Feature.GetFeature({
+              storage: practice.storage,
+              featureId: $route.current.params.practiceId
             });
           },
           variables: function() {
