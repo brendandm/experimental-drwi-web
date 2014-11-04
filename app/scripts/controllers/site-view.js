@@ -43,35 +43,34 @@ angular.module('practiceMonitoringAssessmentApp')
       },
       process: function() {
 
-        var readings = [];
-
         //
         // Get Readings for all practices
         //
         angular.forEach($scope.site.practices.list, function(practice, $index) {
-          
 
           $scope.site.practices.list[$index].readings = {};
 
-          //
-          // Get installation readings
-          //
-          $scope.site.practices.readings({
-            storage: variables.practice.storage,
-            relationship: $scope.readings[practice.practice_type].Installation,
-            featureId: practice.id,
-            readingType: 'Installation'
-          }, $index);
+          if (practice.practice_type && practice.practice_type !== null && practice.practice_type !== '') {
+            //
+            // Get installation readings
+            //
+            $scope.site.practices.readings({
+              storage: variables.practice.storage,
+              relationship: $scope.readings[practice.practice_type].Installation,
+              featureId: practice.id,
+              readingType: 'Installation'
+            }, $index);
 
-          //
-          // Get monitoring readings
-          //
-          $scope.site.practices.readings({
-            storage: variables.practice.storage,
-            relationship: $scope.readings[practice.practice_type].Monitoring,
-            featureId: practice.id,
-            readingType: 'Monitoring'
-          }, $index);
+            //
+            // Get monitoring readings
+            //
+            $scope.site.practices.readings({
+              storage: variables.practice.storage,
+              relationship: $scope.readings[practice.practice_type].Monitoring,
+              featureId: practice.id,
+              readingType: 'Monitoring'
+            }, $index);
+          }
 
         });
       },
@@ -86,12 +85,14 @@ angular.module('practiceMonitoringAssessmentApp')
         Feature.CreateFeature({
           storage: variables.practice.storage,
           data: {
-            practice_type: $scope.practice.practice_type,
-            description: $scope.practice.description,
+            practice_type: 'Forest Buffers',
+            description: '',
             owner: $scope.user.id,
             status: 'private'
           }
         }).then(function(practiceId) {
+
+          console.log('practiceId', practiceId);
           //
           // Create the relationship with the parent, Project, to ensure we're doing this properly we need
           // to submit all relationships that are created and should remain. If we only submit the new
@@ -104,12 +105,7 @@ angular.module('practiceMonitoringAssessmentApp')
               type_77f5c44516674e8da2532939619759dd: $scope.GetAllChildren(practiceId),
             }
           }).then(function() {
-            //
-            // Once the users have been added to the project, close the modal
-            // and refresh the page
-            //
-            $scope.modals.close('createPractice');
-            $scope.page.refresh();
+            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + practiceId + '/edit');
           });
         });
       }
@@ -171,7 +167,8 @@ angular.module('practiceMonitoringAssessmentApp')
         {
           type: 'button-link new',
           action: function() {
-            $scope.modals.open('createPractice');
+            // $scope.modals.open('createPractice');
+            $scope.site.practices.create();
           },
           text: 'Add a practice'
         }
@@ -310,6 +307,21 @@ angular.module('practiceMonitoringAssessmentApp')
       }
     };
 
+    $scope.GetAllChildren = function(practiceId) {
+
+      var existingSites = $scope.site.practices.list,
+          updatedSites = [{
+            id: practiceId // Start by adding the newest relationships, then we'll add the existing sites
+          }];
+
+      angular.forEach(existingSites, function(site, $index) {
+        updatedSites.push({
+          id: site.id
+        });
+      });
+
+      return updatedSites;
+    };
 
 
     //
