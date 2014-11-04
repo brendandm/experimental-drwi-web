@@ -27,7 +27,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.readings = {
       type: {
-        'Forest Buffers': {
+        'Forest Buffer': {
           Planning: 'type_437194b965ea4c94b99aebe22399621f',
           Installation: 'type_437194b965ea4c94b99aebe22399621f',
           Monitoring: 'type_ed657deb908b483a9e96d3a05e420c50'
@@ -76,7 +76,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //  2. Update the Practice to create a relationship with the Reading created in step 1 
         //
         Feature.CreateFeature({
-          storage: $scope.readings[practice.practice_type][readingType],
+          storage: $scope.readings.type[practice.practice_type][readingType],
           data: {
             measurement_period: readingType,
             report_date: moment().format('YYYY-MM-DD'),
@@ -86,7 +86,7 @@ angular.module('practiceMonitoringAssessmentApp')
         }).then(function(readingId) {
 
           var data = {};
-          data[$scope.readings[practice.practice_type][readingType]] = $scope.GetAllReadings(practice.readings[readingType], readingId);
+          data[$scope.readings.type[practice.practice_type][readingType]] = $scope.GetAllReadings(practice.readings[readingType], readingId);
 
           //
           // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
@@ -145,14 +145,14 @@ angular.module('practiceMonitoringAssessmentApp')
         {
           type: 'button-link new',
           action: function() {
-            $scope.readings.add(practice, 'Installation');
+            $scope.readings.add($scope.practice, 'Installation');
           },
           text: 'Add Installation Data'
         },
         {
           type: 'button-link new',
           action: function() {
-            $scope.readings.add(practice, 'Monitoring');
+            $scope.readings.add($scope.practice, 'Monitoring');
           },
           text: 'Add Monitoring Data'
         }

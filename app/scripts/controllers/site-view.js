@@ -22,7 +22,7 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.user.feature = {};
     $scope.user.template = {};
     $scope.readings = {
-      'Forest Buffers': {
+      'Forest Buffer': {
         Planning: 'type_437194b965ea4c94b99aebe22399621f',
         Installation: 'type_437194b965ea4c94b99aebe22399621f',
         Monitoring: 'type_ed657deb908b483a9e96d3a05e420c50'
@@ -89,7 +89,7 @@ angular.module('practiceMonitoringAssessmentApp')
         Feature.CreateFeature({
           storage: variables.practice.storage,
           data: {
-            practice_type: 'Forest Buffer',
+            practice_type: 'Forest Buffers',
             description: '',
             owner: $scope.user.id,
             status: 'private'
