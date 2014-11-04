@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ReportViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'variables', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Feature, template, fields, project, site, practice, variables) {
+  .controller('ReportViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Feature', 'Storage', 'template', 'fields', 'project', 'site', 'practice', 'variables', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Feature, Storage, template, fields, project, site, practice, variables) {
 
     //
     // Assign project to a scoped variable
@@ -17,17 +17,9 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.fields = fields;
     $scope.project = project;
     $scope.practice = practice;
-    
-    $scope.storage = {
-      'Forest Buffer': {
-        Planning: 'type_437194b965ea4c94b99aebe22399621f',
-        Installation: 'type_437194b965ea4c94b99aebe22399621f',
-        Monitoring: 'type_ed657deb908b483a9e96d3a05e420c50'
-      }
-    };
 
     Feature.GetFeature({
-      storage: $scope.storage[$scope.practice.practice_type][$route.current.params.reportType],
+      storage: Storage[$scope.practice.practice_type][$route.current.params.reportType].storage,
       featureId: $route.current.params.reportId
     }).then(function(report) {
 
@@ -35,6 +27,7 @@ angular.module('practiceMonitoringAssessmentApp')
       // Load the reading into the scope
       //
       $scope.report = report;
+      $scope.report.type = $route.current.params.reportType;
 
       //
       // Add the reading information to the breadcrumbs
@@ -55,6 +48,7 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.user.feature = {};
     $scope.user.template = {};
 
+
     //
     // Setup basic page variables
     //
@@ -71,16 +65,8 @@ angular.module('practiceMonitoringAssessmentApp')
           url: '/projects/' + $scope.project.id,
         },
         {
-          text: 'Sites',
-          url: '/projects/' + $scope.project.id + '#sites',
-        },
-        {
           text: $scope.site.site_number,
           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id
-        },
-        {
-          text: 'Practices',
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices'
         },
         {
           text: $scope.practice.practice_type,
@@ -93,4 +79,41 @@ angular.module('practiceMonitoringAssessmentApp')
       }
     };
 
+    //
+    // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
+    // backend functionality. Even if the user guesses the URL the API will stop them from editing the
+    // actual Feature within the system
+    //
+    if ($scope.user.id === $scope.project.owner) {
+      $scope.user.owner = true;
+    } else {
+      Template.GetTemplateUser({
+        storage: storage,
+        templateId: $scope.template.id,
+        userId: $scope.user.id
+      }).then(function(response) {
+
+        $scope.user.template = response;
+        
+        //
+        // If the user is not a Template Moderator or Admin then we need to do a final check to see
+        // if there are permissions on the individual Feature
+        //
+        if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
+          Feature.GetFeatureUser({
+            storage: storage,
+            featureId: $route.current.params.projectId,
+            userId: $scope.user.id
+          }).then(function(response) {
+            $scope.user.feature = response;
+            if ($scope.user.feature.is_admin || $scope.user.feature.write) {
+            } else {
+              $location.path('/projects/' + $route.current.params.projectId);
+            }
+          });
+        }
+
+      });
+    }
+    
   }]);

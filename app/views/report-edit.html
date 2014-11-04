@@ -1,3 +1,32 @@
 <main class="container">
-  
+  <form class="row feature">
+    <article class="feature-detail">
+      <div class="column-11 feature-detail-content">
+
+        <div class="form-group">
+          <label for="report_date" class="control-label">Report Date</label>
+          <input type="text" class="form-control" data-ng-model="report.report_date" id="report_date" name="report_date" />
+          <p class="help-text">YYYY-MM-DD</p>
+        </div>
+
+        <div class="form-group">
+          <label for="measurement_period" class="control-label">Measurement Period</label>
+          <select class="form-control" data-ng-model="report.measurement_period" data-ng-options="option for option in fields.measurement_period.options">
+            <option value="">Select a measurement period</option>
+          </select>
+        </div>
+
+      </div>
+      <nav class="column-5 contextual-navigation-wrapper">
+        <h6><strong>Tools</strong></h6>
+        <ul class="contextual-navigation">
+          <li data-ng-if="user.owner || user.feature.read || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/{{ report.type }}">Report Overview</a></li>
+          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator" class="active"><a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/{{ report.type }}/edit">Edit</a></li>
+        </ul>
+      </nav>
+      <aside class="column-5 feature-sidebar pull-right legend">
+
+      </aside>
+    </article>
+  </form>
 </main>

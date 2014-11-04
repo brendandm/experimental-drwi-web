@@ -18,8 +18,6 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.project = project;
     $scope.practice = practice;
 
-    console.log($scope.template, $scope.fields, $scope.practice);
-
     $scope.site = site;
     $scope.user = user;
     $scope.user.owner = false;
@@ -43,16 +41,8 @@ angular.module('practiceMonitoringAssessmentApp')
           url: '/projects/' + $scope.project.id,
         },
         {
-          text: 'Sites',
-          url: '/projects/' + $scope.project.id + '#sites',
-        },
-        {
           text: $scope.site.site_number,
           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id
-        },
-        {
-          text: 'Practices',
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices'
         },
         {
           text: $scope.practice.practice_type,
@@ -139,6 +129,7 @@ angular.module('practiceMonitoringAssessmentApp')
       });
 
     };
+
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
     // backend functionality. Even if the user guesses the URL the API will stop them from editing the

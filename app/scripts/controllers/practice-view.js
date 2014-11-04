@@ -125,16 +125,8 @@ angular.module('practiceMonitoringAssessmentApp')
           url: '/projects/' + $scope.project.id,
         },
         {
-          text: 'Sites',
-          url: '/projects/' + $scope.project.id + '#sites',
-        },
-        {
           text: $scope.site.site_number,
           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id
-        },
-        {
-          text: 'Practices',
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices'
         },
         {
           text: $scope.practice.practice_type,

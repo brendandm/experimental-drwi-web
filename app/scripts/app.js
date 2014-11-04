@@ -363,7 +363,7 @@ angular
           }
         }
       })
-      .when('/projects/:projectId/sites/:siteId/practices:practiceId/reports', {
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/reports', {
         redirectTo: '/projects/:projectId/sites/:siteId/practices/:practiceId'
       })      
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/reports/:reportId/:reportType', {
