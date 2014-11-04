@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:ReportEditCtrl
+ * @name practiceMonitoringAssessmentApp.controller:PracticeEditCtrl
  * @description
- * # ReportEditCtrl
+ * # PracticeEditCtrl
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ReportEditCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'variables', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Feature, template, fields, project, site, practice, variables) {
+  .controller('PracticeEditCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'variables', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Feature, template, fields, project, site, practice, variables) {
 
     //
     // Assign project to a scoped variable
@@ -26,34 +26,6 @@ angular.module('practiceMonitoringAssessmentApp')
       }
     };
 
-    Feature.GetFeature({
-      storage: $scope.storage[$scope.practice.practice_type][$route.current.params.reportType],
-      featureId: $route.current.params.reportId
-    }).then(function(report) {
-
-      //
-      // Load the reading into the scope
-      //
-      $scope.report = report;
-
-      //
-      // Add the reading information to the breadcrumbs
-      //
-      var page_title = 'Editing the ' + $scope.report.measurement_period + ' Report from ' + moment($scope.report.report_date).format('MMM d, YYYY');
-
-      $rootScope.page.links.push({
-        text: page_title,
-        url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/reports/' + $scope.report.id + '/' + $route.current.params.reportType
-      });
-      $rootScope.page.links.push({
-        text: 'Edit',
-        url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/reports/' + $scope.report.id + '/' + $route.current.params.reportType + '/edit'
-      });
-
-      $rootScope.page.title = page_title;
-
-    });
-
     $scope.site = site;
     $scope.user = user;
     $scope.user.owner = false;
@@ -64,8 +36,8 @@ angular.module('practiceMonitoringAssessmentApp')
     // Setup basic page variables
     //
     $rootScope.page = {
-      template: 'views/report-edit.html',
-      title: null,
+      template: 'views/practice-edit.html',
+      title: $scope.site.site_number,
       links: [
         {
           text: 'Projects',
