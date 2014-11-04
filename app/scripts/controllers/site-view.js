@@ -19,7 +19,7 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.practice = {};
 
     $scope.readings = {
-      "Forest Buffers": {
+      'Forest Buffers': {
         Installation: 'type_437194b965ea4c94b99aebe22399621f',
         Monitoring: 'type_ed657deb908b483a9e96d3a05e420c50'
       },
@@ -40,8 +40,6 @@ angular.module('practiceMonitoringAssessmentApp')
             status: 'private'
           }
         }).then(function(readingId) {
-
-          console.log('readingId', readingId)
 
           var data = {};
           data[$scope.readings[practice.practice_type][readingType]] = $scope.GetAllReadings(practice.readings[readingType], readingId);
@@ -98,7 +96,7 @@ angular.module('practiceMonitoringAssessmentApp')
           //
           $scope.site.practices.readings({
             storage: variables.practice.storage,
-            relationship: $scope.readings[practice.practice_type]['Installation'],
+            relationship: $scope.readings[practice.practice_type].Installation,
             featureId: practice.id,
             readingType: 'Installation'
           }, $index);
@@ -108,14 +106,12 @@ angular.module('practiceMonitoringAssessmentApp')
           //
           $scope.site.practices.readings({
             storage: variables.practice.storage,
-            relationship: $scope.readings[practice.practice_type]['Monitoring'],
+            relationship: $scope.readings[practice.practice_type].Monitoring,
             featureId: practice.id,
             readingType: 'Monitoring'
           }, $index);
 
         });
-
-        console.log('$scope.site.practices', $scope.site.practices);
       },
       create: function() {
         //
@@ -256,13 +252,14 @@ angular.module('practiceMonitoringAssessmentApp')
         }
       },
       geojsonToLayer: function (geojson, layer, options) {
+        
+        //
+        // Make sure the GeoJSON object is added to the layer with appropriate styles
+        //
         layer.clearLayers();
-        function add(l) {
-          l.addTo(layer);
-        }
 
         if (options === undefined || options === null) {
-          var options = {
+          options = {
             stroke: true,
             fill: false,
             weight: 1,
@@ -272,12 +269,11 @@ angular.module('practiceMonitoringAssessmentApp')
           };
         }
 
-        //
-        // Make sure the GeoJSON object is added to the layer with appropriate styles
-        //
         L.geoJson(geojson, {
           style: options
-        }).eachLayer(add);
+        }).eachLayer(function(l) {
+          l.addTo(layer);
+        });
 
       },
       drawPolygon: function(geojson, fitBounds, options) {
@@ -310,27 +306,6 @@ angular.module('practiceMonitoringAssessmentApp')
         });
 
       },
-      getSegment: function(coordinates) {
-        $http({
-          method: 'GET', 
-          url: '//api.commonscloud.org/v2/type_f9d8609090494dac811e6a58eb8ef4be/intersects.geojson',
-          params: {
-            geometry: coordinates.lng + ' ' + coordinates.lat
-          }
-        }).
-          success(function(data, status, headers, config) {
-            $scope.map.drawPolygon(data, true);
-            if (data.features.length > 0) {
-              $scope.site.type_f9d8609090494dac811e6a58eb8ef4be = [];
-              $scope.site.type_f9d8609090494dac811e6a58eb8ef4be.push(data.features[0].properties);
-            }
-          }).
-          error(function(data, status, headers, config) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-            return data;
-          });
-      },
       setupMap: function() {
         //
         // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
@@ -344,7 +319,7 @@ angular.module('practiceMonitoringAssessmentApp')
           $scope.map.drawPolygon({
             type: 'Feature',
             geometry: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].geometry
-          }, true, {
+          }, false, {
             stroke: false,
             fill: true,
             fillOpacity: 0.65,
@@ -393,11 +368,8 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.GetAllReadings = function(existingReadings, readingId) {
 
       var updatedReadings = [{
-            id: readingId // Start by adding the newest relationships, then we'll add the existing sites
-          }];
-
-      console.log('updatedReadings', updatedReadings);
-      console.log('existingReadings', existingReadings);
+        id: readingId // Start by adding the newest relationships, then we'll add the existing sites
+      }];
 
       angular.forEach(existingReadings, function(reading, $index) {
         updatedReadings.push({

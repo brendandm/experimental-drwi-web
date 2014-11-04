@@ -14,17 +14,24 @@
             <p data-ng-if="!practice.readings.Installation.length"><a class="button button-xsmall" data-ng-click="readings.add(practice, 'Installation')">Add Installation Data</a></p>
             <p data-ng-if="practice.readings.Installation.length"><a class="button button-xsmall" data-ng-click="readings.add(practice, 'Monitoring')">Add Monitoring Data</a></p>
 
-            <div data-ng-if="!practice.readings.Installation.length">
-              <div class="throbber"></div>
-            </div>
-            <ul data-ng-if="practice.readings.Installation.length || practice.readings.Monitoring.length">
-              <li data-ng-if="practice.readings.Installation.length" data-ng-repeat="reading in practice.readings.Installation">
-                <a data-ng-click="readings.edit(reading)">{{ reading.measurement_period }}, {{ reading.report_date }}</a>
-              </li>
-              <li data-ng-repeat="reading in practice.readings.Monitoring">
-                <a data-ng-click="readings.edit(reading)">{{ reading.measurement_period }}, {{ reading.report_date }}</a>
-              </li>
-            </ul>
+            <table class="table" data-ng-if="practice.readings.Installation.length">
+              <thead>
+                <tr>
+                  <th>Measurement Period</th>
+                  <th>Report Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-ng-if="practice.readings.Installation.length" data-ng-repeat="reading in practice.readings.Installation">
+                  <td>{{ reading.measurement_period }}</td>
+                  <td>{{ reading.report_date | date:"MM d, yyyy" }}</td>
+                </tr>
+                <tr data-ng-if="practice.readings.Monitoring.length" data-ng-repeat="reading in practice.readings.Monitoring">
+                  <td>{{ reading.measurement_period }}</td>
+                  <td>{{ reading.report_date | date:"MM d, yyyy" }}</td>
+                </tr>
+              </tbody>
+            </table>
           </article>
         </section>
 
@@ -62,7 +69,7 @@
           </p>
         </div>
 
-        <leaflet class="map" markers="map.markers" defaults="map.defaults" layers="map.layers" center="map.center"></leaflet>
+        <leaflet class="map" markers="map.markers" defaults="map.defaults" layers="map.layers"></leaflet>
 
         <h6><strong>Legend</strong></h6>
         <ul class="legend-list">
