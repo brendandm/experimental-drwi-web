@@ -83,10 +83,10 @@ angular.module('practiceMonitoringAssessmentApp')
             owner: $scope.user.id,
             status: 'private'
           }
-        }).then(function(readingId) {
+        }).then(function(reportId) {
 
           var data = {};
-          data[$scope.readings.type[practice.practice_type][readingType]] = $scope.GetAllReadings(practice.readings[readingType], readingId);
+          data[$scope.readings.type[practice.practice_type][readingType]] = $scope.GetAllReadings(practice.readings[readingType], reportId);
 
           //
           // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
@@ -102,7 +102,7 @@ angular.module('practiceMonitoringAssessmentApp')
             // Once the new Reading has been associated with the existing Practice we need to
             // display the form to the user, allowing them to complete it.
             //
-            $scope.page.refresh();
+            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/reports/' + reportId + '/' + readingType + '/edit');
           });
         });
       }
