@@ -36,7 +36,8 @@ angular.module('practiceMonitoringAssessmentApp')
 
       $rootScope.page.links.push({
         text: page_title,
-        url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/reports/' + $scope.report.id + '/' + $route.current.params.reportType
+        url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/reports/' + $scope.report.id + '/' + $route.current.params.reportType,
+        type: 'active'
       });
 
       $rootScope.page.title = page_title;
@@ -70,8 +71,7 @@ angular.module('practiceMonitoringAssessmentApp')
         },
         {
           text: $scope.practice.practice_type,
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id,
-          type: 'active'
+          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id
         }    
       ],
       actions: [],
