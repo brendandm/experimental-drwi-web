@@ -85,6 +85,8 @@ angular.module('practiceMonitoringAssessmentApp')
           }
         }).then(function(reportId) {
 
+          console.log('reportId', reportId);
+
           var data = {};
           data[$scope.readings.type[practice.practice_type][readingType]] = $scope.GetAllReadings(practice.readings[readingType], reportId);
 
