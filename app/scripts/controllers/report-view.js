@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ReportViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Feature', 'Storage', 'template', 'fields', 'project', 'site', 'practice', 'variables', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Feature, Storage, template, fields, project, site, practice, variables) {
+  .controller('ReportViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Template', 'Feature', 'Storage', 'template', 'fields', 'project', 'site', 'practice', 'variables', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Template, Feature, Storage, template, fields, project, site, practice, variables) {
 
     //
     // Assign project to a scoped variable
@@ -17,9 +17,10 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.fields = fields;
     $scope.project = project;
     $scope.practice = practice;
+    $scope.report_storage = Storage[$scope.practice.practice_type][$route.current.params.reportType].storage;
 
     Feature.GetFeature({
-      storage: Storage[$scope.practice.practice_type][$route.current.params.reportType].storage,
+      storage: $scope.report_storage,
       featureId: $route.current.params.reportId
     }).then(function(report) {
 
@@ -89,7 +90,7 @@ angular.module('practiceMonitoringAssessmentApp')
       $scope.user.owner = true;
     } else {
       Template.GetTemplateUser({
-        storage: storage,
+        storage: $scope.report_storage,
         templateId: $scope.template.id,
         userId: $scope.user.id
       }).then(function(response) {
@@ -102,15 +103,11 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
           Feature.GetFeatureUser({
-            storage: storage,
-            featureId: $route.current.params.projectId,
+            storage: $scope.report_storage,
+            featureId: $scope.report.id,
             userId: $scope.user.id
           }).then(function(response) {
             $scope.user.feature = response;
-            if ($scope.user.feature.is_admin || $scope.user.feature.write) {
-            } else {
-              $location.path('/projects/' + $route.current.params.projectId);
-            }
           });
         }
 

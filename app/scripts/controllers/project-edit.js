@@ -49,6 +49,15 @@ angular.module('practiceMonitoringAssessmentApp')
         {
           type: 'button-link new',
           action: function($index) {
+            $scope.project.delete();
+          },
+          visible: false,
+          loading: false,
+          text: 'Delete Project'
+        },
+        {
+          type: 'button-link new',
+          action: function($index) {
             $scope.project.save();
             $scope.page.actions[$index].loading = ! $scope.page.actions[$index].loading;
           },
@@ -78,6 +87,15 @@ angular.module('practiceMonitoringAssessmentApp')
       });
     };
 
+
+    $scope.project.delete = function() {
+      Feature.DeleteFeature({
+        storage: storage,
+        featureId: $scope.project.id
+      }).then(function(response) {
+        $location.path('/projects');
+      });
+    };
 
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect

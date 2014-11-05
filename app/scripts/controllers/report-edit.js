@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ReportEditCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'variables', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Field, Feature, Storage, template, project, site, practice, variables) {
+  .controller('ReportEditCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Template', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'variables', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Template, Field, Feature, Storage, template, project, site, practice, variables) {
 
     //
     // Assign project to a scoped variable
@@ -170,7 +170,7 @@ angular.module('practiceMonitoringAssessmentApp')
       $scope.user.owner = true;
     } else {
       Template.GetTemplateUser({
-        storage: storage,
+        storage: $scope.report_storage,
         templateId: $scope.template.id,
         userId: $scope.user.id
       }).then(function(response) {
@@ -183,15 +183,11 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
           Feature.GetFeatureUser({
-            storage: storage,
-            featureId: $route.current.params.projectId,
+            storage: $scope.report_storage,
+            featureId: $scope.report.id,
             userId: $scope.user.id
           }).then(function(response) {
             $scope.user.feature = response;
-            if ($scope.user.feature.is_admin || $scope.user.feature.write) {
-            } else {
-              $location.path('/projects/' + $route.current.params.projectId);
-            }
           });
         }
 

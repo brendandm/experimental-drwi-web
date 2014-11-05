@@ -82,7 +82,7 @@ angular.module('practiceMonitoringAssessmentApp')
       angular.forEach(projects.response.features, function(project, $index) {
         console.log(project.status);
         if (project.status !== 'public') {
-          features.push(project)
+          features.push(project);
         }
       });
 
