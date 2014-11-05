@@ -118,7 +118,7 @@ angular.module('practiceMonitoringAssessmentApp')
       ],
       actions: [
         {
-          type: 'button-link new',
+          type: 'button-link',
           action: function($index) {
             $scope.site.delete();
           },

@@ -129,7 +129,7 @@ angular.module('practiceMonitoringAssessmentApp')
       ],
       actions: [
         {
-          type: 'button-link edit',
+          type: 'button-link',
           // url: '/projects/' + $scope.project.id + '/users/invite',
           action: function($index) {
             $scope.project.users_edit = ! $scope.project.users_edit;
