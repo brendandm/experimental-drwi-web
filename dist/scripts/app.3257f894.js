@@ -208,7 +208,7 @@ angular
             });
           },
           template: function(Template, $route) {
-            return Template.GetTemplate(site.templateId);
+            return Template.GetTemplate(practice.templateId);
           },
           fields: function(Field, $route) {
             return Field.GetPreparedFields(practice.templateId, 'object');
