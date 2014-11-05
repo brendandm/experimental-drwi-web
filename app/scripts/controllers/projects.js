@@ -67,8 +67,27 @@ angular.module('practiceMonitoringAssessmentApp')
       fields: fields
     }).then(function(response) {
       $scope.projects = response;
+      $scope.projects.response.features = $scope.processProjects(response);
     });
 
+    //
+    // IMPORTANT!!! DO NOT REMOVE!!!
+    //
+    // We have to filter these on the public side instead of the server side
+    //
+    $scope.processProjects = function(projects) {
+
+      var features = [];
+
+      angular.forEach(projects.response.features, function(project, $index) {
+        console.log(project.status);
+        if (project.status !== 'public') {
+          features.push(project)
+        }
+      });
+
+      return features;
+    };
 
     //
     // Setup project filter functionality
@@ -146,7 +165,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         // Update the list of projects being displayed to the user
         //
-        $scope.projects = response;
+        $scope.projects = $scope.processProjects(response);
 
         //
         // Check to see if there are Filters remaining and if not, we should just remove the Q
