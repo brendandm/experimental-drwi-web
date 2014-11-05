@@ -8,65 +8,40 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('PracticeViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'variables', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Template, Feature, template, fields, project, site, practice, variables) {
+  .controller('PracticeViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'variables', 'Storage', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Template, Feature, template, fields, project, site, practice, readings, variables, Storage) {
 
     //
     // Assign project to a scoped variable
     //
+    $scope.project = project;
+    $scope.site = site;
+
     $scope.template = template;
     $scope.fields = fields;
-    $scope.project = project;
+    
     $scope.practice = practice;
-    $scope.practice.readings = {};
+    $scope.practice_type = Feature.MachineReadable($scope.practice.practice_type);
+    $scope.practice.readings = readings;
 
-    $scope.site = site;
+    $scope.reading_storage = Storage[$scope.practice.practice_type];
+
     $scope.user = user;
     $scope.user.owner = false;
     $scope.user.feature = {};
     $scope.user.template = {};
 
-    $scope.readings = {
-      type: {
-        'Forest Buffer': {
-          Planning: 'type_437194b965ea4c94b99aebe22399621f',
-          Installation: 'type_437194b965ea4c94b99aebe22399621f',
-          Monitoring: 'type_ed657deb908b483a9e96d3a05e420c50'
-        }
-      },
-      load: function(options) {
-        Feature.GetRelatedFeatures({
-          storage: options.storage,
-          relationship: options.relationship,
-          featureId: options.featureId
-        }).then(function(response) {
-          // $scope.practice.readings[options.readingType] = response;
-          console.log('response', response, $scope.practice);
-          $scope.practice.readings[options.readingType] = response;
-        });
-      },
-      process: function() {
-        if ($scope.practice.practice_type && $scope.readings.type.hasOwnProperty($scope.practice.practice_type) && practice.practice_type !== null && practice.practice_type !== '') {
-          //
-          // Get installation readings
-          //
-          $scope.readings.load({
-            storage: variables.practice.storage,
-            relationship: $scope.readings.type[$scope.practice.practice_type].Installation,
-            featureId: $scope.practice.id,
-            readingType: 'Installation'
-          });
+    //
+    // Load Land river segment details
+    //
+    Feature.GetFeature({
+      storage: variables.land_river_segment.storage,
+      featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
+    }).then(function(response) {
+      $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0] = response;
+    });
 
-          //
-          // Get monitoring readings
-          //
-          $scope.readings.load({
-            storage: variables.practice.storage,
-            relationship: $scope.readings.type[$scope.practice.practice_type].Monitoring,
-            featureId: $scope.practice.id,
-            readingType: 'Monitoring'
-          });
-        }
-      },
+
+    $scope.readings = {
       add: function(practice, readingType) {
         //
         // Creating a practice reading is a two step process.
@@ -76,7 +51,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //  2. Update the Practice to create a relationship with the Reading created in step 1 
         //
         Feature.CreateFeature({
-          storage: $scope.readings.type[practice.practice_type][readingType],
+          storage: $scope.reading_storage.storage,
           data: {
             measurement_period: readingType,
             report_date: moment().format('YYYY-MM-DD'),
@@ -85,10 +60,8 @@ angular.module('practiceMonitoringAssessmentApp')
           }
         }).then(function(reportId) {
 
-          console.log('reportId', reportId);
-
           var data = {};
-          data[$scope.readings.type[practice.practice_type][readingType]] = $scope.GetAllReadings(practice.readings[readingType], reportId);
+          data[$scope.reading_storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
 
           //
           // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
@@ -132,7 +105,7 @@ angular.module('practiceMonitoringAssessmentApp')
         },
         {
           text: $scope.practice.practice_type,
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id,
+          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice_type,
           type: 'active'
         }    
       ],
@@ -211,10 +184,5 @@ angular.module('practiceMonitoringAssessmentApp')
       });
     }
 
-    //
-    // Once the page has loaded we need to load in all Reading Features that are associated with
-    // the Practices related to the Site being viewed
-    //
-    $scope.readings.process();
 
   }]);

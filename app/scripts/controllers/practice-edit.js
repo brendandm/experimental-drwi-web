@@ -17,6 +17,7 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.fields = fields;
     $scope.project = project;
     $scope.practice = practice;
+    $scope.practice_type = Feature.MachineReadable($scope.practice.practice_type);
 
     $scope.site = site;
     $scope.user = user;
@@ -46,7 +47,7 @@ angular.module('practiceMonitoringAssessmentApp')
         },
         {
           text: $scope.practice.practice_type,
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id
+          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice_type
         },    
         {
           text: 'Edit',

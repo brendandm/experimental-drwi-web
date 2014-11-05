@@ -19,10 +19,11 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.project = project;
     $scope.practice = practice;
-    $scope.report_storage = Storage[$scope.practice.practice_type][$route.current.params.reportType].storage;
-    $scope.report_templateId = Storage[$scope.practice.practice_type][$route.current.params.reportType].templateId;
+    $scope.report_storage = Storage[$scope.practice.practice_type].storage;
+    $scope.report_templateId = Storage[$scope.practice.practice_type].templateId;
+    $scope.report_fields = Storage[$scope.practice.practice_type].fields[$route.current.params.reportType];
 
-    Field.GetPreparedFields($scope.report_templateId, 'object').then(function(response) {
+    Field.GetPreparedFields($scope.report_templateId).then(function(response) {
       $scope.fields = response;
     });
 
@@ -131,7 +132,7 @@ angular.module('practiceMonitoringAssessmentApp')
         },
         {
           text: $scope.practice.practice_type,
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id
+          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + Feature.MachineReadable($scope.practice.practice_type)
         }    
       ],
       actions: [
@@ -160,6 +161,23 @@ angular.module('practiceMonitoringAssessmentApp')
       }
     };
 
+
+    $scope.in = function(search_value, list) {
+
+      if (!list.length) {
+        return true;
+      }
+        
+      var $index;
+
+      for ($index = 0; $index < list.length; $index++) {
+        if (list[$index] === search_value) {
+          return true;
+        }
+      }
+
+      return false;
+    };
 
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect

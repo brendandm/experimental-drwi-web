@@ -12,18 +12,16 @@ angular.module('practiceMonitoringAssessmentApp')
 
     return {
       'Forest Buffer': {
-        Planning: {
-          storage: 'type_437194b965ea4c94b99aebe22399621f',
-          templateId: 277
+        storage: 'type_ed657deb908b483a9e96d3a05e420c50',
+        templateId: 141,
+        fields: {
+          // Planning: ['measurement_period', 'report_date', 'average_width_of_buffer', 'length_of_buffer', 'upland_landuse', 'existing_riparian_landuse'],
+          // Installation: ['measurement_period', 'report_date', 'average_width_of_buffer', 'length_of_buffer', 'upland_landuse', 'existing_riparian_landuse'],
+          Planning: [],
+          Installation: [],
+          Monitoring: []
         },
-        Installation: {
-          storage: 'type_437194b965ea4c94b99aebe22399621f',
-          templateId: 277
-        },
-        Monitoring: {
-          storage: 'type_ed657deb908b483a9e96d3a05e420c50',
-          templateId: 141
-        }
+        template: 'views/reports/forest-buffer.html'
       }
     };
 

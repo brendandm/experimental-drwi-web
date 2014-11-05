@@ -152,6 +152,8 @@ angular.module('practiceMonitoringAssessmentApp')
 
       Feature.GetRelatedFeatures = function(options) {
 
+
+
         var promise = Feature.relationship({
             storage: options.storage,
             relationship: options.relationship,
@@ -162,6 +164,21 @@ angular.module('practiceMonitoringAssessmentApp')
           });
 
         return promise;
+      };
+
+      Feature.MachineReadable = function(name) {
+        name = name.replace(' ', '-');
+        return name.toLowerCase();
+      };
+
+      Feature.HumanReadable = function(name) {
+        return Feature.CapitalizeEachWord(name.replace('-', ' '));
+      };
+
+      Feature.CapitalizeEachWord = function(str) {
+        return str.replace(/\w\S*/g, function(txt) {
+          return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
       };
 
       //

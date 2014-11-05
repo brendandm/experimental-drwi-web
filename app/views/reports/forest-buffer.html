@@ -1,0 +1,188 @@
+        <h6><strong>Installation</strong> Summary</h6>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th width="25%">&nbsp;</th>
+              <th width="25%" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.measurement_period }}</th>
+              <th width="5%">%</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Length of Buffer Installed (ft)</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.length_of_buffer }}</td>
+              <td>(calculation needed)</td>
+            </tr>
+            <tr>
+              <th>Average Buffer Width (ft)</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.average_width_of_buffer }}</td>
+              <td>(calculation needed)</td>
+            </tr>
+            <tr>
+              <th>Number of Trees Planted</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.number_of_trees_planted }}</td>
+              <td>(calculation needed)</td>
+            </tr>
+            <tr>
+              <th>Number of Trees Surviving</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.number_of_trees_surviving }}</td>
+              <td>(calculation needed)</td>
+            </tr>
+            <tr>
+              <th>Tree Density</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                (calculation needed)
+              </td>
+              <td>&nbsp;</td>
+            </tr>
+          </tbody>  
+        </table>
+
+        <h6><strong>Interim</strong> BMP Metrics Data</h6>
+        <table class="table">
+          <thead>
+            <tr>
+              <th width="25%">&nbsp;</th>
+              <th data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.measurement_period }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th colspan="{{ practice.readings.length + 1 }}">Vegetative Cover</th>
+            </tr>
+            <tr>
+              <th>Cover (%)</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.percentage_vegetative_cover }}</td>
+            </tr>
+
+            <tr>
+              <th colspan="{{ practice.readings.length + 1 }}">Buffer Composition</th>
+            </tr>
+            <tr>
+              <th>Woody (%)</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                {{ report.buffer_composition_woody }}
+              </td>
+            </tr>
+            <tr>
+              <th>Shrub (%)</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                {{ report.buffer_composition_shrub }}
+              </td>
+            </tr>
+            <tr>
+              <th>Grass (%)</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                {{ report.buffer_composition_grass }}
+              </td>
+            </tr>
+            <tr>
+              <th>Bare (%)</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                {{ report.buffer_composition_bare }}
+              </td>
+            </tr>
+            <tr>
+              <th>Other (%)</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                {{ report.buffer_composition }}
+              </td>
+            </tr>
+
+          </tbody>  
+        </table>
+        <h6><strong>Load</strong> Reductions</h6>
+
+        <h6><strong>Chesapeake</strong> Bay Metrics</h6>
+        <table class="table">
+          <thead>
+            <tr>
+              <th width="25%">&nbsp;</th>
+              <th width="25%" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.measurement_period }}</th>
+              <th width="5%">&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Miles of Riparian Restoration</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.miles_of_riparian_restoration }}</td>
+            </tr>
+            <tr>
+              <th>Acres of Riparian Restoration</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.cres_of_riparian_restoration }}</td>
+            </tr>
+          </tbody>  
+        </table>
+
+        <h6><strong>Adaptive</strong> Management Checks Performed</h6>
+        <table class="table">
+          <thead>
+            <tr>
+              <th width="25%">&nbsp;</th>
+              <th width="25%" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.measurement_period }}</th>
+              <th width="5%">&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Check for, and correct, causes of excess sediment build-up at the field-buffer interface that re-directs flow</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <div data-ng-if="report.invasive_species_control" class="icon retinaicon-essentials-071"></div>
+              </td>
+            </tr>
+            <tr>
+              <th>Perform maintenance to remove concentrated flow paths through the buffer</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <div data-ng-if="report.concentrated_flow_paths" class="icon retinaicon-essentials-071"></div>
+              </td>
+            </tr>
+            <tr>
+              <th>Check for, correct causes, and path bare and/or eroded areas in the buffer</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <div data-ng-if="report.monthly_buffer_maintenance" class="icon retinaicon-essentials-071"></div>
+              </td>
+            </tr>
+            <tr>
+              <th>Check tree shelters and stakes, especially after flooding and high wind events</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <div data-ng-if="report.stream_shading" class="icon retinaicon-essentials-071"></div>
+              </td>
+            </tr>
+            <tr>
+              <th>Apply herbicide around shelters in spring and fall to reduce competing vegetation</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <div data-ng-if="report.sediment_deposition" class="icon retinaicon-essentials-071"></div>
+              </td>
+            </tr>
+            <tr>
+              <th>Control noxious and invasive weeds</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <div data-ng-if="report.invasive_species_control" class="icon retinaicon-essentials-071"></div>
+              </td>
+            </tr>
+            <tr>
+              <th>Replant, as needed, after addressing cause of failure</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <div data-ng-if="report.tree_survival_rate" class="icon retinaicon-essentials-071"></div>
+              </td>
+            </tr>
+          </tbody>  
+        </table>
+
+        <h6><strong>Notes</strong></h6>
+        <table class="table">
+          <thead>
+            <tr>
+              <th width="25%">Date</th>
+              <th width="75%">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+              <td>{{ report.report_date }}</td>
+              <td data-ng-if="report.notes">{{ report.notes }}</td>
+              <td data-ng-if="!report.notes"><em>No notes recorded for this date</em></td>
+            </tr>
+          </tbody>  
+        </table>

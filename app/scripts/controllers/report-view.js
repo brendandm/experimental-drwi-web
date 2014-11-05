@@ -17,7 +17,7 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.fields = fields;
     $scope.project = project;
     $scope.practice = practice;
-    $scope.report_storage = Storage[$scope.practice.practice_type][$route.current.params.reportType].storage;
+    $scope.report_storage = Storage[$scope.practice.practice_type].storage;
 
     Feature.GetFeature({
       storage: $scope.report_storage,
@@ -72,7 +72,7 @@ angular.module('practiceMonitoringAssessmentApp')
         },
         {
           text: $scope.practice.practice_type,
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id
+          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + Feature.MachineReadable($scope.practice.practice_type)
         }    
       ],
       actions: [],
