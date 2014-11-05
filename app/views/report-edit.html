@@ -37,7 +37,6 @@
 
           <select data-ng-if="field.data_type === 'list'" class="form-control" data-ng-model="report[field.name]" id="{{ field.name }}" name="{{ field.name }}" data-ng-options="value for value in field.options">
           </select>
-          {{ field.options }}
 
           <p class="help-text">{{ field.help }}</p>
 
