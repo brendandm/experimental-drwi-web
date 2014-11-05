@@ -275,7 +275,7 @@ angular
       .when('/projects/:projectId/sites/:siteId/practices', {
         redirectTo: '/projects/:projectId/sites/:siteId'
       })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId', {
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/:practiceType', {
         templateUrl: templateUrl,
         controller: 'PracticeViewCtrl',
         resolve: {
@@ -309,6 +309,15 @@ angular
               featureId: $route.current.params.practiceId
             });
           },
+          readings: function(Storage, Feature, $route) {
+            var clean_name = Feature.HumanReadable($route.current.params.practiceType);
+            
+            return Feature.GetRelatedFeatures({
+              storage: practice.storage,
+              relationship: Storage[clean_name].storage,
+              featureId: $route.current.params.practiceId
+            });
+          },
           variables: function() {
             return {
               project: project,
@@ -319,7 +328,7 @@ angular
           }
         }
       })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/edit', {
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/:practiceType/edit', {
         templateUrl: templateUrl,
         controller: 'PracticeEditCtrl',
         resolve: {
