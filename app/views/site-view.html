@@ -11,12 +11,12 @@
           <h6 class="rule-above"><strong>Practices</strong> Installed</h6>
           <article class="row list-item" data-ng-repeat="practice in site.practices.list track by $index">
             <h1>
-              <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}">
+              <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.clean_practice_type }}">
                 {{ practice.practice_type }}
               </a>
             </h1>
 
-            <table class="table" data-ng-if="practice.readings.Installation.length">
+<!--             <table class="table" data-ng-if="practice.readings.Installation.length">
               <thead>
                 <tr>
                   <th>Measurement Period</th>
@@ -36,7 +36,7 @@
                   </td>
                 </tr>
               </tbody>
-            </table>
+            </table> -->
           </article>
         </section>
 

@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('PracticeEditCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Feature', 'Template', 'template', 'fields', 'project', 'site', 'practice', 'variables', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Feature, Template, template, fields, project, site, practice, variables) {
+  .controller('PracticeEditCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Attachment', 'Feature', 'Template', 'template', 'fields', 'project', 'site', 'practice', 'variables', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Attachment, Feature, Template, template, fields, project, site, practice, variables) {
 
     //
     // Assign project to a scoped variable
@@ -17,6 +17,7 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.fields = fields;
     $scope.project = project;
     $scope.practice = practice;
+    $scope.files = $scope.practice[$scope.fields.installation_photos.relationship];
     $scope.practice_type = Feature.MachineReadable($scope.practice.practice_type);
 
     $scope.site = site;
@@ -88,9 +89,25 @@ angular.module('practiceMonitoringAssessmentApp')
         featureId: $scope.practice.id,
         data: $scope.practice
       }).then(function(response) {
-        //
-        // Refresh the page so that those things update appropriately.
-        //
+
+        var fileData = new FormData();
+
+        angular.forEach($scope.files, function(file, index) {
+          fileData.append(file.field, file.file)
+        });
+
+        Feature.postFiles({
+          storage: variables.practice.storage,
+          featureId: $scope.practice.id
+        }, fileData).$promise.then(function(response) {
+          console.log('Update fired', response);
+          $scope.feature = response.response
+
+          // $location.path('/applications/' + $scope.application.id + '/collections/' + $scope.template.id + '/features/' + $scope.feature.id);
+        }, function(error) {
+          console.log('Update failed!!!!', error);
+        });
+
         $rootScope.page.refresh();
 
       }).then(function(error) {
@@ -131,6 +148,65 @@ angular.module('practiceMonitoringAssessmentApp')
       });
 
     };
+
+    $scope.onFileRemove = function(file, index) {
+      $scope.files.splice(index, 1);
+    };
+
+    $scope.onFileSelect = function(files, field_name) {
+
+      console.log('field_name', field_name);
+
+      angular.forEach(files, function(file, index) {
+        // Check to see if we can load previews
+        if (window.FileReader && file.type.indexOf('image') > -1) {
+
+          var fileReader = new FileReader();
+          fileReader.readAsDataURL(file);
+          fileReader.onload = function (event) {
+            file.preview = event.target.result;
+            $scope.files.push({
+              'field': field_name,
+              'file': file
+            });
+            $scope.$apply();
+            console.log('files', $scope.files);
+          };
+        } else {
+          $scope.files.push({
+            'field': field_name,
+            'file': file
+          });
+          $scope.$apply();
+          console.log('files', $scope.files);
+        }
+      });
+
+    };
+
+    $scope.DeleteAttachment = function(file, $index, attachment_storage) {
+
+      console.log('attachment_storage', attachment_storage);
+
+      $scope.practice[attachment_storage].splice($index, 1);
+
+      // console.log($scope.template.storage, $scope.feature.id, attachment_storage, file.id)
+
+      //
+      // Send the 'DELETE' method to the API so it's removed from the database
+      //
+      Attachment.delete({
+        storage: variables.practice.storage,
+        featureId: $scope.practice.id,
+        attachmentStorage: attachment_storage,
+        attachmentId: file.id
+      }).$promise.then(function(response) {
+        console.log('DeleteAttachment', response);
+        $route.reload();
+      });
+
+    };
+
 
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect

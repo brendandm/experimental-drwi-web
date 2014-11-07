@@ -53,6 +53,8 @@ angular.module('practiceMonitoringAssessmentApp')
           $scope.site.practices.list[$index].readings = {};
           console.log('$scope.readings', $scope.readings, 'practice.practice_type', practice);
 
+          $scope.site.practices.list[$index].clean_practice_type = Feature.MachineReadable(practice.practice_type);
+
           if (practice.practice_type && $scope.readings.hasOwnProperty(practice.practice_type) && practice.practice_type !== null && practice.practice_type !== '') {
             //
             // Get installation readings

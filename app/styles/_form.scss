@@ -308,12 +308,8 @@ a.button:hover {
     box-shadow: 0 0.1em 0 darken(rgb(108,196,14), 10%);
 }
 
-.button.danger {
+.button.button-danger {
   background-color: rgb(187, 17, 17);
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border: 1px solid rgb(147, 17, 17);
 }
 
 .button.button-small,
@@ -594,5 +590,90 @@ h6 {
     form {
       margin: 32px 0;
     }
+  }
+}
+
+
+.drop {
+  border: 2px darken($color-white-base, 10%) dashed;
+  color: $color-black-base;
+  margin: 0 0 32px;
+  padding: 15px;
+
+  &.drag-over {
+    background-color: $color-brightBlue;
+    color: $color-white-base;
+  }
+
+  .btn {
+    position: relative;
+
+    input {
+      height: 100%;
+      left: 0;
+      opacity: 0;
+      -khtml-opacity: 0;
+      -moz-opacity: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+    }
+  }
+
+  .upload {
+    color: darken($color-white-base, 5%);
+    display: block;
+    font-size: 64px;
+    line-height: 1.2;
+  }
+
+  .label-dragdrop {
+    font-size: 16px;
+    font-weight: 200;
+    line-height: 1;
+    margin-top: 16px;
+  }
+
+  .label-or {
+    font-family: $font-serif;
+    font-size: 12px;
+    font-weight: 200;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+}
+
+.transfer-box {
+  margin-bottom: 5px;
+  .progress {
+    margin-bottom: 0;
+  }
+}
+
+.thumbnail {
+  border: 0;
+  line-height: 20px;
+  margin-bottom: 5px;
+  overflow: hidden;
+  word-break: normal;
+
+  img {
+    float: none !important;
+    max-width: 200px;
+    max-height: 150px;
+  }
+}
+
+.upload-list {
+  padding: 5px;
+  margin: 7px;
+  border-bottom: 1px solid darken($color-white-base, 5%);
+
+  .form-group {
+    margin-bottom: 4px;
+  }
+
+  label {
+    font-size: 12px;
   }
 }

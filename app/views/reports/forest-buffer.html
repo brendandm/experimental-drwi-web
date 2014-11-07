@@ -93,6 +93,30 @@
           </tbody>  
         </table>
         <h6><strong>Load</strong> Reductions</h6>
+        <table class="table">
+          <thead>
+            <tr>
+              <th width="25%">&nbsp;</th>
+              <th width="25%" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.measurement_period }}</th>
+              <th width="5%">&nbsp;</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>Pre-BMP Load</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">?</td>
+            </tr>
+            <tr>
+              <th>Planned Load Reductions</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">?</td>
+            </tr>
+            <tr>
+              <th>Load Reductions to-date</th>
+              <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">?</td>
+            </tr>
+          </tbody>  
+        </table>
+
 
         <h6><strong>Chesapeake</strong> Bay Metrics</h6>
         <table class="table">
