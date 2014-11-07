@@ -110,8 +110,8 @@ angular.module('practiceMonitoringAssessmentApp')
             data: {
               type_77f5c44516674e8da2532939619759dd: $scope.GetAllChildren(practiceId),
             }
-          }).then(function() {
-            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + practiceId + '/edit');
+          }).then(function(response) {
+            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + practiceId + '/forest-buffer/edit');
           });
         });
       }

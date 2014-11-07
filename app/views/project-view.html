@@ -69,12 +69,12 @@
 
         <p>
           <strong>Award</strong><br />
-          <span data-ng-if="!project.award">Not specified</span>${{ project.award | number:2 }}
+          <span data-ng-if="!project.award">Not specified</span><span data-ng-if="project.award">${{ project.award | number:2 }}</span>
         </p>
 
         <p>
           <strong>Match</strong><br />
-          <span data-ng-if="!project.match">Not specified</span>${{ project.match | number:2 }}
+          <span data-ng-if="!project.match">Not specified</span><span data-ng-if="project.match">${{ project.match | number:2 }}</span>
         </p>      
 
         <p>
