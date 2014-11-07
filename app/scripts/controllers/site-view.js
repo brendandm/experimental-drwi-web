@@ -25,6 +25,14 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.site = site;
     $scope.site.practices = {
       list: practices,
+      process: function() {
+        //
+        // Get a clean practice type for all practices
+        //
+        angular.forEach($scope.site.practices.list, function(practice, $index) {
+          $scope.site.practices.list[$index].clean_practice_type = Feature.MachineReadable(practice.practice_type);
+        });
+      },
       create: function() {
         //
         // Creating a practice is a two step process.
@@ -282,6 +290,7 @@ angular.module('practiceMonitoringAssessmentApp')
     // Once the page has loaded we need to load in all Reading Features that are associated with
     // the Practices related to the Site being viewed
     //
+    $scope.site.practices.process();
     $scope.map.setupMap();
 
   }]);
