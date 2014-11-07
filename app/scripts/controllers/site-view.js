@@ -21,65 +21,10 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.user.owner = false;
     $scope.user.feature = {};
     $scope.user.template = {};
-    $scope.readings = {
-      'Forest Buffer': {
-        Planning: 'type_437194b965ea4c94b99aebe22399621f',
-        Installation: 'type_437194b965ea4c94b99aebe22399621f',
-        Monitoring: 'type_ed657deb908b483a9e96d3a05e420c50'
-      }
-    };
+
     $scope.site = site;
     $scope.site.practices = {
       list: practices,
-      readingType: function(practice_type, reading_type) {
-        return $scope.readings[practice_type][reading_type];
-      },
-      readings: function(options, $index) {
-        Feature.GetRelatedFeatures({
-          storage: options.storage,
-          relationship: options.relationship,
-          featureId: options.featureId
-        }).then(function(response) {
-          $scope.site.practices.list[$index].readings[options.readingType] = response;
-        });
-      },
-      process: function() {
-
-        //
-        // Get Readings for all practices
-        //
-        angular.forEach($scope.site.practices.list, function(practice, $index) {
-
-          $scope.site.practices.list[$index].readings = {};
-          console.log('$scope.readings', $scope.readings, 'practice.practice_type', practice);
-
-          $scope.site.practices.list[$index].clean_practice_type = Feature.MachineReadable(practice.practice_type);
-
-          if (practice.practice_type && $scope.readings.hasOwnProperty(practice.practice_type) && practice.practice_type !== null && practice.practice_type !== '') {
-            //
-            // Get installation readings
-            //
-            $scope.site.practices.readings({
-              storage: variables.practice.storage,
-              relationship: $scope.readings[practice.practice_type].Installation,
-              featureId: practice.id,
-              readingType: 'Installation'
-            }, $index);
-
-            //
-            // Get monitoring readings
-            //
-            $scope.site.practices.readings({
-              storage: variables.practice.storage,
-              relationship: $scope.readings[practice.practice_type].Monitoring,
-              featureId: practice.id,
-              readingType: 'Monitoring'
-            }, $index);
-          }
-
-        });
-
-      },
       create: function() {
         //
         // Creating a practice is a two step process.
@@ -116,6 +61,7 @@ angular.module('practiceMonitoringAssessmentApp')
         });
       }
     };
+
     $rootScope.page = {
       template: 'views/site-view.html',
       title: $scope.site.site_number,
@@ -148,6 +94,7 @@ angular.module('practiceMonitoringAssessmentApp')
         $route.reload();
       }
     };
+    
     $scope.map = {
       defaults: {
         scrollWheelZoom: false,
@@ -335,7 +282,6 @@ angular.module('practiceMonitoringAssessmentApp')
     // Once the page has loaded we need to load in all Reading Features that are associated with
     // the Practices related to the Site being viewed
     //
-    $scope.site.practices.process();
     $scope.map.setupMap();
 
   }]);
