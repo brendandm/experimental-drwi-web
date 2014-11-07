@@ -15,6 +15,9 @@
           </span>
         </h2>
         <div class="project-abstract" data-ng-bind-html="project.project_abstract"></div>
+        <p><span data-ng-repeat="organization in project.type_271e6f04e893436588c8cd84da851a97">
+          {{ organization.name }}<span data-ng-if="!$last">, </span>
+        </span></p>
 
         <section data-ng-if="project.sites.list" id="sites">
           <div class="list">
@@ -73,6 +76,13 @@
           <strong>Match</strong><br />
           <span data-ng-if="!project.match">Not specified</span>${{ project.match | number:2 }}
         </p>      
+
+        <p>
+          <strong>Funder</strong>
+          <span data-ng-repeat="funder in project.type_b3290b45fa414a9382078cee28e3ff78">
+            {{ funder.name }}<span data-ng-if="!$last">, </span>
+          </span>
+        </p>
       </aside>
     </article>
   </form>

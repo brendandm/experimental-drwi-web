@@ -32,11 +32,7 @@
         <!-- Project Title -->
         <div class="form-group">
           <label for="type_271e6f04e893436588c8cd84da851a97" class="control-label">Organization</label>
-          <textarea rows="1" data-ng-model="project.type_271e6f04e893436588c8cd84da851a97" class="form-control animate" msd-elastic id="type_271e6f04e893436588c8cd84da851a97" name="type_271e6f04e893436588c8cd84da851a97" placeholder="@todo, not complete"></textarea>
-          <p class="help-text"><span data-ng-repeat="organization in project.type_271e6f04e893436588c8cd84da851a97">
-            {{ organization.name }}
-            <span data-ng-if="!$last">, </span>
-          </span></p>
+          <relationship model="project.type_271e6f04e893436588c8cd84da851a97" table="'type_271e6f04e893436588c8cd84da851a97'" fields="['name']" placeholder="'Enter the name of the organization'"></relationship>
         </div>
 
         <!-- Project Abstract -->
@@ -95,11 +91,7 @@
         <!-- Funders -->
         <div class="form-group">
           <label for="type_b3290b45fa414a9382078cee28e3ff78" class="control-label">Funders</label>
-          <textarea rows="1" data-ng-model="project.type_b3290b45fa414a9382078cee28e3ff78" class="form-control animate"  msd-elastic id="type_b3290b45fa414a9382078cee28e3ff78" name="type_b3290b45fa414a9382078cee28e3ff78" placeholder="@todo, not complete"></textarea>
-          <p class="help-text"><span data-ng-repeat="funder in project.type_b3290b45fa414a9382078cee28e3ff78">
-            {{ funder.name }}
-            <span data-ng-if="!$last">, </span>
-          </span></p>
+          <relationship model="project.type_b3290b45fa414a9382078cee28e3ff78" table="'type_b3290b45fa414a9382078cee28e3ff78'" fields="['name']" placeholder="'Enter the name of the funder'"></relationship>
         </div>
 
       </aside>
