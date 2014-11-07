@@ -311,6 +311,7 @@ angular
           },
           readings: function(Storage, Feature, $route) {
             var clean_name = Feature.HumanReadable($route.current.params.practiceType);
+            console.log('clean_name', clean_name);
             
             return Feature.GetRelatedFeatures({
               storage: practice.storage,
