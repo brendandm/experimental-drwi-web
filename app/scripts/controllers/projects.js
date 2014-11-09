@@ -159,6 +159,8 @@ angular.module('practiceMonitoringAssessmentApp')
           results_per_page: ($scope.filters.results_per_page) ? $scope.filters.results_per_page: null,
           callback: ($scope.filters.callback) ? $scope.filters.callback: null 
         });
+
+		$scope.projects = response;
       });
     };
 

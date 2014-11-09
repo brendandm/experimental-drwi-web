@@ -93,7 +93,7 @@ angular.module('practiceMonitoringAssessmentApp')
         var fileData = new FormData();
 
         angular.forEach($scope.files, function(file, index) {
-          fileData.append(file.field, file.file)
+          fileData.append(file.field, file.file);
         });
 
         Feature.postFiles({
@@ -101,7 +101,7 @@ angular.module('practiceMonitoringAssessmentApp')
           featureId: $scope.practice.id
         }, fileData).$promise.then(function(response) {
           console.log('Update fired', response);
-          $scope.feature = response.response
+          $scope.feature = response.response;
 
           // $location.path('/applications/' + $scope.application.id + '/collections/' + $scope.template.id + '/features/' + $scope.feature.id);
         }, function(error) {
