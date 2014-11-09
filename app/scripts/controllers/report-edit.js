@@ -79,7 +79,8 @@ angular.module('practiceMonitoringAssessmentApp')
             storage: $scope.report_storage,
             featureId: $scope.report.id
           }).then(function(response) {
-            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id);
+			$scope.practice_type = Feature.MachineReadable($scope.practice.practice_type);
+            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice_type);
           });
 
         });
