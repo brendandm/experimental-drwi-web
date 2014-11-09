@@ -29,7 +29,7 @@
           <textarea rows="1" data-ng-model="project.project_title" class="form-control animate"  msd-elastic id="project_title" name="project_title" placeholder="Project Title">{{ project.project_title }}</textarea>
         </div>
 
-        <!-- Project Title -->
+        <!-- Organization -->
         <div class="form-group">
           <label for="type_271e6f04e893436588c8cd84da851a97" class="control-label">Organization</label>
           <relationship model="project.type_271e6f04e893436588c8cd84da851a97" table="'type_271e6f04e893436588c8cd84da851a97'" fields="['name']" placeholder="'Enter the name of the organization'"></relationship>
@@ -96,21 +96,5 @@
 
       </aside>
     </article>
-
-    <!-- Project List -->
-    <div class="list">
-      <article class="row list-item" data-ng-repeat="site in sites track by $index">
-        <div class="column-16 list-item-content">
-          <h4>{{ site.name }}</h4>
-          <h1><a href="/projects/{{ project.id }}/sites/{{ site.id }}" title="{{ site.description }} project details">{{ site.description }}</a></h1>
-          <h2>
-            <span data-ng-repeat="organization in project.type_271e6f04e893436588c8cd84da851a97">
-              {{ organization.name }}
-              <span data-ng-if="!$last">, </span>
-            </span>
-          </h2>
-        </div>
-      </article>
-    </div>
   </form>
 </main>

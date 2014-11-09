@@ -73,7 +73,6 @@ angular.module('practiceMonitoringAssessmentApp')
     };
 
     scope.removeFeatureFromRelationships = function(index) {
-      // delete scope.human_readable_values.splice(index, 1);
       scope.model.splice(index, 1);
     };
 
