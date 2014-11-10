@@ -129,7 +129,7 @@
           </thead>
           <tbody>
             <tr>
-              <th colspan="{{ practice.readings.length + 1 }}">Vegetative Cover</th>
+              <th colspan="{{ practice.readings.length + 1 }}" style="background: #efefef;">Vegetative Cover</th>
             </tr>
             <tr>
               <th>Cover (%)</th>
@@ -137,7 +137,7 @@
             </tr>
 
             <tr>
-              <th colspan="{{ practice.readings.length + 1 }}">Buffer Composition</th>
+              <th colspan="{{ practice.readings.length + 1 }}" style="background: #efefef;">Buffer Composition</th>
             </tr>
             <tr>
               <th>Woody (%)</th>
@@ -168,6 +168,26 @@
               <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ report.buffer_composition }}
               </td>
+            </tr>
+
+            <tr>
+              <th colspan="{{ practice.readings.length + 1 }}" style="background: #efefef;">Riparian Vegetation</th>
+            </tr>
+            <tr>
+              <th>Vegetative Protection - Left Bank</th>
+              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.vegetative_protection_left_bank }}</td>
+            </tr>
+            <tr>
+              <th>Vegetative Protection - Right Bank</th>
+              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.vegetative_protection_right_bank }}</td>
+            </tr>
+            <tr>
+              <th>Riparian Vegetative Zone Width - Left Bank</th>
+              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.riparian_vegetative_zone_width_left_bank }}</td>
+            </tr>
+            <tr>
+              <th>Riparian Vegetative Zone Width - Right Bank</th>
+              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.riparian_vegetative_zone_width_right_bank }}</td>
             </tr>
 
           </tbody>  
