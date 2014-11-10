@@ -344,7 +344,7 @@ angular.module('practiceMonitoringAssessmentApp')
     // @param (string) field
     //    The `field` parameter should be the field that you would like to get the percentage for
     //
-    $scope.calculate.GetPercentageOfInstalled = function(field) {
+    $scope.calculate.GetPercentageOfInstalled = function(field, format) {
 
       var planned_total = 0,
           installed_total = 0,
@@ -363,20 +363,34 @@ angular.module('practiceMonitoringAssessmentApp')
 
       // Divide the Installed Total by the Planned Total to get a percentage of installed
       if (planned_total >= 1) {
-        percentage = (installed_total/planned_total);
-        return (percentage*100);
+        if (format === 'percentage') {
+          percentage = (installed_total/planned_total);
+          return (percentage*100);
+        } else {
+          return installed_total;
+        }
       }
 
       return null;
     };
+
+    $scope.calculate.GetTreeDensity = function(trees, length, width) {
+      return (trees/(length*width/43560));
+    }
 
 
     //
     // Scope elements that run the actual equations and send them back to the user interface for display
     //
     $scope.calculate.results = {
-      percentageLengthOfBuffer: $scope.calculate.GetPercentageOfInstalled('length_of_buffer'),
-      percentageTreesPlanted: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted'),
+      percentageLengthOfBuffer: {
+        percentage: $scope.calculate.GetPercentageOfInstalled('length_of_buffer', 'percentage'),
+        total: $scope.calculate.GetPercentageOfInstalled('length_of_buffer')
+      },
+      percentageTreesPlanted: {
+        percentage: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted', 'percentage'),
+        total: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted')
+      },
       totalPreInstallationLoad: $scope.calculate.GetPreInstallationLoad('Planning'),
       totalPlannedLoad: $scope.calculate.GetPlannedLoad('Planning'),
       totalInstalledLoad: $scope.calculate.GetInstalledLoad('Installation')
