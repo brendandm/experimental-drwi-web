@@ -89,7 +89,7 @@ angular.module('practiceMonitoringAssessmentApp')
     //
     $rootScope.page = {
       template: 'views/practice-view.html',
-      title: $scope.site.site_number,
+      title: $scope.site.site_number + ' « ' + $scope.project.project_title,
       links: [
         {
           text: 'Projects',
@@ -146,6 +146,46 @@ angular.module('practiceMonitoringAssessmentApp')
       return updatedReadings;
     };
 
+    $scope.calculate = {};
+
+    //
+    // The purpose of this function is to return a percentage of the total installed versus the amount
+    // that was originally planned on being installed:
+    //
+    // (Installation+Installation+Installation) / Planned = % of Planned
+    //
+    //
+    // @param (string) field
+    //    The `field` parameter should be the field that you would like to get the percentage for
+    //
+    $scope.calculate.GetPercentageOfInstalled = function(field) {
+
+      var planned_total = 0,
+          installed_total = 0;
+
+      // Get readings organized by their Type
+      angular.forEach($scope.practice.readings, function(reading, $index) {
+
+        if (reading.measurement_period === 'Planning') {
+          console.log('Planning', reading[field]);
+          planned_total += reading[field];
+        } else if (reading.measurement_period === 'Installation') {
+          console.log('Installation', reading[field]);
+          installed_total += reading[field];
+        }
+
+      });
+
+      return ((installed_total/planned_total)*100);
+    };
+
+    //
+    // Scope elements that run the actual equations and send them back to the user interface for display
+    //
+    $scope.calculate.results = {
+      percentageLengthOfBuffer: $scope.calculate.GetPercentageOfInstalled('length_of_buffer'),
+      percentageTreesPlanted: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted')
+    };
 
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
