@@ -111,23 +111,23 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr data-ng-if="calculate.results.totalPreInstallationLoad">
               <th>Pre-BMP Load</th>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{{ calculate.results.totalPreInstallationLoad.nitrogen | number:2 }}</td>
+              <td>{{ calculate.results.totalPreInstallationLoad.phosphorus | number:2 }}</td>
+              <td>{{ calculate.results.totalPreInstallationLoad.sediment | number:2 }}</td>
             </tr>
-            <tr>
+            <tr data-ng-if="calculate.results.totalPlannedLoad">
               <th>Planned Load Reductions</th>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{{ calculate.results.totalPlannedLoad.nitrogen | number:2 }}</td>
+              <td>{{ calculate.results.totalPlannedLoad.phosphorus | number:2 }}</td>
+              <td>{{ calculate.results.totalPlannedLoad.sediment | number:2 }}</td>
             </tr>
-            <tr>
+            <tr data-ng-if="calculate.results.totalInstalledLoad">
               <th>Load Reductions to-date</th>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td>{{ calculate.results.totalInstalledLoad.nitrogen | number:2 }}</td>
+              <td>{{ calculate.results.totalInstalledLoad.phosphorus | number:2 }}</td>
+              <td>{{ calculate.results.totalInstalledLoad.sediment | number:2 }}</td>
             </tr>
           </tbody>  
         </table>

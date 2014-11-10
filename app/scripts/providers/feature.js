@@ -427,7 +427,6 @@ angular.module('practiceMonitoringAssessmentApp')
         return filters_;
       };
 
-
       //
       // Build a list of Filters based on a Template Field list passed in through the fields parameter
       //

@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('PracticeViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'variables', 'Storage', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Template, Feature, template, fields, project, site, practice, readings, variables, Storage) {
+  .controller('PracticeViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'variables', 'Storage', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, variables, Storage) {
 
     //
     // Assign project to a scoped variable
@@ -40,6 +40,43 @@ angular.module('practiceMonitoringAssessmentApp')
       $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0] = response;
     });
 
+    $scope.landuse = {
+      'high-till with manure': 'hwm',
+      'high-till with manure nutrient management': 'nhi',
+      'high-till without manure': 'hom',
+      'high-till without manure nutrient management': 'nho',
+      'low-till with manure': 'lwm',
+      'low-till with manure nutrient management': 'nlo',
+      'hay with nutrients': 'hyw',
+      'hay with nutrients nutrient management': 'nhy',
+      'alfalfa': 'alf',
+      'alfalfa nutrient management': 'nal',
+      'hay without nutrients': 'hyo',
+      'pasture': 'pas',
+      'pasture nutrient management': 'npa',
+      'pasture corridor': 'trp',
+      'animal feeding operations': 'afo',
+      'nursery': 'urs',
+      'concentrated animal feeding operations': 'cfo',
+      'regulated construction': 'rcn',
+      'css construction': 'ccn',
+      'regulated extractive': 'rex',
+      'css extractive': 'cex',
+      'nonregulated extractive': 'nex',
+      'forest': 'for',
+      'harvested forest': 'hvf',
+      'regulated impervious developed': 'rid',
+      'nonregulated impervious developed': 'nid',
+      'css impervious developed': 'cid',
+      'atmospheric deposition to non-tidal water': 'atdep',
+      'regulated pervious developed': 'rpd',
+      'nonregulated pervious developed': 'npd',
+      'css pervious developed': 'cpd',
+      'municipal-waste water treatment plants':'wwtp',
+      'septic': 'septic',
+      'combined sewer overflows': 'cso',
+      'industrial-waste water treatment plants': 'indus'
+    }
 
     $scope.readings = {
       add: function(practice, readingType) {
@@ -148,6 +185,113 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.calculate = {};
 
+    // $scope.calculate.GetLoadData('A42061SJ3_2230_2060', 'alf');
+
+    $scope.calculate.GetLoadVariables = function(period, landuse) {
+
+      var planned = {
+        width: 0,
+        length: 0,
+        area: 0,
+        landuse: '',
+        segment: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].name,
+        efficieny: null
+      };
+
+      var deferred = $q.defer();
+
+      for (var i = 0; i < $scope.practice.readings.length; i++) {
+        if ($scope.practice.readings[i].measurement_period === period) {
+          planned.length = $scope.practice.readings[i].length_of_buffer;
+          planned.width = $scope.practice.readings[i].average_width_of_buffer;
+          planned.area = (planned.length*planned.width);
+          planned.landuse = (landuse) ? landuse : $scope.landuse[$scope.practice.readings[i].existing_riparian_landuse.toLowerCase()];
+
+          var promise = $http.get('//api.commonscloud.org/v2/type_3fbea3190b634d0c9021d8e67df84187.json', {
+            params: {
+              q: {
+                filters: [
+                  {
+                    name: 'landriversegment',
+                    op: 'eq',
+                    val: planned.segment
+                  },
+                  {
+                    name: 'landuse',
+                    op: 'eq',
+                    val: planned.landuse
+                  }
+                ]
+              }
+            }
+          }).success(function(data, status, headers, config) {
+            planned.efficieny = data.response.features[0];
+            deferred.resolve(planned);
+          });
+        }
+      }
+
+      return deferred.promise;
+    };
+
+    $scope.calculate.GetPreInstallationLoad = function(period) {
+
+      $scope.calculate.GetLoadVariables(period).then(function(loaddata) {
+
+        console.log('loaddata', loaddata);
+
+        var results = {
+          nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
+          phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
+          sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
+        };
+
+        console.log('results', results);
+
+        $scope.calculate.results.totalPreInstallationLoad = results;
+      });
+
+    };
+
+    $scope.calculate.GetPlannedLoad = function(period) {
+
+      $scope.calculate.GetLoadVariables(period, 'for').then(function(loaddata) {
+
+        console.log('loaddata', loaddata);
+
+        var results = {
+          nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
+          phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
+          sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
+        };
+
+        console.log('results', results);
+
+        $scope.calculate.results.totalPlannedLoad = results;
+      });
+
+    };
+
+
+    $scope.calculate.GetInstalledLoad = function(period) {
+
+      $scope.calculate.GetLoadVariables(period, 'for').then(function(loaddata) {
+
+        console.log('loaddata', loaddata);
+
+        var results = {
+          nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
+          phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
+          sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
+        };
+
+        console.log('results', results);
+
+        $scope.calculate.results.totalInstalledLoad = results;
+      });
+
+    };
+
     //
     // The purpose of this function is to return a percentage of the total installed versus the amount
     // that was originally planned on being installed:
@@ -168,10 +312,8 @@ angular.module('practiceMonitoringAssessmentApp')
       angular.forEach($scope.practice.readings, function(reading, $index) {
 
         if (reading.measurement_period === 'Planning') {
-          console.log('Planning', reading[field]);
           planned_total += reading[field];
         } else if (reading.measurement_period === 'Installation') {
-          console.log('Installation', reading[field]);
           installed_total += reading[field];
         }
 
@@ -180,7 +322,6 @@ angular.module('practiceMonitoringAssessmentApp')
       // Divide the Installed Total by the Planned Total to get a percentage of installed
       if (planned_total >= 1) {
         percentage = (installed_total/planned_total);
-        console.log(installed_total, '/', planned_total, '=', percentage);
         return (percentage*100);
       }
 
@@ -192,8 +333,15 @@ angular.module('practiceMonitoringAssessmentApp')
     //
     $scope.calculate.results = {
       percentageLengthOfBuffer: $scope.calculate.GetPercentageOfInstalled('length_of_buffer'),
-      percentageTreesPlanted: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted')
+      percentageTreesPlanted: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted'),
+      totalPreInstallationLoad: $scope.calculate.GetPreInstallationLoad('Planning'),
+      totalPlannedLoad: $scope.calculate.GetPlannedLoad('Planning'),
+      totalInstalledLoad: $scope.calculate.GetInstalledLoad('Installation')
     };
+
+    $scope.$watch('calculate.results', function(o, n) {
+      console.log(o);
+    });
 
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
