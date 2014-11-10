@@ -234,11 +234,60 @@ angular.module('practiceMonitoringAssessmentApp')
       return deferred.promise;
     };
 
+    $scope.calculate.GetInstalledLoadVariables = function(period, landuse) {
+
+      var segment = $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].name;
+
+      var deferred = $q.defer();
+
+      var promise = $http.get('//api.commonscloud.org/v2/type_3fbea3190b634d0c9021d8e67df84187.json', {
+        params: {
+          q: {
+            filters: [
+              {
+                name: 'landriversegment',
+                op: 'eq',
+                val: segment
+              },
+              {
+                name: 'landuse',
+                op: 'eq',
+                val: landuse
+              }
+            ]
+          }
+        }
+      }).success(function(data, status, headers, config) {
+        
+        var efficieny = data.response.features[0],
+            total_area = 0;
+
+        for (var i = 0; i < $scope.practice.readings.length; i++) {
+          if ($scope.practice.readings[i].measurement_period === period) {
+
+            var that = {
+              length: $scope.practice.readings[i].length_of_buffer,
+              width: $scope.practice.readings[i].average_width_of_buffer
+            };
+
+            total_area += (that.length*that.width)
+          }
+        }
+
+        deferred.resolve({
+          efficieny: efficieny,
+          area: total_area
+        });
+      });
+
+      return deferred.promise;
+    };
+
     $scope.calculate.GetPreInstallationLoad = function(period) {
 
       $scope.calculate.GetLoadVariables(period).then(function(loaddata) {
 
-        console.log('loaddata', loaddata);
+        console.log('GetPreInstallationLoad', loaddata);
 
         var results = {
           nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
@@ -257,7 +306,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
       $scope.calculate.GetLoadVariables(period, 'for').then(function(loaddata) {
 
-        console.log('loaddata', loaddata);
+        console.log('GetPlannedLoad', loaddata);
 
         var results = {
           nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
@@ -275,9 +324,9 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.calculate.GetInstalledLoad = function(period) {
 
-      $scope.calculate.GetLoadVariables(period, 'for').then(function(loaddata) {
+      $scope.calculate.GetInstalledLoadVariables(period, 'for').then(function(loaddata) {
 
-        console.log('loaddata', loaddata);
+        console.log('GetInstalledLoad', loaddata);
 
         var results = {
           nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
@@ -328,6 +377,7 @@ angular.module('practiceMonitoringAssessmentApp')
       return null;
     };
 
+
     //
     // Scope elements that run the actual equations and send them back to the user interface for display
     //
@@ -339,9 +389,6 @@ angular.module('practiceMonitoringAssessmentApp')
       totalInstalledLoad: $scope.calculate.GetInstalledLoad('Installation')
     };
 
-    $scope.$watch('calculate.results', function(o, n) {
-      console.log(o);
-    });
 
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
