@@ -21,7 +21,7 @@ buffer area * UASexist/2000
 
 
 PLANNED
-buffer area * UAShyo/2000
+buffer area * UASfor/2000
 
   A: 
   Buffer Area = 500 length X 20 width = 10000 sqft

@@ -29,17 +29,12 @@
               <td><span data-ng-if="calculate.results.percentageTreesPlanted">{{ calculate.results.percentageTreesPlanted | number:2 }}%</span></td>
             </tr>
             <tr>
-              <th>Number of Trees Surviving</th>
-              <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.number_of_trees_surviving }}</td>
-              <td>&nbsp;</td>
-            </tr>
-<!--             <tr>
               <th>Tree Density</th>
               <td data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 (calculation needed)
               </td>
               <td>&nbsp;</td>
-            </tr> -->
+            </tr>
           </tbody>  
         </table>
 

@@ -16,6 +16,7 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.template = template;
 
     $scope.report = {};
+    $scope.report
 
     $scope.project = project;
     $scope.practice = practice;
@@ -24,7 +25,7 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.report_templateId = Storage[$scope.practice.practice_type].templateId;
     $scope.report_fields = Storage[$scope.practice.practice_type].fields[$route.current.params.reportType];
 
-    Field.GetPreparedFields($scope.report_templateId).then(function(response) {
+    Field.GetPreparedFields($scope.report_templateId, 'object').then(function(response) {
       $scope.fields = response;
     });
 
@@ -38,6 +39,7 @@ angular.module('practiceMonitoringAssessmentApp')
       //
       $scope.report = report;
       $scope.report.type = $route.current.params.reportType;
+      $scope.report.template = '/views/forms/forest-buffer.html'
 
       $scope.report.save = function() {
         Feature.UpdateFeature({
