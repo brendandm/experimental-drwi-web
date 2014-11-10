@@ -92,6 +92,110 @@
 
       <fieldset data-ng-if="report.measurement_period === 'Monitoring'">
         <h2><strong>Interim</strong> BMP Metrics Data</h2>
+
+        <div class="row">
+          <!-- Vegetative Cover -->
+          <div class="form-group column-5">
+            <label for="native_vegetation_intact" class="control-label">
+              Vegetative Cover
+            </label>
+
+            <input data-ng-model="report.native_vegetation_intact" class="form-control" class="form-control" type="number" id="native_vegetation_intact" name="native_vegetation_intact" placeholder="% intact" />
+          </div>
+
+          <!-- Buffer Composition (Woody) -->
+          <div class="column-1"></div>
+          <div class="form-group column-5">
+            <label for="buffer_composition_woody" class="control-label">
+              Buffer Composition (woody)
+            </label>
+
+            <input data-ng-model="report.buffer_composition_woody" class="form-control" class="form-control" type="number" id="buffer_composition_woody" name="buffer_composition_woody" placeholder="% woody" />
+          </div>
+
+          <!-- Buffer Composition (Shrub) -->
+          <div class="column-1"></div>
+          <div class="form-group column-4">
+            <label for="buffer_composition_shrub" class="control-label">
+              Buffer Composition (shrub)
+            </label>
+
+            <input data-ng-model="report.buffer_composition_shrub" class="form-control" class="form-control" type="number" id="buffer_composition_shrub" name="buffer_composition_shrub" placeholder="% shrub" />
+          </div>
+        </div>
+
+        <div class="row">
+          <!-- Buffer Composition (Grass) -->
+          <div class="form-group column-5">
+            <label for="buffer_composition_grass" class="control-label">
+              Buffer Composition (grass)
+            </label>
+
+            <input data-ng-model="report.buffer_composition_grass" class="form-control" class="form-control" type="number" id="buffer_composition_grass" name="buffer_composition_grass" placeholder="% grass" />
+          </div>
+
+          <!-- Buffer Composition (Bare) -->
+          <div class="column-1"></div>
+          <div class="form-group column-5">
+            <label for="buffer_composition_bare" class="control-label">
+              Buffer Composition (bare)
+            </label>
+
+            <input data-ng-model="report.buffer_composition_bare" class="form-control" class="form-control" type="number" id="buffer_composition_bare" name="buffer_composition_bare" placeholder="% bare" />
+          </div>
+
+          <!-- Buffer Composition (Other) -->
+          <div class="column-1"></div>
+          <div class="form-group column-4">
+            <label for="buffer_composition_other" class="control-label">
+              Buffer Composition (other)
+            </label>
+
+            <input data-ng-model="report.buffer_composition_other" class="form-control" class="form-control" type="number" id="buffer_composition_other" name="buffer_composition_other" placeholder="% other" />
+          </div>
+        </div>
+
+        <div class="row">
+          <!-- Vegetative Protection -->
+          <div class="form-group column-5">
+            <label for="vegetative_protection_left_bank" class="control-label">
+              Vegetative Protection (left bank)
+            </label>
+
+            <input data-ng-model="report.vegetative_protection_left_bank" class="form-control" class="form-control" type="number" id="vegetative_protection_left_bank" name="vegetative_protection_left_bank" placeholder="" />
+          </div>
+
+          <div class="column-1"></div>
+          <div class="form-group column-5">
+            <label for="vegetative_protection_right_bank" class="control-label">
+              Vegetative Protection (right bank)
+            </label>
+
+            <input data-ng-model="report.vegetative_protection_right_bank" class="form-control" class="form-control" type="number" id="vegetative_protection_right_bank" name="vegetative_protection_right_bank" placeholder="" />
+          </div>
+
+        </div>
+
+        <div class="row">
+          <!-- Riparian Vegetative Zone Width -->
+          <div class="form-group column-5">
+            <label for="riparian_vegetative_zone_width_left_bank" class="control-label">
+              Riparian Vegetative Zone Width (left bank)
+            </label>
+
+            <input data-ng-model="report.riparian_vegetative_zone_width_left_bank" class="form-control" class="form-control" type="number" id="riparian_vegetative_zone_width_left_bank" name="riparian_vegetative_zone_width_left_bank" placeholder="" />
+          </div>
+
+          <div class="column-1"></div>
+          <div class="form-group column-5">
+            <label for="riparian_vegetative_zone_width_right_bank" class="control-label">
+              Riparian Vegetative Zone Width (right bank)
+            </label>
+
+            <input data-ng-model="report.riparian_vegetative_zone_width_right_bank" class="form-control" class="form-control" type="number" id="riparian_vegetative_zone_width_right_bank" name="riparian_vegetative_zone_width_right_bank" placeholder="" />
+          </div>
+
+        </div>
       </fieldset>
 
       <fieldset data-ng-if="report.measurement_period === 'Monitoring'">
@@ -111,7 +215,7 @@
         <div class="form-group">
           <div class="checkbox">
             <label class="control-label">
-              <input data-ng-model="report.invasive_species_control" type="checkbox" id="invasive_species_control" name="invasive_species_control" /> Check for, and correct, causes of excess sediment build-up at the field-buffer interface that re-directs flow
+              <input data-ng-model="report.sediment_deposition" type="checkbox" id="sediment_deposition" name="sediment_deposition" /> Check for, and correct, causes of excess sediment build-up at the field-buffer interface that re-directs flow
             </label>
           </div>
         </div>
@@ -143,7 +247,7 @@
         <div class="form-group">
           <div class="checkbox">
             <label class="control-label">
-              <input data-ng-model="report.sediment_deposition" type="checkbox" id="sediment_deposition" name="sediment_deposition" /> Apply herbicide around shelters in spring and fall to reduce competing vegetation
+              <input data-ng-model="report.vegetative_cover" type="checkbox" id="vegetative_cover" name="vegetative_cover" /> Apply herbicide around shelters in spring and fall to reduce competing vegetation
             </label>
           </div>
         </div>

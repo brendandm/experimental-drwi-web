@@ -56,17 +56,35 @@
               <td>{{ calculate.results.totalPreInstallationLoad.phosphorus | number:2 }}</td>
               <td>{{ calculate.results.totalPreInstallationLoad.sediment | number:2 }}</td>
             </tr>
+            <tr data-ng-if="!calculate.results.totalPreInstallationLoad">
+              <th>Pre-BMP Load</th>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+            </tr>
             <tr data-ng-if="calculate.results.totalPlannedLoad">
               <th>Planned Load Reductions</th>
               <td>{{ calculate.results.totalPlannedLoad.nitrogen | number:2 }}</td>
               <td>{{ calculate.results.totalPlannedLoad.phosphorus | number:2 }}</td>
               <td>{{ calculate.results.totalPlannedLoad.sediment | number:2 }}</td>
             </tr>
+            <tr data-ng-if="!calculate.results.totalPlannedLoad">
+              <th>Planned Load Reductions</th>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
+            </tr>
             <tr data-ng-if="calculate.results.totalInstalledLoad">
               <th>Load Reductions to-date</th>
               <td>{{ calculate.results.totalInstalledLoad.nitrogen | number:2 }}</td>
               <td>{{ calculate.results.totalInstalledLoad.phosphorus | number:2 }}</td>
               <td>{{ calculate.results.totalInstalledLoad.sediment | number:2 }}</td>
+            </tr>
+            <tr data-ng-if="!calculate.results.totalInstalledLoad">
+              <th>Load Reductions to-date</th>
+              <td>0</td>
+              <td>0</td>
+              <td>0</td>
             </tr>
           </tbody>  
         </table>
@@ -172,7 +190,7 @@
             <tr>
               <th>Check for, and correct, causes of excess sediment build-up at the field-buffer interface that re-directs flow</th>
               <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <div data-ng-if="report.invasive_species_control" class="icon retinaicon-essentials-071"></div>
+                <div data-ng-if="report.sediment_deposition" class="icon retinaicon-essentials-071"></div>
               </td>
             </tr>
             <tr>
@@ -196,7 +214,7 @@
             <tr>
               <th>Apply herbicide around shelters in spring and fall to reduce competing vegetation</th>
               <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <div data-ng-if="report.sediment_deposition" class="icon retinaicon-essentials-071"></div>
+                <div data-ng-if="report.vegetative_cover" class="icon retinaicon-essentials-071"></div>
               </td>
             </tr>
             <tr>
