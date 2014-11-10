@@ -38,63 +38,7 @@
           </tbody>  
         </table>
 
-        <h2><strong>Interim</strong> BMP Metrics Data</h2>
-        <table class="table">
-          <thead>
-            <tr>
-              <th width="25%">&nbsp;</th>
-              <th data-ng-if="report.measurement_period === 'Monitoring'" width="25%" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
-                  {{ report.measurement_period }}
-                </a>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th colspan="{{ practice.readings.length + 1 }}">Vegetative Cover</th>
-            </tr>
-            <tr>
-              <th>Cover (%)</th>
-              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.percentage_vegetative_cover }}</td>
-            </tr>
 
-            <tr>
-              <th colspan="{{ practice.readings.length + 1 }}">Buffer Composition</th>
-            </tr>
-            <tr>
-              <th>Woody (%)</th>
-              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                {{ report.buffer_composition_woody }}
-              </td>
-            </tr>
-            <tr>
-              <th>Shrub (%)</th>
-              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                {{ report.buffer_composition_shrub }}
-              </td>
-            </tr>
-            <tr>
-              <th>Grass (%)</th>
-              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                {{ report.buffer_composition_grass }}
-              </td>
-            </tr>
-            <tr>
-              <th>Bare (%)</th>
-              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                {{ report.buffer_composition_bare }}
-              </td>
-            </tr>
-            <tr>
-              <th>Other (%)</th>
-              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                {{ report.buffer_composition }}
-              </td>
-            </tr>
-
-          </tbody>  
-        </table>
         <h2><strong>Load</strong> Reductions</h2>
         <table class="table">
           <thead>
@@ -150,6 +94,64 @@
               <th>Acres of Riparian Restoration</th>
               <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.cres_of_riparian_restoration }}</td>
             </tr>
+          </tbody>  
+        </table>
+
+        <h2><strong>Interim</strong> BMP Metrics Data</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th width="25%">&nbsp;</th>
+              <th data-ng-if="report.measurement_period === 'Monitoring'" width="25%" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                  {{ report.measurement_period }}
+                </a>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th colspan="{{ practice.readings.length + 1 }}">Vegetative Cover</th>
+            </tr>
+            <tr>
+              <th>Cover (%)</th>
+              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.percentage_vegetative_cover }}</td>
+            </tr>
+
+            <tr>
+              <th colspan="{{ practice.readings.length + 1 }}">Buffer Composition</th>
+            </tr>
+            <tr>
+              <th>Woody (%)</th>
+              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                {{ report.buffer_composition_woody }}
+              </td>
+            </tr>
+            <tr>
+              <th>Shrub (%)</th>
+              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                {{ report.buffer_composition_shrub }}
+              </td>
+            </tr>
+            <tr>
+              <th>Grass (%)</th>
+              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                {{ report.buffer_composition_grass }}
+              </td>
+            </tr>
+            <tr>
+              <th>Bare (%)</th>
+              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                {{ report.buffer_composition_bare }}
+              </td>
+            </tr>
+            <tr>
+              <th>Other (%)</th>
+              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                {{ report.buffer_composition }}
+              </td>
+            </tr>
+
           </tbody>  
         </table>
 
