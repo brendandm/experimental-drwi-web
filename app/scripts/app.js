@@ -380,7 +380,7 @@ angular
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/reports', {
         redirectTo: '/projects/:projectId/sites/:siteId/practices/:practiceId'
       })      
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/reports/:reportId/:reportType', {
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/reports/:reportId', {
         templateUrl: templateUrl,
         controller: 'ReportViewCtrl',
         resolve: {
@@ -424,7 +424,7 @@ angular
           }
         }
       })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/reports/:reportId/:reportType/edit', {
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/reports/:reportId/edit', {
         templateUrl: templateUrl,
         controller: 'ReportEditCtrl',
         resolve: {

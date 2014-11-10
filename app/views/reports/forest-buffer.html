@@ -5,7 +5,7 @@
             <tr>
               <th width="25%">&nbsp;</th>
               <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" width="25%" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/{{ report.measurement_period }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
                   {{ report.measurement_period }}
                 </a>
               </th>
@@ -44,7 +44,7 @@
             <tr>
               <th width="25%">&nbsp;</th>
               <th data-ng-if="report.measurement_period === 'Monitoring'" width="25%" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/{{ report.measurement_period }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
                   {{ report.measurement_period }}
                 </a>
               </th>
@@ -134,7 +134,7 @@
             <tr>
               <th width="25%">&nbsp;</th>
               <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" width="25%" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/{{ report.measurement_period }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
                   {{ report.measurement_period }}
                 </a>
               </th>
@@ -159,7 +159,7 @@
             <tr>
               <th width="25%">&nbsp;</th>
               <th data-ng-if="report.measurement_period === 'Monitoring'" width="25%" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/{{ report.measurement_period }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
                   {{ report.measurement_period }}
                 </a>
               </th>
@@ -223,7 +223,7 @@
           <tbody>
             <tr data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
               <td>
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/{{ report.measurement_period }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
                   {{ report.report_date }}
                 </a>
               </td>

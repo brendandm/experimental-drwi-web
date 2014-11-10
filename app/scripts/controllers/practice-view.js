@@ -90,7 +90,7 @@ angular.module('practiceMonitoringAssessmentApp')
         Feature.CreateFeature({
           storage: $scope.reading_storage.storage,
           data: {
-            measurement_period: readingType,
+            measurement_period: null,
             report_date: moment().format('YYYY-MM-DD'),
             owner: $scope.user.id,
             status: 'private'
@@ -114,7 +114,7 @@ angular.module('practiceMonitoringAssessmentApp')
             // Once the new Reading has been associated with the existing Practice we need to
             // display the form to the user, allowing them to complete it.
             //
-            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/reports/' + reportId + '/' + readingType + '/edit');
+            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/reports/' + reportId + '/edit');
           });
         });
       }
@@ -150,16 +150,9 @@ angular.module('practiceMonitoringAssessmentApp')
         {
           type: 'button-link new',
           action: function() {
-            $scope.readings.add($scope.practice, 'Installation');
+            $scope.readings.add($scope.practice);
           },
-          text: 'Add Installation Data'
-        },
-        {
-          type: 'button-link new',
-          action: function() {
-            $scope.readings.add($scope.practice, 'Monitoring');
-          },
-          text: 'Add Monitoring Data'
+          text: 'Add Measurement Data'
         }
       ],
       refresh: function() {

@@ -21,7 +21,7 @@
         </div>
       </fieldset>
 
-      <fieldset data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" class="row">
+      <fieldset data-ng-if="report.measurement_period === 'Planning'" class="row">
         <h2><strong>Landuse</strong></h2>
 
         <!-- Existing Landuse -->
@@ -96,7 +96,75 @@
 
       <fieldset data-ng-if="report.measurement_period === 'Monitoring'">
         <h2><strong>Adaptive</strong> Management Checks Performed</h2>
-      </fieldset>        
+
+        <!-- Number of Trees Surviving -->
+        <div class="form-group">
+          <label for="number_of_trees_surviving" class="control-label">
+            Number of Trees Surviving
+          </label>
+
+          <input data-ng-model="report.number_of_trees_surviving" class="form-control" class="form-control" type="number" id="number_of_trees_surviving" name="number_of_trees_surviving" placeholder="Number of Trees Planted" />
+
+          <p data-ng-if="fields.number_of_trees_surviving.help" class="help-text">{{ fields.number_of_trees_surviving.help }}</p>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox">
+            <label class="control-label">
+              <input data-ng-model="report.invasive_species_control" type="checkbox" id="invasive_species_control" name="invasive_species_control" /> Check for, and correct, causes of excess sediment build-up at the field-buffer interface that re-directs flow
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox">
+            <label class="control-label">
+              <input data-ng-model="report.concentrated_flow_paths" type="checkbox" id="concentrated_flow_paths" name="concentrated_flow_paths" /> Perform maintenance to remove concentrated flow paths through the buffer
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox">
+            <label class="control-label">
+              <input data-ng-model="report.monthly_buffer_maintenance" type="checkbox" id="monthly_buffer_maintenance" name="monthly_buffer_maintenance" /> Check for, correct causes, and path bare and/or eroded areas in the buffer
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox">
+            <label class="control-label">
+              <input data-ng-model="report.stream_shading" type="checkbox" id="stream_shading" name="stream_shading" /> Check tree shelters and stakes, especially after flooding and high wind events
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox">
+            <label class="control-label">
+              <input data-ng-model="report.sediment_deposition" type="checkbox" id="sediment_deposition" name="sediment_deposition" /> Apply herbicide around shelters in spring and fall to reduce competing vegetation
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox">
+            <label class="control-label">
+              <input data-ng-model="report.invasive_species_control" type="checkbox" id="invasive_species_control" name="invasive_species_control" /> Control noxious and invasive weeds
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox">
+            <label class="control-label">
+              <input data-ng-model="report.tree_survival_rate" type="checkbox" id="tree_survival_rate" name="tree_survival_rate" /> Replant, as needed, after addressing cause of failure
+            </label>
+          </div>
+        </div>
+
+      </fieldset>
 
       <fieldset data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation' || report.measurement_period === 'Monitoring'">
         <h2><strong>Notes</strong></h2>
