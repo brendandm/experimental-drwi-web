@@ -22,6 +22,7 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.practice = practice;
     $scope.practice_type = Feature.MachineReadable($scope.practice.practice_type);
     $scope.practice.readings = readings;
+    $scope.practice_efficiency = null;
 
     $scope.reading_storage = Storage[$scope.practice.practice_type];
 
@@ -321,6 +322,8 @@ angular.module('practiceMonitoringAssessmentApp')
 
         console.log('GetInstalledLoad', loaddata);
 
+        $scope.practice_efficiency = loaddata.efficieny;
+
         var results = {
           nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
           phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
@@ -374,10 +377,40 @@ angular.module('practiceMonitoringAssessmentApp')
       return null;
     };
 
+    $scope.calculate.GetSingleInstalledLoad = function(length, width, element) {
+
+        var efficieny = $scope.practice_efficiency,
+            area = (length*width),
+            value = null;
+
+        console.log('efficieny', efficieny);
+
+        if (element === 'nitrogen') {
+          value = (area*(efficieny.eos_totn/efficieny.eos_acres));
+        } else if (element === 'phosphorus') {
+          value = (area*(efficieny.eos_totp/efficieny.eos_acres));
+        } else if (element === 'sediment') {
+          value = ((area*(efficieny.eos_tss/efficieny.eos_acres))/2000);
+        }
+
+        return value;
+    };
+
     $scope.calculate.GetTreeDensity = function(trees, length, width) {
       return (trees/(length*width/43560));
-    }
+    };
 
+    $scope.calculate.GetPercentage = function(part, total) {
+      return ((part/total)*100);
+    };
+
+    $scope.calculate.GetConversion = function(part, total) {
+      return (part/total);
+    };
+
+    $scope.calculate.GetConversionWithArea = function(length, width, total) {
+      return ((length*width)/total);
+    };
 
     //
     // Scope elements that run the actual equations and send them back to the user interface for display

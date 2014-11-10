@@ -49,51 +49,60 @@
           <thead>
             <tr>
               <th>&nbsp;</th>
-              <th>Nitrogen (lbs/yr)</th>
-              <th>Phosphorus (lbs/yr)</th>
-              <th>Sediment (tons/yr)</th>
+              <th>Pre-BMP Load</th>
+              <th>Planning</th>
+              <th data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                Installation
+              </th>
+              <th>Installed To-date</th>
+              <th>% of Planned</th>
             </tr>
           </thead>
           <tbody>
             <tr data-ng-if="calculate.results.totalPreInstallationLoad">
-              <th>Pre-BMP Load</th>
+              <th>Nitrogen (lbs/yr)</th>
               <td>{{ calculate.results.totalPreInstallationLoad.nitrogen | number:2 }}</td>
-              <td>{{ calculate.results.totalPreInstallationLoad.phosphorus | number:2 }}</td>
-              <td>{{ calculate.results.totalPreInstallationLoad.sediment | number:2 }}</td>
-            </tr>
-            <tr data-ng-if="!calculate.results.totalPreInstallationLoad">
-              <th>Pre-BMP Load</th>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
+              <td>{{ calculate.results.totalPlannedLoad.nitrogen | number:2 }}</td>
+              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_buffer, report.average_width_of_buffer, 'nitrogen') | number:2"></span>
+              </td>
+              <td>{{ calculate.results.totalInstalledLoad.nitrogen | number:2 }}</td>
+              <td>
+                <strong>
+                  <span data-ng-bind="calculate.GetPercentage(calculate.results.totalInstalledLoad.nitrogen, calculate.results.totalPlannedLoad.nitrogen) | number:2"></span>%
+                </strong>
+              </td>
             </tr>
             <tr data-ng-if="calculate.results.totalPlannedLoad">
-              <th>Planned Load Reductions</th>
-              <td>{{ calculate.results.totalPlannedLoad.nitrogen | number:2 }}</td>
+              <th>Phosphorus (lbs/yr)</th>
+              <td>{{ calculate.results.totalPreInstallationLoad.phosphorus | number:2 }}</td>
               <td>{{ calculate.results.totalPlannedLoad.phosphorus | number:2 }}</td>
-              <td>{{ calculate.results.totalPlannedLoad.sediment | number:2 }}</td>
-            </tr>
-            <tr data-ng-if="!calculate.results.totalPlannedLoad">
-              <th>Planned Load Reductions</th>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
+              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_buffer, report.average_width_of_buffer, 'phosphorus') | number:2"></span>
+              </td>
+              <td>{{ calculate.results.totalInstalledLoad.phosphorus | number:2 }}</td>
+              <td>
+                <strong>
+                  <span data-ng-bind="calculate.GetPercentage(calculate.results.totalInstalledLoad.phosphorus, calculate.results.totalPlannedLoad.phosphorus) | number:2"></span>%
+                </strong>
+              </td>
             </tr>
             <tr data-ng-if="calculate.results.totalInstalledLoad">
-              <th>Load Reductions to-date</th>
-              <td>{{ calculate.results.totalInstalledLoad.nitrogen | number:2 }}</td>
-              <td>{{ calculate.results.totalInstalledLoad.phosphorus | number:2 }}</td>
+              <th>Sediment (tons/yr)</th>
+              <td>{{ calculate.results.totalPreInstallationLoad.sediment | number:2 }}</td>
+              <td>{{ calculate.results.totalPlannedLoad.sediment | number:2 }}</td>
+              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_buffer, report.average_width_of_buffer, 'sediment') | number:2"></span>
+              </td>
               <td>{{ calculate.results.totalInstalledLoad.sediment | number:2 }}</td>
-            </tr>
-            <tr data-ng-if="!calculate.results.totalInstalledLoad">
-              <th>Load Reductions to-date</th>
-              <td>0</td>
-              <td>0</td>
-              <td>0</td>
+              <td>
+                <strong>
+                  <span data-ng-bind="calculate.GetPercentage(calculate.results.totalInstalledLoad.sediment, calculate.results.totalPlannedLoad.sediment) | number:2"></span>%
+                </strong>
+              </td>
             </tr>
           </tbody>  
         </table>
-
 
         <h2><strong>Chesapeake</strong> Bay Metrics</h2>
         <table class="table">
@@ -105,17 +114,28 @@
                   {{ report.measurement_period }}
                 </a>
               </th>
-              <th width="5%">&nbsp;</th>
+              <th>Installed To-date</th>
+              <th>% of Planned</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <th>Miles of Riparian Restoration</th>
-              <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.miles_of_riparian_restoration }}</td>
+              <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <span data-ng-bind="calculate.GetConversion(report.length_of_buffer, 5280) | number:2"></span>
+              </td>
+              <td>
+              </td>
+              <td>
+              </td>
             </tr>
             <tr>
               <th>Acres of Riparian Restoration</th>
-              <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.cres_of_riparian_restoration }}</td>
+              <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <span data-ng-bind="calculate.GetConversionWithArea(report.length_of_buffer, report.average_width_of_buffer, 43560) | number:2"></span>
+              </td>
+              <td></td>
+              <td></td>
             </tr>
           </tbody>  
         </table>
