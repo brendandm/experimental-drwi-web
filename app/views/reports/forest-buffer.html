@@ -16,22 +16,22 @@
             <tr>
               <th>Length of Buffer Installed (ft)</th>
               <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.length_of_buffer }}</td>
-              <td>{{ calculate.results.percentageLengthOfBuffer }}%</td>
+              <td><span data-ng-if="calculate.results.percentageLengthOfBuffer">{{ calculate.results.percentageLengthOfBuffer | number:2 }}%</span></td>
             </tr>
             <tr>
               <th>Average Buffer Width (ft)</th>
               <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.average_width_of_buffer }}</td>
-              <td>--</td>
+              <td>&nbsp;</td>
             </tr>
             <tr>
               <th>Number of Trees Planted</th>
               <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.number_of_trees_planted }}</td>
-              <td>{{ calculate.results.percentageTreesPlanted }}%</td>
+              <td><span data-ng-if="calculate.results.percentageTreesPlanted">{{ calculate.results.percentageTreesPlanted | number:2 }}%</span></td>
             </tr>
             <tr>
               <th>Number of Trees Surviving</th>
               <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.number_of_trees_surviving }}</td>
-              <td>--</td>
+              <td>&nbsp;</td>
             </tr>
 <!--             <tr>
               <th>Tree Density</th>

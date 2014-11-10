@@ -19,6 +19,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.project = project;
     $scope.practice = practice;
+    $scope.practice_type = Feature.MachineReadable($scope.practice.practice_type);
     $scope.report_storage = Storage[$scope.practice.practice_type].storage;
     $scope.report_templateId = Storage[$scope.practice.practice_type].templateId;
     $scope.report_fields = Storage[$scope.practice.practice_type].fields[$route.current.params.reportType];
@@ -44,11 +45,7 @@ angular.module('practiceMonitoringAssessmentApp')
           featureId: $scope.report.id,
           data: $scope.report
         }).then(function(response) {
-          //
-          // Refresh the page so that those things update appropriately.
-          //
-          $rootScope.page.refresh();
-
+          $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice_type);
         }).then(function(error) {
           // Do something with the error
         });
@@ -79,7 +76,6 @@ angular.module('practiceMonitoringAssessmentApp')
             storage: $scope.report_storage,
             featureId: $scope.report.id
           }).then(function(response) {
-			$scope.practice_type = Feature.MachineReadable($scope.practice.practice_type);
             $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice_type);
           });
 

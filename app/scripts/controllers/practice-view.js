@@ -161,7 +161,8 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.calculate.GetPercentageOfInstalled = function(field) {
 
       var planned_total = 0,
-          installed_total = 0;
+          installed_total = 0,
+          percentage = 0;
 
       // Get readings organized by their Type
       angular.forEach($scope.practice.readings, function(reading, $index) {
@@ -176,7 +177,14 @@ angular.module('practiceMonitoringAssessmentApp')
 
       });
 
-      return ((installed_total/planned_total)*100);
+      // Divide the Installed Total by the Planned Total to get a percentage of installed
+      if (planned_total >= 1) {
+        percentage = (installed_total/planned_total);
+        console.log(installed_total, '/', planned_total, '=', percentage);
+        return (percentage*100);
+      }
+
+      return null;
     };
 
     //
