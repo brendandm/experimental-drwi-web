@@ -46,6 +46,10 @@ angular
         land_river_segment = {
           templateId: 272,
           storage: 'type_f9d8609090494dac811e6a58eb8ef4be'
+        },
+        loaddata = {
+          templateId: 282,
+          storage: 'type_3fbea3190b634d0c9021d8e67df84187'
         };
 
     $routeProvider

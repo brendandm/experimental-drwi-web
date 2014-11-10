@@ -76,7 +76,7 @@ angular.module('practiceMonitoringAssessmentApp')
       'septic': 'septic',
       'combined sewer overflows': 'cso',
       'industrial-waste water treatment plants': 'indus'
-    }
+    };
 
     $scope.readings = {
       add: function(practice, readingType) {
@@ -270,7 +270,7 @@ angular.module('practiceMonitoringAssessmentApp')
               width: $scope.practice.readings[i].average_width_of_buffer
             };
 
-            total_area += (that.length*that.width)
+            total_area += (that.length*that.width);
           }
         }
 
