@@ -15,6 +15,7 @@
           </label>
 
           <select class="form-control" data-ng-model="report.measurement_period" id="measurement_period" name="measurement_period" data-ng-options="value for value in fields.measurement_period.options">
+            <option value="">Select a Measurement Period</option>
           </select>
 
           <p data-ng-if="fields.measurement_period.help" class="help-text">{{ fields.measurement_period.help }}</p>
