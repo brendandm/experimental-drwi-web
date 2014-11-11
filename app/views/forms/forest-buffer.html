@@ -111,7 +111,7 @@
               Buffer Composition (woody)
             </label>
 
-            <input data-ng-model="report.buffer_composition_woody" class="form-control" class="form-control" type="number" id="buffer_composition_woody" name="buffer_composition_woody" placeholder="% woody" />
+            <input data-ng-model="report.buffer_composition_woody" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_woody" name="buffer_composition_woody" placeholder="% woody" />
           </div>
 
           <!-- Buffer Composition (Shrub) -->
@@ -121,7 +121,7 @@
               Buffer Composition (shrub)
             </label>
 
-            <input data-ng-model="report.buffer_composition_shrub" class="form-control" class="form-control" type="number" id="buffer_composition_shrub" name="buffer_composition_shrub" placeholder="% shrub" />
+            <input data-ng-model="report.buffer_composition_shrub" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_shrub" name="buffer_composition_shrub" placeholder="% shrub" />
           </div>
         </div>
 
@@ -132,7 +132,7 @@
               Buffer Composition (grass)
             </label>
 
-            <input data-ng-model="report.buffer_composition_grass" class="form-control" class="form-control" type="number" id="buffer_composition_grass" name="buffer_composition_grass" placeholder="% grass" />
+            <input data-ng-model="report.buffer_composition_grass" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_grass" name="buffer_composition_grass" placeholder="% grass" />
           </div>
 
           <!-- Buffer Composition (Bare) -->
@@ -142,7 +142,7 @@
               Buffer Composition (bare)
             </label>
 
-            <input data-ng-model="report.buffer_composition_bare" class="form-control" class="form-control" type="number" id="buffer_composition_bare" name="buffer_composition_bare" placeholder="% bare" />
+            <input data-ng-model="report.buffer_composition_bare" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_bare" name="buffer_composition_bare" placeholder="% bare" />
           </div>
 
           <!-- Buffer Composition (Other) -->
@@ -152,7 +152,7 @@
               Buffer Composition (other)
             </label>
 
-            <input data-ng-model="report.buffer_composition_other" class="form-control" class="form-control" type="number" id="buffer_composition_other" name="buffer_composition_other" placeholder="% other" />
+            <input readonly="readonly" data-ng-model="report.buffer_composition_other" class="form-control" class="form-control" type="number" id="buffer_composition_other" name="buffer_composition_other" placeholder="% other" />
           </div>
         </div>
 

@@ -41,6 +41,31 @@ angular.module('practiceMonitoringAssessmentApp')
       $scope.report.type = $route.current.params.reportType;
       $scope.report.template = '/views/forms/forest-buffer.html'
 
+      //
+      // Watch the Tree Canopy Value, when it changes we need to update the lawn area value
+      //
+      $scope.calculateBufferComposition = function() {
+
+        var running_total = $scope.report.buffer_composition_woody + $scope.report.buffer_composition_shrub + $scope.report.buffer_composition_bare + $scope.report.buffer_composition_grass;
+
+        var remainder = 100-running_total;
+
+        $scope.report.buffer_composition_other = remainder;
+      };
+      $scope.$watch('report.buffer_composition_woody', function() {
+        $scope.calculateBufferComposition();
+      });
+      $scope.$watch('report.buffer_composition_shrub', function() {
+        $scope.calculateBufferComposition();
+      });
+      $scope.$watch('report.buffer_composition_bare', function() {
+        $scope.calculateBufferComposition();
+      });
+      $scope.$watch('report.buffer_composition_grass', function() {
+        $scope.calculateBufferComposition();
+      });
+
+
       $scope.report.save = function() {
         Feature.UpdateFeature({
           storage: $scope.report_storage,
