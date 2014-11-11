@@ -1,3 +1,14 @@
+      <div data-ng-if="!total.planning">
+        <h2><strong>Empty</strong> Summary</h2>
+
+        <p>No planning or measurement data has been added to this Practice yet. Please add a new Planning measurement period to this Practice to begin.</p>
+
+        <p>
+          <a class="button" data-ng-click="readings.add(practice, 'Planning')">Add Planning Data</a>
+        </p>
+      </div>
+
+      <div data-ng-if="total.planning || total.installation">
         <h2><strong>Installation</strong> Summary</h2>
 
         <table class="table">
@@ -42,8 +53,9 @@
             </tr>
           </tbody>  
         </table>
+      </div>
 
-
+      <div data-ng-if="total.planning || total.installation">
         <h2><strong>Load</strong> Reductions</h2>
         <table class="table">
           <thead>
@@ -103,7 +115,9 @@
             </tr>
           </tbody>  
         </table>
+      </div>
 
+      <div data-ng-if="total.planning || total.installation">
         <h2><strong>Chesapeake</strong> Bay Metrics</h2>
         <table class="table">
           <thead>
@@ -137,7 +151,9 @@
             </tr>
           </tbody>  
         </table>
+      </div>
 
+      <div data-ng-if="total.monitoring">
         <h2><strong>Interim</strong> BMP Metrics Data</h2>
         <table class="table">
           <thead>
@@ -215,7 +231,9 @@
 
           </tbody>  
         </table>
+      </div>
 
+      <div data-ng-if="total.monitoring">
         <h2><strong>Adaptive</strong> Management Checks Performed</h2>
         <table class="table">
           <thead>
@@ -273,7 +291,9 @@
             </tr>
           </tbody>  
         </table>
+      </div>
 
+      <div data-ng-if="total.planning || total.installation || total.monitoring">
         <h2><strong>Notes</strong></h2>
         <table class="table">
           <thead>
@@ -294,3 +314,4 @@
             </tr>
           </tbody>  
         </table>
+      </div>

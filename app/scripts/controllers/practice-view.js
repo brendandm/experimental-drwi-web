@@ -31,6 +31,25 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.user.feature = {};
     $scope.user.template = {};
 
+    $scope.GetTotal = function(period) {
+
+      var total = 0;
+
+      for (var i = 0; i < $scope.practice.readings.length; i++) {
+        if ($scope.practice.readings[i].measurement_period === period) {
+          total++;
+        }
+      }
+
+      return total;
+    };
+
+    $scope.total = {
+      planning: $scope.GetTotal('Planning'),
+      installation: $scope.GetTotal('Installation'),
+      monitoring: $scope.GetTotal('Monitoring')
+    }
+
     //
     // Load Land river segment details
     //
@@ -98,7 +117,7 @@ angular.module('practiceMonitoringAssessmentApp')
         Feature.CreateFeature({
           storage: $scope.reading_storage.storage,
           data: {
-            measurement_period: null,
+            measurement_period: (readingType) ? readingType : null,
             average_width_of_buffer: $scope.readings.bufferWidth(),
             report_date: moment().format('YYYY-MM-DD'),
             owner: $scope.user.id,
