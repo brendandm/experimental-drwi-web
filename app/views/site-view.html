@@ -15,13 +15,13 @@
                 {{ practice.practice_type }}
               </a>
             </h1>
-            <div class="thumbnails">
+            <div class="thumbnails" data-ng-if="practice.attachment_4513d48492f2485ebcdc3293a3c3695e.length">
               <h6>Installation Photos</h6>
               <div data-ng-repeat="image in practice.attachment_4513d48492f2485ebcdc3293a3c3695e" class="thumbnail">
                 <img ng-src="//{{ image.filepath }}" alt="" title="" />
               </div>
             </div>
-            <div class="thumbnails">
+            <div class="thumbnails" data-ng-if="practice.attachment_deeff980383d47b7869b626080388ec5.length">
               <h6>Mature Photos</h6>
               <div data-ng-repeat="image in practice.attachment_deeff980383d47b7869b626080388ec5" class="thumbnail">
                 <img ng-src="//{{ image.filepath }}" alt="" title="" />
