@@ -32,7 +32,7 @@
             <!-- List of readings order in chronological order by report date -->
             <tr data-ng-if="practice.readings.length" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
               <td>
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">{{ report.measurement_period }}</a>
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit"><span data-ng-if="!report.measurement_period">Undefined</span>{{ report.measurement_period }}</a>
                 <em class="supplemental">Report on {{ report.report_date | date:"MMM d, yyyy" }}</em>
               </td>
             </tr>

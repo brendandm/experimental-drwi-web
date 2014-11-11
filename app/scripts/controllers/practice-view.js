@@ -80,6 +80,13 @@ angular.module('practiceMonitoringAssessmentApp')
     };
 
     $scope.readings = {
+      bufferWidth: function() {
+        for (var i = 0; i < $scope.practice.readings.length; i++) {
+          if ($scope.practice.readings[i].measurement_period === 'Planning') {
+            return $scope.practice.readings[i].average_width_of_buffer;
+          }
+        }
+      },
       add: function(practice, readingType) {
         //
         // Creating a practice reading is a two step process.
@@ -92,6 +99,7 @@ angular.module('practiceMonitoringAssessmentApp')
           storage: $scope.reading_storage.storage,
           data: {
             measurement_period: null,
+            average_width_of_buffer: $scope.readings.bufferWidth(),
             report_date: moment().format('YYYY-MM-DD'),
             owner: $scope.user.id,
             status: 'private'
@@ -120,7 +128,6 @@ angular.module('practiceMonitoringAssessmentApp')
         });
       }
     };
-
 
     //
     // Setup basic page variables
@@ -217,6 +224,9 @@ angular.module('practiceMonitoringAssessmentApp')
                   }
                 ]
               }
+            },
+            headers: {
+              'Authorization': 'external'
             }
           }).success(function(data, status, headers, config) {
             planned.efficieny = data.response.features[0];
@@ -250,6 +260,9 @@ angular.module('practiceMonitoringAssessmentApp')
               }
             ]
           }
+        },
+        headers: {
+          'Authorization': 'external'
         }
       }).success(function(data, status, headers, config) {
         
