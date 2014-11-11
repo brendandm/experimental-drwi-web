@@ -51,7 +51,7 @@
             <span class="btn btn-default">Choose files to upload <input type="file" data-ng-file-select="onFileSelect($files, field.relationship)" multiple="multiple" /></span>
           </div>
 
-          <div class="row upload-list" data-ng-repeat="file in practice[fields.installation_photos.relationship] track by $index">
+          <div class="row upload-list" data-ng-repeat="file in practice[fields.mature_photos.relationship] track by $index">
             <div class="column-16 thumbnail align-center">
               <img data-ng-if="file.file.preview" data-ng-src="{{ file.file.preview }}" />
               <img data-ng-if="file.filepath" data-ng-src="http://{{ file.filepath }}" />

@@ -17,7 +17,11 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.fields = fields;
     $scope.project = project;
     $scope.practice = practice;
-    $scope.files = $scope.practice[$scope.fields.installation_photos.relationship];
+    console.log('$scope.practice', $scope.practice);
+    $scope.files = {};
+    $scope.files[$scope.fields.installation_photos.relationship] = $scope.practice[$scope.fields.installation_photos.relationship];
+    $scope.files[$scope.fields.mature_photos.relationship] = $scope.practice[$scope.fields.mature_photos.relationship];
+    console.log('files', $scope.files);
     $scope.practice_type = Feature.MachineReadable($scope.practice.practice_type);
 
     $scope.site = site;
@@ -92,7 +96,11 @@ angular.module('practiceMonitoringAssessmentApp')
 
         var fileData = new FormData();
 
-        angular.forEach($scope.files, function(file, index) {
+        angular.forEach($scope.files[$scope.fields.installation_photos.relationship], function(file, index) {
+          fileData.append(file.field, file.file);
+        });
+
+        angular.forEach($scope.files[$scope.fields.mature_photos.relationship], function(file, index) {
           fileData.append(file.field, file.file);
         });
 
@@ -102,13 +110,11 @@ angular.module('practiceMonitoringAssessmentApp')
         }, fileData).$promise.then(function(response) {
           console.log('Update fired', response);
           $scope.feature = response.response;
-
+          $route.reload();
           // $location.path('/applications/' + $scope.application.id + '/collections/' + $scope.template.id + '/features/' + $scope.feature.id);
         }, function(error) {
           console.log('Update failed!!!!', error);
         });
-
-        $rootScope.page.refresh();
 
       }).then(function(error) {
         // Do something with the error
@@ -149,13 +155,11 @@ angular.module('practiceMonitoringAssessmentApp')
 
     };
 
-    $scope.onFileRemove = function(file, index) {
-      $scope.files.splice(index, 1);
-    };
+    // $scope.onFileRemove = function(file, field_name, index) {
+    //   $scope.files[$scope.fields[field_name].relationship].splice(index, 1);
+    // };
 
     $scope.onFileSelect = function(files, field_name) {
-
-      console.log('field_name', field_name);
 
       angular.forEach(files, function(file, index) {
         // Check to see if we can load previews
@@ -165,12 +169,11 @@ angular.module('practiceMonitoringAssessmentApp')
           fileReader.readAsDataURL(file);
           fileReader.onload = function (event) {
             file.preview = event.target.result;
-            $scope.files.push({
+            $scope.files[field_name].push({
               'field': field_name,
               'file': file
             });
             $scope.$apply();
-            console.log('files', $scope.files);
           };
         } else {
           $scope.files.push({
@@ -178,15 +181,12 @@ angular.module('practiceMonitoringAssessmentApp')
             'file': file
           });
           $scope.$apply();
-          console.log('files', $scope.files);
         }
       });
 
     };
 
     $scope.DeleteAttachment = function(file, $index, attachment_storage) {
-
-      console.log('attachment_storage', attachment_storage);
 
       $scope.practice[attachment_storage].splice($index, 1);
 
