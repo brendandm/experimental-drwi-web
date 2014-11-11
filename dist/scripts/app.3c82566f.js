@@ -22,7 +22,7 @@ angular
     'angular-loading-bar',
     'monospaced.elastic',
     'angular-medium-editor',
-    'angularMoment',
+    'angularMoment'
   ])
   .config(['$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
 
