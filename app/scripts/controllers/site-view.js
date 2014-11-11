@@ -22,6 +22,8 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.user.feature = {};
     $scope.user.template = {};
 
+    console.log('practices', practices);
+
     $scope.site = site;
     $scope.site.practices = {
       list: practices,
@@ -30,7 +32,13 @@ angular.module('practiceMonitoringAssessmentApp')
         // Get a clean practice type for all practices
         //
         angular.forEach($scope.site.practices.list, function(practice, $index) {
-          $scope.site.practices.list[$index].clean_practice_type = Feature.MachineReadable(practice.practice_type);
+          Feature.GetFeature({
+            storage: variables.practice.storage,
+            featureId: practice.id           
+          }).then(function(response) {
+            $scope.site.practices.list[$index] = response;
+            $scope.site.practices.list[$index].clean_practice_type = Feature.MachineReadable(practice.practice_type);
+          });
         });
       },
       create: function() {
