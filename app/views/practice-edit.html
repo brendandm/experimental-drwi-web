@@ -24,7 +24,7 @@
             <span class="glyphicon glyphicon-cloud-upload upload"></span>
             <p class="label-dragdrop">Drag and drop your files here</p>
             <p class="label-or"><em>or</em></p>
-            <span class="btn btn-default">Choose files to upload <input type="file" data-ng-file-select="onFileSelect($files, field.relationship)" multiple="multiple" /></span>
+            <span class="btn btn-default">Choose files to upload <input type="file" data-ng-file-select="onFileSelect($files, fields.installation_photos.relationship)" multiple="multiple" /></span>
           </div>
 
           <div class="row upload-list" data-ng-repeat="file in practice[fields.installation_photos.relationship] track by $index">
@@ -48,7 +48,7 @@
             <span class="glyphicon glyphicon-cloud-upload upload"></span>
             <p class="label-dragdrop">Drag and drop your files here</p>
             <p class="label-or"><em>or</em></p>
-            <span class="btn btn-default">Choose files to upload <input type="file" data-ng-file-select="onFileSelect($files, field.relationship)" multiple="multiple" /></span>
+            <span class="btn btn-default">Choose files to upload <input type="file" data-ng-file-select="onFileSelect($files, fields.mature_photos.relationship)" multiple="multiple" /></span>
           </div>
 
           <div class="row upload-list" data-ng-repeat="file in practice[fields.mature_photos.relationship] track by $index">
