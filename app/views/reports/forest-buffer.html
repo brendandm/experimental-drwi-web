@@ -66,7 +66,7 @@
               <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_buffer, report.average_width_of_buffer, 'nitrogen') | number:2"></span>
               </td>
-              <td>{{ calculate.results.totalInstalledLoad.nitrogen | number:2 }}</td>
+              <td><strong>{{ calculate.results.totalInstalledLoad.nitrogen | number:2 }}</strong> lbs/yr</td>
               <td>
                 <strong>
                   <span data-ng-bind="calculate.GetPercentage(calculate.results.totalInstalledLoad.nitrogen, calculate.results.totalPlannedLoad.nitrogen) | number:2"></span>%
@@ -80,7 +80,7 @@
               <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_buffer, report.average_width_of_buffer, 'phosphorus') | number:2"></span>
               </td>
-              <td>{{ calculate.results.totalInstalledLoad.phosphorus | number:2 }}</td>
+              <td><strong>{{ calculate.results.totalInstalledLoad.phosphorus | number:2 }}</strong> lbs/yr</td>
               <td>
                 <strong>
                   <span data-ng-bind="calculate.GetPercentage(calculate.results.totalInstalledLoad.phosphorus, calculate.results.totalPlannedLoad.phosphorus) | number:2"></span>%
@@ -94,7 +94,7 @@
               <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_buffer, report.average_width_of_buffer, 'sediment') | number:2"></span>
               </td>
-              <td>{{ calculate.results.totalInstalledLoad.sediment | number:2 }}</td>
+              <td><strong>{{ calculate.results.totalInstalledLoad.sediment | number:2 }}</strong> tons/yr</td>
               <td>
                 <strong>
                   <span data-ng-bind="calculate.GetPercentage(calculate.results.totalInstalledLoad.sediment, calculate.results.totalPlannedLoad.sediment) | number:2"></span>%
@@ -124,18 +124,16 @@
               <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 <span data-ng-bind="calculate.GetConversion(report.length_of_buffer, 5280) | number:2"></span>
               </td>
-              <td>
-              </td>
-              <td>
-              </td>
+              <td><strong>{{ calculate.results.totalMilesRestored | number:2 }}</strong> miles</td>
+              <td><strong>{{ calculate.results.percentageMilesRestored | number:2 }}%</strong></td>
             </tr>
             <tr>
               <th>Acres of Riparian Restoration</th>
               <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 <span data-ng-bind="calculate.GetConversionWithArea(report.length_of_buffer, report.average_width_of_buffer, 43560) | number:2"></span>
               </td>
-              <td></td>
-              <td></td>
+              <td><strong>{{ calculate.results.totalAcresRestored | number:2 }}</strong> acres</td>
+              <td><strong>{{ calculate.results.percentageAcresRestored | number:2 }}%</strong></td>
             </tr>
           </tbody>  
         </table>

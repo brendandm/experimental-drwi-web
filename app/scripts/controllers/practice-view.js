@@ -425,6 +425,48 @@ angular.module('practiceMonitoringAssessmentApp')
       return ((length*width)/total);
     };
 
+    $scope.calculate.GetRestorationTotal = function(unit, area) {
+
+      var total_area = 0;
+
+      for (var i = 0; i < $scope.practice.readings.length; i++) {
+        if ($scope.practice.readings[i].measurement_period === 'Installation') {
+          if (area) {
+            total_area += ($scope.practice.readings[i].length_of_buffer*$scope.practice.readings[i].average_width_of_buffer);
+          } else {
+            total_area += $scope.practice.readings[i].length_of_buffer;
+          }
+        }
+      }
+
+      console.log('GetRestorationTotal', total_area, unit, (total_area/unit));
+
+
+      return (total_area/unit);
+    };
+
+    $scope.calculate.GetRestorationPercentage = function(unit, area) {
+
+      var planned_area = 0,
+          total_area = $scope.calculate.GetRestorationTotal(unit, area);
+
+      for (var i = 0; i < $scope.practice.readings.length; i++) {
+        if ($scope.practice.readings[i].measurement_period === 'Planning') {
+          if (area) {
+            planned_area = ($scope.practice.readings[i].length_of_buffer*$scope.practice.readings[i].average_width_of_buffer);
+          } else {
+            planned_area = $scope.practice.readings[i].length_of_buffer;
+          }
+        }
+      }
+
+      planned_area = (planned_area/unit);
+
+      console.log(total_area, planned_area, (total_area/planned_area));
+
+      return ((total_area/planned_area)*100);
+    };
+
     //
     // Scope elements that run the actual equations and send them back to the user interface for display
     //
@@ -439,9 +481,12 @@ angular.module('practiceMonitoringAssessmentApp')
       },
       totalPreInstallationLoad: $scope.calculate.GetPreInstallationLoad('Planning'),
       totalPlannedLoad: $scope.calculate.GetPlannedLoad('Planning'),
-      totalInstalledLoad: $scope.calculate.GetInstalledLoad('Installation')
+      totalInstalledLoad: $scope.calculate.GetInstalledLoad('Installation'),
+      totalMilesRestored: $scope.calculate.GetRestorationTotal(5280),
+      percentageMilesRestored: $scope.calculate.GetRestorationPercentage(5280, false),
+      totalAcresRestored: $scope.calculate.GetRestorationTotal(43560, true),
+      percentageAcresRestored: $scope.calculate.GetRestorationPercentage(43560, true),
     };
-
 
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
