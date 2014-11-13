@@ -224,7 +224,7 @@ angular.module('practiceMonitoringAssessmentApp')
         if ($scope.practice.readings[i].measurement_period === period) {
           planned.length = $scope.practice.readings[i].length_of_buffer;
           planned.width = $scope.practice.readings[i].average_width_of_buffer;
-          planned.area = (planned.length*planned.width);
+          planned.area = ((planned.length*planned.width)/43560);
           planned.landuse = (landuse) ? landuse : $scope.landuse[$scope.practice.readings[i].existing_riparian_landuse.toLowerCase()];
 
           var promise = $http.get('//api.commonscloud.org/v2/type_3fbea3190b634d0c9021d8e67df84187.json', {
@@ -302,7 +302,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
         deferred.resolve({
           efficieny: efficieny,
-          area: total_area
+          area: (total_area/43560)
         });
       });
 
@@ -412,7 +412,7 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.calculate.GetSingleInstalledLoad = function(length, width, element) {
 
         var efficieny = $scope.practice_efficiency,
-            area = (length*width),
+            area = ((length*width)/43560),
             value = null;
 
         console.log('efficieny', efficieny);

@@ -38,7 +38,30 @@ th {
   font-weigth: 300;
   line-height: 1.42857143;
   padding: 8px;
+  text-align: right;
   vertical-align: top;
+
+  h2 {
+    text-align: left;
+    font-size: 1.3em !important;
+  }
+
+  &.align-left {
+    text-align: left;
+  }
+
+  &.align-center {
+    text-align: center;
+  }
+}
+
+.table > thead > tr.no-rule > th,
+.table > tbody > tr.no-rule > th,
+.table > tfoot > tr.no-rule > th,
+.table > thead > tr.no-rule > td,
+.table > tbody > tr.no-rule > td,
+.table > tfoot > tr.no-rule > td {
+  border-top: 0 !important;
 }
 
 .table > thead > tr > th {
