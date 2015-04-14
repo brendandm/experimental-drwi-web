@@ -128,6 +128,7 @@ angular.module('practiceMonitoringAssessmentApp')
           storage: $scope.storage.storage,
           data: {
             measurement_period: (readingType) ? readingType : null,
+            average_width_of_buffer: $scope.readings.bufferWidth(),
             report_date: moment().format('YYYY-MM-DD'),
             owner: $scope.user.id,
             status: 'private'
@@ -274,6 +275,8 @@ angular.module('practiceMonitoringAssessmentApp')
           planned.width = $scope.practice.readings[i].average_width_of_buffer;
           planned.area = ((planned.length*planned.width)/43560);
           planned.landuse = (landuse) ? landuse : $scope.landuse[$scope.practice.readings[i].existing_riparian_landuse.toLowerCase()];
+
+          console.log('planned', planned)
 
           var promise = $http.get('//api.commonscloud.org/v2/type_3fbea3190b634d0c9021d8e67df84187.json', {
             params: {
@@ -499,7 +502,7 @@ angular.module('practiceMonitoringAssessmentApp')
       for (var i = 0; i < $scope.practice.readings.length; i++) {
         if ($scope.practice.readings[i].measurement_period === 'Installation') {
           if (area) {
-            total_area += ($scope.practice.readings[i].length_of_buffer*$scope.practice.readings[i].average_width_of_buffer);
+            total_area += ($scope.practice.readings[i].length_of_buffer*$scope.practice.readings[i].av);
           } else {
             total_area += $scope.practice.readings[i].length_of_buffer;
           }
