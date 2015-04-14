@@ -20,19 +20,20 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.project = project;
     $scope.practice = practice;
     $scope.practice_type = Feature.MachineReadable($scope.practice.practice_type);
-    $scope.report_storage = Storage[$scope.practice.practice_type].storage;
-    $scope.report_templateId = Storage[$scope.practice.practice_type].templateId;
+
+    $scope.storage = Storage[$scope.practice.practice_type];
+
     $scope.report_fields = Storage[$scope.practice.practice_type].fields[$route.current.params.reportType];
 
 
     console.log('Storage[$scope.practice.practice_type]', Storage[$scope.practice.practice_type]);
 
-    Field.GetPreparedFields($scope.report_templateId, 'object').then(function(response) {
+    Field.GetPreparedFields($scope.storage.templateId, 'object').then(function(response) {
       $scope.fields = response;
     });
 
     Feature.GetFeature({
-      storage: $scope.report_storage,
+      storage: $scope.storage.storage,
       featureId: $route.current.params.reportId
     }).then(function(report) {
 
@@ -41,7 +42,7 @@ angular.module('practiceMonitoringAssessmentApp')
       //
       $scope.report = report;
       $scope.report.type = $route.current.params.reportType;
-      $scope.report.template = '/views/forms/forest-buffer.html';
+      $scope.report.template = $scope.storage.templates.form;
 
       //
       // Watch the Tree Canopy Value, when it changes we need to update the lawn area value
@@ -70,7 +71,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
       $scope.report.save = function() {
         Feature.UpdateFeature({
-          storage: $scope.report_storage,
+          storage: $scope.storage.storage,
           featureId: $scope.report.id,
           data: $scope.report
         }).then(function(response) {
@@ -86,9 +87,9 @@ angular.module('practiceMonitoringAssessmentApp')
         // Before we can remove the Practice we need to remove the relationship it has with the Site
         //
         //
-        angular.forEach($scope.practice[$scope.report_storage], function(feature, $index) {
+        angular.forEach($scope.practice[$scope.storage.storage], function(feature, $index) {
           if (feature.id === $scope.report.id) {
-            $scope.practice[$scope.report_storage].splice($index, 1);
+            $scope.practice[$scope.storage.storage].splice($index, 1);
           }
         });
 
@@ -102,7 +103,7 @@ angular.module('practiceMonitoringAssessmentApp')
           // Now that the Project <> Site relationship has been removed, we can remove the Site
           //
           Feature.DeleteFeature({
-            storage: $scope.report_storage,
+            storage: $scope.storage.storage,
             featureId: $scope.report.id
           }).then(function(response) {
             $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice_type);
@@ -214,7 +215,7 @@ angular.module('practiceMonitoringAssessmentApp')
       $scope.user.owner = true;
     } else {
       Template.GetTemplateUser({
-        storage: $scope.report_storage,
+        storage: $scope.storage.storage,
         templateId: $scope.template.id,
         userId: $scope.user.id
       }).then(function(response) {
@@ -227,7 +228,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
           Feature.GetFeatureUser({
-            storage: $scope.report_storage,
+            storage: $scope.storage.storage,
             featureId: $scope.report.id,
             userId: $scope.user.id
           }).then(function(response) {

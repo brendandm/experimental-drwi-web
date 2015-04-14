@@ -21,7 +21,10 @@ angular.module('practiceMonitoringAssessmentApp')
           Installation: [],
           Monitoring: []
         },
-        template: 'views/reports/forest-buffer.html'
+        templates: {
+          report: '/views/reports/forest-buffer.html',
+          form: '/views/forms/forest-buffer.html'
+        }
       },
       'Grass Buffer': {
         storage: 'type_a1ee0564f2f94eda9c0ca3d6c277cf14',
@@ -33,7 +36,10 @@ angular.module('practiceMonitoringAssessmentApp')
           Installation: [],
           Monitoring: []
         },
-        template: 'views/reports/grass-buffer.html'
+        templates: {
+          report: '/views/reports/grass-buffer.html',
+          form: '/views/forms/grass-buffer.html'
+        }
       }      
     };
 

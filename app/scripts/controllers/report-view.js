@@ -17,10 +17,10 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.fields = fields;
     $scope.project = project;
     $scope.practice = practice;
-    $scope.report_storage = Storage[$scope.practice.practice_type].storage;
+    $scope.storage = Storage[$scope.practice.practice_type];
 
     Feature.GetFeature({
-      storage: $scope.report_storage,
+      storage: $scope.storage.storage,
       featureId: $route.current.params.reportId
     }).then(function(report) {
 
@@ -90,7 +90,7 @@ angular.module('practiceMonitoringAssessmentApp')
       $scope.user.owner = true;
     } else {
       Template.GetTemplateUser({
-        storage: $scope.report_storage,
+        storage: $scope.storage.storage,
         templateId: $scope.template.id,
         userId: $scope.user.id
       }).then(function(response) {
@@ -103,7 +103,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
           Feature.GetFeatureUser({
-            storage: $scope.report_storage,
+            storage: $scope.storage.storage,
             featureId: $scope.report.id,
             userId: $scope.user.id
           }).then(function(response) {

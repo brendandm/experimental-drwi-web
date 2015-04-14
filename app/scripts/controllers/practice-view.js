@@ -24,7 +24,9 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.practice.readings = readings;
     $scope.practice_efficiency = null;
 
-    $scope.reading_storage = Storage[$scope.practice.practice_type];
+    console.log('Raw readings', readings)
+
+    $scope.storage = Storage[$scope.practice.practice_type];
 
     $scope.user = user;
     $scope.user.owner = false;
@@ -49,6 +51,14 @@ angular.module('practiceMonitoringAssessmentApp')
       installation: $scope.GetTotal('Installation'),
       monitoring: $scope.GetTotal('Monitoring')
     };
+
+    $scope.$watch('total', function(new_value) {
+      console.log('total', new_value);
+    }, true);
+
+    $scope.$watch('practice', function(new_value) {
+      console.log('practice', new_value);
+    }, true);
 
     //
     // Load Land river segment details
@@ -115,10 +125,9 @@ angular.module('practiceMonitoringAssessmentApp')
         //  2. Update the Practice to create a relationship with the Reading created in step 1 
         //
         Feature.CreateFeature({
-          storage: $scope.reading_storage.storage,
+          storage: $scope.storage.storage,
           data: {
             measurement_period: (readingType) ? readingType : null,
-            average_width_of_buffer: $scope.readings.bufferWidth(),
             report_date: moment().format('YYYY-MM-DD'),
             owner: $scope.user.id,
             status: 'private'
@@ -126,7 +135,7 @@ angular.module('practiceMonitoringAssessmentApp')
         }).then(function(reportId) {
 
           var data = {};
-          data[$scope.reading_storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
+          data[$scope.storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
 
           //
           // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
@@ -155,7 +164,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //  2. Update the Practice to create a relationship with the Reading created in step 1 
         //
         Feature.CreateFeature({
-          storage: $scope.reading_storage.storage,
+          storage: $scope.storage.storage,
           data: {
             measurement_period: (readingType) ? readingType : null,
             report_date: moment().format('YYYY-MM-DD'),
@@ -165,7 +174,7 @@ angular.module('practiceMonitoringAssessmentApp')
         }).then(function(reportId) {
 
           var data = {};
-          data[$scope.reading_storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
+          data[$scope.storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
 
           //
           // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
