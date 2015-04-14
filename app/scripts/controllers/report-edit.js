@@ -16,7 +16,6 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.template = template;
 
     $scope.report = {};
-    $scope.report
 
     $scope.project = project;
     $scope.practice = practice;
@@ -39,7 +38,7 @@ angular.module('practiceMonitoringAssessmentApp')
       //
       $scope.report = report;
       $scope.report.type = $route.current.params.reportType;
-      $scope.report.template = '/views/forms/forest-buffer.html'
+      $scope.report.template = '/views/forms/forest-buffer.html';
 
       //
       // Watch the Tree Canopy Value, when it changes we need to update the lawn area value
