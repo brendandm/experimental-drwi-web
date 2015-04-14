@@ -48,7 +48,7 @@ angular.module('practiceMonitoringAssessmentApp')
       planning: $scope.GetTotal('Planning'),
       installation: $scope.GetTotal('Installation'),
       monitoring: $scope.GetTotal('Monitoring')
-    }
+    };
 
     //
     // Load Land river segment details

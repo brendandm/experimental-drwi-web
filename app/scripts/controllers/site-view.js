@@ -231,10 +231,12 @@ angular.module('practiceMonitoringAssessmentApp')
           //
           // Draw the county
           //          
-          $scope.map.drawPolygon({
-            type: 'Feature',
-            geometry: $scope.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].geometry
-          }, true);
+          if ($scope.site.type_b1baa10ba3ce493d90581a864ec95dc8.length) {
+            $scope.map.drawPolygon({
+              type: 'Feature',
+              geometry: $scope.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].geometry
+            }, true);
+          }
 
         }
       }

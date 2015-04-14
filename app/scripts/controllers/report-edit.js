@@ -24,6 +24,9 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.report_templateId = Storage[$scope.practice.practice_type].templateId;
     $scope.report_fields = Storage[$scope.practice.practice_type].fields[$route.current.params.reportType];
 
+
+    console.log('Storage[$scope.practice.practice_type]', Storage[$scope.practice.practice_type]);
+
     Field.GetPreparedFields($scope.report_templateId, 'object').then(function(response) {
       $scope.fields = response;
     });
