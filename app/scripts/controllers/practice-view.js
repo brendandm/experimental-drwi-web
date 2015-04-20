@@ -381,7 +381,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.calculate.GetPlannedLoad = function(period) {
 
-      $scope.calculate.GetLoadVariables(period, 'for').then(function(loaddata) {
+      $scope.calculate.GetLoadVariables(period, $scope.storage.landuse).then(function(loaddata) {
 
         console.log('GetPlannedLoad', loaddata);
 
@@ -401,7 +401,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.calculate.GetInstalledLoad = function(period) {
 
-      $scope.calculate.GetInstalledLoadVariables(period, 'for').then(function(loaddata) {
+      $scope.calculate.GetInstalledLoadVariables(period, $scope.storage.landuse).then(function(loaddata) {
 
         console.log('GetInstalledLoad', loaddata);
 

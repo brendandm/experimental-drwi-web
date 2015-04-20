@@ -12,6 +12,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     return {
       'Forest Buffer': {
+        landuse: 'for',
         storage: 'type_ed657deb908b483a9e96d3a05e420c50',
         templateId: 141,
         fields: {
@@ -27,6 +28,7 @@ angular.module('practiceMonitoringAssessmentApp')
         }
       },
       'Grass Buffer': {
+        landuse: 'hyo',
         storage: 'type_a1ee0564f2f94eda9c0ca3d6c277cf14',
         templateId: 373,
         fields: {
