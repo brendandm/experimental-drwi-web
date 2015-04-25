@@ -9,7 +9,7 @@
  */
 angular.module('practiceMonitoringAssessmentApp')
   .constant('Storage', {
-    'Forest Buffer': {
+    'forest-buffer': {
       landuse: 'for',
       storage: 'type_ed657deb908b483a9e96d3a05e420c50',
       templateId: 141,
@@ -23,7 +23,7 @@ angular.module('practiceMonitoringAssessmentApp')
         form: '/modules/components/practices/modules/forest-buffer/views/form--view.html'
       }
     },
-    'Grass Buffer': {
+    'grass-buffer': {
       landuse: 'hyo',
       storage: 'type_a1ee0564f2f94eda9c0ca3d6c277cf14',
       templateId: 373,

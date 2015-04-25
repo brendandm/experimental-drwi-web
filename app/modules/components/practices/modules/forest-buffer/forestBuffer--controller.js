@@ -2,13 +2,15 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:PracticeViewCtrl
+ * @name practiceMonitoringAssessmentApp.controller:ForestBufferController
  * @description
- * # PracticeViewCtrl
+ * # ForestBufferController
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('PracticeViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage) {
+  .controller('ForestBufferController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage) {
+
+    console.log('$route.current.params', $route.current.params)
 
     //
     // Assign project to a scoped variable
@@ -20,11 +22,11 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.fields = fields;
     
     $scope.practice = practice;
-    $scope.practice_type = Feature.MachineReadable($scope.practice.practice_type);
+    $scope.practice_type = 'forest-buffer';
     $scope.practice.readings = readings;
     $scope.practice_efficiency = null;
 
-    $scope.storage = Storage[$scope.practice.practice_type];
+    $scope.storage = Storage['forest-buffer'];
 
     $scope.user = user;
     $scope.user.owner = false;

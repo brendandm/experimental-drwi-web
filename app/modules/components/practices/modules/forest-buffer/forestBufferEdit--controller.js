@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:PracticeEditCtrl
+ * @name practiceMonitoringAssessmentApp.controller:ForestBufferEditController
  * @description
- * # PracticeEditCtrl
+ * # ForestBufferEditController
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('PracticeEditCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Attachment', 'Feature', 'Template', 'template', 'fields', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Attachment, Feature, Template, template, fields, project, site, practice, commonscloud
+  .controller('ForestBufferEditController', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Attachment', 'Feature', 'Template', 'template', 'fields', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Attachment, Feature, Template, template, fields, project, site, practice, commonscloud
     ) {
 
     //
