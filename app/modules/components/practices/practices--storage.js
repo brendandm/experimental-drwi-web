@@ -39,8 +39,8 @@ angular.module('practiceMonitoringAssessmentApp')
     },
     'livestock-exclusion': {
       landuse: 'hyo',
-      storage: 'type_0428c51c6325438c80029bcd539abf4f',
-      templateId: 143,
+      storage: 'type_035455995db040158f5a4a107b5d8a6c',
+      templateId: 375,
       fields: {
         Planning: [],
         Installation: [],

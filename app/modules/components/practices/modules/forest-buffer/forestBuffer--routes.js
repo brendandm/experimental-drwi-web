@@ -55,7 +55,7 @@ angular.module('practiceMonitoringAssessmentApp')
           }
         }
       })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/forest-buffer/:reportId/edit', {
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/forest-buffer/edit', {
         templateUrl: '/modules/shared/default.html',
         controller: 'ForestBufferReadingController',
         resolve: {

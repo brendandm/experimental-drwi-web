@@ -22,8 +22,6 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.user.feature = {};
     $scope.user.template = {};
 
-    console.log('practices', practices);
-
     $scope.site = site;
     $scope.site.practices = {
       list: practices,
@@ -58,8 +56,6 @@ angular.module('practiceMonitoringAssessmentApp')
             status: 'private'
           }
         }).then(function(practiceId) {
-
-          console.log('practiceId', practiceId);
           //
           // Create the relationship with the parent, Project, to ensure we're doing this properly we need
           // to submit all relationships that are created and should remain. If we only submit the new
@@ -72,7 +68,7 @@ angular.module('practiceMonitoringAssessmentApp')
               type_77f5c44516674e8da2532939619759dd: $scope.GetAllChildren(practiceId),
             }
           }).then(function(response) {
-            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + practiceId + '/forest-buffer/edit');
+            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + practiceId + '/edit');
           });
         });
       }

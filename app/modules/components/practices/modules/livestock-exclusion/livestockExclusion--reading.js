@@ -8,8 +8,9 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('LivestockExclusionEditController', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Attachment', 'Feature', 'Template', 'template', 'fields', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Attachment, Feature, Template, template, fields, project, site, practice, commonscloud
-    ) {
+  .controller('LivestockExclusionEditController', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Attachment', 'Feature', 'Template', 'template', 'fields', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Attachment, Feature, Template, template, fields, project, site, practice, commonscloud) {
+
+    console.log()
 
     //
     // Assign project to a scoped variable
@@ -36,7 +37,7 @@ angular.module('practiceMonitoringAssessmentApp')
     // Setup basic page variables
     //
     $rootScope.page = {
-      template: '/modules/components/practices/views/practices--edit.html',
+      template: '/modules/components/practices/views/practices--reading.html',
       title: $scope.site.site_number,
       links: [
         {
