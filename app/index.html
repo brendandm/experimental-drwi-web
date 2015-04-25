@@ -20,11 +20,11 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) /styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="/bower_components/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.css" />
-    <link rel="stylesheet" href="/bower_components/angular-loading-bar/build/loading-bar.css" />
-    <link rel="stylesheet" href="/bower_components/medium-editor/dist/css/medium-editor.css" />
-    <link rel="stylesheet" href="/bower_components/medium-editor/dist/css/themes/default.css" />
+    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
+    <link rel="stylesheet" href="bower_components/medium-editor/dist/css/medium-editor.css" />
+    <link rel="stylesheet" href="bower_components/medium-editor/dist/css/themes/default.css" />
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -106,50 +106,70 @@
         <script src="modules/app--module.js"></script>
         <script src="modules/app--routes.js"></script>
 
-        <!-- Controllers -->
-        <script src="modules/shared/security/security--routes.js"></script>
-        <script src="modules/shared/security/securityAuthorize--controller.js"></script>
-        <script src="modules/shared/security/securityLogin--controller.js"></script>
-        <script src="modules/shared/security/securityLogout--controller.js"></script>
-        <script src="modules/shared/security/security--interceptor.js"></script>
-        <script src="modules/shared/security/token--service.js"></script>
+            <!-- Security Module -->
+            <script src="modules/shared/security/security--routes.js"></script>
+            <script src="modules/shared/security/securityAuthorize--controller.js"></script>
+            <script src="modules/shared/security/securityLogin--controller.js"></script>
+            <script src="modules/shared/security/securityLogout--controller.js"></script>
+            <script src="modules/shared/security/security--interceptor.js"></script>
+            <script src="modules/shared/security/token--service.js"></script>
 
-        <script src="modules/components/projects/projects.js"></script>
-        <script src="modules/components/projects/project-view.js"></script>
-        <script src="modules/components/projects/project-edit.js"></script>
-        <script src="modules/components/projects/project-users.js"></script>
+            <!-- Projects Module -->
+            <script src="modules/components/projects/projects--routes.js"></script>
+            <script src="modules/components/projects/projects--list.js"></script>
+            <script src="modules/components/projects/projects--view.js"></script>
+            <script src="modules/components/projects/projects--edit.js"></script>
+            <script src="modules/components/projects/projects--users.js"></script>
 
-        <script src="modules/components/sites/site-view.js"></script>
-        <script src="modules/components/sites/site-edit.js"></script>
+            <!-- Sites Module -->
+            <script src="modules/components/sites/sites--routes.js"></script>
+            <script src="modules/components/sites/sites--view.js"></script>
+            <script src="modules/components/sites/sites--edit.js"></script>
 
-        <script src="modules/components/practices/practice-view.js"></script>
-        <script src="modules/components/practices/practice-edit.js"></script>
+            <!-- Practices Module -->
+            <script src="modules/components/practices/practices--routes.js"></script>
+            <script src="modules/components/practices/practices--view.js"></script>
+            <script src="modules/components/practices/practices--edit.js"></script>
+            <script src="modules/components/practices/practices--storage.js"></script>
 
-        <script src="modules/components/reports/report-view.js"></script>
-        <script src="modules/components/reports/report-edit.js"></script>
+                <!-- Forest Buffer -->
 
-        <!-- Services -->
-        <script src="modules/shared/services/site.js"></script>
-        <script src="modules/shared/services/navigation.js"></script>
-        <script src="modules/shared/services/storage.js"></script>
+                <!-- Grass Buffer -->
 
-        <!-- Providers -->
-        <script src="modules/shared/api/application.js"></script>
-        <script src="modules/shared/api/attachment.js"></script>
-        <script src="modules/shared/api/feature.js"></script>
-        <script src="modules/shared/api/field.js"></script>
-        <script src="modules/shared/api/template.js"></script>
-        <script src="modules/shared/api/user.js"></script>
+                <!-- Livestock Exclusion -->
 
-        <!-- Factories -->
+            <script src="modules/components/reports/reports--routes.js"></script>
+            <script src="modules/components/reports/reports--view.js"></script>
+            <script src="modules/components/reports/reports--edit.js"></script>
 
-        <!-- Directives -->
-        <script src="modules/shared/directives/imageResize.js"></script>
-        <script src="modules/shared/directives/relationship.js"></script>
+            <!-- CommonsCloud Module -->
+            <script src="modules/shared/commons-cloud/configuration--constant.js"></script>
+            <script src="modules/shared/commons-cloud/geometry--service.js"></script>
+            <script src="modules/shared/commons-cloud/map--service.js"></script>
 
-        <!-- Filters -->
-        <script src="modules/shared/filters/filter--toArray.js"></script>
-        <!-- endbuild -->
+            <!-- Mapbox Module -->
+            <script src="modules/shared/mapbox/geocoding--directive.js"></script>
+            <script src="modules/shared/mapbox/geocoding--service.js"></script>
+            <script src="modules/shared/mapbox/mapbox--constant.js"></script>
+
+            <!-- Providers -->
+            <script src="modules/shared/api/application.js"></script>
+            <script src="modules/shared/api/attachment.js"></script>
+            <script src="modules/shared/api/feature.js"></script>
+            <script src="modules/shared/api/field.js"></script>
+            <script src="modules/shared/api/template.js"></script>
+            <script src="modules/shared/api/user.js"></script>
+
+            <!-- Factories -->
+
+            <!-- Directives -->
+            <script src="modules/shared/directives/imageResize.js"></script>
+            <script src="modules/shared/directives/relationship/relationship.js"></script>
+
+            <!-- Filters -->
+            <script src="modules/shared/filters/toAcres--filter.js"></script>
+            <script src="modules/shared/filters/toArray--filter.js"></script>
+            <!-- endbuild -->
 
   </body>
 

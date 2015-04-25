@@ -16,7 +16,7 @@ angular.module('practiceMonitoringAssessmentApp')
     // Setup basic page variables
     //
     $scope.page = {
-      template: '/views/index.html',
+      template: '/modules/shared/security/views/securityLogin--view.html',
       title: 'NFWF Grant Monitoring and Assessment',
       header: {
         hidden: true

@@ -13,7 +13,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $routeProvider
       .when('/', {
-        templateUrl: '/views/main.html',
+        templateUrl: '/modules/shared/default.html',
         controller: 'SecurityLogin',
         resolve: {
           user: function(User) {
