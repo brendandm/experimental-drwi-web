@@ -21,7 +21,7 @@
               <th>&nbsp;</th>
               <th>&nbsp;</th> <!-- Empty because of Pre-BMP Load -->
               <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/forest-buffer/{{ report.id }}/edit">
                   <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
                   <span data-ng-if="report.measurement_period === 'Installation'">Installed</span>
                   <br />
@@ -73,7 +73,7 @@
               <th>&nbsp;</th>
               <th>Pre-BMP Load</th>
               <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/forest-buffer/{{ report.id }}/edit">
                   <span data-ng-if="report.measurement_period === 'Planning'">Planned Reduction</span><span data-ng-if="report.measurement_period === 'Installation'">Installed Reduction</span><br />
                   {{ report.report_date }}                  
                 </a>
@@ -135,7 +135,7 @@
               <th>&nbsp;</th>
               <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
               <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/forest-buffer/{{ report.id }}/edit">
                   <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
                   <span data-ng-if="report.measurement_period === 'Installation'">Installed</span>
                   <br />
@@ -180,7 +180,7 @@
             <tr>
               <th>&nbsp;</th>
               <th data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/forest-buffer/{{ report.id }}/edit">
                   Monitored on<br />
                   {{ report.report_date }}
                 </a>
@@ -258,7 +258,7 @@
             <tr>
               <th>&nbsp;</th>
               <th data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/forest-buffer/{{ report.id }}/edit">
                   Monitored on<br />
                   {{ report.report_date }}
                 </a>
@@ -323,7 +323,7 @@
           <tbody>
             <tr data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
               <td class="align-left">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/forest-buffer/{{ report.id }}/edit">
                   {{ report.report_date }}
                 </a>
               </td>

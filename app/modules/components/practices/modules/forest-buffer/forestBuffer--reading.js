@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ReportEditCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Template', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'variables', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Template, Field, Feature, Storage, template, project, site, practice, variables) {
+  .controller('ForestBufferReadingController', ['$rootScope', '$scope', '$route', '$location', 'moment', 'user', 'Template', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, moment, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
 
     //
     // Assign project to a scoped variable
@@ -19,14 +19,11 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.project = project;
     $scope.practice = practice;
-    $scope.practice_type = Feature.MachineReadable($scope.practice.practice_type);
+    $scope.practice.practice_type = 'forest-buffer';
 
     $scope.storage = Storage[$scope.practice.practice_type];
 
-    $scope.report_fields = Storage[$scope.practice.practice_type].fields[$route.current.params.reportType];
-
-
-    console.log('Storage[$scope.practice.practice_type]', Storage[$scope.practice.practice_type]);
+    console.log('$scope.storage', $scope.storage)
 
     Field.GetPreparedFields($scope.storage.templateId, 'object').then(function(response) {
       $scope.fields = response;
@@ -41,7 +38,6 @@ angular.module('practiceMonitoringAssessmentApp')
       // Load the reading into the scope
       //
       $scope.report = report;
-      $scope.report.type = $route.current.params.reportType;
       $scope.report.template = $scope.storage.templates.form;
 
       //
@@ -94,7 +90,7 @@ angular.module('practiceMonitoringAssessmentApp')
         });
 
         Feature.UpdateFeature({
-          storage: variables.practice.storage,
+          storage: commonscloud.collections.practice.storage,
           featureId: $scope.practice.id,
           data: $scope.practice
         }).then(function(response) {
@@ -120,12 +116,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
       $rootScope.page.links.push({
         text: page_title,
-        url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/reports/' + $scope.report.id + '/' + $route.current.params.reportType
-      });
-      $rootScope.page.links.push({
-        text: 'Edit',
-        url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/reports/' + $scope.report.id + '/' + $route.current.params.reportType + '/edit',
-        type: 'active'
+        url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/forest-buffer/' + $scope.report.id + '/edit'
       });
 
       $rootScope.page.title = page_title;
@@ -142,7 +133,7 @@ angular.module('practiceMonitoringAssessmentApp')
     // Setup basic page variables
     //
     $rootScope.page = {
-      template: 'views/report-edit.html',
+      template: '/modules/components/practices/views/practices--reading.html',
       title: null,
       links: [
         {
@@ -158,7 +149,7 @@ angular.module('practiceMonitoringAssessmentApp')
           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id
         },
         {
-          text: $scope.practice.practice_type,
+          text: $scope.practice.name,
           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + Feature.MachineReadable($scope.practice.practice_type)
         }    
       ],

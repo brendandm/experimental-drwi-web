@@ -55,9 +55,9 @@ angular.module('practiceMonitoringAssessmentApp')
           }
         }
       })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/forest-buffer/edit', {
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/forest-buffer/:reportId/edit', {
         templateUrl: '/modules/shared/default.html',
-        controller: 'ForestBufferEditController',
+        controller: 'ForestBufferReadingController',
         resolve: {
           user: function(User, $route) {
             return User.getUser({
@@ -71,6 +71,12 @@ angular.module('practiceMonitoringAssessmentApp')
               featureId: $route.current.params.projectId
             });
           },
+          template: function(Template, $route) {
+            return Template.GetTemplate(commonscloud.collections.site.templateId);
+          },
+          fields: function(Field, $route) {
+            return Field.GetPreparedFields(commonscloud.collections.site.templateId, 'object');
+          },
           site: function(Feature, $route) {
             return Feature.GetFeature({
               storage: commonscloud.collections.site.storage,
@@ -82,12 +88,6 @@ angular.module('practiceMonitoringAssessmentApp')
               storage: commonscloud.collections.practice.storage,
               featureId: $route.current.params.practiceId
             });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.practice.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.practice.templateId, 'object');
           }
         }
       });

@@ -3,7 +3,7 @@
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
 
-        <h1>Summary for {{ practice.practice_type }}</h1>
+        <h1>Summary for {{ practice.name }}</h1>
         <p data-ng-if="practice.description" data-ng-bind-html="practice.description"></p>
 
         <h4>
@@ -19,8 +19,8 @@
         <h6><strong>Tools</strong></h6>
         <ul class="contextual-navigation">
           <!-- Proect Manangement Navigation -->
-          <li data-ng-if="user.owner || user.feature.read || user.feature.is_admin || user.template.is_admin || user.template.is_moderator" class="active"><a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice_type }}">Practice Overview</a></li>
-          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice_type }}/edit">Edit</a></li>
+          <li data-ng-if="user.owner || user.feature.read || user.feature.is_admin || user.template.is_admin || user.template.is_moderator" class="active"><a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}">Practice Overview</a></li>
+          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/edit">Edit</a></li>
         </ul>
       </nav>
       <aside class="column-5 feature-sidebar pull-right legend">
@@ -32,7 +32,7 @@
             <!-- List of readings order in chronological order by report date -->
             <tr data-ng-if="practice.readings.length" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
               <td>
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit"><span data-ng-if="!report.measurement_period">Undefined</span>{{ report.measurement_period }}</a>
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit"><span data-ng-if="!report.measurement_period">Undefined</span>{{ report.measurement_period }}</a>
                 <em class="supplemental">Report on {{ report.report_date | date:"MMM d, yyyy" }}</em>
               </td>
             </tr>

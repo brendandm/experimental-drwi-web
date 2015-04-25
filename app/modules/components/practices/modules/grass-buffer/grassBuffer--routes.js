@@ -12,12 +12,9 @@ angular.module('practiceMonitoringAssessmentApp')
   .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
 
     $routeProvider
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/reports', {
-        redirectTo: '/projects/:projectId/sites/:siteId/practices/:practiceId'
-      })      
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/reports/:reportId', {
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/grass-buffer', {
         templateUrl: '/modules/shared/default.html',
-        controller: 'ReportViewCtrl',
+        controller: 'GrassBufferController',
         resolve: {
           user: function(User, $route) {
             return User.getUser({
@@ -49,19 +46,18 @@ angular.module('practiceMonitoringAssessmentApp')
               featureId: $route.current.params.practiceId
             });
           },
-          variables: function() {
-            return {
-              project: commonscloud.collections.project,
-              site: commonscloud.collections.site,
-              practice: commonscloud.collections.practice,
-              land_river_segment: commonscloud.collections.land_river_segment
-            };
+          readings: function(Storage, Feature, $route) {
+            return Feature.GetRelatedFeatures({
+              storage: commonscloud.collections.practice.storage,
+              relationship: Storage['grass-buffer'].storage,
+              featureId: $route.current.params.practiceId
+            });
           }
         }
       })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/reports/:reportId/edit', {
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/grass-buffer/edit', {
         templateUrl: '/modules/shared/default.html',
-        controller: 'ReportEditCtrl',
+        controller: 'GrassBufferEditController',
         resolve: {
           user: function(User, $route) {
             return User.getUser({
@@ -75,12 +71,6 @@ angular.module('practiceMonitoringAssessmentApp')
               featureId: $route.current.params.projectId
             });
           },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.site.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.site.templateId, 'object');
-          },
           site: function(Feature, $route) {
             return Feature.GetFeature({
               storage: commonscloud.collections.site.storage,
@@ -93,15 +83,15 @@ angular.module('practiceMonitoringAssessmentApp')
               featureId: $route.current.params.practiceId
             });
           },
-          variables: function() {
-            return {
-              project: commonscloud.collections.project,
-              site: commonscloud.collections.site,
-              practice: commonscloud.collections.practice,
-              land_river_segment: commonscloud.collections.land_river_segment
-            };
+          template: function(Template, $route) {
+            return Template.GetTemplate(commonscloud.collections.practice.templateId);
+          },
+          fields: function(Field, $route) {
+            return Field.GetPreparedFields(commonscloud.collections.practice.templateId, 'object');
           }
         }
       });
 
   }]);
+
+
