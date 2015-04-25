@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('PracticeViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'variables', 'Storage', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, variables, Storage) {
+  .controller('PracticeViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage) {
 
     //
     // Assign project to a scoped variable
@@ -62,7 +62,7 @@ angular.module('practiceMonitoringAssessmentApp')
     // Load Land river segment details
     //
     Feature.GetFeature({
-      storage: variables.land_river_segment.storage,
+      storage: commonscloud.collections.land_river_segment.storage,
       featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
     }).then(function(response) {
       $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0] = response;
@@ -142,7 +142,7 @@ angular.module('practiceMonitoringAssessmentApp')
           // ID the system will kick out the sites that were added previously.
           //
           Feature.UpdateFeature({
-            storage: variables.practice.storage,
+            storage: commonscloud.collections.practice.storage,
             featureId: practice.id,
             data: data
           }).then(function() {
@@ -181,7 +181,7 @@ angular.module('practiceMonitoringAssessmentApp')
           // ID the system will kick out the sites that were added previously.
           //
           Feature.UpdateFeature({
-            storage: variables.practice.storage,
+            storage: commonscloud.collections.practice.storage,
             featureId: practice.id,
             data: data
           }).then(function() {
@@ -273,8 +273,6 @@ angular.module('practiceMonitoringAssessmentApp')
           planned.width = $scope.practice.readings[i].average_width_of_buffer;
           planned.area = ((planned.length*planned.width)/43560);
           planned.landuse = (landuse) ? landuse : $scope.landuse[$scope.practice.readings[i].existing_riparian_landuse.toLowerCase()];
-
-          console.log('planned', planned)
 
           var promise = $http.get('//api.commonscloud.org/v2/type_3fbea3190b634d0c9021d8e67df84187.json', {
             params: {
@@ -565,7 +563,7 @@ angular.module('practiceMonitoringAssessmentApp')
       $scope.user.owner = true;
     } else {
       Template.GetTemplateUser({
-        storage: variables.project.storage,
+        storage: commonscloud.collections.project.storage,
         templateId: $scope.template.id,
         userId: $scope.user.id
       }).then(function(response) {
@@ -578,7 +576,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
           Feature.GetFeatureUser({
-            storage: variables.project.storage,
+            storage: commonscloud.collections.project.storage,
             featureId: $route.current.params.projectId,
             userId: $scope.user.id
           }).then(function(response) {

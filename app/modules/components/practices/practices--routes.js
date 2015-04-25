@@ -58,14 +58,6 @@ angular.module('practiceMonitoringAssessmentApp')
               relationship: Storage[clean_name].storage,
               featureId: $route.current.params.practiceId
             });
-          },
-          variables: function() {
-            return {
-              project: commonscloud.collections.project,
-              site: commonscloud.collections.site,
-              practice: commonscloud.collections.practice,
-              land_river_segment: commonscloud.collections.land_river_segment
-            };
           }
         }
       })
@@ -102,14 +94,6 @@ angular.module('practiceMonitoringAssessmentApp')
           },
           fields: function(Field, $route) {
             return Field.GetPreparedFields(commonscloud.collections.practice.templateId, 'object');
-          },
-          variables: function() {
-            return {
-              project: commonscloud.collections.project,
-              site: commonscloud.collections.site,
-              practice: commonscloud.collections.practice,
-              land_river_segment: commonscloud.collections.land_river_segment
-            };
           }
         }
       });

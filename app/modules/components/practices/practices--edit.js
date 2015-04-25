@@ -8,7 +8,8 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('PracticeEditCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Attachment', 'Feature', 'Template', 'template', 'fields', 'project', 'site', 'practice', 'variables', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Attachment, Feature, Template, template, fields, project, site, practice, variables) {
+  .controller('PracticeEditCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Attachment', 'Feature', 'Template', 'template', 'fields', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Attachment, Feature, Template, template, fields, project, site, practice, commonscloud
+    ) {
 
     //
     // Assign project to a scoped variable
@@ -89,7 +90,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.practice.save = function() {
       Feature.UpdateFeature({
-        storage: variables.practice.storage,
+        storage: commonscloud.collections.practice.storage,
         featureId: $scope.practice.id,
         data: $scope.practice
       }).then(function(response) {
@@ -105,7 +106,7 @@ angular.module('practiceMonitoringAssessmentApp')
         });
 
         Feature.postFiles({
-          storage: variables.practice.storage,
+          storage: commonscloud.collections.practice.storage,
           featureId: $scope.practice.id
         }, fileData).$promise.then(function(response) {
           console.log('Update fired', response);
@@ -136,7 +137,7 @@ angular.module('practiceMonitoringAssessmentApp')
       });
 
       Feature.UpdateFeature({
-        storage: variables.site.storage,
+        storage: commonscloud.collections.site.storage,
         featureId: $scope.site.id,
         data: $scope.site
       }).then(function(response) {
@@ -145,7 +146,7 @@ angular.module('practiceMonitoringAssessmentApp')
         // Now that the Project <> Site relationship has been removed, we can remove the Site
         //
         Feature.DeleteFeature({
-          storage: variables.practice.storage,
+          storage: commonscloud.collections.practice.storage,
           featureId: $scope.practice.id
         }).then(function(response) {
           $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id);
@@ -196,7 +197,7 @@ angular.module('practiceMonitoringAssessmentApp')
       // Send the 'DELETE' method to the API so it's removed from the database
       //
       Attachment.delete({
-        storage: variables.practice.storage,
+        storage: commonscloud.collections.practice.storage,
         featureId: $scope.practice.id,
         attachmentStorage: attachment_storage,
         attachmentId: file.id
@@ -217,7 +218,7 @@ angular.module('practiceMonitoringAssessmentApp')
       $scope.user.owner = true;
     } else {
       Template.GetTemplateUser({
-        storage: variables.project.storage,
+        storage: commonscloud.collections.project.storage,
         templateId: $scope.template.id,
         userId: $scope.user.id
       }).then(function(response) {
@@ -230,7 +231,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
           Feature.GetFeatureUser({
-            storage: variables.project.storage,
+            storage: commonscloud.collections.project.storage,
             featureId: $route.current.params.projectId,
             userId: $scope.user.id
           }).then(function(response) {
