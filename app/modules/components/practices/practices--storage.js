@@ -36,5 +36,19 @@ angular.module('practiceMonitoringAssessmentApp')
         report: '/modules/components/practices/modules/grass-buffer/views/report--view.html',
         form: '/modules/components/practices/modules/grass-buffer/views/form--view.html'
       }
+    },
+    'livestock-exclusion': {
+      landuse: 'hyo',
+      storage: 'type_0428c51c6325438c80029bcd539abf4f',
+      templateId: 143,
+      fields: {
+        Planning: [],
+        Installation: [],
+        Monitoring: []
+      },
+      templates: {
+        report: '/modules/components/practices/modules/livestock-exclusion/views/report--view.html',
+        form: '/modules/components/practices/modules/livestock-exclusion/views/form--view.html'
+      }
     }      
   });
