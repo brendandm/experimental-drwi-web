@@ -20,11 +20,11 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) /styles/vendor.css -->
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css" />
-    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
-    <link rel="stylesheet" href="bower_components/medium-editor/dist/css/medium-editor.css" />
-    <link rel="stylesheet" href="bower_components/medium-editor/dist/css/themes/default.css" />
+    <link rel="stylesheet" href="/bower_components/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="/bower_components/angular-loading-bar/build/loading-bar.css" />
+    <link rel="stylesheet" href="/bower_components/medium-editor/dist/css/medium-editor.css" />
+    <link rel="stylesheet" href="/bower_components/medium-editor/dist/css/themes/default.css" />
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -74,7 +74,7 @@
         L.mapbox.accessToken = 'pk.eyJ1IjoiZGV2ZWxvcGVkc2ltcGxlIiwiYSI6IlZGVXhnM3MifQ.Q4wmA49ggy9i1rLr8-Mc-w';
     </script>
 
-    <!-- build:js(.) /scripts/vendor.js -->
+    <!-- build:js(.) /modules/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
@@ -102,49 +102,53 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-        <!-- build:js({.tmp,app}) /scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
+        <!-- build:js({.tmp,app}) /modules/modules.js -->
+        <script src="modules/app--module.js"></script>
+        <script src="modules/app--routes.js"></script>
 
         <!-- Controllers -->
-        <script src="scripts/controllers/authorize.js"></script>
-        <script src="scripts/controllers/logout.js"></script>
-        <script src="scripts/controllers/index.js"></script>
-        <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/projects.js"></script>
-        <script src="scripts/controllers/project-view.js"></script>
-        <script src="scripts/controllers/project-edit.js"></script>
-        <script src="scripts/controllers/project-users.js"></script>
-        <script src="scripts/controllers/site-view.js"></script>
-        <script src="scripts/controllers/site-edit.js"></script>
-        <script src="scripts/controllers/practice-view.js"></script>
-        <script src="scripts/controllers/practice-edit.js"></script>
-        <script src="scripts/controllers/report-view.js"></script>
-        <script src="scripts/controllers/report-edit.js"></script>
-        <script src="scripts/controllers/summary.js"></script>
-        <script src="scripts/controllers/users.js"></script>
+        <script src="modules/shared/security/security--routes.js"></script>
+        <script src="modules/shared/security/securityAuthorize--controller.js"></script>
+        <script src="modules/shared/security/securityLogin--controller.js"></script>
+        <script src="modules/shared/security/securityLogout--controller.js"></script>
+        <script src="modules/shared/security/security--interceptor.js"></script>
+        <script src="modules/shared/security/token--service.js"></script>
+
+        <script src="modules/components/projects/projects.js"></script>
+        <script src="modules/components/projects/project-view.js"></script>
+        <script src="modules/components/projects/project-edit.js"></script>
+        <script src="modules/components/projects/project-users.js"></script>
+
+        <script src="modules/components/sites/site-view.js"></script>
+        <script src="modules/components/sites/site-edit.js"></script>
+
+        <script src="modules/components/practices/practice-view.js"></script>
+        <script src="modules/components/practices/practice-edit.js"></script>
+
+        <script src="modules/components/reports/report-view.js"></script>
+        <script src="modules/components/reports/report-edit.js"></script>
 
         <!-- Services -->
-        <script src="scripts/services/site.js"></script>
-        <script src="scripts/services/navigation.js"></script>
-        <script src="scripts/services/storage.js"></script>
+        <script src="modules/shared/services/site.js"></script>
+        <script src="modules/shared/services/navigation.js"></script>
+        <script src="modules/shared/services/storage.js"></script>
 
         <!-- Providers -->
-        <script src="scripts/providers/application.js"></script>
-        <script src="scripts/providers/attachment.js"></script>
-        <script src="scripts/providers/feature.js"></script>
-        <script src="scripts/providers/field.js"></script>
-        <script src="scripts/providers/template.js"></script>
-        <script src="scripts/providers/user.js"></script>
+        <script src="modules/shared/api/application.js"></script>
+        <script src="modules/shared/api/attachment.js"></script>
+        <script src="modules/shared/api/feature.js"></script>
+        <script src="modules/shared/api/field.js"></script>
+        <script src="modules/shared/api/template.js"></script>
+        <script src="modules/shared/api/user.js"></script>
 
         <!-- Factories -->
-        <script src="scripts/factories/authorization.js"></script>
 
         <!-- Directives -->
-        <script src="scripts/directives/imageResize.js"></script>
-        <script src="scripts/directives/relationship.js"></script>
+        <script src="modules/shared/directives/imageResize.js"></script>
+        <script src="modules/shared/directives/relationship.js"></script>
 
         <!-- Filters -->
-        <script src="scripts/filters/toarray.js"></script>
+        <script src="modules/shared/filters/filter--toArray.js"></script>
         <!-- endbuild -->
 
   </body>

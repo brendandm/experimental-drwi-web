@@ -8,22 +8,7 @@
  *
  * Main module of the application.
  */
-angular
-  .module('practiceMonitoringAssessmentApp', [
-    'ngResource',
-    'ngRoute',
-    'ngSanitize',
-    'ngTouch',
-    'ipCookie',
-    'ui.gravatar',
-    'leaflet-directive',
-    'angularFileUpload',
-    'geolocation',
-    'angular-loading-bar',
-    'monospaced.elastic',
-    'angular-medium-editor',
-    'angularMoment'
-  ])
+angular.module('practiceMonitoringAssessmentApp')
   .config(['$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
 
 
@@ -53,23 +38,6 @@ angular
         };
 
     $routeProvider
-      .when('/', {
-        templateUrl: '/views/main.html',
-        controller: 'IndexCtrl',
-        resolve: {
-          user: function(User) {
-            return User.getUser();
-          }
-        }
-      })
-      .when('/authorize', {
-        templateUrl: '/views/authorize.html',
-        controller: 'AuthorizeCtrl'
-      })
-      .when('/logout', {
-        templateUrl: '/views/logout.html',
-        controller: 'LogoutCtrl'
-      })
       .when('/users', {
         templateUrl: templateUrl,
         controller: 'UsersCtrl',

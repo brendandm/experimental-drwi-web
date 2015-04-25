@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:IndexCtrl
+ * @name practiceMonitoringAssessmentApp.controller:SecurityLogin
  * @description
- * # IndexCtrl
+ * # SecurityLogin
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('IndexCtrl', ['$rootScope', '$scope', 'ipCookie', '$location', '$window', 'user', function($rootScope, $scope, ipCookie, $location, $window, user) {
+  .controller('SecurityLogin', ['$scope', 'ipCookie', '$location', function($scope, ipCookie, $location) {
 
     var session_cookie = ipCookie('COMMONS_SESSION');
 
@@ -18,7 +18,6 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.page = {
       template: '/views/index.html',
       title: 'NFWF Grant Monitoring and Assessment',
-      back: '/',
       header: {
         hidden: true
       }
@@ -41,7 +40,6 @@ angular.module('practiceMonitoringAssessmentApp')
     };
 
     if (session_cookie && session_cookie !== undefined && session_cookie !== 'undefined') {
-      $location.hash('');
       $location.path('/projects');
     } else {
       ipCookie.remove('COMMONS_SESSION');
