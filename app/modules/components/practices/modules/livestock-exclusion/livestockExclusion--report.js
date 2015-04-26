@@ -63,6 +63,13 @@ angular.module('practiceMonitoringAssessmentApp')
     });
 
     $scope.readings = {
+      bufferWidth: function() {
+        for (var i = 0; i < $scope.practice.readings.length; i++) {
+          if ($scope.practice.readings[i].measurement_period === 'Planning') {
+            return $scope.practice.readings[i].average_width_of_buffer;
+          }
+        }
+      },
       add: function(practice, readingType) {
         //
         // Creating a practice reading is a two step process.
@@ -75,6 +82,7 @@ angular.module('practiceMonitoringAssessmentApp')
           storage: $scope.storage.storage,
           data: {
             measurement_period: (readingType) ? readingType : null,
+            average_width_of_buffer: $scope.readings.bufferWidth(),
             report_date: moment().format('YYYY-MM-DD'),
             owner: $scope.user.id,
             status: 'private'
@@ -163,7 +171,7 @@ angular.module('practiceMonitoringAssessmentApp')
           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id
         },
         {
-          text: $scope.practice.practice_type,
+          text: $scope.practice.name,
           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type,
           type: 'active'
         }    
