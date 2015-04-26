@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('GrassBufferController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse) {
+  .controller('ForestBufferReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse) {
 
     //
     // Assign project to a scoped variable
@@ -20,11 +20,11 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.fields = fields;
     
     $scope.practice = practice;
-    $scope.practice_type = 'grass-buffer';
+    $scope.practice.practice_type = 'forest-buffer';
     $scope.practice.readings = readings;
     $scope.practice_efficiency = null;
 
-    $scope.storage = Storage['grass-buffer'];
+    $scope.storage = Storage[$scope.practice.practice_type];
 
     $scope.user = user;
     $scope.user.owner = false;
@@ -106,7 +106,7 @@ angular.module('practiceMonitoringAssessmentApp')
             // Once the new Reading has been associated with the existing Practice we need to
             // display the form to the user, allowing them to complete it.
             //
-            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/grass-buffer/' + reportId + '/edit');
+            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
           });
         });
       },
@@ -171,8 +171,8 @@ angular.module('practiceMonitoringAssessmentApp')
           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id
         },
         {
-          text: $scope.practice.practice_type,
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice_type,
+          text: $scope.practice.name,
+          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type,
           type: 'active'
         }    
       ],

@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:ReportEditCtrl
+ * @name practiceMonitoringAssessmentApp.controller:GrassBufferFormController
  * @description
- * # ReportEditCtrl
+ * # GrassBufferFormController
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ForestBufferReadingController', ['$rootScope', '$scope', '$route', '$location', 'moment', 'user', 'Template', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, moment, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
+  .controller('GrassBufferFormController', ['$rootScope', '$scope', '$route', '$location', 'moment', 'user', 'Template', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, moment, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
 
     //
     // Assign project to a scoped variable
@@ -19,7 +19,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.project = project;
     $scope.practice = practice;
-    $scope.practice.practice_type = 'forest-buffer';
+    $scope.practice.practice_type = 'grass-buffer';
 
     $scope.storage = Storage[$scope.practice.practice_type];
 
@@ -71,7 +71,7 @@ angular.module('practiceMonitoringAssessmentApp')
           featureId: $scope.report.id,
           data: $scope.report
         }).then(function(response) {
-          $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice_type);
+          $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type);
         }).then(function(error) {
           // Do something with the error
         });
@@ -102,7 +102,7 @@ angular.module('practiceMonitoringAssessmentApp')
             storage: $scope.storage.storage,
             featureId: $scope.report.id
           }).then(function(response) {
-            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice_type);
+            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type);
           });
 
         });
@@ -116,7 +116,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
       $rootScope.page.links.push({
         text: page_title,
-        url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/forest-buffer/' + $scope.report.id + '/edit'
+        url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + $scope.report.id + '/edit'
       });
 
       $rootScope.page.title = page_title;

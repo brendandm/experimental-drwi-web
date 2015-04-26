@@ -14,7 +14,7 @@ angular.module('practiceMonitoringAssessmentApp')
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/grass-buffer', {
         templateUrl: '/modules/shared/default.html',
-        controller: 'GrassBufferController',
+        controller: 'GrassBufferReportController',
         resolve: {
           user: function(User, $route) {
             return User.getUser({
@@ -57,7 +57,7 @@ angular.module('practiceMonitoringAssessmentApp')
       })
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/grass-buffer/:reportId/edit', {
         templateUrl: '/modules/shared/default.html',
-        controller: 'GrassBufferEditController',
+        controller: 'GrassBufferFormController',
         resolve: {
           user: function(User, $route) {
             return User.getUser({

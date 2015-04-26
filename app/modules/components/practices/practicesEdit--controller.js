@@ -111,16 +111,14 @@ angular.module('practiceMonitoringAssessmentApp')
           storage: commonscloud.collections.practice.storage,
           featureId: $scope.practice.id
         }, fileData).$promise.then(function(response) {
-          console.log('Update fired', response);
           $scope.feature = response.response;
-          $route.reload();
-          // $location.path('/applications/' + $scope.application.id + '/collections/' + $scope.template.id + '/features/' + $scope.feature.id);
+          $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id);
         }, function(error) {
-          console.log('Update failed!!!!', error);
+          console.error('$scope.practice.save::postFiles', error);
         });
 
       }).then(function(error) {
-        // Do something with the error
+          console.error('$scope.practice.save', error);
       });
     };
 

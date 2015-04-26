@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:ForestBufferController
+ * @name practiceMonitoringAssessmentApp.controller:GrassBufferReportController
  * @description
- * # ForestBufferController
+ * # GrassBufferReportController
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ForestBufferController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse) {
+  .controller('GrassBufferReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse) {
 
     //
     // Assign project to a scoped variable
@@ -20,11 +20,11 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.fields = fields;
     
     $scope.practice = practice;
-    $scope.practice.practice_type = 'forest-buffer';
+    $scope.practice.practice_type = 'grass-buffer';
     $scope.practice.readings = readings;
     $scope.practice_efficiency = null;
 
-    $scope.storage = Storage['forest-buffer'];
+    $scope.storage = Storage[$scope.practice.practice_type];
 
     $scope.user = user;
     $scope.user.owner = false;
@@ -106,7 +106,7 @@ angular.module('practiceMonitoringAssessmentApp')
             // Once the new Reading has been associated with the existing Practice we need to
             // display the form to the user, allowing them to complete it.
             //
-            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/forest-buffer/' + reportId + '/edit');
+            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
           });
         });
       },

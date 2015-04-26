@@ -2,19 +2,19 @@
   <form class="row feature">
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
-        <h4>
-          Site Name: {{ site.site_number }}
-        </h4>
-        <h1>{{ site.site_description }}</h1>
+        <h1>
+          {{ site.site_number }}
+        </h1>
+        <h4 data-ng-if="site.site_description">{{ site.site_description }}</h4>
 
         <br />
 
         <section data-ng-if="site.practices.list" id="practices" class="list action-list">
           <h6 class="rule-above"><strong>Practices</strong> Installed</h6>
-          <article class="row list-item" data-ng-repeat="practice in site.practices.list track by $index">
+          <article class="row list-item" data-ng-repeat="practice in site.practices.list track by $index | orderBy:'id':true">
             <h1>
               <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.clean_practice_type }}">
-                {{ practice.practice_type }}
+                {{ practice.name }}
               </a>
             </h1>
             <div class="thumbnails" data-ng-if="practice.attachment_4513d48492f2485ebcdc3293a3c3695e.length">

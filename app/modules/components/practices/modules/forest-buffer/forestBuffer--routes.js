@@ -14,7 +14,7 @@ angular.module('practiceMonitoringAssessmentApp')
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/forest-buffer', {
         templateUrl: '/modules/shared/default.html',
-        controller: 'ForestBufferController',
+        controller: 'ForestBufferReportController',
         resolve: {
           user: function(User, $route) {
             return User.getUser({
@@ -57,7 +57,7 @@ angular.module('practiceMonitoringAssessmentApp')
       })
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/forest-buffer/:reportId/edit', {
         templateUrl: '/modules/shared/default.html',
-        controller: 'ForestBufferReadingController',
+        controller: 'ForestBufferFormController',
         resolve: {
           user: function(User, $route) {
             return User.getUser({
