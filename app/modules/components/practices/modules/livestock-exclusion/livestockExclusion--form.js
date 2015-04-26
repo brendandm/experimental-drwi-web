@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('LivestockExclusionFormController', ['$rootScope', '$scope', '$route', '$location', 'moment', 'user', 'Template', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, moment, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
+  .controller('LivestockExclusionFormController', ['$rootScope', '$scope', '$route', '$location', 'user', 'Template', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
 
     //
     // Assign project to a scoped variable
@@ -113,7 +113,7 @@ angular.module('practiceMonitoringAssessmentApp')
       //
       // Add the reading information to the breadcrumbs
       //
-      var page_title = 'Editing the ' + $scope.report.measurement_period + ' Report from ' + moment($scope.report.report_date).format('MMM d, YYYY');
+      var page_title = 'Editing the ' + $scope.report.measurement_period + ' Report';
 
       $rootScope.page.links.push({
         text: page_title,

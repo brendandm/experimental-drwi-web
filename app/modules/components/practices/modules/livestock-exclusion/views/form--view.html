@@ -22,7 +22,7 @@
         </div>
 
         <!-- WIP Reporting Agency -->
-        <div class="form-group">
+        <div class="form-group" data-ng-if="report.measurement_period === 'Planning'">
           <label for="wip_reporting_agency" class="control-label">
             WIP Reporting Agency
           </label>
@@ -110,6 +110,59 @@
 
       </fieldset>
 
+      <fieldset data-ng-if="report.measurement_period === 'Installation'">
+        <h2><strong>Installation</strong> Summary</h2>
+
+        <div class="row">
+          <!-- Length of Fencing -->
+          <div class="form-group column-5">
+            <label for="length_of_fencing" class="control-label">
+              Length of Fencing Installed
+            </label>
+
+            <input data-ng-model="report.length_of_fencing" class="form-control" class="form-control" type="number" id="length_of_fencing" name="length_of_fencing" />
+
+            <p data-ng-if="fields.length_of_fencing.help" class="help-text">{{ fields.length_of_fencing.help }}</p>
+          </div>
+          <!-- Average Buffer Width -->
+          <div class="column-1"></div>
+          <div class="form-group column-4">
+            <label for="average_buffer_width" class="control-label">
+              Average Buffer Width
+            </label>
+
+            <input data-ng-model="report.average_buffer_width" class="form-control" class="form-control" type="number" id="average_buffer_width" name="average_buffer_width" />
+
+            <p data-ng-if="fields.average_buffer_width.help" class="help-text">{{ fields.average_buffer_width.help }}</p>
+          </div>
+          <!-- Buffer Type -->
+          <div class="column-1"></div>
+          <div class="form-group column-4">
+            <label for="buffer_type" class="control-label">
+              Buffer Type
+            </label>
+
+            <select data-ng-model="report.buffer_type" class="form-control" class="form-control" type="number" id="buffer_type" name="buffer_type">
+              <option>Select a buffer type</option>
+              <option value="Forest Buffer">Forest Buffer</option>
+              <option value="Grass Buffer">Grass Buffer</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Average Buffer Width -->
+          <div class="form-group column-5">
+            <label for="extent_of_exclusion" class="control-label">
+              Extent of Exclusion
+            </label>
+
+            <input data-ng-model="report.extent_of_exclusion" class="form-control" class="form-control" type="number" id="extent_of_exclusion" name="extent_of_exclusion" />
+
+            <p data-ng-if="fields.extent_of_exclusion.help" class="help-text">{{ fields.extent_of_exclusion.help }}</p>
+          </div>
+        </div>
+
+      </fieldset>
       <fieldset data-ng-if="report.measurement_period === 'Planning'">
         <h2><strong>Current</strong> In-stream Activity</h2>
         <div class="row">
