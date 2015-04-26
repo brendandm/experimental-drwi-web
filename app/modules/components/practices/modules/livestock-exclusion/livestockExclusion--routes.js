@@ -14,7 +14,7 @@ angular.module('practiceMonitoringAssessmentApp')
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/livestock-exclusion', {
         templateUrl: '/modules/shared/default.html',
-        controller: 'LivestockExclusionController',
+        controller: 'LivestockExclusionReportController',
         resolve: {
           user: function(User, $route) {
             return User.getUser({
@@ -57,7 +57,7 @@ angular.module('practiceMonitoringAssessmentApp')
       })
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/livestock-exclusion/:reportId/edit', {
         templateUrl: '/modules/shared/default.html',
-        controller: 'LivestockExclusionEditController',
+        controller: 'LivestockExclusionFormController',
         resolve: {
           user: function(User, $route) {
             return User.getUser({

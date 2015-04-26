@@ -105,6 +105,15 @@ $susy: (
     }
   }
 
+  .row-set .row {
+    margin-bottom: 16px;
+
+    .row-set-label {
+      color: lighten($color-black-base, 10%);
+      font-size: 0.875em;
+    }
+  }
+
   .column-flex {
     display: inline-block;
     float: left;

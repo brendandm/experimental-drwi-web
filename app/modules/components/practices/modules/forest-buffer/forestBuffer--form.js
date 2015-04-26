@@ -23,8 +23,6 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.storage = Storage[$scope.practice.practice_type];
 
-    console.log('$scope.storage', $scope.storage)
-
     Field.GetPreparedFields($scope.storage.templateId, 'object').then(function(response) {
       $scope.fields = response;
     });
@@ -133,7 +131,7 @@ angular.module('practiceMonitoringAssessmentApp')
     // Setup basic page variables
     //
     $rootScope.page = {
-      template: '/modules/components/practices/views/practices--reading.html',
+      template: '/modules/components/practices/views/practices--form.html',
       title: null,
       links: [
         {

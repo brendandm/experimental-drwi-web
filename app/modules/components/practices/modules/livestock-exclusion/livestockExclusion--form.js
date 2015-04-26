@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:GrassBufferFormController
+ * @name practiceMonitoringAssessmentApp.controller:LivestockExclusionFormController
  * @description
- * # GrassBufferFormController
+ * # LivestockExclusionFormController
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('GrassBufferFormController', ['$rootScope', '$scope', '$route', '$location', 'moment', 'user', 'Template', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, moment, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
+  .controller('LivestockExclusionFormController', ['$rootScope', '$scope', '$route', '$location', 'moment', 'user', 'Template', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, moment, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
 
     //
     // Assign project to a scoped variable
@@ -19,7 +19,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.project = project;
     $scope.practice = practice;
-    $scope.practice.practice_type = 'grass-buffer';
+    $scope.practice.practice_type = 'livestock-exclusion';
 
     $scope.storage = Storage[$scope.practice.practice_type];
 
@@ -36,6 +36,9 @@ angular.module('practiceMonitoringAssessmentApp')
       // Load the reading into the scope
       //
       $scope.report = report;
+
+      console.log('Report Data Model', $scope.report);
+
       $scope.report.template = $scope.storage.templates.form;
 
       //
