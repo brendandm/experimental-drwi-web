@@ -20,11 +20,11 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.fields = fields;
     
     $scope.practice = practice;
-    $scope.practice_type = 'livestock-exclusion';
+    $scope.practice.practice_type = 'livestock-exclusion';
     $scope.practice.readings = readings;
     $scope.practice_efficiency = null;
 
-    $scope.storage = Storage['livestock-exclusion'];
+    $scope.storage = Storage[$scope.practice.practice_type];
 
     $scope.user = user;
     $scope.user.owner = false;
@@ -98,7 +98,7 @@ angular.module('practiceMonitoringAssessmentApp')
             // Once the new Reading has been associated with the existing Practice we need to
             // display the form to the user, allowing them to complete it.
             //
-            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/livestock-exclusion/' + reportId + '/edit');
+            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
           });
         });
       },
@@ -137,7 +137,7 @@ angular.module('practiceMonitoringAssessmentApp')
             // Once the new Reading has been associated with the existing Practice we need to
             // display the form to the user, allowing them to complete it.
             //
-            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/reports/' + reportId + '/edit');
+            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
           });
         });
       }
@@ -164,7 +164,7 @@ angular.module('practiceMonitoringAssessmentApp')
         },
         {
           text: $scope.practice.practice_type,
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice_type,
+          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type,
           type: 'active'
         }    
       ],

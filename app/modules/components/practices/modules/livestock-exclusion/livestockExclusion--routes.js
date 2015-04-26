@@ -55,7 +55,7 @@ angular.module('practiceMonitoringAssessmentApp')
           }
         }
       })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/livestock-exclusion/edit', {
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/livestock-exclusion/:reportId/edit', {
         templateUrl: '/modules/shared/default.html',
         controller: 'LivestockExclusionEditController',
         resolve: {
