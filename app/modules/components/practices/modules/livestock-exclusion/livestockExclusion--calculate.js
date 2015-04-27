@@ -7,7 +7,7 @@
  * Service in the practiceMonitoringAssessmentApp.
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .service('CalculateLivestockExclusion', [function() {
+  .service('CalculateLivestockExclusion', ['Calculate', 'Landuse', function(Calculate, Landuse) {
     return {
       toMiles: function(feet) {
         return (feet/5280);
@@ -74,9 +74,16 @@ angular.module('practiceMonitoringAssessmentApp')
         var miles_installed = installed_length/feetInMiles,
             percentage_installed = installed_length/planned_length;
 
-        console.log('milesInstalled', miles_installed, percentage_installed, installed_length, planned_length);
-
         return (format === '%') ? (percentage_installed*100) : miles_installed;
+      },
+      getPrePlannedLoad: function(segment, landuse, area) {
+
+        var promise = Calculate.getLoadVariables(segment, Landuse[landuse.toLowerCase()]).$promise.then(function(efficiency) {
+          console.log('Efficienies selected', area, efficiency);
+          return Calculate.getLoadTotals(area, efficiency.features[0].properties);
+        });
+
+        return promise;
       }
     };
   }]);

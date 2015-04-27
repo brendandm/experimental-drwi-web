@@ -23,7 +23,7 @@
             <tr>
               <th>&nbsp;</th>
               <th data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
                   <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
                   <br />
                   {{ report.report_date }}                  
@@ -192,7 +192,7 @@
               <th>&nbsp;</th>
               <th>&nbsp;</th>
               <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
                   <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
                   <span data-ng-if="report.measurement_period === 'Installation'">Installed</span>
                   <br />
@@ -252,6 +252,68 @@
 
             <tr class="no-rule">
               <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+                <h2><strong>Load</strong> &amp; Reductions</h2>
+              </td>
+            </tr>
+
+            <tr>
+              <th>&nbsp;</th>
+              <th>Pre-BMP Load</th>
+              <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
+                  <span data-ng-if="report.measurement_period === 'Planning'">Planned Reduction</span><span data-ng-if="report.measurement_period === 'Installation'">Installed Reduction</span><br />
+                  {{ report.report_date }}                  
+                </a>
+              </th>
+              <th>Reduction To-date</th>
+              <th>% of Planned</th>
+            </tr>        
+
+            <tr>
+              <th>Nitrogen (lbs/yr)</th>
+              <td>{{ calculate.results.totalPreInstallationLoad.nitrogen | number:2 }}</td>
+              <td>{{ calculate.results.totalPlannedLoad.nitrogen | number:2 }}</td>
+              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_fencing, report.average_buffer_width, 'nitrogen') | number:2"></span>
+              </td>
+              <td><strong>{{ calculate.results.totalInstalledLoad.nitrogen | number:2 }}</strong> lbs/yr</td>
+              <td>
+                <strong>
+                  <span data-ng-bind="calculate.GetPercentage(calculate.results.totalInstalledLoad.nitrogen, calculate.results.totalPlannedLoad.nitrogen) | number:0"></span>%
+                </strong>
+              </td>
+            </tr>
+            <tr>
+              <th>Phosphorus (lbs/yr)</th>
+              <td>{{ calculate.results.totalPreInstallationLoad.phosphorus | number:2 }}</td>
+              <td>{{ calculate.results.totalPlannedLoad.phosphorus | number:2 }}</td>
+              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_fencing, report.average_buffer_width, 'phosphorus') | number:2"></span>
+              </td>
+              <td><strong>{{ calculate.results.totalInstalledLoad.phosphorus | number:2 }}</strong> lbs/yr</td>
+              <td>
+                <strong>
+                  <span data-ng-bind="calculate.GetPercentage(calculate.results.totalInstalledLoad.phosphorus, calculate.results.totalPlannedLoad.phosphorus) | number:0"></span>%
+                </strong>
+              </td>
+            </tr>
+            <tr>
+              <th>Sediment (tons/yr)</th>
+              <td>{{ calculate.results.totalPreInstallationLoad.sediment | number:2 }}</td>
+              <td>{{ calculate.results.totalPlannedLoad.sediment | number:2 }}</td>
+              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_fencing, report.average_buffer_width, 'sediment') | number:2"></span>
+              </td>
+              <td><strong>{{ calculate.results.totalInstalledLoad.sediment | number:2 }}</strong> tons/yr</td>
+              <td>
+                <strong>
+                  <span data-ng-bind="calculate.GetPercentage(calculate.results.totalInstalledLoad.sediment, calculate.results.totalPlannedLoad.sediment) | number:0"></span>%
+                </strong>
+              </td>
+            </tr>
+
+            <tr class="no-rule">
+              <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
                 <h2><strong>Chesapeake</strong> Bay Metrics</h2>
               </td>
             </tr>
@@ -260,7 +322,7 @@
               <th>&nbsp;</th>
               <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
               <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
                   <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
                   <span data-ng-if="report.measurement_period === 'Installation'">Installed</span>
                   <br />
@@ -296,7 +358,7 @@
             <tr>
               <th>&nbsp;</th>
               <th data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
                   Monitored on<br />
                   {{ report.report_date }}
                 </a>
@@ -360,7 +422,7 @@
             <tr>
               <th>&nbsp;</th>
               <th data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
                   Monitored on<br />
                   {{ report.report_date }}
                 </a>
@@ -412,7 +474,7 @@
           <tbody>
             <tr data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
               <td class="align-left">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
                   {{ report.report_date }}
                 </a>
               </td>
