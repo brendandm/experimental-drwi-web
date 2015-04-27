@@ -2096,6 +2096,49 @@ angular.module('practiceMonitoringAssessmentApp')
 'use strict';
 
 /**
+ * @ngdoc service
+ * @name practiceMonitoringAssessmentApp.Storage
+ * @description
+ * Service in the practiceMonitoringAssessmentApp.
+ */
+angular.module('practiceMonitoringAssessmentApp')
+  .service('Calculate', ['Load', function(Load) {
+    return {
+      getLoadVariables: function(segment, landuse) {
+        var promise = Load.query({
+          q: {
+            filters: [
+              {
+                name: 'landriversegment',
+                op: 'eq',
+                val: segment
+              },
+              {
+                name: 'landuse',
+                op: 'eq',
+                val: landuse
+              }
+            ]
+          }
+        }, function(response) {
+          return response;
+        });
+
+        return promise;
+      },
+      getLoadTotals: function(area, efficiency) {
+        return {
+          nitrogen: (area*(efficiency.eos_totn/efficiency.eos_acres)),
+          phosphorus: (area*(efficiency.eos_totp/efficiency.eos_acres)),
+          sediment: ((area*(efficiency.eos_tss/efficiency.eos_acres))/2000)
+        };
+      }
+    };
+  }]);
+
+'use strict';
+
+/**
  * @ngdoc function
  * @name practiceMonitoringAssessmentApp.controller:PracticeEditController
  * @description
@@ -4385,9 +4428,84 @@ angular.module('practiceMonitoringAssessmentApp')
  * Service in the practiceMonitoringAssessmentApp.
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .service('LivestockExclusionCalculate', [function() {
+  .service('CalculateLivestockExclusion', ['Calculate', 'Landuse', function(Calculate, Landuse) {
     return {
+      toMiles: function(feet) {
+        return (feet/5280);
+      },
+      animalUnits: function(quantity, multiplier) {
+        return ((quantity*multiplier)/1000);
+      },
+      totalDaysPerYearInStream: function(values) {
+        return values.instream_dpmjan+values.instream_dpmfeb+values.instream_dpmmar+values.instream_dpmapr+values.instream_dpmmay+values.instream_dpmjun+values.instream_dpmjul+values.instream_dpmaug+values.instream_dpmsep+values.instream_dpmoct+values.instream_dpmnov+values.instream_dpmdec; 
+      },
+      averageHoursPerYearInStream: function(values) {
+        var totalHoursPerYearInStream = values.instream_hpdjan+values.instream_hpdfeb+values.instream_hpdmar+values.instream_hpdapr+values.instream_hpdmay+values.instream_hpdjun+values.instream_hpdjul+values.instream_hpdaug+values.instream_hpdsep+values.instream_hpdoct+values.instream_hpdnov+values.instream_hpddec; 
+        return (totalHoursPerYearInStream/12);
+      },
+      averageDaysPerYearInStream: function(values) {
+        var dpm = this.totalDaysPerYearInStream(values),
+            hpd = this.averageHoursPerYearInStream(values);
+        return (dpm*hpd/24);
+      },
+      quantityInstalled: function(values, field, format) {
 
+        var planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          if (reading.measurement_period === 'Planning') {
+            planned_total += reading[field];
+          } else if (reading.measurement_period === 'Installation') {
+            installed_total += reading[field];
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (planned_total >= 1) {
+          if (format === '%') {
+            percentage = (installed_total/planned_total);
+            return (percentage*100);
+          } else {
+            return installed_total;
+          }
+        }
+
+        return null;
+      },
+      milesInstalled: function(values, field, format) {
+
+        var installed_length = 0,
+            planned_length = 0,
+            feetInMiles = 5280;
+
+        angular.forEach(values, function(value, $index) {
+          if (values[$index].measurement_period === 'Planning') {
+            planned_length += values[$index][field];
+          }
+          else if (values[$index].measurement_period === 'Installation') {
+            installed_length += values[$index][field];
+          }
+        });
+
+        var miles_installed = installed_length/feetInMiles,
+            percentage_installed = installed_length/planned_length;
+
+        return (format === '%') ? (percentage_installed*100) : miles_installed;
+      },
+      getPrePlannedLoad: function(segment, landuse, area) {
+
+        var promise = Calculate.getLoadVariables(segment, Landuse[landuse.toLowerCase()]).$promise.then(function(efficiency) {
+          console.log('Efficienies selected', area, efficiency);
+          return Calculate.getLoadTotals(area, efficiency.features[0].properties);
+        });
+
+        return promise;
+      }
     };
   }]);
 
@@ -4401,7 +4519,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('LivestockExclusionReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse) {
+  .controller('LivestockExclusionReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', 'CalculateLivestockExclusion', 'Calculate', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateLivestockExclusion, Calculate) {
 
     //
     // Assign project to a scoped variable
@@ -4415,6 +4533,9 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.practice = practice;
     $scope.practice.practice_type = 'livestock-exclusion';
     $scope.practice.readings = readings;
+
+    console.log('readings', readings);
+
     $scope.practice_efficiency = null;
 
     $scope.storage = Storage[$scope.practice.practice_type];
@@ -4424,182 +4545,23 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.user.feature = {};
     $scope.user.template = {};
 
+
     $scope.landuse = Landuse;
 
-    $scope.GetTotal = function(period) {
+    $scope.calculate = CalculateLivestockExclusion;
 
-      var total = 0;
+    // //
+    // // Calculate Load Values
+    // //
+    // $scope.loads = {
+    //   preproject: null,
+    //   planned: null,
+    //   installed: null
+    // };
 
-      for (var i = 0; i < $scope.practice.readings.length; i++) {
-        if ($scope.practice.readings[i].measurement_period === period) {
-          total++;
-        }
-      }
-
-      return total;
-    };
-
-    $scope.total = {
-      planning: $scope.GetTotal('Planning'),
-      installation: $scope.GetTotal('Installation'),
-      monitoring: $scope.GetTotal('Monitoring')
-    };
-
-    //
-    // Load Land river segment details
-    //
-    Feature.GetFeature({
-      storage: commonscloud.collections.land_river_segment.storage,
-      featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
-    }).then(function(response) {
-      $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0] = response;
-    });
-
-    $scope.readings = {
-      bufferWidth: function() {
-        for (var i = 0; i < $scope.practice.readings.length; i++) {
-          if ($scope.practice.readings[i].measurement_period === 'Planning') {
-            return $scope.practice.readings[i].average_width_of_buffer;
-          }
-        }
-      },
-      add: function(practice, readingType) {
-        //
-        // Creating a practice reading is a two step process.
-        //
-        //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
-        //     for the Practice Reading table
-        //  2. Update the Practice to create a relationship with the Reading created in step 1 
-        //
-        Feature.CreateFeature({
-          storage: $scope.storage.storage,
-          data: {
-            measurement_period: (readingType) ? readingType : null,
-            average_width_of_buffer: $scope.readings.bufferWidth(),
-            report_date: moment().format('YYYY-MM-DD'),
-            owner: $scope.user.id,
-            status: 'private'
-          }
-        }).then(function(reportId) {
-
-          var data = {};
-          data[$scope.storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
-
-          //
-          // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
-          // to submit all relationships that are created and should remain. If we only submit the new
-          // ID the system will kick out the sites that were added previously.
-          //
-          Feature.UpdateFeature({
-            storage: commonscloud.collections.practice.storage,
-            featureId: practice.id,
-            data: data
-          }).then(function() {
-            //
-            // Once the new Reading has been associated with the existing Practice we need to
-            // display the form to the user, allowing them to complete it.
-            //
-            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
-          });
-        });
-      },
-      addReading: function(practice, readingType) {
-        //
-        // Creating a practice reading is a two step process.
-        //
-        //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
-        //     for the Practice Reading table
-        //  2. Update the Practice to create a relationship with the Reading created in step 1 
-        //
-        Feature.CreateFeature({
-          storage: $scope.storage.storage,
-          data: {
-            measurement_period: (readingType) ? readingType : null,
-            report_date: moment().format('YYYY-MM-DD'),
-            owner: $scope.user.id,
-            status: 'private'
-          }
-        }).then(function(reportId) {
-
-          var data = {};
-          data[$scope.storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
-
-          //
-          // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
-          // to submit all relationships that are created and should remain. If we only submit the new
-          // ID the system will kick out the sites that were added previously.
-          //
-          Feature.UpdateFeature({
-            storage: commonscloud.collections.practice.storage,
-            featureId: practice.id,
-            data: data
-          }).then(function() {
-            //
-            // Once the new Reading has been associated with the existing Practice we need to
-            // display the form to the user, allowing them to complete it.
-            //
-            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
-          });
-        });
-      }
-    };
-
-    //
-    // Setup basic page variables
-    //
-    $rootScope.page = {
-      template: '/modules/components/practices/views/practices--view.html',
-      title: $scope.site.site_number + ' « ' + $scope.project.project_title,
-      links: [
-        {
-          text: 'Projects',
-          url: '/projects'
-        },
-        {
-          text: $scope.project.project_title,
-          url: '/projects/' + $scope.project.id,
-        },
-        {
-          text: $scope.site.site_number,
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id
-        },
-        {
-          text: $scope.practice.name,
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type,
-          type: 'active'
-        }    
-      ],
-      actions: [
-        {
-          type: 'button-link new',
-          action: function() {
-            $scope.readings.add($scope.practice);
-          },
-          text: 'Add Measurement Data'
-        }
-      ],
-      refresh: function() {
-        $route.reload();
-      }
-    };
-
-
-    $scope.GetAllReadings = function(existingReadings, readingId) {
-
-      var updatedReadings = [{
-        id: readingId // Start by adding the newest relationships, then we'll add the existing sites
-      }];
-
-      angular.forEach(existingReadings, function(reading, $index) {
-        updatedReadings.push({
-          id: reading.id
-        });
-      });
-
-      return updatedReadings;
-    };
-
-    $scope.calculate = {};
+    // $scope.calculate.getPrePlannedLoad($scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].name, 'alfalfa nutrient management', (25*29472)).then(function(response) {
+    //   $scope.loads = response;
+    // });
 
     $scope.calculate.GetLoadVariables = function(period, landuse) {
 
@@ -4616,8 +4578,8 @@ angular.module('practiceMonitoringAssessmentApp')
 
       for (var i = 0; i < $scope.practice.readings.length; i++) {
         if ($scope.practice.readings[i].measurement_period === period) {
-          planned.length = $scope.practice.readings[i].length_of_buffer;
-          planned.width = $scope.practice.readings[i].average_width_of_buffer;
+          planned.length = $scope.practice.readings[i].length_of_fencing;
+          planned.width = $scope.practice.readings[i].average_buffer_width;
           planned.area = ((planned.length*planned.width)/43560);
           planned.landuse = (landuse) ? landuse : $scope.landuse[$scope.practice.readings[i].existing_riparian_landuse.toLowerCase()];
 
@@ -4686,8 +4648,8 @@ angular.module('practiceMonitoringAssessmentApp')
           if ($scope.practice.readings[i].measurement_period === period) {
 
             var that = {
-              length: $scope.practice.readings[i].length_of_buffer,
-              width: $scope.practice.readings[i].average_width_of_buffer
+              length: $scope.practice.readings[i].length_of_fencing,
+              width: $scope.practice.readings[i].average_buffer_width
             };
 
             total_area += (that.length*that.width);
@@ -4884,22 +4846,188 @@ angular.module('practiceMonitoringAssessmentApp')
     // Scope elements that run the actual equations and send them back to the user interface for display
     //
     $scope.calculate.results = {
-      percentageLengthOfBuffer: {
-        percentage: $scope.calculate.GetPercentageOfInstalled('length_of_buffer', 'percentage'),
-        total: $scope.calculate.GetPercentageOfInstalled('length_of_buffer')
-      },
-      percentageTreesPlanted: {
-        percentage: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted', 'percentage'),
-        total: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted')
-      },
       totalPreInstallationLoad: $scope.calculate.GetPreInstallationLoad('Planning'),
       totalPlannedLoad: $scope.calculate.GetPlannedLoad('Planning'),
-      totalInstalledLoad: $scope.calculate.GetInstalledLoad('Installation'),
-      totalMilesRestored: $scope.calculate.GetRestorationTotal(5280),
-      percentageMilesRestored: $scope.calculate.GetRestorationPercentage(5280, false),
-      totalAcresRestored: $scope.calculate.GetRestorationTotal(43560, true),
-      percentageAcresRestored: $scope.calculate.GetRestorationPercentage(43560, true),
+      totalInstalledLoad: $scope.calculate.GetInstalledLoad('Installation')
     };
+
+
+    //
+    //
+    //
+    $scope.GetTotal = function(period) {
+
+      var total = 0;
+
+      for (var i = 0; i < $scope.practice.readings.length; i++) {
+        if ($scope.practice.readings[i].measurement_period === period) {
+          total++;
+        }
+      }
+
+      return total;
+    };
+
+    $scope.total = {
+      planning: $scope.GetTotal('Planning'),
+      installation: $scope.GetTotal('Installation'),
+      monitoring: $scope.GetTotal('Monitoring')
+    };
+
+    //
+    // Load Land river segment details
+    //
+    Feature.GetFeature({
+      storage: commonscloud.collections.land_river_segment.storage,
+      featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
+    }).then(function(response) {
+      $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0] = response;
+    });
+
+    $scope.readings = {
+      bufferWidth: function() {
+        for (var i = 0; i < $scope.practice.readings.length; i++) {
+          if ($scope.practice.readings[i].measurement_period === 'Planning') {
+            return $scope.practice.readings[i].average_width_of_buffer;
+          }
+        }
+      },
+      add: function(practice, readingType) {
+        //
+        // Creating a practice reading is a two step process.
+        //
+        //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
+        //     for the Practice Reading table
+        //  2. Update the Practice to create a relationship with the Reading created in step 1 
+        //
+        Feature.CreateFeature({
+          storage: $scope.storage.storage,
+          data: {
+            measurement_period: (readingType) ? readingType : null,
+            average_width_of_buffer: $scope.readings.bufferWidth(),
+            report_date: moment().format('YYYY-MM-DD'),
+            owner: $scope.user.id,
+            status: 'private'
+          }
+        }).then(function(reportId) {
+
+          var data = {};
+          data[$scope.storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
+
+          //
+          // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
+          // to submit all relationships that are created and should remain. If we only submit the new
+          // ID the system will kick out the sites that were added previously.
+          //
+          Feature.UpdateFeature({
+            storage: commonscloud.collections.practice.storage,
+            featureId: practice.id,
+            data: data
+          }).then(function() {
+            //
+            // Once the new Reading has been associated with the existing Practice we need to
+            // display the form to the user, allowing them to complete it.
+            //
+            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
+          });
+        });
+      },
+      addReading: function(practice, readingType) {
+        //
+        // Creating a practice reading is a two step process.
+        //
+        //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
+        //     for the Practice Reading table
+        //  2. Update the Practice to create a relationship with the Reading created in step 1 
+        //
+        Feature.CreateFeature({
+          storage: $scope.storage.storage,
+          data: {
+            measurement_period: (readingType) ? readingType : null,
+            report_date: moment().format('YYYY-MM-DD'),
+            owner: $scope.user.id,
+            status: 'private'
+          }
+        }).then(function(reportId) {
+
+          var data = {};
+          data[$scope.storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
+
+          //
+          // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
+          // to submit all relationships that are created and should remain. If we only submit the new
+          // ID the system will kick out the sites that were added previously.
+          //
+          Feature.UpdateFeature({
+            storage: commonscloud.collections.practice.storage,
+            featureId: practice.id,
+            data: data
+          }).then(function() {
+            //
+            // Once the new Reading has been associated with the existing Practice we need to
+            // display the form to the user, allowing them to complete it.
+            //
+            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
+          });
+        });
+      }
+    };
+
+    //
+    // Setup basic page variables
+    //
+    $rootScope.page = {
+      template: '/modules/components/practices/views/practices--view.html',
+      title: $scope.site.site_number + ' « ' + $scope.project.project_title,
+      links: [
+        {
+          text: 'Projects',
+          url: '/projects'
+        },
+        {
+          text: $scope.project.project_title,
+          url: '/projects/' + $scope.project.id,
+        },
+        {
+          text: $scope.site.site_number,
+          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id
+        },
+        {
+          text: $scope.practice.name,
+          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type,
+          type: 'active'
+        }    
+      ],
+      actions: [
+        {
+          type: 'button-link new',
+          action: function() {
+            $scope.readings.add($scope.practice);
+          },
+          text: 'Add Measurement Data'
+        }
+      ],
+      refresh: function() {
+        $route.reload();
+      }
+    };
+
+
+    $scope.GetAllReadings = function(existingReadings, readingId) {
+
+      var updatedReadings = [{
+        id: readingId // Start by adding the newest relationships, then we'll add the existing sites
+      }];
+
+      angular.forEach(existingReadings, function(reading, $index) {
+        updatedReadings.push({
+          id: reading.id
+        });
+      });
+
+      return updatedReadings;
+    };
+
 
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
@@ -4937,8 +5065,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
       });
     }
-
-
+    
   }]);
 
 'use strict';
@@ -5861,6 +5988,26 @@ angular.module('practiceMonitoringAssessmentApp')
       return Application;
     }];
   });
+
+'use strict';
+
+/**
+ * @ngdoc service
+ * @name cleanWaterCommunitiesApp.ImperviousSurfaceResource
+ * @description
+ * # ImperviousSurfaceResource
+ * Service in the managerApp.
+ */
+angular.module('practiceMonitoringAssessmentApp')
+  .service('Load', ['$resource', 'commonscloud', function ($resource, commonscloud) {
+    return $resource(commonscloud.baseurl + commonscloud.collections.loaddata.storage + '/:id.geojson', {
+      id: '@id'
+    }, {
+      query: {
+        isArray: false
+      },
+    });
+  }]);
 
 'use strict';
 
