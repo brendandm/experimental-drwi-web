@@ -154,6 +154,7 @@
             <!-- Measurement Period Headings -->
             <tr>
               <th>&nbsp;</th>
+              <th>&nbsp;</th>
               <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
                   <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
@@ -169,6 +170,7 @@
             <!-- Installation Summary -->
             <tr>
               <th>Length of Stream Fencing Installed (ft)</th>
+              <td>&nbsp;</td>
               <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.length_of_fencing | number:2 }}</td>
               <td>
                 <strong>
@@ -183,6 +185,7 @@
             </tr>
             <tr>
               <th>Average Buffer Width (ft)</th>
+              <td>&nbsp;</td>
               <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ report.average_buffer_width | number:2 }}
               </td>
@@ -192,6 +195,7 @@
             </tr>
             <tr>
               <th>Buffer Type</th>
+              <td>&nbsp;</td>
               <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ report.buffer_type }}
               </td>
@@ -201,6 +205,7 @@
             </tr>
             <tr>
               <th>Extent of Exclusion (if not 100%)</th>
+              <td>&nbsp;</td>
               <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ report.extent_of_exclusion | number:2 }}
               </td>
@@ -209,6 +214,36 @@
               <td>&nbsp;</td>
             </tr>
 
+            <tr class="no-rule">
+              <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+                <h2><strong>Chesapeake</strong> Bay Metrics</h2>
+              </td>
+            </tr>
+
+            <tr>
+              <th>&nbsp;</th>
+              <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
+              <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                  <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
+                  <span data-ng-if="report.measurement_period === 'Installation'">Installed</span>
+                  <br />
+                  {{ report.report_date }}
+                </a>
+              </th>
+              <th>Installed To-date</th>
+              <th>% of Planned</th>
+            </tr>
+
+            <tr>
+              <th>Miles of Fencing Installed</th>
+              <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
+              <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                {{ calculate.toMiles(report.length_of_fencing) | number:2 }}
+              </td>
+             <td><strong>{{ calculate.milesInstalled(practice.readings, 'length_of_fencing') | number:2 }}</strong> miles</td>
+             <td><strong>{{ calculate.milesInstalled(practice.readings, 'length_of_fencing', '%') | number:2 }}</strong> %</td>
+            </tr>
           </tbody>
         </table>
       </div>

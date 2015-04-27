@@ -9,6 +9,9 @@
 angular.module('practiceMonitoringAssessmentApp')
   .service('CalculateLivestockExclusion', [function() {
     return {
+      toMiles: function(feet) {
+        return (feet/5280);
+      },
       animalUnits: function(quantity, multiplier) {
         return ((quantity*multiplier)/1000);
       },
@@ -52,6 +55,28 @@ angular.module('practiceMonitoringAssessmentApp')
         }
 
         return null;
+      },
+      milesInstalled: function(values, field, format) {
+
+        var installed_length = 0,
+            planned_length = 0,
+            feetInMiles = 5280;
+
+        angular.forEach(values, function(value, $index) {
+          if (values[$index].measurement_period === 'Planning') {
+            planned_length += values[$index][field];
+          }
+          else if (values[$index].measurement_period === 'Installation') {
+            installed_length += values[$index][field];
+          }
+        });
+
+        var miles_installed = installed_length/feetInMiles,
+            percentage_installed = installed_length/planned_length;
+
+        console.log('milesInstalled', miles_installed, percentage_installed, installed_length, planned_length);
+
+        return (format === '%') ? (percentage_installed*100) : miles_installed;
       }
     };
   }]);
