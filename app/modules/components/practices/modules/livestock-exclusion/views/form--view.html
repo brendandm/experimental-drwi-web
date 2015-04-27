@@ -113,17 +113,6 @@
 
             <p data-ng-if="fields.length_of_stream_with_livestock_access.help" class="help-text">{{ fields.length_of_stream_with_livestock_access.help }}</p>
           </div>
-          <!-- Length of Fencing -->
-          <div class="column-1"></div>
-          <div class="form-group column-4">
-            <label for="length_of_fencing" class="control-label">
-              Length of Fencing
-            </label>
-
-            <input data-ng-model="report.length_of_fencing" class="form-control" class="form-control" type="number" id="length_of_fencing" name="length_of_fencing" />
-
-            <p data-ng-if="fields.length_of_fencing.help" class="help-text">{{ fields.length_of_fencing.help }}</p>
-          </div>
           <!-- Average Buffer Width -->
           <div class="column-1"></div>
           <div class="form-group column-4">
@@ -134,6 +123,18 @@
             <input data-ng-model="report.average_buffer_width" class="form-control" class="form-control" type="number" id="average_buffer_width" name="average_buffer_width" />
 
             <p data-ng-if="fields.average_buffer_width.help" class="help-text">{{ fields.average_buffer_width.help }}</p>
+          </div>
+        </div>
+        <div class="row">
+          <!-- Length of Fencing -->
+          <div class="form-group column-5">
+            <label for="length_of_fencing" class="control-label">
+              Length of Fencing to be Installed
+            </label>
+
+            <input data-ng-model="report.length_of_fencing" class="form-control" class="form-control" type="number" id="length_of_fencing" name="length_of_fencing" />
+
+            <p data-ng-if="fields.length_of_fencing.help" class="help-text">{{ fields.length_of_fencing.help }}</p>
           </div>
         </div>
 
