@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('LivestockExclusionReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse) {
+  .controller('LivestockExclusionReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', 'CalculateLivestockExclusion', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateLivestockExclusion) {
 
     //
     // Assign project to a scoped variable
@@ -22,6 +22,9 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.practice = practice;
     $scope.practice.practice_type = 'livestock-exclusion';
     $scope.practice.readings = readings;
+
+    console.log('readings', readings);
+
     $scope.practice_efficiency = null;
 
     $scope.storage = Storage[$scope.practice.practice_type];
@@ -32,6 +35,8 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.user.template = {};
 
     $scope.landuse = Landuse;
+
+    $scope.calculate = CalculateLivestockExclusion;
 
     $scope.GetTotal = function(period) {
 
@@ -206,307 +211,307 @@ angular.module('practiceMonitoringAssessmentApp')
       return updatedReadings;
     };
 
-    $scope.calculate = {};
+    // $scope.calculate = {};
 
-    $scope.calculate.GetLoadVariables = function(period, landuse) {
+    // $scope.calculate.GetLoadVariables = function(period, landuse) {
 
-      var planned = {
-        width: 0,
-        length: 0,
-        area: 0,
-        landuse: '',
-        segment: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].name,
-        efficieny: null
-      };
+    //   var planned = {
+    //     width: 0,
+    //     length: 0,
+    //     area: 0,
+    //     landuse: '',
+    //     segment: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].name,
+    //     efficieny: null
+    //   };
 
-      var deferred = $q.defer();
+    //   var deferred = $q.defer();
 
-      for (var i = 0; i < $scope.practice.readings.length; i++) {
-        if ($scope.practice.readings[i].measurement_period === period) {
-          planned.length = $scope.practice.readings[i].length_of_buffer;
-          planned.width = $scope.practice.readings[i].average_width_of_buffer;
-          planned.area = ((planned.length*planned.width)/43560);
-          planned.landuse = (landuse) ? landuse : $scope.landuse[$scope.practice.readings[i].existing_riparian_landuse.toLowerCase()];
+    //   for (var i = 0; i < $scope.practice.readings.length; i++) {
+    //     if ($scope.practice.readings[i].measurement_period === period) {
+    //       planned.length = $scope.practice.readings[i].length_of_buffer;
+    //       planned.width = $scope.practice.readings[i].average_width_of_buffer;
+    //       planned.area = ((planned.length*planned.width)/43560);
+    //       planned.landuse = (landuse) ? landuse : $scope.landuse[$scope.practice.readings[i].existing_riparian_landuse.toLowerCase()];
 
-          var promise = $http.get('//api.commonscloud.org/v2/type_3fbea3190b634d0c9021d8e67df84187.json', {
-            params: {
-              q: {
-                filters: [
-                  {
-                    name: 'landriversegment',
-                    op: 'eq',
-                    val: planned.segment
-                  },
-                  {
-                    name: 'landuse',
-                    op: 'eq',
-                    val: planned.landuse
-                  }
-                ]
-              }
-            },
-            headers: {
-              'Authorization': 'external'
-            }
-          }).success(function(data, status, headers, config) {
-            planned.efficieny = data.response.features[0];
-            deferred.resolve(planned);
-          });
-        }
-      }
+    //       var promise = $http.get('//api.commonscloud.org/v2/type_3fbea3190b634d0c9021d8e67df84187.json', {
+    //         params: {
+    //           q: {
+    //             filters: [
+    //               {
+    //                 name: 'landriversegment',
+    //                 op: 'eq',
+    //                 val: planned.segment
+    //               },
+    //               {
+    //                 name: 'landuse',
+    //                 op: 'eq',
+    //                 val: planned.landuse
+    //               }
+    //             ]
+    //           }
+    //         },
+    //         headers: {
+    //           'Authorization': 'external'
+    //         }
+    //       }).success(function(data, status, headers, config) {
+    //         planned.efficieny = data.response.features[0];
+    //         deferred.resolve(planned);
+    //       });
+    //     }
+    //   }
 
-      return deferred.promise;
-    };
+    //   return deferred.promise;
+    // };
 
-    $scope.calculate.GetInstalledLoadVariables = function(period, landuse) {
+    // $scope.calculate.GetInstalledLoadVariables = function(period, landuse) {
 
-      var segment = $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].name;
+    //   var segment = $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].name;
 
-      var deferred = $q.defer();
+    //   var deferred = $q.defer();
 
-      var promise = $http.get('//api.commonscloud.org/v2/type_3fbea3190b634d0c9021d8e67df84187.json', {
-        params: {
-          q: {
-            filters: [
-              {
-                name: 'landriversegment',
-                op: 'eq',
-                val: segment
-              },
-              {
-                name: 'landuse',
-                op: 'eq',
-                val: landuse
-              }
-            ]
-          }
-        },
-        headers: {
-          'Authorization': 'external'
-        }
-      }).success(function(data, status, headers, config) {
+    //   var promise = $http.get('//api.commonscloud.org/v2/type_3fbea3190b634d0c9021d8e67df84187.json', {
+    //     params: {
+    //       q: {
+    //         filters: [
+    //           {
+    //             name: 'landriversegment',
+    //             op: 'eq',
+    //             val: segment
+    //           },
+    //           {
+    //             name: 'landuse',
+    //             op: 'eq',
+    //             val: landuse
+    //           }
+    //         ]
+    //       }
+    //     },
+    //     headers: {
+    //       'Authorization': 'external'
+    //     }
+    //   }).success(function(data, status, headers, config) {
         
-        var efficieny = data.response.features[0],
-            total_area = 0;
+    //     var efficieny = data.response.features[0],
+    //         total_area = 0;
 
-        for (var i = 0; i < $scope.practice.readings.length; i++) {
-          if ($scope.practice.readings[i].measurement_period === period) {
+    //     for (var i = 0; i < $scope.practice.readings.length; i++) {
+    //       if ($scope.practice.readings[i].measurement_period === period) {
 
-            var that = {
-              length: $scope.practice.readings[i].length_of_buffer,
-              width: $scope.practice.readings[i].average_width_of_buffer
-            };
+    //         var that = {
+    //           length: $scope.practice.readings[i].length_of_buffer,
+    //           width: $scope.practice.readings[i].average_width_of_buffer
+    //         };
 
-            total_area += (that.length*that.width);
-          }
-        }
+    //         total_area += (that.length*that.width);
+    //       }
+    //     }
 
-        deferred.resolve({
-          efficieny: efficieny,
-          area: (total_area/43560)
-        });
-      });
+    //     deferred.resolve({
+    //       efficieny: efficieny,
+    //       area: (total_area/43560)
+    //     });
+    //   });
 
-      return deferred.promise;
-    };
+    //   return deferred.promise;
+    // };
 
-    $scope.calculate.GetPreInstallationLoad = function(period) {
+    // $scope.calculate.GetPreInstallationLoad = function(period) {
 
-      $scope.calculate.GetLoadVariables(period).then(function(loaddata) {
+    //   $scope.calculate.GetLoadVariables(period).then(function(loaddata) {
 
-        console.log('GetPreInstallationLoad', loaddata);
+    //     console.log('GetPreInstallationLoad', loaddata);
 
-        var results = {
-          nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
-          phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
-          sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
-        };
+    //     var results = {
+    //       nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
+    //       phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
+    //       sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
+    //     };
 
-        console.log('results', results);
+    //     console.log('results', results);
 
-        $scope.calculate.results.totalPreInstallationLoad = results;
-      });
+    //     $scope.calculate.results.totalPreInstallationLoad = results;
+    //   });
 
-    };
+    // };
 
-    $scope.calculate.GetPlannedLoad = function(period) {
+    // $scope.calculate.GetPlannedLoad = function(period) {
 
-      $scope.calculate.GetLoadVariables(period, $scope.storage.landuse).then(function(loaddata) {
+    //   $scope.calculate.GetLoadVariables(period, $scope.storage.landuse).then(function(loaddata) {
 
-        console.log('GetPlannedLoad', loaddata);
+    //     console.log('GetPlannedLoad', loaddata);
 
-        var results = {
-          nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
-          phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
-          sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
-        };
+    //     var results = {
+    //       nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
+    //       phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
+    //       sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
+    //     };
 
-        console.log('results', results);
+    //     console.log('results', results);
 
-        $scope.calculate.results.totalPlannedLoad = results;
-      });
+    //     $scope.calculate.results.totalPlannedLoad = results;
+    //   });
 
-    };
-
-
-    $scope.calculate.GetInstalledLoad = function(period) {
-
-      $scope.calculate.GetInstalledLoadVariables(period, $scope.storage.landuse).then(function(loaddata) {
-
-        console.log('GetInstalledLoad', loaddata);
-
-        $scope.practice_efficiency = loaddata.efficieny;
-
-        var results = {
-          nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
-          phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
-          sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
-        };
-
-        console.log('results', results);
-
-        $scope.calculate.results.totalInstalledLoad = results;
-      });
-
-    };
-
-    //
-    // The purpose of this function is to return a percentage of the total installed versus the amount
-    // that was originally planned on being installed:
-    //
-    // (Installation+Installation+Installation) / Planned = % of Planned
-    //
-    //
-    // @param (string) field
-    //    The `field` parameter should be the field that you would like to get the percentage for
-    //
-    $scope.calculate.GetPercentageOfInstalled = function(field, format) {
-
-      var planned_total = 0,
-          installed_total = 0,
-          percentage = 0;
-
-      // Get readings organized by their Type
-      angular.forEach($scope.practice.readings, function(reading, $index) {
-
-        if (reading.measurement_period === 'Planning') {
-          planned_total += reading[field];
-        } else if (reading.measurement_period === 'Installation') {
-          installed_total += reading[field];
-        }
-
-      });
-
-      // Divide the Installed Total by the Planned Total to get a percentage of installed
-      if (planned_total >= 1) {
-        if (format === 'percentage') {
-          percentage = (installed_total/planned_total);
-          return (percentage*100);
-        } else {
-          return installed_total;
-        }
-      }
-
-      return null;
-    };
-
-    $scope.calculate.GetSingleInstalledLoad = function(length, width, element) {
-
-        var efficieny = $scope.practice_efficiency,
-            area = ((length*width)/43560),
-            value = null;
-
-        console.log('efficieny', efficieny);
-
-        if (element === 'nitrogen') {
-          value = (area*(efficieny.eos_totn/efficieny.eos_acres));
-        } else if (element === 'phosphorus') {
-          value = (area*(efficieny.eos_totp/efficieny.eos_acres));
-        } else if (element === 'sediment') {
-          value = ((area*(efficieny.eos_tss/efficieny.eos_acres))/2000);
-        }
-
-        return value;
-    };
-
-    $scope.calculate.GetTreeDensity = function(trees, length, width) {
-      return (trees/(length*width/43560));
-    };
-
-    $scope.calculate.GetPercentage = function(part, total) {
-      return ((part/total)*100);
-    };
-
-    $scope.calculate.GetConversion = function(part, total) {
-      return (part/total);
-    };
-
-    $scope.calculate.GetConversionWithArea = function(length, width, total) {
-      return ((length*width)/total);
-    };
-
-    $scope.calculate.GetRestorationTotal = function(unit, area) {
-
-      var total_area = 0;
-
-      for (var i = 0; i < $scope.practice.readings.length; i++) {
-        if ($scope.practice.readings[i].measurement_period === 'Installation') {
-          if (area) {
-            total_area += ($scope.practice.readings[i].length_of_buffer*$scope.practice.readings[i].av);
-          } else {
-            total_area += $scope.practice.readings[i].length_of_buffer;
-          }
-        }
-      }
-
-      console.log('GetRestorationTotal', total_area, unit, (total_area/unit));
+    // };
 
 
-      return (total_area/unit);
-    };
+    // $scope.calculate.GetInstalledLoad = function(period) {
 
-    $scope.calculate.GetRestorationPercentage = function(unit, area) {
+    //   $scope.calculate.GetInstalledLoadVariables(period, $scope.storage.landuse).then(function(loaddata) {
 
-      var planned_area = 0,
-          total_area = $scope.calculate.GetRestorationTotal(unit, area);
+    //     console.log('GetInstalledLoad', loaddata);
 
-      for (var i = 0; i < $scope.practice.readings.length; i++) {
-        if ($scope.practice.readings[i].measurement_period === 'Planning') {
-          if (area) {
-            planned_area = ($scope.practice.readings[i].length_of_buffer*$scope.practice.readings[i].average_width_of_buffer);
-          } else {
-            planned_area = $scope.practice.readings[i].length_of_buffer;
-          }
-        }
-      }
+    //     $scope.practice_efficiency = loaddata.efficieny;
 
-      planned_area = (planned_area/unit);
+    //     var results = {
+    //       nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
+    //       phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
+    //       sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
+    //     };
 
-      console.log(total_area, planned_area, (total_area/planned_area));
+    //     console.log('results', results);
 
-      return ((total_area/planned_area)*100);
-    };
+    //     $scope.calculate.results.totalInstalledLoad = results;
+    //   });
 
-    //
-    // Scope elements that run the actual equations and send them back to the user interface for display
-    //
-    $scope.calculate.results = {
-      percentageLengthOfBuffer: {
-        percentage: $scope.calculate.GetPercentageOfInstalled('length_of_buffer', 'percentage'),
-        total: $scope.calculate.GetPercentageOfInstalled('length_of_buffer')
-      },
-      percentageTreesPlanted: {
-        percentage: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted', 'percentage'),
-        total: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted')
-      },
-      totalPreInstallationLoad: $scope.calculate.GetPreInstallationLoad('Planning'),
-      totalPlannedLoad: $scope.calculate.GetPlannedLoad('Planning'),
-      totalInstalledLoad: $scope.calculate.GetInstalledLoad('Installation'),
-      totalMilesRestored: $scope.calculate.GetRestorationTotal(5280),
-      percentageMilesRestored: $scope.calculate.GetRestorationPercentage(5280, false),
-      totalAcresRestored: $scope.calculate.GetRestorationTotal(43560, true),
-      percentageAcresRestored: $scope.calculate.GetRestorationPercentage(43560, true),
-    };
+    // };
+
+    // //
+    // // The purpose of this function is to return a percentage of the total installed versus the amount
+    // // that was originally planned on being installed:
+    // //
+    // // (Installation+Installation+Installation) / Planned = % of Planned
+    // //
+    // //
+    // // @param (string) field
+    // //    The `field` parameter should be the field that you would like to get the percentage for
+    // //
+    // $scope.calculate.GetPercentageOfInstalled = function(field, format) {
+
+    //   var planned_total = 0,
+    //       installed_total = 0,
+    //       percentage = 0;
+
+    //   // Get readings organized by their Type
+    //   angular.forEach($scope.practice.readings, function(reading, $index) {
+
+    //     if (reading.measurement_period === 'Planning') {
+    //       planned_total += reading[field];
+    //     } else if (reading.measurement_period === 'Installation') {
+    //       installed_total += reading[field];
+    //     }
+
+    //   });
+
+    //   // Divide the Installed Total by the Planned Total to get a percentage of installed
+    //   if (planned_total >= 1) {
+    //     if (format === 'percentage') {
+    //       percentage = (installed_total/planned_total);
+    //       return (percentage*100);
+    //     } else {
+    //       return installed_total;
+    //     }
+    //   }
+
+    //   return null;
+    // };
+
+    // $scope.calculate.GetSingleInstalledLoad = function(length, width, element) {
+
+    //     var efficieny = $scope.practice_efficiency,
+    //         area = ((length*width)/43560),
+    //         value = null;
+
+    //     console.log('efficieny', efficieny);
+
+    //     if (element === 'nitrogen') {
+    //       value = (area*(efficieny.eos_totn/efficieny.eos_acres));
+    //     } else if (element === 'phosphorus') {
+    //       value = (area*(efficieny.eos_totp/efficieny.eos_acres));
+    //     } else if (element === 'sediment') {
+    //       value = ((area*(efficieny.eos_tss/efficieny.eos_acres))/2000);
+    //     }
+
+    //     return value;
+    // };
+
+    // $scope.calculate.GetTreeDensity = function(trees, length, width) {
+    //   return (trees/(length*width/43560));
+    // };
+
+    // $scope.calculate.GetPercentage = function(part, total) {
+    //   return ((part/total)*100);
+    // };
+
+    // $scope.calculate.GetConversion = function(part, total) {
+    //   return (part/total);
+    // };
+
+    // $scope.calculate.GetConversionWithArea = function(length, width, total) {
+    //   return ((length*width)/total);
+    // };
+
+    // $scope.calculate.GetRestorationTotal = function(unit, area) {
+
+    //   var total_area = 0;
+
+    //   for (var i = 0; i < $scope.practice.readings.length; i++) {
+    //     if ($scope.practice.readings[i].measurement_period === 'Installation') {
+    //       if (area) {
+    //         total_area += ($scope.practice.readings[i].length_of_buffer*$scope.practice.readings[i].av);
+    //       } else {
+    //         total_area += $scope.practice.readings[i].length_of_buffer;
+    //       }
+    //     }
+    //   }
+
+    //   console.log('GetRestorationTotal', total_area, unit, (total_area/unit));
+
+
+    //   return (total_area/unit);
+    // };
+
+    // $scope.calculate.GetRestorationPercentage = function(unit, area) {
+
+    //   var planned_area = 0,
+    //       total_area = $scope.calculate.GetRestorationTotal(unit, area);
+
+    //   for (var i = 0; i < $scope.practice.readings.length; i++) {
+    //     if ($scope.practice.readings[i].measurement_period === 'Planning') {
+    //       if (area) {
+    //         planned_area = ($scope.practice.readings[i].length_of_buffer*$scope.practice.readings[i].average_width_of_buffer);
+    //       } else {
+    //         planned_area = $scope.practice.readings[i].length_of_buffer;
+    //       }
+    //     }
+    //   }
+
+    //   planned_area = (planned_area/unit);
+
+    //   console.log(total_area, planned_area, (total_area/planned_area));
+
+    //   return ((total_area/planned_area)*100);
+    // };
+
+    // //
+    // // Scope elements that run the actual equations and send them back to the user interface for display
+    // //
+    // $scope.calculate.results = {
+    //   percentageLengthOfBuffer: {
+    //     percentage: $scope.calculate.GetPercentageOfInstalled('length_of_buffer', 'percentage'),
+    //     total: $scope.calculate.GetPercentageOfInstalled('length_of_buffer')
+    //   },
+    //   percentageTreesPlanted: {
+    //     percentage: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted', 'percentage'),
+    //     total: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted')
+    //   },
+    //   totalPreInstallationLoad: $scope.calculate.GetPreInstallationLoad('Planning'),
+    //   totalPlannedLoad: $scope.calculate.GetPlannedLoad('Planning'),
+    //   totalInstalledLoad: $scope.calculate.GetInstalledLoad('Installation'),
+    //   totalMilesRestored: $scope.calculate.GetRestorationTotal(5280),
+    //   percentageMilesRestored: $scope.calculate.GetRestorationPercentage(5280, false),
+    //   totalAcresRestored: $scope.calculate.GetRestorationTotal(43560, true),
+    //   percentageAcresRestored: $scope.calculate.GetRestorationPercentage(43560, true),
+    // };
 
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
