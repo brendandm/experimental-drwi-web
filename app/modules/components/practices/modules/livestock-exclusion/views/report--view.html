@@ -22,13 +22,15 @@
             <!-- Measurement Period Headings -->
             <tr>
               <th>&nbsp;</th>
-              <th data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
-                  <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
-                  <br />
-                  {{ report.report_date }}                  
-                </a>
+              <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                Planned<br />
+                {{ report.report_date }}
               </th>
+              <th data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                &nbsp;
+              </th>
+              <th>&nbsp;</th>
+              <th>&nbsp;</th>
             </tr>
 
             <!-- Pre-project Summary -->
@@ -37,32 +39,73 @@
               <td data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ report.length_of_stream_with_livestock_access | number:2 }}
               </td>
+              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                &nbsp;
+              </td>
+              <th>&nbsp;</th>
+              <th>&nbsp;</th>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
             </tr>
             <tr>
               <th>Number of Livestock (head)</th>
               <td data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ report.number_of_livestock | number:2 }}
               </td>
+              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                &nbsp;
+              </td>
+              <th>&nbsp;</th>
+              <th>&nbsp;</th>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
             </tr>
             <tr>
               <th>Type of Livestock</th>
               <td data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ report.animal_type }}
               </td>
+              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                &nbsp;
+              </td>
+              <td>&nbsp;</td>
+              <th>&nbsp;</th>
+              <th>&nbsp;</th>
+              <td>&nbsp;</td>
             </tr>
             <tr>
               <th>Average Weight of Livestock (lbs/head)</th>
               <td data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ report.average_weight | number:2 }}
               </td>
+              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                &nbsp;
+              </td>
+              <th>&nbsp;</th>
+              <th>&nbsp;</th>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
             </tr>
             <tr>
               <th>Number of Animal Units (AU)</th>
               <td data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ calculate.animalUnits(report.number_of_livestock, report.average_weight) }}
               </td>
+              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                &nbsp;
+              </td>
+              <th>&nbsp;</th>
+              <th>&nbsp;</th>
+              <td>&nbsp;</td>
+              <td>&nbsp;</td>
             </tr>
+          </tbody>
+        </table>
+      </div>
 
+      <div data-ng-if="total.planning">
+        <table class="table">
+          <tbody>
             <!-- Section Heading -->
             <tr class="no-rule">
               <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">

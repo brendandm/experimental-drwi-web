@@ -19,6 +19,11 @@ th {
 td,
 th {
   padding: 0;
+  width: 400px;
+}
+
+.table > tbody > tr > th {
+  white-space: nowrap;
 }
 
 .table {
