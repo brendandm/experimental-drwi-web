@@ -31,6 +31,35 @@
         </div>
       </fieldset>
 
+      <fieldset data-ng-if="report.measurement_period === 'Planning'" class="row">
+        <h2><strong>Landuse</strong></h2>
+
+        <!-- Existing Landuse -->
+        <div class="form-group column-7">
+          <label for="existing_riparian_landuse" class="control-label">
+            Existing Landuse
+          </label>
+
+          <select class="form-control" data-ng-model="report.existing_riparian_landuse" id="existing_riparian_landuse" name="existing_riparian_landuse" data-ng-options="value for value in fields.existing_riparian_landuse.options">
+          </select>
+
+          <p data-ng-if="fields.existing_riparian_landuse.help" class="help-text">{{ fields.existing_riparian_landuse.help }}</p>
+        </div>
+
+        <!-- Upland Landuse -->
+        <div class="column-2"></div>
+        <div class="form-group column-7">
+          <label for="upland_landuse" class="control-label">
+            Upland Landuse
+          </label>
+
+          <select class="form-control" data-ng-model="report.upland_landuse" id="upland_landuse" name="upland_landuse" data-ng-options="value for value in fields.upland_landuse.options">
+          </select>
+
+          <p data-ng-if="fields.upland_landuse.help" class="help-text">{{ fields.upland_landuse.help }}</p>
+        </div>
+      </fieldset>
+
       <fieldset data-ng-if="report.measurement_period === 'Planning'">
         <h2><strong>Pre-project</strong> Summary</h2>
 
@@ -189,10 +218,10 @@
                 January
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_dpmjan" class="form-control" class="form-control" type="number" id="instream_dpmjan" name="instream_dpmjan" />
+                <input data-ng-model="report.instream_dpmjan" class="form-control" class="form-control" type="number" id="instream_dpmjan" name="instream_dpmjan" min="0" max="31" />
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_hpdjan" class="form-control" class="form-control" type="number" id="instream_hpdjan" name="instream_hpdjan" />
+                <input data-ng-model="report.instream_hpdjan" class="form-control" class="form-control" type="number" id="instream_hpdjan" name="instream_hpdjan" min="0" max="24" />
               </div>
             </div>
             <div class="row">
@@ -200,10 +229,10 @@
                 February
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_dpmfeb" class="form-control" class="form-control" type="number" id="instream_dpmfeb" name="instream_dpmfeb" />
+                <input data-ng-model="report.instream_dpmfeb" class="form-control" class="form-control" type="number" id="instream_dpmfeb" name="instream_dpmfeb" min="0" max="29" />
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_hpdfeb" class="form-control" class="form-control" type="number" id="instream_hpdfeb" name="instream_hpdfeb" />
+                <input data-ng-model="report.instream_hpdfeb" class="form-control" class="form-control" type="number" id="instream_hpdfeb" name="instream_hpdfeb" min="0" max="24" />
               </div>
             </div>
             <div class="row">
@@ -211,10 +240,10 @@
                   March
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_dpmmar" class="form-control" class="form-control" type="number" id="instream_dpmmar" name="instream_dpmmar" />
+                <input data-ng-model="report.instream_dpmmar" class="form-control" class="form-control" type="number" id="instream_dpmmar" name="instream_dpmmar" min="0" max="31" />
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_hpdmar" class="form-control" class="form-control" type="number" id="instream_hpdmar" name="instream_hpdmar" />
+                <input data-ng-model="report.instream_hpdmar" class="form-control" class="form-control" type="number" id="instream_hpdmar" name="instream_hpdmar" min="0" max="24" />
               </div>
             </div>
             <div class="row">
@@ -222,10 +251,10 @@
                   April
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_dpmapr" class="form-control" class="form-control" type="number" id="instream_dpmapr" name="instream_dpmapr" />
+                <input data-ng-model="report.instream_dpmapr" class="form-control" class="form-control" type="number" id="instream_dpmapr" name="instream_dpmapr" min="0" max="30" />
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_hpdapr" class="form-control" class="form-control" type="number" id="instream_hpdapr" name="instream_hpdapr" />
+                <input data-ng-model="report.instream_hpdapr" class="form-control" class="form-control" type="number" id="instream_hpdapr" name="instream_hpdapr" min="0" max="24" />
               </div>
             </div>
             <div class="row">
@@ -233,10 +262,10 @@
                   May
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_dpmmay" class="form-control" class="form-control" type="number" id="instream_dpmmay" name="instream_dpmmay" />
+                <input data-ng-model="report.instream_dpmmay" class="form-control" class="form-control" type="number" id="instream_dpmmay" name="instream_dpmmay" min="0" max="31" />
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_hpdmay" class="form-control" class="form-control" type="number" id="instream_hpdmay" name="instream_hpdmay" />
+                <input data-ng-model="report.instream_hpdmay" class="form-control" class="form-control" type="number" id="instream_hpdmay" name="instream_hpdmay" min="0" max="24" />
               </div>
             </div>
             <div class="row">
@@ -244,10 +273,10 @@
                   June
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_dpmjun" class="form-control" class="form-control" type="number" id="instream_dpmjun" name="instream_dpmjun" />
+                <input data-ng-model="report.instream_dpmjun" class="form-control" class="form-control" type="number" id="instream_dpmjun" name="instream_dpmjun" min="0" max="30" />
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_hpdjun" class="form-control" class="form-control" type="number" id="instream_hpdjun" name="instream_hpdjun" />
+                <input data-ng-model="report.instream_hpdjun" class="form-control" class="form-control" type="number" id="instream_hpdjun" name="instream_hpdjun" min="0" max="24" />
               </div>
             </div>
             <div class="row">
@@ -255,10 +284,10 @@
                   July
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_dpmjul" class="form-control" class="form-control" type="number" id="instream_dpmjul" name="instream_dpmjul" />
+                <input data-ng-model="report.instream_dpmjul" class="form-control" class="form-control" type="number" id="instream_dpmjul" name="instream_dpmjul" min="0" max="31" />
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_hpdjul" class="form-control" class="form-control" type="number" id="instream_hpdjul" name="instream_hpdjul" />
+                <input data-ng-model="report.instream_hpdjul" class="form-control" class="form-control" type="number" id="instream_hpdjul" name="instream_hpdjul" min="0" max="24" />
               </div>
             </div>
             <div class="row">
@@ -266,10 +295,10 @@
                   August
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_dpmaug" class="form-control" class="form-control" type="number" id="instream_dpmaug" name="instream_dpmaug" />
+                <input data-ng-model="report.instream_dpmaug" class="form-control" class="form-control" type="number" id="instream_dpmaug" name="instream_dpmaug" min="0" max="31" />
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_hpdaug" class="form-control" class="form-control" type="number" id="instream_hpdaug" name="instream_hpdaug" />
+                <input data-ng-model="report.instream_hpdaug" class="form-control" class="form-control" type="number" id="instream_hpdaug" name="instream_hpdaug" min="0" max="24" />
               </div>
             </div>
             <div class="row">
@@ -277,10 +306,10 @@
                   September
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_dpmsep" class="form-control" class="form-control" type="number" id="instream_dpmsep" name="instream_dpmsep" />
+                <input data-ng-model="report.instream_dpmsep" class="form-control" class="form-control" type="number" id="instream_dpmsep" name="instream_dpmsep" min="0" max="30" />
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_hpdsep" class="form-control" class="form-control" type="number" id="instream_hpdsep" name="instream_hpdsep" />
+                <input data-ng-model="report.instream_hpdsep" class="form-control" class="form-control" type="number" id="instream_hpdsep" name="instream_hpdsep" min="0" max="24" />
               </div>
             </div>
             <div class="row">
@@ -288,10 +317,10 @@
                   October
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_dpmoct" class="form-control" class="form-control" type="number" id="instream_dpmoct" name="instream_dpmoct" />
+                <input data-ng-model="report.instream_dpmoct" class="form-control" class="form-control" type="number" id="instream_dpmoct" name="instream_dpmoct" min="0" max="31" />
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_hpdoct" class="form-control" class="form-control" type="number" id="instream_hpdoct" name="instream_hpdoct" />
+                <input data-ng-model="report.instream_hpdoct" class="form-control" class="form-control" type="number" id="instream_hpdoct" name="instream_hpdoct" min="0" max="24" />
               </div>
             </div>
             <div class="row">
@@ -299,10 +328,10 @@
                   November
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_dpmnov" class="form-control" class="form-control" type="number" id="instream_dpmnov" name="instream_dpmnov" />
+                <input data-ng-model="report.instream_dpmnov" class="form-control" class="form-control" type="number" id="instream_dpmnov" name="instream_dpmnov" min="0" max="30" />
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_hpdnov" class="form-control" class="form-control" type="number" id="instream_hpdnov" name="instream_hpdnov" />
+                <input data-ng-model="report.instream_hpdnov" class="form-control" class="form-control" type="number" id="instream_hpdnov" name="instream_hpdnov" min="0" max="24" />
               </div>
             </div>
             <div class="row">
@@ -310,10 +339,10 @@
                   December
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_dpmdec" class="form-control" class="form-control" type="number" id="instream_dpmdec" name="instream_dpmdec" />
+                <input data-ng-model="report.instream_dpmdec" class="form-control" class="form-control" type="number" id="instream_dpmdec" name="instream_dpmdec" min="0" max="31" />
               </div>
               <div class="column-5">
-                <input data-ng-model="report.instream_hpddec" class="form-control" class="form-control" type="number" id="instream_hpddec" name="instream_hpddec" />
+                <input data-ng-model="report.instream_hpddec" class="form-control" class="form-control" type="number" id="instream_hpddec" name="instream_hpddec" min="0" max="24" />
               </div>
             </div>
 
