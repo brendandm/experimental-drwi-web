@@ -42,135 +42,140 @@
         </div>
       </fieldset>
 
-      <fieldset data-ng-if="report.measurement_period === 'Installation'">
+      <fieldset data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'">
         <h2><strong>Installation</strong> Summary</h2>
 
         <div class="row">
-          <!-- Length of Fencing -->
-          <div class="form-group column-5">
-            <label for="length_of_fencing" class="control-label">
-              Length of Fencing Installed
+          <div class="form-group column-8">
+            <label for="rain_garden_area" class="control-label">
+              Rain Garden
             </label>
 
-            <input data-ng-model="report.length_of_fencing" class="form-control" class="form-control" type="number" id="length_of_fencing" name="length_of_fencing" />
-
-            <p data-ng-if="fields.length_of_fencing.help" class="help-text">{{ fields.length_of_fencing.help }}</p>
+            <input data-ng-model="report.rain_garden_area" class="form-control" class="form-control" type="number" id="rain_garden_area" name="rain_garden_area" />
+            
+            <p data-ng-if="fields.rain_garden_area.help" class="help-text">{{ fields.rain_garden_area.help }}</p>
           </div>
-          <!-- Average Buffer Width -->
-          <div class="column-1"></div>
-          <div class="form-group column-4">
-            <label for="average_buffer_width" class="control-label">
-              Average Buffer Width
+
+          <div class="form-group column-8">
+            <label for="rain_garden_drainage_area" class="control-label">
+              &nbsp;
             </label>
 
-            <input data-ng-model="report.average_buffer_width" class="form-control" class="form-control" type="number" id="average_buffer_width" name="average_buffer_width" />
-
-            <p data-ng-if="fields.average_buffer_width.help" class="help-text">{{ fields.average_buffer_width.help }}</p>
-          </div>
-          <!-- Buffer Type -->
-          <div class="column-1"></div>
-          <div class="form-group column-4">
-            <label for="buffer_type" class="control-label">
-              Buffer Type
-            </label>
-
-            <select data-ng-model="report.buffer_type" class="form-control" class="form-control" type="number" id="buffer_type" name="buffer_type">
-              <option>Select a buffer type</option>
-              <option value="Forest Buffer">Forest Buffer</option>
-              <option value="Grass Buffer">Grass Buffer</option>
-            </select>
+            <input data-ng-model="report.rain_garden_drainage_area" class="form-control" class="form-control" type="number" id="rain_garden_drainage_area" name="rain_garden_drainage_area" />
+            
+            <p data-ng-if="fields.rain_garden_drainage_area.help" class="help-text">{{ fields.rain_garden_drainage_area.help }}</p>
           </div>
         </div>
+
         <div class="row">
-          <!-- Average Buffer Width -->
-          <div class="form-group column-5">
-            <label for="extent_of_exclusion" class="control-label">
-              Extent of Exclusion
+          <div class="form-group column-8">
+            <label for="rain_barrel_drainage_area" class="control-label">
+              Rain Barrel
             </label>
 
-            <input data-ng-model="report.extent_of_exclusion" class="form-control" class="form-control" type="number" id="extent_of_exclusion" name="extent_of_exclusion" />
-
-            <p data-ng-if="fields.extent_of_exclusion.help" class="help-text">{{ fields.extent_of_exclusion.help }}</p>
+            <input data-ng-model="report.rain_barrel_drainage_area" class="form-control" class="form-control" type="number" id="rain_barrel_drainage_area" name="rain_barrel_drainage_area" />
+            
+            <p data-ng-if="fields.rain_barrel_drainage_area.help" class="help-text">{{ fields.rain_barrel_drainage_area.help }}</p>
           </div>
         </div>
+
+        <div class="row">
+          <div class="form-group column-8">
+            <label for="permeable_pavement_area" class="control-label">
+              Permeable Pavement
+            </label>
+
+            <input data-ng-model="report.permeable_pavement_area" class="form-control" class="form-control" type="number" id="permeable_pavement_area" name="permeable_pavement_area" />
+            
+            <p data-ng-if="fields.permeable_pavement_area.help" class="help-text">{{ fields.permeable_pavement_area.help }}</p>
+          </div>
+        </div>   
+
+        <div class="row">
+          <div class="form-group column-8">
+            <label for="downspout_disconnection_drainage_area" class="control-label">
+              Downspout Disconnection
+            </label>
+
+            <input data-ng-model="report.downspout_disconnection_drainage_area" class="form-control" class="form-control" type="number" id="downspout_disconnection_drainage_area" name="downspout_disconnection_drainage_area" />
+            
+            <p data-ng-if="fields.downspout_disconnection_drainage_area.help" class="help-text">{{ fields.downspout_disconnection_drainage_area.help }}</p>
+          </div>
+        </div>  
+
+        <div class="row">
+          <div class="form-group column-8">
+            <label for="urban_nutrient_management_pledge_area" class="control-label">
+              UNM Pledge
+            </label>
+
+            <input data-ng-model="report.urban_nutrient_management_pledge_area" class="form-control" class="form-control" type="number" id="urban_nutrient_management_pledge_area" name="urban_nutrient_management_pledge_area" />
+            
+            <p data-ng-if="fields.urban_nutrient_management_pledge_area.help" class="help-text">{{ fields.urban_nutrient_management_pledge_area.help }}</p>
+          </div>
+        </div>            
+
+        <div class="row">
+          <div class="form-group column-8">
+            <label for="urban_nutrient_management_plan_area_hi_risk" class="control-label">
+              UNM Plan, Hi Risk
+            </label>
+
+            <input data-ng-model="report.urban_nutrient_management_plan_area_hi_risk" class="form-control" class="form-control" type="number" id="urban_nutrient_management_plan_area_hi_risk" name="urban_nutrient_management_plan_area_hi_risk" />
+            
+            <p data-ng-if="fields.urban_nutrient_management_plan_area_hi_risk.help" class="help-text">{{ fields.urban_nutrient_management_plan_area_hi_risk.help }}</p>
+          </div>
+        </div> 
+
+        <div class="row">
+          <div class="form-group column-8">
+            <label for="conservation_landscaping" class="control-label">
+              Conservation Landscaping
+            </label>
+
+            <input data-ng-model="report.conservation_landscaping" class="form-control" class="form-control" type="number" id="conservation_landscaping" name="conservation_landscaping" />
+            
+            <p data-ng-if="fields.conservation_landscaping.help" class="help-text">{{ fields.conservation_landscaping.help }}</p>
+          </div>
+        </div> 
+
+        <div class="row">
+          <div class="form-group column-8">
+            <label for="tree_planting" class="control-label">
+              Tree Planting
+            </label>
+
+            <input data-ng-model="report.tree_planting" class="form-control" class="form-control" type="number" id="tree_planting" name="tree_planting" />
+            
+            <p data-ng-if="fields.tree_planting.help" class="help-text">{{ fields.tree_planting.help }}</p>
+          </div>
+        </div> 
+
+        <div class="row">
+          <div class="form-group column-8">
+            <label for="impervious_cover_removal_area" class="control-label">
+              Impervious Cover Removal
+            </label>
+
+            <input data-ng-model="report.impervious_cover_removal_area" class="form-control" class="form-control" type="number" id="impervious_cover_removal_area" name="impervious_cover_removal_area" />
+            
+            <p data-ng-if="fields.impervious_cover_removal_area.help" class="help-text">{{ fields.impervious_cover_removal_area.help }}</p>
+          </div>
+        </div> 
 
       </fieldset>
 
       <fieldset data-ng-if="report.measurement_period === 'Monitoring'">
         <h2><strong>Interim</strong> BMP Metrics Data</h2>
 
-        <div class="row">
-          <!-- Vegetative Cover -->
-          <div class="form-group column-5">
-            <label for="vegetative_cover" class="control-label">
-              Vegetative Cover
-            </label>
+        <div class="form-group column-5">
+          <label for="bird_count" class="control-label">
+            Number of observed bird or small animal species
+          </label>
 
-            <input data-ng-model="report.vegetative_cover" class="form-control" class="form-control" type="number" id="vegetative_cover" name="vegetative_cover" placeholder="% cover" />
-          </div>
-
-          <!-- Bank Erosion Hazard Index (BEHI) -->
-          <div class="column-1"></div>
-          <div class="form-group column-5">
-            <label for="bank_erosion_hazard_index" class="control-label">
-              Bank Erosion Hazard Index (BEHI)
-            </label>
-
-            <input data-ng-model="report.bank_erosion_hazard_index" class="form-control" class="form-control" type="number" id="bank_erosion_hazard_index" name="bank_erosion_hazard_index" />
-          </div>
-
-          <!-- Riffle Stability Index -->
-          <div class="column-1"></div>
-          <div class="form-group column-4">
-            <label for="riffle_stability_index" class="control-label">
-              Riffle Stability Index
-            </label>
-
-            <input data-ng-model="report.riffle_stability_index" class="form-control" class="form-control" type="number" id="riffle_stability_index" name="riffle_stability_index" />
-          </div>
-        </div>
-
-        <div class="row">
-          <!-- Log Relative Bed Stability -->
-          <div class="form-group column-5">
-            <label for="log_relative_bed_stability" class="control-label">
-              Log Relative Bed Stability
-            </label>
-
-            <input data-ng-model="report.log_relative_bed_stability" class="form-control" class="form-control" type="number" id="log_relative_bed_stability" name="log_relative_bed_stability" />
-          </div>
-
-          <!-- Substrate Mean D50 Particle Size -->
-          <div class="column-1"></div>
-          <div class="form-group column-5">
-            <label for="substrate_mean_d50_particle_size" class="control-label">
-              Substrate Mean D50 Particle Size   
-            </label>
-
-            <input data-ng-model="report.substrate_mean_d50_particle_size" class="form-control" class="form-control" type="number" max="100" min="0" id="substrate_mean_d50_particle_size" name="substrate_mean_d50_particle_size" />
-          </div>
-
-          <!-- Streambed Percent Fines -->
-          <div class="column-1"></div>
-          <div class="form-group column-4">
-            <label for="streambed_percent_fines" class="control-label">
-              Streambed Percent Fines
-            </label>
-
-            <input data-ng-model="report.streambed_percent_fines" class="form-control" class="form-control" max="100" min="0" type="number" id="streambed_percent_fines" name="streambed_percent_fines" />
-          </div>
-        </div>
-
-        <div class="row">
-          <!-- Bed Armoring Ratio -->
-          <div class="form-group column-5">
-            <label for="bed_armoring_ratio" class="control-label">
-              Bed Armoring Ratio
-            </label>
-
-            <input data-ng-model="report.bed_armoring_ratio" class="form-control" class="form-control" type="number" id="bed_armoring_ratio" name="bed_armoring_ratio" />
-          </div>
-
+          <input data-ng-model="report.bird_count" class="form-control" class="form-control" type="number" id="bird_count" name="bird_count" />
+          
+          <p data-ng-if="fields.bird_count.help" class="help-text">{{ fields.bird_count.help }}</p>
         </div>
 
       </fieldset>
@@ -181,7 +186,7 @@
         <div class="form-group">
           <div class="checkbox">
             <label class="control-label">
-              <input data-ng-model="report.concentrated_flow_paths" type="checkbox" id="concentrated_flow_paths" name="concentrated_flow_paths" /> Perform maintenance to remove concentrated flow paths through the buffer
+              <input data-ng-model="report.obstruction" type="checkbox" id="obstruction" name="obstruction" /> Keep all inflows into, and outflows from, the BMP free of obstructions
             </label>
           </div>
         </div>
@@ -189,7 +194,7 @@
         <div class="form-group">
           <div class="checkbox">
             <label class="control-label">
-              <input data-ng-model="report.livestock_kept_out" type="checkbox" id="livestock_kept_out" name="livestock_kept_out" /> Prevent livestock from access to stabilized areas
+              <input data-ng-model="report.vegetation" type="checkbox" id="vegetation" name="vegetation" /> Maintain dense vegetative cover, grass, or conservation landscaping to reduce runoff, prevent erosion, and to retain nutrients.
             </label>
           </div>
         </div>
@@ -197,7 +202,7 @@
         <div class="form-group">
           <div class="checkbox">
             <label class="control-label">
-              <input data-ng-model="report.plantings_protected" type="checkbox" id="plantings_protected" name="plantings_protected" /> Repair any damage from destructive fire or destructive grazing
+              <input data-ng-model="report.maintenance" type="checkbox" id="maintenance" name="maintenance" /> Initially, and then annually, review CSN Homeowners Guide sections for appropriate BMP maintenance (CSN, 2013,2014).
             </label>
           </div>
         </div>
@@ -205,7 +210,7 @@
         <div class="form-group">
           <div class="checkbox">
             <label class="control-label">
-              <input data-ng-model="report.bare_or_eroded_areas" type="checkbox" id="bare_or_eroded_areas" name="bare_or_eroded_areas" /> Check for, correct causes, and patch bare and/or eroded areas in the buffer.
+              <input data-ng-model="report.poststorm_maintenance" type="checkbox" id="poststorm_maintenance" name="poststorm_maintenance" /> Visually check the BMPs after each major storm and perform any needed maintenance.
             </label>
           </div>
         </div>
@@ -213,7 +218,23 @@
         <div class="form-group">
           <div class="checkbox">
             <label class="control-label">
-              <input data-ng-model="report.invasive_species_control" type="checkbox" id="invasive_species_control" name="invasive_species_control" /> Control noxious and invasive weeds
+              <input data-ng-model="report.rain_barrel_check" type="checkbox" id="rain_barrel_check" name="rain_barrel_check" /> Make sure barrels are empty before each storm; inspect for mosquitos, cracks, and clogging. If runoff volumes generally exceed barrel capacities, increase the number or size of barrels.
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox">
+            <label class="control-label">
+              <input data-ng-model="report.ponding" type="checkbox" id="ponding" name="ponding" /> Ponding may indicate clogging of the media. Replace media in raingardens; sweep, vacuum, or power-wash pervious pavement.
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox">
+            <label class="control-label">
+              <input data-ng-model="report.dying_plants" type="checkbox" id="dying_plants" name="dying_plants" /> Check and correct conditions producing too much or too little water, resulting in dying plants.
             </label>
           </div>
         </div>
