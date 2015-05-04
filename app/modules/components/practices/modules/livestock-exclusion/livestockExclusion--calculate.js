@@ -54,7 +54,7 @@ angular.module('practiceMonitoringAssessmentApp')
           }
         }
 
-        return null;
+        return 0;
       },
       milesInstalled: function(values, field, format) {
 

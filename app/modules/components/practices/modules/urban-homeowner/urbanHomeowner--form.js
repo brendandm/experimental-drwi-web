@@ -16,6 +16,50 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.template = template;
 
     $scope.report = {};
+    
+    $scope.save = function() {
+      Feature.UpdateFeature({
+        storage: $scope.storage.storage,
+        featureId: $scope.report.id,
+        data: $scope.report
+      }).then(function(response) {
+        $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type);
+      }).then(function(error) {
+        // Do something with the error
+      });
+    };
+
+    $scope.delete = function() {
+
+      //
+      // Before we can remove the Practice we need to remove the relationship it has with the Site
+      //
+      //
+      angular.forEach($scope.practice[$scope.storage.storage], function(feature, $index) {
+        if (feature.id === $scope.report.id) {
+          $scope.practice[$scope.storage.storage].splice($index, 1);
+        }
+      });
+
+      Feature.UpdateFeature({
+        storage: commonscloud.collections.practice.storage,
+        featureId: $scope.practice.id,
+        data: $scope.practice
+      }).then(function(response) {
+        
+        //
+        // Now that the Project <> Site relationship has been removed, we can remove the Site
+        //
+        Feature.DeleteFeature({
+          storage: $scope.storage.storage,
+          featureId: $scope.report.id
+        }).then(function(response) {
+          $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type);
+        });
+
+      });
+
+    };
 
     $scope.project = project;
     $scope.practice = practice;
@@ -37,78 +81,7 @@ angular.module('practiceMonitoringAssessmentApp')
       //
       $scope.report = report;
 
-      console.log('Report Data Model', $scope.report);
-
       $scope.report.template = $scope.storage.templates.form;
-
-      //
-      // Watch the Tree Canopy Value, when it changes we need to update the lawn area value
-      //
-      $scope.calculateBufferComposition = function() {
-
-        var running_total = $scope.report.buffer_composition_woody + $scope.report.buffer_composition_shrub + $scope.report.buffer_composition_bare + $scope.report.buffer_composition_grass;
-
-        var remainder = 100-running_total;
-
-        $scope.report.buffer_composition_other = remainder;
-      };
-      $scope.$watch('report.buffer_composition_woody', function() {
-        $scope.calculateBufferComposition();
-      });
-      $scope.$watch('report.buffer_composition_shrub', function() {
-        $scope.calculateBufferComposition();
-      });
-      $scope.$watch('report.buffer_composition_bare', function() {
-        $scope.calculateBufferComposition();
-      });
-      $scope.$watch('report.buffer_composition_grass', function() {
-        $scope.calculateBufferComposition();
-      });
-
-
-      $scope.report.save = function() {
-        Feature.UpdateFeature({
-          storage: $scope.storage.storage,
-          featureId: $scope.report.id,
-          data: $scope.report
-        }).then(function(response) {
-          $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type);
-        }).then(function(error) {
-          // Do something with the error
-        });
-      };
-
-      $scope.report.delete = function() {
-
-        //
-        // Before we can remove the Practice we need to remove the relationship it has with the Site
-        //
-        //
-        angular.forEach($scope.practice[$scope.storage.storage], function(feature, $index) {
-          if (feature.id === $scope.report.id) {
-            $scope.practice[$scope.storage.storage].splice($index, 1);
-          }
-        });
-
-        Feature.UpdateFeature({
-          storage: commonscloud.collections.practice.storage,
-          featureId: $scope.practice.id,
-          data: $scope.practice
-        }).then(function(response) {
-          
-          //
-          // Now that the Project <> Site relationship has been removed, we can remove the Site
-          //
-          Feature.DeleteFeature({
-            storage: $scope.storage.storage,
-            featureId: $scope.report.id
-          }).then(function(response) {
-            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type);
-          });
-
-        });
-
-      };
 
       //
       // Add the reading information to the breadcrumbs
@@ -158,7 +131,7 @@ angular.module('practiceMonitoringAssessmentApp')
         {
           type: 'button-link',
           action: function($index) {
-            $scope.report.delete();
+            $scope.delete();
           },
           visible: false,
           loading: false,
@@ -167,7 +140,7 @@ angular.module('practiceMonitoringAssessmentApp')
         {
           type: 'button-link new',
           action: function($index) {
-            $scope.report.save();
+            $scope.save();
             $scope.page.actions[$index].loading = ! $scope.page.actions[$index].loading;
           },
           visible: false,
@@ -178,24 +151,6 @@ angular.module('practiceMonitoringAssessmentApp')
       refresh: function() {
         $route.reload();
       }
-    };
-
-
-    $scope.in = function(search_value, list) {
-
-      if (!list.length) {
-        return true;
-      }
-        
-      var $index;
-
-      for ($index = 0; $index < list.length; $index++) {
-        if (list[$index] === search_value) {
-          return true;
-        }
-      }
-
-      return false;
     };
 
     //
