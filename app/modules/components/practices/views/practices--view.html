@@ -11,9 +11,6 @@
           <strong>Site Number:</strong> {{ site.site_number }} {{ site.description }}<br />
           <strong>Stream Name: </strong> {{ site.type_f9d8609090494dac811e6a58eb8ef4be[0].rivername }}
         </h4>
-
-        <div data-ng-include="storage.templates.report"></div>
-
       </div>
       <nav class="column-5 contextual-navigation-wrapper">
         <h6><strong>Tools</strong></h6>
@@ -23,22 +20,15 @@
           <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/edit">Edit</a></li>
         </ul>
       </nav>
-      <aside class="column-5 feature-sidebar pull-right legend">
-
-        <h6>Measurements</h6>
-
-        <table class="table" data-ng-if="practice.readings.length">
-          <tbody>
-            <!-- List of readings order in chronological order by report date -->
-            <tr data-ng-if="practice.readings.length" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-              <td>
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit"><span data-ng-if="!report.measurement_period">Undefined</span>{{ report.measurement_period }}</a>
-                <em class="supplemental">Report on {{ report.report_date | date:"MMM d, yyyy" }}</em>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </aside>
+    </article>
+  </section>
+  <section class="row feature summary">
+    <article class="feature-detail">
+      <div class="column-16 feature-detail-content">
+        <div class="table-responsive">
+          <div data-ng-include="storage.templates.report"></div>
+        </div>
+      </div>
     </article>
   </section>
 </main>

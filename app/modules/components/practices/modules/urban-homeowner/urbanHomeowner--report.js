@@ -37,19 +37,6 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.calculate = CalculateUrbanHomeowner;
 
-    // //
-    // // Calculate Load Values
-    // //
-    // $scope.loads = {
-    //   preproject: null,
-    //   planned: null,
-    //   installed: null
-    // };
-
-    // $scope.calculate.getPrePlannedLoad($scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].name, 'alfalfa nutrient management', (25*29472)).then(function(response) {
-    //   $scope.loads = response;
-    // });
-
     $scope.calculate.GetLoadVariables = function(period, landuse) {
 
       var planned = {
@@ -65,10 +52,6 @@ angular.module('practiceMonitoringAssessmentApp')
 
       for (var i = 0; i < $scope.practice.readings.length; i++) {
         if ($scope.practice.readings[i].measurement_period === period) {
-          // planned.length = $scope.practice.readings[i].length_of_fencing;
-          // planned.width = $scope.practice.readings[i].average_buffer_width;
-          // planned.area = ((planned.length*planned.width)/43560);
-          // planned.landuse = (landuse) ? landuse : $scope.landuse[$scope.practice.readings[i].existing_riparian_landuse.toLowerCase()];
 
           var promise = $http.get('//api.commonscloud.org/v2/type_3fbea3190b634d0c9021d8e67df84187.json', {
             params: {

@@ -242,20 +242,6 @@
                 </strong>
               </td>
             </tr>
-            <tr>
-              <th>Sediment (tons/yr)</th>
-              <td>{{ calculate.results.totalPreInstallationLoad.sediment | number:2 }}</td>
-              <td>{{ calculate.results.totalPlannedLoad.sediment | number:2 }}</td>
-              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_fencing, report.average_buffer_width, 'sediment') | number:2"></span>
-              </td>
-              <td><strong>{{ calculate.results.totalInstalledLoad.sediment | number:2 }}</strong> tons/yr</td>
-              <td>
-                <strong>
-                  <span data-ng-bind="calculate.GetPercentage(calculate.results.totalInstalledLoad.sediment, calculate.results.totalPlannedLoad.sediment) | number:0"></span>%
-                </strong>
-              </td>
-            </tr>
 
             <tr class="no-rule">
               <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
