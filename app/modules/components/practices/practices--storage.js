@@ -50,5 +50,19 @@ angular.module('practiceMonitoringAssessmentApp')
         report: '/modules/components/practices/modules/livestock-exclusion/views/report--view.html',
         form: '/modules/components/practices/modules/livestock-exclusion/views/form--view.html'
       }
+    },
+    'urban-homeowner': {
+      landuse: null,
+      storage: 'type_6da15b74f6564feb90c3d581d97700fd',
+      templateId: 377,
+      fields: {
+        Planning: [],
+        Installation: [],
+        Monitoring: []
+      },
+      templates: {
+        report: '/modules/components/practices/modules/urban-homeowner/views/report--view.html',
+        form: '/modules/components/practices/modules/urban-homeowner/views/form--view.html'
+      }
     }      
   });
