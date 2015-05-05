@@ -19,6 +19,7 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.project = project;
     $scope.site = site;
     $scope.site.geolocation = null;
+    
     $scope.site.save = function() {
 
       //
@@ -30,12 +31,6 @@ angular.module('practiceMonitoringAssessmentApp')
           $scope.site.site_state = $scope.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].state_name;
         }
       }
-
-      // if ($scope.site.site_city) {
-
-      // }
-
-      console.log('site.geolocation', $scope.site.site_city);
 
       Feature.UpdateFeature({
         storage: variables.storage,

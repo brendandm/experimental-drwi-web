@@ -52,6 +52,9 @@ angular.module('practiceMonitoringAssessmentApp')
           params: {
             'callback': 'JSON_CALLBACK',
             'access_token': mapbox.access_token
+          },
+          headers: {
+            'Authorization': 'external'
           }
         })
           .success(function(featureCollection) {
