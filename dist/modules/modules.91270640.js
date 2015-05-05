@@ -5466,24 +5466,18 @@ angular.module('practiceMonitoringAssessmentApp')
         return (rainGarden+rainBarrel+permeablePavement+downspoutDisconnection);
       },
       preInstallationNitrogenLoad: function(value, loaddata) {
-        console.log('value', value, 'loaddata', loaddata)
         var impervious = ((value.rain_garden_area/0.12)+value.rain_barrel_drainage_area+value.permeable_pavement_area+value.downspout_disconnection_drainage_area+value.impervious_cover_removal_area),
             pervious = (value.urban_nutrient_management_pledge_area+value.urban_nutrient_management_plan_area_hi_risk+value.conservation_landscaping+(value.tree_planting*100));
 
-        console.log(impervious, 43560, loaddata.impervious.tn_ual, pervious, 43560, loaddata.pervious.tn_ual, 43560);
-
-        debugger;
+        console.log(impervious, 43560, loaddata.impervious.tn_ual, pervious, 43560, loaddata.pervious.tn_ual, 43560, '=', (((impervious/43560)*loaddata.impervious.tn_ual + (pervious/43560)*loaddata.pervious.tn_ual)/43560));
 
         return ((impervious/43560)*loaddata.impervious.tn_ual + (pervious/43560)*loaddata.pervious.tn_ual)/43560; // These need to be state specific
       },
       preInstallationPhosphorusLoad: function(value, loaddata) {
-        var impervious = (value.rain_garden_area+value.rain_barrel_drainage_area+value.permeable_pavement_area+value.downspout_disconnection_drainage_area+value.impervious_cover_removal_area)/43560,
-            pervious = (value.urban_nutrient_management_pledge_area+value.urban_nutrient_management_plan_area_hi_risk+value.conservation_landscaping+(value.tree_planting*100))/43560;
+        var impervious = ((value.rain_garden_area/0.12)+value.rain_barrel_drainage_area+value.permeable_pavement_area+value.downspout_disconnection_drainage_area+value.impervious_cover_removal_area),
+            pervious = (value.urban_nutrient_management_pledge_area+value.urban_nutrient_management_plan_area_hi_risk+value.conservation_landscaping+(value.tree_planting*100));
 
-
-        console.log(impervious, 43560, loaddata.impervious.tp_ual, pervious, 43560, loaddata.pervious.tp_ual, 43560);
-
-        debugger;
+        console.log(impervious, 43560, loaddata.impervious.tp_ual, pervious, 43560, loaddata.pervious.tp_ual, 43560, '=', ((impervious/43560)*loaddata.impervious.tp_ual + (pervious/43560)*loaddata.pervious.tp_ual)/43560);
 
         return ((impervious/43560)*loaddata.impervious.tp_ual + (pervious/43560)*loaddata.pervious.tp_ual)/43560; // These need to be state specific
       },
