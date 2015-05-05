@@ -5454,7 +5454,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * Service in the practiceMonitoringAssessmentApp.
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .service('CalculateUrbanHomeowner', ['Calculate', 'Landuse', function(Calculate, Landuse) {
+  .service('CalculateUrbanHomeowner', ['Calculate', 'Landuse', 'StateLoad', function(Calculate, Landuse, StateLoad) {
     return {
       gallonsReducedPerYear: function(value) {
 
@@ -5464,6 +5464,91 @@ angular.module('practiceMonitoringAssessmentApp')
             downspoutDisconnection = value.downspout_disconnection_drainage_area*0.312;
 
         return (rainGarden+rainBarrel+permeablePavement+downspoutDisconnection);
+      },
+      preInstallationNitrogenLoad: function(value, loaddata) {
+        console.log('value', value, 'loaddata', loaddata)
+        var impervious = ((value.rain_garden_area/0.12)+value.rain_barrel_drainage_area+value.permeable_pavement_area+value.downspout_disconnection_drainage_area+value.impervious_cover_removal_area),
+            pervious = (value.urban_nutrient_management_pledge_area+value.urban_nutrient_management_plan_area_hi_risk+value.conservation_landscaping+(value.tree_planting*100));
+
+        console.log(impervious, 43560, loaddata.impervious.tn_ual, pervious, 43560, loaddata.pervious.tn_ual, 43560);
+
+        debugger;
+
+        return ((impervious/43560)*loaddata.impervious.tn_ual + (pervious/43560)*loaddata.pervious.tn_ual)/43560; // These need to be state specific
+      },
+      preInstallationPhosphorusLoad: function(value, loaddata) {
+        var impervious = (value.rain_garden_area+value.rain_barrel_drainage_area+value.permeable_pavement_area+value.downspout_disconnection_drainage_area+value.impervious_cover_removal_area)/43560,
+            pervious = (value.urban_nutrient_management_pledge_area+value.urban_nutrient_management_plan_area_hi_risk+value.conservation_landscaping+(value.tree_planting*100))/43560;
+
+
+        console.log(impervious, 43560, loaddata.impervious.tp_ual, pervious, 43560, loaddata.pervious.tp_ual, 43560);
+
+        debugger;
+
+        return ((impervious/43560)*loaddata.impervious.tp_ual + (pervious/43560)*loaddata.pervious.tp_ual)/43560; // These need to be state specific
+      },
+      plannedNitrogenLoadReduction: function(value, loaddata) {
+        var rainGarden = (value.rain_garden_area/0.12)*8.710,
+            rainBarrel = value.rain_barrel_drainage_area*4.360,
+            permeablePavement = value.permeable_pavement_area*6.970,
+            downspoutDisconnection = value.downspout_disconnection_drainage_area*6.970,
+            unmPledgeArea = value.urban_nutrient_management_pledge_area*0.653,
+            unmHighRisk = value.urban_nutrient_management_plan_area_hi_risk*2.180,
+            conservationLandscaping = value.conservation_landscaping*3.830,
+            treePlanting = value.tree_planting*0.610,
+            imperviousCoverRemoval = value.impervious_cover_removal_area*(loaddata.impervious.tn_ual-loaddata.pervious.tn_ual); // These need to be state specific
+
+        return (rainGarden+rainBarrel+permeablePavement+downspoutDisconnection+unmPledgeArea+unmHighRisk+conservationLandscaping+treePlanting+imperviousCoverRemoval)/43560;
+      },
+      plannedPhosphorusLoadReduction: function(value, loaddata) {
+        var rainGarden = (value.rain_garden_area/0.12)*1.220,
+            rainBarrel = value.rain_barrel_drainage_area*0.520,
+            permeablePavement = value.permeable_pavement_area*0.870,
+            downspoutDisconnection = value.downspout_disconnection_drainage_area*0.870,
+            unmPledgeArea = value.urban_nutrient_management_pledge_area*0.013,
+            unmHighRisk = value.urban_nutrient_management_plan_area_hi_risk*0.044,
+            conservationLandscaping = value.conservation_landscaping*0.170,
+            imperviousCoverRemoval = value.impervious_cover_removal_area*(loaddata.impervious.tp_ual-loaddata.pervious.tp_ual); // These need to be state specific
+
+        return (rainGarden+rainBarrel+permeablePavement+downspoutDisconnection+unmPledgeArea+unmHighRisk+conservationLandscaping+imperviousCoverRemoval)/43560;
+      },
+      installedPhosphorusLoadReduction: function(values, loaddata, format) {
+
+        var installed = 0,
+            planned = 0,
+            self = this;
+
+        angular.forEach(values, function(value, $index) {
+          if (values[$index].measurement_period === 'Planning') {
+            planned += self.plannedPhosphorusLoadReduction(value, loaddata);
+          }
+          else if (values[$index].measurement_period === 'Installation') {
+            installed += self.plannedPhosphorusLoadReduction(value, loaddata);
+          }
+        });
+
+        var percentage_installed = installed/planned;
+
+        return (format === '%') ? (percentage_installed*100) : installed;
+      },
+      installedNitrogenLoadReduction: function(values, loaddata, format) {
+
+        var installed = 0,
+            planned = 0,
+            self = this;
+
+        angular.forEach(values, function(value, $index) {
+          if (values[$index].measurement_period === 'Planning') {
+            planned += self.plannedNitrogenLoadReduction(value, loaddata);
+          }
+          else if (values[$index].measurement_period === 'Installation') {
+            installed += self.plannedNitrogenLoadReduction(value, loaddata);
+          }
+        });
+
+        var percentage_installed = installed/planned;
+
+        return (format === '%') ? (percentage_installed*100) : installed;
       },
       reductionPracticesInstalled: function(values, format) {
 
@@ -5502,7 +5587,7 @@ angular.module('practiceMonitoringAssessmentApp')
       },
       acresProtected: function(value) {
 
-        var practiceArea = value.rain_garden_area + value.rain_barrel_drainage_area + value.permeable_pavement_area + value.downspout_disconnection_drainage_area + value.urban_nutrient_management_pledge_area + value.urban_nutrient_management_plan_area_hi_risk + value.conservation_landscaping + value.impervious_cover_removal_area,
+        var practiceArea = (value.rain_garden_area/0.12) + value.rain_barrel_drainage_area + value.permeable_pavement_area + value.downspout_disconnection_drainage_area + value.urban_nutrient_management_pledge_area + value.urban_nutrient_management_plan_area_hi_risk + value.conservation_landscaping + value.impervious_cover_removal_area,
             treePlantingArea = value.tree_planting*100;
 
         return (practiceArea+treePlantingArea)/43560;
@@ -5554,6 +5639,35 @@ angular.module('practiceMonitoringAssessmentApp')
         }
 
         return 0;
+      },
+      quantityCustomInstalled: function(values, field, format) {
+
+        var planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          if (reading.measurement_period === 'Planning') {
+            planned_total += reading[field]/0.12;
+          } else if (reading.measurement_period === 'Installation') {
+            installed_total += reading[field]/0.12;
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (planned_total >= 1) {
+          if (format === '%') {
+            percentage = (installed_total/planned_total);
+            return (percentage*100);
+          } else {
+            return installed_total;
+          }
+        }
+
+        return 0;
       }
     };
   }]);
@@ -5568,7 +5682,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('UrbanHomeownerReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', 'CalculateUrbanHomeowner', 'Calculate', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateUrbanHomeowner, Calculate) {
+  .controller('UrbanHomeownerReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', 'CalculateUrbanHomeowner', 'Calculate', 'StateLoad', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateUrbanHomeowner, Calculate, StateLoad) {
 
     //
     // Assign project to a scoped variable
@@ -5591,6 +5705,33 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.user.owner = false;
     $scope.user.feature = {};
     $scope.user.template = {};
+
+    //
+    // Retrieve State-specific Load Data
+    //
+    StateLoad.query({
+      q: {
+        filters: [
+          {
+            name: 'state',
+            op: 'eq',
+            val: $scope.site.site_state
+          }
+        ]
+      }
+    }, function(response) {
+      $scope.loaddata = {};
+
+      angular.forEach(response.response.features, function(feature, $index) {
+        $scope.loaddata[feature.developed_type] = {
+          tn_ual: feature.tn_ual,
+          tp_ual: feature.tp_ual,
+          tss_ual: feature.tss_ual
+        };
+
+        console.log('feature', feature)
+      });
+    });
 
 
     $scope.landuse = Landuse;
@@ -6320,6 +6461,10 @@ angular.module('practiceMonitoringAssessmentApp')
       loaddata: {
         templateId: 282,
         storage: 'type_3fbea3190b634d0c9021d8e67df84187'
+      },
+      stateloaddata: {
+        templateId: 379,
+        storage: 'type_053d71f4258746ceb0bef2d914c97876'
       }
     }
   });
@@ -6989,6 +7134,26 @@ angular.module('practiceMonitoringAssessmentApp')
 angular.module('practiceMonitoringAssessmentApp')
   .service('Load', ['$resource', 'commonscloud', function ($resource, commonscloud) {
     return $resource(commonscloud.baseurl + commonscloud.collections.loaddata.storage + '/:id.geojson', {
+      id: '@id'
+    }, {
+      query: {
+        isArray: false
+      },
+    });
+  }]);
+
+'use strict';
+
+/**
+ * @ngdoc service
+ * @name cleanWaterCommunitiesApp.ImperviousSurfaceResource
+ * @description
+ * # ImperviousSurfaceResource
+ * Service in the managerApp.
+ */
+angular.module('practiceMonitoringAssessmentApp')
+  .service('StateLoad', ['$resource', 'commonscloud', function ($resource, commonscloud) {
+    return $resource(commonscloud.baseurl + commonscloud.collections.stateloaddata.storage + '/:id.json', {
       id: '@id'
     }, {
       query: {
