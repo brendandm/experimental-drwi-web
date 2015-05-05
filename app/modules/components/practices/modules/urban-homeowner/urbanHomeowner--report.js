@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('UrbanHomeownerReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', 'CalculateUrbanHomeowner', 'Calculate', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateUrbanHomeowner, Calculate) {
+  .controller('UrbanHomeownerReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', 'CalculateUrbanHomeowner', 'Calculate', 'StateLoad', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateUrbanHomeowner, Calculate, StateLoad) {
 
     //
     // Assign project to a scoped variable
@@ -31,6 +31,33 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.user.owner = false;
     $scope.user.feature = {};
     $scope.user.template = {};
+
+    //
+    // Retrieve State-specific Load Data
+    //
+    StateLoad.query({
+      q: {
+        filters: [
+          {
+            name: 'state',
+            op: 'eq',
+            val: $scope.site.site_state
+          }
+        ]
+      }
+    }, function(response) {
+      $scope.loaddata = {};
+
+      angular.forEach(response.response.features, function(feature, $index) {
+        $scope.loaddata[feature.developed_type] = {
+          tn_ual: feature.tn_ual,
+          tp_ual: feature.tp_ual,
+          tss_ual: feature.tss_ual
+        };
+
+        console.log('feature', feature)
+      });
+    });
 
 
     $scope.landuse = Landuse;

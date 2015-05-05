@@ -30,6 +30,10 @@ angular.module('practiceMonitoringAssessmentApp')
       loaddata: {
         templateId: 282,
         storage: 'type_3fbea3190b634d0c9021d8e67df84187'
+      },
+      stateloaddata: {
+        templateId: 379,
+        storage: 'type_053d71f4258746ceb0bef2d914c97876'
       }
     }
   });
