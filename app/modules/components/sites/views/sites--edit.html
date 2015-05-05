@@ -18,29 +18,20 @@
         <h6><strong>Location</strong> Information</h6>
 
         <div class="row">
-          <div class="column-8">
+          <div class="column-7">
             <!-- Land River Segment -->
             <div class="form-group">
               <label for="site_city" class="control-label">City</label>
-              <div data-ng-if="!site.site_city" class="autocomplete">
-                <input type="text" class="form-control" id="address" name="address" data-ng-model="site.geolocation" data-ng-change="geolocation.search()"  placeholder="Enter the name of the nearest city" />
-                <div data-ng-if="geocode_features.length && site.geolocation.length >= 2" class="dropdown">
-                  <ul>
-                    <!-- <li data-ng-if="relationship_focus && !features.length"><p><em>Begin typing to select the {{ field.label }} you want</em></p></li> -->
-                    <li data-ng-repeat="possible_result in geocode_features"><a data-ng-click="geolocation.select(possible_result)">{{ possible_result.place_name }}</a></li>
-                  </ul>
-                </div>
+              <div>
+                <input type="text" class="form-control" id="address" name="address" data-ng-model="site.site_city" placeholder="Enter the name of the nearest city" />
               </div>
-              <p data-ng-if="site.site_city">
-                {{ site.site_city }}
-                <span data-ng-if="site.site_city" class="help-text action"><a data-ng-click="site.site_city = ''; site.type_f9d8609090494dac811e6a58eb8ef4be = [];" class="remove">Clear value</a></span>
-              </p>
             </div>
           </div>
+          <div class="column-1"></div>
           <div class="column-8" data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
             <!-- County -->
             <div class="form-group">
-              <label for="site_county" class="control-label">County</label>
+              <label for="site_county" class="control-label">County &amp; State</label>
               <relationship data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8.length" model="site.type_b1baa10ba3ce493d90581a864ec95dc8" table="'type_b1baa10ba3ce493d90581a864ec95dc8'" fields="['name','state_name']" placeholder="'Enter the name of the county'"></relationship>
               <p data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
                 {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['name'] }},
@@ -75,8 +66,25 @@
           </div>
 
         </div>
+
+        <h6><strong>Land River</strong> Segment</h6>
+
         <div class="row">
-          <div class="column-10">
+          <div class="column-7">
+            <div class="autocomplete">
+              <label for="site_geolocation" class="control-label">Find a Location</label>
+              <input type="text" class="form-control" id="site_geolocation" name="site_geolocation" data-ng-model="site.geolocation" data-ng-change="geolocation.search()"  placeholder="Find an address, city, or zipcode" /><br />
+              <div data-ng-if="geocode_features.length && site.geolocation.length >= 2" class="dropdown">
+                <ul>
+                  <!-- <li data-ng-if="relationship_focus && !features.length"><p><em>Begin typing to select the {{ field.label }} you want</em></p></li> -->
+                  <li data-ng-repeat="possible_result in geocode_features"><a data-ng-click="geolocation.select(possible_result)">{{ possible_result.place_name }}</a></li>
+                </ul>
+              </div>
+              <br />
+            </div>
+          </div>
+          <div class="column-1"></div>
+          <div class="column-8">
            <!-- Land River Segment -->
             <div class="form-group">
               <label for="site_city" class="control-label">Land River Segment</label>
@@ -96,7 +104,11 @@
           </div>
         </div>
 
-        <leaflet class="map" markers="map.markers" defaults="map.defaults" layers="map.layers" center="map.center"></leaflet>
+        <div class="row">
+          <div class="column-16">
+            <leaflet class="map" markers="map.markers" defaults="map.defaults" layers="map.layers" center="map.center"></leaflet>
+          </div>
+        </div>
 
       </div>
       <nav class="column-5 contextual-navigation-wrapper">

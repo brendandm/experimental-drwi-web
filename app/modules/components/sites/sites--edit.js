@@ -19,7 +19,6 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.project = project;
     $scope.site = site;
     $scope.site.geolocation = null;
-    
     $scope.site.save = function() {
 
       //
@@ -31,6 +30,7 @@ angular.module('practiceMonitoringAssessmentApp')
           $scope.site.site_state = $scope.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].state_name;
         }
       }
+
 
       Feature.UpdateFeature({
         storage: variables.storage,
@@ -164,7 +164,7 @@ angular.module('practiceMonitoringAssessmentApp')
       center: {
         lat: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[1] : 38.362,
         lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119, 
-        zoom: 6
+        zoom: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? 16 : 6
       },
       markers: {
         LandRiverSegment: {
@@ -226,16 +226,6 @@ angular.module('practiceMonitoringAssessmentApp')
           // Add the FeatureGroup to the map
           //
           map.addLayer(featureGroup);
-
-          //
-          // If we can getBounds then we can zoom to a specific level, we need to check to see
-          // if the FeatureGroup has any bounds first though, otherwise we'll get an error.
-          //
-          var bounds = featureGroup.getBounds();
-
-          if (bounds.hasOwnProperty('_northEast')) {
-            map.fitBounds(featureGroup.getBounds());
-          }
         });
 
       },
@@ -249,7 +239,7 @@ angular.module('practiceMonitoringAssessmentApp')
           }
         }).
           success(function(data, status, headers, config) {
-            console.log('LandRiverSegment Request', data);
+            // console.log('LandRiverSegment Request', data);
             $scope.geolocation.drawSegment(data);
             if (data.features.length > 0) {
               $scope.site.type_f9d8609090494dac811e6a58eb8ef4be = [];
@@ -295,8 +285,6 @@ angular.module('practiceMonitoringAssessmentApp')
       },
       select: function(geocode) {
 
-        $scope.site.site_city = geocode.place_name;
-
         //
         // Move the draggable marker to the newly selected address
         //
@@ -320,7 +308,7 @@ angular.module('practiceMonitoringAssessmentApp')
         $scope.map.center = {
           lat: geocode.center[1],
           lng: geocode.center[0], 
-          zoom: 12
+          zoom: 16
         };
 
         //
@@ -357,6 +345,44 @@ angular.module('practiceMonitoringAssessmentApp')
     
 
 
+    $scope.site.processPin = function(coordinates, zoom) {
+
+      //
+      // Update the LandRiver Segment
+      //
+      $scope.geolocation.getSegment(coordinates);
+
+      //
+      // Update the geometry for this Site
+      //
+      $scope.site.geometry = {
+        type: 'GeometryCollection',
+        geometries: []
+      };
+      $scope.site.geometry.geometries.push({
+        type: 'Point',
+        coordinates: [
+          coordinates.lng,
+          coordinates.lat
+        ]
+      });
+
+      //
+      // Update the visible pin on the map
+      //
+      $scope.map.markers.LandRiverSegment.lat = coordinates.lat;
+      $scope.map.markers.LandRiverSegment.lng = coordinates.lng;
+
+      //
+      // Update the map center and zoom level
+      //
+      $scope.map.center = {
+        lat: coordinates.lat,
+        lng: coordinates.lng, 
+        zoom: (zoom < 10) ? 10 : zoom
+      };
+    };
+
     //
     // Define our map interactions via the Angular Leaflet Directive
     //
@@ -370,25 +396,26 @@ angular.module('practiceMonitoringAssessmentApp')
       }).addTo(map);
 
       //
-      // Listen for when the user drops the pin on a new geography
+      // Update the pin and segment information when the user clicks on the map
+      // or drags the pin to a new location
       //
-      $scope.$on('leafletDirectiveMarker.dragend', function(event, args) {
-        $scope.geolocation.getSegment(args.leafletEvent.target._latlng);
-
-        $scope.site.geometry = {
-          type: 'GeometryCollection',
-          geometries: []
-        };
-        $scope.site.geometry.geometries.push({
-          type: 'Point',
-          coordinates: [
-            args.leafletEvent.target._latlng.lng,
-            args.leafletEvent.target._latlng.lat
-          ]
-        });
-
-
+      $scope.$on('leafletDirectiveMap.click', function(event, args) {
+        $scope.site.processPin(args.leafletEvent.latlng, map._zoom);
       });
+
+      $scope.$on('leafletDirectiveMap.dblclick', function(event, args) {
+        $scope.site.processPin(args.leafletEvent.latlng, map._zoom+1);
+      });
+
+      $scope.$on('leafletDirectiveMarker.dragend', function(event, args) {
+        $scope.site.processPin(args.leafletEvent.target._latlng, map._zoom);
+      });
+
+      $scope.$on('leafletDirectiveMarker.dblclick', function(event, args) {
+        var zoom = map._zoom+1;
+        map.setZoom(zoom);
+      });
+
     });
 
 

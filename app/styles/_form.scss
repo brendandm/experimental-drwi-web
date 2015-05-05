@@ -486,7 +486,7 @@ h6 {
     color: rgb(242, 242, 242);
     left: 0;
     position: absolute;
-    top: 22px;
+    top: 37px;
     width: 100%;
     z-index: 9999;
 
@@ -499,11 +499,12 @@ h6 {
     }
 
     li {
-      font-size: 16px;
-      font-weight: 300;
+      font-size: 13px;
+      font-weight: 400;
       list-style-type: none;
       margin: 0;
       padding: 8px 16px;
+      -webkit-font-smoothing: antialiased;
 
       a {
         color: $color-black-base;
