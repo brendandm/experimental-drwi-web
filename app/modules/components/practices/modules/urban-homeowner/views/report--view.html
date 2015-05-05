@@ -219,7 +219,7 @@
               <td>{{ calculate.results.totalPreInstallationLoad.nitrogen | number:2 }}</td>
               <td>{{ calculate.results.totalPlannedLoad.nitrogen | number:2 }}</td>
               <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_fencing, report.average_buffer_width, 'nitrogen') | number:2"></span>
+                {{ calculate.plannedNitrogenLoadReduction(report) || 0 | number:2 }}
               </td>
               <td><strong>{{ calculate.results.totalInstalledLoad.nitrogen | number:2 }}</strong> lbs/yr</td>
               <td>
@@ -233,7 +233,7 @@
               <td>{{ calculate.results.totalPreInstallationLoad.phosphorus | number:2 }}</td>
               <td>{{ calculate.results.totalPlannedLoad.phosphorus | number:2 }}</td>
               <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_fencing, report.average_buffer_width, 'phosphorus') | number:2"></span>
+                {{ calculate.plannedPhosphorusLoadReduction(report) || 0 | number:2 }}
               </td>
               <td><strong>{{ calculate.results.totalInstalledLoad.phosphorus | number:2 }}</strong> lbs/yr</td>
               <td>

@@ -18,6 +18,31 @@ angular.module('practiceMonitoringAssessmentApp')
 
         return (rainGarden+rainBarrel+permeablePavement+downspoutDisconnection);
       },
+      plannedNitrogenLoadReduction: function(value) {
+        var rainGarden = (value.rain_garden_area/0.12)*8.710,
+            rainBarrel = value.rain_barrel_drainage_area*4.360,
+            permeablePavement = value.permeable_pavement_area*6.970,
+            downspoutDisconnection = value.downspout_disconnection_drainage_area*6.970,
+            unmPledgeArea = value.urban_nutrient_management_pledge_area*0.653,
+            unmHighRisk = value.urban_nutrient_management_plan_area_hi_risk*2.180,
+            conservationLandscaping = value.conservation_landscaping*3.830,
+            treePlanting = value.tree_planting*0.610,
+            imperviousCoverRemoval = value.impervious_cover_removal_area*(13.55-9.88); // These need to be state specific
+
+        return (rainGarden+rainBarrel+permeablePavement+downspoutDisconnection+unmPledgeArea+unmHighRisk+conservationLandscaping+treePlanting+imperviousCoverRemoval)/43560;
+      },
+      plannedPhosphorusLoadReduction: function(value) {
+        var rainGarden = (value.rain_garden_area/0.12)*1.220,
+            rainBarrel = value.rain_barrel_drainage_area*0.520,
+            permeablePavement = value.permeable_pavement_area*0.870,
+            downspoutDisconnection = value.downspout_disconnection_drainage_area*0.870,
+            unmPledgeArea = value.urban_nutrient_management_pledge_area*0.013,
+            unmHighRisk = value.urban_nutrient_management_plan_area_hi_risk*0.044,
+            conservationLandscaping = value.conservation_landscaping*0.170,
+            imperviousCoverRemoval = value.impervious_cover_removal_area*(13.55-9.88);
+
+        return (rainGarden+rainBarrel+permeablePavement+downspoutDisconnection+unmPledgeArea+unmHighRisk+conservationLandscaping+imperviousCoverRemoval)/43560;
+      },
       reductionPracticesInstalled: function(values, format) {
 
         var installed = 0,
