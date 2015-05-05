@@ -18,7 +18,7 @@
         <h6><strong>Location</strong> Information</h6>
 
         <div class="row">
-          <div class="column-10">
+          <div class="column-8">
             <!-- Land River Segment -->
             <div class="form-group">
               <label for="site_city" class="control-label">City</label>
@@ -37,7 +37,7 @@
               </p>
             </div>
           </div>
-          <div class="column-6">
+          <div class="column-8" data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
             <!-- County -->
             <div class="form-group">
               <label for="site_county" class="control-label">County</label>
@@ -50,6 +50,25 @@
                 </span>
                 <!-- If not, try and get the site_state field from the site -->
                 <span data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name'] && site.site_state">{{ site.site_state }}</span>
+                <span data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length" class="help-text action"><a data-ng-click="site.type_b1baa10ba3ce493d90581a864ec95dc8 = [];" class="remove">Clear value</a></span>
+              </p>
+            </div>
+          </div>
+          <div class="column-4" data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
+            <!-- County -->
+            <div class="form-group">
+              <label for="site_county" class="control-label">County</label>
+              <p data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
+                {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['name'] }}
+              </p>
+            </div>
+          </div>
+          <div class="column-4" data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
+            <!-- County -->
+            <div class="form-group">
+              <label for="site_state" class="control-label">State</label>
+              <p>
+                {{ site.site_state }}
                 <span data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length" class="help-text action"><a data-ng-click="site.type_b1baa10ba3ce493d90581a864ec95dc8 = [];" class="remove">Clear value</a></span>
               </p>
             </div>
