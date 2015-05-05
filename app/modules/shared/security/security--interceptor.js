@@ -32,8 +32,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         config.headers = config.headers || {};
 
-        if (config.headers['Authorization'] === 'external') {
-          delete config.headers['Authorization-Bypass'];
+        if (config.headers.Authorization === 'external') {
           delete config.headers.Authorization;
           return config || $q.when(config);
         }

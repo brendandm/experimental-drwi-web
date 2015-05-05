@@ -54,8 +54,6 @@ angular.module('practiceMonitoringAssessmentApp')
           tp_ual: feature.tp_ual,
           tss_ual: feature.tss_ual
         };
-
-        console.log('feature', feature)
       });
     });
 

@@ -21,7 +21,7 @@ angular.module('practiceMonitoringAssessmentApp')
         total_nitrogen: 0.0052,
         total_phosphorus: 0.001,
       },
-      "other cattle": {
+      'other cattle': {
         average_weight: 480.77,
         manure: 64.39,
         total_nitrogen: 0.0037,
@@ -51,13 +51,13 @@ angular.module('practiceMonitoringAssessmentApp')
         total_nitrogen: 0.0132,
         total_phosphorus: 0.0049
       },
-      "hogs and pigs for breeding": {
+      'hogs and pigs for breeding': {
         average_weight: 374.53,
         manure: 33.46,
         total_nitrogen: 0.0066,
         total_phosphorus: 0.0021
       },
-      "hogs for slaughter": {
+      'hogs for slaughter': {
         average_weight: 110.01,
         manure: 84,
         total_nitrogen: 0.0062,
@@ -69,19 +69,19 @@ angular.module('practiceMonitoringAssessmentApp')
         total_nitrogen: 0.0059,
         total_phosphorus: 0.0014
       },
-      "angora goats": {
+      'angora goats': {
         average_weight: 65.02,
         manure: 41,
         total_nitrogen: 0.011,
         total_phosphorus: 0.0027
       },
-      "milk goats": {
+      'milk goats': {
         average_weight: 65.02,
         manure: 41,
         total_nitrogen: 0.011,
         total_phosphorus: 0.0027
       },
-      "sheep and lambs": {
+      'sheep and lambs': {
         average_weight: 100,
         manure: 40,
         total_nitrogen: 0.0105,
