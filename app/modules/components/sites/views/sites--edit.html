@@ -40,7 +40,9 @@
                   {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name'] }}
                 </span>
                 <!-- If not, try and get the site_state field from the site -->
-                <span data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name'] && site.site_state">{{ site.site_state }}</span>
+                <span data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name'] && site.site_state">
+                  {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0].state_name }}
+                </span>
                 <span data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length" class="help-text action"><a data-ng-click="site.type_b1baa10ba3ce493d90581a864ec95dc8 = [];" class="remove">Clear value</a></span>
               </p>
             </div>
@@ -59,7 +61,7 @@
             <div class="form-group">
               <label for="site_state" class="control-label">State</label>
               <p>
-                {{ site.site_state }}
+                {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0].state_name || site.site_state }}
                 <span data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length" class="help-text action"><a data-ng-click="site.type_b1baa10ba3ce493d90581a864ec95dc8 = [];" class="remove">Clear value</a></span>
               </p>
             </div>

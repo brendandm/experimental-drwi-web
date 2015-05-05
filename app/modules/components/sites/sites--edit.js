@@ -31,6 +31,8 @@ angular.module('practiceMonitoringAssessmentApp')
         }
       }
 
+      
+
 
       Feature.UpdateFeature({
         storage: variables.storage,
