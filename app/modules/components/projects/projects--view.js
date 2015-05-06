@@ -28,8 +28,7 @@ angular.module('practiceMonitoringAssessmentApp')
         Feature.CreateFeature({
           storage: site.storage,
           data: {
-            site_number: '0000',
-            site_description: 'Untitled Site',
+            site_number: 'Untitled Site',
             owner: $scope.user.id,
             status: 'private'
           }

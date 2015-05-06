@@ -369,7 +369,7 @@
               <th class="align-left" colspan="{{ practice.readings.length + 1 }}" style="background: #efefef;">Vegetation</th>
             </tr>
             <tr>
-              <th class="align-left">Cover (%) <a href="#">?</a></th>
+              <th class="align-left">Cover (%)</th>
               <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.vegetative_cover }}</td>
             </tr>
 

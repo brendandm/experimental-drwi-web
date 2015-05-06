@@ -31,7 +31,7 @@
           <div class="column-8" data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
             <!-- County -->
             <div class="form-group">
-              <label for="site_county" class="control-label">County &amp; State</label>
+              <label for="site_county" class="control-label">County</label>
               <relationship data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8.length" model="site.type_b1baa10ba3ce493d90581a864ec95dc8" table="'type_b1baa10ba3ce493d90581a864ec95dc8'" fields="['name','state_name']" placeholder="'Enter the name of the county'"></relationship>
               <p data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
                 {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['name'] }},

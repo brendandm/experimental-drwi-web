@@ -363,60 +363,17 @@
 
             <tr>
               <th>&nbsp;</th>
-              <th data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
                   Monitored on<br />
                   {{ report.report_date }}
                 </a>
-              </th>
+              </td>
             </tr>
 
             <tr>
-              <th class="align-left" colspan="{{ practice.readings.length + 1 }}" style="background: #efefef;">Vegetation</th>
-            </tr>
-            <tr>
-              <th class="align-left">Cover (%) <a href="#">?</a></th>
-              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.vegetative_cover }}</td>
-            </tr>
-
-            <tr>
-              <th class="align-left" colspan="{{ practice.readings.length + 1 }}" style="background: #efefef;">Geomorphic</th>
-            </tr>
-            <tr>
-              <th class="align-left">Bank Erosion Hazard Index (BEHI)</th>
-              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                {{ report.bank_erosion_hazard_index }}
-              </td>
-            </tr>
-            <tr>
-              <th class="align-left">Riffle Stability Index</th>
-              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                {{ report.riffle_stability_index }}
-              </td>
-            </tr>
-            <tr>
-              <th class="align-left">Log Relative Bed Stability</th>
-              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                {{ report.log_relative_bed_stability }}
-              </td>
-            </tr>
-            <tr>
-              <th class="align-left">Substrate Mean D50 Particle Size</th>
-              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                {{ report.substrate_mean_d50_particle_size }}
-              </td>
-            </tr>
-            <tr>
-              <th class="align-left">Streambed Percent Fines</th>
-              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                {{ report.streambed_percent_fines }}
-              </td>
-            </tr>
-            <tr>
-              <th class="align-left">Bed Armoring Ratio</th>
-              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                {{ report.bed_armoring_ratio }}
-              </td>
+              <th class="align-left">Number of observed bird or small animal species</th>
+              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.bird_count }}</td>
             </tr>
 
             <tr class="no-rule">
@@ -436,33 +393,45 @@
             </tr>
 
             <tr>
-              <th class="align-left" width="50%">Perform maintenance to remove concentrated flow paths through the buffer</th>
+              <th class="align-left" width="50%">Keep all inflows into, and outflows from, the BMP free of obstructions</th>
               <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <div data-ng-if="report.concentrated_flow_paths" class="icon retinaicon-essentials-071"></div>
+                <div data-ng-if="report.obstruction" class="icon retinaicon-essentials-071"></div>
               </td>
             </tr>
             <tr>
-              <th class="align-left" width="50%">Prevent livestock from access to stabilized areas</th>
+              <th class="align-left" width="50%">Maintain dense vegetative cover, grass, or conservation landscaping to reduce runoff, prevent erosion, and to retain nutrients.</th>
               <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <div data-ng-if="report.livestock_kept_out" class="icon retinaicon-essentials-071"></div>
+                <div data-ng-if="report.vegetation" class="icon retinaicon-essentials-071"></div>
               </td>
             </tr>
             <tr>
-              <th class="align-left" width="50%">Repair any damage from destructive fire or destructive grazing</th>
+              <th class="align-left" width="50%">Initially, and then annually, review CSN Homeowners Guide sections for appropriate BMP maintenance (CSN, 2013,2014).</th>
               <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <div data-ng-if="report.plantings_protected" class="icon retinaicon-essentials-071"></div>
+                <div data-ng-if="report.maintenance" class="icon retinaicon-essentials-071"></div>
               </td>
             </tr>
             <tr>
-              <th class="align-left" width="50%">Check for, correct causes, and patch bare and/or eroded areas in the buffer</th>
+              <th class="align-left" width="50%">Visually check the BMPs after each major storm and perform any needed maintenance.</th>
               <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <div data-ng-if="report.bare_or_eroded_areas" class="icon retinaicon-essentials-071"></div>
+                <div data-ng-if="report.poststorm_maintenance" class="icon retinaicon-essentials-071"></div>
               </td>
             </tr>
             <tr>
-              <th class="align-left" width="50%">Control noxious and invasive weeds</th>
+              <th class="align-left" width="50%">Make sure barrels are empty before each storm; inspect for mosquitos, cracks, and clogging. If runoff volumes generally exceed barrel capacities, increase the number or size of barrels.</th>
               <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <div data-ng-if="report.invasive_species_control" class="icon retinaicon-essentials-071"></div>
+                <div data-ng-if="report.rain_barrel_check" class="icon retinaicon-essentials-071"></div>
+              </td>
+            </tr>
+            <tr>
+              <th class="align-left" width="50%">Ponding may indicate clogging of the media. Replace media in raingardens; sweep, vacuum, or power-wash pervious pavement.</th>
+              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <div data-ng-if="report.ponding" class="icon retinaicon-essentials-071"></div>
+              </td>
+            </tr>
+            <tr>
+              <th class="align-left" width="50%">Check and correct conditions producing too much or too little water, resulting in dying plants.</th>
+              <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                <div data-ng-if="report.dying_plants" class="icon retinaicon-essentials-071"></div>
               </td>
             </tr>
           </tbody>  
