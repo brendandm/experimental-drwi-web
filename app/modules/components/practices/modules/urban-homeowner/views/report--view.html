@@ -227,12 +227,12 @@
               </td>
               <td>
                 <strong>
-                  {{ calculate.installedNitrogenLoadReduction(practice.readings, loaddata) || 0 | number:2 }}
+                  {{ calculate.installedNitrogenLoadReduction(practice.readings, loaddata) | number:2 }}
                 </strong>
               </td>
               <td>
                 <strong>
-                  {{ calculate.installedNitrogenLoadReduction(practice.readings, loaddata, '%') || 0 | number:2 }}
+                  {{ calculate.installedNitrogenLoadReduction(practice.readings, loaddata, '%') | number:2 }}
                 </strong>
               </td>
             </tr>
