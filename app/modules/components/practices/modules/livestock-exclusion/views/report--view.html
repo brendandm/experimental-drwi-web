@@ -222,7 +222,7 @@
             <tr>
               <th>Average Buffer Width (ft)</th>
               <td>&nbsp;</td>
-              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+              <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ report.average_buffer_width | number:2 }}
               </td>
               <td>&nbsp;</td>
@@ -232,7 +232,7 @@
             <tr>
               <th>Buffer Type</th>
               <td>&nbsp;</td>
-              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+              <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ report.buffer_type }}
               </td>
               <td>&nbsp;</td>
@@ -242,7 +242,7 @@
             <tr>
               <th>Extent of Exclusion (if not 100%)</th>
               <td>&nbsp;</td>
-              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+              <td data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ report.extent_of_exclusion | number:2 }}
               </td>
               <td>&nbsp;</td>
