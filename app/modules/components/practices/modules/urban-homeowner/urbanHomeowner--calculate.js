@@ -22,17 +22,13 @@ angular.module('practiceMonitoringAssessmentApp')
         var impervious = ((value.rain_garden_area/0.12)+value.rain_barrel_drainage_area+value.permeable_pavement_area+value.downspout_disconnection_drainage_area+value.impervious_cover_removal_area),
             pervious = (value.urban_nutrient_management_pledge_area+value.urban_nutrient_management_plan_area_hi_risk+value.conservation_landscaping+(value.tree_planting*100));
 
-        console.log(impervious, 43560, loaddata.impervious.tn_ual, pervious, 43560, loaddata.pervious.tn_ual, 43560, '=', (((impervious/43560)*loaddata.impervious.tn_ual + (pervious/43560)*loaddata.pervious.tn_ual)/43560));
-
-        return ((impervious/43560)*loaddata.impervious.tn_ual + (pervious/43560)*loaddata.pervious.tn_ual)/43560; // These need to be state specific
+        return ((impervious)*loaddata.impervious.tn_ual + (pervious)*loaddata.pervious.tn_ual)/43560;
       },
       preInstallationPhosphorusLoad: function(value, loaddata) {
         var impervious = ((value.rain_garden_area/0.12)+value.rain_barrel_drainage_area+value.permeable_pavement_area+value.downspout_disconnection_drainage_area+value.impervious_cover_removal_area),
             pervious = (value.urban_nutrient_management_pledge_area+value.urban_nutrient_management_plan_area_hi_risk+value.conservation_landscaping+(value.tree_planting*100));
 
-        console.log(impervious, 43560, loaddata.impervious.tp_ual, pervious, 43560, loaddata.pervious.tp_ual, 43560, '=', ((impervious/43560)*loaddata.impervious.tp_ual + (pervious/43560)*loaddata.pervious.tp_ual)/43560);
-
-        return ((impervious/43560)*loaddata.impervious.tp_ual + (pervious/43560)*loaddata.pervious.tp_ual)/43560; // These need to be state specific
+        return ((impervious)*loaddata.impervious.tp_ual + (pervious)*loaddata.pervious.tp_ual)/43560;
       },
       plannedNitrogenLoadReduction: function(value, loaddata) {
         var rainGarden = (value.rain_garden_area/0.12)*8.710,
@@ -43,7 +39,7 @@ angular.module('practiceMonitoringAssessmentApp')
             unmHighRisk = value.urban_nutrient_management_plan_area_hi_risk*2.180,
             conservationLandscaping = value.conservation_landscaping*3.830,
             treePlanting = value.tree_planting*0.610,
-            imperviousCoverRemoval = value.impervious_cover_removal_area*(loaddata.impervious.tn_ual-loaddata.pervious.tn_ual); // These need to be state specific
+            imperviousCoverRemoval = value.impervious_cover_removal_area*(loaddata.impervious.tn_ual-loaddata.pervious.tn_ual);
 
         return (rainGarden+rainBarrel+permeablePavement+downspoutDisconnection+unmPledgeArea+unmHighRisk+conservationLandscaping+treePlanting+imperviousCoverRemoval)/43560;
       },
@@ -55,7 +51,7 @@ angular.module('practiceMonitoringAssessmentApp')
             unmPledgeArea = value.urban_nutrient_management_pledge_area*0.013,
             unmHighRisk = value.urban_nutrient_management_plan_area_hi_risk*0.044,
             conservationLandscaping = value.conservation_landscaping*0.170,
-            imperviousCoverRemoval = value.impervious_cover_removal_area*(loaddata.impervious.tp_ual-loaddata.pervious.tp_ual); // These need to be state specific
+            imperviousCoverRemoval = value.impervious_cover_removal_area*(loaddata.impervious.tp_ual-loaddata.pervious.tp_ual);
 
         return (rainGarden+rainBarrel+permeablePavement+downspoutDisconnection+unmPledgeArea+unmHighRisk+conservationLandscaping+imperviousCoverRemoval)/43560;
       },

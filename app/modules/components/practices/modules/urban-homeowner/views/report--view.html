@@ -216,44 +216,44 @@
 
             <tr>
               <th>Nitrogen (lbs/yr)</th>
-              <td data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                {{ calculate.preInstallationNitrogenLoad(report, loaddata) | number:10 }}
+              <td data-ng-if="report.measurement_period === 'Planning' && loaddata" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                {{ calculate.preInstallationNitrogenLoad(report, loaddata) | number:2 }}
               </td>
-              <td data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+              <td data-ng-if="report.measurement_period === 'Planning' && loaddata" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ calculate.plannedNitrogenLoadReduction(report, loaddata) || 0 | number:2 }}
               </td>
-              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+              <td data-ng-if="report.measurement_period === 'Installation' && loaddata" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ calculate.plannedNitrogenLoadReduction(report, loaddata) || 0 | number:2 }}
               </td>
               <td>
-                <strong>
+                <strong data-ng-if="loaddata">
                   {{ calculate.installedNitrogenLoadReduction(practice.readings, loaddata) | number:2 }}
                 </strong>
               </td>
               <td>
-                <strong>
+                <strong data-ng-if="loaddata">
                   {{ calculate.installedNitrogenLoadReduction(practice.readings, loaddata, '%') | number:2 }}
                 </strong>
               </td>
             </tr>
             <tr>
               <th>Phosphorus (lbs/yr)</th>
-              <td data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                {{ calculate.preInstallationPhosphorusLoad(report, loaddata) | number:10 }}
+              <td data-ng-if="report.measurement_period === 'Planning' && loaddata" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+                {{ calculate.preInstallationPhosphorusLoad(report, loaddata) | number:2 }}
               </td>
-              <td data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+              <td data-ng-if="report.measurement_period === 'Planning' && loaddata" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ calculate.plannedPhosphorusLoadReduction(report, loaddata) || 0 | number:2 }}
               </td>
-              <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+              <td data-ng-if="report.measurement_period === 'Installation' && loaddata" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ calculate.plannedPhosphorusLoadReduction(report, loaddata) || 0 | number:2 }}
               </td>
               <td>
-                <strong>
+                <strong data-ng-if="loaddata">
                   {{ calculate.installedPhosphorusLoadReduction(practice.readings, loaddata) || 0 | number:2 }}
                 </strong>
               </td>
               <td>
-                <strong>
+                <strong data-ng-if="loaddata">
                   {{ calculate.installedPhosphorusLoadReduction(practice.readings, loaddata, '%') || 0 | number:2 }}
                 </strong>
               </td>
