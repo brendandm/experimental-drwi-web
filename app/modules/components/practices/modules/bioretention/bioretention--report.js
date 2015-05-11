@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('BioretentionReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', 'CalculateUrbanHomeowner', 'Calculate', 'StateLoad', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateUrbanHomeowner, Calculate, StateLoad) {
+  .controller('BioretentionReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', 'CalculateBioretention', 'Calculate', 'StateLoad', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateBioretention, Calculate, StateLoad) {
 
     //
     // Assign project to a scoped variable
@@ -60,7 +60,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.landuse = Landuse;
 
-    $scope.calculate = CalculateUrbanHomeowner;
+    $scope.calculate = CalculateBioretention;
 
     $scope.calculate.GetLoadVariables = function(period, landuse) {
 
@@ -388,6 +388,9 @@ angular.module('practiceMonitoringAssessmentApp')
         }
       },
       add: function(practice, readingType) {
+
+        var reportDate = new Date();
+
         //
         // Creating a practice reading is a two step process.
         //
@@ -395,12 +398,13 @@ angular.module('practiceMonitoringAssessmentApp')
         //     for the Practice Reading table
         //  2. Update the Practice to create a relationship with the Reading created in step 1 
         //
+        console.log('reportDate', reportDate, angular.isDate(reportDate), typeof reportDate);
+        
         Feature.CreateFeature({
           storage: $scope.storage.storage,
           data: {
             measurement_period: (readingType) ? readingType : null,
-            average_width_of_buffer: $scope.readings.bufferWidth(),
-            report_date: moment().format('YYYY-MM-DD'),
+            report_date: reportDate,
             owner: $scope.user.id,
             status: 'private'
           }
@@ -439,7 +443,7 @@ angular.module('practiceMonitoringAssessmentApp')
           storage: $scope.storage.storage,
           data: {
             measurement_period: (readingType) ? readingType : null,
-            report_date: moment().format('YYYY-MM-DD'),
+            report_date: new Date(),
             owner: $scope.user.id,
             status: 'private'
           }

@@ -81,6 +81,8 @@ angular.module('practiceMonitoringAssessmentApp')
       //
       $scope.report = report;
 
+      console.log('report', report);
+
       $scope.report.template = $scope.storage.templates.form;
 
       //

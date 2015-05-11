@@ -5,7 +5,7 @@
             Report Date
           </label>
 
-          <input data-ng-model="report.report_date" class="form-control" class="form-control" type="date" id="report_date" name="report_date" placeholder="Enter a date" />
+          <input data-ng-model="report.report_date" class="form-control" class="form-control" type="text" id="report_date" name="report_date" placeholder="Enter a date" />
 
           <p data-ng-if="fields.report_date.help" class="help-text">{{ fields.report_date.help }}</p>
         </div>
@@ -107,7 +107,7 @@
         <div class="form-group">
           <div class="checkbox">
             <label class="control-label">
-              <input data-ng-model="report.obstruction" type="checkbox" id="obstruction" name="obstruction" /> Keep all inflows into, and outflows from, the BMP free of obstructions
+              <input data-ng-model="report.obstructions" type="checkbox" id="obstructions" name="obstructions" /> Keep all inflows into, and outflows from, the BMP free of obstructions
             </label>
           </div>
         </div>
@@ -123,7 +123,7 @@
         <div class="form-group">
           <div class="checkbox">
             <label class="control-label">
-              <input data-ng-model="report.poststorm_maintenance" type="checkbox" id="poststorm_maintenance" name="poststorm_maintenance" /> Visually check the BMP after each major storm and perform any needed maintenance
+              <input data-ng-model="report.post_storm" type="checkbox" id="post_storm" name="post_storm" /> Visually check the BMP after each major storm and perform any needed maintenance
             </label>
           </div>
         </div>
