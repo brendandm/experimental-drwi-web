@@ -9,8 +9,29 @@
 angular.module('practiceMonitoringAssessmentApp')
   .service('CalculateBioretention', [function() {
     return {
+      rainfallDepthTreated: function(value) {
+        return (value.bioretention_runoff_volume_captured/(value.bioretention_impervious_area/43560))*12;
+      },
+      totalRainfallDepthTreated: function(values, format) {
+        
+        var installed = 0,
+            planned = 0,
+            self = this;
+
+        angular.forEach(values, function(value, $index) {
+          if (values[$index].measurement_period === 'Planning') {
+            planned += self.rainfallDepthTreated(value);
+          }
+          else if (values[$index].measurement_period === 'Installation') {
+            installed += self.rainfallDepthTreated(value);
+          }
+        });
+
+        var percentage_installed = installed/planned;
+
+        return (format === '%') ? (percentage_installed*100) : installed;
+      },
       gallonsReducedPerYear: function(value) {
-        console.log('value.bioretention_runoff_volume_captured', value.bioretention_runoff_volume_captured)
         return (value.bioretention_runoff_volume_captured/325851.4);
       },
       preInstallationNitrogenLoad: function(value, loaddata) {
