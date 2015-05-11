@@ -9,7 +9,7 @@
 angular.module('practiceMonitoringAssessmentApp')
   .service('CalculateBioretention', [function() {
     return {
-      adjustorCurveNitrogen: function(value) {
+      adjustorCurveNitrogen: function(value, format) {
 
         var self = this,
             rainfallDepthTreated = self.rainfallDepthTreated(value),
@@ -20,7 +20,7 @@ angular.module('practiceMonitoringAssessmentApp')
             fifth = 1.501*rainfallDepthTreated,
             reduction = (first-second+third-fourth+fifth-0.013);
 
-        return reduction*100;
+        return (format === '%') ? reduction*100 : reduction;
       },
       adjustorCurvePhosphorus: function(value) {
 
@@ -55,41 +55,22 @@ angular.module('practiceMonitoringAssessmentApp')
         return (value.bioretention_runoff_volume_captured/325851.4);
       },
       preInstallationNitrogenLoad: function(value, loaddata) {
-        var impervious = ((value.rain_garden_area/0.12)+value.rain_barrel_drainage_area+value.permeable_pavement_area+value.downspout_disconnection_drainage_area+value.impervious_cover_removal_area),
-            pervious = (value.urban_nutrient_management_pledge_area+value.urban_nutrient_management_plan_area_hi_risk+value.conservation_landscaping+(value.tree_planting*100));
-
-        return ((impervious)*loaddata.impervious.tn_ual + (pervious)*loaddata.pervious.tn_ual)/43560;
+        return ((value.bioretention_impervious_area*loaddata.impervious.tn_ual) + ((value.bioretention_total_drainage_area-value.bioretention_impervious_area)*loaddata.pervious.tn_ual))/43560;
       },
       preInstallationPhosphorusLoad: function(value, loaddata) {
-        var impervious = ((value.rain_garden_area/0.12)+value.rain_barrel_drainage_area+value.permeable_pavement_area+value.downspout_disconnection_drainage_area+value.impervious_cover_removal_area),
-            pervious = (value.urban_nutrient_management_pledge_area+value.urban_nutrient_management_plan_area_hi_risk+value.conservation_landscaping+(value.tree_planting*100));
-
-        return ((impervious)*loaddata.impervious.tp_ual + (pervious)*loaddata.pervious.tp_ual)/43560;
+        return ((value.bioretention_impervious_area*loaddata.impervious.tp_ual) + ((value.bioretention_total_drainage_area-value.bioretention_impervious_area)*loaddata.pervious.tp_ual))/43560;
+      },
+      preInstallationSedimentLoad: function(value, loaddata) {
+        return ((value.bioretention_impervious_area*loaddata.impervious.tss_ual) + ((value.bioretention_total_drainage_area-value.bioretention_impervious_area)*loaddata.pervious.tss_ual))/43560;
       },
       plannedNitrogenLoadReduction: function(value, loaddata) {
-        var rainGarden = (value.rain_garden_area/0.12)*8.710,
-            rainBarrel = value.rain_barrel_drainage_area*4.360,
-            permeablePavement = value.permeable_pavement_area*6.970,
-            downspoutDisconnection = value.downspout_disconnection_drainage_area*6.970,
-            unmPledgeArea = value.urban_nutrient_management_pledge_area*0.653,
-            unmHighRisk = value.urban_nutrient_management_plan_area_hi_risk*2.180,
-            conservationLandscaping = value.conservation_landscaping*3.830,
-            treePlanting = value.tree_planting*0.610,
-            imperviousCoverRemoval = value.impervious_cover_removal_area*(loaddata.impervious.tn_ual-loaddata.pervious.tn_ual);
-
-        return (rainGarden+rainBarrel+permeablePavement+downspoutDisconnection+unmPledgeArea+unmHighRisk+conservationLandscaping+treePlanting+imperviousCoverRemoval)/43560;
+        return (((value.bioretention_impervious_area*loaddata.impervious.tn_ual) + ((value.bioretention_total_drainage_area-value.bioretention_impervious_area)*loaddata.pervious.tn_ual))*this.adjustorCurveNitrogen(value))/43560;
       },
       plannedPhosphorusLoadReduction: function(value, loaddata) {
-        var rainGarden = (value.rain_garden_area/0.12)*1.220,
-            rainBarrel = value.rain_barrel_drainage_area*0.520,
-            permeablePavement = value.permeable_pavement_area*0.870,
-            downspoutDisconnection = value.downspout_disconnection_drainage_area*0.870,
-            unmPledgeArea = value.urban_nutrient_management_pledge_area*0.013,
-            unmHighRisk = value.urban_nutrient_management_plan_area_hi_risk*0.044,
-            conservationLandscaping = value.conservation_landscaping*0.170,
-            imperviousCoverRemoval = value.impervious_cover_removal_area*(loaddata.impervious.tp_ual-loaddata.pervious.tp_ual);
-
-        return (rainGarden+rainBarrel+permeablePavement+downspoutDisconnection+unmPledgeArea+unmHighRisk+conservationLandscaping+imperviousCoverRemoval)/43560;
+        return (((value.bioretention_impervious_area*loaddata.impervious.tp_ual) + ((value.bioretention_total_drainage_area-value.bioretention_impervious_area)*loaddata.pervious.tp_ual))*this.adjustorCurvePhosphorus(value))/43560;
+      },
+      plannedSedimentLoadReduction: function(value, loaddata) {
+        return (((value.bioretention_impervious_area*loaddata.impervious.tss_ual) + ((value.bioretention_total_drainage_area-value.bioretention_impervious_area)*loaddata.pervious.tss_ual))*this.adjustorCurveSediment(value))/43560;
       },
       installedPhosphorusLoadReduction: function(values, loaddata, format) {
 
@@ -122,6 +103,25 @@ angular.module('practiceMonitoringAssessmentApp')
           }
           else if (values[$index].measurement_period === 'Installation') {
             installed += self.plannedNitrogenLoadReduction(value, loaddata);
+          }
+        });
+
+        var percentage_installed = installed/planned;
+
+        return (format === '%') ? (percentage_installed*100) : installed;
+      },
+      installedSedimentLoadReduction: function(values, loaddata, format) {
+
+        var installed = 0,
+            planned = 0,
+            self = this;
+
+        angular.forEach(values, function(value, $index) {
+          if (values[$index].measurement_period === 'Planning') {
+            planned += self.plannedSedimentLoadReduction(value, loaddata);
+          }
+          else if (values[$index].measurement_period === 'Installation') {
+            installed += self.plannedSedimentLoadReduction(value, loaddata);
           }
         });
 
