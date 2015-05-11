@@ -9,27 +9,47 @@
 angular.module('practiceMonitoringAssessmentApp')
   .service('CalculateBioretention', [function() {
     return {
+      adjustorCurveNitrogen: function(value) {
+
+        var self = this,
+            rainfallDepthTreated = self.rainfallDepthTreated(value),
+            first = 0.0308*Math.pow(rainfallDepthTreated, 5),
+            second = 0.2562*Math.pow(rainfallDepthTreated, 4),
+            third = 0.8634*Math.pow(rainfallDepthTreated, 3),
+            fourth = 1.5285*Math.pow(rainfallDepthTreated, 2),
+            fifth = 1.501*rainfallDepthTreated,
+            reduction = (first-second+third-fourth+fifth-0.013);
+
+        return reduction*100;
+      },
+      adjustorCurvePhosphorus: function(value) {
+
+        var self = this,
+            rainfallDepthTreated = self.rainfallDepthTreated(value),
+            first = 0.0304*Math.pow(rainfallDepthTreated, 5),
+            second = 0.2619*Math.pow(rainfallDepthTreated, 4),
+            third = 0.9161*Math.pow(rainfallDepthTreated, 3),
+            fourth = 1.6837*Math.pow(rainfallDepthTreated, 2),
+            fifth = 1.7072*rainfallDepthTreated,
+            reduction = (first-second+third-fourth+fifth-0.0091);
+
+        return reduction*100;
+      },
+      adjustorCurveSediment: function(value) {
+
+        var self = this,
+            rainfallDepthTreated = self.rainfallDepthTreated(value),
+            first = 0.0326*Math.pow(rainfallDepthTreated, 5),
+            second = 0.2806*Math.pow(rainfallDepthTreated, 4),
+            third = 0.9816*Math.pow(rainfallDepthTreated, 3),
+            fourth = 1.8039*Math.pow(rainfallDepthTreated, 2),
+            fifth = 1.8292*rainfallDepthTreated,
+            reduction = (first-second+third-fourth+fifth-0.0098);
+
+        return reduction*100;
+      },
       rainfallDepthTreated: function(value) {
         return (value.bioretention_runoff_volume_captured/(value.bioretention_impervious_area/43560))*12;
-      },
-      totalRainfallDepthTreated: function(values, format) {
-        
-        var installed = 0,
-            planned = 0,
-            self = this;
-
-        angular.forEach(values, function(value, $index) {
-          if (values[$index].measurement_period === 'Planning') {
-            planned += self.rainfallDepthTreated(value);
-          }
-          else if (values[$index].measurement_period === 'Installation') {
-            installed += self.rainfallDepthTreated(value);
-          }
-        });
-
-        var percentage_installed = installed/planned;
-
-        return (format === '%') ? (percentage_installed*100) : installed;
       },
       gallonsReducedPerYear: function(value) {
         return (value.bioretention_runoff_volume_captured/325851.4);

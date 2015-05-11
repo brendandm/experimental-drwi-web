@@ -96,14 +96,10 @@
                 {{ calculate.rainfallDepthTreated(report) || 0 | number:2 }}
               </td>
               <td>
-                <strong>
-                  {{ calculate.totalRainfallDepthTreated(practice.readings) || 0 | number:2 }}
-                </strong>
+                &nbsp;
               </td>
               <td>
-                <strong>
-                  {{ calculate.quantityInstalled(practice.readings, '%') || 0 | number:2 }}%
-                </strong>
+                &nbsp;
               </td>
             </tr>
 
@@ -111,17 +107,13 @@
               <th rowspan="3">Adjustor Curve % Reductions</th>
               <td>TN</td>
               <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                CALC
+                {{ calculate.adjustorCurveNitrogen(report) | number:2 }}%
               </td>
               <td>
-                <strong>
-                  {{ calculate.quantityInstalled(practice.readings, 'downspout_disconnection_drainage_area') || 0 | number:2 }}
-                </strong>
+                &nbsp;
               </td>
               <td>
-                <strong>
-                  {{ calculate.quantityInstalled(practice.readings, 'downspout_disconnection_drainage_area', '%') || 0 | number:2 }}%
-                </strong>
+                &nbsp;
               </td>
             </tr>
 
@@ -129,17 +121,13 @@
               <!-- Blank TH because of rowspan above -->
               <td>TP</td>
               <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                CALC
+                {{ calculate.adjustorCurvePhosphorus(report) | number:2 }}%
               </td>
               <td>
-                <strong>
-                  {{ calculate.quantityInstalled(practice.readings, 'urban_nutrient_management_pledge_area') || 0 | number:2 }}
-                </strong>
+                &nbsp;
               </td>
               <td>
-                <strong>
-                  {{ calculate.quantityInstalled(practice.readings, 'urban_nutrient_management_pledge_area', '%') || 0 | number:2 }}%
-                </strong>
+                &nbsp;
               </td>
             </tr>
 
@@ -147,17 +135,13 @@
               <!-- Blank TH because of rowspan above -->
               <td>TSS</td>
               <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                CALC
+                {{ calculate.adjustorCurveSediment(report) | number:2 }}%
               </td>
               <td>
-                <strong>
-                  {{ calculate.quantityInstalled(practice.readings, 'urban_nutrient_management_plan_area_hi_risk') || 0 | number:2 }}
-                </strong>
+                &nbsp;
               </td>
               <td>
-                <strong>
-                  {{ calculate.quantityInstalled(practice.readings, 'urban_nutrient_management_plan_area_hi_risk', '%') || 0 | number:2 }}%
-                </strong>
+                &nbsp;
               </td>
             </tr>
 
