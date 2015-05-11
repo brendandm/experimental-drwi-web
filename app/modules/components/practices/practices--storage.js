@@ -64,5 +64,19 @@ angular.module('practiceMonitoringAssessmentApp')
         report: '/modules/components/practices/modules/urban-homeowner/views/report--view.html',
         form: '/modules/components/practices/modules/urban-homeowner/views/form--view.html'
       }
+    },
+    'bioretention': {
+      landuse: null,
+      storage: 'type_64d08a6ba8874ed5a76ae3f4abeb68ca',
+      templateId: 380,
+      fields: {
+        Planning: [],
+        Installation: [],
+        Monitoring: []
+      },
+      templates: {
+        report: '/modules/components/practices/modules/bioretention/views/report--view.html',
+        form: '/modules/components/practices/modules/bioretention/views/form--view.html'
+      }
     }      
   });
