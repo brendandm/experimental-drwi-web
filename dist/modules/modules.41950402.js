@@ -9205,7 +9205,7 @@ angular.module('practiceMonitoringAssessmentApp')
               }
             ]
           },
-          'results_per_page': 6
+          'results_per_page': 25
         }
       }).success(function(data){
         //assign feature objects to scope for use in template
