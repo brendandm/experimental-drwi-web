@@ -3154,7 +3154,7 @@ angular.module('practiceMonitoringAssessmentApp')
       for (var i = 0; i < $scope.practice.readings.length; i++) {
         if ($scope.practice.readings[i].measurement_period === 'Installation') {
           if (area) {
-            total_area += ($scope.practice.readings[i].length_of_buffer*$scope.practice.readings[i].av);
+            total_area += ($scope.practice.readings[i].length_of_buffer*$scope.practice.readings[i].average_width_of_buffer);
           } else {
             total_area += $scope.practice.readings[i].length_of_buffer;
           }
@@ -4044,12 +4044,14 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.calculate.GetRestorationTotal = function(unit, area) {
 
+      console.log('$scope.calculate.GetRestorationTotal', unit, area);
+
       var total_area = 0;
 
       for (var i = 0; i < $scope.practice.readings.length; i++) {
         if ($scope.practice.readings[i].measurement_period === 'Installation') {
           if (area) {
-            total_area += ($scope.practice.readings[i].length_of_buffer*$scope.practice.readings[i].av);
+            total_area += ($scope.practice.readings[i].length_of_buffer*$scope.practice.readings[i].average_width_of_buffer);
           } else {
             total_area += $scope.practice.readings[i].length_of_buffer;
           }
