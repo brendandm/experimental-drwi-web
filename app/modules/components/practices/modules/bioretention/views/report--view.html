@@ -75,16 +75,16 @@
               <!-- Blank TH because of rowspan above -->
               <td>Runoff Volume Captured (acre/ft)</td>
               <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                {{ report.bioretention_runoff_volume_captured || 0 | number:2 }}
+                {{ report.bioretention_runoff_volume_captured || 0 | number:5 }}
               </td>
               <td>
                 <strong>
-                  {{ calculate.quantityInstalled(practice.readings, 'bioretention_runoff_volume_captured') || 0 | number:2 }}
+                  {{ calculate.quantityInstalled(practice.readings, 'bioretention_runoff_volume_captured') || 0 | number:5 }}
                 </strong>
               </td>
               <td>
                 <strong>
-                  {{ calculate.quantityInstalled(practice.readings, 'bioretention_runoff_volume_captured', '%') || 0 | number:2 }}%
+                  {{ calculate.quantityInstalled(practice.readings, 'bioretention_runoff_volume_captured', '%') || 0 | number:5 }}%
                 </strong>
               </td>
             </tr>
