@@ -138,6 +138,23 @@ angular.module('practiceMonitoringAssessmentApp')
         * @param add (function) Add an entirely new Reading to this practice instance
         */
       $scope.readings = {
+        all: function(existingReadings, readingId) {
+
+          // Start by adding the newest relationships, then we'll add the existing sites
+          var updatedReadings = [{
+            id: readingId
+          }];
+
+          // Add all existing readings back to our newly updated array
+          angular.forEach(existingReadings, function(reading, $index) {
+            updatedReadings.push({
+              id: reading.id
+            });
+          });
+
+          // Return our revised and combined readings array
+          return updatedReadings;
+        },
         add: function(practice, readingType) {
 
           var reportDate = new Date();
@@ -166,7 +183,14 @@ angular.module('practiceMonitoringAssessmentApp')
 
             var data = {};
 
-            // data[$scope.storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
+            //
+            // We need to make sure that we add the new reading to the existing
+            // list of readings on this Pracitce Instance. if we don't submit
+            // all old `id`s with the new `id` bad things happen. Our `POST`
+            // needs the entire list of reading `id` in order to retain the
+            // relationship between `Practice` instance <> `Reading` list
+            //
+            data[$scope.storage.storage] = $scope.readings.all(practice.readings, reportId);
 
             //
             // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
