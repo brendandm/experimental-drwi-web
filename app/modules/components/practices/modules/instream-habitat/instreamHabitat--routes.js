@@ -13,10 +13,13 @@ angular.module('practiceMonitoringAssessmentApp')
         templateUrl: '/modules/shared/default.html',
         controller: 'InstreamHabitatReportController',
         resolve: {
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.site.templateId
+          fields: function(Field, $route) {
+            return Field.GetPreparedFields(commonscloud.collections.site.templateId, 'object');
+          },
+          practice: function(Feature, $route) {
+            return Feature.GetFeature({
+              storage: commonscloud.collections.practice.storage,
+              featureId: $route.current.params.practiceId
             });
           },
           project: function(Feature, $route) {
@@ -25,11 +28,12 @@ angular.module('practiceMonitoringAssessmentApp')
               featureId: $route.current.params.projectId
             });
           },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.site.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.site.templateId, 'object');
+          readings: function(Storage, Feature, $route) {
+            return Feature.GetRelatedFeatures({
+              storage: commonscloud.collections.practice.storage,
+              relationship: Storage['instream-habitat'].storage,
+              featureId: $route.current.params.practiceId
+            });
           },
           site: function(Feature, $route) {
             return Feature.GetFeature({
@@ -37,17 +41,13 @@ angular.module('practiceMonitoringAssessmentApp')
               featureId: $route.current.params.siteId
             });
           },
-          practice: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.practice.storage,
-              featureId: $route.current.params.practiceId
-            });
+          template: function(Template, $route) {
+            return Template.GetTemplate(commonscloud.collections.site.templateId);
           },
-          readings: function(Storage, Feature, $route) {
-            return Feature.GetRelatedFeatures({
-              storage: commonscloud.collections.practice.storage,
-              relationship: Storage['instream-habitat'].storage,
-              featureId: $route.current.params.practiceId
+          user: function(User, $route) {
+            return User.getUser({
+              featureId: $route.current.params.projectId,
+              templateId: commonscloud.collections.site.templateId
             });
           }
         }
