@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .service('BankStabilizationCalculate', function() {
+  .controller('BankStabilizationFormController', function() {
     return {
 
     };
