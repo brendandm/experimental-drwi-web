@@ -89,8 +89,8 @@ angular.module('practiceMonitoringAssessmentApp')
         Monitoring: []
       },
       templates: {
-        report: '/modules/components/practices/modules/instream-habitat/report--view.html',
-        form: '/modules/components/practices/modules/instream-habitat/form--view.html'
+        report: '/modules/components/practices/modules/instream-habitat/views/report--view.html',
+        form: '/modules/components/practices/modules/instream-habitat/views/form--view.html'
       }
     }
   });
