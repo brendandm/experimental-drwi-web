@@ -54,12 +54,12 @@ angular.module('practiceMonitoringAssessmentApp')
         {
           text: $scope.practice.practice_type,
           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice_type
-        },    
+        },
         {
           text: 'Edit',
           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/edit',
           type: 'active'
-        }   
+        }
       ],
       actions: [
         {
@@ -128,7 +128,7 @@ angular.module('practiceMonitoringAssessmentApp')
       // Before we can remove the Practice we need to remove the relationship it has with the Site
       //
       //
-      // Drop the siteId from the list of 
+      // Drop the siteId from the list of
       //
       angular.forEach($scope.site.type_77f5c44516674e8da2532939619759dd, function(feature, $index) {
         if (feature.id === $scope.practice.id) {
@@ -141,7 +141,7 @@ angular.module('practiceMonitoringAssessmentApp')
         featureId: $scope.site.id,
         data: $scope.site
       }).then(function(response) {
-        
+
         //
         // Now that the Project <> Site relationship has been removed, we can remove the Site
         //
@@ -224,7 +224,7 @@ angular.module('practiceMonitoringAssessmentApp')
       }).then(function(response) {
 
         $scope.user.template = response;
-        
+
         //
         // If the user is not a Template Moderator or Admin then we need to do a final check to see
         // if there are permissions on the individual Feature

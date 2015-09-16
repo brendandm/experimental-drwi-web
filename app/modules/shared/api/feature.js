@@ -70,25 +70,25 @@ angular.module('practiceMonitoringAssessmentApp')
       });
 
       Feature.GetPaginatedFeatures = function(templateId, page) {
-        
+
         var promise = Feature.GetTemplate(templateId, page).then(function(options) {
           return Feature.GetFeatures(options);
         });
-        
-        return promise;     
+
+        return promise;
       };
 
       Feature.GetSingleFeatures = function(templateId, featureId) {
-        
+
         var promise = Feature.GetTemplateSingleFeature(templateId, featureId).then(function(options) {
           return Feature.GetFeature(options);
         });
-        
-        return promise;     
+
+        return promise;
       };
 
       Feature.GetTemplate = function(templateId, page) {
-  
+
         var promise = Template.get({
             templateId: templateId,
             updated: new Date().getTime()
@@ -103,7 +103,7 @@ angular.module('practiceMonitoringAssessmentApp')
       };
 
       Feature.GetTemplateSingleFeature = function(templateId, featureId) {
-  
+
         var promise = Template.get({
             templateId: templateId,
             updated: new Date().getTime()
@@ -167,7 +167,7 @@ angular.module('practiceMonitoringAssessmentApp')
       };
 
       Feature.MachineReadable = function(name) {
-        name = name.replace(' ', '-');
+        name = name.replace('-', '').replace(' ', '-');
         return name.toLowerCase();
       };
 
@@ -187,7 +187,7 @@ angular.module('practiceMonitoringAssessmentApp')
       //    storage (string) The storage string for the Feature Collection you wish to search
       //    criteria (object) An object of filters, order by, and other statements
       //    page (integer) The page number
-      //    
+      //
       //
       Feature.SearchFeatures = function(storage, criteria, page) {
 
@@ -369,7 +369,7 @@ angular.module('practiceMonitoringAssessmentApp')
       // and retain appropriate search and pagination functionality
       //
       // Keywords:
-      // 
+      //
       // results_per_page (integer) The number of results per page you wish to return, not to be used like limit/offset
       // page (integer) The page number of results to return
       // callback (string) Wrap response in a Javascript function with the name of the string
@@ -420,8 +420,8 @@ angular.module('practiceMonitoringAssessmentApp')
                 val: (criteria.op === 'ilike') ? '%' + criteria.value + '%' : criteria.value
               });
             }
-          });          
-        
+          });
+
         });
 
         return filters_;
@@ -532,7 +532,7 @@ angular.module('practiceMonitoringAssessmentApp')
       // Check if a value is in a list of values
       //
       Feature.inList = function(search_value, list) {
-        
+
         var $index;
 
         for ($index = 0; $index < list.length; $index++) {
