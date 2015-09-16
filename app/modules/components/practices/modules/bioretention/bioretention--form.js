@@ -16,7 +16,7 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.template = template;
 
     $scope.report = {};
-    
+
     $scope.save = function() {
       Feature.UpdateFeature({
         storage: $scope.storage.storage,
@@ -46,7 +46,7 @@ angular.module('practiceMonitoringAssessmentApp')
         featureId: $scope.practice.id,
         data: $scope.practice
       }).then(function(response) {
-        
+
         //
         // Now that the Project <> Site relationship has been removed, we can remove the Site
         //
@@ -127,7 +127,7 @@ angular.module('practiceMonitoringAssessmentApp')
         {
           text: $scope.practice.name,
           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + Feature.MachineReadable($scope.practice.practice_type)
-        }    
+        }
       ],
       actions: [
         {
@@ -170,7 +170,7 @@ angular.module('practiceMonitoringAssessmentApp')
       }).then(function(response) {
 
         $scope.user.template = response;
-        
+
         //
         // If the user is not a Template Moderator or Admin then we need to do a final check to see
         // if there are permissions on the individual Feature
