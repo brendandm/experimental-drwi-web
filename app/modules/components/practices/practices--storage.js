@@ -78,5 +78,19 @@ angular.module('practiceMonitoringAssessmentApp')
         report: '/modules/components/practices/modules/bioretention/views/report--view.html',
         form: '/modules/components/practices/modules/bioretention/views/form--view.html'
       }
-    }      
+    },
+    'instream-habitat': {
+      landuse: null,
+      storage: 'type_6800a0c907494118b9a8872a70ee26da',
+      templateId: 381,
+      fields: {
+        Planning: [],
+        Installation: [],
+        Monitoring: []
+      },
+      templates: {
+        report: '/modules/components/practices/modules/instream-habitat/report--view.html',
+        form: '/modules/components/practices/modules/instream-habitat/form--view.html'
+      }
+    }
   });
