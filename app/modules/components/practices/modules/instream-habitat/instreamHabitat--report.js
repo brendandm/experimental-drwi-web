@@ -166,7 +166,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
             var data = {};
 
-            data[$scope.storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
+            // data[$scope.storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
 
             //
             // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
