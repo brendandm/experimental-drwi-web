@@ -35,13 +35,13 @@
     <!-- build:css(.tmp) /styles/main.css -->
     <link rel="stylesheet" href="/styles/main.css">
     <!-- endbuild -->
-    
+
 
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link rel="author" href="/humans.txt" />
-    
+
     <link data-ng-repeat="link in $root.site.links" rel="{{ link.rel }}" href="{{ link.href }}" />
-    
+
     <base href="/" />
 
   </head>
@@ -162,6 +162,12 @@
                 <script src="modules/components/practices/modules/bioretention/bioretention--calculate.js"></script>
                 <script src="modules/components/practices/modules/bioretention/bioretention--report.js"></script>
                 <script src="modules/components/practices/modules/bioretention/bioretention--form.js"></script>
+
+                <!-- In-stream Habitat -->
+                <script src="modules/components/practices/modules/instream-habitat/instreamHabitat--routes.js"></script>
+                <script src="modules/components/practices/modules/instream-habitat/instreamHabitat--calculate.js"></script>
+                <script src="modules/components/practices/modules/instream-habitat/instreamHabitat--report.js"></script>
+                <script src="modules/components/practices/modules/instream-habitat/instreamHabitat--form.js"></script>
 
             <!-- CommonsCloud Module -->
             <script src="modules/shared/commons-cloud/configuration--constant.js"></script>
