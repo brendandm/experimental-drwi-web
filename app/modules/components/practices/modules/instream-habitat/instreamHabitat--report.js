@@ -8,6 +8,99 @@
 angular.module('practiceMonitoringAssessmentApp')
   .controller('InstreamHabitatReportController', function(commonscloud, Feature, fields, Landuse, $location, practice, project, readings, $rootScope, $route, $scope, site, Storage, template, Template, user) {
 
+    /**
+     * Define how we should handle individual Practice/Monitoring Readings
+     * for the In-stream Habitat Practice
+     *
+     * @param add (function) Add an entirely new Reading to this practice instance
+     */
+     $scope.readings = {
+       count: function(measurementPeriodName) {
+
+         var total = 0;
+
+         for (var i = 0; i < $scope.practice.readings.length; i++) {
+           if ($scope.practice.readings[i].measurement_period === measurementPeriodName) {
+             total++;
+           }
+         }
+
+         return total;
+       },
+       all: function(existingReadings, readingId) {
+
+         // Start by adding the newest relationships, then we'll add the existing sites
+         var updatedReadings = [{
+           id: readingId
+         }];
+
+         // Add all existing readings back to our newly updated array
+         angular.forEach(existingReadings, function(reading, $index) {
+           updatedReadings.push({
+             id: reading.id
+           });
+         });
+
+         // Return our revised and combined readings array
+         return updatedReadings;
+       },
+       add: function(practice, readingType) {
+
+         var reportDate = new Date();
+
+         /**
+          * Creating a practice reading is a two step process.
+          *
+          *  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
+          *     for the Practice Reading table
+          *  2. Update the Practice to create a relationship with the Reading created in step 1
+          *
+          * @todo When we implement the Enterprise we'll be remove the `status`
+          *       defintion here. Allowing folks to set this or intercept this
+          *       defeats the purpose of really having it to secure the system.
+          *
+          */
+         Feature.CreateFeature({
+           storage: $scope.storage.storage,
+           data: {
+             measurement_period: (readingType) ? readingType : null,
+             report_date: reportDate,
+             owner: $scope.user.id,
+             status: 'private'
+           }
+         }).then(function(reportId) {
+
+           var data = {};
+
+           //
+           // We need to make sure that we add the new reading to the existing
+           // list of readings on this Pracitce Instance. if we don't submit
+           // all old `id`s with the new `id` bad things happen. Our `POST`
+           // needs the entire list of reading `id` in order to retain the
+           // relationship between `Practice` instance <> `Reading` list
+           //
+           data[$scope.storage.storage] = $scope.readings.all(practice.readings, reportId);
+
+           //
+           // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
+           // to submit all relationships that are created and should remain. If we only submit the new
+           // ID the system will kick out the sites that were added previously.
+           //
+           Feature.UpdateFeature({
+             storage: commonscloud.collections.practice.storage,
+             featureId: practice.id,
+             data: data
+           }).then(function() {
+             //
+             // Once the new Reading has been associated with the existing Practice we need to
+             // display the form to the user, allowing them to complete it.
+             //
+             $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
+           });
+         });
+       }
+     };
+
       /**
        * Ensures that all 'resolve' $promises are loaded into the page as
        * variables on the $scope. If they are not, you won't be able to access
@@ -37,6 +130,11 @@ angular.module('practiceMonitoringAssessmentApp')
 
       $scope.landuse = Landuse;
 
+      $scope.total = {
+        planning: $scope.readings.count('Planning'),
+        installation: $scope.readings.count('Installation'),
+        monitoring: $scope.readings.count('Monitoring')
+      };
 
       /**
        * Defined the Page variables to load and display the page properly
@@ -130,85 +228,4 @@ angular.module('practiceMonitoringAssessmentApp')
 
          });
        }
-
-       /**
-        * Define how we should handle individual Practice/Monitoring Readings
-        * for the In-stream Habitat Practice
-        *
-        * @param add (function) Add an entirely new Reading to this practice instance
-        */
-      $scope.readings = {
-        all: function(existingReadings, readingId) {
-
-          // Start by adding the newest relationships, then we'll add the existing sites
-          var updatedReadings = [{
-            id: readingId
-          }];
-
-          // Add all existing readings back to our newly updated array
-          angular.forEach(existingReadings, function(reading, $index) {
-            updatedReadings.push({
-              id: reading.id
-            });
-          });
-
-          // Return our revised and combined readings array
-          return updatedReadings;
-        },
-        add: function(practice, readingType) {
-
-          var reportDate = new Date();
-
-          /**
-           * Creating a practice reading is a two step process.
-           *
-           *  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
-           *     for the Practice Reading table
-           *  2. Update the Practice to create a relationship with the Reading created in step 1
-           *
-           * @todo When we implement the Enterprise we'll be remove the `status`
-           *       defintion here. Allowing folks to set this or intercept this
-           *       defeats the purpose of really having it to secure the system.
-           *
-           */
-          Feature.CreateFeature({
-            storage: $scope.storage.storage,
-            data: {
-              measurement_period: (readingType) ? readingType : null,
-              report_date: reportDate,
-              owner: $scope.user.id,
-              status: 'private'
-            }
-          }).then(function(reportId) {
-
-            var data = {};
-
-            //
-            // We need to make sure that we add the new reading to the existing
-            // list of readings on this Pracitce Instance. if we don't submit
-            // all old `id`s with the new `id` bad things happen. Our `POST`
-            // needs the entire list of reading `id` in order to retain the
-            // relationship between `Practice` instance <> `Reading` list
-            //
-            data[$scope.storage.storage] = $scope.readings.all(practice.readings, reportId);
-
-            //
-            // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
-            // to submit all relationships that are created and should remain. If we only submit the new
-            // ID the system will kick out the sites that were added previously.
-            //
-            Feature.UpdateFeature({
-              storage: commonscloud.collections.practice.storage,
-              featureId: practice.id,
-              data: data
-            }).then(function() {
-              //
-              // Once the new Reading has been associated with the existing Practice we need to
-              // display the form to the user, allowing them to complete it.
-              //
-              $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
-            });
-          });
-        }
-      };
   });

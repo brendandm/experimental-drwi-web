@@ -192,15 +192,34 @@ angular.module('practiceMonitoringAssessmentApp')
             data: $scope.practice
           }).then(function(response) {
 
-            //
-            // Now that the Project <> Site relationship has been removed, we can remove the Site
-            //
-            Feature.DeleteFeature({
-              storage: $scope.storage.storage,
-              featureId: $scope.report.id
-            }).then(function(response) {
-              $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type);
-            });
+            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type);
+
+            /**
+             * @todo We should be actually deleting the feature as displayed in
+             *       the code below:
+             *
+             *         Feature.DeleteFeature({
+             *           storage: $scope.storage.storage,
+             *           featureId: $scope.report.id
+             *         });
+             *
+             *       However, because of a weird permissions issue that breaks
+             *       the endpoint in the existing version of CommonsAPI we
+             *       cannot delete this because of the following error:
+             *
+             * IntegrityError: (IntegrityError) update or delete on table
+             * "type_6800a0c907494118b9a8872a70ee26da" violates foreign key
+             * constraint "type_6800a0c907494118b9a8872a70ee26da_users_feature_id_fkey"
+             * on table "type_6800a0c907494118b9a8872a70ee26da_users"
+             *
+             *       This issue will be resolved through new permission usage
+             *       on the NFWF Enterprise API, but will exist while we use the
+             *       existing CommonsCloud API data models.
+             *
+             *       Our existing and bad fix is to simply "disassociated" the
+             *       the Reading Feature from the Practice Feature without
+             *       deleting the Feature from the system.
+             */
 
           });
         }
