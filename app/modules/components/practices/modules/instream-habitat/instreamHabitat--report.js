@@ -131,4 +131,60 @@ angular.module('practiceMonitoringAssessmentApp')
          });
        }
 
+       /**
+        * Define how we should handle individual Practice/Monitoring Readings
+        * for the In-stream Habitat Practice
+        *
+        * @param add (function) Add an entirely new Reading to this practice instance
+        */
+      $scope.readings = {
+        add: function(practice, readingType) {
+
+          var reportDate = new Date();
+
+          /**
+           * Creating a practice reading is a two step process.
+           *
+           *  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
+           *     for the Practice Reading table
+           *  2. Update the Practice to create a relationship with the Reading created in step 1
+           *
+           * @todo When we implement the Enterprise we'll be remove the `status`
+           *       defintion here. Allowing folks to set this or intercept this
+           *       defeats the purpose of really having it to secure the system.
+           *
+           */
+          Feature.CreateFeature({
+            storage: $scope.storage.storage,
+            data: {
+              measurement_period: (readingType) ? readingType : null,
+              report_date: reportDate,
+              owner: $scope.user.id,
+              status: 'private'
+            }
+          }).then(function(reportId) {
+
+            var data = {};
+
+            data[$scope.storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
+
+            //
+            // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
+            // to submit all relationships that are created and should remain. If we only submit the new
+            // ID the system will kick out the sites that were added previously.
+            //
+            Feature.UpdateFeature({
+              storage: commonscloud.collections.practice.storage,
+              featureId: practice.id,
+              data: data
+            }).then(function() {
+              //
+              // Once the new Reading has been associated with the existing Practice we need to
+              // display the form to the user, allowing them to complete it.
+              //
+              $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
+            });
+          });
+        }
+      };
   });
