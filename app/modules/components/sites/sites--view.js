@@ -32,10 +32,10 @@ angular.module('practiceMonitoringAssessmentApp')
         angular.forEach($scope.site.practices.list, function(practice, $index) {
           Feature.GetFeature({
             storage: variables.practice.storage,
-            featureId: practice.id           
+            featureId: practice.id
           }).then(function(response) {
             $scope.site.practices.list[$index] = response;
-            $scope.site.practices.list[$index].clean_practice_type = Feature.MachineReadable(practice.practice_type);
+            $scope.site.practices.list[$index].clean_practice_type = Feature.MachineReadable(response.name);
           });
         });
       },
@@ -45,7 +45,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         //  1. Create the new Practice record, including the owner and a new UserFeatures entry
         //     for the Practice table
-        //  2. Update the Site to create a relationship with the Practice created in step 1 
+        //  2. Update the Site to create a relationship with the Practice created in step 1
         //
         Feature.CreateFeature({
           storage: variables.practice.storage,
@@ -106,7 +106,7 @@ angular.module('practiceMonitoringAssessmentApp')
         $route.reload();
       }
     };
-    
+
     $scope.map = {
       defaults: {
         scrollWheelZoom: false,
@@ -129,7 +129,7 @@ angular.module('practiceMonitoringAssessmentApp')
       markers: {
         LandRiverSegment: {
           lat: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[1] : 38.362,
-          lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119, 
+          lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119,
           icon: {
             iconUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d.png?access_token=' + mapbox.access_token,
             iconRetinaUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d@2x.png?access_token=' + mapbox.access_token,
@@ -140,7 +140,7 @@ angular.module('practiceMonitoringAssessmentApp')
         }
       },
       geojsonToLayer: function (geojson, layer, options) {
-        
+
         //
         // Make sure the GeoJSON object is added to the layer with appropriate styles
         //
@@ -165,7 +165,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
       },
       drawPolygon: function(geojson, fitBounds, options) {
-          
+
         leafletData.getMap().then(function(map) {
           var featureGroup = new L.FeatureGroup();
 
@@ -226,7 +226,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
           //
           // Draw the county
-          //          
+          //
           if ($scope.site.type_b1baa10ba3ce493d90581a864ec95dc8.length) {
             $scope.map.drawPolygon({
               type: 'Feature',
@@ -270,7 +270,7 @@ angular.module('practiceMonitoringAssessmentApp')
       }).then(function(response) {
 
         $scope.user.template = response;
-        
+
         //
         // If the user is not a Template Moderator or Admin then we need to do a final check to see
         // if there are permissions on the individual Feature

@@ -11,7 +11,8 @@
 
         <section data-ng-if="site.practices.list" id="practices" class="list action-list">
           <h6 class="rule-above"><strong>Practices</strong> Installed</h6>
-          <article class="row list-item" data-ng-repeat="practice in site.practices.list track by $index | orderBy:'id':true">
+          <article class="row list-item" data-ng-if="practice.name"
+                   data-ng-repeat="practice in site.practices.list track by $index | orderBy:'id':true">
             <h1>
               <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.clean_practice_type }}">
                 {{ practice.name }}
