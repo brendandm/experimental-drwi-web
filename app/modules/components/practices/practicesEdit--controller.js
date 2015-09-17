@@ -18,12 +18,12 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.fields = fields;
     $scope.project = project;
     $scope.practice = practice;
-    console.log('$scope.practice', $scope.practice);
+
     $scope.files = {};
     $scope.files[$scope.fields.installation_photos.relationship] = $scope.practice[$scope.fields.installation_photos.relationship];
     $scope.files[$scope.fields.mature_photos.relationship] = $scope.practice[$scope.fields.mature_photos.relationship];
-    console.log('files', $scope.files);
-    $scope.practice_type = Feature.MachineReadable($scope.practice.practice_type);
+
+    $scope.practice_type = $scope.practice.practice_type;
 
     $scope.site = site;
     $scope.user = user;
