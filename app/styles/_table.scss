@@ -22,9 +22,15 @@ th {
   width: 400px;
 }
 
-.table > tbody > tr > th {
+.table > tbody > tr > th,
+.table > tbody > tr > th.nowrap {
   white-space: nowrap;
 }
+
+.table > tbody > tr > th.wrap {
+  white-space: normal;
+}
+
 
 .table {
   width: 100%;

@@ -10,6 +10,181 @@
   </p>
 </div>
 
+<!-- INSTALLATION SUMMARY -->
+
+<div data-ng-if="total.planning || total.installation">
+  <table class="table">
+    <tbody>
+      <!-- Section Heading -->
+      <tr class="no-rule">
+        <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+          <h2><strong>Installation</strong> Summary</h2>
+        </td>
+      </tr>
+
+      <!-- Measurement Period Headings -->
+      <tr>
+        <th>&nbsp;</th>
+        <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
+            <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
+            <span data-ng-if="report.measurement_period === 'Installation'">Installed</span>
+            <br />
+            {{ report.report_date }}
+          </a>
+        </th>
+        <th>Installed To-Date</th>
+        <th>% of Planned</th>
+      </tr>
+
+      <!-- Installation Summary -->
+      <tr>
+        <th>Length of Streambank (ft)</th>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_length_of_streambank | number:2 }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'installation_length_of_streambank') | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'installation_length_of_streambank', '%') | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+      <tr>
+        <th>Eroding Bank Height (ft)</th>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_eroding_bank_height | number:2 }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'installation_eroding_bank_height') | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'installation_eroding_bank_height', '%') | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+      <tr>
+        <th>Eroding Bank Horizontal Width (ft)</th>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_eroding_bank_horizontal_width | number:2 }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'installation_eroding_bank_horizontal_width') | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'installation_eroding_bank_horizontal_width', '%') | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+
+    </tbody>
+  </table>
+</div>
+
+<!-- MONITORING -->
+
+<div data-ng-if="total.monitoring">
+  <div class="table-responsive"><table class="table">
+
+      <tr class="no-rule">
+        <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+          <h2><strong>Interim</strong> BMP Metrics Data</h2>
+        </td>
+      </tr>
+
+      <tr>
+        <th>&nbsp;</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
+            Monitored on<br />
+            {{ report.report_date }}
+          </a>
+        </td>
+      </tr>
+
+      <tr>
+        <th class="align-left">Number of observed bird or small animal species</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.bird_count }}</td>
+      </tr>
+
+      <tr class="no-rule">
+        <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+          <h2><strong>Adaptive</strong> Management Checks Performed</h2>
+        </td>
+      </tr>
+
+      <tr>
+        <th>&nbsp;</th>
+        <th data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
+            Monitored on<br />
+            {{ report.report_date }}
+          </a>
+        </th>
+      </tr>
+
+      <tr>
+        <th class="align-left wrap" width="50%">Step pools, floodplain re-connection, or other built elements should have photos or site inspections to document that design elements were followed by contractors and disturbance to the riparian zone was minimized. No trees should be removed unless absolutely essential. Banks with riparian vegetation should not be re-graded, but the channel invert raised instead.</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <div data-ng-if="report.monitoring_design_criteria_1" class="icon retinaicon-essentials-071"></div>
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left wrap" width="50%">Built elements match design in extent, placement, and type of material - should be reassessed after a 10-yr or greater event. </th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <div data-ng-if="report.monitoring_design_criteria_2" class="icon retinaicon-essentials-071"></div>
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left wrap" width="50%">Coir logs, woody debris additions, or other natural structural elements meet all design specifications.</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <div data-ng-if="report.monitoring_design_criteria_3" class="icon retinaicon-essentials-071"></div>
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left wrap" width="50%">Have any rills or gullies developed along the restored bank?</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <div data-ng-if="report.monitoring_hydraulic" class="icon retinaicon-essentials-071"></div>
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left wrap" width="50%">Have livestock been kept off of restored areas?</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <div data-ng-if="report.monitoring_geomorphic_1" class="icon retinaicon-essentials-071"></div>
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left wrap" width="50%">Have plantings been protected from destructive fire and destructive grazing?</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <div data-ng-if="report.monitoring_geomorphic_2" class="icon retinaicon-essentials-071"></div>
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left wrap" width="50%">Have bare and/or eroded areas appeared in the buffer?</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <div data-ng-if="report.monitoring_geomorphic_3" class="icon retinaicon-essentials-071"></div>
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left wrap" width="50%">Have noxious weeds and invasive species appeared which have changed the desired species mix? If so, see Sellner et al., 2012, p.106.</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <div data-ng-if="report.monitoring_geomorphic_4" class="icon retinaicon-essentials-071"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table></div>
+</div>
 
 <div data-ng-if="total.planning || total.installation || total.monitoring">
   <h2><strong>Notes</strong></h2>
