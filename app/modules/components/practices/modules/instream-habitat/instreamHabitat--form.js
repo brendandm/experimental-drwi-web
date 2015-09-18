@@ -93,7 +93,7 @@ angular.module('practiceMonitoringAssessmentApp')
          },
          {
            text: $scope.practice.name,
-           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + Feature.MachineReadable($scope.practice.practice_type)
+           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type
          }
        ],
        actions: [
