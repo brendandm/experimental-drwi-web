@@ -32,7 +32,7 @@ body {
 // Calculating Line Height and Margins from PX to EM
 //
 // Example:
-// 
+//
 //     body {
 //       font-size: 100%; // 100% body font-size is the same as saying 16px
 //     }
@@ -78,6 +78,15 @@ h1 {
   line-height: 1;
   margin-bottom: 16px;
   margin-top: 0;
+
+  .creation-date {
+    color: $color-black-lightest;
+    display: block;
+    font-size: 0.6125em;
+    font-style: italic;
+    font-weight: 400;
+    margin-top: 4px;
+  }
 }
 
 h2, p.lead {
@@ -182,7 +191,7 @@ hr {
 
 //
 // Global Hyperlink Styles
-// 
+//
 a,
 a:active,
 a:link,

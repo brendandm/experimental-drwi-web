@@ -12,11 +12,14 @@
         <section data-ng-if="site.practices.list" id="practices" class="list action-list">
           <h6 class="rule-above"><strong>Practices</strong> Installed</h6>
           <article class="row list-item" data-ng-if="practice.name"
-                   data-ng-repeat="practice in site.practices.list track by $index | orderBy:'id':true">
+                   data-ng-repeat="practice in site.practices.list | orderBy:'id' track by $index">
             <h1>
               <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.clean_practice_type }}">
                 {{ practice.name }}
               </a>
+              <span class="creation-date">
+                Created on {{ practice.created | date:'longDate' }}
+              </span>
             </h1>
             <div class="thumbnails" data-ng-if="practice.attachment_4513d48492f2485ebcdc3293a3c3695e.length">
               <h6>Installation Photos</h6>
