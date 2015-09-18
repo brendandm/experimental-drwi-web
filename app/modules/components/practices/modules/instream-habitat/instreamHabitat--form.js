@@ -32,6 +32,17 @@ angular.module('practiceMonitoringAssessmentApp')
      $scope.user.feature = {};
      $scope.user.template = {};
 
+     $scope.options = {
+       structureTypes: [
+         'Drop Structure',
+         'Vanes',
+         'Porous Weirs',
+         'Roughened Channels/Constructed Riffles',
+         'Boulder Placement',
+         'Rootwad Revetment'
+       ]
+     };
+
 
      /**
       *
@@ -52,6 +63,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
        $scope.report.template = $scope.storage.templates.form;
 
+       console.log('report', $scope.report);
      });
 
      /**
