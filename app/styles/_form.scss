@@ -25,6 +25,10 @@
 
 .form-group {
   margin-bottom: 32px;
+
+  .row.nested-row {
+    margin-bottom: 32px;
+  }
 }
 
 .form-value,
@@ -117,7 +121,7 @@ input.form-control {
     font-weight: 300;
   }
 
-  :-ms-input-placeholder {  
+  :-ms-input-placeholder {
     color: lighten($color-black-lighter, 40%);
     font-family: $font-sans-plain;
     font-size: 1em;
@@ -130,7 +134,7 @@ input.form-control {
 //
 select.form-control {
   background: url(/images/Retina-Icons-v_1.0_Arrow7-16x8.png) transparent no-repeat 98% 5px;
-  
+
   border-radius: 0;
   -moz-border-radius: 0;
   -o-border-radius: 0;
@@ -593,7 +597,7 @@ h6 {
         font-weight: 500;
       }
     }
-    
+
     form {
       margin: 32px 0;
     }

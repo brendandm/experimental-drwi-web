@@ -1,5 +1,6 @@
+
+<!-- BASIC READING INFORMATION -->
 <fieldset>
-  <!-- Report Date -->
   <div class="form-group">
     <label for="report_date" class="control-label">
       Report Date
@@ -22,17 +23,141 @@
   </div>
 
   <!-- WIP Reporting Agency -->
-  <div class="form-group column-8" data-ng-if="report.measurement_period === 'Planning'">
+  <div class="form-group" data-ng-if="report.measurement_period === 'Planning'">
     <label for="wip_reporting_agency" class="control-label">
       WIP Reporting Agency
     </label>
 
-    <input data-ng-model="report.wip_reporting_agency" class="form-control" class="form-control" type="number" id="wip_reporting_agency" name="wip_reporting_agency" placeholder="Name of reporting agency" />
+    <input data-ng-model="report.wip_reporting_agency" class="form-control" class="form-control" type="text" id="wip_reporting_agency" name="wip_reporting_agency" placeholder="Name of reporting agency" />
   </div>
 
 </fieldset>
 
+<!-- INSTALLATION FIELDS -->
 
+<fieldset data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'">
+
+  <h2>
+    <strong>Insallation</strong> Summary
+  </h2>
+
+  <!--
+  <div class="form-group">
+    <div class="row">
+      <div class="column-16">
+        <label for="" class="control-label">
+          FakeLabel
+        </label>
+
+        <input type="text" class="form-control" data-ng-model=""
+               id="" name="" placeholder="" />
+        <p class="help-text">
+          Help text goes here
+        </p>
+      </div>
+    </div>
+  </div>
+  -->
+
+  <div class="form-group">
+    <p>
+      <strong>Structural Features</strong>
+    </p>
+    <div class="row nested-row">
+      <div class="column-8">
+        <label for="installation_structure_type_1" class="control-label">
+          Type
+        </label>
+
+        <select class="form-control" data-ng-model=""
+                id="installation_structure_type_1"
+                name="installation_structure_type_1"
+                data-ng-options="">
+          <option value="">
+            -- Select a Structure type --
+          </option>
+        </select>
+
+      </div>
+      <div class="column-8">
+        <label for="installation_structure_extent_1" class="control-label">
+          Units
+        </label>
+
+        <input type="text" class="form-control" data-ng-model=""
+               id="installation_structure_extent_1"
+               name="installation_structure_extent_1"
+               placeholder="" />
+      </div>
+    </div>
+
+    <div class="row nested-row">
+      <div class="column-8">
+        <select class="form-control" data-ng-model=""
+                id="installation_structure_type_2"
+                name="installation_structure_type_2"
+                data-ng-options="">
+          <option value="">
+            -- Select a Structure type --
+          </option>
+        </select>
+
+      </div>
+      <div class="column-8">
+        <input type="text" class="form-control" data-ng-model=""
+               id="installation_structure_extent_2"
+               name="installation_structure_extent_2"
+               placeholder="" />
+      </div>
+    </div>
+
+    <div class="row nested-row">
+      <div class="column-8">
+        <select class="form-control" data-ng-model=""
+                id="installation_structure_type_3"
+                name="installation_structure_type_3"
+                data-ng-options="">
+          <option value="">
+            -- Select a Structure type --
+          </option>
+        </select>
+
+      </div>
+      <div class="column-8">
+        <input type="text" class="form-control" data-ng-model=""
+               id="installation_structure_extent_3"
+               name="installation_structure_extent_3"
+               placeholder="" />
+      </div>
+    </div>
+
+    <div class="row nested-row">
+      <div class="column-8">
+        <select class="form-control" data-ng-model=""
+                id="installation_structure_type_4"
+                name="installation_structure_type_4"
+                data-ng-options="">
+          <option value="">
+            -- Select a Structure type --
+          </option>
+        </select>
+
+      </div>
+      <div class="column-8">
+        <input type="text" class="form-control" data-ng-model=""
+               id="installation_structure_extent_4"
+               name="installation_structure_extent_4"
+               placeholder="" />
+      </div>
+    </div>
+  </div>
+
+
+</fieldset>
+
+<!-- MONITORING FIELDS -->
+
+<!-- NOTES -->
 <fieldset data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation' || report.measurement_period === 'Monitoring'">
   <h2><strong>Notes</strong></h2>
 
