@@ -40,6 +40,12 @@ angular.module('practiceMonitoringAssessmentApp')
          'Roughened Channels/Constructed Riffles',
          'Boulder Placement',
          'Rootwad Revetment'
+       ],
+       habitatAssessmentTypes: [
+         'Rapid Bioassessment Protocol II',
+         'SaveOurStreams',
+         'Maryland Biological Stream Survey',
+         'Unified Stream Assessment'
        ]
      };
 
