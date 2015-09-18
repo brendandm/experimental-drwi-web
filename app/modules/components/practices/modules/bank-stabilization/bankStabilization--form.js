@@ -7,7 +7,4 @@
  */
 angular.module('practiceMonitoringAssessmentApp')
   .controller('BankStabilizationFormController', function() {
-    return {
-
-    };
   });

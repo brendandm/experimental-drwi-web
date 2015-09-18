@@ -92,5 +92,19 @@ angular.module('practiceMonitoringAssessmentApp')
         report: '/modules/components/practices/modules/instream-habitat/views/report--view.html',
         form: '/modules/components/practices/modules/instream-habitat/views/form--view.html'
       }
+    },
+    'bank-stabilization': {
+      landuse: null,
+      storage: 'type_907ba68d848c4131a0cf58a3682ff50e',
+      templateId: 382,
+      fields: {
+        Planning: [],
+        Installation: [],
+        Monitoring: []
+      },
+      templates: {
+        report: '/modules/components/practices/modules/bank-stabilization/views/report--view.html',
+        form: '/modules/components/practices/modules/bank-stabilization/views/form--view.html'
+      }
     }
   });
