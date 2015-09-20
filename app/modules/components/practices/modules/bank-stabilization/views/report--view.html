@@ -60,14 +60,14 @@
           {{ report.installation_eroding_bank_height | number:2 }}
         </td>
         <td>
-          <strong>
+          <!-- <strong>
             {{ calculate.quantityInstalled(practice.readings, 'installation_eroding_bank_height') | number:2 }}
-          </strong>
+          </strong> -->
         </td>
         <td>
-          <strong>
+          <!-- <strong>
             {{ calculate.quantityInstalled(practice.readings, 'installation_eroding_bank_height', '%') | number:2 }}%
-          </strong>
+          </strong> -->
         </td>
       </tr>
       <tr>
@@ -76,17 +76,94 @@
           {{ report.installation_eroding_bank_horizontal_width | number:2 }}
         </td>
         <td>
-          <strong>
+          <!-- <strong>
             {{ calculate.quantityInstalled(practice.readings, 'installation_eroding_bank_horizontal_width') | number:2 }}
+          </strong> -->
+        </td>
+        <td>
+          <!-- <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'installation_eroding_bank_horizontal_width', '%') | number:2 }}%
+          </strong> -->
+        </td>
+      </tr>
+
+      <tr>
+        <th>LER Evaluation Basis</th>
+        <td data-ng-if="report.measurement_period === 'Planning'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_ler_evaluation_basis }}
+        </td>
+      </tr>
+      <tr>
+        <th>Lateral Erosion Rate (LER; ft/yr)</th>
+        <td data-ng-if="report.measurement_period === 'Planning'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_lateral_erosion_rate }}
+        </td>
+      </tr>
+      <tr>
+        <th>Soil Bulk Density (lbs/cu ft)</th>
+        <td data-ng-if="report.measurement_period === 'Planning'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_soil_bulk_density }}
+        </td>
+      </tr>
+      <tr>
+        <th>Soil N Content Density (lbs N/ton soil)</th>
+        <td data-ng-if="report.measurement_period === 'Planning'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_soil_n_content }}
+        </td>
+      </tr>
+      <tr>
+        <th>Soil P Content Density (lbs P/ton soil)</th>
+        <td data-ng-if="report.measurement_period === 'Planning'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_soil_p_content }}
+        </td>
+      </tr>
+
+      <tr class="no-rule">
+        <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+          <h2><strong>Chesapeake Bay</strong> Metrics</h2>
+        </td>
+      </tr>
+
+      <tr>
+        <th>&nbsp;</th>
+        <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
+            <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
+            <span data-ng-if="report.measurement_period === 'Installation'">Installed</span>
+            <br />
+            {{ report.report_date }}
+          </a>
+        </th>
+        <th>Installed To-date</th>
+        <th>% of Planned</th>
+      </tr>
+
+      <tr>
+        <th>Miles of Streambank Restored</th>
+        <td data-ng-if="report.measurement_period === 'Planning'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+            {{ calculate.milesStreambankRestored(report) | number:2 }}
+        </td>
+        <td data-ng-if="report.measurement_period === 'Installation'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+            {{ calculate.milesStreambankRestored(report) | number:2 }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.milesStreambankInstalledFromPlan(practice.readings) | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'installation_eroding_bank_horizontal_width', '%') | number:2 }}%
+            {{ calculate.milesStreambankInstalledFromPlan(practice.readings, '%') | number:2 }}%
           </strong>
         </td>
       </tr>
-
 
     </tbody>
   </table>
