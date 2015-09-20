@@ -191,8 +191,46 @@
       </tr>
 
       <tr>
-        <th class="align-left">Number of observed bird or small animal species</th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">{{ report.bird_count }}</td>
+        <th class="align-left">Bank Erosion Hazard Index (BEHI) Rating</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+            {{ report.metrics_bank_erosion_hazard_index_rating }}
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left">Near Bank Stress (NBS) Rating</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+            {{ report.metrics_near_bank_stress_rating }}
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left">Riffle Stability Index</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+            {{ report.metrics_riffle_stability_index }}
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left">Logarithm of Relative Bed Stability (LRBS)</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+            {{ report.metrics_logarithm_of_relative_bed_stability }}
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left">Substrate Mean Particle Size (D50)</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+            {{ report.metrics_substrate_mean_particle_size }}
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left">Streambed Percent Fines</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+            {{ report.metrics_streambed_percent_fines }}
+        </td>
       </tr>
 
       <tr class="no-rule">

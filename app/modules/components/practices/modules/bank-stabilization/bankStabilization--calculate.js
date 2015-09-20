@@ -24,7 +24,6 @@ angular.module('practiceMonitoringAssessmentApp')
             planned_total += (reading.installation_length_of_streambank/5280);
           } else if (reading.measurement_period === 'Installation') {
             installed_total += (reading.installation_length_of_streambank/5280);
-            console.log('installed_total', (reading.installation_length_of_streambank/5280))
           }
 
         });
