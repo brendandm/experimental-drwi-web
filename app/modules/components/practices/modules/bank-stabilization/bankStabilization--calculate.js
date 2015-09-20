@@ -8,6 +8,80 @@
 angular.module('practiceMonitoringAssessmentApp')
   .service('BankStabilizationCalculate', function() {
     return {
+      preInstallationSedimentLoad: function(value) {
+
+        var baseLength = value.installation_length_of_streambank,
+            ler = value.installation_lateral_erosion_rate,
+            soilDensity = value.installation_soil_bulk_density,
+            soilNDensity = value.installation_soil_n_content,
+            soilPDensity = value.installation_soil_p_content,
+            squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
+            loadTotal = baseLength*squareRoot*ler*soilDensity,
+            conversion = (43560*2000);
+
+        return loadTotal/conversion;
+      },
+      plannedSedimentLoadReduction: function(value) {
+
+        var baseLength = value.installation_length_of_streambank,
+            ler = (value.installation_lateral_erosion_rate-0.02),
+            soilDensity = value.installation_soil_bulk_density,
+            soilNDensity = value.installation_soil_n_content,
+            soilPDensity = value.installation_soil_p_content,
+            squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
+            loadTotal = baseLength*squareRoot*ler*soilDensity,
+            conversion = (43560*2000);
+
+        return loadTotal/conversion;
+      },
+      preInstallationNitrogenLoad: function(value) {
+
+        var baseLength = value.installation_length_of_streambank,
+            ler = value.installation_lateral_erosion_rate,
+            soilDensity = value.installation_soil_bulk_density,
+            soilNDensity = value.installation_soil_n_content,
+            squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
+            loadTotal = baseLength*squareRoot*ler*soilDensity,
+            conversion = (43560*2000);
+
+        return (loadTotal/conversion)*soilNDensity;
+      },
+      plannedNitrogenLoadReduction: function(value) {
+
+        var baseLength = value.installation_length_of_streambank,
+            ler = (value.installation_lateral_erosion_rate-0.02),
+            soilDensity = value.installation_soil_bulk_density,
+            soilNDensity = value.installation_soil_n_content,
+            squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
+            loadTotal = baseLength*squareRoot*ler*soilDensity,
+            conversion = (43560*2000);
+
+        return (loadTotal/conversion)*soilNDensity;
+      },
+      preInstallationPhosphorusLoad: function(value) {
+
+        var baseLength = value.installation_length_of_streambank,
+            ler = value.installation_lateral_erosion_rate,
+            soilDensity = value.installation_soil_bulk_density,
+            soilPDensity = value.installation_soil_p_content,
+            squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
+            loadTotal = baseLength*squareRoot*ler*soilDensity,
+            conversion = (43560*2000);
+
+        return (loadTotal/conversion)*soilPDensity;
+      },
+      plannedPhosphorusLoadReduction: function(value) {
+
+        var baseLength = value.installation_length_of_streambank,
+            ler = (value.installation_lateral_erosion_rate-0.02),
+            soilDensity = value.installation_soil_bulk_density,
+            soilPDensity = value.installation_soil_p_content,
+            squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
+            loadTotal = baseLength*squareRoot*ler*soilDensity,
+            conversion = (43560*2000);
+
+        return (loadTotal/conversion)*soilPDensity;
+      },
       milesStreambankRestored: function(value) {
         return (value.installation_length_of_streambank/5280);
       },
