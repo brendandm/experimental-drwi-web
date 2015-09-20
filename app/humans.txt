@@ -1,10 +1,5 @@
 /* TEAM */
 
-  Front End Engineer, UI, UX: Ryan Hamley
-  Company: Viable Industries, L.L.C.
-  Github: https://github.com/ryanhamley
-  From: Pittsburgh, Pennsylvania, United States
-
   API Development, UI, UX: Joshua Powell
   Company: Viable Industries, L.L.C.
   Github: https://github.com/joshuapowell
