@@ -34,6 +34,34 @@ angular.module('practiceMonitoringAssessmentApp')
 
         return loadTotal/conversion;
       },
+      installedSedimentLoadReduction: function(values, format) {
+
+        var self = this,
+            planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          if (reading.measurement_period === 'Planning') {
+            planned_total += self.plannedSedimentLoadReduction(reading);
+          } else if (reading.measurement_period === 'Installation') {
+            installed_total += self.plannedSedimentLoadReduction(reading);
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (format === '%') {
+          percentage = (installed_total/planned_total);
+          return (percentage*100);
+        } else {
+          return installed_total;
+        }
+
+        return 0;
+      },
       preInstallationNitrogenLoad: function(value) {
 
         var baseLength = value.installation_length_of_streambank,
@@ -58,6 +86,34 @@ angular.module('practiceMonitoringAssessmentApp')
 
         return (loadTotal/conversion)*soilNDensity;
       },
+      installedNitrogenLoadReduction: function(values, format) {
+
+        var self = this,
+            planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          if (reading.measurement_period === 'Planning') {
+            planned_total += self.plannedNitrogenLoadReduction(reading);
+          } else if (reading.measurement_period === 'Installation') {
+            installed_total += self.plannedNitrogenLoadReduction(reading);
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (format === '%') {
+          percentage = (installed_total/planned_total);
+          return (percentage*100);
+        } else {
+          return installed_total;
+        }
+
+        return 0;
+      },
       preInstallationPhosphorusLoad: function(value) {
 
         var baseLength = value.installation_length_of_streambank,
@@ -81,6 +137,34 @@ angular.module('practiceMonitoringAssessmentApp')
             conversion = (43560*2000);
 
         return (loadTotal/conversion)*soilPDensity;
+      },
+      installedPhosphorusLoadReduction: function(values, format) {
+
+        var self = this,
+            planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          if (reading.measurement_period === 'Planning') {
+            planned_total += self.plannedPhosphorusLoadReduction(reading);
+          } else if (reading.measurement_period === 'Installation') {
+            installed_total += self.plannedPhosphorusLoadReduction(reading);
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (format === '%') {
+          percentage = (installed_total/planned_total);
+          return (percentage*100);
+        } else {
+          return installed_total;
+        }
+
+        return 0;
       },
       milesStreambankRestored: function(value) {
         return (value.installation_length_of_streambank/5280);
@@ -111,7 +195,6 @@ angular.module('practiceMonitoringAssessmentApp')
         }
 
         return 0;
-
       },
       quantityInstalled: function(values, field, format) {
 

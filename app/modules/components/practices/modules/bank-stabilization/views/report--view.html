@@ -188,10 +188,12 @@
         </td>
         <td>
           <strong>
+            {{ calculate.installedSedimentLoadReduction(practice.readings) | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
+            {{ calculate.installedSedimentLoadReduction(practice.readings, '%') | number:2 }}
           </strong>
         </td>
       </tr>
@@ -212,10 +214,12 @@
         </td>
         <td>
           <strong>
+            {{ calculate.installedNitrogenLoadReduction(practice.readings) | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
+            {{ calculate.installedNitrogenLoadReduction(practice.readings, '%') | number:2 }}
           </strong>
         </td>
       </tr>
@@ -236,10 +240,12 @@
         </td>
         <td>
           <strong>
+            {{ calculate.installedPhosphorusLoadReduction(practice.readings) | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
+            {{ calculate.installedPhosphorusLoadReduction(practice.readings, '%') | number:2 }}
           </strong>
         </td>
       </tr>
