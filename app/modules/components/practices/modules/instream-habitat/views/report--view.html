@@ -11,6 +11,100 @@
 </div>
 
 
+<!-- MONITORING -->
+
+<div data-ng-if="total.monitoring">
+  <div class="table-responsive"><table class="table">
+
+      <tr class="no-rule">
+        <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+          <h2><strong>Interim</strong> BMP Metrics Data</h2>
+        </td>
+      </tr>
+
+      <tr>
+        <th>&nbsp;</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
+            Monitored on<br />
+            {{ report.report_date }}
+          </a>
+        </td>
+      </tr>
+
+      <tr>
+        <th class="align-left">Riffle Stability Index</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+            {{ report.metrics_riffle_stability_index }}
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left">Relative Bed Stability (LRBS)</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+            {{ report.metrics_relative_bed_stability }}
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left">Substrate Mean Particle Size (D50)</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+            {{ report.metrics_substrate_mean_particle_size }}
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left">Streambed Percent Fines</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+            {{ report.metrics_streambed_percent_fines }}
+        </td>
+      </tr>
+
+      <tr class="no-rule">
+        <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+          <h2><strong>Adaptive</strong> Management Checks Performed</h2>
+        </td>
+      </tr>
+
+      <tr>
+        <th>&nbsp;</th>
+        <th data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
+            Monitored on<br />
+            {{ report.report_date }}
+          </a>
+        </th>
+      </tr>
+
+      <tr>
+        <th class="align-left wrap" width="50%">
+          Coir logs, woody debris additions, or other natural structural elements meet all design specifications.
+        </th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <div data-ng-if="report.monitoring_design_criteria_checklist" class="icon retinaicon-essentials-071"></div>
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left wrap" width="50%">
+          Is the bed composition too fine? If so, see Sellner et al., 2012, p. 102.
+        </th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <div data-ng-if="report.monitoring_geomorphic" class="icon retinaicon-essentials-071"></div>
+        </td>
+      </tr>
+      <tr>
+        <th class="align-left wrap" width="50%">
+          Has LWD maintained its planned density? If not, see Sellner et al., 2012, p.104.
+        </th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <div data-ng-if="report.monitoring_biological" class="icon retinaicon-essentials-071"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table></div>
+</div>
+
 <div data-ng-if="total.planning || total.installation || total.monitoring">
   <h2><strong>Notes</strong></h2>
   <table class="table">
