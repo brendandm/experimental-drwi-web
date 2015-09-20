@@ -11,6 +11,150 @@
 </div>
 
 
+<!-- INSTALLATION SUMMARY -->
+
+<div data-ng-if="total.planning || total.installation">
+  <table class="table">
+    <tbody>
+      <!-- Section Heading -->
+      <tr class="no-rule">
+        <td class="align-left" colspan="{{ total.planning + total.installation + 5 }}">
+          <h2><strong>Installation</strong> Summary</h2>
+        </td>
+      </tr>
+
+      <!-- Measurement Period Headings -->
+      <tr>
+        <th colspan="2" class="align-center">Structural Features</th>
+        <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
+            <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
+            <span data-ng-if="report.measurement_period === 'Installation'">Installed</span>
+            <br />
+            {{ report.report_date }}
+          </a>
+        </th>
+        <th>Installed To-Date</th>
+        <th>% of Planned</th>
+      </tr>
+
+      <!-- Installation Summary -->
+      <tr>
+        <th class="align-center">
+          Type
+        </th>
+        <th class="align-center">
+          Units
+        </th>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          &nbsp;
+        </td>
+        <td>
+          <strong>
+            &nbsp;
+          </strong>
+        </td>
+        <td>
+          <strong>
+            &nbsp;
+          </strong>
+        </td>
+      </tr>
+
+      <!-- Installation Summary -->
+      <tr>
+        <td class="align-center" data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_structure_type_1 }}
+        </td>
+        <td class="align-center" data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_structure_units_1 }}
+        </td>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_structure_extent_1 | number:2 }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'installation_structure_extent_1') || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'installation_structure_extent_1', '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="align-center" data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_structure_type_2 }}
+        </td>
+        <td class="align-center" data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_structure_units_2 }}
+        </td>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_structure_extent_2 | number:2 }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'installation_structure_extent_2') || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'installation_structure_extent_2', '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="align-center" data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_structure_type_3 }}
+        </td>
+        <td class="align-center" data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_structure_units_3 }}
+        </td>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_structure_extent_3 | number:2 }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'installation_structure_extent_3') || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'installation_structure_extent_3', '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="align-center" data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_structure_type_4 }}
+        </td>
+        <td class="align-center" data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_structure_units_4 }}
+        </td>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.installation_structure_extent_4 | number:2 }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'installation_structure_extent_4') || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'installation_structure_extent_4', '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+
 <!-- MONITORING -->
 
 <div data-ng-if="total.monitoring">

@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('InstreamHabitatReportController', function(commonscloud, Feature, fields, Landuse, $location, practice, project, readings, $rootScope, $route, $scope, site, Storage, template, Template, user) {
+  .controller('InstreamHabitatReportController', function(commonscloud, Feature, fields, InstreamHabitatCalculate, Landuse, $location, practice, project, readings, $rootScope, $route, $scope, site, Storage, template, Template, user) {
 
     /**
      * Define how we should handle individual Practice/Monitoring Readings
@@ -135,6 +135,8 @@ angular.module('practiceMonitoringAssessmentApp')
         installation: $scope.readings.count('Installation'),
         monitoring: $scope.readings.count('Monitoring')
       };
+
+      $scope.calculate = InstreamHabitatCalculate;
 
       /**
        * Defined the Page variables to load and display the page properly
