@@ -150,6 +150,255 @@
         </td>
       </tr>
 
+      <!-- Section Heading -->
+      <tr class="no-rule">
+        <td class="align-left" colspan="{{ total.planning + total.installation + 5 }}">
+          <h2><strong>Chesapeake Bay</strong> Metrics</h2>
+        </td>
+      </tr>
+
+      <!-- Measurement Period Headings -->
+      <tr>
+        <th colspan="2">&nbsp;</th>
+        <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
+            <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
+            <span data-ng-if="report.measurement_period === 'Installation'">Installed</span>
+            <br />
+            {{ report.report_date }}
+          </a>
+        </th>
+        <th>Installed To-Date</th>
+        <th>% of Planned</th>
+      </tr>
+
+      <tr>
+        <th colspan="2">
+          Acres Protected Under Long-term Easment (permanent or >=30 years)
+        </th>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.metrics_areas_protected }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_areas_protected') || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_areas_protected', '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <th colspan="2">
+          Habitat Restoration Target Species 1
+        </th>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.metrics_habitat_restoration_target_species_1 }}
+        </td>
+        <td>
+          <strong>
+            &nbsp;
+          </strong>
+        </td>
+        <td>
+          <strong>
+            &nbsp;
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <th colspan="2">
+          Habitat Restoration Target Species 2
+        </th>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.metrics_habitat_restoration_target_species_2 }}
+        </td>
+        <td>
+          <strong>
+            &nbsp;
+          </strong>
+        </td>
+        <td>
+          <strong>
+            &nbsp;
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <th colspan="2">
+          Acres of Habitat Restored
+        </th>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.metrics_areas_of_habitat_restored }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_areas_of_habitat_restored') || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_areas_of_habitat_restored', '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <th colspan="2">
+          Acres of Wetlands Restored
+        </th>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.metrics_acres_of_wetlands_restored }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_acres_of_wetlands_restored') || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_acres_of_wetlands_restored', '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <th colspan="2">
+          Miles of Living Shoreline Restored
+        </th>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.metrics_miles_of_living_shoreline_restored }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_miles_of_living_shoreline_restored') || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_miles_of_living_shoreline_restored', '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <th colspan="2">
+          Miles of Stream Opened
+        </th>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.metrics_miles_of_stream_opened }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_miles_of_stream_opened') || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_miles_of_stream_opened', '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <th colspan="2">
+          Acres of Oyster Habitat Restored
+        </th>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.metrics_acres_of_oyster_habitat_restored }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_acres_of_oyster_habitat_restored') || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_acres_of_oyster_habitat_restored', '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+      <tr>
+        <th colspan="2">
+          Fish Passage Improvements: # of Passage Barriers Rectified
+        </th>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.metrics_fish_passage_improvements_number_of_passage_barriers_re }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_fish_passage_improvements_number_of_passage_barriers_re') || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_fish_passage_improvements_number_of_passage_barriers_re', '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <th colspan="2">
+          Fish Passage Improvements: # of Fish Crossing Barriers
+        </th>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.metrics_fish_passage_improvements_number_of_fish_crossing_barri }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_fish_passage_improvements_number_of_fish_crossing_barri') || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_fish_passage_improvements_number_of_fish_crossing_barri', '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <th colspan="2">
+          Eastern Brook Trout: # of Reintroduced Subwatersheds
+        </th>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.metrics_number_of_reintroduced_subwatersheds_eastern_brook_trou }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_number_of_reintroduced_subwatersheds_eastern_brook_trou') || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_number_of_reintroduced_subwatersheds_eastern_brook_trou', '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <th colspan="2">
+          Eastern Brook Trout: # of Habitat Units Improved
+        </th>
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.metrics_number_of_habitat_units_improved_eastern_brook_trout }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_number_of_habitat_units_improved_eastern_brook_trout') || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'metrics_number_of_habitat_units_improved_eastern_brook_trout', '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
     </tbody>
   </table>
 </div>
