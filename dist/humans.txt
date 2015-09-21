@@ -1,0 +1,33 @@
+/* TEAM */
+
+  API Development, UI, UX: Joshua Powell
+  Company: Viable Industries, L.L.C.
+  Github: https://github.com/joshuapowell
+  From: Pittsburgh, Pennsylvania, United States
+
+/* THANKS */
+  
+  API Team: CommonsCloud Team
+  Github: https://github.com/commonscloud
+  From: Pittsburgh, Pennsylvania and Washington, D.C., United States
+
+  GIS, QA/QC: R. John Dawes
+  Company: Chesapeake Commons
+  Github: https://github.com/rdawes1
+  From: Washington, D.C., United States
+
+  Policy, QA/QC: Brendan McIntrye
+  Company: Chesapeake Commons
+  Github: https://github.com/brendandm
+  From: Washington, D.C., United States
+
+
+/* SITE */
+  Site Name: NFWF 
+  Site URL: http://bayanmodern.com/
+  Language: Turkish
+  Last update:2012/10/20
+  Language: English
+  Standards: HTML5, CSS3
+  Software: Sublime Text, Terminal, Adobe Photoshop, Adobe Illustrator, TextWrangler
+  Components: CommonsCloud, Mapbox, Leaflet, AngularJS, Susy
