@@ -9,7 +9,7 @@
  */
 angular.module('practiceMonitoringAssessmentApp')
   .service('token', ['$location', 'ipCookie', function ($location, ipCookie) {
-    
+
     return {
       get: function() {
         return ipCookie('COMMONS_SESSION');
@@ -30,6 +30,8 @@ angular.module('practiceMonitoringAssessmentApp')
               path: '/',
               expires: 2
             });
+
+        $location.hash(null);
 
         $location.path('/projects');
       }

@@ -22,11 +22,11 @@ angular.module('practiceMonitoringAssessmentApp')
         }
       })
       .when('/authorize', {
-        template: '',
+        template: 'authorize',
         controller: 'SecurityAuthorize'
       })
       .when('/logout', {
-        template: '',
+        template: 'logout',
         controller: 'SecurityLogout'
       });
 

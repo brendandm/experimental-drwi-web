@@ -70,11 +70,11 @@ angular.module('practiceMonitoringAssessmentApp')
         }
       })
       .when('/authorize', {
-        template: '',
+        template: 'authorize',
         controller: 'SecurityAuthorize'
       })
       .when('/logout', {
-        template: '',
+        template: 'logout',
         controller: 'SecurityLogout'
       });
 
@@ -90,18 +90,18 @@ angular.module('practiceMonitoringAssessmentApp')
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('SecurityAuthorize', ['$location', 'token', function($location, token) {
+  .controller('SecurityAuthorize', function($location, token) {
 
     //
     // If we have an Access Token, forward the user to the Projects page
     //
     if (token.get()) {
       $location.path('/projects');
-    } else {      
+    } else {
       token.save();
     }
 
-  }]);
+  });
 
 'use strict';
 
@@ -253,7 +253,7 @@ angular.module('practiceMonitoringAssessmentApp')
  */
 angular.module('practiceMonitoringAssessmentApp')
   .service('token', ['$location', 'ipCookie', function ($location, ipCookie) {
-    
+
     return {
       get: function() {
         return ipCookie('COMMONS_SESSION');
@@ -274,6 +274,8 @@ angular.module('practiceMonitoringAssessmentApp')
               path: '/',
               expires: 2
             });
+
+        $location.hash(null);
 
         $location.path('/projects');
       }
