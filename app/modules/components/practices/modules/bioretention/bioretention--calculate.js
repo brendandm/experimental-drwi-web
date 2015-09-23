@@ -23,7 +23,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
         return (format === '%') ? reduction*100 : reduction;
       },
-      adjustorCurvePhosphorus: function(value) {
+      adjustorCurvePhosphorus: function(value, format) {
 
         var self = this,
             depthTreated = value.bioretention_runoff_volume_captured, // Make sure we change this in the database
@@ -35,9 +35,9 @@ angular.module('practiceMonitoringAssessmentApp')
             fifth = 1.7072*depthTreated,
             reduction = (first-second+third-fourth+fifth-0.0091);
 
-        return reduction*100;
+        return (format === '%') ? reduction*100 : reduction;
       },
-      adjustorCurveSediment: function(value) {
+      adjustorCurveSediment: function(value, format) {
 
         var self = this,
             depthTreated = value.bioretention_runoff_volume_captured, // Make sure we change this in the database
@@ -49,13 +49,15 @@ angular.module('practiceMonitoringAssessmentApp')
             fifth = 1.8292*depthTreated,
             reduction = (first-second+third-fourth+fifth-0.0098);
 
-        return reduction*100;
+        return (format === '%') ? reduction*100 : reduction;
       },
       rainfallDepthTreated: function(value) {
         return (value.bioretention_runoff_volume_captured/(value.bioretention_impervious_area/43560))*12;
       },
       gallonsReducedPerYear: function(value) {
-        return (value.bioretention_runoff_volume_captured/325851.4);
+        var runoffVolumeCaptured = this.runoffVolumeCaptured(value);
+
+        return (runoffVolumeCaptured*325851.4);
       },
       preInstallationNitrogenLoad: function(value, loaddata) {
         return ((value.bioretention_impervious_area*loaddata.impervious.tn_ual) + ((value.bioretention_total_drainage_area-value.bioretention_impervious_area)*loaddata.pervious.tn_ual))/43560;
