@@ -25,7 +25,7 @@
                   <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
                   <span data-ng-if="report.measurement_period === 'Installation'">Installed</span>
                   <br />
-                  {{ report.report_date }}                  
+                  {{ report.report_date }}
                 </a>
               </th>
               <th>Installed To-Date</th>
@@ -75,12 +75,12 @@
               <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/forest-buffer/{{ report.id }}/edit">
                   <span data-ng-if="report.measurement_period === 'Planning'">Planned Reduction</span><span data-ng-if="report.measurement_period === 'Installation'">Installed Reduction</span><br />
-                  {{ report.report_date }}                  
+                  {{ report.report_date }}
                 </a>
               </th>
               <th>Reduction To-date</th>
               <th>% of Planned</th>
-            </tr>        
+            </tr>
 
             <tr data-ng-if="calculate.results.totalPreInstallationLoad">
               <th>Nitrogen (lbs/yr)</th>
@@ -112,12 +112,12 @@
             </tr>
             <tr data-ng-if="calculate.results.totalInstalledLoad">
               <th>Sediment (tons/yr)</th>
-              <td>{{ calculate.results.totalPreInstallationLoad.sediment | number:3 }}</td>
-              <td>{{ calculate.results.totalPlannedLoad.sediment | number:3 }}</td>
+              <td>{{ calculate.results.totalPreInstallationLoad.sediment | number:2 }}</td>
+              <td>{{ calculate.results.totalPlannedLoad.sediment | number:2 }}</td>
               <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_buffer, report.average_width_of_buffer, 'sediment') | number:3"></span>
+                <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_buffer, report.average_width_of_buffer, 'sediment') | number:2"></span>
               </td>
-              <td><strong>{{ calculate.results.totalInstalledLoad.sediment | number:3 }}</strong> tons/yr</td>
+              <td><strong>{{ calculate.results.totalInstalledLoad.sediment | number:2 }}</strong> tons/yr</td>
               <td>
                 <strong>
                   <span data-ng-bind="calculate.GetPercentage(calculate.results.totalInstalledLoad.sediment, calculate.results.totalPlannedLoad.sediment) | number:0"></span>%
@@ -164,7 +164,7 @@
               <td><strong>{{ calculate.results.totalAcresRestored | number:2 }}</strong> acres</td>
               <td><strong>{{ calculate.results.percentageAcresRestored | number:0 }}%</strong></td>
             </tr>
-          </tbody>  
+          </tbody>
         </table>
       </div>
 
@@ -307,7 +307,7 @@
                 <div data-ng-if="report.tree_survival_rate" class="icon retinaicon-essentials-071"></div>
               </td>
             </tr>
-          </tbody>  
+          </tbody>
         </table>
       </div>
 
@@ -330,6 +330,6 @@
               <td class="align-left" data-ng-if="report.notes">{{ report.notes }}</td>
               <td class="align-left" data-ng-if="!report.notes"><em>No notes recorded for this date</em></td>
             </tr>
-          </tbody>  
+          </tbody>
         </table>
       </div>

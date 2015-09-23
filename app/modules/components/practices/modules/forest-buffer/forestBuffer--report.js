@@ -18,7 +18,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.template = template;
     $scope.fields = fields;
-    
+
     $scope.practice = practice;
     $scope.practice.practice_type = 'forest-buffer';
     $scope.practice.readings = readings;
@@ -76,7 +76,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
         //     for the Practice Reading table
-        //  2. Update the Practice to create a relationship with the Reading created in step 1 
+        //  2. Update the Practice to create a relationship with the Reading created in step 1
         //
         Feature.CreateFeature({
           storage: $scope.storage.storage,
@@ -116,7 +116,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
         //     for the Practice Reading table
-        //  2. Update the Practice to create a relationship with the Reading created in step 1 
+        //  2. Update the Practice to create a relationship with the Reading created in step 1
         //
         Feature.CreateFeature({
           storage: $scope.storage.storage,
@@ -174,7 +174,7 @@ angular.module('practiceMonitoringAssessmentApp')
           text: $scope.practice.name,
           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type,
           type: 'active'
-        }    
+        }
       ],
       actions: [
         {
@@ -285,7 +285,7 @@ angular.module('practiceMonitoringAssessmentApp')
           'Authorization': 'external'
         }
       }).success(function(data, status, headers, config) {
-        
+
         var efficieny = data.response.features[0],
             total_area = 0;
 
@@ -310,40 +310,100 @@ angular.module('practiceMonitoringAssessmentApp')
       return deferred.promise;
     };
 
+
     $scope.calculate.GetPreInstallationLoad = function(period) {
 
+      //
+      // Existing Landuse
+      //
       $scope.calculate.GetLoadVariables(period).then(function(loaddata) {
 
-        console.log('GetPreInstallationLoad', loaddata);
+        var uplandPreInstallationLoad = {
+          nitrogen: ((loaddata.area * 4)*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
+          phosphorus: ((loaddata.area * 2)*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
+          sediment: (((loaddata.area * 2)*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
+        };
 
-        var results = {
+        var existingPreInstallationLoad = {
           nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
           phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
           sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
         };
 
-        console.log('results', results);
+        $scope.calculate.results.totalPreInstallationLoad = {
+          nitrogen: uplandPreInstallationLoad.nitrogen + existingPreInstallationLoad.nitrogen,
+          phosphorus: uplandPreInstallationLoad.phosphorus + existingPreInstallationLoad.phosphorus,
+          sediment: uplandPreInstallationLoad.sediment + existingPreInstallationLoad.sediment
+        };
 
-        $scope.calculate.results.totalPreInstallationLoad = results;
       });
+
 
     };
 
     $scope.calculate.GetPlannedLoad = function(period) {
 
-      $scope.calculate.GetLoadVariables(period, $scope.storage.landuse).then(function(loaddata) {
+      var existingLanduseType;
 
-        console.log('GetPlannedLoad', loaddata);
+      for (var i = 0; i < $scope.practice.readings.length; i++) {
+        if ($scope.practice.readings[i].measurement_period === 'Planning') {
+          existingLanduseType = $scope.landuse[$scope.practice.readings[i].existing_riparian_landuse.toLowerCase()];
+        }
+      }
 
-        var results = {
-          nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
-          phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
-          sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
-        };
+      $scope.calculate.GetLoadVariables(period, existingLanduseType).then(function(existingLoaddata) {
+        $scope.calculate.GetLoadVariables(period, $scope.storage.landuse).then(function(newLoaddata) {
 
-        console.log('results', results);
+          //
+          // EXISTING CONDITION LOAD VALUES
+          //
+          var existingLanduse = {
+            nitrogen: (existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres),
+            phosphorus: (existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres),
+            sediment: (existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)
+          };
 
-        $scope.calculate.results.totalPlannedLoad = results;
+          console.log('existingLanduse', existingLanduse, existingLoaddata);
+
+          var newLanduse = {
+            nitrogen: (newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres),
+            phosphorus: (newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres),
+            sediment: (newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)
+          };
+
+          console.log('newLanduse', newLanduse, newLoaddata);
+
+          var existingLanduseResults = {
+            nitrogen: (existingLoaddata.area*(existingLanduse.nitrogen-newLanduse.nitrogen)),
+            phosphorus: (existingLoaddata.area*(existingLanduse.phosphorus-newLanduse.phosphorus)),
+            sediment: ((existingLoaddata.area*(existingLanduse.sediment-newLanduse.sediment))/2000)
+          };
+
+
+          //
+          // UPLAND CONDITION LANDUSE VALUES
+          //
+
+
+          $scope.calculate.results.totalPlannedLoad = null; // was set to results
+
+
+
+          //
+          // @todo This is most of the way there. At this point we need to grab
+          //       pre-project information (C:19 in the CalcCheck 1 sheet), we
+          //       then take that number (0.15 in this case) and multiple it by
+          //       a percentage format of the ForestBuffer efficiency see (I:3
+          //       from the CalcCheck 1 sheet).
+          //
+          //       After this We take our planned upland and add it to the
+          //       existing to result in our TOTAL SEDIMENT LOAD REDUCTION
+          //       (C:40 in CalcCheck 1 sheet)
+          //
+          //
+
+
+        });
       });
 
     };
@@ -523,7 +583,7 @@ angular.module('practiceMonitoringAssessmentApp')
       }).then(function(response) {
 
         $scope.user.template = response;
-        
+
         //
         // If the user is not a Template Moderator or Admin then we need to do a final check to see
         // if there are permissions on the individual Feature
