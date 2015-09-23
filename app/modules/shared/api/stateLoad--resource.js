@@ -8,12 +8,16 @@
  * Service in the managerApp.
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .service('StateLoad', ['$resource', 'commonscloud', function ($resource, commonscloud) {
-    return $resource(commonscloud.baseurl + commonscloud.collections.stateloaddata.storage + '/:id.json', {
+  .service('StateLoad', function ($resource, commonscloud) {
+
+    var __url = commonscloud.baseurl + commonscloud.collections.stateloaddata.storage;
+
+    return $resource(__url + '/:id.json', {
       id: '@id'
     }, {
       query: {
+        method: 'GET',
         isArray: false
       },
     });
-  }]);
+  });

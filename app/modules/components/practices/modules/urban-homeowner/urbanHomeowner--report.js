@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('UrbanHomeownerReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', 'CalculateUrbanHomeowner', 'Calculate', 'StateLoad', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateUrbanHomeowner, Calculate, StateLoad) {
+  .controller('UrbanHomeownerReportController', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateUrbanHomeowner, Calculate, StateLoad) {
 
     //
     // Assign project to a scoped variable
@@ -18,7 +18,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.template = template;
     $scope.fields = fields;
-    
+
     $scope.practice = practice;
     $scope.practice.practice_type = 'urban-homeowner';
     $scope.practice.readings = readings;
@@ -55,6 +55,8 @@ angular.module('practiceMonitoringAssessmentApp')
           tss_ual: feature.tss_ual
         };
       });
+    }, function(errorResponse) {
+      console.log('errorResponse', errorResponse);
     });
 
 
@@ -135,7 +137,7 @@ angular.module('practiceMonitoringAssessmentApp')
           'Authorization': 'external'
         }
       }).success(function(data, status, headers, config) {
-        
+
         var efficieny = data.response.features[0],
             total_area = 0;
 
@@ -393,7 +395,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
         //     for the Practice Reading table
-        //  2. Update the Practice to create a relationship with the Reading created in step 1 
+        //  2. Update the Practice to create a relationship with the Reading created in step 1
         //
         Feature.CreateFeature({
           storage: $scope.storage.storage,
@@ -433,7 +435,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
         //     for the Practice Reading table
-        //  2. Update the Practice to create a relationship with the Reading created in step 1 
+        //  2. Update the Practice to create a relationship with the Reading created in step 1
         //
         Feature.CreateFeature({
           storage: $scope.storage.storage,
@@ -491,7 +493,7 @@ angular.module('practiceMonitoringAssessmentApp')
           text: $scope.practice.name,
           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type,
           type: 'active'
-        }    
+        }
       ],
       actions: [
         {
@@ -539,7 +541,7 @@ angular.module('practiceMonitoringAssessmentApp')
       }).then(function(response) {
 
         $scope.user.template = response;
-        
+
         //
         // If the user is not a Template Moderator or Admin then we need to do a final check to see
         // if there are permissions on the individual Feature
@@ -560,5 +562,5 @@ angular.module('practiceMonitoringAssessmentApp')
 
       });
     }
-    
-  }]);
+
+  });
