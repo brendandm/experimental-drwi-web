@@ -28,7 +28,7 @@
                   <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
                   <span data-ng-if="report.measurement_period === 'Installation'">Installed</span>
                   <br />
-                  {{ report.report_date }}                  
+                  {{ report.report_date }}
                 </a>
               </th>
               <th>Installed To-Date</th>
@@ -73,7 +73,7 @@
 
             <tr>
               <!-- Blank TH because of rowspan above -->
-              <td>Runoff Volume Captured (acre/ft)</td>
+              <td>Rainfall Depth Treated (in)</td>
               <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 {{ report.bioretention_runoff_volume_captured || 0 | number:5 }}
               </td>
@@ -91,9 +91,9 @@
 
             <tr>
               <!-- Blank TH because of rowspan above -->
-              <td>Rainfall Depth Treated (in)</td>
+              <td>Runoff Volume Captured (acre/ft)</td>
               <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                {{ calculate.rainfallDepthTreated(report) || 0 | number:2 }}
+                {{ calculate.runoffVolumeCaptured(report) || 0 | number:2 }}
               </td>
               <td>
                 &nbsp;
@@ -175,12 +175,12 @@
               <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
                 <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
                   <span data-ng-if="report.measurement_period === 'Planning'">Planned Reduction</span><span data-ng-if="report.measurement_period === 'Installation'">Installed Reduction</span><br />
-                  {{ report.report_date }}                  
+                  {{ report.report_date }}
                 </a>
               </th>
               <th>Reduction To-date</th>
               <th>% of Planned</th>
-            </tr>        
+            </tr>
 
             <tr>
               <th>Nitrogen (lbs/yr)</th>
@@ -381,7 +381,7 @@
                 <div data-ng-if="report.dying_plants" class="icon retinaicon-essentials-071"></div>
               </td>
             </tr>
-          </tbody>  
+          </tbody>
         </table>
       </div>
       <div data-ng-if="total.planning || total.installation || total.monitoring">
@@ -403,6 +403,6 @@
               <td class="align-left" data-ng-if="report.notes">{{ report.notes }}</td>
               <td class="align-left" data-ng-if="!report.notes"><em>No notes recorded for this date</em></td>
             </tr>
-          </tbody>  
+          </tbody>
         </table>
       </div>

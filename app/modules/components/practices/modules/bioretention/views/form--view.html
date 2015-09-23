@@ -42,7 +42,7 @@
             </label>
 
             <input data-ng-model="report.bioretention_impervious_area" class="form-control" class="form-control" type="number" id="bioretention_impervious_area" name="bioretention_impervious_area" />
-            
+
             <p data-ng-if="fields.bioretention_impervious_area.help" class="help-text">{{ fields.bioretention_impervious_area.help }}</p>
           </div>
         </div>
@@ -54,7 +54,7 @@
             </label>
 
             <input data-ng-model="report.bioretention_total_drainage_area" class="form-control" class="form-control" type="number" id="bioretention_total_drainage_area" name="bioretention_total_drainage_area" />
-            
+
             <p data-ng-if="fields.bioretention_total_drainage_area.help" class="help-text">{{ fields.bioretention_total_drainage_area.help }}</p>
           </div>
         </div>
@@ -66,10 +66,12 @@
             </label>
 
             <input data-ng-model="report.bioretention_runoff_volume_captured" class="form-control" class="form-control" type="number" id="bioretention_runoff_volume_captured" name="bioretention_runoff_volume_captured" />
-            
-            <p data-ng-if="fields.bioretention_runoff_volume_captured.help" class="help-text">{{ fields.bioretention_runoff_volume_captured.help }}</p>
+
+            <p data-ng-if="fields.bioretention_runoff_volume_captured.help" class="help-text">
+              Rainfall Depth Treated (RT - in)
+            </p>
           </div>
-        </div>   
+        </div>
 
         <div class="row">
           <div class="form-group column-8">
@@ -78,10 +80,10 @@
             </label>
 
             <input data-ng-model="report.bioretention_practice_area" class="form-control" class="form-control" type="number" id="bioretention_practice_area" name="bioretention_practice_area" />
-            
+
             <p data-ng-if="fields.bioretention_practice_area.help" class="help-text">{{ fields.bioretention_practice_area.help }}</p>
           </div>
-        </div>  
+        </div>
 
 
       </fieldset>
@@ -95,7 +97,7 @@
           </label>
 
           <input data-ng-model="report.bird_count" class="form-control" class="form-control" type="number" id="bird_count" name="bird_count" />
-          
+
           <p data-ng-if="fields.bird_count.help" class="help-text">{{ fields.bird_count.help }}</p>
         </div>
 
@@ -147,7 +149,7 @@
 
       <fieldset data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation' || report.measurement_period === 'Monitoring'">
         <h2><strong>Notes</strong></h2>
-  
+
         <div class="form-group">
           <textarea rows="1" data-ng-model="report.notes" class="form-control animate"  msd-elastic id="notes" name="notes" placeholder="Notes">{{ report.notes }}</textarea>
         </div>

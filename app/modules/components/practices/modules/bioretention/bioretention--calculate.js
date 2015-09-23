@@ -12,12 +12,13 @@ angular.module('practiceMonitoringAssessmentApp')
       adjustorCurveNitrogen: function(value, format) {
 
         var self = this,
-            rainfallDepthTreated = self.rainfallDepthTreated(value),
-            first = 0.0308*Math.pow(rainfallDepthTreated, 5),
-            second = 0.2562*Math.pow(rainfallDepthTreated, 4),
-            third = 0.8634*Math.pow(rainfallDepthTreated, 3),
-            fourth = 1.5285*Math.pow(rainfallDepthTreated, 2),
-            fifth = 1.501*rainfallDepthTreated,
+            depthTreated = value.bioretention_runoff_volume_captured, // Make sure we change this in the database
+            runoffVolumeCaptured = self.runoffVolumeCaptured(value),
+            first = 0.0308*Math.pow(depthTreated, 5),
+            second = 0.2562*Math.pow(depthTreated, 4),
+            third = 0.8634*Math.pow(depthTreated, 3),
+            fourth = 1.5285*Math.pow(depthTreated, 2),
+            fifth = 1.501*depthTreated,
             reduction = (first-second+third-fourth+fifth-0.013);
 
         return (format === '%') ? reduction*100 : reduction;
@@ -25,12 +26,13 @@ angular.module('practiceMonitoringAssessmentApp')
       adjustorCurvePhosphorus: function(value) {
 
         var self = this,
-            rainfallDepthTreated = self.rainfallDepthTreated(value),
-            first = 0.0304*Math.pow(rainfallDepthTreated, 5),
-            second = 0.2619*Math.pow(rainfallDepthTreated, 4),
-            third = 0.9161*Math.pow(rainfallDepthTreated, 3),
-            fourth = 1.6837*Math.pow(rainfallDepthTreated, 2),
-            fifth = 1.7072*rainfallDepthTreated,
+            depthTreated = value.bioretention_runoff_volume_captured, // Make sure we change this in the database
+            runoffVolumeCaptured = self.runoffVolumeCaptured(value), // we need to make sure that this number is 0 before actually doing the rest of the calculation
+            first = 0.0304*Math.pow(depthTreated, 5),
+            second = 0.2619*Math.pow(depthTreated, 4),
+            third = 0.9161*Math.pow(depthTreated, 3),
+            fourth = 1.6837*Math.pow(depthTreated, 2),
+            fifth = 1.7072*depthTreated,
             reduction = (first-second+third-fourth+fifth-0.0091);
 
         return reduction*100;
@@ -38,12 +40,13 @@ angular.module('practiceMonitoringAssessmentApp')
       adjustorCurveSediment: function(value) {
 
         var self = this,
-            rainfallDepthTreated = self.rainfallDepthTreated(value),
-            first = 0.0326*Math.pow(rainfallDepthTreated, 5),
-            second = 0.2806*Math.pow(rainfallDepthTreated, 4),
-            third = 0.9816*Math.pow(rainfallDepthTreated, 3),
-            fourth = 1.8039*Math.pow(rainfallDepthTreated, 2),
-            fifth = 1.8292*rainfallDepthTreated,
+            depthTreated = value.bioretention_runoff_volume_captured, // Make sure we change this in the database
+            runoffVolumeCaptured = self.runoffVolumeCaptured(value), // we need to make sure that this number is 0 before actually doing the rest of the calculation
+            first = 0.0326*Math.pow(depthTreated, 5),
+            second = 0.2806*Math.pow(depthTreated, 4),
+            third = 0.9816*Math.pow(depthTreated, 3),
+            fourth = 1.8039*Math.pow(depthTreated, 2),
+            fifth = 1.8292*depthTreated,
             reduction = (first-second+third-fourth+fifth-0.0098);
 
         return reduction*100;
@@ -198,6 +201,9 @@ angular.module('practiceMonitoringAssessmentApp')
         }
 
         return 0;
+      },
+      runoffVolumeCaptured: function(value) {
+        return (value.bioretention_runoff_volume_captured*value.bioretention_impervious_area)/(12*43560);
       }
     };
   }]);
