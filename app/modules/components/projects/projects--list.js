@@ -91,12 +91,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
       //
       // Each Filter can have multiple criteria such as single ilike, or
-      // a combination of gte and lte. We need to null the values of all 
+      // a combination of gte and lte. We need to null the values of all
       // filters in order for the URL to change appropriately
       //
       angular.forEach($scope.filters.available[$index].filter, function(criteria, $_index) {
         $scope.filters.available[$index].filter[$_index].value = null;
-      }); 
+      });
 
       $scope.search.execute();
     };
@@ -114,7 +114,7 @@ angular.module('practiceMonitoringAssessmentApp')
       timeout = $timeout(function () {
         $scope.search.execute();
       }, 1000);
-      
+
     };
 
     $scope.search.execute = function(page_number) {
@@ -157,7 +157,7 @@ angular.module('practiceMonitoringAssessmentApp')
           q: Q_,
           page: ($scope.filters.page) ? $scope.filters.page: null,
           results_per_page: ($scope.filters.results_per_page) ? $scope.filters.results_per_page: null,
-          callback: ($scope.filters.callback) ? $scope.filters.callback: null 
+          callback: ($scope.filters.callback) ? $scope.filters.callback: null
         });
 
 		$scope.projects = response;
@@ -183,9 +183,9 @@ angular.module('practiceMonitoringAssessmentApp')
     // Project functionality
     //
     $scope.project = {};
-    
+
     $scope.project.create = function() {
-      
+
       Feature.CreateFeature({
         storage: storage,
         data: {

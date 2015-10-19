@@ -77,10 +77,11 @@ angular.module('practiceMonitoringAssessmentApp')
         featureId: $scope.project.id,
         data: $scope.project
       }).then(function(response) {
+
         //
         // Refresh the page so that those things update appropriately.
         //
-        $rootScope.page.refresh();
+        $location.path('/projects/');
 
       }).then(function(error) {
         // Do something with the error
@@ -112,7 +113,7 @@ angular.module('practiceMonitoringAssessmentApp')
       }).then(function(response) {
 
         $scope.user.template = response;
-        
+
         //
         // If the user is not a Template Moderator or Admin then we need to do a final check to see
         // if there are permissions on the individual Feature
@@ -133,5 +134,5 @@ angular.module('practiceMonitoringAssessmentApp')
 
       });
     }
-    
+
   }]);
