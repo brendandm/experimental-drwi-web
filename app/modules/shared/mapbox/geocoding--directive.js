@@ -11,7 +11,7 @@
  */
 angular.module('practiceMonitoringAssessmentApp')
   .directive('mapboxGeocoder', ['$compile', '$http', '$templateCache', '$timeout', 'mapbox', 'geocoding', 'TemplateLoader', function ($compile, $http, $templateCache, $timeout, mapbox, geocoding, TemplateLoader) {
-     
+
     return {
         restrict: 'A',
         scope: {
@@ -27,7 +27,7 @@ angular.module('practiceMonitoringAssessmentApp')
           // Setup up our timeout and the Template we will use for display the
           // results from the Mapbox Geocoding API back to the user making the
           // Request
-          // 
+          //
           var timeout;
 
           //
@@ -91,7 +91,7 @@ angular.module('practiceMonitoringAssessmentApp')
               // Assign the selected value to back to our scope. The developer
               // should be able to use the results however they like. For
               // instance they may need to use the `Response` from this request
-              // to perform a query against another database for geolookup or 
+              // to perform a query against another database for geolookup or
               // save this value to the database.
               //
               scope.mapboxGeocoderQuery = selectedValue.place_name;

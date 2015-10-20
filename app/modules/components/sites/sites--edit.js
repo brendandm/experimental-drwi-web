@@ -31,9 +31,6 @@ angular.module('practiceMonitoringAssessmentApp')
         }
       }
 
-      
-
-
       Feature.UpdateFeature({
         storage: variables.storage,
         featureId: $scope.site.id,
@@ -54,7 +51,7 @@ angular.module('practiceMonitoringAssessmentApp')
       // Before we can remove the Site we need to remove the relationship it has with the Project
       //
       //
-      // Drop the siteId from the list of 
+      // Drop the siteId from the list of
       //
       angular.forEach($scope.project.type_646f23aa91a64f7c89a008322f4f1093, function(feature, $index) {
         if (feature.id === $scope.site.id) {
@@ -67,7 +64,7 @@ angular.module('practiceMonitoringAssessmentApp')
         featureId: $scope.project.id,
         data: $scope.project
       }).then(function(response) {
-        
+
         //
         // Now that the Project <> Site relationship has been removed, we can remove the Site
         //
@@ -124,9 +121,9 @@ angular.module('practiceMonitoringAssessmentApp')
           text: 'Delete Site'
         },
         {
+          button: 'submit',
           type: 'button-link new',
           action: function($index) {
-            $scope.site.save();
             $scope.page.actions[$index].loading = ! $scope.page.actions[$index].loading;
           },
           visible: false,
@@ -165,13 +162,13 @@ angular.module('practiceMonitoringAssessmentApp')
       },
       center: {
         lat: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[1] : 38.362,
-        lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119, 
+        lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119,
         zoom: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? 16 : 6
       },
       markers: {
         LandRiverSegment: {
           lat: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[1] : 38.362,
-          lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119, 
+          lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119,
           focus: false,
           draggable: true,
           icon: {
@@ -212,7 +209,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.geolocation = {
       drawSegment: function(geojson) {
-          
+
         leafletData.getMap().then(function(map) {
           //
           // Reset the FeatureGroup because we don't want multiple parcels drawn on the map
@@ -234,7 +231,7 @@ angular.module('practiceMonitoringAssessmentApp')
       getSegment: function(coordinates) {
 
         $http({
-          method: 'GET', 
+          method: 'GET',
           url: '//api.commonscloud.org/v2/type_f9d8609090494dac811e6a58eb8ef4be/intersects.geojson',
           params: {
             geometry: coordinates.lng + ' ' + coordinates.lat
@@ -292,7 +289,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         $scope.map.markers.LandRiverSegment = {
           lat: geocode.center[1],
-          lng: geocode.center[0], 
+          lng: geocode.center[0],
           focus: false,
           draggable: true,
           icon: {
@@ -309,7 +306,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         $scope.map.center = {
           lat: geocode.center[1],
-          lng: geocode.center[0], 
+          lng: geocode.center[0],
           zoom: 16
         };
 
@@ -344,7 +341,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
       }
     };
-    
+
 
 
     $scope.site.processPin = function(coordinates, zoom) {
@@ -380,7 +377,7 @@ angular.module('practiceMonitoringAssessmentApp')
       //
       $scope.map.center = {
         lat: coordinates.lat,
-        lng: coordinates.lng, 
+        lng: coordinates.lng,
         zoom: (zoom < 10) ? 10 : zoom
       };
     };
@@ -436,7 +433,7 @@ angular.module('practiceMonitoringAssessmentApp')
       }).then(function(response) {
 
         $scope.user.template = response;
-        
+
         //
         // If the user is not a Template Moderator or Admin then we need to do a final check to see
         // if there are permissions on the individual Feature

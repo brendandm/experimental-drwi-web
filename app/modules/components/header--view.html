@@ -1,5 +1,5 @@
 <header role="banner" class="site-header">
-  <div class="container">  
+  <div class="container">
     <div class="row">
       <section class="site-brand column-8">
         <a href="/projects"><img src="/images/logo-NFWF-reverse.png" width="100" title="Commons Cloud Data Explorer" alt="Commons Cloud Data Explorer" class="img-responsive" /></a>
@@ -31,10 +31,14 @@
     <nav class="column-6">
       <ul data-ng-if="page.actions" class="breadcrumb-navigation">
         <li data-ng-repeat="action in page.actions track by $index">
-          <a data-ng-if="!action.loading" data-ng-click="action.action($index)" class="{{ action.type }}">
+          <button data-ng-if="!action.loading && action.button !== 'submit'" data-ng-click="action.action($index)" class="{{ action.type }}">
             <span data-ng-if="(!action.visible && action.alt) || (!action.alt)">{{ action.text }}</span>
             <span data-ng-if="action.alt && action.visible">{{ action.alt }}</span>
-          </a>
+          </button>
+          <button data-ng-if="!action.loading && action.button === 'submit'" data-ng-click="action.action($index)" class="{{ action.type }}">
+            <span data-ng-if="(!action.visible && action.alt) || (!action.alt)">{{ action.text }}</span>
+            <span data-ng-if="action.alt && action.visible">{{ action.alt }}</span>
+          </button>
           <a data-ng-if="action.loading" class="">
             <span class="throbber"></span>
           </a>
