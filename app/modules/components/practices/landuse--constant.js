@@ -22,7 +22,7 @@ angular.module('practiceMonitoringAssessmentApp')
     'hay without nutrients': 'hyo',
     'pasture': 'pas',
     'pasture nutrient management': 'npa',
-    'pasture corridor': 'trp',
+    'Trampled Riparian Pasture': 'trp',
     'animal feeding operations': 'afo',
     'nursery': 'urs',
     'concentrated animal feeding operations': 'cfo',
