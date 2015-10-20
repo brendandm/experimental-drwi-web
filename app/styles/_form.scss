@@ -210,12 +210,14 @@ label.control-label {
 //
 // Buttons
 //
+.button,
 a.button,
-a.button:hover {
+button.button {
   background-color: $color-green-base;
   border: 0;
   box-shadow: 0px 2px 3px rgba(0,0,0,0.2);
   color: rgb(255, 255, 255);
+  cursor: pointer;
   display: inline-block;
   font-family: $font-sans;
   font-size: 0.875em;
@@ -227,8 +229,16 @@ a.button:hover {
   text-align: center;
   text-shadow: none;
   text-transform: uppercase;
+
   &:hover {
     background-color: $color-green-base;
+  }
+
+  &:active,
+  &:focus {
+    outline: none;
+    position:relative;
+    top: 1px;
   }
 }
 
@@ -242,11 +252,6 @@ a.button:hover {
     background-color: $color-white-base;
     border: 2px solid $color-green-base;
   }
-}
-
-.button:active {
-  position:relative;
-  top: 1px;
 }
 
 .button.button-default,
@@ -280,13 +285,6 @@ a.button:hover {
   background-color: rgb(252,252,252);
   border-bottom: 2px solid rgb(252,252,252);
   box-shadow: none;
-  color: rgb(64, 172, 24);
-  margin: 10px 20px;
-  padding: 0;
-}
-
-.button.button-link:hover {
-  border-bottom: 2px solid rgb(64, 172, 24);
 }
 
 .button.button-cancel,

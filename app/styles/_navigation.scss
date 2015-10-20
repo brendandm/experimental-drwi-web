@@ -77,7 +77,8 @@
       font-weight: 700;
     }
 
-    > a {
+    > a,
+    > button {
       background-color: transparent;
       color: $color-white-base;
       padding: 0;
@@ -104,7 +105,7 @@
       margin-right: 8px;
     }
   }
-  
+
 }
 
 
@@ -136,7 +137,8 @@
       font-weight: 700;
     }
 
-    > a {
+    > a,
+    > button {
       background-color: transparent;
       color: $color-green-base;
       padding: 0;
@@ -185,7 +187,7 @@
     }
 
   }
-  
+
 }
 
 .crumbs {
@@ -235,7 +237,7 @@
   list-style-type: none;
   margin: 0;
   padding: 0;
-  
+
   li {
     border-left: 3px solid transparent;
     line-height: 3;
@@ -300,12 +302,12 @@
       &.refresh {
         padding: 3px 10px;
       }
-    }  
+    }
     &.previous a {
       margin-right: -1px;
     }
   }
-  
+
   li > span {
     border: 0;
     line-height: 2;
