@@ -17,9 +17,27 @@ angular.module('practiceMonitoringAssessmentApp')
     //
     $scope.template = template;
     $scope.project = project;
+
+    //
+    // Setup the Site
+    //
     $scope.site = site;
+
     $scope.site.geolocation = null;
-    $scope.site.save = function() {
+
+    $scope.site.save = function($actionIndex) {
+
+      console.log('did something happen?', $actionIndex, $scope.page.actions[$actionIndex].loading);
+
+      //
+      // To allow users to continue we must have at least a land river segment
+      // associated with this site. County, Site, and State are not critical.
+      //
+      if (!$scope.site.type_f9d8609090494dac811e6a58eb8ef4be.length) {
+        $scope.page.actions[$actionIndex].loading =! $scope.page.actions[$actionIndex].loading;
+        $scope.site.invalidLandRiverSegment = true;
+        return;
+      }
 
       //
       // Make sure we've assigned a state to the state field based on user selections in the
@@ -36,10 +54,11 @@ angular.module('practiceMonitoringAssessmentApp')
         featureId: $scope.site.id,
         data: $scope.site
       }).then(function(response) {
-        //
-        // Refresh the page so that those things update appropriately.
-        //
-        $rootScope.page.refresh();
+
+        var projectId = $route.current.params.projectId,
+            redirect = '/projects/' + projectId;
+
+        $location.path(redirect);
 
       }).then(function(error) {
         // Do something with the error
@@ -121,9 +140,9 @@ angular.module('practiceMonitoringAssessmentApp')
           text: 'Delete Site'
         },
         {
-          button: 'submit',
           type: 'button-link new',
           action: function($index) {
+            $scope.site.save($index);
             $scope.page.actions[$index].loading = ! $scope.page.actions[$index].loading;
           },
           visible: false,

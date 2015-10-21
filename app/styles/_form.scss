@@ -95,6 +95,7 @@ input.form-control {
     color: $color-brightBlue;
     font-weight: 600;
   }
+
 }
 
   //
@@ -684,5 +685,20 @@ h6 {
 
   label {
     font-size: 12px;
+  }
+}
+
+
+//
+// Errors
+//
+.input-error {
+  .form-control {
+    border-color: $color-red-base;
+  }
+
+  .control-label,
+  .form-value-static {
+    color: $color-red-base;
   }
 }
