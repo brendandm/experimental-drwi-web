@@ -355,7 +355,7 @@ angular.module('practiceMonitoringAssessmentApp')
         $scope.calculate.GetLoadVariables(period, $scope.storage.landuse).then(function(newLoaddata) {
 
           //
-          // EXISTING CONDITION LOAD VALUES
+          // EXISTING CONDITION — LOAD VALUES
           //
           var existingLanduse = {
             nitrogen: (existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres),
@@ -381,11 +381,11 @@ angular.module('practiceMonitoringAssessmentApp')
 
 
           //
-          // UPLAND CONDITION LANDUSE VALUES
+          // PLANNED CONDITIONS — LANDUSE VALUES
           //
 
 
-          $scope.calculate.results.totalPlannedLoad = null; // was set to results
+          // $scope.calculate.results.totalPlannedLoad = null; // was set to results
 
 
 
@@ -556,6 +556,7 @@ angular.module('practiceMonitoringAssessmentApp')
         total: $scope.calculate.GetPercentageOfInstalled('length_of_buffer')
       },
       percentageTreesPlanted: {
+
         percentage: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted', 'percentage'),
         total: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted')
       },
