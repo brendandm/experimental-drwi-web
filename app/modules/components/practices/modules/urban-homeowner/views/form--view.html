@@ -1,6 +1,6 @@
       <fieldset>
         <!-- Report Date -->
-        <div class="form-group">
+        <div class="form-group column-8">
           <label for="report_date" class="control-label">
             Report Date
           </label>
@@ -9,7 +9,9 @@
 
           <p data-ng-if="fields.report_date.help" class="help-text">{{ fields.report_date.help }}</p>
         </div>
-        <div class="form-group">
+
+        <!-- Measurement Period -->
+        <div class="form-group column-8">
           <label for="measurement_period" class="control-label">
             Measurement Period
           </label>
@@ -27,7 +29,9 @@
             WIP Reporting Agency
           </label>
 
-          <input data-ng-model="report.wip_reporting_agency" class="form-control" class="form-control" type="number" id="wip_reporting_agency" name="wip_reporting_agency" placeholder="Name of reporting agency" />
+          <select class="form-control" data-ng-model="report.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency" data-ng-options="value for value in fields.wip_reporting_agency.options">
+            <option value="">Select a Report Agency</option>
+          </select>
         </div>
 
         <div class="form-group column-8" data-ng-if="report.measurement_period === 'Planning'">
@@ -52,7 +56,7 @@
             </label>
 
             <input data-ng-model="report.rain_garden_area" class="form-control" class="form-control" type="number" id="rain_garden_area" name="rain_garden_area" />
-            
+
             <p data-ng-if="fields.rain_garden_area.help" class="help-text">{{ fields.rain_garden_area.help }}</p>
           </div>
         </div>
@@ -64,7 +68,7 @@
             </label>
 
             <input data-ng-model="report.rain_barrel_drainage_area" class="form-control" class="form-control" type="number" id="rain_barrel_drainage_area" name="rain_barrel_drainage_area" />
-            
+
             <p data-ng-if="fields.rain_barrel_drainage_area.help" class="help-text">{{ fields.rain_barrel_drainage_area.help }}</p>
           </div>
         </div>
@@ -76,10 +80,10 @@
             </label>
 
             <input data-ng-model="report.permeable_pavement_area" class="form-control" class="form-control" type="number" id="permeable_pavement_area" name="permeable_pavement_area" />
-            
+
             <p data-ng-if="fields.permeable_pavement_area.help" class="help-text">{{ fields.permeable_pavement_area.help }}</p>
           </div>
-        </div>   
+        </div>
 
         <div class="row">
           <div class="form-group column-8">
@@ -88,10 +92,10 @@
             </label>
 
             <input data-ng-model="report.downspout_disconnection_drainage_area" class="form-control" class="form-control" type="number" id="downspout_disconnection_drainage_area" name="downspout_disconnection_drainage_area" />
-            
+
             <p data-ng-if="fields.downspout_disconnection_drainage_area.help" class="help-text">{{ fields.downspout_disconnection_drainage_area.help }}</p>
           </div>
-        </div>  
+        </div>
 
         <div class="row">
           <div class="form-group column-8">
@@ -100,10 +104,10 @@
             </label>
 
             <input data-ng-model="report.urban_nutrient_management_pledge_area" class="form-control" class="form-control" type="number" id="urban_nutrient_management_pledge_area" name="urban_nutrient_management_pledge_area" />
-            
+
             <p data-ng-if="fields.urban_nutrient_management_pledge_area.help" class="help-text">{{ fields.urban_nutrient_management_pledge_area.help }}</p>
           </div>
-        </div>            
+        </div>
 
         <div class="row">
           <div class="form-group column-8">
@@ -112,10 +116,10 @@
             </label>
 
             <input data-ng-model="report.urban_nutrient_management_plan_area_hi_risk" class="form-control" class="form-control" type="number" id="urban_nutrient_management_plan_area_hi_risk" name="urban_nutrient_management_plan_area_hi_risk" />
-            
+
             <p data-ng-if="fields.urban_nutrient_management_plan_area_hi_risk.help" class="help-text">{{ fields.urban_nutrient_management_plan_area_hi_risk.help }}</p>
           </div>
-        </div> 
+        </div>
 
         <div class="row">
           <div class="form-group column-8">
@@ -124,10 +128,10 @@
             </label>
 
             <input data-ng-model="report.conservation_landscaping" class="form-control" class="form-control" type="number" id="conservation_landscaping" name="conservation_landscaping" />
-            
+
             <p data-ng-if="fields.conservation_landscaping.help" class="help-text">{{ fields.conservation_landscaping.help }}</p>
           </div>
-        </div> 
+        </div>
 
         <div class="row">
           <div class="form-group column-8">
@@ -136,10 +140,10 @@
             </label>
 
             <input data-ng-model="report.tree_planting" class="form-control" class="form-control" type="number" id="tree_planting" name="tree_planting" />
-            
+
             <p data-ng-if="fields.tree_planting.help" class="help-text">{{ fields.tree_planting.help }}</p>
           </div>
-        </div> 
+        </div>
 
         <div class="row">
           <div class="form-group column-8">
@@ -148,10 +152,10 @@
             </label>
 
             <input data-ng-model="report.impervious_cover_removal_area" class="form-control" class="form-control" type="number" id="impervious_cover_removal_area" name="impervious_cover_removal_area" />
-            
+
             <p data-ng-if="fields.impervious_cover_removal_area.help" class="help-text">{{ fields.impervious_cover_removal_area.help }}</p>
           </div>
-        </div> 
+        </div>
 
       </fieldset>
 
@@ -164,7 +168,7 @@
           </label>
 
           <input data-ng-model="report.bird_count" class="form-control" class="form-control" type="number" id="bird_count" name="bird_count" />
-          
+
           <p data-ng-if="fields.bird_count.help" class="help-text">{{ fields.bird_count.help }}</p>
         </div>
 
@@ -233,7 +237,7 @@
 
       <fieldset data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation' || report.measurement_period === 'Monitoring'">
         <h2><strong>Notes</strong></h2>
-  
+
         <div class="form-group">
           <textarea rows="1" data-ng-model="report.notes" class="form-control animate"  msd-elastic id="notes" name="notes" placeholder="Notes">{{ report.notes }}</textarea>
         </div>
