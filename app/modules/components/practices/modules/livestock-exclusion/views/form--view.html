@@ -9,7 +9,9 @@
 
           <p data-ng-if="fields.report_date.help" class="help-text">{{ fields.report_date.help }}</p>
         </div>
-        <div class="form-group">
+
+        <!-- Measurement Period -->
+        <div class="form-group  column-8">
           <label for="measurement_period" class="control-label">
             Measurement Period
           </label>
@@ -22,12 +24,14 @@
         </div>
 
         <!-- WIP Reporting Agency -->
-        <div class="form-group" data-ng-if="report.measurement_period === 'Planning'">
+        <div class="form-group column-8" data-ng-if="report.measurement_period === 'Planning'">
           <label for="wip_reporting_agency" class="control-label">
             WIP Reporting Agency
           </label>
 
-          <input data-ng-model="report.wip_reporting_agency" class="form-control" class="form-control" type="number" id="wip_reporting_agency" name="wip_reporting_agency" placeholder="Name of reporting agency" />
+          <select class="form-control" data-ng-model="report.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency" data-ng-options="value for value in fields.wip_reporting_agency.options">
+            <option value="">Select a Report Agency</option>
+          </select>
         </div>
       </fieldset>
 
@@ -400,7 +404,7 @@
           <div class="column-1"></div>
           <div class="form-group column-5">
             <label for="substrate_mean_d50_particle_size" class="control-label">
-              Substrate Mean D50 Particle Size   
+              Substrate Mean D50 Particle Size
             </label>
 
             <input data-ng-model="report.substrate_mean_d50_particle_size" class="form-control" class="form-control" type="number" max="100" min="0" id="substrate_mean_d50_particle_size" name="substrate_mean_d50_particle_size" />
@@ -478,7 +482,7 @@
 
       <fieldset data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation' || report.measurement_period === 'Monitoring'">
         <h2><strong>Notes</strong></h2>
-  
+
         <div class="form-group">
           <textarea rows="1" data-ng-model="report.notes" class="form-control animate"  msd-elastic id="notes" name="notes" placeholder="Notes">{{ report.notes }}</textarea>
         </div>
