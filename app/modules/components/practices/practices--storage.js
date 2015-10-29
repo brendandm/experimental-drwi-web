@@ -106,5 +106,19 @@ angular.module('practiceMonitoringAssessmentApp')
         report: '/modules/components/practices/modules/bank-stabilization/views/report--view.html',
         form: '/modules/components/practices/modules/bank-stabilization/views/form--view.html'
       }
+    },
+    'enhanced-stream-restoration': {
+      landuse: null,
+      storage: 'type_ff74e5abd79f4b2fbf04bf28168eaf97',
+      templateId: 382,
+      fields: {
+        Planning: [],
+        Installation: [],
+        Monitoring: []
+      },
+      templates: {
+        report: '/modules/components/practices/modules/enhanced-stream-restoration/views/report--view.html',
+        form: '/modules/components/practices/modules/enhanced-stream-restoration/views/form--view.html'
+      }
     }
   });
