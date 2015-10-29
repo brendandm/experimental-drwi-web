@@ -167,7 +167,16 @@ angular.module('practiceMonitoringAssessmentApp')
       };
 
       Feature.MachineReadable = function(name) {
-        return name.replace('-', '').replace(' ', '-').toLowerCase();
+
+        if (name) {
+          var removeDashes = name.replace(/-/g, ''),
+              removeSpaces = removeDashes.replace(/ /g, '-'),
+              convertLowerCase = removeSpaces.toLowerCase();
+
+          return convertLowerCase;
+        }
+
+        return null;
       };
 
       Feature.HumanReadable = function(name) {
