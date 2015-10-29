@@ -21,11 +21,11 @@
               <th>&nbsp;</th>
               <th>&nbsp;</th> <!-- Empty because of Pre-BMP Load -->
               <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/grass-buffer/{{ report.id }}/edit">
                   <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
                   <span data-ng-if="report.measurement_period === 'Installation'">Installed</span>
                   <br />
-                  {{ report.report_date }}                  
+                  {{ report.report_date }}
                 </a>
               </th>
               <th>Installed To-Date</th>
@@ -57,14 +57,14 @@
               <th>&nbsp;</th>
               <th>Pre-BMP Load</th>
               <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/grass-buffer/{{ report.id }}/edit">
                   <span data-ng-if="report.measurement_period === 'Planning'">Planned Reduction</span><span data-ng-if="report.measurement_period === 'Installation'">Installed Reduction</span><br />
-                  {{ report.report_date }}                  
+                  {{ report.report_date }}
                 </a>
               </th>
               <th>Reduction To-date</th>
               <th>% of Planned</th>
-            </tr>        
+            </tr>
 
             <tr data-ng-if="calculate.results.totalPreInstallationLoad">
               <th>Nitrogen (lbs/yr)</th>
@@ -119,7 +119,7 @@
               <th>&nbsp;</th>
               <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
               <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/grass-buffer/{{ report.id }}/edit">
                   <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
                   <span data-ng-if="report.measurement_period === 'Installation'">Installed</span>
                   <br />
@@ -148,7 +148,7 @@
               <td><strong>{{ calculate.results.totalAcresRestored | number:2 }}</strong> acres</td>
               <td><strong>{{ calculate.results.percentageAcresRestored | number:0 }}%</strong></td>
             </tr>
-          </tbody>  
+          </tbody>
         </table>
       </div>
 
@@ -164,7 +164,7 @@
             <tr>
               <th>&nbsp;</th>
               <th data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/grass-buffer/{{ report.id }}/edit">
                   Monitored on<br />
                   {{ report.report_date }}
                 </a>
@@ -242,7 +242,7 @@
             <tr>
               <th>&nbsp;</th>
               <th data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/grass-buffer/{{ report.id }}/edit">
                   Monitored on<br />
                   {{ report.report_date }}
                 </a>
@@ -291,7 +291,7 @@
                 <div data-ng-if="report.tree_survival_rate" class="icon retinaicon-essentials-071"></div>
               </td>
             </tr>
-          </tbody>  
+          </tbody>
         </table>
       </div>
 
@@ -307,13 +307,13 @@
           <tbody>
             <tr data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
               <td class="align-left">
-                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/reports/{{ report.id }}/edit">
+                <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/grass-buffer/{{ report.id }}/edit">
                   {{ report.report_date }}
                 </a>
               </td>
               <td class="align-left" data-ng-if="report.notes">{{ report.notes }}</td>
               <td class="align-left" data-ng-if="!report.notes"><em>No notes recorded for this date</em></td>
             </tr>
-          </tbody>  
+          </tbody>
         </table>
       </div>
