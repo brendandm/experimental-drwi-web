@@ -26,7 +26,7 @@
   </div>
 
   <!-- WIP Reporting Agency -->
-  <div class="form-group column-8" data-ng-if="report.measurement_period === 'Planning'">
+  <div class="form-group column-8" data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'">
     <label for="wip_reporting_agency" class="control-label">
       WIP Reporting Agency
     </label>
@@ -39,7 +39,7 @@
 </fieldset>
 
 <!-- Installation Summary -->
-<fieldset data-ng-if="report.measurement_period === 'Planning'">
+<fieldset data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'">
   <h2><strong>Installation</strong> Summary</h2>
 
   <p>
@@ -138,7 +138,7 @@
   </div>
 </fieldset>
 
-<fieldset data-ng-if="report.measurement_period === 'Planning'">
+<fieldset data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'">
   <p>
     Protocol 3: Floodplain Reconnection Volume Credit
   </p>
@@ -214,6 +214,91 @@
     <input data-ng-model="report.fraction_of_annual_runoff_treated_by_floodplain" class="form-control" class="form-control" type="number" id="fraction_of_annual_runoff_treated_by_floodplain" name="fraction_of_annual_runoff_treated_by_floodplain" />
 
     <p data-ng-if="fields.fraction_of_annual_runoff_treated_by_floodplain.help" class="help-text">{{ fields.fraction_of_annual_runoff_treated_by_floodplain.help }}</p>
+  </div>
+</fieldset>
+
+<!-- Interim BMP Metrics Data-->
+<fieldset data-ng-if="report.measurement_period === 'Monitoring'">
+  <h2><strong>Interim</strong> BMP Metrics Data</h2>
+  <p>
+    Hydrologic
+  </p>
+
+  <div class="form-group column-8">
+    <label for="mean_annual_bankfull_flow" class="control-label">
+      {{ fields.mean_annual_bankfull_flow.label }}
+    </label>
+
+    <input data-ng-model="report.mean_annual_bankfull_flow" class="form-control" class="form-control" type="number" id="mean_annual_bankfull_flow" name="mean_annual_bankfull_flow" />
+
+    <p data-ng-if="fields.mean_annual_bankfull_flow.help" class="help-text">{{ fields.mean_annual_bankfull_flow.help }}</p>
+  </div>
+  <div class="form-group column-8">
+    <label for="monthly_flow_frequency_probability_plot" class="control-label">
+      {{ fields.monthly_flow_frequency_probability_plot.label }}
+    </label>
+
+    <input data-ng-model="report.monthly_flow_frequency_probability_plot" class="form-control" class="form-control" type="text" id="monthly_flow_frequency_probability_plot" name="monthly_flow_frequency_probability_plot" />
+
+    <p data-ng-if="fields.monthly_flow_frequency_probability_plot.help" class="help-text">{{ fields.monthly_flow_frequency_probability_plot.help }}</p>
+  </div>
+</fieldset>
+<fieldset data-ng-if="report.measurement_period === 'Monitoring'">
+  <p>
+    Hydraulic
+  </p>
+
+  <div class="form-group column-8">
+    <label for="number_of_overbank_flows_per_year" class="control-label">
+      {{ fields.number_of_overbank_flows_per_year.label }}
+    </label>
+
+    <input data-ng-model="report.number_of_overbank_flows_per_year" class="form-control" class="form-control" type="number" id="number_of_overbank_flows_per_year" name="number_of_overbank_flows_per_year" />
+
+    <p data-ng-if="fields.number_of_overbank_flows_per_year.help" class="help-text">{{ fields.number_of_overbank_flows_per_year.help }}</p>
+  </div>
+</fieldset>
+<fieldset data-ng-if="report.measurement_period === 'Monitoring'">
+  <p>
+    Riparian Vegetation
+  </p>
+
+  <div class="form-group column-4">
+    <label for="left_bank_vegetative_protection" class="control-label">
+      {{ fields.left_bank_vegetative_protection.label }}
+    </label>
+
+    <input data-ng-model="report.left_bank_vegetative_protection" class="form-control" class="form-control" type="number" id="left_bank_vegetative_protection" name="left_bank_vegetative_protection" />
+
+    <p data-ng-if="fields.left_bank_vegetative_protection.help" class="help-text">{{ fields.left_bank_vegetative_protection.help }}</p>
+  </div>
+  <div class="form-group column-4">
+    <label for="left_bank_riparian_vegetative_zone_width" class="control-label">
+      {{ fields.left_bank_riparian_vegetative_zone_width.label }}
+    </label>
+
+    <input data-ng-model="report.left_bank_riparian_vegetative_zone_width" class="form-control" class="form-control" type="number" id="left_bank_riparian_vegetative_zone_width" name="left_bank_riparian_vegetative_zone_width" />
+
+    <p data-ng-if="fields.left_bank_riparian_vegetative_zone_width.help" class="help-text">{{ fields.left_bank_riparian_vegetative_zone_width.help }}</p>
+  </div>
+
+  <div class="form-group column-4">
+    <label for="right_bank_vegetative_protection" class="control-label">
+      {{ fields.right_bank_vegetative_protection.label }}
+    </label>
+
+    <input data-ng-model="report.right_bank_vegetative_protection" class="form-control" class="form-control" type="number" id="right_bank_vegetative_protection" name="right_bank_vegetative_protection" />
+
+    <p data-ng-if="fields.right_bank_vegetative_protection.help" class="help-text">{{ fields.right_bank_vegetative_protection.help }}</p>
+  </div>
+  <div class="form-group column-4">
+    <label for="right_bank_riparian_vegetative_zone_width" class="control-label">
+      {{ fields.right_bank_riparian_vegetative_zone_width.label }}
+    </label>
+
+    <input data-ng-model="report.right_bank_riparian_vegetative_zone_width" class="form-control" class="form-control" type="number" id="right_bank_riparian_vegetative_zone_width" name="right_bank_riparian_vegetative_zone_width" />
+
+    <p data-ng-if="fields.right_bank_riparian_vegetative_zone_width.help" class="help-text">{{ fields.right_bank_riparian_vegetative_zone_width.help }}</p>
   </div>
 </fieldset>
 
