@@ -110,7 +110,7 @@ angular.module('practiceMonitoringAssessmentApp')
     'enhanced-stream-restoration': {
       landuse: null,
       storage: 'type_ff74e5abd79f4b2fbf04bf28168eaf97',
-      templateId: 382,
+      templateId: 383,
       fields: {
         Planning: [],
         Installation: [],

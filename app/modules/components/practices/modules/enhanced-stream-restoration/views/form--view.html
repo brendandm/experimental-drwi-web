@@ -38,20 +38,183 @@
 
 </fieldset>
 
-<!-- Interim BMP Metrics -->
-<fieldset data-ng-if="report.measurement_period === 'Monitoring'">
-  <h2><strong>Interim</strong> BMP Metrics Data</h2>
+<!-- Installation Summary -->
+<fieldset data-ng-if="report.measurement_period === 'Planning'">
+  <h2><strong>Installation</strong> Summary</h2>
 
-  <div class="form-group column-5">
-    <label for="bird_count" class="control-label">
-      Number of observed bird or small animal species
+  <p>
+    Protocol 2: In-Stream and Riparian Nutrient Processing Credit within the Hyporheic Zone during Base Flow
+  </p>
+
+  <div class="form-group column-8">
+    <label for="stream_width_at_bankfull" class="control-label">
+      {{ fields.stream_width_at_bankfull.label }}
     </label>
 
-    <input data-ng-model="report.bird_count" class="form-control" class="form-control" type="number" id="bird_count" name="bird_count" />
+    <input data-ng-model="report.stream_width_at_bankfull" class="form-control" class="form-control" type="number" id="stream_width_at_bankfull" name="stream_width_at_bankfull" />
 
-    <p data-ng-if="fields.bird_count.help" class="help-text">{{ fields.bird_count.help }}</p>
+    <p data-ng-if="fields.stream_width_at_bankfull.help" class="help-text">{{ fields.stream_width_at_bankfull.help }}</p>
+  </div>
+  <div class="form-group column-8">
+    <label for="stream_width_at_mean_base_flow" class="control-label">
+      {{ fields.stream_width_at_mean_base_flow.label }}
+    </label>
+
+    <input data-ng-model="report.stream_width_at_mean_base_flow" class="form-control" class="form-control" type="number" id="stream_width_at_mean_base_flow" name="stream_width_at_mean_base_flow" />
+
+    <p data-ng-if="fields.stream_width_at_mean_base_flow.help" class="help-text">{{ fields.stream_width_at_mean_base_flow.help }}</p>
   </div>
 
+  <!-- Left Bank Metrics -->
+  <div class="form-group column-5">
+    <label for="length_of_left_bank_with_improved_connectivity" class="control-label">
+      {{ fields.length_of_left_bank_with_improved_connectivity.label }}
+    </label>
+
+    <input data-ng-model="report.length_of_left_bank_with_improved_connectivity" class="form-control" class="form-control" type="number" id="length_of_left_bank_with_improved_connectivity" name="length_of_left_bank_with_improved_connectivity" />
+
+    <p data-ng-if="fields.length_of_left_bank_with_improved_connectivity.help" class="help-text">{{ fields.length_of_left_bank_with_improved_connectivity.help }}</p>
+  </div>
+
+  <div class="form-group column-5">
+    <label for="project_left_bank_height" class="control-label">
+      {{ fields.project_left_bank_height.label }}
+    </label>
+
+    <input data-ng-model="report.project_left_bank_height" class="form-control" class="form-control" type="number" id="project_left_bank_height" name="project_left_bank_height" />
+
+    <p data-ng-if="fields.project_left_bank_height.help" class="help-text">{{ fields.project_left_bank_height.help }}</p>
+  </div>
+
+  <div class="form-group column-5">
+    <label for="left_bank_bankfull_height" class="control-label">
+      {{ fields.left_bank_bankfull_height.label }}
+    </label>
+
+    <input data-ng-model="report.left_bank_bankfull_height" class="form-control" class="form-control" type="number" id="left_bank_bankfull_height" name="left_bank_bankfull_height" />
+
+    <p data-ng-if="fields.left_bank_bankfull_height.help" class="help-text">{{ fields.left_bank_bankfull_height.help }}</p>
+  </div>
+
+  <!-- Right Bank Metrics -->
+  <div class="form-group column-5">
+    <label for="length_of_right_bank_with_improved_connectivity" class="control-label">
+      {{ fields.length_of_right_bank_with_improved_connectivity.label }}
+    </label>
+
+    <input data-ng-model="report.length_of_right_bank_with_improved_connectivity" class="form-control" class="form-control" type="number" id="length_of_right_bank_with_improved_connectivity" name="length_of_right_bank_with_improved_connectivity" />
+
+    <p data-ng-if="fields.length_of_right_bank_with_improved_connectivity.help" class="help-text">{{ fields.length_of_right_bank_with_improved_connectivity.help }}</p>
+  </div>
+
+  <div class="form-group column-5">
+    <label for="project_right_bank_height" class="control-label">
+      {{ fields.project_right_bank_height.label }}
+    </label>
+
+    <input data-ng-model="report.project_right_bank_height" class="form-control" class="form-control" type="number" id="project_right_bank_height" name="project_right_bank_height" />
+
+    <p data-ng-if="fields.project_right_bank_height.help" class="help-text">{{ fields.project_right_bank_height.help }}</p>
+  </div>
+
+  <div class="form-group column-5">
+    <label for="right_bank_bankfull_height" class="control-label">
+      {{ fields.right_bank_bankfull_height.label }}
+    </label>
+
+    <input data-ng-model="report.right_bank_bankfull_height" class="form-control" class="form-control" type="number" id="right_bank_bankfull_height" name="right_bank_bankfull_height" />
+
+    <p data-ng-if="fields.right_bank_bankfull_height.help" class="help-text">{{ fields.right_bank_bankfull_height.help }}</p>
+  </div>
+
+  <div class="form-group column-5">
+    <label for="bulk_density_of_soil_in_hyporheic_zone" class="control-label">
+      {{ fields.bulk_density_of_soil_in_hyporheic_zone.label }}
+    </label>
+
+    <input data-ng-model="report.bulk_density_of_soil_in_hyporheic_zone" class="form-control" class="form-control" type="number" id="bulk_density_of_soil_in_hyporheic_zone" name="bulk_density_of_soil_in_hyporheic_zone" />
+
+    <p data-ng-if="fields.bulk_density_of_soil_in_hyporheic_zone.help" class="help-text">{{ fields.bulk_density_of_soil_in_hyporheic_zone.help }}</p>
+  </div>
+</fieldset>
+
+<fieldset data-ng-if="report.measurement_period === 'Planning'">
+  <p>
+    Protocol 3: Floodplain Reconnection Volume Credit
+  </p>
+  <div class="form-group column-4">
+    <label for="stream_length_reconnected_at_floodplain" class="control-label">
+      {{ fields.stream_length_reconnected_at_floodplain.label }}
+    </label>
+
+    <input data-ng-model="report.stream_length_reconnected_at_floodplain" class="form-control" class="form-control" type="number" id="stream_length_reconnected_at_floodplain" name="stream_length_reconnected_at_floodplain" />
+
+    <p data-ng-if="fields.stream_length_reconnected_at_floodplain.help" class="help-text">{{ fields.stream_length_reconnected_at_floodplain.help }}</p>
+  </div>
+  <div class="form-group column-4">
+    <label for="connected_floodplain_surface_area" class="control-label">
+      {{ fields.connected_floodplain_surface_area.label }}
+    </label>
+
+    <input data-ng-model="report.connected_floodplain_surface_area" class="form-control" class="form-control" type="number" id="connected_floodplain_surface_area" name="connected_floodplain_surface_area" />
+
+    <p data-ng-if="fields.connected_floodplain_surface_area.help" class="help-text">{{ fields.connected_floodplain_surface_area.help }}</p>
+  </div>
+  <div class="form-group column-4">
+    <label for="watershed_contributing_area" class="control-label">
+      {{ fields.watershed_contributing_area.label }}
+    </label>
+
+    <input data-ng-model="report.watershed_contributing_area" class="form-control" class="form-control" type="number" id="watershed_contributing_area" name="watershed_contributing_area" />
+
+    <p data-ng-if="fields.watershed_contributing_area.help" class="help-text">{{ fields.watershed_contributing_area.help }}</p>
+  </div>
+  <div class="form-group column-4">
+    <label for="watershed_impervious_area" class="control-label">
+      {{ fields.watershed_impervious_area.label }}
+    </label>
+
+    <input data-ng-model="report.watershed_impervious_area" class="form-control" class="form-control" type="number" id="watershed_impervious_area" name="watershed_impervious_area" />
+
+    <p data-ng-if="fields.watershed_impervious_area.help" class="help-text">{{ fields.watershed_impervious_area.help }}</p>
+  </div>
+
+  <div class="form-group column-4">
+    <label for="watershed_pervious_area" class="control-label">
+      {{ fields.watershed_pervious_area.label }}
+    </label>
+
+    <input data-ng-model="report.watershed_pervious_area" class="form-control" class="form-control" type="number" id="watershed_pervious_area" name="watershed_pervious_area" />
+
+    <p data-ng-if="fields.watershed_pervious_area.help" class="help-text">{{ fields.watershed_pervious_area.help }}</p>
+  </div>
+  <div class="form-group column-4">
+    <label for="rainfall_depth_where_connection_occurs" class="control-label">
+      {{ fields.rainfall_depth_where_connection_occurs.label }}
+    </label>
+
+    <input data-ng-model="report.rainfall_depth_where_connection_occurs" class="form-control" class="form-control" type="number" id="rainfall_depth_where_connection_occurs" name="rainfall_depth_where_connection_occurs" />
+
+    <p data-ng-if="fields.rainfall_depth_where_connection_occurs.help" class="help-text">{{ fields.rainfall_depth_where_connection_occurs.help }}</p>
+  </div>
+  <div class="form-group column-4">
+    <label for="floodplain_connection_volume" class="control-label">
+      {{ fields.floodplain_connection_volume.label }}
+    </label>
+
+    <input data-ng-model="report.floodplain_connection_volume" class="form-control" class="form-control" type="number" id="floodplain_connection_volume" name="floodplain_connection_volume" />
+
+    <p data-ng-if="fields.floodplain_connection_volume.help" class="help-text">{{ fields.floodplain_connection_volume.help }}</p>
+  </div>
+  <div class="form-group column-4">
+    <label for="fraction_of_annual_runoff_treated_by_floodplain" class="control-label">
+      {{ fields.fraction_of_annual_runoff_treated_by_floodplain.label }}
+    </label>
+
+    <input data-ng-model="report.fraction_of_annual_runoff_treated_by_floodplain" class="form-control" class="form-control" type="number" id="fraction_of_annual_runoff_treated_by_floodplain" name="fraction_of_annual_runoff_treated_by_floodplain" />
+
+    <p data-ng-if="fields.fraction_of_annual_runoff_treated_by_floodplain.help" class="help-text">{{ fields.fraction_of_annual_runoff_treated_by_floodplain.help }}</p>
+  </div>
 </fieldset>
 
 <!-- Adaptive Management Checks -->
