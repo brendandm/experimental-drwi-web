@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('practiceMonitoringAssessmentApp')
-    .controller('EnhancedStreamRestorationReportController', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, EnhancedStreamRestorationCalculate, Calculate, StateLoad) {
+    .controller('EnhancedStreamRestorationReportController', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, user, Template, Feature, Field, template, project, site, practice, readings, commonscloud, Storage, Landuse, EnhancedStreamRestorationCalculate, Calculate, StateLoad) {
 
       //
       // Assign project to a scoped variable
@@ -17,7 +17,6 @@
       $scope.site = site;
 
       $scope.template = template;
-      $scope.fields = fields;
 
       $scope.practice = practice;
       $scope.practice.practice_type = 'enhanced-stream-restoration';
@@ -35,6 +34,9 @@
       $scope.landuse = Landuse;
       $scope.calculate = EnhancedStreamRestorationCalculate;
 
+      Field.GetPreparedFields($scope.storage.templateId, 'object').then(function(response) {
+        $scope.fields = response;
+      });
 
       //
       // Retrieve State-specific Load Data
