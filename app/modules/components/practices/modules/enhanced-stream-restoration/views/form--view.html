@@ -1,6 +1,6 @@
-<!-- Generic Practice Informationm -->
-
+<!-- Practice Information -->
 <fieldset>
+
   <!-- Report Date -->
   <div class="form-group column-8">
     <label for="report_date" class="control-label">
@@ -34,6 +34,62 @@
     <select class="form-control" data-ng-model="report.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency" data-ng-options="value for value in fields.wip_reporting_agency.options">
       <option value="">Select a Report Agency</option>
     </select>
+  </div>
+
+</fieldset>
+
+<!-- Interim BMP Metrics -->
+<fieldset data-ng-if="report.measurement_period === 'Monitoring'">
+  <h2><strong>Interim</strong> BMP Metrics Data</h2>
+
+  <div class="form-group column-5">
+    <label for="bird_count" class="control-label">
+      Number of observed bird or small animal species
+    </label>
+
+    <input data-ng-model="report.bird_count" class="form-control" class="form-control" type="number" id="bird_count" name="bird_count" />
+
+    <p data-ng-if="fields.bird_count.help" class="help-text">{{ fields.bird_count.help }}</p>
+  </div>
+
+</fieldset>
+
+<!-- Adaptive Management Checks -->
+<fieldset data-ng-if="report.measurement_period === 'Monitoring'">
+  <h2><strong>Adaptive</strong> Management Checks Performed</h2>
+
+  <div class="form-group">
+    <div class="checkbox">
+      <label class="control-label">
+        <input data-ng-model="report.adaptive_management_hydrologic" type="checkbox" id="adaptive_management_hydrologic" name="adaptive_management_hydrologic" /> Does discharge need to be adjusted through dam management, channel adjustments, or riparian plantings? If so, see Sellner et al., 2012, p.101.
+      </label>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="checkbox">
+      <label class="control-label">
+        <input data-ng-model="report.adaptive_management_hydraulic" type="checkbox" id="adaptive_management_hydraulic" name="adaptive_management_hydraulic" /> Is overland accretion occurring? If so, see Sellner et al., 2012, p.103.
+      </label>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="checkbox">
+      <label class="control-label">
+        <input data-ng-model="report.adaptive_management_riparian_vegetation" type="checkbox" id="adaptive_management_riparian_vegetation" name="adaptive_management_riparian_vegetation" /> Protocol 2 requires adequate riparian plant establishment to provide a carbon source for de-nitrification.
+      </label>
+    </div>
+  </div>
+
+</fieldset>
+
+<!-- Notes -->
+<fieldset data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation' || report.measurement_period === 'Monitoring'">
+  <h2><strong>Notes</strong></h2>
+
+  <div class="form-group">
+    <textarea rows="1" data-ng-model="report.notes" class="form-control animate"  msd-elastic id="notes" name="notes" placeholder="Notes">{{ report.notes }}</textarea>
   </div>
 
 </fieldset>
