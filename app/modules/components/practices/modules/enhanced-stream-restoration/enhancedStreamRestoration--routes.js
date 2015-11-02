@@ -48,7 +48,7 @@
             readings: function(Storage, Feature, $route) {
               return Feature.GetRelatedFeatures({
                 storage: commonscloud.collections.practice.storage,
-                relationship: Storage.bioretention.storage,
+                relationship: Storage['enhanced-stream-restoration'].storage,
                 featureId: $route.current.params.practiceId
               });
             }
