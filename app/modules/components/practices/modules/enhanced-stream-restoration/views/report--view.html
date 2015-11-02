@@ -364,8 +364,180 @@
           </strong>
         </td>
       </tr>
+    </tbody>
+  </table>
+</div>
 
+<div data-ng-if="total.monitoring">
+  <table class="table">
+    <tbody>
+      <!-- Section Heading -->
+      <tr class="no-rule">
+        <td class="align-left" colspan="{{ total.monitoring + 4 }}">
+          <h2><strong>Interim</strong> BMP Metrics Data</h2>
+        </td>
+      </tr>
 
+      <tr>
+        <th colspan="2">&nbsp;</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
+            Monitored on<br />
+            {{ report.report_date }}
+          </a>
+        </td>
+      </tr>
+
+      <tr>
+        <td rowspan="2" class="align-middle">
+          Hydrologic
+        </td>
+        <th class="align-left">
+          {{ fields.mean_annual_bankfull_flow.label }}
+        </th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.mean_annual_bankfull_flow }}
+        </td>
+      </tr>
+      <tr>
+        <!-- SKIP BECAUSE OF ROWSPAN ABOVE-->
+        <th class="align-left">
+          {{ fields.monthly_flow_frequency_probability_plot.label }}
+        </th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.monthly_flow_frequency_probability_plot }}
+        </td>
+      </tr>
+
+      <tr>
+        <td rowspan="2" class="align-middle">
+          Hydraulic
+        </td>
+        <th class="align-left">
+          {{ fields.number_of_overbank_flows_per_year.label }}
+        </th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.number_of_overbank_flows_per_year }}
+        </td>
+      </tr>
+      <tr>
+        <!-- SKIP BECAUSE OF ROWSPAN ABOVE-->
+        <th class="align-left">
+          Bank Height Ratio
+        </th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          --
+        </td>
+      </tr>
+
+      <tr>
+        <td rowspan="4" class="align-middle">
+          Riparian Vegetation
+        </td>
+        <th class="align-left">
+          {{ fields.left_bank_vegetative_protection.label }}
+        </th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.left_bank_vegetative_protection }}
+        </td>
+      </tr>
+      <tr>
+        <!-- SKIP BECAUSE OF ROWSPAN ABOVE-->
+        <th class="align-left">
+          {{ fields.left_bank_riparian_vegetative_zone_width.label }}
+        </th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.left_bank_riparian_vegetative_zone_width }}
+        </td>
+      </tr>
+      <tr>
+        <!-- SKIP BECAUSE OF ROWSPAN ABOVE-->
+        <th class="align-left">
+          {{ fields.right_bank_vegetative_protection.label }}
+        </th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.right_bank_vegetative_protection }}
+        </td>
+      </tr>
+      <tr>
+        <!-- SKIP BECAUSE OF ROWSPAN ABOVE-->
+        <th class="align-left">
+          {{ fields.right_bank_riparian_vegetative_zone_width.label }}
+        </th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.right_bank_riparian_vegetative_zone_width }}
+        </td>
+      </tr>
+
+      <tr class="no-rule">
+        <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+          <h2><strong>Adaptive</strong> Management Checks Performed</h2>
+        </td>
+      </tr>
+
+      <tr>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
+            Monitored on<br />
+            {{ report.report_date }}
+          </a>
+        </th>
+      </tr>
+
+      <tr>
+        <td class="align-middle">
+          Hydrologic
+        </td>
+        <th class="align-left" width="50%">Does discharge need to be adjusted through dam management, channel adjustments, or riparian plantings? If so, see Sellner et al., 2012, p.101.</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <div data-ng-if="report.adaptive_management_hydrologic" class="icon retinaicon-essentials-071"></div>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="align-middle">
+          Hydraulic
+        </td>
+        <th class="align-left" width="50%">Is overland accretion occurring? If so, see Sellner et al., 2012, p.103.</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <div data-ng-if="report.adaptive_management_hydraulic" class="icon retinaicon-essentials-071"></div>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="align-middle">
+          Riparian Vegetation
+        </td>
+        <th class="align-left" width="50%">Protocol 2 requires adequate riparian plant establishment to provide a carbon source for de-nitrification.</th>
+        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <div data-ng-if="report.adaptive_management_riparian_vegetation" class="icon retinaicon-essentials-071"></div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div data-ng-if="total.planning || total.installation || total.monitoring">
+  <h2><strong>Notes</strong></h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="align-left" width="10%">Date</th>
+        <th class="align-left" width="90%">Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+        <td class="align-left">
+          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
+            {{ report.report_date }}
+          </a>
+        </td>
+        <td class="align-left" data-ng-if="report.notes">{{ report.notes }}</td>
+        <td class="align-left" data-ng-if="!report.notes"><em>No notes recorded for this date</em></td>
+      </tr>
     </tbody>
   </table>
 </div>
