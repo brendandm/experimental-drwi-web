@@ -506,12 +506,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
       //
       // Each Filter can have multiple criteria such as single ilike, or
-      // a combination of gte and lte. We need to null the values of all 
+      // a combination of gte and lte. We need to null the values of all
       // filters in order for the URL to change appropriately
       //
       angular.forEach($scope.filters.available[$index].filter, function(criteria, $_index) {
         $scope.filters.available[$index].filter[$_index].value = null;
-      }); 
+      });
 
       $scope.search.execute();
     };
@@ -529,7 +529,7 @@ angular.module('practiceMonitoringAssessmentApp')
       timeout = $timeout(function () {
         $scope.search.execute();
       }, 1000);
-      
+
     };
 
     $scope.search.execute = function(page_number) {
@@ -572,7 +572,7 @@ angular.module('practiceMonitoringAssessmentApp')
           q: Q_,
           page: ($scope.filters.page) ? $scope.filters.page: null,
           results_per_page: ($scope.filters.results_per_page) ? $scope.filters.results_per_page: null,
-          callback: ($scope.filters.callback) ? $scope.filters.callback: null 
+          callback: ($scope.filters.callback) ? $scope.filters.callback: null
         });
 
 		$scope.projects = response;
@@ -598,9 +598,9 @@ angular.module('practiceMonitoringAssessmentApp')
     // Project functionality
     //
     $scope.project = {};
-    
+
     $scope.project.create = function() {
-      
+
       Feature.CreateFeature({
         storage: storage,
         data: {
@@ -875,10 +875,11 @@ angular.module('practiceMonitoringAssessmentApp')
         featureId: $scope.project.id,
         data: $scope.project
       }).then(function(response) {
+
         //
         // Refresh the page so that those things update appropriately.
         //
-        $rootScope.page.refresh();
+        $location.path('/projects/');
 
       }).then(function(error) {
         // Do something with the error
@@ -910,7 +911,7 @@ angular.module('practiceMonitoringAssessmentApp')
       }).then(function(response) {
 
         $scope.user.template = response;
-        
+
         //
         // If the user is not a Template Moderator or Admin then we need to do a final check to see
         // if there are permissions on the individual Feature
@@ -931,7 +932,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
       });
     }
-    
+
   }]);
 
 'use strict';
@@ -1554,9 +1555,27 @@ angular.module('practiceMonitoringAssessmentApp')
     //
     $scope.template = template;
     $scope.project = project;
+
+    //
+    // Setup the Site
+    //
     $scope.site = site;
+
     $scope.site.geolocation = null;
-    $scope.site.save = function() {
+
+    $scope.site.save = function($actionIndex) {
+
+      console.log('did something happen?', $actionIndex, $scope.page.actions[$actionIndex].loading);
+
+      //
+      // To allow users to continue we must have at least a land river segment
+      // associated with this site. County, Site, and State are not critical.
+      //
+      if (!$scope.site.type_f9d8609090494dac811e6a58eb8ef4be.length) {
+        $scope.page.actions[$actionIndex].loading =! $scope.page.actions[$actionIndex].loading;
+        $scope.site.invalidLandRiverSegment = true;
+        return;
+      }
 
       //
       // Make sure we've assigned a state to the state field based on user selections in the
@@ -1568,18 +1587,16 @@ angular.module('practiceMonitoringAssessmentApp')
         }
       }
 
-      
-
-
       Feature.UpdateFeature({
         storage: variables.storage,
         featureId: $scope.site.id,
         data: $scope.site
       }).then(function(response) {
-        //
-        // Refresh the page so that those things update appropriately.
-        //
-        $rootScope.page.refresh();
+
+        var projectId = $route.current.params.projectId,
+            redirect = '/projects/' + projectId;
+
+        $location.path(redirect);
 
       }).then(function(error) {
         // Do something with the error
@@ -1591,7 +1608,7 @@ angular.module('practiceMonitoringAssessmentApp')
       // Before we can remove the Site we need to remove the relationship it has with the Project
       //
       //
-      // Drop the siteId from the list of 
+      // Drop the siteId from the list of
       //
       angular.forEach($scope.project.type_646f23aa91a64f7c89a008322f4f1093, function(feature, $index) {
         if (feature.id === $scope.site.id) {
@@ -1604,7 +1621,7 @@ angular.module('practiceMonitoringAssessmentApp')
         featureId: $scope.project.id,
         data: $scope.project
       }).then(function(response) {
-        
+
         //
         // Now that the Project <> Site relationship has been removed, we can remove the Site
         //
@@ -1663,7 +1680,7 @@ angular.module('practiceMonitoringAssessmentApp')
         {
           type: 'button-link new',
           action: function($index) {
-            $scope.site.save();
+            $scope.site.save($index);
             $scope.page.actions[$index].loading = ! $scope.page.actions[$index].loading;
           },
           visible: false,
@@ -1702,13 +1719,13 @@ angular.module('practiceMonitoringAssessmentApp')
       },
       center: {
         lat: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[1] : 38.362,
-        lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119, 
+        lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119,
         zoom: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? 16 : 6
       },
       markers: {
         LandRiverSegment: {
           lat: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[1] : 38.362,
-          lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119, 
+          lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119,
           focus: false,
           draggable: true,
           icon: {
@@ -1749,7 +1766,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.geolocation = {
       drawSegment: function(geojson) {
-          
+
         leafletData.getMap().then(function(map) {
           //
           // Reset the FeatureGroup because we don't want multiple parcels drawn on the map
@@ -1771,7 +1788,7 @@ angular.module('practiceMonitoringAssessmentApp')
       getSegment: function(coordinates) {
 
         $http({
-          method: 'GET', 
+          method: 'GET',
           url: '//api.commonscloud.org/v2/type_f9d8609090494dac811e6a58eb8ef4be/intersects.geojson',
           params: {
             geometry: coordinates.lng + ' ' + coordinates.lat
@@ -1829,7 +1846,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         $scope.map.markers.LandRiverSegment = {
           lat: geocode.center[1],
-          lng: geocode.center[0], 
+          lng: geocode.center[0],
           focus: false,
           draggable: true,
           icon: {
@@ -1846,7 +1863,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         $scope.map.center = {
           lat: geocode.center[1],
-          lng: geocode.center[0], 
+          lng: geocode.center[0],
           zoom: 16
         };
 
@@ -1881,7 +1898,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
       }
     };
-    
+
 
 
     $scope.site.processPin = function(coordinates, zoom) {
@@ -1917,7 +1934,7 @@ angular.module('practiceMonitoringAssessmentApp')
       //
       $scope.map.center = {
         lat: coordinates.lat,
-        lng: coordinates.lng, 
+        lng: coordinates.lng,
         zoom: (zoom < 10) ? 10 : zoom
       };
     };
@@ -1973,7 +1990,7 @@ angular.module('practiceMonitoringAssessmentApp')
       }).then(function(response) {
 
         $scope.user.template = response;
-        
+
         //
         // If the user is not a Template Moderator or Admin then we need to do a final check to see
         // if there are permissions on the individual Feature
@@ -2175,6 +2192,20 @@ angular.module('practiceMonitoringAssessmentApp')
       templates: {
         report: '/modules/components/practices/modules/bank-stabilization/views/report--view.html',
         form: '/modules/components/practices/modules/bank-stabilization/views/form--view.html'
+      }
+    },
+    'enhanced-stream-restoration': {
+      landuse: null,
+      storage: 'type_ff74e5abd79f4b2fbf04bf28168eaf97',
+      templateId: 383,
+      fields: {
+        Planning: [],
+        Installation: [],
+        Monitoring: []
+      },
+      templates: {
+        report: '/modules/components/practices/modules/enhanced-stream-restoration/views/report--view.html',
+        form: '/modules/components/practices/modules/enhanced-stream-restoration/views/form--view.html'
       }
     }
   });
@@ -2592,7 +2623,7 @@ angular.module('practiceMonitoringAssessmentApp')
     'hay without nutrients': 'hyo',
     'pasture': 'pas',
     'pasture nutrient management': 'npa',
-    'pasture corridor': 'trp',
+    'Trampled Riparian Pasture': 'trp',
     'animal feeding operations': 'afo',
     'nursery': 'urs',
     'concentrated animal feeding operations': 'cfo',
@@ -2750,7 +2781,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.template = template;
     $scope.fields = fields;
-    
+
     $scope.practice = practice;
     $scope.practice.practice_type = 'forest-buffer';
     $scope.practice.readings = readings;
@@ -2808,7 +2839,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
         //     for the Practice Reading table
-        //  2. Update the Practice to create a relationship with the Reading created in step 1 
+        //  2. Update the Practice to create a relationship with the Reading created in step 1
         //
         Feature.CreateFeature({
           storage: $scope.storage.storage,
@@ -2848,7 +2879,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
         //     for the Practice Reading table
-        //  2. Update the Practice to create a relationship with the Reading created in step 1 
+        //  2. Update the Practice to create a relationship with the Reading created in step 1
         //
         Feature.CreateFeature({
           storage: $scope.storage.storage,
@@ -2906,7 +2937,7 @@ angular.module('practiceMonitoringAssessmentApp')
           text: $scope.practice.name,
           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type,
           type: 'active'
-        }    
+        }
       ],
       actions: [
         {
@@ -3017,7 +3048,7 @@ angular.module('practiceMonitoringAssessmentApp')
           'Authorization': 'external'
         }
       }).success(function(data, status, headers, config) {
-        
+
         var efficieny = data.response.features[0],
             total_area = 0;
 
@@ -3042,40 +3073,100 @@ angular.module('practiceMonitoringAssessmentApp')
       return deferred.promise;
     };
 
+
     $scope.calculate.GetPreInstallationLoad = function(period) {
 
+      //
+      // Existing Landuse
+      //
       $scope.calculate.GetLoadVariables(period).then(function(loaddata) {
 
-        console.log('GetPreInstallationLoad', loaddata);
+        var uplandPreInstallationLoad = {
+          nitrogen: ((loaddata.area * 4)*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
+          phosphorus: ((loaddata.area * 2)*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
+          sediment: (((loaddata.area * 2)*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
+        };
 
-        var results = {
+        var existingPreInstallationLoad = {
           nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
           phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
           sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
         };
 
-        console.log('results', results);
+        $scope.calculate.results.totalPreInstallationLoad = {
+          nitrogen: uplandPreInstallationLoad.nitrogen + existingPreInstallationLoad.nitrogen,
+          phosphorus: uplandPreInstallationLoad.phosphorus + existingPreInstallationLoad.phosphorus,
+          sediment: uplandPreInstallationLoad.sediment + existingPreInstallationLoad.sediment
+        };
 
-        $scope.calculate.results.totalPreInstallationLoad = results;
       });
+
 
     };
 
     $scope.calculate.GetPlannedLoad = function(period) {
 
-      $scope.calculate.GetLoadVariables(period, $scope.storage.landuse).then(function(loaddata) {
+      var existingLanduseType;
 
-        console.log('GetPlannedLoad', loaddata);
+      for (var i = 0; i < $scope.practice.readings.length; i++) {
+        if ($scope.practice.readings[i].measurement_period === 'Planning') {
+          existingLanduseType = $scope.landuse[$scope.practice.readings[i].existing_riparian_landuse.toLowerCase()];
+        }
+      }
 
-        var results = {
-          nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
-          phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
-          sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
-        };
+      $scope.calculate.GetLoadVariables(period, existingLanduseType).then(function(existingLoaddata) {
+        $scope.calculate.GetLoadVariables(period, $scope.storage.landuse).then(function(newLoaddata) {
 
-        console.log('results', results);
+          //
+          // EXISTING CONDITION — LOAD VALUES
+          //
+          var existingLanduse = {
+            nitrogen: (existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres),
+            phosphorus: (existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres),
+            sediment: (existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)
+          };
 
-        $scope.calculate.results.totalPlannedLoad = results;
+          console.log('existingLanduse', existingLanduse, existingLoaddata);
+
+          var newLanduse = {
+            nitrogen: (newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres),
+            phosphorus: (newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres),
+            sediment: (newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)
+          };
+
+          console.log('newLanduse', newLanduse, newLoaddata);
+
+          var existingLanduseResults = {
+            nitrogen: (existingLoaddata.area*(existingLanduse.nitrogen-newLanduse.nitrogen)),
+            phosphorus: (existingLoaddata.area*(existingLanduse.phosphorus-newLanduse.phosphorus)),
+            sediment: ((existingLoaddata.area*(existingLanduse.sediment-newLanduse.sediment))/2000)
+          };
+
+
+          //
+          // PLANNED CONDITIONS — LANDUSE VALUES
+          //
+
+
+          // $scope.calculate.results.totalPlannedLoad = null; // was set to results
+
+
+
+          //
+          // @todo This is most of the way there. At this point we need to grab
+          //       pre-project information (C:19 in the CalcCheck 1 sheet), we
+          //       then take that number (0.15 in this case) and multiple it by
+          //       a percentage format of the ForestBuffer efficiency see (I:3
+          //       from the CalcCheck 1 sheet).
+          //
+          //       After this We take our planned upland and add it to the
+          //       existing to result in our TOTAL SEDIMENT LOAD REDUCTION
+          //       (C:40 in CalcCheck 1 sheet)
+          //
+          //
+
+
+        });
       });
 
     };
@@ -3228,6 +3319,7 @@ angular.module('practiceMonitoringAssessmentApp')
         total: $scope.calculate.GetPercentageOfInstalled('length_of_buffer')
       },
       percentageTreesPlanted: {
+
         percentage: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted', 'percentage'),
         total: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted')
       },
@@ -3255,7 +3347,7 @@ angular.module('practiceMonitoringAssessmentApp')
       }).then(function(response) {
 
         $scope.user.template = response;
-        
+
         //
         // If the user is not a Template Moderator or Admin then we need to do a final check to see
         // if there are permissions on the individual Feature
@@ -4525,7 +4617,7 @@ angular.module('practiceMonitoringAssessmentApp')
         return ((quantity*multiplier)/1000);
       },
       totalDaysPerYearInStream: function(values) {
-        return values.instream_dpmjan+values.instream_dpmfeb+values.instream_dpmmar+values.instream_dpmapr+values.instream_dpmmay+values.instream_dpmjun+values.instream_dpmjul+values.instream_dpmaug+values.instream_dpmsep+values.instream_dpmoct+values.instream_dpmnov+values.instream_dpmdec; 
+        return values.instream_dpmjan+values.instream_dpmfeb+values.instream_dpmmar+values.instream_dpmapr+values.instream_dpmmay+values.instream_dpmjun+values.instream_dpmjul+values.instream_dpmaug+values.instream_dpmsep+values.instream_dpmoct+values.instream_dpmnov+values.instream_dpmnov+values.instream_dpmdec; 
       },
       averageHoursPerYearInStream: function(values) {
         var totalHoursPerYearInStream = values.instream_hpdjan+values.instream_hpdfeb+values.instream_hpdmar+values.instream_hpdapr+values.instream_hpdmay+values.instream_hpdjun+values.instream_hpdjul+values.instream_hpdaug+values.instream_hpdsep+values.instream_hpdoct+values.instream_hpdnov+values.instream_hpddec; 
@@ -5716,7 +5808,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('UrbanHomeownerReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', 'CalculateUrbanHomeowner', 'Calculate', 'StateLoad', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateUrbanHomeowner, Calculate, StateLoad) {
+  .controller('UrbanHomeownerReportController', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateUrbanHomeowner, Calculate, StateLoad) {
 
     //
     // Assign project to a scoped variable
@@ -5726,7 +5818,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.template = template;
     $scope.fields = fields;
-    
+
     $scope.practice = practice;
     $scope.practice.practice_type = 'urban-homeowner';
     $scope.practice.readings = readings;
@@ -5763,6 +5855,8 @@ angular.module('practiceMonitoringAssessmentApp')
           tss_ual: feature.tss_ual
         };
       });
+    }, function(errorResponse) {
+      console.log('errorResponse', errorResponse);
     });
 
 
@@ -5843,7 +5937,7 @@ angular.module('practiceMonitoringAssessmentApp')
           'Authorization': 'external'
         }
       }).success(function(data, status, headers, config) {
-        
+
         var efficieny = data.response.features[0],
             total_area = 0;
 
@@ -6101,7 +6195,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
         //     for the Practice Reading table
-        //  2. Update the Practice to create a relationship with the Reading created in step 1 
+        //  2. Update the Practice to create a relationship with the Reading created in step 1
         //
         Feature.CreateFeature({
           storage: $scope.storage.storage,
@@ -6141,7 +6235,7 @@ angular.module('practiceMonitoringAssessmentApp')
         //
         //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
         //     for the Practice Reading table
-        //  2. Update the Practice to create a relationship with the Reading created in step 1 
+        //  2. Update the Practice to create a relationship with the Reading created in step 1
         //
         Feature.CreateFeature({
           storage: $scope.storage.storage,
@@ -6199,7 +6293,7 @@ angular.module('practiceMonitoringAssessmentApp')
           text: $scope.practice.name,
           url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type,
           type: 'active'
-        }    
+        }
       ],
       actions: [
         {
@@ -6247,7 +6341,7 @@ angular.module('practiceMonitoringAssessmentApp')
       }).then(function(response) {
 
         $scope.user.template = response;
-        
+
         //
         // If the user is not a Template Moderator or Admin then we need to do a final check to see
         // if there are permissions on the individual Feature
@@ -6268,8 +6362,8 @@ angular.module('practiceMonitoringAssessmentApp')
 
       });
     }
-    
-  }]);
+
+  });
 
 'use strict';
 
@@ -6573,47 +6667,52 @@ angular.module('practiceMonitoringAssessmentApp')
       adjustorCurveNitrogen: function(value, format) {
 
         var self = this,
-            rainfallDepthTreated = self.rainfallDepthTreated(value),
-            first = 0.0308*Math.pow(rainfallDepthTreated, 5),
-            second = 0.2562*Math.pow(rainfallDepthTreated, 4),
-            third = 0.8634*Math.pow(rainfallDepthTreated, 3),
-            fourth = 1.5285*Math.pow(rainfallDepthTreated, 2),
-            fifth = 1.501*rainfallDepthTreated,
+            depthTreated = value.bioretention_runoff_volume_captured, // Make sure we change this in the database
+            runoffVolumeCaptured = self.runoffVolumeCaptured(value),
+            first = 0.0308*Math.pow(depthTreated, 5),
+            second = 0.2562*Math.pow(depthTreated, 4),
+            third = 0.8634*Math.pow(depthTreated, 3),
+            fourth = 1.5285*Math.pow(depthTreated, 2),
+            fifth = 1.501*depthTreated,
             reduction = (first-second+third-fourth+fifth-0.013);
 
         return (format === '%') ? reduction*100 : reduction;
       },
-      adjustorCurvePhosphorus: function(value) {
+      adjustorCurvePhosphorus: function(value, format) {
 
         var self = this,
-            rainfallDepthTreated = self.rainfallDepthTreated(value),
-            first = 0.0304*Math.pow(rainfallDepthTreated, 5),
-            second = 0.2619*Math.pow(rainfallDepthTreated, 4),
-            third = 0.9161*Math.pow(rainfallDepthTreated, 3),
-            fourth = 1.6837*Math.pow(rainfallDepthTreated, 2),
-            fifth = 1.7072*rainfallDepthTreated,
+            depthTreated = value.bioretention_runoff_volume_captured, // Make sure we change this in the database
+            runoffVolumeCaptured = self.runoffVolumeCaptured(value), // we need to make sure that this number is 0 before actually doing the rest of the calculation
+            first = 0.0304*Math.pow(depthTreated, 5),
+            second = 0.2619*Math.pow(depthTreated, 4),
+            third = 0.9161*Math.pow(depthTreated, 3),
+            fourth = 1.6837*Math.pow(depthTreated, 2),
+            fifth = 1.7072*depthTreated,
             reduction = (first-second+third-fourth+fifth-0.0091);
 
-        return reduction*100;
+        return (format === '%') ? reduction*100 : reduction;
       },
-      adjustorCurveSediment: function(value) {
+      adjustorCurveSediment: function(value, format) {
 
         var self = this,
-            rainfallDepthTreated = self.rainfallDepthTreated(value),
-            first = 0.0326*Math.pow(rainfallDepthTreated, 5),
-            second = 0.2806*Math.pow(rainfallDepthTreated, 4),
-            third = 0.9816*Math.pow(rainfallDepthTreated, 3),
-            fourth = 1.8039*Math.pow(rainfallDepthTreated, 2),
-            fifth = 1.8292*rainfallDepthTreated,
+            depthTreated = value.bioretention_runoff_volume_captured, // Make sure we change this in the database
+            runoffVolumeCaptured = self.runoffVolumeCaptured(value), // we need to make sure that this number is 0 before actually doing the rest of the calculation
+            first = 0.0326*Math.pow(depthTreated, 5),
+            second = 0.2806*Math.pow(depthTreated, 4),
+            third = 0.9816*Math.pow(depthTreated, 3),
+            fourth = 1.8039*Math.pow(depthTreated, 2),
+            fifth = 1.8292*depthTreated,
             reduction = (first-second+third-fourth+fifth-0.0098);
 
-        return reduction*100;
+        return (format === '%') ? reduction*100 : reduction;
       },
       rainfallDepthTreated: function(value) {
         return (value.bioretention_runoff_volume_captured/(value.bioretention_impervious_area/43560))*12;
       },
       gallonsReducedPerYear: function(value) {
-        return (value.bioretention_runoff_volume_captured/325851.4);
+        var runoffVolumeCaptured = this.runoffVolumeCaptured(value);
+
+        return (runoffVolumeCaptured*325851.4);
       },
       preInstallationNitrogenLoad: function(value, loaddata) {
         return ((value.bioretention_impervious_area*loaddata.impervious.tn_ual) + ((value.bioretention_total_drainage_area-value.bioretention_impervious_area)*loaddata.pervious.tn_ual))/43560;
@@ -6759,9 +6858,13 @@ angular.module('practiceMonitoringAssessmentApp')
         }
 
         return 0;
+      },
+      runoffVolumeCaptured: function(value) {
+        return (value.bioretention_runoff_volume_captured*value.bioretention_impervious_area)/(12*43560);
       }
     };
   }]);
+
 'use strict';
 
 /**
@@ -8247,10 +8350,9 @@ angular.module('practiceMonitoringAssessmentApp')
             soilNDensity = value.installation_soil_n_content,
             soilPDensity = value.installation_soil_p_content,
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
-            loadTotal = baseLength*squareRoot*ler*soilDensity,
-            conversion = (43560*2000);
+            loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return loadTotal/conversion;
+        return loadTotal/2000;
       },
       plannedSedimentLoadReduction: function(value) {
 
@@ -8260,10 +8362,9 @@ angular.module('practiceMonitoringAssessmentApp')
             soilNDensity = value.installation_soil_n_content,
             soilPDensity = value.installation_soil_p_content,
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
-            loadTotal = baseLength*squareRoot*ler*soilDensity,
-            conversion = (43560*2000);
+            loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return loadTotal/conversion;
+        return loadTotal/2000;
       },
       installedSedimentLoadReduction: function(values, format) {
 
@@ -8300,10 +8401,9 @@ angular.module('practiceMonitoringAssessmentApp')
             soilDensity = value.installation_soil_bulk_density,
             soilNDensity = value.installation_soil_n_content,
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
-            loadTotal = baseLength*squareRoot*ler*soilDensity,
-            conversion = (43560*2000);
+            loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return (loadTotal/conversion)*soilNDensity;
+        return (loadTotal/2000)*soilNDensity;
       },
       plannedNitrogenLoadReduction: function(value) {
 
@@ -8312,10 +8412,9 @@ angular.module('practiceMonitoringAssessmentApp')
             soilDensity = value.installation_soil_bulk_density,
             soilNDensity = value.installation_soil_n_content,
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
-            loadTotal = baseLength*squareRoot*ler*soilDensity,
-            conversion = (43560*2000);
+            loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return (loadTotal/conversion)*soilNDensity;
+        return (loadTotal/2000)*soilNDensity;
       },
       installedNitrogenLoadReduction: function(values, format) {
 
@@ -8352,10 +8451,9 @@ angular.module('practiceMonitoringAssessmentApp')
             soilDensity = value.installation_soil_bulk_density,
             soilPDensity = value.installation_soil_p_content,
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
-            loadTotal = baseLength*squareRoot*ler*soilDensity,
-            conversion = (43560*2000);
+            loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return (loadTotal/conversion)*soilPDensity;
+        return (loadTotal/2000)*soilPDensity;
       },
       plannedPhosphorusLoadReduction: function(value) {
 
@@ -8364,10 +8462,9 @@ angular.module('practiceMonitoringAssessmentApp')
             soilDensity = value.installation_soil_bulk_density,
             soilPDensity = value.installation_soil_p_content,
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
-            loadTotal = baseLength*squareRoot*ler*soilDensity,
-            conversion = (43560*2000);
+            loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return (loadTotal/conversion)*soilPDensity;
+        return (loadTotal/2000)*soilPDensity;
       },
       installedPhosphorusLoadReduction: function(values, format) {
 
@@ -8930,6 +9027,632 @@ angular.module('practiceMonitoringAssessmentApp')
 
   });
 
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc overview
+   * @name
+   * @description
+   */
+  angular.module('practiceMonitoringAssessmentApp')
+    .config(function($routeProvider, commonscloud) {
+
+      $routeProvider
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/enhanced-stream-restoration', {
+          templateUrl: '/modules/shared/default.html',
+          controller: 'EnhancedStreamRestorationReportController',
+          resolve: {
+            user: function(User, $route) {
+              return User.getUser({
+                featureId: $route.current.params.projectId,
+                templateId: commonscloud.collections.site.templateId
+              });
+            },
+            project: function(Feature, $route) {
+              return Feature.GetFeature({
+                storage: commonscloud.collections.project.storage,
+                featureId: $route.current.params.projectId
+              });
+            },
+            template: function(Template, $route) {
+              return Template.GetTemplate(commonscloud.collections.site.templateId);
+            },
+            fields: function(Field, $route) {
+              return Field.GetPreparedFields(commonscloud.collections.site.templateId, 'object');
+            },
+            site: function(Feature, $route) {
+              return Feature.GetFeature({
+                storage: commonscloud.collections.site.storage,
+                featureId: $route.current.params.siteId
+              });
+            },
+            practice: function(Feature, $route) {
+              return Feature.GetFeature({
+                storage: commonscloud.collections.practice.storage,
+                featureId: $route.current.params.practiceId
+              });
+            },
+            readings: function(Storage, Feature, $route) {
+              return Feature.GetRelatedFeatures({
+                storage: commonscloud.collections.practice.storage,
+                relationship: Storage['enhanced-stream-restoration'].storage,
+                featureId: $route.current.params.practiceId
+              });
+            }
+          }
+        })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/enhanced-stream-restoration/:reportId/edit', {
+          templateUrl: '/modules/shared/default.html',
+          controller: 'EnhancedStreamRestorationFormController',
+          resolve: {
+            user: function(User, $route) {
+              return User.getUser({
+                featureId: $route.current.params.projectId,
+                templateId: commonscloud.collections.site.templateId
+              });
+            },
+            project: function(Feature, $route) {
+              return Feature.GetFeature({
+                storage: commonscloud.collections.project.storage,
+                featureId: $route.current.params.projectId
+              });
+            },
+            site: function(Feature, $route) {
+              return Feature.GetFeature({
+                storage: commonscloud.collections.site.storage,
+                featureId: $route.current.params.siteId
+              });
+            },
+            practice: function(Feature, $route) {
+              return Feature.GetFeature({
+                storage: commonscloud.collections.practice.storage,
+                featureId: $route.current.params.practiceId
+              });
+            },
+            template: function(Template, $route) {
+              return Template.GetTemplate(commonscloud.collections.practice.templateId);
+            },
+            fields: function(Field, $route) {
+              return Field.GetPreparedFields(commonscloud.collections.practice.templateId, 'object');
+            }
+          }
+        });
+
+    });
+
+
+}());
+
+(function () {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('practiceMonitoringAssessmentApp')
+    .service('EnhancedStreamRestorationCalculate', function() {
+      return {
+        quantityInstalled: function(values, field, format) {
+
+          var planned_total = 0,
+              installed_total = 0,
+              percentage = 0;
+
+          // Get readings organized by their Type
+          angular.forEach(values, function(reading, $index) {
+
+            if (reading.measurement_period === 'Planning') {
+              planned_total += reading[field];
+            } else if (reading.measurement_period === 'Installation') {
+              installed_total += reading[field];
+            }
+
+          });
+
+          // Divide the Installed Total by the Planned Total to get a percentage of installed
+          if (planned_total >= 1) {
+            if (format === '%') {
+              percentage = (installed_total/planned_total);
+              return (percentage*100);
+            } else {
+              return installed_total;
+            }
+          }
+
+          return 0;
+        }
+      };
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc function
+   * @name
+   * @description
+   */
+  angular.module('practiceMonitoringAssessmentApp')
+    .controller('EnhancedStreamRestorationReportController', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, user, Template, Feature, Field, template, project, site, practice, readings, commonscloud, Storage, Landuse, EnhancedStreamRestorationCalculate, Calculate, StateLoad) {
+
+      //
+      // Assign project to a scoped variable
+      //
+      $scope.project = project;
+      $scope.site = site;
+
+      $scope.template = template;
+
+      $scope.practice = practice;
+      $scope.practice.practice_type = 'enhanced-stream-restoration';
+      $scope.practice.readings = readings;
+
+      $scope.practice_efficiency = null;
+
+      $scope.storage = Storage[$scope.practice.practice_type];
+
+      $scope.user = user;
+      $scope.user.owner = false;
+      $scope.user.feature = {};
+      $scope.user.template = {};
+
+      $scope.landuse = Landuse;
+      $scope.calculate = EnhancedStreamRestorationCalculate;
+
+      Field.GetPreparedFields($scope.storage.templateId, 'object').then(function(response) {
+        $scope.fields = response;
+      });
+
+      //
+      // Retrieve State-specific Load Data
+      //
+      StateLoad.query({
+        q: {
+          filters: [
+            {
+              name: 'state',
+              op: 'eq',
+              val: $scope.site.site_state
+            }
+          ]
+        }
+      }, function(response) {
+        $scope.loaddata = {};
+
+        angular.forEach(response.response.features, function(feature, $index) {
+          $scope.loaddata[feature.developed_type] = {
+            tn_ual: feature.tn_ual,
+            tp_ual: feature.tp_ual,
+            tss_ual: feature.tss_ual
+          };
+        });
+
+      });
+
+
+      //
+      //
+      //
+      $scope.GetTotal = function(period) {
+
+        var total = 0;
+
+        for (var i = 0; i < $scope.practice.readings.length; i++) {
+          if ($scope.practice.readings[i].measurement_period === period) {
+            total++;
+          }
+        }
+
+        return total;
+      };
+
+      $scope.total = {
+        planning: $scope.GetTotal('Planning'),
+        installation: $scope.GetTotal('Installation'),
+        monitoring: $scope.GetTotal('Monitoring')
+      };
+
+      //
+      // Load Land river segment details
+      //
+      Feature.GetFeature({
+        storage: commonscloud.collections.land_river_segment.storage,
+        featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
+      }).then(function(response) {
+        $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0] = response;
+      });
+
+      $scope.readings = {
+        bufferWidth: function() {
+          for (var i = 0; i < $scope.practice.readings.length; i++) {
+            if ($scope.practice.readings[i].measurement_period === 'Planning') {
+              return $scope.practice.readings[i].average_width_of_buffer;
+            }
+          }
+        },
+        add: function(practice, readingType) {
+
+          var reportDate = new Date();
+
+          //
+          // Creating a practice reading is a two step process.
+          //
+          //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
+          //     for the Practice Reading table
+          //  2. Update the Practice to create a relationship with the Reading created in step 1
+          //
+          console.log('reportDate', reportDate, angular.isDate(reportDate), typeof reportDate);
+
+          Feature.CreateFeature({
+            storage: $scope.storage.storage,
+            data: {
+              measurement_period: (readingType) ? readingType : null,
+              report_date: reportDate,
+              owner: $scope.user.id,
+              status: 'private'
+            }
+          }).then(function(reportId) {
+
+            var data = {};
+            data[$scope.storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
+
+            //
+            // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
+            // to submit all relationships that are created and should remain. If we only submit the new
+            // ID the system will kick out the sites that were added previously.
+            //
+            Feature.UpdateFeature({
+              storage: commonscloud.collections.practice.storage,
+              featureId: practice.id,
+              data: data
+            }).then(function() {
+              //
+              // Once the new Reading has been associated with the existing Practice we need to
+              // display the form to the user, allowing them to complete it.
+              //
+              $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
+            });
+          });
+        },
+        addReading: function(practice, readingType) {
+          //
+          // Creating a practice reading is a two step process.
+          //
+          //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
+          //     for the Practice Reading table
+          //  2. Update the Practice to create a relationship with the Reading created in step 1
+          //
+          Feature.CreateFeature({
+            storage: $scope.storage.storage,
+            data: {
+              measurement_period: (readingType) ? readingType : null,
+              report_date: new Date(),
+              owner: $scope.user.id,
+              status: 'private'
+            }
+          }).then(function(reportId) {
+
+            var data = {};
+            data[$scope.storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
+
+            //
+            // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
+            // to submit all relationships that are created and should remain. If we only submit the new
+            // ID the system will kick out the sites that were added previously.
+            //
+            Feature.UpdateFeature({
+              storage: commonscloud.collections.practice.storage,
+              featureId: practice.id,
+              data: data
+            }).then(function() {
+              //
+              // Once the new Reading has been associated with the existing Practice we need to
+              // display the form to the user, allowing them to complete it.
+              //
+              $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
+            });
+          });
+        }
+      };
+
+      //
+      // Setup basic page variables
+      //
+      $rootScope.page = {
+        template: '/modules/components/practices/views/practices--view.html',
+        title: $scope.site.site_number + ' « ' + $scope.project.project_title,
+        links: [
+          {
+            text: 'Projects',
+            url: '/projects'
+          },
+          {
+            text: $scope.project.project_title,
+            url: '/projects/' + $scope.project.id,
+          },
+          {
+            text: $scope.site.site_number,
+            url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id
+          },
+          {
+            text: $scope.practice.name,
+            url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type,
+            type: 'active'
+          }
+        ],
+        actions: [
+          {
+            type: 'button-link new',
+            action: function() {
+              $scope.readings.add($scope.practice);
+            },
+            text: 'Add Measurement Data'
+          }
+        ],
+        refresh: function() {
+          $route.reload();
+        }
+      };
+
+
+      $scope.GetAllReadings = function(existingReadings, readingId) {
+
+        var updatedReadings = [{
+          id: readingId // Start by adding the newest relationships, then we'll add the existing sites
+        }];
+
+        angular.forEach(existingReadings, function(reading, $index) {
+          updatedReadings.push({
+            id: reading.id
+          });
+        });
+
+        return updatedReadings;
+      };
+
+
+      //
+      // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
+      // backend functionality. Even if the user guesses the URL the API will stop them from editing the
+      // actual Feature within the system
+      //
+      if ($scope.user.id === $scope.project.owner) {
+        $scope.user.owner = true;
+      } else {
+        Template.GetTemplateUser({
+          storage: commonscloud.collections.project.storage,
+          templateId: $scope.template.id,
+          userId: $scope.user.id
+        }).then(function(response) {
+
+          $scope.user.template = response;
+
+          //
+          // If the user is not a Template Moderator or Admin then we need to do a final check to see
+          // if there are permissions on the individual Feature
+          //
+          if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
+            Feature.GetFeatureUser({
+              storage: commonscloud.collections.project.storage,
+              featureId: $route.current.params.projectId,
+              userId: $scope.user.id
+            }).then(function(response) {
+              $scope.user.feature = response;
+              if ($scope.user.feature.is_admin || $scope.user.feature.write) {
+              } else {
+                $location.path('/projects/' + $route.current.params.projectId);
+              }
+            });
+          }
+
+        });
+      }
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc function
+   * @name
+   * @description
+   */
+  angular.module('practiceMonitoringAssessmentApp')
+    .controller('EnhancedStreamRestorationFormController', function ($rootScope, $scope, $route, $location, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
+
+      //
+      // Assign project to a scoped variable
+      //
+      $scope.template = template;
+
+      $scope.report = {};
+
+      $scope.project = project;
+      $scope.practice = practice;
+      $scope.practice.practice_type = 'enhanced-stream-restoration';
+
+      $scope.storage = Storage[$scope.practice.practice_type];
+
+      $scope.site = site;
+      $scope.user = user;
+      $scope.user.owner = false;
+      $scope.user.feature = {};
+      $scope.user.template = {};
+
+      $scope.save = function() {
+        Feature.UpdateFeature({
+          storage: $scope.storage.storage,
+          featureId: $scope.report.id,
+          data: $scope.report
+        }).then(function(response) {
+          $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type);
+        }).then(function(error) {
+          // Do something with the error
+        });
+      };
+
+      $scope.delete = function() {
+
+        //
+        // Before we can remove the Practice we need to remove the relationship it has with the Site
+        //
+        //
+        angular.forEach($scope.practice[$scope.storage.storage], function(feature, $index) {
+          if (feature.id === $scope.report.id) {
+            $scope.practice[$scope.storage.storage].splice($index, 1);
+          }
+        });
+
+        Feature.UpdateFeature({
+          storage: commonscloud.collections.practice.storage,
+          featureId: $scope.practice.id,
+          data: $scope.practice
+        }).then(function(response) {
+
+          //
+          // Now that the Project <> Site relationship has been removed, we can remove the Site
+          //
+          Feature.DeleteFeature({
+            storage: $scope.storage.storage,
+            featureId: $scope.report.id
+          }).then(function(response) {
+            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type);
+          });
+
+        });
+
+      };
+
+      Field.GetPreparedFields($scope.storage.templateId, 'object').then(function(response) {
+        $scope.fields = response;
+      });
+
+      Feature.GetFeature({
+        storage: $scope.storage.storage,
+        featureId: $route.current.params.reportId
+      }).then(function(report) {
+
+        //
+        // Load the reading into the scope
+        //
+        $scope.report = report;
+
+        console.log('report', report);
+
+        $scope.report.template = $scope.storage.templates.form;
+
+        //
+        // Add the reading information to the breadcrumbs
+        //
+        var page_title = 'Editing the ' + $scope.report.measurement_period + ' Report';
+
+        $rootScope.page.links.push({
+          text: page_title,
+          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + $scope.report.id + '/edit'
+        });
+
+        $rootScope.page.title = page_title;
+
+      });
+
+      //
+      // Setup basic page variables
+      //
+      $rootScope.page = {
+        template: '/modules/components/practices/views/practices--form.html',
+        title: null,
+        links: [
+          {
+            text: 'Projects',
+            url: '/projects'
+          },
+          {
+            text: $scope.project.project_title,
+            url: '/projects/' + $scope.project.id,
+          },
+          {
+            text: $scope.site.site_number,
+            url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id
+          },
+          {
+            text: $scope.practice.name,
+            url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + Feature.MachineReadable($scope.practice.practice_type)
+          }
+        ],
+        actions: [
+          {
+            type: 'button-link',
+            action: function($index) {
+              $scope.delete();
+            },
+            visible: false,
+            loading: false,
+            text: 'Delete Report'
+          },
+          {
+            type: 'button-link new',
+            action: function($index) {
+              $scope.save();
+              $scope.page.actions[$index].loading = ! $scope.page.actions[$index].loading;
+            },
+            visible: false,
+            loading: false,
+            text: 'Save Changes'
+          }
+        ],
+        refresh: function() {
+          $route.reload();
+        }
+      };
+
+      //
+      // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
+      // backend functionality. Even if the user guesses the URL the API will stop them from editing the
+      // actual Feature within the system
+      //
+      if ($scope.user.id === $scope.project.owner) {
+        $scope.user.owner = true;
+      } else {
+        Template.GetTemplateUser({
+          storage: $scope.storage.storage,
+          templateId: $scope.template.id,
+          userId: $scope.user.id
+        }).then(function(response) {
+
+          $scope.user.template = response;
+
+          //
+          // If the user is not a Template Moderator or Admin then we need to do a final check to see
+          // if there are permissions on the individual Feature
+          //
+          if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
+            Feature.GetFeatureUser({
+              storage: $scope.storage.storage,
+              featureId: $scope.report.id,
+              userId: $scope.user.id
+            }).then(function(response) {
+              $scope.user.feature = response;
+            });
+          }
+
+        });
+      }
+
+    });
+
+}());
+
 'use strict';
 
 /**
@@ -9214,7 +9937,7 @@ angular.module('practiceMonitoringAssessmentApp')
  */
 angular.module('practiceMonitoringAssessmentApp')
   .directive('mapboxGeocoder', ['$compile', '$http', '$templateCache', '$timeout', 'mapbox', 'geocoding', 'TemplateLoader', function ($compile, $http, $templateCache, $timeout, mapbox, geocoding, TemplateLoader) {
-     
+
     return {
         restrict: 'A',
         scope: {
@@ -9230,7 +9953,7 @@ angular.module('practiceMonitoringAssessmentApp')
           // Setup up our timeout and the Template we will use for display the
           // results from the Mapbox Geocoding API back to the user making the
           // Request
-          // 
+          //
           var timeout;
 
           //
@@ -9294,7 +10017,7 @@ angular.module('practiceMonitoringAssessmentApp')
               // Assign the selected value to back to our scope. The developer
               // should be able to use the results however they like. For
               // instance they may need to use the `Response` from this request
-              // to perform a query against another database for geolookup or 
+              // to perform a query against another database for geolookup or
               // save this value to the database.
               //
               scope.mapboxGeocoderQuery = selectedValue.place_name;
@@ -9311,6 +10034,7 @@ angular.module('practiceMonitoringAssessmentApp')
         }
     };
   }]);
+
 'use strict';
 
 /**
@@ -9653,15 +10377,19 @@ angular.module('practiceMonitoringAssessmentApp')
  * Service in the managerApp.
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .service('StateLoad', ['$resource', 'commonscloud', function ($resource, commonscloud) {
-    return $resource(commonscloud.baseurl + commonscloud.collections.stateloaddata.storage + '/:id.json', {
+  .service('StateLoad', function ($resource, commonscloud) {
+
+    var __url = commonscloud.baseurl + commonscloud.collections.stateloaddata.storage;
+
+    return $resource(__url + '/:id.json', {
       id: '@id'
     }, {
       query: {
+        method: 'GET',
         isArray: false
       },
     });
-  }]);
+  });
 
 'use strict';
 
@@ -9859,7 +10587,16 @@ angular.module('practiceMonitoringAssessmentApp')
       };
 
       Feature.MachineReadable = function(name) {
-        return name.replace('-', '').replace(' ', '-').toLowerCase();
+
+        if (name) {
+          var removeDashes = name.replace(/-/g, ''),
+              removeSpaces = removeDashes.replace(/ /g, '-'),
+              convertLowerCase = removeSpaces.toLowerCase();
+
+          return convertLowerCase;
+        }
+
+        return null;
       };
 
       Feature.HumanReadable = function(name) {
@@ -10611,105 +11348,107 @@ angular.module('practiceMonitoringAssessmentApp')
       };
   }]);
 
-'use strict';
+(function() {
 
-angular.module('practiceMonitoringAssessmentApp')
-  .directive('relationship', function ($http, $timeout) {
-  function link(scope, el, attrs) {
-    //create variables for needed DOM elements
-    var container = el.children()[0];
-    var input = angular.element(container.children[0]);
-    var dropdown = angular.element(container.children[1]);
-    var timeout;
-    scope.relationship_focus = false;
+  'use strict';
 
-    //$http request to be fired on search
-    var getFilteredResults = function(table){
-      var url = '//api.commonscloud.org/v2/' + table + '.json';
+  angular.module('practiceMonitoringAssessmentApp')
+    .directive('relationship', function ($http, $timeout) {
+      return {
+        scope: {
+          table: '=',
+          model: '=',
+          multiple: '=',
+          placeholder: '='
+        },
+        templateUrl: '/modules/shared/directives/relationship/relationship.html',
+        restrict: 'E',
+        link: function (scope, el, attrs) {
 
-      $http({
-        method: 'GET',
-        url: url,
-        params: {
-          'q': {
-            'filters':
-            [
-              {
-                'name': 'name',
-                'op': 'ilike',
-                'val': scope.searchText + '%'
+          var container = el.children()[0],
+              input = angular.element(container.children[0]),
+              dropdown = angular.element(container.children[1]),
+              timeout;
+
+          scope.relationship_focus = false;
+          console.log('multiple', scope.multiple);
+          console.log('placeholder', scope.placeholder);
+
+          var getFilteredResults = function(table){
+            var url = '//api.commonscloud.org/v2/' + table + '.json';
+
+            $http({
+              method: 'GET',
+              url: url,
+              params: {
+                'q': {
+                  'filters':
+                  [
+                    {
+                      'name': 'name',
+                      'op': 'ilike',
+                      'val': scope.searchText + '%'
+                    }
+                  ]
+                },
+                'results_per_page': 25
               }
-            ]
-          },
-          'results_per_page': 25
+            }).success(function(data){
+              //assign feature objects to scope for use in template
+              scope.features = data.response.features;
+            });
+          };
+
+          var set = function(arr) {
+            return arr.reduce(function (a, val) {
+              if (a.indexOf(val) === -1) {
+                  a.push(val);
+              }
+              return a;
+            }, []);
+          };
+
+          //search with timeout to prevent it from firing on every keystroke
+          scope.search = function(){
+            $timeout.cancel(timeout);
+
+            timeout = $timeout(function () {
+              getFilteredResults(scope.table);
+            }, 200);
+          };
+
+          scope.addFeatureToRelationships = function(feature){
+
+            if (angular.isArray(scope.model)) {
+              scope.model.push(feature);
+            } else {
+              scope.model = [];
+              scope.model.push(feature);
+            }
+
+            scope.model = set(scope.model);
+
+            // Clear out input field
+            scope.searchText = '';
+            scope.features = [];
+          };
+
+          scope.removeFeatureFromRelationships = function(index) {
+            scope.model.splice(index, 1);
+          };
+
+          scope.resetField = function() {
+            scope.searchText = '';
+            scope.features = [];
+            scope.relationship_focus = false;
+            console.log('Field reset');
+          };
+
         }
-      }).success(function(data){
-        //assign feature objects to scope for use in template
-        scope.features = data.response.features;
-      });
-    };
+      };
+  });
 
-    var set = function(arr) {
-      return arr.reduce(function (a, val) {
-        if (a.indexOf(val) === -1) {
-            a.push(val);
-        }
-        return a;
-      }, []);
-    };
-
-    //search with timeout to prevent it from firing on every keystroke
-    scope.search = function(){
-      $timeout.cancel(timeout);
-
-      timeout = $timeout(function () {
-        getFilteredResults(scope.table);
-      }, 200);
-    };
-
-    scope.addFeatureToRelationships = function(feature){
-
-      if (angular.isArray(scope.model)) {
-        // scope.human_readable_values.push(feature);
-        scope.model.push(feature);
-      } else {
-        scope.model = [];
-        // scope.human_readable_values.push(feature);
-        scope.model.push(feature);
-      }
-
-      scope.model = set(scope.model);
-
-      // Clear out input field
-      scope.searchText = '';
-      scope.features = [];
-    };
-
-    scope.removeFeatureFromRelationships = function(index) {
-      scope.model.splice(index, 1);
-    };
-
-    scope.resetField = function() {
-      scope.searchText = '';
-      scope.features = [];
-      scope.relationship_focus = false;
-      console.log('Field reset');
-    };
-
-  }
-
-  return {
-    scope: {
-      table: '=',
-      model: '=',
-      fields: '=',
-      placeholder: '='
-    },
-    templateUrl: '/modules/shared/directives/relationship/relationship.html',
-    restrict: 'E',
-    link: link
-  };
-});
+}());
 
 'use strict';
 
