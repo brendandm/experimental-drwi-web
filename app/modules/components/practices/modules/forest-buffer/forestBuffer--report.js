@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ForestBufferReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse) {
+  .controller('ForestBufferReportController', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse) {
 
     //
     // Assign project to a scoped variable
@@ -324,11 +324,15 @@ angular.module('practiceMonitoringAssessmentApp')
           sediment: (((loaddata.area * 2)*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
         };
 
+        console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad, loaddata);
+
         var existingPreInstallationLoad = {
           nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
           phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
           sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
         };
+
+        console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad, loaddata);
 
         $scope.calculate.results.totalPreInstallationLoad = {
           nitrogen: uplandPreInstallationLoad.nitrogen + existingPreInstallationLoad.nitrogen,
@@ -357,36 +361,41 @@ angular.module('practiceMonitoringAssessmentApp')
           //
           // EXISTING CONDITION — LOAD VALUES
           //
-          var existingLanduse = {
-            nitrogen: (existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres),
-            phosphorus: (existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres),
-            sediment: (existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)
+          var uplandPlannedInstallationLoad = {
+            sediment: $scope.calculate.results.totalPreInstallationLoad.sediment*((newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)/100),
+            // nitrogen: (newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres),
+            // phosphorus: (newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)
           };
 
-          console.log('existingLanduse', existingLanduse, existingLoaddata);
+          console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad, newLoaddata.efficieny, newLoaddata);
 
-          var newLanduse = {
-            nitrogen: (newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres),
-            phosphorus: (newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres),
-            sediment: (newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)
-          };
-
-          console.log('newLanduse', newLanduse, newLoaddata);
-
-          var existingLanduseResults = {
-            nitrogen: (existingLoaddata.area*(existingLanduse.nitrogen-newLanduse.nitrogen)),
-            phosphorus: (existingLoaddata.area*(existingLanduse.phosphorus-newLanduse.phosphorus)),
-            sediment: ((existingLoaddata.area*(existingLanduse.sediment-newLanduse.sediment))/2000)
-          };
-
+          // var existingPlannedInstallationLoad = {
+          //   nitrogen: (existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres),
+          //   phosphorus: (existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres),
+          //   sediment: (existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)
+          // };
+          //
+          // console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad, existingLoaddata);
+          //
+          // var existingLanduseResults = {
+          //   nitrogen: (existingLoaddata.area*(existingPlannedInstallationLoad.nitrogen-uplandPlannedInstallationLoad.nitrogen)),
+          //   phosphorus: (existingLoaddata.area*(existingPlannedInstallationLoad.phosphorus-uplandPlannedInstallationLoad.phosphorus)),
+          //   sediment: ((existingLoaddata.area*(existingPlannedInstallationLoad.sediment-uplandPlannedInstallationLoad.sediment))/2000)
+          // };
+          //
+          // console.log('PLANNED existingLanduseResults', existingLanduseResults, existingLoaddata);
+          //
 
           //
           // PLANNED CONDITIONS — LANDUSE VALUES
           //
-
+          $scope.calculate.results.totalPlannedLoad = {
+            // nitrogen: uplandPreInstallationLoad.nitrogen + existingPreInstallationLoad.nitrogen,
+            // phosphorus: uplandPreInstallationLoad.phosphorus + existingPreInstallationLoad.phosphorus,
+            // sediment: uplandPreInstallationLoad.sediment + existingPreInstallationLoad.sediment
+          };
 
           // $scope.calculate.results.totalPlannedLoad = null; // was set to results
-
 
 
           //
@@ -607,4 +616,4 @@ angular.module('practiceMonitoringAssessmentApp')
     }
 
 
-  }]);
+  });

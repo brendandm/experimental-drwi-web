@@ -128,6 +128,19 @@
 
             <p data-ng-if="fields.average_buffer_width.help" class="help-text">{{ fields.average_buffer_width.help }}</p>
           </div>
+          <!-- Buffer Type -->
+          <div class="column-1"></div>
+          <div class="form-group column-4">
+            <label for="buffer_type" class="control-label">
+              Buffer Type
+            </label>
+
+            <select data-ng-model="report.buffer_type" class="form-control" class="form-control" type="number" id="buffer_type" name="buffer_type">
+              <option>Select a buffer type</option>
+              <option value="Forest Buffer">Forest Buffer</option>
+              <option value="Grass Buffer">Grass Buffer</option>
+            </select>
+          </div>
         </div>
         <div class="row">
           <!-- Length of Fencing -->
