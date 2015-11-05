@@ -12,7 +12,7 @@ angular.module('practiceMonitoringAssessmentApp')
       adjustorCurveNitrogen: function(value, format) {
 
         var self = this,
-            depthTreated = value.bioretention_runoff_volume_captured, // Make sure we change this in the database
+            depthTreated = value.rainfall_depth_treated, // Make sure we change this in the database
             runoffVolumeCaptured = self.runoffVolumeCaptured(value),
             first = 0.0308*Math.pow(depthTreated, 5),
             second = 0.2562*Math.pow(depthTreated, 4),
@@ -26,7 +26,7 @@ angular.module('practiceMonitoringAssessmentApp')
       adjustorCurvePhosphorus: function(value, format) {
 
         var self = this,
-            depthTreated = value.bioretention_runoff_volume_captured, // Make sure we change this in the database
+            depthTreated = value.rainfall_depth_treated, // Make sure we change this in the database
             runoffVolumeCaptured = self.runoffVolumeCaptured(value), // we need to make sure that this number is 0 before actually doing the rest of the calculation
             first = 0.0304*Math.pow(depthTreated, 5),
             second = 0.2619*Math.pow(depthTreated, 4),
@@ -40,7 +40,7 @@ angular.module('practiceMonitoringAssessmentApp')
       adjustorCurveSediment: function(value, format) {
 
         var self = this,
-            depthTreated = value.bioretention_runoff_volume_captured, // Make sure we change this in the database
+            depthTreated = value.rainfall_depth_treated, // Make sure we change this in the database
             runoffVolumeCaptured = self.runoffVolumeCaptured(value), // we need to make sure that this number is 0 before actually doing the rest of the calculation
             first = 0.0326*Math.pow(depthTreated, 5),
             second = 0.2806*Math.pow(depthTreated, 4),
@@ -52,7 +52,7 @@ angular.module('practiceMonitoringAssessmentApp')
         return (format === '%') ? reduction*100 : reduction;
       },
       rainfallDepthTreated: function(value) {
-        return (value.bioretention_runoff_volume_captured/(value.bioretention_impervious_area/43560))*12;
+        return (value.rainfall_depth_treated/(value.bioretention_impervious_area/43560))*12;
       },
       gallonsReducedPerYear: function(value) {
         var runoffVolumeCaptured = this.runoffVolumeCaptured(value);
@@ -205,7 +205,7 @@ angular.module('practiceMonitoringAssessmentApp')
         return 0;
       },
       runoffVolumeCaptured: function(value) {
-        return (value.bioretention_runoff_volume_captured*value.bioretention_impervious_area)/(12*43560);
+        return (value.rainfall_depth_treated*value.bioretention_impervious_area)/(12*43560);
       }
     };
   }]);
