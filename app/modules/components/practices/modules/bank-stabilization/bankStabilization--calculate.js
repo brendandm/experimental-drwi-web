@@ -13,24 +13,20 @@ angular.module('practiceMonitoringAssessmentApp')
         var baseLength = value.installation_length_of_streambank,
             ler = value.installation_lateral_erosion_rate,
             soilDensity = value.installation_soil_bulk_density,
-            soilNDensity = value.installation_soil_n_content,
-            soilPDensity = value.installation_soil_p_content,
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return loadTotal/2000;
+        return (loadTotal)/2000;
       },
       plannedSedimentLoadReduction: function(value) {
 
         var baseLength = value.installation_length_of_streambank,
-            ler = (value.installation_lateral_erosion_rate-0.02),
+            ler = (parseFloat(value.installation_lateral_erosion_rate)-0.02),
             soilDensity = value.installation_soil_bulk_density,
-            soilNDensity = value.installation_soil_n_content,
-            soilPDensity = value.installation_soil_p_content,
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return loadTotal/2000;
+        return (loadTotal)/2000;
       },
       installedSedimentLoadReduction: function(values, format) {
 
@@ -69,7 +65,7 @@ angular.module('practiceMonitoringAssessmentApp')
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return (loadTotal/2000)*soilNDensity;
+        return ((loadTotal)/2000)*soilNDensity;
       },
       plannedNitrogenLoadReduction: function(value) {
 
@@ -80,7 +76,7 @@ angular.module('practiceMonitoringAssessmentApp')
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return (loadTotal/2000)*soilNDensity;
+        return ((loadTotal)/2000)*soilNDensity;
       },
       installedNitrogenLoadReduction: function(values, format) {
 
@@ -119,7 +115,7 @@ angular.module('practiceMonitoringAssessmentApp')
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return (loadTotal/2000)*soilPDensity;
+        return ((loadTotal)/2000)*soilPDensity;
       },
       plannedPhosphorusLoadReduction: function(value) {
 
@@ -130,7 +126,7 @@ angular.module('practiceMonitoringAssessmentApp')
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return (loadTotal/2000)*soilPDensity;
+        return ((loadTotal)/2000)*soilPDensity;
       },
       installedPhosphorusLoadReduction: function(values, format) {
 
