@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ForestBufferReportController', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse) {
+  .controller('ForestBufferReportController', function (Efficiency, $rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse) {
 
     //
     // Assign project to a scoped variable
@@ -360,48 +360,83 @@ angular.module('practiceMonitoringAssessmentApp')
       $scope.calculate.GetLoadVariables(period, existingLanduseType).then(function(existingLoaddata) {
         $scope.calculate.GetLoadVariables(period, $scope.storage.landuse).then(function(newLoaddata) {
 
+          // console.log('cbwm_lu', existingLanduseType);
           //
-          // EXISTING CONDITION — LOAD VALUES
+          // console.log('$scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0]', $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0])
           //
-          var uplandPlannedInstallationLoad = {
-            sediment: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.sediment*(60/100),
-            nitrogen: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.nitrogen*(31/100),
-            phosphorus: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.phosphorus*(45/100)
-          };
+          // Feature.GetFeature({
+          //   storage: 'type_f9d8609090494dac811e6a58eb8ef4be',
+          //   featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
+          // }).then(function(reportResponse) {
+          //   console.log('hydrogeomorphic_region', reportResponse);
+          //   debugger;
+          // });
 
-          console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
+          Efficiency.query({
+            q: {
+              filters: [
+                {
+                  name: 'cbwm_lu',
+                  op: 'eq',
+                  val: existingLanduseType
+                },
+                {
+                  name: 'hydrogeomorphic_region',
+                  op: 'eq',
+                  val: 'Coastal Plain Uplands Non Tidal'
+                },
+                {
+                  name: 'best_management_practice_short_name',
+                  op: 'eq',
+                  val: (existingLanduseType === 'pas' || existingLanduseType === 'npa') ? 'ForestBuffersTrp': 'ForestBuffers'
+                }
+              ]
+            }
+          }).$promise.then(function(efficiencyResponse) {
+            console.log('efficiencyResponse', efficiencyResponse);
+            var efficiency = efficiencyResponse.response.features[0];
 
-          var existingPlannedInstallationLoad = {
-            sediment: ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000),
-            nitrogen: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres))),
-            phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
-          };
+            //
+            // EXISTING CONDITION — LOAD VALUES
+            //
+            var uplandPlannedInstallationLoad = {
+              sediment: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.sediment*(efficiency.s_efficiency/100),
+              nitrogen: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.nitrogen*(efficiency.n_efficiency/100),
+              phosphorus: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.phosphorus*(efficiency.p_efficiency/100)
+            };
 
-          console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
+            console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
 
-          //
-          // PLANNED CONDITIONS — LANDUSE VALUES
-          //
-          $scope.calculate.results.totalPlannedLoad = {
-            nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen,
-            phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus,
-            sediment: uplandPlannedInstallationLoad.sediment + existingPlannedInstallationLoad.sediment
-          };
+            var existingPlannedInstallationLoad = {
+              sediment: ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000),
+              nitrogen: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres))),
+              phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
+            };
 
-          //
-          // @todo This is most of the way there. At this point we need to grab
-          //       pre-project information (C:19 in the CalcCheck 1 sheet), we
-          //       then take that number (0.15 in this case) and multiple it by
-          //       a percentage format of the ForestBuffer efficiency see (I:3
-          //       from the CalcCheck 1 sheet).
-          //
-          //       After this We take our planned upland and add it to the
-          //       existing to result in our TOTAL SEDIMENT LOAD REDUCTION
-          //       (C:40 in CalcCheck 1 sheet)
-          //
-          //
+            console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
 
+            //
+            // PLANNED CONDITIONS — LANDUSE VALUES
+            //
+            $scope.calculate.results.totalPlannedLoad = {
+              nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen,
+              phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus,
+              sediment: uplandPlannedInstallationLoad.sediment + existingPlannedInstallationLoad.sediment
+            };
 
+            //
+            // @todo This is most of the way there. At this point we need to grab
+            //       pre-project information (C:19 in the CalcCheck 1 sheet), we
+            //       then take that number (0.15 in this case) and multiple it by
+            //       a percentage format of the ForestBuffer efficiency see (I:3
+            //       from the CalcCheck 1 sheet).
+            //
+            //       After this We take our planned upland and add it to the
+            //       existing to result in our TOTAL SEDIMENT LOAD REDUCTION
+            //       (C:40 in CalcCheck 1 sheet)
+            //
+            //
+          });
         });
       });
 
