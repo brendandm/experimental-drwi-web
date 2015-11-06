@@ -324,7 +324,7 @@ angular.module('practiceMonitoringAssessmentApp')
           sediment: (((loaddata.area * 2)*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
         };
 
-        console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad, loaddata);
+        console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad);
 
         var existingPreInstallationLoad = {
           nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
@@ -332,9 +332,11 @@ angular.module('practiceMonitoringAssessmentApp')
           sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
         };
 
-        console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad, loaddata);
+        console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad);
 
         $scope.calculate.results.totalPreInstallationLoad = {
+          uplandLanduse: uplandPreInstallationLoad,
+          existingLanduse: existingPreInstallationLoad,
           nitrogen: uplandPreInstallationLoad.nitrogen + existingPreInstallationLoad.nitrogen,
           phosphorus: uplandPreInstallationLoad.phosphorus + existingPreInstallationLoad.phosphorus,
           sediment: uplandPreInstallationLoad.sediment + existingPreInstallationLoad.sediment
@@ -362,41 +364,29 @@ angular.module('practiceMonitoringAssessmentApp')
           // EXISTING CONDITION — LOAD VALUES
           //
           var uplandPlannedInstallationLoad = {
-            sediment: $scope.calculate.results.totalPreInstallationLoad.sediment*((newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)/100),
-            // nitrogen: (newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres),
-            // phosphorus: (newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)
+            sediment: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.sediment*(60/100),
+            nitrogen: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.nitrogen*(31/100),
+            phosphorus: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.phosphorus*(45/100)
           };
 
-          console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad, newLoaddata.efficieny, newLoaddata);
+          console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
 
-          // var existingPlannedInstallationLoad = {
-          //   nitrogen: (existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres),
-          //   phosphorus: (existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres),
-          //   sediment: (existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)
-          // };
-          //
-          // console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad, existingLoaddata);
-          //
-          // var existingLanduseResults = {
-          //   nitrogen: (existingLoaddata.area*(existingPlannedInstallationLoad.nitrogen-uplandPlannedInstallationLoad.nitrogen)),
-          //   phosphorus: (existingLoaddata.area*(existingPlannedInstallationLoad.phosphorus-uplandPlannedInstallationLoad.phosphorus)),
-          //   sediment: ((existingLoaddata.area*(existingPlannedInstallationLoad.sediment-uplandPlannedInstallationLoad.sediment))/2000)
-          // };
-          //
-          // console.log('PLANNED existingLanduseResults', existingLanduseResults, existingLoaddata);
-          //
+          var existingPlannedInstallationLoad = {
+            sediment: ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000),
+            nitrogen: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres))),
+            phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
+          };
+
+          console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
 
           //
           // PLANNED CONDITIONS — LANDUSE VALUES
           //
           $scope.calculate.results.totalPlannedLoad = {
-            // nitrogen: uplandPreInstallationLoad.nitrogen + existingPreInstallationLoad.nitrogen,
-            // phosphorus: uplandPreInstallationLoad.phosphorus + existingPreInstallationLoad.phosphorus,
-            // sediment: uplandPreInstallationLoad.sediment + existingPreInstallationLoad.sediment
+            nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen,
+            phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus,
+            sediment: uplandPlannedInstallationLoad.sediment + existingPlannedInstallationLoad.sediment
           };
-
-          // $scope.calculate.results.totalPlannedLoad = null; // was set to results
-
 
           //
           // @todo This is most of the way there. At this point we need to grab
@@ -422,7 +412,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
       $scope.calculate.GetInstalledLoadVariables(period, $scope.storage.landuse).then(function(loaddata) {
 
-        console.log('GetInstalledLoad', loaddata);
+        // console.log('GetInstalledLoad', loaddata);
 
         $scope.practice_efficiency = loaddata.efficieny;
 
@@ -431,8 +421,6 @@ angular.module('practiceMonitoringAssessmentApp')
           phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
           sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
         };
-
-        console.log('results', results);
 
         $scope.calculate.results.totalInstalledLoad = results;
       });
@@ -485,7 +473,7 @@ angular.module('practiceMonitoringAssessmentApp')
             area = ((length*width)/43560),
             value = null;
 
-        console.log('efficieny', efficieny);
+        // console.log('efficieny', efficieny);
 
         if (element === 'nitrogen') {
           value = (area*(efficieny.eos_totn/efficieny.eos_acres));
@@ -528,7 +516,7 @@ angular.module('practiceMonitoringAssessmentApp')
         }
       }
 
-      console.log('GetRestorationTotal', total_area, unit, (total_area/unit));
+      // console.log('GetRestorationTotal', total_area, unit, (total_area/unit));
 
 
       return (total_area/unit);
@@ -551,7 +539,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
       planned_area = (planned_area/unit);
 
-      console.log(total_area, planned_area, (total_area/planned_area));
+      // console.log(total_area, planned_area, (total_area/planned_area));
 
       return ((total_area/planned_area)*100);
     };
