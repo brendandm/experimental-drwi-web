@@ -14,7 +14,7 @@
           <article class="row list-item" data-ng-if="practice.name"
                    data-ng-repeat="practice in site.practices.list | orderBy:'id' track by $index">
             <h1>
-              <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.clean_practice_type }}">
+              <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ site.practices.cleanName(practice.name) }}">
                 {{ practice.name }}
               </a>
               <span class="creation-date">

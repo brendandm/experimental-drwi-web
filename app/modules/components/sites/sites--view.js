@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('SiteViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'mapbox', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practices', 'variables', 'leafletData', function ($rootScope, $scope, $route, $location, $timeout, moment, user, mapbox, Template, Feature, template, fields, project, site, practices, variables, leafletData) {
+  .controller('SiteViewCtrl', function ($rootScope, $scope, $route, $location, $timeout, moment, user, mapbox, Template, Feature, template, fields, project, site, practices, variables, leafletData) {
 
     //
     // Assign project to a scoped variable
@@ -25,19 +25,8 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.site = site;
     $scope.site.practices = {
       list: practices,
-      process: function() {
-        //
-        // Get a clean practice type for all practices
-        //
-        angular.forEach($scope.site.practices.list, function(practice, $index) {
-          Feature.GetFeature({
-            storage: variables.practice.storage,
-            featureId: practice.id
-          }).then(function(response) {
-            $scope.site.practices.list[$index] = response;
-            $scope.site.practices.list[$index].clean_practice_type = Feature.MachineReadable(response.name);
-          });
-        });
+      cleanName: function(name) {
+        return Feature.MachineReadable(name);
       },
       create: function() {
         //
@@ -296,7 +285,6 @@ angular.module('practiceMonitoringAssessmentApp')
     // Once the page has loaded we need to load in all Reading Features that are associated with
     // the Practices related to the Site being viewed
     //
-    $scope.site.practices.process();
     $scope.map.setupMap();
 
-  }]);
+  });
