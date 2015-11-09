@@ -360,18 +360,6 @@ angular.module('practiceMonitoringAssessmentApp')
       $scope.calculate.GetLoadVariables(period, existingLanduseType).then(function(existingLoaddata) {
         $scope.calculate.GetLoadVariables(period, $scope.storage.landuse).then(function(newLoaddata) {
 
-          // console.log('cbwm_lu', existingLanduseType);
-          //
-          // console.log('$scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0]', $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0])
-          //
-          // Feature.GetFeature({
-          //   storage: 'type_f9d8609090494dac811e6a58eb8ef4be',
-          //   featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
-          // }).then(function(reportResponse) {
-          //   console.log('hydrogeomorphic_region', reportResponse);
-          //   debugger;
-          // });
-
           Efficiency.query({
             q: {
               filters: [
@@ -383,7 +371,7 @@ angular.module('practiceMonitoringAssessmentApp')
                 {
                   name: 'hydrogeomorphic_region',
                   op: 'eq',
-                  val: 'Coastal Plain Uplands Non Tidal'
+                  val: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].hgmr_nme
                 },
                 {
                   name: 'best_management_practice_short_name',
@@ -579,27 +567,47 @@ angular.module('practiceMonitoringAssessmentApp')
       return ((total_area/planned_area)*100);
     };
 
-    //
-    // Scope elements that run the actual equations and send them back to the user interface for display
-    //
-    $scope.calculate.results = {
-      percentageLengthOfBuffer: {
-        percentage: $scope.calculate.GetPercentageOfInstalled('length_of_buffer', 'percentage'),
-        total: $scope.calculate.GetPercentageOfInstalled('length_of_buffer')
-      },
-      percentageTreesPlanted: {
 
-        percentage: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted', 'percentage'),
-        total: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted')
-      },
-      totalPreInstallationLoad: $scope.calculate.GetPreInstallationLoad('Planning'),
-      totalPlannedLoad: $scope.calculate.GetPlannedLoad('Planning'),
-      totalInstalledLoad: $scope.calculate.GetInstalledLoad('Installation'),
-      totalMilesRestored: $scope.calculate.GetRestorationTotal(5280),
-      percentageMilesRestored: $scope.calculate.GetRestorationPercentage(5280, false),
-      totalAcresRestored: $scope.calculate.GetRestorationTotal(43560, true),
-      percentageAcresRestored: $scope.calculate.GetRestorationPercentage(43560, true),
-    };
+
+    //
+    // Scope elements that run the actual equations and send them back to the
+    // user interface for display
+    //
+    // In order to run all of these we need to make sure that our HGMR
+    // information from our selected Site has been added to the HGMR object
+    //
+    Feature.GetFeature({
+      storage: 'type_f9d8609090494dac811e6a58eb8ef4be',
+      featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
+    }).then(function(hgmrResponse) {
+
+      //
+      // Assign HGMR Code Lookup information to the existing site
+      //
+      $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0] = hgmrResponse;
+
+      //
+      //
+      //
+      $scope.calculate.results = {
+        percentageLengthOfBuffer: {
+          percentage: $scope.calculate.GetPercentageOfInstalled('length_of_buffer', 'percentage'),
+          total: $scope.calculate.GetPercentageOfInstalled('length_of_buffer')
+        },
+        percentageTreesPlanted: {
+
+          percentage: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted', 'percentage'),
+          total: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted')
+        },
+        totalPreInstallationLoad: $scope.calculate.GetPreInstallationLoad('Planning'),
+        totalPlannedLoad: $scope.calculate.GetPlannedLoad('Planning'),
+        totalInstalledLoad: $scope.calculate.GetInstalledLoad('Installation'),
+        totalMilesRestored: $scope.calculate.GetRestorationTotal(5280),
+        percentageMilesRestored: $scope.calculate.GetRestorationPercentage(5280, false),
+        totalAcresRestored: $scope.calculate.GetRestorationTotal(43560, true),
+        percentageAcresRestored: $scope.calculate.GetRestorationPercentage(43560, true),
+      };
+    });
 
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
