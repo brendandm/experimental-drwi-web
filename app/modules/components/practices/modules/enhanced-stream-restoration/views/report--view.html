@@ -200,7 +200,7 @@
       <tr>
         <th>Left Bank Height Ratio</th>
         <td data-ng-if="report.measurement_period === 'Pre-Project' || report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          0
+          {{ calculate.bankHeightRatio(report.project_left_bank_height, report.left_bank_bankfull_height) || 0 | number:2 }}
         </td>
         <td>
           &nbsp;
@@ -213,7 +213,7 @@
       <tr>
         <th>Right Bank Height Ratio</th>
         <td data-ng-if="report.measurement_period === 'Pre-Project' || report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          0
+          {{ calculate.bankHeightRatio(report.project_right_bank_height, report.right_bank_bankfull_height) || 0 | number:2 }}
         </td>
         <td>
           &nbsp;
@@ -373,17 +373,19 @@
       <tr>
         <th>{{ fields.fraction_of_annual_runoff_treated_by_floodplain.label }}</th>
         <td data-ng-if="report.measurement_period === 'Pre-Project' || report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.fraction_of_annual_runoff_treated_by_floodplain | number:2 }}
+          {{ calculate.fractionRunoffTreatedByFloodplain(report.rainfall_depth_where_connection_occurs, report.floodplain_connection_volume) || 0 | number:2 }}
         </td>
         <td>
-          <strong>
+          &nbsp;
+          <!-- <strong>
             {{ calculate.quantityInstalled(practice.readings, 'fraction_of_annual_runoff_treated_by_floodplain') || 0 | number:2 }}
-          </strong>
+          </strong> -->
         </td>
         <td>
-          <strong>
+          &nbsp;
+          <!-- <strong>
             {{ calculate.quantityInstalled(practice.readings, 'fraction_of_annual_runoff_treated_by_floodplain', '%') || 0 | number:2 }}%
-          </strong>
+          </strong> -->
         </td>
       </tr>
     </tbody>

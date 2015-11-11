@@ -10,6 +10,31 @@
   angular.module('practiceMonitoringAssessmentApp')
     .service('EnhancedStreamRestorationCalculate', function() {
       return {
+        bankHeightRatio: function(bankHeight, bankfullHeight) {
+
+          var behi = 0;
+
+          if (bankHeight) {
+            behi = (bankHeight/bankfullHeight);
+          }
+
+          return behi;
+
+        },
+        fractionRunoffTreatedByFloodplain: function(fractionInChannel, fractionRunoffTreated) {
+
+          var fraction = 0;
+
+          //
+          // =(POWER(D73,2)+0.3*D73-0.98)*POWER(D74,2)+(-2.35*D73+2)*D74
+          //
+          if (fractionInChannel && fractionRunoffTreated) {
+            fraction = (Math.pow(fractionInChannel, 2)+0.2*fractionInChannel-0.98)*Math.pow(fractionRunoffTreated,2)+(-2.35*fractionInChannel+2)*fractionRunoffTreated;
+          }
+
+          return fraction;
+
+        },
         quantityInstalled: function(values, field, format) {
 
           var planned_total = 0,
