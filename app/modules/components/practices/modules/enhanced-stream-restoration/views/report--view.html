@@ -282,17 +282,19 @@
           --
         </td>
         <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.watershed_contributing_area | number:2 }}
+          {{ (report.watershed_impervious_area+report.watershed_pervious_area) | number:2 }}
         </td>
         <td>
-          <strong>
+          &nbsp;
+          <!-- <strong>
             {{ calculate.quantityInstalled(practice.readings, 'watershed_contributing_area') || 0 | number:2 }}
-          </strong>
+          </strong> -->
         </td>
         <td>
-          <strong>
+          &nbsp;
+          <!-- <strong>
             {{ calculate.quantityInstalled(practice.readings, 'watershed_contributing_area', '%') || 0 | number:2 }}%
-          </strong>
+          </strong> -->
         </td>
       </tr>
 
