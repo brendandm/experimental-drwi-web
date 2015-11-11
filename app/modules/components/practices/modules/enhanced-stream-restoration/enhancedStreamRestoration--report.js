@@ -82,6 +82,7 @@
       };
 
       $scope.total = {
+        preproject: $scope.GetTotal('Pre-Project'),
         planning: $scope.GetTotal('Planning'),
         installation: $scope.GetTotal('Installation'),
         monitoring: $scope.GetTotal('Monitoring')

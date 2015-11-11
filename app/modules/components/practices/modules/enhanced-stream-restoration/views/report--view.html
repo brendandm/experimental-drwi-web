@@ -1,17 +1,17 @@
-<div data-ng-if="!total.planning">
+<div data-ng-if="!total.preproject">
   <h2><strong>Empty</strong> Summary</h2>
 
   <p>
-    Please add a new Planning measurement period to this Practice to begin.
+    Please add a Pre-project measurement period to this Practice to begin.
   </p>
 
   <p>
-    <a class="button" data-ng-click="readings.add(practice, 'Planning')">Add Planning Data</a>
+    <a class="button" data-ng-click="readings.add(practice, 'Pre-Project')">Add Pre-Project Data</a>
   </p>
 </div>
 
 
-<div data-ng-if="total.planning || total.installation">
+<div data-ng-if="total.preproject || total.planning || total.installation">
   <table class="table">
     <tbody>
       <!-- Section Heading -->
