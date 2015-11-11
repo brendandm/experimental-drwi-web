@@ -35,6 +35,60 @@
           return fraction;
 
         },
+        plannedNitrogenProtocol2LoadReduction: function(value, loaddata) {
+
+          var self = this,
+              bulkDensity = 125,
+              nitrogen = 0,
+              leftBehi = self.bankHeightRatio(value.project_left_bank_height, value.left_bank_bankfull_height),
+              rightBehi = self.bankHeightRatio(value.project_right_bank_height, value.right_bank_bankfull_height),
+              leftBank = 0,
+              rightBank = 0;
+
+              console.log('leftBehi', leftBehi, 'rightBehi', rightBehi);
+
+
+          //
+          // Left Bank Modifier
+          //
+          if (leftBehi < 1.1) {
+            leftBank = value.length_of_left_bank_with_improved_connectivity*(value.stream_width_at_mean_base_flow/2+5);
+          }
+
+          //
+          // Right Bank Modifier
+          //
+          if (rightBehi < 1.1) {
+            rightBank = value.length_of_right_bank_with_improved_connectivity*(value.stream_width_at_mean_base_flow/2+5);
+          }
+
+          //
+          // =((IF(E64<1.1,E56*(E55/2+5),0)+IF(E65<1.1,E59*(E55/2+5),0))*5*$D63/2000)*0.000195*365
+          //
+          nitrogen = ((leftBank+rightBank)*5*bulkDensity/2000)*0.000195*365;
+
+          return nitrogen;
+
+        },
+        installedNitrogenProtocol2LoadReduction: function(values, loaddata, format) {
+
+          var installed = 0,
+              planned = 0,
+              self = this;
+
+          angular.forEach(values, function(value, $index) {
+            if (values[$index].measurement_period === 'Planning') {
+              planned += self.plannedNitrogenProtocol2LoadReduction(value, loaddata);
+            }
+            else if (values[$index].measurement_period === 'Installation') {
+              installed += self.plannedNitrogenProtocol2LoadReduction(value, loaddata);
+            }
+          });
+
+          var percentage_installed = installed/planned;
+
+          return (format === '%') ? (percentage_installed*100) : installed;
+        },
         quantityInstalled: function(values, field, format) {
 
           var planned_total = 0,

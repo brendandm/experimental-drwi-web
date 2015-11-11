@@ -390,6 +390,110 @@
           </strong> -->
         </td>
       </tr>
+
+      <tr class="no-rule">
+        <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+          <h2><strong>Load</strong> &amp; Reductions</h2>
+        </td>
+      </tr>
+
+      <tr>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
+            <span data-ng-if="report.measurement_period === 'Planning'">Planned Reduction</span><span data-ng-if="report.measurement_period === 'Installation'">Installed Reduction</span><br />
+            {{ report.report_date }}
+          </a>
+        </th>
+        <th>Reduction To-date</th>
+        <th>% of Planned</th>
+      </tr>
+
+      <tr>
+        <th>Nitrogen (lbs/yr) <em>Protocol 2</em></th>
+        <th>&nbsp;</th>
+        <td data-ng-if="report.measurement_period === 'Planning' && loaddata" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ calculate.plannedNitrogenProtocol2LoadReduction(report, loaddata) || 0 | number:2 }}
+        </td>
+        <td data-ng-if="report.measurement_period === 'Installation' && loaddata" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ calculate.plannedNitrogenProtocol2LoadReduction(report, loaddata) || 0 | number:2 }}
+        </td>
+        <td>
+          <strong data-ng-if="loaddata">
+            {{ calculate.installedNitrogenProtocol2LoadReduction(practice.readings, loaddata) | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong data-ng-if="loaddata">
+            {{ calculate.installedNitrogenProtocol2LoadReduction(practice.readings, loaddata, '%') | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <th>Nitrogen (lbs/yr) <em>Protocol 3</em></th>
+        <th>&nbsp;</th>
+        <td data-ng-if="report.measurement_period === 'Planning' && loaddata" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ calculate.plannedNitrogenProtocol3LoadReduction(report, loaddata) || 0 | number:2 }}
+        </td>
+        <td data-ng-if="report.measurement_period === 'Installation' && loaddata" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ calculate.plannedNitrogenProtocol3LoadReduction(report, loaddata) || 0 | number:2 }}
+        </td>
+        <td>
+          <strong data-ng-if="loaddata">
+            {{ calculate.installedNitrogenProtocol3LoadReduction(practice.readings, loaddata) | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong data-ng-if="loaddata">
+            {{ calculate.installedNitrogenProtocol3LoadReduction(practice.readings, loaddata, '%') | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <th>Phosphorus (lbs/yr) <em>Protocol 3</em></th>
+        <th>&nbsp;</th>
+        <td data-ng-if="report.measurement_period === 'Planning' && loaddata" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ calculate.plannedPhosphorusProtocol3LoadReduction(report, loaddata) || 0 | number:2 }}
+        </td>
+        <td data-ng-if="report.measurement_period === 'Installation' && loaddata" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ calculate.plannedPhosphorusProtocol3LoadReduction(report, loaddata) || 0 | number:2 }}
+        </td>
+        <td>
+          <strong data-ng-if="loaddata">
+            {{ calculate.installedPhosphorusLoadReduction(practice.readings, loaddata) || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong data-ng-if="loaddata">
+            {{ calculate.installedPhosphorusLoadReduction(practice.readings, loaddata, '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <th>Sediment (tons/yr)</th>
+        <th>&nbsp;</th>
+        <td data-ng-if="report.measurement_period === 'Planning' && loaddata" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ calculate.plannedSedimentLoadReduction(report, loaddata) || 0 | number:2 }}
+        </td>
+        <td data-ng-if="report.measurement_period === 'Installation' && loaddata" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ calculate.plannedSedimentLoadReduction(report, loaddata) || 0 | number:2 }}
+        </td>
+        <td>
+          <strong data-ng-if="loaddata">
+            {{ calculate.installedSedimentLoadReduction(practice.readings, loaddata) || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong data-ng-if="loaddata">
+            {{ calculate.installedSedimentLoadReduction(practice.readings, loaddata, '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
     </tbody>
   </table>
 </div>
