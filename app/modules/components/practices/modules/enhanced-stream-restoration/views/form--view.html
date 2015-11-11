@@ -67,13 +67,15 @@
 
   <!-- Left Bank Metrics -->
   <div class="form-group column-5">
-    <label for="length_of_left_bank_with_improved_connectivity" class="control-label">
-      {{ fields.length_of_left_bank_with_improved_connectivity.label }}
-    </label>
+    <div data-ng-if="report.measurement_period !== 'Pre-Project'">
+      <label for="length_of_left_bank_with_improved_connectivity" class="control-label">
+        {{ fields.length_of_left_bank_with_improved_connectivity.label }}
+      </label>
 
-    <input data-ng-model="report.length_of_left_bank_with_improved_connectivity" class="form-control" class="form-control" type="number" id="length_of_left_bank_with_improved_connectivity" name="length_of_left_bank_with_improved_connectivity" />
+      <input data-ng-model="report.length_of_left_bank_with_improved_connectivity" class="form-control" class="form-control" type="number" id="length_of_left_bank_with_improved_connectivity" name="length_of_left_bank_with_improved_connectivity" />
 
-    <p data-ng-if="fields.length_of_left_bank_with_improved_connectivity.help" class="help-text">{{ fields.length_of_left_bank_with_improved_connectivity.help }}</p>
+      <p data-ng-if="fields.length_of_left_bank_with_improved_connectivity.help" class="help-text">{{ fields.length_of_left_bank_with_improved_connectivity.help }}</p>
+    </div>
   </div>
 
   <div class="form-group column-5">
@@ -98,13 +100,15 @@
 
   <!-- Right Bank Metrics -->
   <div class="form-group column-5">
-    <label for="length_of_right_bank_with_improved_connectivity" class="control-label">
-      {{ fields.length_of_right_bank_with_improved_connectivity.label }}
-    </label>
+    <div data-ng-if="report.measurement_period !== 'Pre-Project'">
+      <label for="length_of_right_bank_with_improved_connectivity" class="control-label">
+        {{ fields.length_of_right_bank_with_improved_connectivity.label }}
+      </label>
 
-    <input data-ng-model="report.length_of_right_bank_with_improved_connectivity" class="form-control" class="form-control" type="number" id="length_of_right_bank_with_improved_connectivity" name="length_of_right_bank_with_improved_connectivity" />
+      <input data-ng-model="report.length_of_right_bank_with_improved_connectivity" class="form-control" class="form-control" type="number" id="length_of_right_bank_with_improved_connectivity" name="length_of_right_bank_with_improved_connectivity" />
 
-    <p data-ng-if="fields.length_of_right_bank_with_improved_connectivity.help" class="help-text">{{ fields.length_of_right_bank_with_improved_connectivity.help }}</p>
+      <p data-ng-if="fields.length_of_right_bank_with_improved_connectivity.help" class="help-text">{{ fields.length_of_right_bank_with_improved_connectivity.help }}</p>
+    </div>
   </div>
 
   <div class="form-group column-5">
@@ -142,7 +146,7 @@
   <p>
     Protocol 3: Floodplain Reconnection Volume Credit
   </p>
-  <div class="form-group column-4">
+  <div class="form-group column-4" data-ng-if="report.measurement_period !== 'Pre-Project'">
     <label for="stream_length_reconnected_at_floodplain" class="control-label">
       {{ fields.stream_length_reconnected_at_floodplain.label }}
     </label>
@@ -151,7 +155,7 @@
 
     <p data-ng-if="fields.stream_length_reconnected_at_floodplain.help" class="help-text">{{ fields.stream_length_reconnected_at_floodplain.help }}</p>
   </div>
-  <div class="form-group column-4">
+  <div class="form-group column-4" data-ng-if="report.measurement_period !== 'Pre-Project'">
     <label for="connected_floodplain_surface_area" class="control-label">
       {{ fields.connected_floodplain_surface_area.label }}
     </label>
@@ -160,7 +164,7 @@
 
     <p data-ng-if="fields.connected_floodplain_surface_area.help" class="help-text">{{ fields.connected_floodplain_surface_area.help }}</p>
   </div>
-  <div class="form-group column-4">
+  <div class="form-group column-4" data-ng-if="report.measurement_period !== 'Pre-Project'">
     <label for="watershed_contributing_area" class="control-label">
       {{ fields.watershed_contributing_area.label }}
     </label>
@@ -169,7 +173,7 @@
 
     <p data-ng-if="fields.watershed_contributing_area.help" class="help-text">{{ fields.watershed_contributing_area.help }}</p>
   </div>
-  <div class="form-group column-4">
+  <div class="form-group column-4" data-ng-if="report.measurement_period !== 'Pre-Project'">
     <label for="watershed_impervious_area" class="control-label">
       {{ fields.watershed_impervious_area.label }}
     </label>
@@ -179,7 +183,7 @@
     <p data-ng-if="fields.watershed_impervious_area.help" class="help-text">{{ fields.watershed_impervious_area.help }}</p>
   </div>
 
-  <div class="form-group column-4">
+  <div class="form-group column-4" data-ng-if="report.measurement_period !== 'Pre-Project'">
     <label for="watershed_pervious_area" class="control-label">
       {{ fields.watershed_pervious_area.label }}
     </label>
@@ -206,7 +210,7 @@
 
     <p data-ng-if="fields.floodplain_connection_volume.help" class="help-text">{{ fields.floodplain_connection_volume.help }}</p>
   </div>
-  <div class="form-group column-4">
+  <!-- <div class="form-group column-4">
     <label for="fraction_of_annual_runoff_treated_by_floodplain" class="control-label">
       {{ fields.fraction_of_annual_runoff_treated_by_floodplain.label }}
     </label>
@@ -214,7 +218,7 @@
     <input data-ng-model="report.fraction_of_annual_runoff_treated_by_floodplain" class="form-control" class="form-control" type="number" id="fraction_of_annual_runoff_treated_by_floodplain" name="fraction_of_annual_runoff_treated_by_floodplain" />
 
     <p data-ng-if="fields.fraction_of_annual_runoff_treated_by_floodplain.help" class="help-text">{{ fields.fraction_of_annual_runoff_treated_by_floodplain.help }}</p>
-  </div>
+  </div> -->
 </fieldset>
 
 <!-- Interim BMP Metrics Data-->
