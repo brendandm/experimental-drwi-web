@@ -26,7 +26,7 @@
   </div>
 
   <!-- WIP Reporting Agency -->
-  <div class="form-group column-8" data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'">
+  <div class="form-group column-8" data-ng-if="report.measurement_period === 'Pre-Project' || report.measurement_period === 'Planning' || report.measurement_period === 'Installation'">
     <label for="wip_reporting_agency" class="control-label">
       WIP Reporting Agency
     </label>
@@ -39,7 +39,7 @@
 </fieldset>
 
 <!-- Installation Summary -->
-<fieldset data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'">
+<fieldset data-ng-if="report.measurement_period === 'Pre-Project' || report.measurement_period === 'Planning' || report.measurement_period === 'Installation'">
   <h2><strong>Installation</strong> Summary</h2>
 
   <p>
@@ -138,7 +138,7 @@
   </div>
 </fieldset>
 
-<fieldset data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'">
+<fieldset data-ng-if="report.measurement_period === 'Pre-Project' || report.measurement_period === 'Planning' || report.measurement_period === 'Installation'">
   <p>
     Protocol 3: Floodplain Reconnection Volume Credit
   </p>
