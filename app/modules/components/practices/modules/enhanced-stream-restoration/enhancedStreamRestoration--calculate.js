@@ -8,8 +8,13 @@
    * @description
    */
   angular.module('practiceMonitoringAssessmentApp')
-    .service('EnhancedStreamRestorationCalculate', function() {
+    .service('EnhancedStreamRestorationCalculate', function($q) {
       return {
+        efficiency: {
+          n_eff: 0.2,
+          p_eff: 0.3,
+          s_eff: 0.2
+        },
         bankHeightRatio: function(bankHeight, bankfullHeight) {
 
           var behi = 0;
@@ -45,9 +50,6 @@
               leftBank = 0,
               rightBank = 0;
 
-              console.log('leftBehi', leftBehi, 'rightBehi', rightBehi);
-
-
           //
           // Left Bank Modifier
           //
@@ -82,6 +84,54 @@
             }
             else if (values[$index].measurement_period === 'Installation') {
               installed += self.plannedNitrogenProtocol2LoadReduction(value, loaddata);
+            }
+          });
+
+          var percentage_installed = installed/planned;
+
+          return (format === '%') ? (percentage_installed*100) : installed;
+        },
+        plannedNitrogenProtocol3LoadReduction: function(value, loaddata, readings) {
+
+          var self = this,
+              nitrogen = 0,
+              preProjectData = null;
+
+          //
+          // Before we move on we need to make sure we have the appropriate
+          // pre-project data which impacts the rest of the calculation
+          //
+          angular.forEach(readings, function(value, $index) {
+            if (readings[$index].measurement_period === 'Pre-Project') {
+              preProjectData = value;
+            }
+          });
+
+          //
+          // =IF(E75>0,(E75-D75)*$B$43*(E71*$B$46+E72*$B$47),"")
+          //
+          if (preProjectData) {
+            var plannedRunoffFraction = parseFloat(self.fractionRunoffTreatedByFloodplain(value.rainfall_depth_where_connection_occurs, value.floodplain_connection_volume)).toFixed(3),
+                preprojectRunoffFraction = parseFloat(self.fractionRunoffTreatedByFloodplain(preProjectData.rainfall_depth_where_connection_occurs, preProjectData.floodplain_connection_volume)).toFixed(3);
+
+            nitrogen = (plannedRunoffFraction-preprojectRunoffFraction)*self.efficiency.n_eff*(value.watershed_impervious_area*parseFloat(loaddata.impervious.tn_ual).toFixed(2)+value.watershed_pervious_area*parseFloat(loaddata.pervious.tn_ual).toFixed(2));
+          }
+
+          return nitrogen;
+
+        },
+        installedNitrogenProtocol3LoadReduction: function(values, loaddata, format) {
+
+          var installed = 0,
+              planned = 0,
+              self = this;
+
+          angular.forEach(values, function(value, $index) {
+            if (values[$index].measurement_period === 'Planning') {
+              planned += self.plannedNitrogenProtocol3LoadReduction(value, loaddata, values);
+            }
+            else if (values[$index].measurement_period === 'Installation') {
+              installed += self.plannedNitrogenProtocol3LoadReduction(value, loaddata, values);
             }
           });
 
