@@ -22,7 +22,11 @@
       $scope.practice.practice_type = 'enhanced-stream-restoration';
       $scope.practice.readings = readings;
 
-      $scope.practice_efficiency = null;
+      $scope.practice_efficiency = {
+        n_eff: 0.2,
+        p_eff: 0.3,
+        s_eff: 0.2
+      };
 
       $scope.storage = Storage[$scope.practice.practice_type];
 
