@@ -139,6 +139,102 @@
 
           return (format === '%') ? (percentage_installed*100) : installed;
         },
+        plannedPhosphorusProtocol3LoadReduction: function(value, loaddata, readings) {
+
+          var self = this,
+              phosphorus = 0,
+              preProjectData = null;
+
+          //
+          // Before we move on we need to make sure we have the appropriate
+          // pre-project data which impacts the rest of the calculation
+          //
+          angular.forEach(readings, function(value, $index) {
+            if (readings[$index].measurement_period === 'Pre-Project') {
+              preProjectData = value;
+            }
+          });
+
+          //
+          // =IF(E75>0,(E75-D75)*$B$43*(E71*$B$46+E72*$B$47),"")
+          //
+          if (preProjectData) {
+            var plannedRunoffFraction = parseFloat(self.fractionRunoffTreatedByFloodplain(value.rainfall_depth_where_connection_occurs, value.floodplain_connection_volume)).toFixed(3),
+                preprojectRunoffFraction = parseFloat(self.fractionRunoffTreatedByFloodplain(preProjectData.rainfall_depth_where_connection_occurs, preProjectData.floodplain_connection_volume)).toFixed(3);
+
+            phosphorus = (plannedRunoffFraction-preprojectRunoffFraction)*self.efficiency.p_eff*(value.watershed_impervious_area*parseFloat(loaddata.impervious.tp_ual).toFixed(2)+value.watershed_pervious_area*parseFloat(loaddata.pervious.tp_ual).toFixed(2));
+          }
+
+          return phosphorus;
+
+        },
+        installedPhosphorusProtocol3LoadReduction: function(values, loaddata, format) {
+
+          var installed = 0,
+              planned = 0,
+              self = this;
+
+          angular.forEach(values, function(value, $index) {
+            if (values[$index].measurement_period === 'Planning') {
+              planned += self.plannedPhosphorusProtocol3LoadReduction(value, loaddata, values);
+            }
+            else if (values[$index].measurement_period === 'Installation') {
+              installed += self.plannedPhosphorusProtocol3LoadReduction(value, loaddata, values);
+            }
+          });
+
+          var percentage_installed = installed/planned;
+
+          return (format === '%') ? (percentage_installed*100) : installed;
+        },
+        plannedSedimentLoadReduction: function(value, loaddata, readings) {
+
+          var self = this,
+              sediment = 0,
+              preProjectData = null;
+
+          //
+          // Before we move on we need to make sure we have the appropriate
+          // pre-project data which impacts the rest of the calculation
+          //
+          angular.forEach(readings, function(value, $index) {
+            if (readings[$index].measurement_period === 'Pre-Project') {
+              preProjectData = value;
+            }
+          });
+
+          //
+          // =IF(E75>0,(E75-D75)*$B$43*(E71*$B$46+E72*$B$47),"")
+          //
+          if (preProjectData) {
+            var plannedRunoffFraction = parseFloat(self.fractionRunoffTreatedByFloodplain(value.rainfall_depth_where_connection_occurs, value.floodplain_connection_volume)).toFixed(3),
+                preprojectRunoffFraction = parseFloat(self.fractionRunoffTreatedByFloodplain(preProjectData.rainfall_depth_where_connection_occurs, preProjectData.floodplain_connection_volume)).toFixed(3);
+
+            sediment = (plannedRunoffFraction-preprojectRunoffFraction)*self.efficiency.s_eff*(value.watershed_impervious_area*parseFloat(loaddata.impervious.tss_ual).toFixed(2)+value.watershed_pervious_area*parseFloat(loaddata.pervious.tss_ual).toFixed(2))/2000;
+          }
+
+          return sediment;
+
+        },
+        installedSedimentLoadReduction: function(values, loaddata, format) {
+
+          var installed = 0,
+              planned = 0,
+              self = this;
+
+          angular.forEach(values, function(value, $index) {
+            if (values[$index].measurement_period === 'Planning') {
+              planned += self.plannedSedimentLoadReduction(value, loaddata, values);
+            }
+            else if (values[$index].measurement_period === 'Installation') {
+              installed += self.plannedSedimentLoadReduction(value, loaddata, values);
+            }
+          });
+
+          var percentage_installed = installed/planned;
+
+          return (format === '%') ? (percentage_installed*100) : installed;
+        },
         quantityInstalled: function(values, field, format) {
 
           var planned_total = 0,
