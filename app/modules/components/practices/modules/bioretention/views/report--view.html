@@ -78,14 +78,16 @@
                 {{ report.rainfall_depth_treated || 0 | number:5 }}
               </td>
               <td>
-                <strong>
+                &nbsp;
+                <!-- <strong>
                   {{ calculate.quantityInstalled(practice.readings, 'rainfall_depth_treated') || 0 | number:5 }}
-                </strong>
+                </strong> -->
               </td>
               <td>
-                <strong>
+                &nbsp;
+                <!-- <strong>
                   {{ calculate.quantityInstalled(practice.readings, 'rainfall_depth_treated', '%') || 0 | number:5 }}%
-                </strong>
+                </strong> -->
               </td>
             </tr>
 
@@ -200,7 +202,7 @@
               </td>
               <td>
                 <strong data-ng-if="loaddata">
-                  {{ calculate.installedNitrogenLoadReduction(practice.readings, loaddata, '%') | number:2 }}
+                  {{ calculate.installedNitrogenLoadReduction(practice.readings, loaddata, '%') | number:2 }}%
                 </strong>
               </td>
             </tr>
@@ -222,7 +224,7 @@
               </td>
               <td>
                 <strong data-ng-if="loaddata">
-                  {{ calculate.installedPhosphorusLoadReduction(practice.readings, loaddata, '%') || 0 | number:2 }}
+                  {{ calculate.installedPhosphorusLoadReduction(practice.readings, loaddata, '%') || 0 | number:2 }}%
                 </strong>
               </td>
             </tr>
@@ -245,7 +247,7 @@
               </td>
               <td>
                 <strong data-ng-if="loaddata">
-                  {{ calculate.installedSedimentLoadReduction(practice.readings, loaddata, '%') || 0 | number:2 }}
+                  {{ calculate.installedSedimentLoadReduction(practice.readings, loaddata, '%') || 0 | number:2 }}%
                 </strong>
               </td>
             </tr>
@@ -284,7 +286,7 @@
               </td>
               <td>
                 <strong>
-                  {{ calculate.reductionPracticesInstalled(practice.readings, '%') || 0 | number:2 }}
+                  {{ calculate.reductionPracticesInstalled(practice.readings, '%') || 0 | number:2 }}%
                 </strong>
               </td>
             </tr>
@@ -302,7 +304,7 @@
               </td>
               <td>
                 <strong>
-                  {{ calculate.acresInstalled(practice.readings) || 0 | number:2 }}
+                  {{ calculate.acresInstalled(practice.readings, '%') || 0 | number:2 }}%
                 </strong>
               </td>
             </tr>
