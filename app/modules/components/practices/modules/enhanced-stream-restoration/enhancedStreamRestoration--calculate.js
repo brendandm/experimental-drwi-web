@@ -286,7 +286,62 @@
 
           return (format === '%') ? (percentage_installed*100) : installed;
         },
+        acresTreated: function(value) {
+
+          var self = this,
+              acres = 0,
+              leftBehi = self.bankHeightRatio(value.project_left_bank_height, value.left_bank_bankfull_height),
+              rightBehi = self.bankHeightRatio(value.project_right_bank_height, value.right_bank_bankfull_height),
+              leftBank = 0,
+              rightBank = 0;
+
+          //
+          // Left Bank Modifier
+          //
+          if (leftBehi < 1.1) {
+            leftBank = value.length_of_left_bank_with_improved_connectivity;
+          }
+
+          //
+          // Right Bank Modifier
+          //
+          if (rightBehi < 1.1) {
+            rightBank = value.length_of_right_bank_with_improved_connectivity;
+          }
+
+          //
+          // =(
+          //   IF(E64<1.1,E56*(E55/2+5),0)
+          //  +IF(E65<1.1,E59*(E55/2+5),0)
+          // )/43560
+          //
+          acres = (((leftBank*(value.stream_width_at_mean_base_flow/2+5))+(rightBank*(value.stream_width_at_mean_base_flow/2+5))+value.stream_length_reconnected_at_floodplain)/43560);
+
+          return acres;
+
+        },
+        acresTreatedInstalled: function(values, format) {
+
+          var installed = 0,
+              planned = 0,
+              self = this;
+
+          angular.forEach(values, function(value, $index) {
+            if (values[$index].measurement_period === 'Planning') {
+              planned += self.acresTreated(value);
+            }
+            else if (values[$index].measurement_period === 'Installation') {
+              installed += self.acresTreated(value);
+            }
+          });
+
+          var percentage_installed = installed/planned;
+
+          return (format === '%') ? (percentage_installed*100) : installed;
+        },
         quantityInstalled: function(values, field, format) {
+
+          console.log('quantityInstalled', field, values)
 
           var planned_total = 0,
               installed_total = 0,
@@ -294,21 +349,25 @@
 
           // Get readings organized by their Type
           angular.forEach(values, function(reading, $index) {
-
             if (reading.measurement_period === 'Planning') {
+              console.log('loop > planned_total', reading[field])
               planned_total += reading[field];
             } else if (reading.measurement_period === 'Installation') {
+              console.log('loop > installed_total', reading[field])
               installed_total += reading[field];
             }
 
           });
 
           // Divide the Installed Total by the Planned Total to get a percentage of installed
-          if (planned_total >= 1) {
+          if (planned_total) {
+            console.log('something to show');
             if (format === '%') {
               percentage = (installed_total/planned_total);
+              console.log('percentage', (percentage*100));
               return (percentage*100);
             } else {
+              console.log('installed_total', installed_total);
               return installed_total;
             }
           }

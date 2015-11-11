@@ -186,14 +186,16 @@
           {{ report.bulk_density_of_soil_in_hyporheic_zone | number:2 }}
         </td>
         <td>
-          <strong>
+          &nbsp;
+          <!-- <strong>
             {{ calculate.quantityInstalled(practice.readings, 'bulk_density_of_soil_in_hyporheic_zone') || 0 | number:2 }}
-          </strong>
+          </strong> -->
         </td>
         <td>
-          <strong>
+          &nbsp;
+          <!-- <strong>
             {{ calculate.quantityInstalled(practice.readings, 'bulk_density_of_soil_in_hyporheic_zone', '%') || 0 | number:2 }}%
-          </strong>
+          </strong> -->
         </td>
       </tr>
 
@@ -529,6 +531,42 @@
         <td>
           <strong>
             {{ calculate.milesOfStreambankRestoredInstalled(practice.readings, '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <th>Acres of Hyporheic Area Treated</th>
+        <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ calculate.acresTreated(report) || 0 | number:2 }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.acresTreatedInstalled(practice.readings) || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.acresTreatedInstalled(practice.readings, '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <th>Acres of Floodplain Reconnected</th>
+        <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ report.connected_floodplain_surface_area || 0 | number:2 }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'connected_floodplain_surface_area') || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(practice.readings, 'connected_floodplain_surface_area', '%') || 0 | number:2 }}%
           </strong>
         </td>
       </tr>
