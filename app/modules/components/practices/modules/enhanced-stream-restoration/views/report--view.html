@@ -494,6 +494,45 @@
         </td>
       </tr>
 
+      <tr class="no-rule">
+        <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+          <h2><strong>Chesapeake</strong> Bay Metrics</h2>
+        </td>
+      </tr>
+
+      <tr>
+        <th>&nbsp;</th>
+        <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
+        <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
+            <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
+            <span data-ng-if="report.measurement_period === 'Installation'">Installed</span>
+            <br />
+            {{ report.report_date }}
+          </a>
+        </th>
+        <th>Installed To-date</th>
+        <th>% of Planned</th>
+      </tr>
+
+      <tr>
+        <th>Miles of Streambank Restored</th>
+        <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
+        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+          {{ calculate.milesOfStreambankRestored(report) || 0 | number:2 }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.milesOfStreambankRestoredInstalled(practice.readings) || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.milesOfStreambankRestoredInstalled(practice.readings, '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
     </tbody>
   </table>
 </div>

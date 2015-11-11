@@ -235,6 +235,57 @@
 
           return (format === '%') ? (percentage_installed*100) : installed;
         },
+        milesOfStreambankRestored: function(value) {
+
+          var self = this,
+              miles = 0,
+              leftBehi = self.bankHeightRatio(value.project_left_bank_height, value.left_bank_bankfull_height),
+              rightBehi = self.bankHeightRatio(value.project_right_bank_height, value.right_bank_bankfull_height),
+              leftBank = 0,
+              rightBank = 0;
+
+          //
+          // Left Bank Modifier
+          //
+          if (leftBehi < 1.1) {
+            leftBank = value.length_of_left_bank_with_improved_connectivity;
+          }
+
+          //
+          // Right Bank Modifier
+          //
+          if (rightBehi < 1.1) {
+            rightBank = value.length_of_right_bank_with_improved_connectivity;
+          }
+
+          //
+          // =(IF(E64<1.1,E56,0)+IF(E65<1.1,E59,0)+E68)/5280
+          //
+          console.log('leftBank', leftBank, 'rightBank', rightBank, 'value.stream_length_reconnected_at_floodplain', value.stream_length_reconnected_at_floodplain);
+          miles = ((leftBank+rightBank+value.stream_length_reconnected_at_floodplain)/5280);
+
+          return miles;
+
+        },
+        milesOfStreambankRestoredInstalled: function(values, format) {
+
+          var installed = 0,
+              planned = 0,
+              self = this;
+
+          angular.forEach(values, function(value, $index) {
+            if (values[$index].measurement_period === 'Planning') {
+              planned += self.milesOfStreambankRestored(value);
+            }
+            else if (values[$index].measurement_period === 'Installation') {
+              installed += self.milesOfStreambankRestored(value);
+            }
+          });
+
+          var percentage_installed = installed/planned;
+
+          return (format === '%') ? (percentage_installed*100) : installed;
+        },
         quantityInstalled: function(values, field, format) {
 
           var planned_total = 0,
