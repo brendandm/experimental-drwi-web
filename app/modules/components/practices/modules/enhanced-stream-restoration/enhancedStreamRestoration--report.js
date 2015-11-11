@@ -88,6 +88,8 @@
         monitoring: $scope.GetTotal('Monitoring')
       };
 
+      console.log('$scope.total', $scope.total);
+
       //
       // Load Land river segment details
       //
