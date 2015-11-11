@@ -463,12 +463,12 @@
         </td>
         <td>
           <strong data-ng-if="loaddata">
-            {{ calculate.installedPhosphorusLoadReduction(practice.readings, loaddata) || 0 | number:2 }}
+            {{ calculate.installedPhosphorusProtocol3LoadReduction(practice.readings, loaddata) || 0 | number:2 }}
           </strong>
         </td>
         <td>
           <strong data-ng-if="loaddata">
-            {{ calculate.installedPhosphorusLoadReduction(practice.readings, loaddata, '%') || 0 | number:2 }}%
+            {{ calculate.installedPhosphorusProtocol3LoadReduction(practice.readings, loaddata, '%') || 0 | number:2 }}%
           </strong>
         </td>
       </tr>
@@ -484,7 +484,7 @@
         </td>
         <td>
           <strong data-ng-if="loaddata">
-            {{ calculate.installedSedimentLoadReduction(practice.readings, loaddata) || 0 | number:2 }}
+            {{ calculate.installedSedimentLoadReduction(practice.readings, loaddata) || 0 | number:3 }}
           </strong>
         </td>
         <td>
