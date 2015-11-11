@@ -406,24 +406,14 @@ angular.module('practiceMonitoringAssessmentApp')
             //
             // PLANNED CONDITIONS — LANDUSE VALUES
             //
-            $scope.calculate.results.totalPlannedLoad = {
+            var totals = {
               nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen,
               phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus,
               sediment: uplandPlannedInstallationLoad.sediment + existingPlannedInstallationLoad.sediment
             };
 
-            //
-            // @todo This is most of the way there. At this point we need to grab
-            //       pre-project information (C:19 in the CalcCheck 1 sheet), we
-            //       then take that number (0.15 in this case) and multiple it by
-            //       a percentage format of the ForestBuffer efficiency see (I:3
-            //       from the CalcCheck 1 sheet).
-            //
-            //       After this We take our planned upland and add it to the
-            //       existing to result in our TOTAL SEDIMENT LOAD REDUCTION
-            //       (C:40 in CalcCheck 1 sheet)
-            //
-            //
+            $scope.calculate.results.totalPlannedLoad = totals;
+
           });
         });
       });
@@ -433,19 +423,77 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.calculate.GetInstalledLoad = function(period) {
 
-      $scope.calculate.GetInstalledLoadVariables(period, $scope.storage.landuse).then(function(loaddata) {
+      var existingLanduseType;
 
-        // console.log('GetInstalledLoad', loaddata);
+      for (var i = 0; i < $scope.practice.readings.length; i++) {
+        if ($scope.practice.readings[i].measurement_period === 'Planning') {
+          existingLanduseType = $scope.landuse[$scope.practice.readings[i].existing_riparian_landuse.toLowerCase()];
+        }
+      }
 
-        $scope.practice_efficiency = loaddata.efficieny;
+      $scope.calculate.GetLoadVariables(period, existingLanduseType).then(function(existingLoaddata) {
+        $scope.calculate.GetLoadVariables(period, $scope.storage.landuse).then(function(newLoaddata) {
 
-        var results = {
-          nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
-          phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
-          sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
-        };
+          Efficiency.query({
+            q: {
+              filters: [
+                {
+                  name: 'cbwm_lu',
+                  op: 'eq',
+                  val: existingLanduseType
+                },
+                {
+                  name: 'hydrogeomorphic_region',
+                  op: 'eq',
+                  val: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].hgmr_nme
+                },
+                {
+                  name: 'best_management_practice_short_name',
+                  op: 'eq',
+                  val: (existingLanduseType === 'pas' || existingLanduseType === 'npa') ? 'ForestBuffersTrp': 'ForestBuffers'
+                }
+              ]
+            }
+          }).$promise.then(function(efficiencyResponse) {
 
-        $scope.calculate.results.totalInstalledLoad = results;
+
+            var efficiency = efficiencyResponse.response.features[0];
+
+            // var uplandPreInstallationLoad = {
+            //   nitrogen: ((loaddata.area * 4)*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
+            //   phosphorus: ((loaddata.area * 2)*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
+            //   sediment: (((loaddata.area * 2)*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
+            // };
+
+            //
+            // EXISTING CONDITION — LOAD VALUES
+            //
+            var uplandPlannedInstallationLoad = {
+              sediment: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.sediment*(efficiency.s_efficiency/100),
+              nitrogen: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.nitrogen*(efficiency.n_efficiency/100),
+              phosphorus: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.phosphorus*(efficiency.p_efficiency/100)
+            };
+
+            console.log('TOTAL uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
+
+            var existingPlannedInstallationLoad = {
+              sediment: ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000),
+              nitrogen: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres))),
+              phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
+            };
+
+            console.log('TOTAL existingPlannedInstallationLoad', existingPlannedInstallationLoad);
+
+            //
+            // PLANNED CONDITIONS — LANDUSE VALUES
+            //
+            $scope.calculate.results.totalInstalledLoad = {
+              nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen,
+              phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus,
+              sediment: uplandPlannedInstallationLoad.sediment + existingPlannedInstallationLoad.sediment
+            };
+          });
+        });
       });
 
     };
@@ -562,8 +610,6 @@ angular.module('practiceMonitoringAssessmentApp')
 
       planned_area = (planned_area/unit);
 
-      // console.log(total_area, planned_area, (total_area/planned_area));
-
       return ((total_area/planned_area)*100);
     };
 
@@ -605,7 +651,7 @@ angular.module('practiceMonitoringAssessmentApp')
         totalMilesRestored: $scope.calculate.GetRestorationTotal(5280),
         percentageMilesRestored: $scope.calculate.GetRestorationPercentage(5280, false),
         totalAcresRestored: $scope.calculate.GetRestorationTotal(43560, true),
-        percentageAcresRestored: $scope.calculate.GetRestorationPercentage(43560, true),
+        percentageAcresRestored: $scope.calculate.GetRestorationPercentage(43560, true)
       };
     });
 

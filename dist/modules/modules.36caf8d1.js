@@ -1243,7 +1243,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('SiteViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'mapbox', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practices', 'variables', 'leafletData', function ($rootScope, $scope, $route, $location, $timeout, moment, user, mapbox, Template, Feature, template, fields, project, site, practices, variables, leafletData) {
+  .controller('SiteViewCtrl', function ($rootScope, $scope, $route, $location, $timeout, moment, user, mapbox, Template, Feature, template, fields, project, site, practices, variables, leafletData) {
 
     //
     // Assign project to a scoped variable
@@ -1260,19 +1260,8 @@ angular.module('practiceMonitoringAssessmentApp')
     $scope.site = site;
     $scope.site.practices = {
       list: practices,
-      process: function() {
-        //
-        // Get a clean practice type for all practices
-        //
-        angular.forEach($scope.site.practices.list, function(practice, $index) {
-          Feature.GetFeature({
-            storage: variables.practice.storage,
-            featureId: practice.id
-          }).then(function(response) {
-            $scope.site.practices.list[$index] = response;
-            $scope.site.practices.list[$index].clean_practice_type = Feature.MachineReadable(response.name);
-          });
-        });
+      cleanName: function(name) {
+        return Feature.MachineReadable(name);
       },
       create: function() {
         //
@@ -1531,10 +1520,9 @@ angular.module('practiceMonitoringAssessmentApp')
     // Once the page has loaded we need to load in all Reading Features that are associated with
     // the Practices related to the Site being viewed
     //
-    $scope.site.practices.process();
     $scope.map.setupMap();
 
-  }]);
+  });
 
 'use strict';
 
@@ -2771,7 +2759,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('ForestBufferReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'moment', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse) {
+  .controller('ForestBufferReportController', function (Efficiency, $rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse) {
 
     //
     // Assign project to a scoped variable
@@ -3087,13 +3075,19 @@ angular.module('practiceMonitoringAssessmentApp')
           sediment: (((loaddata.area * 2)*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
         };
 
+        console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad);
+
         var existingPreInstallationLoad = {
           nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
           phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
           sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
         };
 
+        console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad);
+
         $scope.calculate.results.totalPreInstallationLoad = {
+          uplandLanduse: uplandPreInstallationLoad,
+          existingLanduse: existingPreInstallationLoad,
           nitrogen: uplandPreInstallationLoad.nitrogen + existingPreInstallationLoad.nitrogen,
           phosphorus: uplandPreInstallationLoad.phosphorus + existingPreInstallationLoad.phosphorus,
           sediment: uplandPreInstallationLoad.sediment + existingPreInstallationLoad.sediment
@@ -3117,55 +3111,61 @@ angular.module('practiceMonitoringAssessmentApp')
       $scope.calculate.GetLoadVariables(period, existingLanduseType).then(function(existingLoaddata) {
         $scope.calculate.GetLoadVariables(period, $scope.storage.landuse).then(function(newLoaddata) {
 
-          //
-          // EXISTING CONDITION — LOAD VALUES
-          //
-          var existingLanduse = {
-            nitrogen: (existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres),
-            phosphorus: (existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres),
-            sediment: (existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)
-          };
+          Efficiency.query({
+            q: {
+              filters: [
+                {
+                  name: 'cbwm_lu',
+                  op: 'eq',
+                  val: existingLanduseType
+                },
+                {
+                  name: 'hydrogeomorphic_region',
+                  op: 'eq',
+                  val: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].hgmr_nme
+                },
+                {
+                  name: 'best_management_practice_short_name',
+                  op: 'eq',
+                  val: (existingLanduseType === 'pas' || existingLanduseType === 'npa') ? 'ForestBuffersTrp': 'ForestBuffers'
+                }
+              ]
+            }
+          }).$promise.then(function(efficiencyResponse) {
+            console.log('efficiencyResponse', efficiencyResponse);
+            var efficiency = efficiencyResponse.response.features[0];
 
-          console.log('existingLanduse', existingLanduse, existingLoaddata);
+            //
+            // EXISTING CONDITION — LOAD VALUES
+            //
+            var uplandPlannedInstallationLoad = {
+              sediment: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.sediment*(efficiency.s_efficiency/100),
+              nitrogen: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.nitrogen*(efficiency.n_efficiency/100),
+              phosphorus: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.phosphorus*(efficiency.p_efficiency/100)
+            };
 
-          var newLanduse = {
-            nitrogen: (newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres),
-            phosphorus: (newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres),
-            sediment: (newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)
-          };
+            console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
 
-          console.log('newLanduse', newLanduse, newLoaddata);
+            var existingPlannedInstallationLoad = {
+              sediment: ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000),
+              nitrogen: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres))),
+              phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
+            };
 
-          var existingLanduseResults = {
-            nitrogen: (existingLoaddata.area*(existingLanduse.nitrogen-newLanduse.nitrogen)),
-            phosphorus: (existingLoaddata.area*(existingLanduse.phosphorus-newLanduse.phosphorus)),
-            sediment: ((existingLoaddata.area*(existingLanduse.sediment-newLanduse.sediment))/2000)
-          };
+            console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
 
+            //
+            // PLANNED CONDITIONS — LANDUSE VALUES
+            //
+            var totals = {
+              nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen,
+              phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus,
+              sediment: uplandPlannedInstallationLoad.sediment + existingPlannedInstallationLoad.sediment
+            };
 
-          //
-          // PLANNED CONDITIONS — LANDUSE VALUES
-          //
+            $scope.calculate.results.totalPlannedLoad = totals;
 
-
-          // $scope.calculate.results.totalPlannedLoad = null; // was set to results
-
-
-
-          //
-          // @todo This is most of the way there. At this point we need to grab
-          //       pre-project information (C:19 in the CalcCheck 1 sheet), we
-          //       then take that number (0.15 in this case) and multiple it by
-          //       a percentage format of the ForestBuffer efficiency see (I:3
-          //       from the CalcCheck 1 sheet).
-          //
-          //       After this We take our planned upland and add it to the
-          //       existing to result in our TOTAL SEDIMENT LOAD REDUCTION
-          //       (C:40 in CalcCheck 1 sheet)
-          //
-          //
-
-
+          });
         });
       });
 
@@ -3174,21 +3174,77 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.calculate.GetInstalledLoad = function(period) {
 
-      $scope.calculate.GetInstalledLoadVariables(period, $scope.storage.landuse).then(function(loaddata) {
+      var existingLanduseType;
 
-        console.log('GetInstalledLoad', loaddata);
+      for (var i = 0; i < $scope.practice.readings.length; i++) {
+        if ($scope.practice.readings[i].measurement_period === 'Planning') {
+          existingLanduseType = $scope.landuse[$scope.practice.readings[i].existing_riparian_landuse.toLowerCase()];
+        }
+      }
 
-        $scope.practice_efficiency = loaddata.efficieny;
+      $scope.calculate.GetLoadVariables(period, existingLanduseType).then(function(existingLoaddata) {
+        $scope.calculate.GetLoadVariables(period, $scope.storage.landuse).then(function(newLoaddata) {
 
-        var results = {
-          nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
-          phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
-          sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
-        };
+          Efficiency.query({
+            q: {
+              filters: [
+                {
+                  name: 'cbwm_lu',
+                  op: 'eq',
+                  val: existingLanduseType
+                },
+                {
+                  name: 'hydrogeomorphic_region',
+                  op: 'eq',
+                  val: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].hgmr_nme
+                },
+                {
+                  name: 'best_management_practice_short_name',
+                  op: 'eq',
+                  val: (existingLanduseType === 'pas' || existingLanduseType === 'npa') ? 'ForestBuffersTrp': 'ForestBuffers'
+                }
+              ]
+            }
+          }).$promise.then(function(efficiencyResponse) {
 
-        console.log('results', results);
 
-        $scope.calculate.results.totalInstalledLoad = results;
+            var efficiency = efficiencyResponse.response.features[0];
+
+            // var uplandPreInstallationLoad = {
+            //   nitrogen: ((loaddata.area * 4)*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
+            //   phosphorus: ((loaddata.area * 2)*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
+            //   sediment: (((loaddata.area * 2)*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
+            // };
+
+            //
+            // EXISTING CONDITION — LOAD VALUES
+            //
+            var uplandPlannedInstallationLoad = {
+              sediment: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.sediment*(efficiency.s_efficiency/100),
+              nitrogen: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.nitrogen*(efficiency.n_efficiency/100),
+              phosphorus: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.phosphorus*(efficiency.p_efficiency/100)
+            };
+
+            console.log('TOTAL uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
+
+            var existingPlannedInstallationLoad = {
+              sediment: ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000),
+              nitrogen: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres))),
+              phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
+            };
+
+            console.log('TOTAL existingPlannedInstallationLoad', existingPlannedInstallationLoad);
+
+            //
+            // PLANNED CONDITIONS — LANDUSE VALUES
+            //
+            $scope.calculate.results.totalInstalledLoad = {
+              nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen,
+              phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus,
+              sediment: uplandPlannedInstallationLoad.sediment + existingPlannedInstallationLoad.sediment
+            };
+          });
+        });
       });
 
     };
@@ -3239,7 +3295,7 @@ angular.module('practiceMonitoringAssessmentApp')
             area = ((length*width)/43560),
             value = null;
 
-        console.log('efficieny', efficieny);
+        // console.log('efficieny', efficieny);
 
         if (element === 'nitrogen') {
           value = (area*(efficieny.eos_totn/efficieny.eos_acres));
@@ -3282,7 +3338,7 @@ angular.module('practiceMonitoringAssessmentApp')
         }
       }
 
-      console.log('GetRestorationTotal', total_area, unit, (total_area/unit));
+      // console.log('GetRestorationTotal', total_area, unit, (total_area/unit));
 
 
       return (total_area/unit);
@@ -3305,32 +3361,50 @@ angular.module('practiceMonitoringAssessmentApp')
 
       planned_area = (planned_area/unit);
 
-      console.log(total_area, planned_area, (total_area/planned_area));
-
       return ((total_area/planned_area)*100);
     };
 
-    //
-    // Scope elements that run the actual equations and send them back to the user interface for display
-    //
-    $scope.calculate.results = {
-      percentageLengthOfBuffer: {
-        percentage: $scope.calculate.GetPercentageOfInstalled('length_of_buffer', 'percentage'),
-        total: $scope.calculate.GetPercentageOfInstalled('length_of_buffer')
-      },
-      percentageTreesPlanted: {
 
-        percentage: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted', 'percentage'),
-        total: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted')
-      },
-      totalPreInstallationLoad: $scope.calculate.GetPreInstallationLoad('Planning'),
-      totalPlannedLoad: $scope.calculate.GetPlannedLoad('Planning'),
-      totalInstalledLoad: $scope.calculate.GetInstalledLoad('Installation'),
-      totalMilesRestored: $scope.calculate.GetRestorationTotal(5280),
-      percentageMilesRestored: $scope.calculate.GetRestorationPercentage(5280, false),
-      totalAcresRestored: $scope.calculate.GetRestorationTotal(43560, true),
-      percentageAcresRestored: $scope.calculate.GetRestorationPercentage(43560, true),
-    };
+
+    //
+    // Scope elements that run the actual equations and send them back to the
+    // user interface for display
+    //
+    // In order to run all of these we need to make sure that our HGMR
+    // information from our selected Site has been added to the HGMR object
+    //
+    Feature.GetFeature({
+      storage: 'type_f9d8609090494dac811e6a58eb8ef4be',
+      featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
+    }).then(function(hgmrResponse) {
+
+      //
+      // Assign HGMR Code Lookup information to the existing site
+      //
+      $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0] = hgmrResponse;
+
+      //
+      //
+      //
+      $scope.calculate.results = {
+        percentageLengthOfBuffer: {
+          percentage: $scope.calculate.GetPercentageOfInstalled('length_of_buffer', 'percentage'),
+          total: $scope.calculate.GetPercentageOfInstalled('length_of_buffer')
+        },
+        percentageTreesPlanted: {
+
+          percentage: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted', 'percentage'),
+          total: $scope.calculate.GetPercentageOfInstalled('number_of_trees_planted')
+        },
+        totalPreInstallationLoad: $scope.calculate.GetPreInstallationLoad('Planning'),
+        totalPlannedLoad: $scope.calculate.GetPlannedLoad('Planning'),
+        totalInstalledLoad: $scope.calculate.GetInstalledLoad('Installation'),
+        totalMilesRestored: $scope.calculate.GetRestorationTotal(5280),
+        percentageMilesRestored: $scope.calculate.GetRestorationPercentage(5280, false),
+        totalAcresRestored: $scope.calculate.GetRestorationTotal(43560, true),
+        percentageAcresRestored: $scope.calculate.GetRestorationPercentage(43560, true)
+      };
+    });
 
     //
     // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
@@ -3370,7 +3444,7 @@ angular.module('practiceMonitoringAssessmentApp')
     }
 
 
-  }]);
+  });
 
 'use strict';
 
@@ -4617,16 +4691,19 @@ angular.module('practiceMonitoringAssessmentApp')
         return ((quantity*multiplier)/1000);
       },
       totalDaysPerYearInStream: function(values) {
-        return values.instream_dpmjan+values.instream_dpmfeb+values.instream_dpmmar+values.instream_dpmapr+values.instream_dpmmay+values.instream_dpmjun+values.instream_dpmjul+values.instream_dpmaug+values.instream_dpmsep+values.instream_dpmoct+values.instream_dpmnov+values.instream_dpmnov+values.instream_dpmdec; 
+        return values.instream_dpmjan+values.instream_dpmfeb+values.instream_dpmmar+values.instream_dpmapr+values.instream_dpmmay+values.instream_dpmjun+values.instream_dpmjul+values.instream_dpmaug+values.instream_dpmsep+values.instream_dpmoct+values.instream_dpmnov+values.instream_dpmdec;
       },
       averageHoursPerYearInStream: function(values) {
-        var totalHoursPerYearInStream = values.instream_hpdjan+values.instream_hpdfeb+values.instream_hpdmar+values.instream_hpdapr+values.instream_hpdmay+values.instream_hpdjun+values.instream_hpdjul+values.instream_hpdaug+values.instream_hpdsep+values.instream_hpdoct+values.instream_hpdnov+values.instream_hpddec; 
-        return (totalHoursPerYearInStream/12);
+        var totalHoursPerYearInStream = values.instream_hpdjan+values.instream_hpdfeb+values.instream_hpdmar+values.instream_hpdapr+values.instream_hpdmay+values.instream_hpdjun+values.instream_hpdjul+values.instream_hpdaug+values.instream_hpdsep+values.instream_hpdoct+values.instream_hpdnov+values.instream_hpddec;
+        return totalHoursPerYearInStream;
       },
       averageDaysPerYearInStream: function(values) {
-        var dpm = this.totalDaysPerYearInStream(values),
-            hpd = this.averageHoursPerYearInStream(values);
-        return (dpm*hpd/24);
+        // var dpm = this.totalDaysPerYearInStream(values),
+        //     hpd = this.averageHoursPerYearInStream(values);
+
+        var sumproduct = (values.instream_hpdjan*values.instream_dpmjan)+(values.instream_hpdfeb*values.instream_dpmfeb)+(values.instream_hpdmar*values.instream_dpmmar)+(values.instream_hpdapr*values.instream_dpmapr)+(values.instream_hpdmay*values.instream_dpmmay)+(values.instream_hpdjun*values.instream_dpmjun)+(values.instream_hpdjul*values.instream_dpmjul)+(values.instream_hpdaug*values.instream_dpmaug)+(values.instream_hpdsep*values.instream_dpmsep)+(values.instream_hpdoct*values.instream_dpmoct)+(values.instream_hpdnov*values.instream_dpmnov)+(values.instream_hpddec*values.instream_dpmdec);
+
+        return (sumproduct/24);
       },
       quantityInstalled: function(values, field, format) {
 
@@ -6667,7 +6744,7 @@ angular.module('practiceMonitoringAssessmentApp')
       adjustorCurveNitrogen: function(value, format) {
 
         var self = this,
-            depthTreated = value.bioretention_runoff_volume_captured, // Make sure we change this in the database
+            depthTreated = value.rainfall_depth_treated, // Make sure we change this in the database
             runoffVolumeCaptured = self.runoffVolumeCaptured(value),
             first = 0.0308*Math.pow(depthTreated, 5),
             second = 0.2562*Math.pow(depthTreated, 4),
@@ -6681,7 +6758,7 @@ angular.module('practiceMonitoringAssessmentApp')
       adjustorCurvePhosphorus: function(value, format) {
 
         var self = this,
-            depthTreated = value.bioretention_runoff_volume_captured, // Make sure we change this in the database
+            depthTreated = value.rainfall_depth_treated, // Make sure we change this in the database
             runoffVolumeCaptured = self.runoffVolumeCaptured(value), // we need to make sure that this number is 0 before actually doing the rest of the calculation
             first = 0.0304*Math.pow(depthTreated, 5),
             second = 0.2619*Math.pow(depthTreated, 4),
@@ -6695,7 +6772,7 @@ angular.module('practiceMonitoringAssessmentApp')
       adjustorCurveSediment: function(value, format) {
 
         var self = this,
-            depthTreated = value.bioretention_runoff_volume_captured, // Make sure we change this in the database
+            depthTreated = value.rainfall_depth_treated, // Make sure we change this in the database
             runoffVolumeCaptured = self.runoffVolumeCaptured(value), // we need to make sure that this number is 0 before actually doing the rest of the calculation
             first = 0.0326*Math.pow(depthTreated, 5),
             second = 0.2806*Math.pow(depthTreated, 4),
@@ -6707,7 +6784,7 @@ angular.module('practiceMonitoringAssessmentApp')
         return (format === '%') ? reduction*100 : reduction;
       },
       rainfallDepthTreated: function(value) {
-        return (value.bioretention_runoff_volume_captured/(value.bioretention_impervious_area/43560))*12;
+        return (value.rainfall_depth_treated/(value.bioretention_impervious_area/43560))*12;
       },
       gallonsReducedPerYear: function(value) {
         var runoffVolumeCaptured = this.runoffVolumeCaptured(value);
@@ -6860,7 +6937,7 @@ angular.module('practiceMonitoringAssessmentApp')
         return 0;
       },
       runoffVolumeCaptured: function(value) {
-        return (value.bioretention_runoff_volume_captured*value.bioretention_impervious_area)/(12*43560);
+        return (value.rainfall_depth_treated*value.bioretention_impervious_area)/(12*43560);
       }
     };
   }]);
@@ -8347,24 +8424,20 @@ angular.module('practiceMonitoringAssessmentApp')
         var baseLength = value.installation_length_of_streambank,
             ler = value.installation_lateral_erosion_rate,
             soilDensity = value.installation_soil_bulk_density,
-            soilNDensity = value.installation_soil_n_content,
-            soilPDensity = value.installation_soil_p_content,
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return loadTotal/2000;
+        return (loadTotal)/2000;
       },
       plannedSedimentLoadReduction: function(value) {
 
         var baseLength = value.installation_length_of_streambank,
-            ler = (value.installation_lateral_erosion_rate-0.02),
+            ler = (parseFloat(value.installation_lateral_erosion_rate)-0.02),
             soilDensity = value.installation_soil_bulk_density,
-            soilNDensity = value.installation_soil_n_content,
-            soilPDensity = value.installation_soil_p_content,
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return loadTotal/2000;
+        return (loadTotal)/2000;
       },
       installedSedimentLoadReduction: function(values, format) {
 
@@ -8403,7 +8476,7 @@ angular.module('practiceMonitoringAssessmentApp')
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return (loadTotal/2000)*soilNDensity;
+        return ((loadTotal)/2000)*soilNDensity;
       },
       plannedNitrogenLoadReduction: function(value) {
 
@@ -8414,7 +8487,7 @@ angular.module('practiceMonitoringAssessmentApp')
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return (loadTotal/2000)*soilNDensity;
+        return ((loadTotal)/2000)*soilNDensity;
       },
       installedNitrogenLoadReduction: function(values, format) {
 
@@ -8453,7 +8526,7 @@ angular.module('practiceMonitoringAssessmentApp')
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return (loadTotal/2000)*soilPDensity;
+        return ((loadTotal)/2000)*soilPDensity;
       },
       plannedPhosphorusLoadReduction: function(value) {
 
@@ -8464,7 +8537,7 @@ angular.module('practiceMonitoringAssessmentApp')
             squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
-        return (loadTotal/2000)*soilPDensity;
+        return ((loadTotal)/2000)*soilPDensity;
       },
       installedPhosphorusLoadReduction: function(values, format) {
 
@@ -10344,6 +10417,25 @@ angular.module('practiceMonitoringAssessmentApp')
       };
 
       return Application;
+    }];
+  });
+
+'use strict';
+
+/**
+ * @ngdoc service
+ * @name
+ * @description
+ */
+angular.module('practiceMonitoringAssessmentApp')
+  .provider('Efficiency', function () {
+    this.$get = ['$resource', function ($resource) {
+      return $resource('//api.commonscloud.org/v2/type_056e01e3bbf44359866b4861cde24808.json', {}, {
+        query: {
+          method: 'GET',
+          isArray: false,
+        }
+      });
     }];
   });
 

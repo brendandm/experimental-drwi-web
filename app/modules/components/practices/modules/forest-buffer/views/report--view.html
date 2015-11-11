@@ -87,7 +87,9 @@
               <td>{{ calculate.results.totalPreInstallationLoad.nitrogen || 0 | number:2 }}</td>
               <td>{{ calculate.results.totalPlannedLoad.nitrogen || 0 | number:2 }}</td>
               <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_buffer, report.average_width_of_buffer, 'nitrogen') | number:2"></span>
+                <span data-ng-if="practice_efficiency"
+                      data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_buffer, report.average_width_of_buffer, 'nitrogen') | number:2">
+                </span>
               </td>
               <td><strong>{{ calculate.results.totalInstalledLoad.nitrogen | number:2 }}</strong> lbs/yr</td>
               <td>
@@ -101,7 +103,9 @@
               <td>{{ calculate.results.totalPreInstallationLoad.phosphorus || 0 | number:2 }}</td>
               <td>{{ calculate.results.totalPlannedLoad.phosphorus || 0 | number:2 }}</td>
               <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_buffer, report.average_width_of_buffer, 'phosphorus') | number:2"></span>
+                <span data-ng-if="practice_efficiency"
+                      data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_buffer, report.average_width_of_buffer, 'phosphorus') | number:2">
+                </span>
               </td>
               <td><strong>{{ calculate.results.totalInstalledLoad.phosphorus | number:2 }}</strong> lbs/yr</td>
               <td>
@@ -115,7 +119,9 @@
               <td>{{ calculate.results.totalPreInstallationLoad.sediment || 0 | number:2 }}</td>
               <td>{{ calculate.results.totalPlannedLoad.sediment || 0 | number:2 }}</td>
               <td data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-                <span data-ng-if="practice_efficiency" data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_buffer, report.average_width_of_buffer, 'sediment') | number:2"></span>
+                <span data-ng-if="practice_efficiency"
+                      data-ng-bind="calculate.GetSingleInstalledLoad(report.length_of_buffer, report.average_width_of_buffer, 'sediment') | number:2">
+                </span>
               </td>
               <td><strong>{{ calculate.results.totalInstalledLoad.sediment | number:2 }}</strong> tons/yr</td>
               <td>
