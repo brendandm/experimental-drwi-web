@@ -586,7 +586,6 @@ angular.module('practiceMonitoringAssessmentApp')
         },
         totalPreInstallationLoad: $scope.calculate.GetPreInstallationLoad('Planning'),
         totalPlannedLoad: $scope.calculate.GetPlannedLoad('Planning'),
-        // totalInstalledLoad: $scope.calculate.GetInstalledLoad('Installation'),
         totalMilesRestored: $scope.calculate.GetRestorationTotal(5280),
         percentageMilesRestored: $scope.calculate.GetRestorationPercentage(5280, false),
         totalAcresRestored: $scope.calculate.GetRestorationTotal(43560, true),
