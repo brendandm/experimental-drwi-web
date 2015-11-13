@@ -45,6 +45,18 @@ angular.module('practiceMonitoringAssessmentApp')
       p_efficiency: 24
     };
 
+    $scope.grass_efficiency = {
+      s_efficiency: 60,
+      n_efficiency: 21,
+      p_efficiency: 45
+    };
+
+    $scope.forest_efficiency = {
+      s_efficiency: 60,
+      n_efficiency: 21,
+      p_efficiency: 45
+    };
+
     $scope.calculate.GetLoadVariables = function(period, landuse) {
 
       var planned = {
@@ -161,11 +173,14 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.calculate.GetPlannedLoad = function(period) {
 
-      var existingLanduseType;
+      var existingLanduseType, bmpEfficiency, animal, auDaysYr;
 
       for (var i = 0; i < $scope.practice.readings.length; i++) {
         if ($scope.practice.readings[i].measurement_period === period) {
           existingLanduseType = $scope.landuse[$scope.practice.readings[i].existing_riparian_landuse.toLowerCase()];
+          bmpEfficiency = ($scope.practice.readings[i].buffer_type) ? $scope.grass_efficiency : $scope.forest_efficiency;
+          animal = AnimalType[$scope.practice.readings[i].animal_type];
+          auDaysYr = ($scope.calculate.averageDaysPerYearInStream($scope.practice.readings[i])*$scope.calculate.animalUnits($scope.practice.readings[i].number_of_livestock, $scope.practice.readings[i].average_weight));
         }
       }
 
@@ -199,9 +214,9 @@ angular.module('practiceMonitoringAssessmentApp')
             // EXISTING CONDITION — LOAD VALUES
             //
             var uplandPlannedInstallationLoad = {
-              sediment: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.sediment*($scope.practice_efficiency.s_efficiency/100),
-              nitrogen: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.nitrogen*($scope.practice_efficiency.n_efficiency/100),
-              phosphorus: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.phosphorus*($scope.practice_efficiency.p_efficiency/100)
+              sediment: ($scope.calculate.results.totalPreInstallationLoad.uplandLanduse.sediment/100)*bmpEfficiency.s_efficiency,
+              nitrogen: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.nitrogen/100*bmpEfficiency.n_efficiency,
+              phosphorus: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.phosphorus/100*bmpEfficiency.p_efficiency
             };
 
             console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
@@ -214,6 +229,11 @@ angular.module('practiceMonitoringAssessmentApp')
 
             console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
 
+            var directDeposit = {
+              nitrogen: (auDaysYr*animal.manure)*animal.total_nitrogen,
+              phosphorus: (auDaysYr*animal.manure)*animal.total_phosphorus,
+            };
+
             //
             // PLANNED CONDITIONS — LANDUSE VALUES
             //
@@ -222,8 +242,9 @@ angular.module('practiceMonitoringAssessmentApp')
                 new: newLoaddata,
                 existing: existingLoaddata
               },
-              nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen,
-              phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus,
+              directDeposit: directDeposit,
+              nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen + directDeposit.nitrogen,
+              phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus + directDeposit.phosphorus,
               sediment: uplandPlannedInstallationLoad.sediment + existingPlannedInstallationLoad.sediment
             };
 
