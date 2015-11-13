@@ -492,7 +492,7 @@ angular.module('practiceMonitoringAssessmentApp')
           nitrogen: null,
           phosphorus: null,
           sediment: null
-        }
+        };
       }
     };
 
