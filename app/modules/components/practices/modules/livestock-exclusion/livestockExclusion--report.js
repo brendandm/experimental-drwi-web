@@ -8,7 +8,7 @@
  * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('LivestockExclusionReportController', function (Efficiency, $rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateLivestockExclusion, Calculate) {
+  .controller('LivestockExclusionReportController', function (AnimalType, Efficiency, $rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateLivestockExclusion, Calculate) {
 
     //
     // Assign project to a scoped variable
@@ -99,13 +99,17 @@ angular.module('practiceMonitoringAssessmentApp')
 
       var rotationalGrazingArea = null,
           existingLanduseType = null,
-          uplandLanduseType = null;
+          uplandLanduseType = null,
+          animal = null,
+          auDaysYr = null;
 
       for (var i = 0; i < $scope.practice.readings.length; i++) {
         if ($scope.practice.readings[i].measurement_period === 'Planning') {
            rotationalGrazingArea = ($scope.practice.readings[i].length_of_fencing*200/43560);
            existingLanduseType = $scope.landuse[$scope.practice.readings[i].existing_riparian_landuse.toLowerCase()];
            uplandLanduseType = $scope.landuse[$scope.practice.readings[i].upland_landuse.toLowerCase()];
+           animal = AnimalType[$scope.practice.readings[i].animal_type];
+           auDaysYr = ($scope.calculate.averageDaysPerYearInStream($scope.practice.readings[i])*$scope.calculate.animalUnits($scope.practice.readings[i].number_of_livestock, $scope.practice.readings[i].average_weight));
         }
       }
 
@@ -123,22 +127,30 @@ angular.module('practiceMonitoringAssessmentApp')
             phosphorus: (((loaddata.area * 2)*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres))) + rotationalGrazingArea*((loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres))*($scope.practice_efficiency.p_efficiency/100)
           };
 
-          console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad);
+          // console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad);
 
           var existingPreInstallationLoad = {
-            nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
-            phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
-            sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
+            sediment: ((loaddata.area*(existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres))/2000),
+            nitrogen: (loaddata.area*(existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres)),
+            phosphorus: (loaddata.area*(existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres))
           };
 
-          console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad);
+          // console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad);
+
+          var directDeposit = {
+            nitrogen: (auDaysYr*animal.manure)*animal.total_nitrogen,
+            phosphorus: (auDaysYr*animal.manure)*animal.total_phosphorus,
+          };
+
+          // console.log('directDeposit', directDeposit);
 
           $scope.calculate.results.totalPreInstallationLoad = {
+            directDeposit: directDeposit,
             efficieny: loaddata.efficieny,
             uplandLanduse: uplandPreInstallationLoad,
             existingLanduse: existingPreInstallationLoad,
-            nitrogen: uplandPreInstallationLoad.nitrogen + existingPreInstallationLoad.nitrogen,
-            phosphorus: uplandPreInstallationLoad.phosphorus + existingPreInstallationLoad.phosphorus,
+            nitrogen: uplandPreInstallationLoad.nitrogen + existingPreInstallationLoad.nitrogen + directDeposit.nitrogen,
+            phosphorus: uplandPreInstallationLoad.phosphorus + existingPreInstallationLoad.phosphorus + directDeposit.phosphorus,
             sediment: uplandPreInstallationLoad.sediment + existingPreInstallationLoad.sediment
           };
 
