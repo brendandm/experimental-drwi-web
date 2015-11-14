@@ -109,11 +109,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.calculate.GetPreInstallationLoad = function() {
 
-      var rotationalGrazingArea = null,
-          existingLanduseType = null,
-          uplandLanduseType = null,
-          animal = null,
-          auDaysYr = null;
+      var rotationalGrazingArea, existingLanduseType, uplandLanduseType, animal, auDaysYr;
 
       for (var i = 0; i < $scope.practice.readings.length; i++) {
         if ($scope.practice.readings[i].measurement_period === 'Planning') {
@@ -332,35 +328,108 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $scope.calculate.GetSingleInstalledLoad = function(value) {
 
-      var reduction = 0,
-          bufferArea = ((value.length_of_buffer * value.average_width_of_buffer)/43560),
-          landuse = (value.existing_riparian_landuse) ? $scope.landuse[value.existing_riparian_landuse.toLowerCase()] : null,
-          preExistingEfficieny = $scope.calculate.results.totalPreInstallationLoad.efficieny,
-          landuseEfficiency = ($scope.calculate.results.totalPlannedLoad && $scope.calculate.results.totalPlannedLoad.efficiency) ? $scope.calculate.results.totalPlannedLoad.efficiency : null,
-          uplandPreInstallationLoad = null,
-          existingPreInstallationLoad = null;
+      console.log('value', value)
 
-      if ($scope.practice_efficiency) {
-        uplandPreInstallationLoad = {
-          sediment: (((bufferArea*2*(landuseEfficiency.existing.efficieny.eos_tss/landuseEfficiency.existing.efficieny.eos_acres))/2000)*$scope.practice_efficiency.s_efficiency/100),
-          nitrogen: ((bufferArea*4*(landuseEfficiency.existing.efficieny.eos_totn/landuseEfficiency.existing.efficieny.eos_acres))*$scope.practice_efficiency.n_efficiency/100),
-          phosphorus: ((bufferArea*2*(landuseEfficiency.existing.efficieny.eos_totp/landuseEfficiency.existing.efficieny.eos_acres))*$scope.practice_efficiency.p_efficiency/100)
-        };
-      }
+      /********************************************************************/
+      // Setup
+      /********************************************************************/
 
-      if (landuseEfficiency) {
-        existingPreInstallationLoad = {
-          sediment: ((bufferArea*((landuseEfficiency.existing.efficieny.eos_tss/landuseEfficiency.existing.efficieny.eos_acres)-(landuseEfficiency.new.efficieny.eos_tss/landuseEfficiency.new.efficieny.eos_acres)))/2000),
-          nitrogen: (bufferArea*((landuseEfficiency.existing.efficieny.eos_totn/landuseEfficiency.existing.efficieny.eos_acres)-(landuseEfficiency.new.efficieny.eos_totn/landuseEfficiency.new.efficieny.eos_acres))),
-          phosphorus: (bufferArea*((landuseEfficiency.existing.efficieny.eos_totp/landuseEfficiency.existing.efficieny.eos_acres)-(landuseEfficiency.new.efficieny.eos_totp/landuseEfficiency.new.efficieny.eos_acres)))
-        };
-      }
-
-      if (uplandPreInstallationLoad && existingPreInstallationLoad) {
+      //
+      // Before we allow any of the following calculations to happen we
+      // need to ensure that our basic load data has been loaded
+      //
+      if (!$scope.calculate.results.totalPlannedLoad) {
         return {
-          nitrogen: uplandPreInstallationLoad.nitrogen + existingPreInstallationLoad.nitrogen,
-          phosphorus: uplandPreInstallationLoad.phosphorus + existingPreInstallationLoad.phosphorus,
-          sediment: uplandPreInstallationLoad.sediment + existingPreInstallationLoad.sediment
+          nitrogen: null,
+          phosphorus: null,
+          sediment: null
+        };
+      }
+
+      //
+      // Setup variables we will need to complete the calculation
+      //
+      //
+      var bufferArea = (value.length_of_fencing * value.average_buffer_width)/43560,
+          bmpEfficiency = (value.buffer_type) ? $scope.grass_efficiency : $scope.forest_efficiency,
+          newLanduseLoadData = $scope.calculate.results.totalPlannedLoad.efficiency.new.efficieny,
+          existingLoaddata = $scope.calculate.results.totalPlannedLoad.efficiency.existing.efficieny,
+          uplandLoaddata = $scope.calculate.results.totalPreInstallationLoad.efficieny,
+          rotationalGrazingArea = (value.length_of_fencing*200/43560),
+          animal = AnimalType[value.animal_type],
+          auDaysYr,
+          planningValue;
+
+      //
+      // Get Animal Unit Days/Year from Planning data
+      //
+      for (var i = 0; i < $scope.practice.readings.length; i++) {
+        if ($scope.practice.readings[i].measurement_period === 'Planning') {
+          planningValue = $scope.practice.readings[i];
+          auDaysYr = ($scope.calculate.averageDaysPerYearInStream($scope.practice.readings[i])*$scope.calculate.animalUnits($scope.practice.readings[i].number_of_livestock, $scope.practice.readings[i].average_weight));
+        }
+      }
+
+      /********************************************************************/
+      // Part 1: Pre-Project Loads based on "Installed" buffer size
+      /********************************************************************/
+
+      var preUplandPreInstallationLoad = {
+        sediment: (bufferArea * 2 * (uplandLoaddata.eos_tss/uplandLoaddata.eos_acres)/2000) + rotationalGrazingArea * ((uplandLoaddata.eos_tss/uplandLoaddata.eos_acres)/2000) * ($scope.practice_efficiency.s_efficiency/100),
+        nitrogen: ((bufferArea * 4 * (uplandLoaddata.eos_totn/uplandLoaddata.eos_acres))) + rotationalGrazingArea*(uplandLoaddata.eos_totn/uplandLoaddata.eos_acres)*($scope.practice_efficiency.n_efficiency/100),
+        phosphorus: ((bufferArea * 2 * (uplandLoaddata.eos_totp/uplandLoaddata.eos_acres))) + rotationalGrazingArea*((uplandLoaddata.eos_totp/uplandLoaddata.eos_acres))*($scope.practice_efficiency.p_efficiency/100)
+      };
+
+      var preExistingPreInstallationLoad = {
+        sediment: ((bufferArea*(existingLoaddata.eos_tss/existingLoaddata.eos_acres))/2000),
+        nitrogen: (bufferArea*(existingLoaddata.eos_totn/existingLoaddata.eos_acres)),
+        phosphorus: (bufferArea*(existingLoaddata.eos_totp/existingLoaddata.eos_acres))
+      };
+
+      var preDirectDeposit = {
+        nitrogen: (auDaysYr*animal.manure)*animal.total_nitrogen,
+        phosphorus: (auDaysYr*animal.manure)*animal.total_phosphorus,
+      };
+
+       var preInstallationeBMPLoadTotals = {
+           nitrogen: preUplandPreInstallationLoad.nitrogen + preExistingPreInstallationLoad.nitrogen + preDirectDeposit.nitrogen,
+           phosphorus: preUplandPreInstallationLoad.phosphorus + preExistingPreInstallationLoad.phosphorus + preDirectDeposit.phosphorus,
+           sediment: preUplandPreInstallationLoad.sediment + preExistingPreInstallationLoad.sediment
+       };
+
+       console.log('preInstallationeBMPLoadTotals', preInstallationeBMPLoadTotals);
+
+       /********************************************************************/
+       // Part 2: Loads based on "Installed" buffer size
+       /********************************************************************/
+       var uplandPlannedInstallationLoad = {
+         sediment: preUplandPreInstallationLoad.sediment/100*bmpEfficiency.s_efficiency,
+         nitrogen: preUplandPreInstallationLoad.nitrogen/100*bmpEfficiency.n_efficiency,
+         phosphorus: preUplandPreInstallationLoad.phosphorus/100*bmpEfficiency.p_efficiency
+       };
+
+       console.log('postInstallationeBMPLoadTotals uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
+
+       var existingPlannedInstallationLoad = {
+         sediment: ((bufferArea*((existingLoaddata.eos_tss/existingLoaddata.eos_acres)-(newLanduseLoadData.eos_tss/newLanduseLoadData.eos_acres)))/2000),
+         nitrogen: (bufferArea*((existingLoaddata.eos_totn/existingLoaddata.eos_acres)-(newLanduseLoadData.eos_totn/newLanduseLoadData.eos_acres))),
+         phosphorus: (bufferArea*((existingLoaddata.eos_totp/existingLoaddata.eos_acres)-(newLanduseLoadData.eos_totp/newLanduseLoadData.eos_acres)))
+       };
+
+       console.log('postInstallationeBMPLoadTotals existingPlannedInstallationLoad', existingPlannedInstallationLoad);
+
+       var directDeposit = {
+         nitrogen: preDirectDeposit.nitrogen*value.length_of_fencing/planningValue.length_of_fencing,
+         phosphorus: preDirectDeposit.phosphorus*value.length_of_fencing/planningValue.length_of_fencing,
+       };
+
+       console.log('postInstallationeBMPLoadTotals directDeposit', directDeposit);
+
+      if (uplandPlannedInstallationLoad && existingPlannedInstallationLoad && directDeposit) {
+        return {
+          nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen + directDeposit.nitrogen,
+          phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus + directDeposit.phosphorus,
+          sediment: uplandPlannedInstallationLoad.sediment + existingPlannedInstallationLoad.sediment
         };
       } else {
         return {
@@ -488,17 +557,10 @@ angular.module('practiceMonitoringAssessmentApp')
     });
 
     $scope.readings = {
-      bufferWidth: function() {
+      prepopulate: function(field) {
         for (var i = 0; i < $scope.practice.readings.length; i++) {
           if ($scope.practice.readings[i].measurement_period === 'Planning') {
-            return $scope.practice.readings[i].average_width_of_buffer;
-          }
-        }
-      },
-      landuse: function(landuseType) {
-        for (var i = 0; i < $scope.practice.readings.length; i++) {
-          if ($scope.practice.readings[i].measurement_period === 'Planning') {
-            return $scope.practice.readings[i][landuseType];
+            return $scope.practice.readings[i][field];
           }
         }
       },
@@ -514,9 +576,10 @@ angular.module('practiceMonitoringAssessmentApp')
           storage: $scope.storage.storage,
           data: {
             measurement_period: (readingType) ? readingType : null,
-            average_width_of_buffer: $scope.readings.bufferWidth(),
-            existing_riparian_landuse: $scope.readings.landuse('existing_riparian_landuse'),
-            upland_landuse: $scope.readings.landuse('upland_landuse'),
+            average_width_of_buffer: $scope.readings.prepopulate('average_width_of_buffer'),
+            existing_riparian_landuse: $scope.readings.prepopulate('existing_riparian_landuse'),
+            upland_landuse: $scope.readings.prepopulate('upland_landuse'),
+            animal_type: $scope.readings.prepopulate('animal_type'),
             report_date: moment().format('YYYY-MM-DD'),
             owner: $scope.user.id,
             status: 'private'
