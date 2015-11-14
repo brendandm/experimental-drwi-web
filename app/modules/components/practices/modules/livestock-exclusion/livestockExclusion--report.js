@@ -497,6 +497,40 @@ angular.module('practiceMonitoringAssessmentApp')
     };
 
 
+    $scope.calculate.quantityBufferInstalled = function(values, element, format) {
+
+      var planned_total = 0,
+          installed_total = 0,
+          percentage = 0;
+
+      // Get readings organized by their Type
+      angular.forEach(values, function(reading, $index) {
+        if (reading.measurement_period === 'Planning') {
+          planned_total += $scope.calculate.GetSingleInstalledLoad(reading)[element];
+        } else if (reading.measurement_period === 'Installation') {
+          installed_total += $scope.calculate.GetSingleInstalledLoad(reading)[element];
+        }
+
+      });
+
+      // Divide the Installed Total by the Planned Total to get a percentage of installed
+      if (planned_total) {
+        console.log('something to show');
+        if (format === '%') {
+          percentage = (installed_total/planned_total);
+          console.log('percentage', (percentage*100));
+          return (percentage*100);
+        } else {
+          console.log('installed_total', installed_total);
+          return installed_total;
+        }
+      }
+
+      return 0;
+
+    };
+
+
     //
     // Scope elements that run the actual equations and send them back to the
     // user interface for display
