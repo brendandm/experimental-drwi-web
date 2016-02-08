@@ -22,6 +22,5 @@
     "angular-moment": "0.8.2"
   },
   "devDependencies": {},
-  "appPath": "app",
-  "resolutions": {}
+  "appPath": "app"
 }
