@@ -50,6 +50,7 @@ angular.module('FieldStack')
       .when('/projects/:projectId/edit', {
         templateUrl: '/modules/components/projects/views/projectsEdit--view.html',
         controller: 'ProjectEditCtrl',
+        controllerAs: 'page',
         resolve: {
           user: function(Account) {
             if (Account.userObject && !Account.userObject.id) {
@@ -57,20 +58,10 @@ angular.module('FieldStack')
             }
             return Account.userObject;
           },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.project.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.project.templateId, 'object');
-          },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
+          project: function(Project, $route) {
+            return Project.get({
+                'id': $route.current.params.projectId
             });
-          },
-          storage: function() {
-            return commonscloud.collections.project.storage;
           }
         }
       })

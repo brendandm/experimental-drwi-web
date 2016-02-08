@@ -43,8 +43,8 @@ angular.module('FieldStack')
             'name': 'Untitled Project'
         });
 
-        self.project.$save(function(project) {
-            $location.path('/projects/' + project + '/edit');
+        self.project.$save(function(successResponse) {
+            $location.path('/projects/' + successResponse.id + '/edit');
         }, function(errorResponse) {
             $log.error('Unable to create Project object');
         });
