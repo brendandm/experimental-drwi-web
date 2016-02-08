@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldStack')
-  .controller('ProjectsCtrl', function (Account, $location, Project, projects, $rootScope, user) {
+  .controller('ProjectsCtrl', function (Account, $location, $log, Project, projects, $rootScope, user) {
 
     var self = this;
 
@@ -26,7 +26,7 @@ angular.module('FieldStack')
         {
           type: 'button-link new',
           action: function() {
-            $scope.project.create();
+            self.createProject();
           },
           text: 'Create project'
         }
@@ -38,16 +38,16 @@ angular.module('FieldStack')
     //
     self.projects = projects;
 
-    self.project = {
-        create: function() {
-            Project.$save({
-                data: {
-                    project_title: 'Untitled Project'
-                }
-              }).then(function(project) {
-                  $location.path('/projects/' + project + '/edit');
-              });
-        }
+    self.createProject = function() {
+        self.project = new Project({
+            'name': 'Untitled Project'
+        });
+
+        self.project.$save(function(project) {
+            $location.path('/projects/' + project + '/edit');
+        }, function(errorResponse) {
+            $log.error('Unable to create Project object');
+        });
     };
 
     //
