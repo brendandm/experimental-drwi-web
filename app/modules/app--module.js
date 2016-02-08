@@ -15,12 +15,10 @@ angular
     'ngSanitize',
     'ngTouch',
     'ipCookie',
-    'ui.gravatar',
     'leaflet-directive',
     'angularFileUpload',
     'geolocation',
     'angular-loading-bar',
     'monospaced.elastic',
-    'angular-medium-editor',
     'angularMoment'
   ]);
