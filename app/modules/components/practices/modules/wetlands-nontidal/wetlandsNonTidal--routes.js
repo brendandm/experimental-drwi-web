@@ -4,10 +4,10 @@
 
   /**
    * @ngdoc overview
-   * @name practiceMonitoringAssessmentApp
+   * @name FieldStack
    * @description
    */
-  angular.module('practiceMonitoringAssessmentApp')
+  angular.module('FieldStack')
     .config(function($routeProvider, commonscloud) {
 
     });

@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.user
+ * @name FieldStack.user
  * @description
  * # user
- * Provider in the practiceMonitoringAssessmentApp.
+ * Provider in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .provider('User', function () {
 
     this.$get = ['$resource', '$rootScope', '$location', '$q', 'ipCookie', '$timeout', function($resource, $rootScope, $location, $q, ipCookie, $timeout) {

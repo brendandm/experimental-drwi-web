@@ -4,13 +4,13 @@
 
     /**
      * @ngdoc overview
-     * @name practiceMonitoringAssessmentApp
+     * @name FieldStack
      * @description
-     * # practiceMonitoringAssessmentApp
+     * # FieldStack
      *
      * Main module of the application.
      */
-    angular.module('practiceMonitoringAssessmentApp')
+    angular.module('FieldStack')
       .config(function ($routeProvider) {
         $routeProvider
           .when('/', {

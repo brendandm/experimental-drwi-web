@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:ForestBufferController
+ * @name FieldStack.controller:ForestBufferController
  * @description
  * # ForestBufferController
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('ForestBufferReportController', function (Efficiency, $rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse) {
 
     //

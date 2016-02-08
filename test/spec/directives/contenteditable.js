@@ -3,7 +3,7 @@
 describe('Directive: contenteditable', function () {
 
   // load the directive's module
-  beforeEach(module('practiceMonitoringAssessmentApp'));
+  beforeEach(module('FieldStack'));
 
   var element,
     scope;

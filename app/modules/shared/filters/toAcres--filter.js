@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.toAcres
+ * @name FieldStack.toAcres
  * @description
  * # toAcres
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .filter('toAcres', [function(){
 
     /**

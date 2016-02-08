@@ -3,7 +3,7 @@
 describe('Controller: SiteEditCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('practiceMonitoringAssessmentApp'));
+  beforeEach(module('FieldStack'));
 
   var SiteEditCtrl,
     scope;

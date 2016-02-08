@@ -2,14 +2,14 @@
 
 /**
  * @ngdoc overview
- * @name practiceMonitoringAssessmentApp
+ * @name FieldStack
  * @description
- * # practiceMonitoringAssessmentApp
+ * # FieldStack
  *
  * Main module of the application.
  */
 angular
-  .module('practiceMonitoringAssessmentApp', [
+  .module('FieldStack', [
     'ngResource',
     'ngRoute',
     'ngSanitize',
@@ -28,13 +28,13 @@ angular
 
 /**
  * @ngdoc overview
- * @name practiceMonitoringAssessmentApp
+ * @name FieldStack
  * @description
- * # practiceMonitoringAssessmentApp
+ * # FieldStack
  *
  * Main module of the application.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
 
     $routeProvider
@@ -50,13 +50,13 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc overview
- * @name practiceMonitoringAssessmentApp
+ * @name FieldStack
  * @description
- * # practiceMonitoringAssessmentApp
+ * # FieldStack
  *
  * Main module of the application.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .config(['$routeProvider', function($routeProvider) {
 
     $routeProvider
@@ -84,12 +84,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:SecurityController
+ * @name FieldStack.controller:SecurityController
  * @description
  * # SecurityController
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('SecurityAuthorize', function($location, token) {
 
     //
@@ -107,12 +107,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:SecurityLogin
+ * @name FieldStack.controller:SecurityLogin
  * @description
  * # SecurityLogin
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('SecurityLogin', ['$scope', 'ipCookie', '$location', function($scope, ipCookie, $location) {
 
     var session_cookie = ipCookie('COMMONS_SESSION');
@@ -158,12 +158,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:SecurityLogout
+ * @name FieldStack.controller:SecurityLogout
  * @description
  * # SecurityLogout
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('SecurityLogout', ['$location', 'token', function($location, token) {
 
     console.log('SecurityLogout');
@@ -184,12 +184,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.authorizationInterceptor
+ * @name FieldStack.authorizationInterceptor
  * @description
  * # authorizationInterceptor
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .factory('AuthorizationInterceptor', ['$location', '$q', 'ipCookie', function($location, $q, ipCookie) {
 
     return {
@@ -246,12 +246,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.Navigation
+ * @name FieldStack.Navigation
  * @description
  * # Navigation
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('token', ['$location', 'ipCookie', function ($location, ipCookie) {
 
     return {
@@ -287,13 +287,13 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc overview
- * @name practiceMonitoringAssessmentApp
+ * @name FieldStack
  * @description
- * # practiceMonitoringAssessmentApp
+ * # FieldStack
  *
  * Main module of the application.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
 
     $routeProvider
@@ -417,12 +417,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:ProjectsCtrl
+ * @name FieldStack.controller:ProjectsCtrl
  * @description
  * # ProjectsCtrl
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('ProjectsCtrl', ['$rootScope', '$scope', '$route', '$routeParams', '$location', '$timeout', 'Feature', 'template', 'fields', 'storage', 'user', function ($rootScope, $scope, $route, $routeParams, $location, $timeout, Feature, template, fields, storage, user) {
 
     var timeout;
@@ -625,12 +625,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:ProjectviewCtrl
+ * @name FieldStack.controller:ProjectviewCtrl
  * @description
  * # ProjectviewCtrl
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('ProjectViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$anchorScroll', 'mapbox', 'Template', 'Feature', 'project', 'storage', 'user', 'template', 'site', 'sites', function ($rootScope, $scope, $route, $location, $anchorScroll, mapbox, Template, Feature, project, storage, user, template, site, sites) {
 
     //
@@ -800,12 +800,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:ProjecteditCtrl
+ * @name FieldStack.controller:ProjecteditCtrl
  * @description
  * # ProjecteditCtrl
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('ProjectEditCtrl', ['$rootScope', '$scope', '$route', '$location', 'project', 'Template', 'Feature', 'Field', 'template', 'fields', 'storage', 'user', function ($rootScope, $scope, $route, $location, project, Template, Feature, Field, template, fields, storage, user) {
 
     //
@@ -939,12 +939,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:ProjectUsersCtrl
+ * @name FieldStack.controller:ProjectUsersCtrl
  * @description
  * # ProjectUsersCtrl
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('ProjectUsersCtrl', ['$rootScope', '$scope', '$route', '$location', 'project', 'Template', 'Feature', 'Field', 'template', 'fields', 'storage', 'user', 'users', 'projectUsers', function ($rootScope, $scope, $route, $location, project, Template, Feature, Field, template, fields, storage, user, users, projectUsers) {
 
     //
@@ -1134,13 +1134,13 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc overview
- * @name practiceMonitoringAssessmentApp
+ * @name FieldStack
  * @description
- * # practiceMonitoringAssessmentApp
+ * # FieldStack
  *
  * Main module of the application.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
 
     $routeProvider
@@ -1237,12 +1237,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:SiteViewCtrl
+ * @name FieldStack.controller:SiteViewCtrl
  * @description
  * # SiteViewCtrl
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('SiteViewCtrl', function ($rootScope, $scope, $route, $location, $timeout, moment, user, mapbox, Template, Feature, template, fields, project, site, practices, variables, leafletData) {
 
     //
@@ -1528,12 +1528,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:SiteEditCtrl
+ * @name FieldStack.controller:SiteEditCtrl
  * @description
  * # SiteEditCtrl
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('SiteEditCtrl', ['$rootScope', '$scope', '$route', '$timeout', '$http', '$location', 'Template', 'Feature', 'mapbox', 'user', 'template', 'fields', 'project', 'site', 'storage', 'variables', 'leafletData', function ($rootScope, $scope, $route, $timeout, $http, $location, Template, Feature, mapbox, user, template, fields, project, site, storage, variables, leafletData) {
 
     var timeout;
@@ -2019,13 +2019,13 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc overview
- * @name practiceMonitoringAssessmentApp
+ * @name FieldStack
  * @description
- * # practiceMonitoringAssessmentApp
+ * # FieldStack
  *
  * Main module of the application.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
 
     $routeProvider
@@ -2077,12 +2077,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.Storage
+ * @name FieldStack.Storage
  * @description
  *    Provides site/application specific variables to the entire application
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .constant('Storage', {
     'forest-buffer': {
       landuse: 'for',
@@ -2202,11 +2202,11 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.Storage
+ * @name FieldStack.Storage
  * @description
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('Calculate', ['Load', function(Load) {
     return {
       getLoadVariables: function(segment, landuse) {
@@ -2245,12 +2245,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:PracticeEditController
+ * @name FieldStack.controller:PracticeEditController
  * @description
  * # PracticeEditController
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('PracticeEditController', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Attachment', 'Feature', 'Template', 'template', 'fields', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Attachment, Feature, Template, template, fields, project, site, practice, commonscloud
     ) {
 
@@ -2495,12 +2495,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.Storage
+ * @name FieldStack.Storage
  * @description
  *    Provides site/application specific variables to the entire application
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .constant('AnimalType', {
       beef: {
         average_weight: 877.19,
@@ -2591,12 +2591,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.Storage
+ * @name FieldStack.Storage
  * @description
  *    Provides site/application specific variables to the entire application
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .constant('Landuse', {
     'high-till with manure': 'hwm',
     'high-till with manure nutrient management': 'nhi',
@@ -2639,13 +2639,13 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc overview
- * @name practiceMonitoringAssessmentApp
+ * @name FieldStack
  * @description
- * # practiceMonitoringAssessmentApp
+ * # FieldStack
  *
  * Main module of the application.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
 
     $routeProvider
@@ -2737,12 +2737,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.Storage
+ * @name FieldStack.Storage
  * @description
  *    Provides site/application specific variables to the entire application
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('ForestBufferCalculate', [function() {
     return {
 
@@ -2753,12 +2753,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:ForestBufferController
+ * @name FieldStack.controller:ForestBufferController
  * @description
  * # ForestBufferController
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('ForestBufferReportController', function (Efficiency, $rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse) {
 
     //
@@ -3388,12 +3388,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:ReportEditCtrl
+ * @name FieldStack.controller:ReportEditCtrl
  * @description
  * # ReportEditCtrl
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('ForestBufferFormController', ['$rootScope', '$scope', '$route', '$location', 'moment', 'user', 'Template', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, moment, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
 
     //
@@ -3620,13 +3620,13 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc overview
- * @name practiceMonitoringAssessmentApp
+ * @name FieldStack
  * @description
- * # practiceMonitoringAssessmentApp
+ * # FieldStack
  *
  * Main module of the application.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
 
     $routeProvider
@@ -3718,11 +3718,11 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.Storage
+ * @name FieldStack.Storage
  * @description
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('GrassBufferCalculate', [function() {
     return {
 
@@ -3733,12 +3733,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:GrassBufferReportController
+ * @name FieldStack.controller:GrassBufferReportController
  * @description
  * # GrassBufferReportController
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('GrassBufferReportController', function (Efficiency, $rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse) {
 
     //
@@ -4358,12 +4358,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:GrassBufferFormController
+ * @name FieldStack.controller:GrassBufferFormController
  * @description
  * # GrassBufferFormController
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('GrassBufferFormController', ['$rootScope', '$scope', '$route', '$location', 'moment', 'user', 'Template', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, moment, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
 
     //
@@ -4590,13 +4590,13 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc overview
- * @name practiceMonitoringAssessmentApp
+ * @name FieldStack
  * @description
- * # practiceMonitoringAssessmentApp
+ * # FieldStack
  *
  * Main module of the application.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
 
     $routeProvider
@@ -4688,11 +4688,11 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.LivestockExclusionCalculate
+ * @name FieldStack.LivestockExclusionCalculate
  * @description
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('CalculateLivestockExclusion', ['Calculate', 'Landuse', function(Calculate, Landuse) {
     return {
       toMiles: function(feet) {
@@ -4781,12 +4781,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:LivestockExclusionReportController
+ * @name FieldStack.controller:LivestockExclusionReportController
  * @description
  * # LivestockExclusionReportController
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('LivestockExclusionReportController', function (AnimalType, Efficiency, $rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateLivestockExclusion, Calculate) {
 
     //
@@ -5560,12 +5560,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:LivestockExclusionFormController
+ * @name FieldStack.controller:LivestockExclusionFormController
  * @description
  * # LivestockExclusionFormController
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('LivestockExclusionFormController', ['$rootScope', '$scope', '$route', '$location', 'user', 'Template', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
 
     //
@@ -5795,13 +5795,13 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc overview
- * @name practiceMonitoringAssessmentApp
+ * @name FieldStack
  * @description
- * # practiceMonitoringAssessmentApp
+ * # FieldStack
  *
  * Main module of the application.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
 
     $routeProvider
@@ -5893,11 +5893,11 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.CalculateUrbanHomeowner
+ * @name FieldStack.CalculateUrbanHomeowner
  * @description
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('CalculateUrbanHomeowner', ['Calculate', 'Landuse', 'StateLoad', function(Calculate, Landuse, StateLoad) {
     return {
       gallonsReducedPerYear: function(value) {
@@ -6110,12 +6110,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:UrbanHomeownerReportController
+ * @name FieldStack.controller:UrbanHomeownerReportController
  * @description
  * # UrbanHomeownerReportController
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('UrbanHomeownerReportController', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateUrbanHomeowner, Calculate, StateLoad) {
 
     //
@@ -6677,12 +6677,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:UrbanHomeownerFormController
+ * @name FieldStack.controller:UrbanHomeownerFormController
  * @description
  * # UrbanHomeownerFormController
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('UrbanHomeownerFormController', ['$rootScope', '$scope', '$route', '$location', 'user', 'Template', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
 
     //
@@ -6867,13 +6867,13 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc overview
- * @name practiceMonitoringAssessmentApp
+ * @name FieldStack
  * @description
- * # practiceMonitoringAssessmentApp
+ * # FieldStack
  *
  * Main module of the application.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
 
     $routeProvider
@@ -6965,11 +6965,11 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.CalculateBioretention
+ * @name FieldStack.CalculateBioretention
  * @description
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('CalculateBioretention', [function() {
     return {
       adjustorCurveNitrogen: function(value, format) {
@@ -7177,12 +7177,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:BioretentionReportController
+ * @name FieldStack.controller:BioretentionReportController
  * @description
  * # BioretentionReportController
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('BioretentionReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', 'CalculateBioretention', 'Calculate', 'StateLoad', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateBioretention, Calculate, StateLoad) {
 
     //
@@ -7748,12 +7748,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:BioretentionFormController
+ * @name FieldStack.controller:BioretentionFormController
  * @description
  * # BioretentionFormController
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('BioretentionFormController', ['$rootScope', '$scope', '$route', '$location', 'user', 'Template', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
 
     //
@@ -7943,7 +7943,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * @name
  * @description
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .config(function($routeProvider, commonscloud) {
 
     $routeProvider
@@ -8036,7 +8036,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * @name
  * @description
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('InstreamHabitatCalculate', function() {
     return {
       quantityInstalled: function(values, field, format) {
@@ -8076,7 +8076,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * @name
  * @description
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('InstreamHabitatReportController', function(commonscloud, Feature, fields, InstreamHabitatCalculate, Landuse, $location, practice, project, readings, $rootScope, $route, $scope, site, Storage, template, Template, user) {
 
     /**
@@ -8310,7 +8310,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * @name
  * @description
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('InstreamHabitatFormController', function(commonscloud, Feature, Field, fields, $location, practice, project, $rootScope, $route, $scope, site, Storage, template, Template, user) {
 
     /**
@@ -8554,7 +8554,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * @name
  * @description
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .config(function($routeProvider, commonscloud) {
 
     $routeProvider
@@ -8647,7 +8647,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * @name
  * @description
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('BankStabilizationCalculate', function() {
     return {
       preInstallationSedimentLoad: function(value) {
@@ -8867,7 +8867,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * @name
  * @description
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('BankStabilizationReportController', function(BankStabilizationCalculate, commonscloud, Feature, fields, Landuse, $location, practice, project, readings, $rootScope, $route, $scope, site, Storage, template, Template, user) {
 
     /**
@@ -9101,7 +9101,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * @name
  * @description
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('BankStabilizationFormController', function(commonscloud, Feature, Field, fields, $location, practice, project, $rootScope, $route, $scope, site, Storage, template, Template, user) {
 
     /**
@@ -9340,7 +9340,7 @@ angular.module('practiceMonitoringAssessmentApp')
    * @name
    * @description
    */
-  angular.module('practiceMonitoringAssessmentApp')
+  angular.module('FieldStack')
     .config(function($routeProvider, commonscloud) {
 
       $routeProvider
@@ -9438,7 +9438,7 @@ angular.module('practiceMonitoringAssessmentApp')
    * @name
    * @description
    */
-  angular.module('practiceMonitoringAssessmentApp')
+  angular.module('FieldStack')
     .service('EnhancedStreamRestorationCalculate', function($q) {
       return {
         efficiency: {
@@ -9819,7 +9819,7 @@ angular.module('practiceMonitoringAssessmentApp')
    * @name
    * @description
    */
-  angular.module('practiceMonitoringAssessmentApp')
+  angular.module('FieldStack')
     .controller('EnhancedStreamRestorationReportController', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, user, Template, Feature, Field, template, project, site, practice, readings, commonscloud, Storage, Landuse, EnhancedStreamRestorationCalculate, Calculate, StateLoad) {
 
       //
@@ -10114,7 +10114,7 @@ angular.module('practiceMonitoringAssessmentApp')
    * @name
    * @description
    */
-  angular.module('practiceMonitoringAssessmentApp')
+  angular.module('FieldStack')
     .controller('EnhancedStreamRestorationFormController', function ($rootScope, $scope, $route, $location, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
 
       //
@@ -10303,12 +10303,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.CommonsCloud
+ * @name FieldStack.CommonsCloud
  * @description
  * # Site
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .constant('commonscloud', {
     baseurl: 'https://api.commonscloud.org/v2/',
     collections: {
@@ -10343,11 +10343,11 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.GeometryService
+ * @name FieldStack.GeometryService
  * @description
  *   
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('commonsGeometry', ['$http', 'commonscloud', 'leafletData', function Navigation($http, commonscloud, leafletData) {
     return {
       drawGeoJSON: function(geojson, featureGroup) {
@@ -10499,7 +10499,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * @description
  *   Assist Directives in loading templates
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('Map', ['mapbox', function (mapbox) {
 
     var self = this;
@@ -10581,7 +10581,7 @@ angular.module('practiceMonitoringAssessmentApp')
  *   The Mapbox Geocoder directive enables developers to quickly add inline
  *   geocoding capabilities to any HTML <input> or <textarea>
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .directive('mapboxGeocoder', ['$compile', '$http', '$templateCache', '$timeout', 'mapbox', 'geocoding', 'TemplateLoader', function ($compile, $http, $templateCache, $timeout, mapbox, geocoding, TemplateLoader) {
 
     return {
@@ -10686,14 +10686,14 @@ angular.module('practiceMonitoringAssessmentApp')
 /**
  * @ngdoc service
  *
- * @name practiceMonitoringAssessmentApp.Geocode
+ * @name FieldStack.Geocode
  *
  * @description
  *   The Geocode Service provides access to the Mapbox Geocoding API
  *
  * @see https://www.mapbox.com/developers/api/geocoding/
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('geocoding', ['$http', 'mapbox', function Navigation($http, mapbox) {
     return {
 
@@ -10842,12 +10842,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.Site
+ * @name FieldStack.Site
  * @description
  * # Site
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .constant('mapbox', {
     geocodingUrl: 'https://api.tiles.mapbox.com/v4/geocode/mapbox.places-v1/',
     access_token: 'pk.eyJ1IjoiZGV2ZWxvcGVkc2ltcGxlIiwiYSI6IlZGVXhnM3MifQ.Q4wmA49ggy9i1rLr8-Mc-w',
@@ -10860,12 +10860,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.application
+ * @name FieldStack.application
  * @description
  * # application
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .provider('Application', function application() {
     
     this.$get = ['$resource', '$location', '$rootScope', function($resource, $location, $rootScope) {
@@ -11000,7 +11000,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * @name
  * @description
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .provider('Efficiency', function () {
     this.$get = ['$resource', function ($resource) {
       return $resource('//api.commonscloud.org/v2/type_056e01e3bbf44359866b4861cde24808.json', {}, {
@@ -11021,7 +11021,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * # ImperviousSurfaceResource
  * Service in the managerApp.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('Load', ['$resource', 'commonscloud', function ($resource, commonscloud) {
     return $resource(commonscloud.baseurl + commonscloud.collections.loaddata.storage + '/:id.geojson', {
       id: '@id'
@@ -11041,7 +11041,7 @@ angular.module('practiceMonitoringAssessmentApp')
  * # ImperviousSurfaceResource
  * Service in the managerApp.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('StateLoad', function ($resource, commonscloud) {
 
     var __url = commonscloud.baseurl + commonscloud.collections.stateloaddata.storage;
@@ -11060,12 +11060,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.attachment
+ * @name FieldStack.attachment
  * @description
  * # attachment
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .provider('Attachment', function attachment() {
 
     this.$get = ['$resource', function ($resource) {
@@ -11087,12 +11087,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.feature
+ * @name FieldStack.feature
  * @description
  * # feature
- * Provider in the practiceMonitoringAssessmentApp.
+ * Provider in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .provider('Feature', function () {
 
 
@@ -11646,12 +11646,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.field
+ * @name FieldStack.field
  * @description
  * # field
- * Provider in the practiceMonitoringAssessmentApp.
+ * Provider in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .provider('Field', function () {
 
     this.$get = ['$resource', function ($resource) {
@@ -11767,12 +11767,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.template
+ * @name FieldStack.template
  * @description
  * # template
- * Provider in the practiceMonitoringAssessmentApp.
+ * Provider in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .provider('Template', function () {
 
     this.$get = ['$resource', function ($resource) {
@@ -11899,12 +11899,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.user
+ * @name FieldStack.user
  * @description
  * # user
- * Provider in the practiceMonitoringAssessmentApp.
+ * Provider in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .provider('User', function () {
 
     this.$get = ['$resource', '$rootScope', '$location', '$q', 'ipCookie', '$timeout', function($resource, $rootScope, $location, $q, ipCookie, $timeout) {
@@ -11987,12 +11987,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:imageResize
+ * @name FieldStack.controller:imageResize
  * @description
  * # imageResize
- * Directive of the practiceMonitoringAssessmentApp
+ * Directive of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .directive('imageResize', ['$parse', function($parse) {
       return {
         link: function(scope, elm, attrs) {
@@ -12017,7 +12017,7 @@ angular.module('practiceMonitoringAssessmentApp')
 
   'use strict';
 
-  angular.module('practiceMonitoringAssessmentApp')
+  angular.module('FieldStack')
     .directive('relationship', function ($http, $timeout) {
       return {
         scope: {
@@ -12119,12 +12119,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.toAcres
+ * @name FieldStack.toAcres
  * @description
  * # toAcres
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .filter('toAcres', [function(){
 
     /**
@@ -12149,12 +12149,12 @@ angular.module('practiceMonitoringAssessmentApp')
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:MainCtrl
+ * @name FieldStack.controller:MainCtrl
  * @description
  * # MainCtrl
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .filter('toArray', function(){
 
     //

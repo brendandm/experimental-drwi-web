@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:LivestockExclusionFormController
+ * @name FieldStack.controller:LivestockExclusionFormController
  * @description
  * # LivestockExclusionFormController
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('LivestockExclusionFormController', ['$rootScope', '$scope', '$route', '$location', 'user', 'Template', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
 
     //

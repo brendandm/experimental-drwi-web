@@ -2,11 +2,11 @@
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.GeometryService
+ * @name FieldStack.GeometryService
  * @description
  *   
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('commonsGeometry', ['$http', 'commonscloud', 'leafletData', function Navigation($http, commonscloud, leafletData) {
     return {
       drawGeoJSON: function(geojson, featureGroup) {

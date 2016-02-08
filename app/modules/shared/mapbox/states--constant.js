@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.state
+ * @name FieldStack.state
  * @description
  * # state
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .constant('states', {
     list: [
       {

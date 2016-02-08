@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('practiceMonitoringAssessmentApp')
+  angular.module('FieldStack')
     .service('EnhancedStreamRestorationCalculate', function($q) {
       return {
         efficiency: {

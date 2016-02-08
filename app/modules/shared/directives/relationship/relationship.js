@@ -2,7 +2,7 @@
 
   'use strict';
 
-  angular.module('practiceMonitoringAssessmentApp')
+  angular.module('FieldStack')
     .directive('relationship', function ($http, $timeout) {
       return {
         scope: {

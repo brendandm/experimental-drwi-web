@@ -2,11 +2,11 @@
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.CalculateBioretention
+ * @name FieldStack.CalculateBioretention
  * @description
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('CalculateBioretention', [function() {
     return {
       adjustorCurveNitrogen: function(value, format) {

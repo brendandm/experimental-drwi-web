@@ -5,7 +5,7 @@
  * @name
  * @description
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('InstreamHabitatCalculate', function() {
     return {
       quantityInstalled: function(values, field, format) {

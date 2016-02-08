@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.Storage
+ * @name FieldStack.Storage
  * @description
  *    Provides site/application specific variables to the entire application
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('ForestBufferCalculate', [function() {
     return {
 

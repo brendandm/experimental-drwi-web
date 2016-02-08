@@ -5,7 +5,7 @@
  * @name
  * @description
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('BankStabilizationFormController', function(commonscloud, Feature, Field, fields, $location, practice, project, $rootScope, $route, $scope, site, Storage, template, Template, user) {
 
     /**

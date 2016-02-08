@@ -3,14 +3,14 @@
 /**
  * @ngdoc service
  *
- * @name practiceMonitoringAssessmentApp.Geocode
+ * @name FieldStack.Geocode
  *
  * @description
  *   The Geocode Service provides access to the Mapbox Geocoding API
  *
  * @see https://www.mapbox.com/developers/api/geocoding/
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('geocoding', ['$http', 'mapbox', function Navigation($http, mapbox) {
     return {
 

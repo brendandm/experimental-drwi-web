@@ -3,7 +3,7 @@
 describe('Filter: toArray', function () {
 
   // load the filter's module
-  beforeEach(module('practiceMonitoringAssessmentApp'));
+  beforeEach(module('FieldStack'));
 
   // initialize a new instance of the filter before each test
   var toArray;

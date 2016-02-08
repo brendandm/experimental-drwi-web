@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:imageResize
+ * @name FieldStack.controller:imageResize
  * @description
  * # imageResize
- * Directive of the practiceMonitoringAssessmentApp
+ * Directive of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .directive('imageResize', ['$parse', function($parse) {
       return {
         link: function(scope, elm, attrs) {

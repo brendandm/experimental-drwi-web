@@ -7,7 +7,7 @@
  * # ImperviousSurfaceResource
  * Service in the managerApp.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('StateLoad', function ($resource, commonscloud) {
 
     var __url = commonscloud.baseurl + commonscloud.collections.stateloaddata.storage;

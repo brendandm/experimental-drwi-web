@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:SiteEditCtrl
+ * @name FieldStack.controller:SiteEditCtrl
  * @description
  * # SiteEditCtrl
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('SiteEditCtrl', ['$rootScope', '$scope', '$route', '$timeout', '$http', '$location', 'Template', 'Feature', 'mapbox', 'user', 'template', 'fields', 'project', 'site', 'storage', 'variables', 'leafletData', function ($rootScope, $scope, $route, $timeout, $http, $location, Template, Feature, mapbox, user, template, fields, project, site, storage, variables, leafletData) {
 
     var timeout;

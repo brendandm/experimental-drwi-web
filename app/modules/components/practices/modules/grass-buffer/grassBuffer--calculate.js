@@ -2,11 +2,11 @@
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.Storage
+ * @name FieldStack.Storage
  * @description
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('GrassBufferCalculate', [function() {
     return {
 

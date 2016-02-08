@@ -2,11 +2,11 @@
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.CalculateUrbanHomeowner
+ * @name FieldStack.CalculateUrbanHomeowner
  * @description
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('CalculateUrbanHomeowner', ['Calculate', 'Landuse', 'StateLoad', function(Calculate, Landuse, StateLoad) {
     return {
       gallonsReducedPerYear: function(value) {

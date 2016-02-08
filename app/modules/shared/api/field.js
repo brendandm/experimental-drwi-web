@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.field
+ * @name FieldStack.field
  * @description
  * # field
- * Provider in the practiceMonitoringAssessmentApp.
+ * Provider in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .provider('Field', function () {
 
     this.$get = ['$resource', function ($resource) {

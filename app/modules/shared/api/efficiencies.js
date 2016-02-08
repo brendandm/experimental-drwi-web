@@ -5,7 +5,7 @@
  * @name
  * @description
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .provider('Efficiency', function () {
     this.$get = ['$resource', function ($resource) {
       return $resource('//api.commonscloud.org/v2/type_056e01e3bbf44359866b4861cde24808.json', {}, {

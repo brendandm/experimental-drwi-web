@@ -5,7 +5,7 @@
  * @name 
  * @description
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('PracticeEditController', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Attachment, Feature, Template, template, fields, project, site, practice, commonscloud) {
 
     //

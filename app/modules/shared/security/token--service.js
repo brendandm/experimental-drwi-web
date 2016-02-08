@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.Navigation
+ * @name FieldStack.Navigation
  * @description
  * # Navigation
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('token', ['$location', 'ipCookie', function ($location, ipCookie) {
 
     return {

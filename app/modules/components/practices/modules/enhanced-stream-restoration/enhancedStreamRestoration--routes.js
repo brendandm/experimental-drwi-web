@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('practiceMonitoringAssessmentApp')
+  angular.module('FieldStack')
     .config(function($routeProvider, commonscloud) {
 
       $routeProvider

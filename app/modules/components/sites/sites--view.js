@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:SiteViewCtrl
+ * @name FieldStack.controller:SiteViewCtrl
  * @description
  * # SiteViewCtrl
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('SiteViewCtrl', function ($rootScope, $scope, $route, $location, $timeout, moment, user, mapbox, Template, Feature, template, fields, project, site, practices, variables, leafletData) {
 
     //

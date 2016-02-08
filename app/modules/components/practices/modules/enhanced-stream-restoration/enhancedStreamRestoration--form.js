@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('practiceMonitoringAssessmentApp')
+  angular.module('FieldStack')
     .controller('EnhancedStreamRestorationFormController', function ($rootScope, $scope, $route, $location, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
 
       //

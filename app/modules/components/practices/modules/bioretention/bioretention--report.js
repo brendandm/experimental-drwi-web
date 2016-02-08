@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:BioretentionReportController
+ * @name FieldStack.controller:BioretentionReportController
  * @description
  * # BioretentionReportController
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('BioretentionReportController', ['$rootScope', '$scope', '$route', '$location', '$timeout', '$http', '$q', 'user', 'Template', 'Feature', 'template', 'fields', 'project', 'site', 'practice', 'readings', 'commonscloud', 'Storage', 'Landuse', 'CalculateBioretention', 'Calculate', 'StateLoad', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateBioretention, Calculate, StateLoad) {
 
     //

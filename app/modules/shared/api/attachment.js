@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.attachment
+ * @name FieldStack.attachment
  * @description
  * # attachment
- * Service in the practiceMonitoringAssessmentApp.
+ * Service in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .provider('Attachment', function attachment() {
 
     this.$get = ['$resource', function ($resource) {

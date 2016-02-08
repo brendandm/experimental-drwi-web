@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('practiceMonitoringAssessmentApp')
+  angular.module('FieldStack')
     .controller('EnhancedStreamRestorationReportController', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, user, Template, Feature, Field, template, project, site, practice, readings, commonscloud, Storage, Landuse, EnhancedStreamRestorationCalculate, Calculate, StateLoad) {
 
       //

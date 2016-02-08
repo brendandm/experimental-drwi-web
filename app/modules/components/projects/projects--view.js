@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:ProjectviewCtrl
+ * @name FieldStack.controller:ProjectviewCtrl
  * @description
  * # ProjectviewCtrl
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('ProjectViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$anchorScroll', 'mapbox', 'Template', 'Feature', 'project', 'storage', 'user', 'template', 'site', 'sites', function ($rootScope, $scope, $route, $location, $anchorScroll, mapbox, Template, Feature, project, storage, user, template, site, sites) {
 
     //

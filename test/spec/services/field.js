@@ -3,7 +3,7 @@
 describe('Service: field', function () {
 
   // load the service's module
-  beforeEach(module('practiceMonitoringAssessmentApp'));
+  beforeEach(module('FieldStack'));
 
   // instantiate service
   var field;

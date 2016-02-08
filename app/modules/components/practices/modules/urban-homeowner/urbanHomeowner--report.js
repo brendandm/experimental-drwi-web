@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:UrbanHomeownerReportController
+ * @name FieldStack.controller:UrbanHomeownerReportController
  * @description
  * # UrbanHomeownerReportController
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('UrbanHomeownerReportController', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, Template, Feature, template, fields, project, site, practice, readings, commonscloud, Storage, Landuse, CalculateUrbanHomeowner, Calculate, StateLoad) {
 
     //

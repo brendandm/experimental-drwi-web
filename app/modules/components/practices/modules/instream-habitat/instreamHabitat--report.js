@@ -5,7 +5,7 @@
  * @name
  * @description
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('InstreamHabitatReportController', function(commonscloud, Feature, fields, InstreamHabitatCalculate, Landuse, $location, practice, project, readings, $rootScope, $route, $scope, site, Storage, template, Template, user) {
 
     /**

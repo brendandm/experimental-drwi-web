@@ -5,7 +5,7 @@
  * @name
  * @description
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('BankStabilizationCalculate', function() {
     return {
       preInstallationSedimentLoad: function(value) {

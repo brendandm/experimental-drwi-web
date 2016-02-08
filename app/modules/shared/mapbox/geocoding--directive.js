@@ -9,7 +9,7 @@
  *   The Mapbox Geocoder directive enables developers to quickly add inline
  *   geocoding capabilities to any HTML <input> or <textarea>
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .directive('mapboxGeocoder', ['$compile', '$http', '$templateCache', '$timeout', 'mapbox', 'geocoding', 'TemplateLoader', function ($compile, $http, $templateCache, $timeout, mapbox, geocoding, TemplateLoader) {
 
     return {

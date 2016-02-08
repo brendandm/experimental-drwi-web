@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:SecurityLogout
+ * @name FieldStack.controller:SecurityLogout
  * @description
  * # SecurityLogout
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('SecurityLogout', ['$location', 'token', function($location, token) {
 
     console.log('SecurityLogout');

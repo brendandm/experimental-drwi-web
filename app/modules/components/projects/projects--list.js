@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:ProjectsCtrl
+ * @name FieldStack.controller:ProjectsCtrl
  * @description
  * # ProjectsCtrl
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('ProjectsCtrl', ['$rootScope', '$scope', '$route', '$routeParams', '$location', '$timeout', 'Feature', 'template', 'fields', 'storage', 'user', function ($rootScope, $scope, $route, $routeParams, $location, $timeout, Feature, template, fields, storage, user) {
 
     var timeout;

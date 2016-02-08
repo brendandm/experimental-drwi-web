@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.feature
+ * @name FieldStack.feature
  * @description
  * # feature
- * Provider in the practiceMonitoringAssessmentApp.
+ * Provider in the FieldStack.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .provider('Feature', function () {
 
 

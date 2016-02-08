@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:SecurityController
+ * @name FieldStack.controller:SecurityController
  * @description
  * # SecurityController
- * Controller of the practiceMonitoringAssessmentApp
+ * Controller of the FieldStack
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .controller('SecurityAuthorize', function($location, token) {
 
     //
