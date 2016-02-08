@@ -2,11 +2,10 @@
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.Storage
+ * @name
  * @description
- * Service in the practiceMonitoringAssessmentApp.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .service('Calculate', ['Load', function(Load) {
     return {
       getLoadVariables: function(segment, landuse) {

@@ -2,14 +2,11 @@
 
 /**
  * @ngdoc overview
- * @name practiceMonitoringAssessmentApp
+ * @name 
  * @description
- * # practiceMonitoringAssessmentApp
- *
- * Main module of the application.
  */
 angular
-  .module('practiceMonitoringAssessmentApp', [
+  .module('FieldStack', [
     'ngResource',
     'ngRoute',
     'ngSanitize',

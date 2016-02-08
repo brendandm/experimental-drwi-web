@@ -2,14 +2,11 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:PracticeEditController
+ * @name 
  * @description
- * # PracticeEditController
- * Controller of the practiceMonitoringAssessmentApp
  */
 angular.module('practiceMonitoringAssessmentApp')
-  .controller('PracticeEditController', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Attachment', 'Feature', 'Template', 'template', 'fields', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Attachment, Feature, Template, template, fields, project, site, practice, commonscloud
-    ) {
+  .controller('PracticeEditController', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Attachment, Feature, Template, template, fields, project, site, practice, commonscloud) {
 
     //
     // Assign project to a scoped variable
@@ -246,4 +243,4 @@ angular.module('practiceMonitoringAssessmentApp')
       });
     }
 
-  }]);
+  });

@@ -2,12 +2,10 @@
 
 /**
  * @ngdoc service
- * @name practiceMonitoringAssessmentApp.Storage
+ * @name
  * @description
- *    Provides site/application specific variables to the entire application
- * Service in the practiceMonitoringAssessmentApp.
  */
-angular.module('practiceMonitoringAssessmentApp')
+angular.module('FieldStack')
   .constant('Storage', {
     'forest-buffer': {
       landuse: 'for',

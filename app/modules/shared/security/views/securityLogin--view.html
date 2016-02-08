@@ -1,13 +1,48 @@
-<main role="main" class="site-content row">
-  
-  <div class="column-5"></div>
+<div data-ng-include="'/modules/shared/views/header--view.html'"></div>
 
-  <div class="column-6 align-center login">
-    <img src="/" alt="FieldStack best management
-         practice monitoring and assessment system" width="240" />
+<main class="site--content site--content--submit">
+  <div class="page--content page--content--form">
 
-    <!-- UserLogin Form  -->
+    <h1>Log in</h1>
+
+    <p>
+      Do you have a FieldStack account? If so, you can login below to access
+      your project history, create new pre-project planning calculations, or
+      manage your FieldStack account.
+    </p>
+
+    <div data-ng-if="page.login.errors" class="notifications">
+      <div class="notify notify-error notify-dismissable" role="alert">
+        {{ page.login.errors.email[0] }}
+      </div>
+    </div>
+
+    <form role="form" class="form form--centered" method="POST"
+          data-ng-if="!page.login.processing" data-ng-submit="page.login.submit()">
+      <div class="form--element">
+        <label for="email" class="control--label">Email Address</label>
+        <input tabindex="1" type="text" class="form--control" type="text" id="email" name="email" data-ng-model="page.login.email" autofocus />
+      </div>
+      <div class="form--element">
+        <label for="password" class="control--label">Password <small><em><a href="/user/reset" tabindex="4">Forgot your password?</a></em></small></label>
+        <input tabindex="2" type="password" class="form--control" type="text" id="password" name="password" data-ng-model="page.login.password" />
+      </div>
+      <input tabindex="3" type="submit" class="button button--submit" id="submit" name="submit" value="Log in" />
+      <div class="throbber throbber-small" data-ng-if="page.login.processing"></div>
+    </form>
+
+    <div data-ng-if="page.login.processing">
+      <div class="throbber"></div>
+    </div>
+
+    <p>
+      <small>
+        <strong>Need an account?</strong><br />
+        Download the app to sign up
+      </small>
+    </p>
 
   </div>
-
 </main>
+
+<div data-ng-include="'/modules/shared/views/footer--view.html'"></div>

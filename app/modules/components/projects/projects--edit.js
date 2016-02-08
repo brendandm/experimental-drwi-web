@@ -2,13 +2,11 @@
 
 /**
  * @ngdoc function
- * @name practiceMonitoringAssessmentApp.controller:ProjecteditCtrl
+ * @name
  * @description
- * # ProjecteditCtrl
- * Controller of the practiceMonitoringAssessmentApp
  */
-angular.module('practiceMonitoringAssessmentApp')
-  .controller('ProjectEditCtrl', ['$rootScope', '$scope', '$route', '$location', 'project', 'Template', 'Feature', 'Field', 'template', 'fields', 'storage', 'user', function ($rootScope, $scope, $route, $location, project, Template, Feature, Field, template, fields, storage, user) {
+angular.module('FieldStack')
+  .controller('ProjectEditCtrl', function ($rootScope, $scope, $route, $location, project, Template, Feature, Field, template, fields, storage, user) {
 
     //
     // Assign project to a scoped variable

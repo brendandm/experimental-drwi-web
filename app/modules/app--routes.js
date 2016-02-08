@@ -2,14 +2,11 @@
 
 /**
  * @ngdoc overview
- * @name practiceMonitoringAssessmentApp
+ * @name 
  * @description
- * # practiceMonitoringAssessmentApp
- *
- * Main module of the application.
  */
-angular.module('practiceMonitoringAssessmentApp')
-  .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+angular.module('FieldStack')
+  .config(function($routeProvider, $locationProvider) {
 
     $routeProvider
       .otherwise({
@@ -18,4 +15,4 @@ angular.module('practiceMonitoringAssessmentApp')
 
     $locationProvider.html5Mode(true);
 
-  }]);
+  });

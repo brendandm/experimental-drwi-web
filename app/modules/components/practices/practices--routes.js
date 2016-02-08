@@ -2,14 +2,11 @@
 
 /**
  * @ngdoc overview
- * @name practiceMonitoringAssessmentApp
+ * @name 
  * @description
- * # practiceMonitoringAssessmentApp
- *
- * Main module of the application.
  */
-angular.module('practiceMonitoringAssessmentApp')
-  .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
+angular.module('FieldStack')
+  .config(function($routeProvider, commonscloud) {
 
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices', {
@@ -52,6 +49,6 @@ angular.module('practiceMonitoringAssessmentApp')
         }
       });
 
-  }]);
+  });
 
 

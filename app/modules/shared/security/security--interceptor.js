@@ -1,61 +1,58 @@
-'use strict';
+(function() {
 
-/**
- * @ngdoc service
- * @name practiceMonitoringAssessmentApp.authorizationInterceptor
- * @description
- * # authorizationInterceptor
- * Service in the practiceMonitoringAssessmentApp.
- */
-angular.module('practiceMonitoringAssessmentApp')
-  .factory('AuthorizationInterceptor', ['$location', '$q', 'ipCookie', function($location, $q, ipCookie) {
+    'use strict';
 
-    return {
-      request: function(config) {
+    /**
+     * @ngdoc service
+     * @name practiceMonitoringAssessmentApp.authorizationInterceptor
+     * @description
+     * # authorizationInterceptor
+     * Service in the practiceMonitoringAssessmentApp.
+     */
+    angular.module('practiceMonitoringAssessmentApp')
+      .factory('AuthorizationInterceptor', function($location, $q, ipCookie, $log) {
 
-        var session = ipCookie('COMMONS_SESSION');
+        return {
+          request: function(config) {
 
-        //
-        // Before we make any modifications to the config/header of the request
-        // check to see if our authorization page is being requested and if the
-        // session cookie is defined
-        //
-        if (!session) {
-          $location.path('/');
-          return config || $q.when(config);
-        }
+            var sessionCookie = ipCookie('WATERREPORTER_SESSION');
 
-        //
-        // We have a session cookie if we've gotten this far. That means we
-        // need to make some header changes so that all of our requests are
-        // properly authenticated.
-        //
-        config.headers = config.headers || {};
+            //
+            // Configure our headers to contain the appropriate tags
+            //
+            config.headers = config.headers || {};
 
-        if (config.headers.Authorization === 'external') {
-          delete config.headers.Authorization;
-          return config || $q.when(config);
-        }
+            if (config.headers['Authorization-Bypass'] === true) {
+              delete config.headers['Authorization-Bypass'];
+              return config || $q.when(config);
+            }
 
-        //
-        // Add the Authorization header with our Access Token
-        //
-        if (session) {
-          config.headers.Authorization = 'Bearer ' + session;
-        }
+            if (sessionCookie) {
+              config.headers.Authorization = 'Bearer ' + sessionCookie;
+            }
 
-        console.debug('AuthorizationInterceptor::Request', config || $q.when(config));
-        return config || $q.when(config);
-      },
-      response: function(response) {
-        console.debug('AuthorizationInterceptor::Response', response || $q.when(response));
-        return response || $q.when(response);
-      },
-      responseError: function (response) {
-        console.debug('AuthorizationInterceptor::ResponseError', response || $q.when(response));
-        return $q.reject(response);
-      }
-    };
-  }]).config(function ($httpProvider) {
-    $httpProvider.interceptors.push('AuthorizationInterceptor');
-  });
+            config.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate';
+
+            //
+            // Configure or override parameters where necessary
+            //
+            config.params = (config.params === undefined) ? {} : config.params;
+
+            console.debug('SecurityInterceptor::Request', config || $q.when(config));
+
+            return config || $q.when(config);
+          },
+          response: function(response) {
+            $log.info('AuthorizationInterceptor::Response', response || $q.when(response));
+            return response || $q.when(response);
+          },
+          responseError: function (response) {
+            $log.info('AuthorizationInterceptor::ResponseError', response || $q.when(response));
+            return $q.reject(response);
+          }
+        };
+      }).config(function ($httpProvider) {
+        $httpProvider.interceptors.push('AuthorizationInterceptor');
+      });
+
+}());
