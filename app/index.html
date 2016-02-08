@@ -95,6 +95,7 @@
         <!-- build:js({.tmp,app}) /modules/modules.js -->
         <script src="modules/app--module.js"></script>
         <script src="modules/app--routes.js"></script>
+        <script src="config/environment.js"></script>
 
             <!-- Security Module -->
             <script src="modules/shared/security/security--routes.js"></script>
@@ -183,6 +184,8 @@
             <script src="modules/shared/mapbox/mapbox--constant.js"></script>
 
             <!-- Providers -->
+            <script src="modules/shared/api/account--service.js"></script>
+            <script src="modules/shared/api/security--service.js"></script>
             <script src="modules/shared/api/application.js"></script>
             <script src="modules/shared/api/efficiencies.js"></script>
             <script src="modules/shared/api/load--resource.js"></script>

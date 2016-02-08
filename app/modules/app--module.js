@@ -17,5 +17,6 @@ angular
     'geolocation',
     'angular-loading-bar',
     'monospaced.elastic',
-    'angularMoment'
+    'angularMoment',
+    'config'
   ]);

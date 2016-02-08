@@ -30,8 +30,73 @@ module.exports = function (grunt) {
     dist: 'dist'
   };
 
+  var environment = grunt.option('environment') || 'local';
+
   // Define the configuration for all the tasks
   grunt.initConfig({
+
+    //
+    // Environment Specific Variables
+    //
+    ngconstant: {
+      options: {
+        space: '  ',
+        wrap: '"use strict";\n\n {%= __ngModule %}',
+        name: 'config'
+      },
+      local: {
+        options: {
+          dest: '<%= yeoman.app %>/config/environment.js'
+        },
+        constants: {
+          environment: {
+            name: 'local',
+            apiUrl: 'http://127.0.0.1:5000',
+            siteUrl: 'http://127.0.0.1:9000',
+            clientId: 'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'
+          }
+        }
+      },
+      development: {
+        options: {
+          dest: '<%= yeoman.app %>/config/environment.js'
+        },
+        constants: {
+          environment: {
+            name: 'development',
+            apiUrl: 'http://dev.api.fieldstack.io',
+            siteUrl: 'http://dev.fieldstack.io',
+            clientId: ''
+          }
+        }
+      },
+      staging: {
+        options: {
+          dest: '<%= yeoman.app %>/config/environment.js'
+        },
+        constants: {
+          environment: {
+            name: 'staging',
+            apiUrl: 'http://stg.api.fieldstack.io',
+            siteUrl: 'http://stg.fieldstack.io',
+            clientId: ''
+          }
+        }
+      },
+      production: {
+        options: {
+          dest: '<%= yeoman.dist %>/config/environment.js'
+        },
+        constants: {
+          environment: {
+            name: 'production',
+            apiUrl: 'https://api.fieldstack.io',
+            siteUrl: 'https://www.fieldstack.io',
+            clientId: ''
+          }
+        }
+      }
+    },
 
     // Project settings
     yeoman: appConfig,
@@ -385,6 +450,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
+      'ngconstant:local',
       'wiredep',
       'concurrent:server',
       'autoprefixer:server',
@@ -409,6 +475,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'clean:dist',
+    'ngconstant:' + environment,
     'wiredep',
     'useminPrepare',
     'concurrent:dist',
