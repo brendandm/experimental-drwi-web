@@ -45,8 +45,8 @@
                     //
                     // Make sure our cookies for the Session are being set properly
                     //
-                    ipCookie.remove('WATERREPORTER_SESSION');
-                    ipCookie('WATERREPORTER_SESSION', response.access_token, self.cookieOptions);
+                    ipCookie.remove('FIELDSTACKIO_SESSION');
+                    ipCookie('FIELDSTACKIO_SESSION', response.access_token, self.cookieOptions);
 
                     //
                     // Make sure we also set the User ID Cookie, so we need to wait to
