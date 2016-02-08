@@ -20,7 +20,16 @@
     <form role="form" class="form form--centered" method="POST"
           data-ng-if="!page.login.processing" data-ng-submit="page.login.submit()">
       <div class="form--element">
-        <label for="email" class="control--label">Email Address</label>
+        <label for="email" class="control--label">
+            Email Address
+            <small>
+                <em>
+                    <a href="/user/register" tabindex="5">
+                        Need an account?
+                    </a>
+                </em>
+            </small>
+        </label>
         <input tabindex="1" type="text" class="form--control" type="text" id="email" name="email" data-ng-model="page.login.email" autofocus />
       </div>
       <div class="form--element">
@@ -34,14 +43,6 @@
     <div data-ng-if="page.login.processing">
       <div class="throbber"></div>
     </div>
-
-    <p>
-      <small>
-        <strong>Need an account?</strong><br />
-        Download the app to sign up
-      </small>
-    </p>
-
   </div>
 </main>
 

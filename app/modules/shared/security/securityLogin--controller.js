@@ -17,6 +17,13 @@
                 'expires': 7
             };
 
+            //
+            // Before showing the user the login page, 
+            //
+            if (ipCookie('FIELDSTACKIO_SESSION')) {
+                $location.path('/projects');
+            }
+
             self.login = {
               submit: function(firstTime) {
 

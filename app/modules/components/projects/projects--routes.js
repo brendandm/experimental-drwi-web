@@ -9,34 +9,35 @@
  * Main module of the application.
  */
 angular.module('FieldStack')
-  .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
+  .config(function($routeProvider, commonscloud) {
 
     $routeProvider
       .when('/projects', {
-        templateUrl: '/modules/shared/default.html',
+        templateUrl: '/modules/components/projects/views/projectsList--view.html',
         controller: 'ProjectsCtrl',
+        controllerAs: 'page',
         reloadOnSearch: false,
         resolve: {
-          user: function(User) {
-            return User.getUser();
+          projects: function(Project) {
+            return Project.query();
           },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.project.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.project.templateId);
-          },
-          storage: function() {
-            return commonscloud.collections.project.storage;
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
           }
         }
       })
       .when('/projects/:projectId', {
-        templateUrl: '/modules/shared/default.html',
+        templateUrl: '/modules/components/projects/views/projectsSingle--view.html',
         controller: 'ProjectViewCtrl',
         resolve: {
-          user: function(User) {
-            return User.getUser();
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
           },
           template: function(Template, $route) {
             return Template.GetTemplate(commonscloud.collections.project.templateId);
@@ -66,11 +67,14 @@ angular.module('FieldStack')
         }
       })
       .when('/projects/:projectId/edit', {
-        templateUrl: '/modules/shared/default.html',
+        templateUrl: '/modules/components/projects/views/projectsEdit--view.html',
         controller: 'ProjectEditCtrl',
         resolve: {
-          user: function(User) {
-            return User.getUser();
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
           },
           template: function(Template, $route) {
             return Template.GetTemplate(commonscloud.collections.project.templateId);
@@ -90,7 +94,7 @@ angular.module('FieldStack')
         }
       })
       .when('/projects/:projectId/users', {
-        templateUrl: '/modules/shared/default.html',
+        templateUrl: '/modules/components/projects/views/projectsUsers--view.html',
         controller: 'ProjectUsersCtrl',
         resolve: {
           user: function(User, $route) {
@@ -126,4 +130,4 @@ angular.module('FieldStack')
         }
       });
 
-  }]);
+  });
