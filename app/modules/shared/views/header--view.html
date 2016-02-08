@@ -36,11 +36,11 @@
   </div>
 </header>
 
-<section data-ng-if="$root.user.email" class="container meta">
-  <article data-ng-if="!page.display_title" class="row">
+<section class="container meta">
+  <article class="row">
     <nav class="column-10">
-      <ul data-ng-if="page.links" class="breadcrumb-navigation crumbs">
-        <li data-ng-repeat="link in page.links">
+      <ul data-ng-if="$root.page.links" class="breadcrumb-navigation crumbs">
+        <li data-ng-repeat="link in $root.page.links">
           <a href="{{ link.url }}" class="{{ link.type }}">
             {{ link.text }}
           </a>
@@ -48,8 +48,8 @@
       </ul>
     </nav>
     <nav class="column-6">
-      <ul data-ng-if="page.actions" class="breadcrumb-navigation">
-        <li data-ng-repeat="action in page.actions track by $index">
+      <ul data-ng-if="$root.page.actions" class="breadcrumb-navigation">
+        <li data-ng-repeat="action in $root.page.actions track by $index">
           <button data-ng-if="!action.loading && action.button !== 'submit'" data-ng-click="action.action($index)" class="button {{ action.type }}">
             <span data-ng-if="(!action.visible && action.alt) || (!action.alt)">{{ action.text }}</span>
             <span data-ng-if="action.alt && action.visible">{{ action.alt }}</span>

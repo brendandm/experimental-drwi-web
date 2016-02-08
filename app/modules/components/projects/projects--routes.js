@@ -32,6 +32,7 @@ angular.module('FieldStack')
       .when('/projects/:projectId', {
         templateUrl: '/modules/components/projects/views/projectsSingle--view.html',
         controller: 'ProjectViewCtrl',
+        controllerAs: 'page',
         resolve: {
           user: function(Account) {
             if (Account.userObject && !Account.userObject.id) {
@@ -39,30 +40,10 @@ angular.module('FieldStack')
             }
             return Account.userObject;
           },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.project.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.project.templateId, 'object');
-          },
-          site: function() {
-            return commonscloud.collections.site;
-          },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
+          project: function(Project, $route) {
+            return Project.get({
+                'id': $route.current.params.projectId
             });
-          },
-          sites: function(Feature, $route) {
-            return Feature.GetRelatedFeatures({
-              storage: commonscloud.collections.project.storage,
-              relationship: commonscloud.collections.site.storage,
-              featureId: $route.current.params.projectId
-            });
-          },
-          storage: function() {
-            return commonscloud.collections.project.storage;
           }
         }
       })

@@ -17,6 +17,11 @@
         },
         update: {
           method: 'PATCH'
+        },
+        sites: {
+          method: 'GET',
+          isArray: false,
+          url: environment.apiUrl.concat('/v1/data/project/:id/sites')
         }
       });
     });
