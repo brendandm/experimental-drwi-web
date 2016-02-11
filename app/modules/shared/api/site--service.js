@@ -4,7 +4,7 @@
 
   /**
    * @ngdoc service
-   * @name 
+   * @name
    * @description
    */
   angular.module('FieldStack')
@@ -16,7 +16,11 @@
           isArray: false
         },
         update: {
-          method: 'PATCH'
+          method: 'PATCH',
+          transformRequest: function(data) {
+            var feature = Preprocessors.geojson(data);
+            return angular.toJson(feature);
+          }
         },
         practices: {
           method: 'GET',
