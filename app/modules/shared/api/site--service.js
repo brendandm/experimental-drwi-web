@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldStack')
-    .service('Site', function (environment, $resource) {
+    .service('Site', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/site/:id'), {
         id: '@id'
       }, {

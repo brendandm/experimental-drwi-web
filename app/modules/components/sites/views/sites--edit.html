@@ -1,3 +1,5 @@
+<div data-ng-include="'/modules/shared/views/header--view.html'"></div>
+
 <main class="container">
   <form class="row feature">
     <article class="feature-detail">
@@ -6,13 +8,13 @@
         <!-- Site Number -->
         <div class="form-group">
           <label for="site_number" class="control-label">Site Name</label>
-          <textarea rows="1" data-ng-model="site.site_number" class="form-control animate"  msd-elastic id="site_number" name="site_number" placeholder="Site Name">{{ site.site_number }}</textarea>
+          <textarea rows="1" data-ng-model="page.site.properties.name" class="form-control animate"  msd-elastic id="site_name" name="site_name" placeholder="Site Name">{{ page.site.properties.site_name }}</textarea>
         </div>
 
         <!-- Site Description -->
         <div class="form-group">
           <label for="site_description" class="control-label">Site Description</label>
-          <textarea rows="1" data-ng-model="site.site_description" class="form-control animate"  msd-elastic id="site_description" name="site_description" placeholder="Site Description">{{ site.site_description }}</textarea>
+          <textarea rows="1" data-ng-model="page.site.properties.description" class="form-control animate"  msd-elastic id="description" name="description" placeholder="Site Description">{{ page.site.properties.description }}</textarea>
         </div>
 
         <h6><strong>Location</strong> Information</h6>
@@ -23,7 +25,7 @@
             <div class="form-group">
               <label for="site_city" class="control-label">City</label>
               <div>
-                <input type="text" class="form-control" id="address" name="address" data-ng-model="site.site_city" placeholder="Enter the name of the nearest city" />
+                <input type="text" class="form-control" id="address" name="address" data-ng-model="page.site.properties.city" placeholder="Enter the name of the nearest city" />
               </div>
             </div>
           </div>
@@ -33,41 +35,41 @@
             <div class="form-group">
               <label for="site_county" class="control-label">County</label>
               <relationship data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8.length"
-                            model="site.type_b1baa10ba3ce493d90581a864ec95dc8"
+                            model="page.site.type_b1baa10ba3ce493d90581a864ec95dc8"
                             table="'type_b1baa10ba3ce493d90581a864ec95dc8'"
                             multiple="'true'"
                             placeholder="'Enter the name of the county'">
               </relationship>
-              <p data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
-                {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['name'] }},
+              <p data-ng-if="page.site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
+                {{ page.site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['name'] }},
                 <!-- If the state name is available from the county then use it -->
-                <span data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name']">
-                  {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name'] }}
+                <span data-ng-if="page.site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name']">
+                  {{ page.site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name'] }}
                 </span>
                 <!-- If not, try and get the site_state field from the site -->
                 <span data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name'] && site.site_state">
-                  {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0].state_name }}
+                  {{ page.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].state_name }}
                 </span>
-                <span data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length" class="help-text action"><a data-ng-click="site.type_b1baa10ba3ce493d90581a864ec95dc8 = [];" class="remove">Clear value</a></span>
+                <span data-ng-if="page.site.type_b1baa10ba3ce493d90581a864ec95dc8.length" class="help-text action"><a data-ng-click="page.site.type_b1baa10ba3ce493d90581a864ec95dc8 = [];" class="remove">Clear value</a></span>
               </p>
             </div>
           </div>
-          <div class="column-4" data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
+          <div class="column-4" data-ng-if="page.site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
             <!-- County -->
             <div class="form-group">
               <label for="site_county" class="control-label">County</label>
-              <p data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
-                {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['name'] }}
+              <p data-ng-if="page.site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
+                {{ page.site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['name'] }}
               </p>
             </div>
           </div>
-          <div class="column-4" data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
+          <div class="column-4" data-ng-if="page.site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
             <!-- County -->
             <div class="form-group">
               <label for="site_state" class="control-label">State</label>
               <p>
-                {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0].state_name || site.site_state }}
-                <span data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length" class="help-text action"><a data-ng-click="site.type_b1baa10ba3ce493d90581a864ec95dc8 = [];" class="remove">Clear value</a></span>
+                {{ page.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].state_name || site.site_state }}
+                <span data-ng-if="page.site.type_b1baa10ba3ce493d90581a864ec95dc8.length" class="help-text action"><a data-ng-click="page.site.type_b1baa10ba3ce493d90581a864ec95dc8 = [];" class="remove">Clear value</a></span>
               </p>
             </div>
           </div>
@@ -82,7 +84,7 @@
               <label for="site_geolocation" class="control-label">
                 Find a Location
               </label>
-              <input type="text" class="form-control" id="site_geolocation" name="site_geolocation" data-ng-model="site.geolocation" data-ng-change="geolocation.search()"  placeholder="Find an address, city, or zipcode" /><br />
+              <input type="text" class="form-control" id="site_geolocation" name="site_geolocation" data-ng-model="page.site.geolocation" data-ng-change="geolocation.search()"  placeholder="Find an address, city, or zipcode" /><br />
               <div data-ng-if="geocode_features.length && site.geolocation.length >= 2" class="dropdown">
                 <ul>
                   <!-- <li data-ng-if="relationship_focus && !features.length"><p><em>Begin typing to select the {{ field.label }} you want</em></p></li> -->
@@ -100,9 +102,9 @@
               <p class="form-value form-value-static" data-ng-if="!site.type_f9d8609090494dac811e6a58eb8ef4be.length">
                 Not Specified, use "Find a Location" or relocate the pin
               </p>
-              <p class="form-value" data-ng-if="site.type_f9d8609090494dac811e6a58eb8ef4be.length" data-ng-repeat="segment in site.type_f9d8609090494dac811e6a58eb8ef4be track by $index">
+              <p class="form-value" data-ng-if="page.site.type_f9d8609090494dac811e6a58eb8ef4be.length" data-ng-repeat="segment in site.type_f9d8609090494dac811e6a58eb8ef4be track by $index">
                 {{ segment.name }}
-                <span data-ng-if="site.type_f9d8609090494dac811e6a58eb8ef4be.length" class="help-text action"><a data-ng-click="site.type_f9d8609090494dac811e6a58eb8ef4be = [];" class="remove">Clear value</a></span>
+                <span data-ng-if="page.site.type_f9d8609090494dac811e6a58eb8ef4be.length" class="help-text action"><a data-ng-click="page.site.type_f9d8609090494dac811e6a58eb8ef4be = [];" class="remove">Clear value</a></span>
               </p>
               <p class="help-text">
                 <em>
@@ -115,17 +117,36 @@
 
         <div class="row">
           <div class="column-16">
-            <leaflet class="map" markers="map.markers" defaults="map.defaults" layers="map.layers" center="map.center"></leaflet>
+            <leaflet data-ng-if="page.map" class="map" markers="page.map.markers" defaults="page.map.defaults" layers="page.map.layers" center="page.map.center"></leaflet>
           </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" data-ng-click="page.saveSite()"
+                  class="button button-submit">
+            Save Changes
+          </button>
+          <button type="button" data-ng-click="page.deleteSite()"
+                  class="button button-submit">
+            Delete
+          </button>
         </div>
 
       </div>
       <nav class="column-5 contextual-navigation-wrapper">
         <h6><strong>Tools</strong></h6>
         <ul class="contextual-navigation">
-          <!-- Proect Manangement Navigation -->
-          <li data-ng-if="user.owner || user.feature.read || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/sites/{{ site.id }}">Overview</a></li>
-          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator" class="active"><a href="/projects/{{ project.id }}/sites/{{ site.id }}/edit">Edit</a></li>
+          <!-- Site Manangement Navigation -->
+          <li>
+            <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}">
+              Site Overview
+            </a>
+          </li>
+          <li class="active" data-ng-if="page.permissions.can_edit">
+            <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/edit">
+              Edit
+            </a>
+          </li>
         </ul>
       </nav>
 
@@ -133,3 +154,5 @@
     </article>
   </form>
 </main>
+
+<div data-ng-include="'/modules/shared/views/footer--view.html'"></div>
