@@ -28,11 +28,10 @@ angular.module('FieldStack')
           },
           {
               text: self.site.properties.project.properties.name,
-              url: '/projects/' + $route.current.params.projectId,
-              type: 'active'
+              url: '/projects/' + $route.current.params.projectId
           },
           {
-            text: self.site.name,
+            text: self.site.properties.name,
             url: '/projects/' + $route.current.params.projectId + '/sites/' + self.site.id,
             type: 'active'
           }
