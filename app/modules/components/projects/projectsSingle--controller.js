@@ -39,8 +39,6 @@ angular.module('FieldStack')
             user.$promise.then(function(userResponse) {
                 $rootScope.user = Account.userObject = userResponse;
 
-                console.log('$rootScope.user', $rootScope.user);
-
                 self.permissions = {
                     isLoggedIn: Account.hasToken(),
                     role: $rootScope.user.properties.roles[0].properties.name,
@@ -63,7 +61,7 @@ angular.module('FieldStack')
         self.site.$save(function(successResponse) {
             $location.path('/projects/' + self.project.id + '/sites/' + successResponse.id + '/edit');
           }, function(errorResponse) {
-            console.error('Unable to create your site, please try again later'); 
+            console.error('Unable to create your site, please try again later');
           });
     };
 
@@ -84,20 +82,17 @@ angular.module('FieldStack')
     //  // console.log('self.project.sites.list,', self.project.sites.list)
     //  angular.forEach(processedSites, function(feature, $index) {
     //    var coords = [0,0];
-    //    
+    //
     //    if (feature.geometry !== null) {
     //      console.log('feature.geometry', feature.geometry);
     //      if (feature.geometry.geometries[0].type === 'Point') {
     //        coords = feature.geometry.geometries[0].coordinates;
     //      }
     //    }
-    //    
+    //
     //    self.project.sites.list[$index].site_thumbnail = 'https://api.tiles.mapbox.com/v4/' + mapbox.satellite + '/pin-s+b1c11d(' + coords[0] + ',' + coords[1] + ',17)/' + coords[0] + ',' + coords[1] + ',17/80x80@2x.png?access_token=' + mapbox.access_token;
-    //  });      
+    //  });
     //});
 
 
   });
-
-
-

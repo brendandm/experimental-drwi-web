@@ -5,7 +5,7 @@
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
         <h4>
-          <span data-ng-if="page.project.properties.program_type" class="label">{{ page.project.properties.program_type }}</span> 
+          <span data-ng-if="page.project.properties.program_type" class="label">{{ page.project.properties.program_type }}</span>
         </h4>
         <h1 class="large">{{ page.project.properties.name }}</h1>
         <div class="project-abstract" data-ng-bind-html="page.project.properties.project_abstract"></div>
@@ -29,12 +29,13 @@
                   <span data-ng-if="site.properties.state && site.county.properties.name">
                     {{ site.county.properties.name }} County, {{ site.properties.state }}
                   </span>
-                </h4>                
+                </h4>
               </div>
             </article>
           </div>
         </section>
       </div>
+
       <nav class="column-5 contextual-navigation-wrapper">
         <h6><strong>Tools</strong></h6>
         <ul class="contextual-navigation">
@@ -47,7 +48,9 @@
           <li data-ng-if="page.permissions.can_edit">
             <a href="/projects/{{ page.project.id }}/edit">Edit</a>
           </li>
-          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/users">Users</a></li>
+          <li data-ng-if="page.permissions.can_edit">
+            <a href="/projects/{{ page.project.id }}/users">Collaborators</a>
+          </li>
         </ul>
       </nav>
     </article>
