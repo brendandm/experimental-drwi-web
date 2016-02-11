@@ -6,11 +6,12 @@
  * @description
  */
 angular.module('FieldStack')
-  .controller('PracticeViewController', function (Account, $location, Practice, practice, $rootScope, $route, site, user) {
+  .controller('PracticeViewController', function (Account, $location, Practice, practice, $rootScope, $route, site, user, Utility) {
 
     var self = this,
         projectId = $route.current.params.projectId,
-        siteId = $route.current.params.siteId;
+        siteId = $route.current.params.siteId,
+        practiceType;
 
     $rootScope.page = {};
 
@@ -18,6 +19,18 @@ angular.module('FieldStack')
 
       self.practice = successResponse;
 
+      practiceType = Utility.machineName(self.practice.properties.practice_type);
+
+      //
+      //
+      //
+      self.template = {
+        path: '/modules/components/practices/modules/' + practiceType + '/views/report--view.html'
+      };
+
+      //
+      //
+      //
       site.$promise.then(function(successResponse) {
         self.site = successResponse;
 

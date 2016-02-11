@@ -44,6 +44,11 @@ angular.module('FieldStack')
             return Project.get({
                 'id': $route.current.params.projectId
             });
+          },
+          sites: function(Project, $route) {
+            return Project.sites({
+                'id': $route.current.params.projectId
+            });
           }
         }
       })

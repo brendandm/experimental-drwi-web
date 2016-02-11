@@ -8,10 +8,12 @@
  * Controller of the FieldStack
  */
 angular.module('FieldStack')
-  .controller('ProjectViewCtrl', function (Account, $rootScope, $route, $location, mapbox, project, Site, user) {
+  .controller('ProjectViewCtrl', function (Account, $rootScope, $route, $location, mapbox, project, Site, sites, user) {
 
     var self = this;
     $rootScope.page = {};
+
+    self.sites = sites;
 
     //
     // Assign project to a scoped variable
