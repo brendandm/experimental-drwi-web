@@ -1,24 +1,26 @@
+<div data-ng-include="'/modules/shared/views/header--view.html'"></div>
+
 <main class="container">
   <form class="row feature">
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
         <h1>
-          {{ site.site_number }}
+          {{ page.site.properties.name }}
         </h1>
-        <h4 data-ng-if="site.site_description">{{ site.site_description }}</h4>
+        <h4 data-ng-if="page.site.properties.site_description">{{ page.site.properties.site_description }}</h4>
 
         <br />
 
-        <section data-ng-if="site.practices.list" id="practices" class="list action-list">
+        <section class="list action-list">
           <h6 class="rule-above"><strong>Practices</strong> Installed</h6>
-          <article class="row list-item" data-ng-if="practice.name"
-                   data-ng-repeat="practice in site.practices.list | orderBy:'id' track by $index">
+          <article class="row list-item"
+                   data-ng-repeat="practice in page.practices.features | orderBy:'id' track by $index">
             <h1>
-              <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ site.practices.cleanName(practice.name) }}">
-                {{ practice.name }}
+              <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}/{{ page.site.practices.cleanName(practice.name) }}">
+                {{ practice.properties.practice_type }}
               </a>
               <span class="creation-date">
-                Created on {{ practice.created | date:'longDate' }}
+                Created on {{ practice.properties.created_on | date:'longDate' }}
               </span>
             </h1>
             <div class="thumbnails" data-ng-if="practice.attachment_4513d48492f2485ebcdc3293a3c3695e.length">
@@ -40,19 +42,27 @@
       <nav class="column-5 contextual-navigation-wrapper">
         <h6><strong>Tools</strong></h6>
         <ul class="contextual-navigation">
-          <!-- Proect Manangement Navigation -->
-          <li data-ng-if="user.owner || user.feature.read || user.feature.is_admin || user.template.is_admin || user.template.is_moderator" class="active"><a href="/projects/{{ project.id }}/sites/{{ site.id }}">Site Overview</a></li>
-          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/sites/{{ site.id }}/edit">Edit</a></li>
+          <!-- Site Manangement Navigation -->
+          <li class="active">
+            <a href="/projects/{{ page.site.properties.project_id }}/{{ page.site.id }}">
+              Site Overview
+            </a>
+          </li>
+          <li data-ng-if="page.permissions.can_edit">
+            <a href="/projects/{{ page.site.properties.project_id }}/{{ page.site.id }}/edit">
+              Edit
+            </a>
+          </li>
         </ul>
       </nav>
-      <aside class="column-5 feature-sidebar pull-right legend">
+      <!-- <aside class="column-5 feature-sidebar pull-right legend">
         <h6><strong>Location</strong> Information</h6>
-        <p data-ng-if="site.site_city || site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
-          {{ site.site_city }}
+        <p data-ng-if="page.site.site_city || site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
+          {{ page.site.site_city }}
         </p>
         <p>
-          <span data-ng-if="site.type_b1baa10ba3ce493d90581a864ec95dc8.length && site.site_state">
-            {{ site.type_b1baa10ba3ce493d90581a864ec95dc8[0].name }} County, {{ site.site_state }}
+          <span data-ng-if="page.site.type_b1baa10ba3ce493d90581a864ec95dc8.length && site.site_state">
+            {{ page.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].name }} County, {{ page.site.site_state }}
           </span>
         </p>
 
@@ -92,7 +102,9 @@
             <span class="legend-item-label">County</span>
           </li>
         </ul>
-      </aside>
+      </aside>-->
     </article>
   </form>
 </main>
+
+<div data-ng-include="'/modules/shared/views/footer--view.html'"></div>

@@ -16,87 +16,45 @@ angular.module('FieldStack')
         redirectTo: '/projects/:projectId'
       })
       .when('/projects/:projectId/sites/:siteId', {
-        templateUrl: '/modules/shared/default.html',
+        templateUrl: '/modules/components/sites/views/sites--view.html',
         controller: 'SiteViewCtrl',
+        controllerAs: 'page',
         resolve: {
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.site.templateId
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          site: function(Site, $route) {
+            return Site.get({
+              id: $route.current.params.siteId
             });
           },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
+          practices: function(Site, $route) {
+            return Site.practices({
+              id: $route.current.params.siteId
             });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.practice.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.practice.templateId, 'object');
-          },
-          site: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.site.storage,
-              featureId: $route.current.params.siteId
-            });
-          },
-          practices: function(Feature, $route) {
-            return Feature.GetRelatedFeatures({
-              storage: commonscloud.collections.site.storage,
-              relationship: commonscloud.collections.practice.storage,
-              featureId: $route.current.params.siteId
-            });
-          },
-          variables: function() {
-            return {
-              project: commonscloud.collections.project,
-              site: commonscloud.collections.site,
-              practice: commonscloud.collections.practice,
-              land_river_segment: commonscloud.collections.land_river_segment
-            };
           }
         }
       })
       .when('/projects/:projectId/sites/:siteId/edit', {
-        templateUrl: '/modules/shared/default.html',
+        templateUrl: '/modules/components/sites/views/sites--edit.html',
         controller: 'SiteEditCtrl',
+        controllerAs: 'page',
         resolve: {
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.site.templateId
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          site: function(Site, $route) {
+            return Site.get({
+              id: $route.current.params.siteId
             });
-          },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
-            });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.site.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.site.templateId, 'object');
-          },
-          site: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.site.storage,
-              featureId: $route.current.params.siteId
-            });
-          },
-          storage: function() {
-            return commonscloud.collections.project.storage;
-          },
-          variables: function() {
-            return commonscloud.collections.site;
           }
         }
       });
 
   }]);
-
-

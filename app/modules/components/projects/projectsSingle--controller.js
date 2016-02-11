@@ -19,7 +19,7 @@ angular.module('FieldStack')
     project.$promise.then(function(projectResponse) {
         self.project = projectResponse;
 
-        $rootScope.page.title = self.project.properties.name,
+        $rootScope.page.title = self.project.properties.name;
         $rootScope.page.links = [
             {
                 text: 'Projects',

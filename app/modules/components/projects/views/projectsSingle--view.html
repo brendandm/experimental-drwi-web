@@ -17,7 +17,7 @@
               <div class="column-16 list-item-content">
                 <img data-ng-if="site.site_thumbnail" data-ng-src="{{ site.site_thumbnail }}" alt="{{ site.site_description }} location preview" width="80" height="80" />
                 <h1 class="project-site-number">
-                    <a href="/projects/{{ project.id }}/sites/{{ site.id }}" title="{{ site.properties.name }} project details">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ site.id }}" title="{{ site.properties.name }} project details">
                         {{ site.properties.name }}
                     </a>
                 </h1>
