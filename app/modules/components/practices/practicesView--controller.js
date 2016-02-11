@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldStack')
-  .controller('PracticeEditController', function (Account, $location, Practice, practice, $rootScope, $route, site, user) {
+  .controller('PracticeViewController', function (Account, $location, Practice, practice, $rootScope, $route, site, user) {
 
     var self = this,
         projectId = $route.current.params.projectId,
@@ -37,11 +37,7 @@ angular.module('FieldStack')
             },
             {
               text: self.practice.properties.practice_type,
-              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id
-            },
-            {
-              text: 'Edit',
-              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id + '/edit',
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
               type: 'active'
             }
         ];
@@ -60,27 +56,10 @@ angular.module('FieldStack')
                   isLoggedIn: Account.hasToken(),
                   role: $rootScope.user.properties.roles[0].properties.name,
                   account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                  can_edit: true
+                  can_edit: Account.canEdit(self.site.properties.project)
               };
           });
       }
     });
-
-    self.savePractice = function() {
-      var practice = new Practice(self.practice.properties);
-      practice.$update().then(function(successResponse) {
-        $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id);
-      }, function(errorResponse) {
-        // Error message
-      });
-    };
-
-    self.deletePractice = function() {
-      self.practice.$delete().then(function(successResponse) {
-        $location.path('/projects/' + projectId + '/sites/' + siteId);
-      }, function(errorResponse) {
-        // Error message
-      });
-    };
 
   });

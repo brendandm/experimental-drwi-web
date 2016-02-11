@@ -93,5 +93,3 @@ angular.module('FieldStack')
       });
 
   }]);
-
-

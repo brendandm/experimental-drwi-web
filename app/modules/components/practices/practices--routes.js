@@ -1,54 +1,66 @@
-'use strict';
+(function() {
 
-/**
- * @ngdoc overview
- * @name 
- * @description
- */
-angular.module('FieldStack')
-  .config(function($routeProvider, commonscloud) {
+  'use strict';
 
-    $routeProvider
-      .when('/projects/:projectId/sites/:siteId/practices', {
-        redirectTo: '/projects/:projectId/sites/:siteId'
-      })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/edit', {
-        templateUrl: '/modules/shared/default.html',
-        controller: 'PracticeEditController',
-        resolve: {
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.site.templateId
-            });
-          },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
-            });
-          },
-          site: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.site.storage,
-              featureId: $route.current.params.siteId
-            });
-          },
-          practice: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.practice.storage,
-              featureId: $route.current.params.practiceId
-            });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.practice.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.practice.templateId, 'object');
+  /**
+   * @ngdoc
+   * @name
+   * @description
+   */
+  angular.module('FieldStack')
+    .config(function($routeProvider, commonscloud) {
+
+      $routeProvider
+        .when('/projects/:projectId/sites/:siteId/practices', {
+          redirectTo: '/projects/:projectId/sites/:siteId'
+        })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId', {
+          templateUrl: '/modules/components/practices/views/practices--view.html',
+          controller: 'PracticeViewController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            site: function(Site, $route) {
+              return Site.get({
+                id: 1
+              });
+            },
+            practice: function(Practice, $route) {
+              return Practice.get({
+                id: $route.current.params.practiceId
+              });
+            }
           }
-        }
-      });
+        })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/edit', {
+          templateUrl: '/modules/components/practices/views/practices--edit.html',
+          controller: 'PracticeEditController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            site: function(Site, $route) {
+              return Site.get({
+                id: $route.current.params.siteId
+              });
+            },
+            practice: function(Practice, $route) {
+              return Practice.get({
+                id: $route.current.params.practiceId
+              });
+            }
+          }
+        });
 
-  });
+    });
 
-
+}());
