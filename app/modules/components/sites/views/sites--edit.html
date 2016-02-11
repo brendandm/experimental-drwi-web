@@ -58,8 +58,8 @@
             <!-- County -->
             <div class="form-group">
               <label for="site_county" class="control-label">County</label>
-              <p data-ng-if="page.site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
-                {{ page.site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['name'] }}
+              <p data-ng-if="page.site.properties.county.length">
+                {{ page.site.county }}
               </p>
             </div>
           </div>
@@ -68,7 +68,7 @@
             <div class="form-group">
               <label for="site_state" class="control-label">State</label>
               <p>
-                {{ page.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].state_name || site.site_state }}
+                {{ page.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].state_name || site.state }}
                 <span data-ng-if="page.site.type_b1baa10ba3ce493d90581a864ec95dc8.length" class="help-text action"><a data-ng-click="page.site.type_b1baa10ba3ce493d90581a864ec95dc8 = [];" class="remove">Clear value</a></span>
               </p>
             </div>
@@ -78,17 +78,17 @@
 
         <h6><strong>Land River</strong> Segment</h6>
 
-        <div class="row" data-ng-class="{'input-error': site.invalidLandRiverSegment}">
+        <div class="row" data-ng-class="{'input-error': page.site.invalidLandRiverSegment}">
           <div class="column-7">
             <div class="autocomplete">
               <label for="site_geolocation" class="control-label">
                 Find a Location
               </label>
-              <input type="text" class="form-control" id="site_geolocation" name="site_geolocation" data-ng-model="page.site.geolocation" data-ng-change="geolocation.search()"  placeholder="Find an address, city, or zipcode" /><br />
-              <div data-ng-if="geocode_features.length && site.geolocation.length >= 2" class="dropdown">
+              <input type="text" class="form-control" id="site_geolocation" name="site_geolocation" data-ng-model="page.site.geolocation" data-ng-change="page.geolocation.search()"  placeholder="Find an address, city, or zipcode" /><br />
+              <div data-ng-if="page.geocode_features.length && page.site.geolocation.length >= 2" class="dropdown">
                 <ul>
                   <!-- <li data-ng-if="relationship_focus && !features.length"><p><em>Begin typing to select the {{ field.label }} you want</em></p></li> -->
-                  <li data-ng-repeat="possible_result in geocode_features"><a data-ng-click="geolocation.select(possible_result)">{{ possible_result.place_name }}</a></li>
+                  <li data-ng-repeat="possible_result in page.geocode_features"><a data-ng-click="page.geolocation.select(possible_result)">{{ possible_result.place_name }}</a></li>
                 </ul>
               </div>
               <br />
@@ -99,12 +99,12 @@
            <!-- Land River Segment -->
             <div class="form-group">
               <label for="site_city" class="control-label">Land River Segment</label>
-              <p class="form-value form-value-static" data-ng-if="!site.type_f9d8609090494dac811e6a58eb8ef4be.length">
+              <p class="form-value form-value-static" data-ng-if="!page.site.properties.segment">
                 Not Specified, use "Find a Location" or relocate the pin
               </p>
-              <p class="form-value" data-ng-if="page.site.type_f9d8609090494dac811e6a58eb8ef4be.length" data-ng-repeat="segment in site.type_f9d8609090494dac811e6a58eb8ef4be track by $index">
+              <p class="form-value" data-ng-if="page.site.properties.county.length" data-ng-repeat="segment in page.site.properties.segment track by $index">
                 {{ segment.name }}
-                <span data-ng-if="page.site.type_f9d8609090494dac811e6a58eb8ef4be.length" class="help-text action"><a data-ng-click="page.site.type_f9d8609090494dac811e6a58eb8ef4be = [];" class="remove">Clear value</a></span>
+                <span data-ng-if="page.site.properties.segment" class="help-text action"><a data-ng-click="page.site.properties.segment = '';" class="remove">Clear value</a></span>
               </p>
               <p class="help-text">
                 <em>
