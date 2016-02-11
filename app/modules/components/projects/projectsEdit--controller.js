@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldStack')
-  .controller('ProjectEditCtrl', function (Account, $location, $log, project, $rootScope, $route, user) {
+  .controller('ProjectEditCtrl', function (Account, $location, $log, Project, project, $rootScope, $route, user) {
 
     var self = this;
     $rootScope.page = {};
@@ -43,11 +43,21 @@ angular.module('FieldStack')
     //
     //
     self.saveProject = function() {
-      
+
+      console.log('self.project', self.project);
+      debugger;
+
+      self.project.$update().then(function(response) {
+
+        $location.path('/projects/');
+
+      }).then(function(error) {
+        // Do something with the error
+      });
     };
 
     self.deleteProject = function() {
-      
+
     };
 
     //

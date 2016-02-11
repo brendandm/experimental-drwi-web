@@ -40,9 +40,13 @@
         <ul class="contextual-navigation">
           <!-- Proect Manangement Navigation -->
           <li class="active">
-            <a href="/projects/{{ project.id }}">Project Overview</a>
+            <a href="/projects/{{ page.project.id }}">
+                Project Overview
+            </a>
           </li>
-          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/edit">Edit</a></li>
+          <li data-ng-if="page.permissions.can_edit">
+            <a href="/projects/{{ page.project.id }}/edit">Edit</a>
+          </li>
           <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/users">Users</a></li>
         </ul>
       </nav>

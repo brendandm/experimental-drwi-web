@@ -15,7 +15,7 @@
         return {
           request: function(config) {
 
-            var sessionCookie = ipCookie('WATERREPORTER_SESSION');
+            var sessionCookie = ipCookie('FIELDSTACKIO_SESSION');
 
             //
             // Configure our headers to contain the appropriate tags

@@ -1,29 +1,50 @@
 <div data-ng-include="'/modules/shared/views/header--view.html'"></div>
 
 <main class="container">
-  <form class="row feature" data-ng-if="page.project.id"> 
+  <form class="row feature" data-ng-if="page.project.id">
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
 
+        <!-- Project Name -->
+        <div class="form-group">
+          <label for="project_title" class="control-label">1. What is the name of your project?</label>
+          <textarea rows="1" data-ng-model="page.project.properties.name" class="form-control animate"  msd-elastic id="name" name="name" placeholder="Project Name">{{ page.project.properties.name }}</textarea>
+        </div>
+
         <!-- Program Type -->
         <div class="form-group">
-          <label for="program_type" class="control-label">Program Type</label>
-          <select data-ng-model="project.program_type" data-ng-options="option for option in fields.program_type.options" class="form-control" id="program_type" name="program_type">
-            <option value="">Choose a program type</option>
+          <label for="program_type" class="control-label">2. Which funder is providing the grant?</label>
+          <select data-ng-model="page.project.properties.account_id" class="form-control" id="program_type" name="program_type">
+            <option value="">Choose a funder</option>
+            <option value="2">Maryland DNR – Chesapeake Bay Trust</option>
+            <option value="1">National Fish and Wildlife Foundation</option>
           </select>
         </div>
 
-        <!-- Project Name -->
+        <!-- Program Type -->
         <div class="form-group">
-          <label for="project_title" class="control-label">Project Name</label>
-          <textarea rows="1" data-ng-model="project.properties.name" class="form-control animate"  msd-elastic id="name" name="name" placeholder="Project Name">{{ project.properties.name }}</textarea>
+          <label for="program_type" class="control-label">3. What type of grant are you requesting?</label>
+          <select data-ng-model="page.project.properties.program_type" class="form-control" id="program_type" name="program_type">
+            <option value="">Choose a grant type</option>
+            <option value="SWG">SWG</option>
+            <option value="TWG">TWG</option>
+            <option value="INSR">INSR</option>
+            <option value="CBCIG">CBCIG</option>
+          </select>
         </div>
 
         <!-- Project Abstract -->
         <div class="form-group">
-          <label for="project_abstract" class="control-label">Project Description</label>
-          <textarea class="form-control animate" data-ng-model="project.properties.description"
-                    msd-elastic id="description" name="description" rows="1">{{ project.properties.description }}</textarea>
+          <label for="project_abstract" class="control-label">4. Please provide a short project description.</label>
+          <textarea class="form-control animate" data-ng-model="page.project.properties.description"
+                    msd-elastic id="description" name="description" rows="1">{{ page.project.properties.description }}</textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" data-ng-click="page.saveProject()"
+                  class="button button-submit">
+            Save Changes
+          </button>
         </div>
       </div>
 

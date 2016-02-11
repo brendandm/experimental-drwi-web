@@ -4,11 +4,11 @@
 
   /**
    * @ngdoc service
-   * @name 
+   * @name
    * @description
    */
   angular.module('FieldStack')
-    .service('Project', function (environment, $resource) {
+    .service('Project', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/project/:id'), {
         id: '@id'
       }, {
@@ -16,7 +16,11 @@
           isArray: false
         },
         update: {
-          method: 'PATCH'
+          method: 'PATCH',
+          transformRequest: function(data) {
+            var feature = Preprocessors.geojson(data);
+            return angular.toJson(feature);
+          }
         },
         sites: {
           method: 'GET',

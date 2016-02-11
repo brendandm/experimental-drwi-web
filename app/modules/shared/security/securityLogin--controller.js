@@ -4,12 +4,12 @@
 
     /**
      * @ngdoc controller
-     * @name 
+     * @name
      * @description
      */
      angular.module('FieldStack')
         .controller('SecurityController', function(Account, $location, Security, ipCookie, $route, $rootScope, $timeout) {
-        
+
             var self = this;
 
             self.cookieOptions = {
@@ -18,7 +18,7 @@
             };
 
             //
-            // Before showing the user the login page, 
+            // Before showing the user the login page,
             //
             if (ipCookie('FIELDSTACKIO_SESSION')) {
                 $location.path('/projects');
@@ -69,7 +69,7 @@
                         $rootScope.isAdmin = Account.hasRole('admin');
 
                         if ($rootScope.isAdmin) {
-                          $location.path('/dashboard');
+                          $location.path('/projects');
                         }
                         else if (firstTime) {
                           $location.path('/profiles/' + $rootScope.user.id + '/edit');
