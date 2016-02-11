@@ -8,7 +8,7 @@
  * Controller of the FieldStack
  */
 angular.module('FieldStack')
-  .controller('SiteViewCtrl', function (Account, leafletData, $location, site, practices, $rootScope, $route, user) {
+  .controller('SiteViewCtrl', function (Account, leafletData, $location, site, Practice, practices, $rootScope, $route, user) {
 
     var self = this;
 
@@ -57,66 +57,33 @@ angular.module('FieldStack')
 
     });
 
+    self.createPractice = function() {
+        self.practice = new Practice({
+            'practice_type': 'Grass Buffer',
+            'site_id': self.site.id,
+            'account_id': self.site.properties.project.properties.account_id
+        });
 
-    // $scope.site = site;
-    // $scope.site.practices = {
-    //   list: practices,
-    //   cleanName: function(name) {
-    //     return Feature.MachineReadable(name);
-    //   },
-    //   create: function() {
-    //     //
-    //     // Creating a practice is a two step process.
-    //     //
-    //     //  1. Create the new Practice record, including the owner and a new UserFeatures entry
-    //     //     for the Practice table
-    //     //  2. Update the Site to create a relationship with the Practice created in step 1
-    //     //
-    //     Feature.CreateFeature({
-    //       storage: variables.practice.storage,
-    //       data: {
-    //         practice_type: 'Forest Buffer',
-    //         description: '',
-    //         owner: $scope.user.id,
-    //         status: 'private'
-    //       }
-    //     }).then(function(practiceId) {
-    //       //
-    //       // Create the relationship with the parent, Project, to ensure we're doing this properly we need
-    //       // to submit all relationships that are created and should remain. If we only submit the new
-    //       // ID the system will kick out the sites that were added previously.
-    //       //
-    //       Feature.UpdateFeature({
-    //         storage: variables.site.storage,
-    //         featureId: $route.current.params.siteId,
-    //         data: {
-    //           type_77f5c44516674e8da2532939619759dd: $scope.GetAllChildren(practiceId),
-    //         }
-    //       }).then(function(response) {
-    //         $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + practiceId + '/edit');
-    //       });
-    //     });
-    //   }
-    // };
+        self.practice.$save(function(successResponse) {
+            $location.path('/projects/' + self.site.properties.project.id + '/sites/' + self.site.id + '/practices/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('Unable to create your site, please try again later');
+          });
+    };
+
     //
-    // $rootScope.page = {
-    //   title: $scope.site.site_number,
-    //   links: [
-    //     {
-    //       text: 'Projects',
-    //       url: '/projects'
-    //     },
-    //     {
-    //       text: $scope.project.project_title,
-    //       url: '/projects/' + $scope.project.id,
-    //     },
-    //     {
-    //       text: $scope.site.site_number,
-    //       url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id,
-    //       type: 'active'
-    //     }
-    //   ]
-    // };
+    // Setup basic page variables
+    //
+    $rootScope.page.actions = [
+      {
+        type: 'button-link new',
+        action: function() {
+          self.createPractice();
+        },
+        text: 'Create practice'
+      }
+    ];
+
     //
     // $scope.map = {
     //   defaults: {
