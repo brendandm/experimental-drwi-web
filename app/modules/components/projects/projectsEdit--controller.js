@@ -61,7 +61,7 @@ angular.module('FieldStack')
     self.saveProject = function() {
       self.project.$update().then(function(response) {
 
-        $location.path('/projects/');
+        $location.path('/projects/' + self.project.id);
 
       }).then(function(error) {
         // Do something with the error
