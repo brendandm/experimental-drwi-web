@@ -40,23 +40,23 @@
       <div class="column-16 feature-detail-content">
         <div class="table-responsive">
 
-        <div data-ng-if="!total.planning">
+        <div data-ng-if="!page.total.planning">
           <h2><strong>Empty</strong> Summary</h2>
 
           <p>No planning or measurement data has been added to this Practice yet. Please add a new Planning measurement period to this Practice to begin.</p>
 
           <p>
-            <a class="button" data-ng-click="readings.addReading('Planning')">Add Planning Data</a>
+            <a class="button" data-ng-click="page.readings.addReading('Planning')">Add Planning Data</a>
           </p>
         </div>
 
 
-        <div data-ng-if="total.planning || total.installation">
+        <div data-ng-if="page.total.planning || page.total.installation">
           <table class="table">
             <tbody>
               <!-- Section Heading -->
               <tr class="no-rule">
-                <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+                <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
                   <h2><strong>Installation</strong> Summary</h2>
                 </td>
               </tr>
@@ -238,7 +238,7 @@
               </tr>
 
               <tr class="no-rule">
-                <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+                <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
                   <h2><strong>Load</strong> &amp; Reductions</h2>
                 </td>
               </tr>
@@ -302,7 +302,7 @@
               </tr>
 
               <tr class="no-rule">
-                <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+                <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
                   <h2><strong>Chesapeake</strong> Bay Metrics</h2>
                 </td>
               </tr>
@@ -394,11 +394,11 @@
           </table>
         </div>
 
-        <div data-ng-if="total.monitoring">
+        <div data-ng-if="page.total.monitoring">
           <table class="table">
 
               <tr class="no-rule">
-                <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+                <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
                   <h2><strong>Interim</strong> BMP Metrics Data</h2>
                 </td>
               </tr>
@@ -419,7 +419,7 @@
               </tr>
 
               <tr class="no-rule">
-                <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+                <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
                   <h2><strong>Adaptive</strong> Management Checks Performed</h2>
                 </td>
               </tr>
@@ -479,7 +479,7 @@
             </tbody>
           </table>
         </div>
-        <div data-ng-if="total.planning || total.installation || total.monitoring">
+        <div data-ng-if="page.total.planning || page.total.installation || page.total.monitoring">
           <h2><strong>Notes</strong></h2>
           <table class="table">
             <thead>

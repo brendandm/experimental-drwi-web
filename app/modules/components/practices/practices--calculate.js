@@ -38,6 +38,17 @@
             phosphorus: (area*(efficiency.eos_totp/efficiency.eos_acres)),
             sediment: ((area*(efficiency.eos_tss/efficiency.eos_acres))/2000)
           };
+        },
+        getTotalReadingsByCategory: function(period, readings) {
+          var total = 0;
+
+          for (var i = 0; i < readings.length; i++) {
+            if (readings[i].properties.measurement_period === period) {
+              total++;
+            }
+          }
+
+          return total;
         }
       };
     });

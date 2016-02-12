@@ -8,7 +8,7 @@
  * Controller of the FieldStack
  */
 angular.module('FieldStack')
-  .controller('UrbanHomeownerReportController', function (Account, Utility, $rootScope, $scope, $route, $location, $timeout, $http, $q, moment, user, site, practice, readings, commonscloud, Storage, Landuse, CalculateUrbanHomeowner, Calculate, StateLoad, PracticeUrbanHomeowner) {
+  .controller('UrbanHomeownerReportController', function (Account, Calculate, CalculateUrbanHomeowner, Landuse, $location, moment, practice, PracticeUrbanHomeowner, readings, $rootScope, $route, site, $scope, StateLoad, user, Utility) {
 
     var self = this,
         projectId = $route.current.params.projectId,
@@ -17,6 +17,9 @@ angular.module('FieldStack')
         practiceType;
 
     $rootScope.page = {};
+
+    self.calculate = Calculate;
+    self.calculateUrbanHomeowner = CalculateUrbanHomeowner;
 
     practice.$promise.then(function(successResponse) {
 
@@ -130,7 +133,6 @@ angular.module('FieldStack')
     //
     // $scope.landuse = Landuse;
     //
-    // $scope.calculate = CalculateUrbanHomeowner;
     //
     // $scope.calculate.GetLoadVariables = function(period, landuse) {
     //
@@ -415,29 +417,21 @@ angular.module('FieldStack')
     // //   totalPlannedLoad: $scope.calculate.GetPlannedLoad('Planning'),
     // //   totalInstalledLoad: $scope.calculate.GetInstalledLoad('Installation')
     // // };
-    //
-    //
-    // //
-    // //
-    // //
-    // $scope.GetTotal = function(period) {
-    //
-    //   var total = 0;
-    //
-    //   for (var i = 0; i < $scope.practice.readings.length; i++) {
-    //     if ($scope.practice.readings[i].measurement_period === period) {
-    //       total++;
-    //     }
-    //   }
-    //
-    //   return total;
-    // };
-    //
-    // $scope.total = {
-    //   planning: $scope.GetTotal('Planning'),
-    //   installation: $scope.GetTotal('Installation'),
-    //   monitoring: $scope.GetTotal('Monitoring')
-    // };
+
+    readings.$promise.then(function(successResponse) {
+
+      self.readings = successResponse;
+
+      self.total = {
+        planning: self.calculate.getTotalReadingsByCategory('Planning', self.readings.features),
+        installation: self.calculate.getTotalReadingsByCategory('Installation', self.readings.features),
+        monitoring: self.calculate.getTotalReadingsByCategory('Monitoring', self.readings.features)
+      };
+
+    }, function(errorResponse) {
+
+    });
+
     //
     // //
     // // Load Land river segment details
@@ -449,59 +443,61 @@ angular.module('FieldStack')
     //   $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0] = response;
     // });
     //
-    $scope.readings = {
-      bufferWidth: function() {
-        for (var i = 0; i < $scope.practice.readings.length; i++) {
-          if ($scope.practice.readings[i].measurement_period === 'Planning') {
-            return $scope.practice.readings[i].average_width_of_buffer;
-          }
-        }
-      },
-      add: function(practice, readingType) {
-        //
-        // Creating a practice reading is a two step process.
-        //
-        //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
-        //     for the Practice Reading table
-        //  2. Update the Practice to create a relationship with the Reading created in step 1
-        //
-        Feature.CreateFeature({
-          storage: $scope.storage.storage,
-          data: {
-            measurement_period: (readingType) ? readingType : null,
-            average_width_of_buffer: $scope.readings.bufferWidth(),
-            report_date: moment().format('YYYY-MM-DD'),
-            owner: $scope.user.id,
-            status: 'private'
-          }
-        }).then(function(reportId) {
-
-          var data = {};
-          data[$scope.storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
-
-          //
-          // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
-          // to submit all relationships that are created and should remain. If we only submit the new
-          // ID the system will kick out the sites that were added previously.
-          //
-          Feature.UpdateFeature({
-            storage: commonscloud.collections.practice.storage,
-            featureId: practice.id,
-            data: data
-          }).then(function() {
-            //
-            // Once the new Reading has been associated with the existing Practice we need to
-            // display the form to the user, allowing them to complete it.
-            //
-            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
-          });
-        });
-      },
+    self.readings = {
+      // bufferWidth: function() {
+      //   for (var i = 0; i < $scope.practice.readings.length; i++) {
+      //     if ($scope.practice.readings[i].measurement_period === 'Planning') {
+      //       return $scope.practice.readings[i].average_width_of_buffer;
+      //     }
+      //   }
+      // },
+      // add: function(practice, readingType) {
+      //   //
+      //   // Creating a practice reading is a two step process.
+      //   //
+      //   //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
+      //   //     for the Practice Reading table
+      //   //  2. Update the Practice to create a relationship with the Reading created in step 1
+      //   //
+      //   Feature.CreateFeature({
+      //     storage: $scope.storage.storage,
+      //     data: {
+      //       measurement_period: (readingType) ? readingType : null,
+      //       average_width_of_buffer: $scope.readings.bufferWidth(),
+      //       report_date: moment().format('YYYY-MM-DD'),
+      //       owner: $scope.user.id,
+      //       status: 'private'
+      //     }
+      //   }).then(function(reportId) {
+      //
+      //     var data = {};
+      //     data[$scope.storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
+      //
+      //     //
+      //     // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
+      //     // to submit all relationships that are created and should remain. If we only submit the new
+      //     // ID the system will kick out the sites that were added previously.
+      //     //
+      //     Feature.UpdateFeature({
+      //       storage: commonscloud.collections.practice.storage,
+      //       featureId: practice.id,
+      //       data: data
+      //     }).then(function() {
+      //       //
+      //       // Once the new Reading has been associated with the existing Practice we need to
+      //       // display the form to the user, allowing them to complete it.
+      //       //
+      //       $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
+      //     });
+      //   });
+      // },
       addReading: function(measurementPeriod) {
 
         var newReading = new PracticeUrbanHomeowner({
-            measurement_period: measurementPeriod,
-            report_date: moment().format('YYYY-MM-DD')
+            'measurement_period': measurementPeriod,
+            'report_date': moment().format('YYYY-MM-DD'),
+            'practice_id': practiceId,
+            'account_id': self.site.properties.project.properties.account_id
           });
 
         newReading.$save().then(function(successResponse) {

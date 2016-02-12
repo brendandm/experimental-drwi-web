@@ -33,8 +33,10 @@ angular.module('FieldStack')
               id: $route.current.params.practiceId
             });
           },
-          readings: function() {
-            return null;
+          readings: function(Practice, $route) {
+            return Practice.urbanHomeowner({
+              id: $route.current.params.practiceId
+            });
           }
         }
       })

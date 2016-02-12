@@ -10,10 +10,10 @@
   angular.module('FieldStack')
     .service('Practice', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/practice/:id'), {
-        id: '@id'
+        'id': '@id'
       }, {
-        query: {
-          isArray: false
+        'query': {
+          'isArray': false
         },
         'update': {
           method: 'PATCH',
@@ -21,6 +21,11 @@
             var feature = Preprocessors.geojson(data);
             return angular.toJson(feature);
           }
+        },
+        'urbanHomeowner': {
+          'method': 'GET',
+          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_urban_homeowner'),
+          'isArray': false
         }
       });
     });
