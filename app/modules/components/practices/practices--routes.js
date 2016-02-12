@@ -19,17 +19,6 @@
           controller: 'PracticeViewController',
           controllerAs: 'page',
           resolve: {
-            user: function(Account) {
-              if (Account.userObject && !Account.userObject.id) {
-                  return Account.getUser();
-              }
-              return Account.userObject;
-            },
-            site: function(Site, $route) {
-              return Site.get({
-                id: 1
-              });
-            },
             practice: function(Practice, $route) {
               return Practice.get({
                 id: $route.current.params.practiceId
