@@ -5,10 +5,12 @@
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
 
+        {{ page.practice }}
+
         <!-- Practice Type -->
         <div class="form-group">
           <label for="practice_type" class="control-label">Practice Type</label>
-          <select data-ng-model="page.practice.properties.practice_type" class="form-control" id="practice_type" name="practice_type">
+          <select class="form-control" data-ng-model="page.practice.properties.practice_type" id="practice_type" name="practice_type">
             <option value="Bank Stabilization">Bank Stabilization</option>
             <option value="Bioretention">Bioretention</option>
             <option value="Enhanced Stream Restoration">Enhanced Stream Restoration</option>
@@ -16,7 +18,7 @@
             <option value="Grass Buffer">Grass Buffer</option>
             <option value="In-stream Habitat">In-stream Habitat</option>
             <option value="Livestock Exclusion">Livestock Exclusion</option>
-            <option value="Urban Homeowner">Urban Homeowner</option>
+            <option>Urban Homeowner</option>
             <option value="Wetlands (non-tidal)">Wetlands (non-tidal)</option>
           </select>
         </div>

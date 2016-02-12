@@ -67,8 +67,7 @@ angular.module('FieldStack')
     });
 
     self.savePractice = function() {
-      var practice = new Practice(self.practice.properties);
-      practice.$update().then(function(successResponse) {
+      self.practice.$update().then(function(successResponse) {
         $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id);
       }, function(errorResponse) {
         // Error message
