@@ -20,10 +20,11 @@
           return (rainGarden+rainBarrel+permeablePavement+downspoutDisconnection);
         },
         preInstallationNitrogenLoad: function(value, loaddata) {
-          var impervious = ((value.rain_garden_area/0.12)+value.rain_barrel_drainage_area+value.permeable_pavement_area+value.downspout_disconnection_drainage_area+value.impervious_cover_removal_area),
-              pervious = (value.urban_nutrient_management_pledge_area+value.urban_nutrient_management_plan_area_hi_risk+value.conservation_landscaping+(value.tree_planting*100));
 
-          return ((impervious)*loaddata.impervious.tn_ual + (pervious)*loaddata.pervious.tn_ual)/43560;
+          var impervious = ((value.rain_garden_area/0.12)+value.rain_barrel_drainage_area+value.permeable_pavement_area+value.downspout_disconnection_drainage_area+value.impervious_cover_removal_area)*loaddata.impervious.tn_ual,
+              pervious = (value.urban_nutrient_management_pledge_area+value.urban_nutrient_management_plan_area_hi_risk+value.conservation_landscaping+(value.tree_planting*100))*loaddata.pervious.tn_ual;
+
+          return (impervious+pervious)/43560;
         },
         preInstallationPhosphorusLoad: function(value, loaddata) {
           var impervious = ((value.rain_garden_area/0.12)+value.rain_barrel_drainage_area+value.permeable_pavement_area+value.downspout_disconnection_drainage_area+value.impervious_cover_removal_area),
@@ -63,11 +64,11 @@
               self = this;
 
           angular.forEach(values, function(value, $index) {
-            if (values[$index].measurement_period === 'Planning') {
-              planned += self.plannedPhosphorusLoadReduction(value, loaddata);
+            if (value.properties.measurement_period === 'Planning') {
+              planned += self.plannedPhosphorusLoadReduction(value.properties, loaddata);
             }
-            else if (values[$index].measurement_period === 'Installation') {
-              installed += self.plannedPhosphorusLoadReduction(value, loaddata);
+            else if (value.properties.measurement_period === 'Installation') {
+              installed += self.plannedPhosphorusLoadReduction(value.properties, loaddata);
             }
           });
 
@@ -82,11 +83,11 @@
               self = this;
 
           angular.forEach(values, function(value, $index) {
-            if (values[$index].measurement_period === 'Planning') {
-              planned += self.plannedNitrogenLoadReduction(value, loaddata);
+            if (value.properties.measurement_period === 'Planning') {
+              planned += self.plannedNitrogenLoadReduction(value.properties, loaddata);
             }
-            else if (values[$index].measurement_period === 'Installation') {
-              installed += self.plannedNitrogenLoadReduction(value, loaddata);
+            else if (value.properties.measurement_period === 'Installation') {
+              installed += self.plannedNitrogenLoadReduction(value.properties, loaddata);
             }
           });
 
@@ -101,11 +102,11 @@
               self = this;
 
           angular.forEach(values, function(value, $index) {
-            if (values[$index].measurement_period === 'Planning') {
-              planned += self.gallonsReducedPerYear(value);
+            if (value.properties.measurement_period === 'Planning') {
+              planned += self.gallonsReducedPerYear(value.properties);
             }
-            else if (values[$index].measurement_period === 'Installation') {
-              installed += self.gallonsReducedPerYear(value);
+            else if (value.properties.measurement_period === 'Installation') {
+              installed += self.gallonsReducedPerYear(value.properties);
             }
           });
 
@@ -119,11 +120,11 @@
               planned_trees = 0;
 
           angular.forEach(values, function(value, $index) {
-            if (values[$index].measurement_period === 'Planning') {
-              planned_trees += values[$index][field];
+            if (value.properties.measurement_period === 'Planning') {
+              planned_trees += value.properties[field];
             }
-            else if (values[$index].measurement_period === 'Installation') {
-              installed_trees += values[$index][field];
+            else if (value.properties.measurement_period === 'Installation') {
+              installed_trees += value.properties[field];
             }
           });
 
@@ -143,11 +144,11 @@
               self = this;
 
           angular.forEach(values, function(value, $index) {
-            if (values[$index].measurement_period === 'Planning') {
-              planned += self.acresProtected(value);
+            if (value.properties.measurement_period === 'Planning') {
+              planned += self.acresProtected(value.properties);
             }
-            else if (values[$index].measurement_period === 'Installation') {
-              installed += self.acresProtected(value);
+            else if (value.properties.measurement_period === 'Installation') {
+              installed += self.acresProtected(value.properties);
             }
           });
 
@@ -164,10 +165,10 @@
           // Get readings organized by their Type
           angular.forEach(values, function(reading, $index) {
 
-            if (reading.measurement_period === 'Planning') {
-              planned_total += reading[field];
-            } else if (reading.measurement_period === 'Installation') {
-              installed_total += reading[field];
+            if (reading.properties.measurement_period === 'Planning') {
+              planned_total += reading.properties[field];
+            } else if (reading.properties.measurement_period === 'Installation') {
+              installed_total += reading.properties[field];
             }
 
           });
@@ -193,10 +194,10 @@
           // Get readings organized by their Type
           angular.forEach(values, function(reading, $index) {
 
-            if (reading.measurement_period === 'Planning') {
-              planned_total += reading[field]/0.12;
-            } else if (reading.measurement_period === 'Installation') {
-              installed_total += reading[field]/0.12;
+            if (reading.properties.measurement_period === 'Planning') {
+              planned_total += reading.properties[field]/0.12;
+            } else if (reading.properties.measurement_period === 'Installation') {
+              installed_total += reading.properties[field]/0.12;
             }
 
           });

@@ -41,8 +41,9 @@ angular.module('FieldStack')
         }
       })
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/urban-homeowner/:reportId/edit', {
-        templateUrl: '/modules/shared/default.html',
+        templateUrl: '/modules/components/practices/modules/urban-homeowner/views/form--view.html',
         controller: 'UrbanHomeownerFormController',
+        controllerAs: 'page',
         resolve: {
           user: function(Account) {
             if (Account.userObject && !Account.userObject.id) {
@@ -60,8 +61,10 @@ angular.module('FieldStack')
               id: $route.current.params.practiceId
             });
           },
-          readings: function() {
-            return null;
+          report: function(PracticeUrbanHomeowner, $route) {
+            return PracticeUrbanHomeowner.get({
+              id: $route.current.params.reportId
+            });
           }
         }
       });
