@@ -12,86 +12,30 @@ angular.module('FieldStack')
   .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
 
     $routeProvider
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/urban-homeowner', {
-        templateUrl: '/modules/shared/default.html',
-        controller: 'UrbanHomeownerReportController',
-        resolve: {
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.site.templateId
-            });
-          },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
-            });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.site.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.site.templateId, 'object');
-          },
-          site: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.site.storage,
-              featureId: $route.current.params.siteId
-            });
-          },
-          practice: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.practice.storage,
-              featureId: $route.current.params.practiceId
-            });
-          },
-          readings: function(Storage, Feature, $route) {
-            return Feature.GetRelatedFeatures({
-              storage: commonscloud.collections.practice.storage,
-              relationship: Storage['urban-homeowner'].storage,
-              featureId: $route.current.params.practiceId
-            });
-          }
-        }
-      })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/urban-homeowner/:reportId/edit', {
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/reading/:reportId/edit', {
         templateUrl: '/modules/shared/default.html',
         controller: 'UrbanHomeownerFormController',
         resolve: {
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.site.templateId
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          site: function(Site, $route) {
+            return Site.get({
+              id: $route.current.params.siteId
             });
           },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
+          practice: function(Practice, $route) {
+            return Practice.get({
+              id: $route.current.params.practiceId
             });
           },
-          site: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.site.storage,
-              featureId: $route.current.params.siteId
-            });
-          },
-          practice: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.practice.storage,
-              featureId: $route.current.params.practiceId
-            });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.practice.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.practice.templateId, 'object');
+          readings: function() {
+            return null;
           }
         }
       });
 
   }]);
-
-
