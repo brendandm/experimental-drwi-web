@@ -2,11 +2,8 @@
 
 /**
  * @ngdoc overview
- * @name FieldStack
+ * @name 
  * @description
- * # FieldStack
- *
- * Main module of the application.
  */
 angular
   .module('FieldStack', [
@@ -15,27 +12,24 @@ angular
     'ngSanitize',
     'ngTouch',
     'ipCookie',
-    'ui.gravatar',
     'leaflet-directive',
     'angularFileUpload',
     'geolocation',
     'angular-loading-bar',
     'monospaced.elastic',
-    'angular-medium-editor',
-    'angularMoment'
+    'angularMoment',
+    'config'
   ]);
+
 'use strict';
 
 /**
  * @ngdoc overview
- * @name FieldStack
+ * @name 
  * @description
- * # FieldStack
- *
- * Main module of the application.
  */
 angular.module('FieldStack')
-  .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+  .config(function($routeProvider, $locationProvider) {
 
     $routeProvider
       .otherwise({
@@ -44,115 +38,161 @@ angular.module('FieldStack')
 
     $locationProvider.html5Mode(true);
 
-  }]);
-
-'use strict';
-
-/**
- * @ngdoc overview
- * @name FieldStack
- * @description
- * # FieldStack
- *
- * Main module of the application.
- */
-angular.module('FieldStack')
-  .config(['$routeProvider', function($routeProvider) {
-
-    $routeProvider
-      .when('/', {
-        templateUrl: '/modules/shared/default.html',
-        controller: 'SecurityLogin',
-        resolve: {
-          user: function(User) {
-            return User.getUser();
-          }
-        }
-      })
-      .when('/authorize', {
-        template: 'authorize',
-        controller: 'SecurityAuthorize'
-      })
-      .when('/logout', {
-        template: 'logout',
-        controller: 'SecurityLogout'
-      });
-
-  }]);
-
-'use strict';
-
-/**
- * @ngdoc function
- * @name FieldStack.controller:SecurityController
- * @description
- * # SecurityController
- * Controller of the FieldStack
- */
-angular.module('FieldStack')
-  .controller('SecurityAuthorize', function($location, token) {
-
-    //
-    // If we have an Access Token, forward the user to the Projects page
-    //
-    if (token.get()) {
-      $location.path('/projects');
-    } else {
-      token.save();
-    }
-
   });
 
-'use strict';
+"use strict";
 
-/**
- * @ngdoc function
- * @name FieldStack.controller:SecurityLogin
- * @description
- * # SecurityLogin
- * Controller of the FieldStack
- */
-angular.module('FieldStack')
-  .controller('SecurityLogin', ['$scope', 'ipCookie', '$location', function($scope, ipCookie, $location) {
+ angular.module('config', [])
 
-    var session_cookie = ipCookie('COMMONS_SESSION');
+.constant('environment', {name:'local',apiUrl:'http://127.0.0.1:5000',siteUrl:'http://127.0.0.1:9000',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
-    //
-    // Setup basic page variables
-    //
-    $scope.page = {
-      template: '/modules/shared/security/views/securityLogin--view.html',
-      title: 'NFWF Grant Monitoring and Assessment',
-      header: {
-        hidden: true
-      }
-    };
+;
+(function() {
 
-    $scope.setupLoginPage = function() {
-      var host = $location.host();
+    'use strict';
 
-      //
-      // Redirect based on current enviornment
-      //
-      if (host === 'localhost' || host === '127.0.0.1') {
-        $scope.login_url = '//api.commonscloud.org/oauth/authorize?response_type=token&client_id=qXadujeb96VrZogGGd6zE6wTtzziBZJnxPfM8ZPu&redirect_uri=http%3A%2F%2F127.0.0.1%3A9000%2Fauthorize&scope=user applications';
-      // } else if (host === 'stg.commonscloud.org') {
-      //   $scope.login_url = '//api.commonscloud.org/oauth/authorize?response_type=token&client_id=MbanCzYpm0fUW8md1cdSJjUoYI78zTbak2XhZ2hf&redirect_uri=http%3A%2F%2Fstg.commonscloud.org%2Fauthorize&scope=user applications';
-      } else {
-        $scope.login_url = '//api.commonscloud.org/oauth/authorize?response_type=token&client_id=MbanCzYpm0fUW8md1cdSJjUoYI78zTbak2XhZ2hQ&redirect_uri=http%3A%2F%2Fnfwf.viableindustries.com%2Fauthorize&scope=user applications';
-      }
+    /**
+     * @ngdoc overview
+     * @name FieldStack
+     * @description
+     * # FieldStack
+     *
+     * Main module of the application.
+     */
+    angular.module('FieldStack')
+      .config(function ($routeProvider) {
+        $routeProvider
+          .when('/', {
+            redirectTo: '/user/login'
+          })
+          .when('/user', {
+            redirectTo: '/user/login'
+          })
+          .when('/user/login', {
+            templateUrl: '/modules/shared/security/views/securityLogin--view.html',
+            controller: 'SecurityController',
+            controllerAs: 'page'
+          })
+          .when('/user/register', {
+            templateUrl: '/modules/shared/security/views/securityRegister--view.html',
+            controller: 'SecurityController',
+            controllerAs: 'page'
+          })
+          .when('/user/reset', {
+            templateUrl: '/modules/shared/security/views/securityResetPassword--view.html',
+            controller: 'SecurityResetPasswordController',
+            controllerAs: 'page'
+          })
+          .when('/logout', {
+            redirectTo: '/user/logout'
+          })
+          .when('/user/logout', {
+            template: 'Logging out ...',
+            controller: 'SecurityLogoutController',
+            controllerAs: 'page'
+          });
+      });
 
-    };
+}());
 
-    if (session_cookie && session_cookie !== undefined && session_cookie !== 'undefined') {
-      $location.path('/projects');
-    } else {
-      ipCookie.remove('COMMONS_SESSION');
-      ipCookie.remove('COMMONS_SESSION', { path: '/' });
-      $scope.setupLoginPage();
-    }
+(function() {
 
-  }]);
+    'use strict';
+
+    /**
+     * @ngdoc controller
+     * @name
+     * @description
+     */
+     angular.module('FieldStack')
+        .controller('SecurityController', function(Account, $location, Security, ipCookie, $route, $rootScope, $timeout) {
+
+            var self = this;
+
+            self.cookieOptions = {
+                'path': '/',
+                'expires': 7
+            };
+
+            //
+            // Before showing the user the login page,
+            //
+            if (ipCookie('FIELDSTACKIO_SESSION')) {
+                $location.path('/projects');
+            }
+
+            self.login = {
+              submit: function(firstTime) {
+
+                self.login.processing = true;
+
+                var credentials = new Security({
+                  email: self.login.email,
+                  password: self.login.password,
+                });
+
+                credentials.$save(function(response) {
+
+                  //
+                  // Check to see if there are any errors by checking for the existence
+                  // of response.response.errors
+                  //
+                  if (response.response && response.response.errors) {
+                    self.login.errors = response.response.errors;
+                    self.register.processing = false;
+                    self.login.processing = false;
+
+                    $timeout(function() {
+                      self.login.errors = null;
+                    }, 3500);
+                  } else {
+                    //
+                    // Make sure our cookies for the Session are being set properly
+                    //
+                    ipCookie.remove('FIELDSTACKIO_SESSION');
+                    ipCookie('FIELDSTACKIO_SESSION', response.access_token, self.cookieOptions);
+
+                    //
+                    // Make sure we also set the User ID Cookie, so we need to wait to
+                    // redirect until we're really sure the cookie is set
+                    //
+                    Account.setUserId().$promise.then(function() {
+                      Account.getUser().$promise.then(function(userResponse) {
+
+                        Account.userObject = userResponse;
+
+                        $rootScope.user = Account.userObject;
+                        $rootScope.isLoggedIn = Account.hasToken();
+                        $rootScope.isAdmin = Account.hasRole('admin');
+
+                        if ($rootScope.isAdmin) {
+                          $location.path('/projects');
+                        }
+                        else if (firstTime) {
+                          $location.path('/profiles/' + $rootScope.user.id + '/edit');
+                        }
+                        else {
+                          $location.path('/activity');
+                        }
+                      });
+                    });
+
+                  }
+                }, function(){
+                  self.login.processing = false;
+                  self.login.errors = {
+                    email: ['The email or password you provided was incorrect']
+                  };
+
+                  $timeout(function() {
+                    self.login.errors = null;
+                  }, 3500);
+                });
+              }
+            };
+        });
+
+}());
 
 'use strict';
 
@@ -180,67 +220,64 @@ angular.module('FieldStack')
     
   }]);
 
-'use strict';
+(function() {
 
-/**
- * @ngdoc service
- * @name FieldStack.authorizationInterceptor
- * @description
- * # authorizationInterceptor
- * Service in the FieldStack.
- */
-angular.module('FieldStack')
-  .factory('AuthorizationInterceptor', ['$location', '$q', 'ipCookie', function($location, $q, ipCookie) {
+    'use strict';
 
-    return {
-      request: function(config) {
+    /**
+     * @ngdoc service
+     * @name FieldStack.authorizationInterceptor
+     * @description
+     * # authorizationInterceptor
+     * Service in the FieldStack.
+     */
+    angular.module('FieldStack')
+      .factory('AuthorizationInterceptor', function($location, $q, ipCookie, $log) {
 
-        var session = ipCookie('COMMONS_SESSION');
+        return {
+          request: function(config) {
 
-        //
-        // Before we make any modifications to the config/header of the request
-        // check to see if our authorization page is being requested and if the
-        // session cookie is defined
-        //
-        if (!session) {
-          $location.path('/');
-          return config || $q.when(config);
-        }
+            var sessionCookie = ipCookie('FIELDSTACKIO_SESSION');
 
-        //
-        // We have a session cookie if we've gotten this far. That means we
-        // need to make some header changes so that all of our requests are
-        // properly authenticated.
-        //
-        config.headers = config.headers || {};
+            //
+            // Configure our headers to contain the appropriate tags
+            //
+            config.headers = config.headers || {};
 
-        if (config.headers.Authorization === 'external') {
-          delete config.headers.Authorization;
-          return config || $q.when(config);
-        }
+            if (config.headers['Authorization-Bypass'] === true) {
+              delete config.headers['Authorization-Bypass'];
+              return config || $q.when(config);
+            }
 
-        //
-        // Add the Authorization header with our Access Token
-        //
-        if (session) {
-          config.headers.Authorization = 'Bearer ' + session;
-        }
+            if (sessionCookie) {
+              config.headers.Authorization = 'Bearer ' + sessionCookie;
+            }
 
-        console.debug('AuthorizationInterceptor::Request', config || $q.when(config));
-        return config || $q.when(config);
-      },
-      response: function(response) {
-        console.debug('AuthorizationInterceptor::Response', response || $q.when(response));
-        return response || $q.when(response);
-      },
-      responseError: function (response) {
-        console.debug('AuthorizationInterceptor::ResponseError', response || $q.when(response));
-        return $q.reject(response);
-      }
-    };
-  }]).config(function ($httpProvider) {
-    $httpProvider.interceptors.push('AuthorizationInterceptor');
-  });
+            config.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate';
+
+            //
+            // Configure or override parameters where necessary
+            //
+            config.params = (config.params === undefined) ? {} : config.params;
+
+            console.debug('SecurityInterceptor::Request', config || $q.when(config));
+
+            return config || $q.when(config);
+          },
+          response: function(response) {
+            $log.info('AuthorizationInterceptor::Response', response || $q.when(response));
+            return response || $q.when(response);
+          },
+          responseError: function (response) {
+            $log.info('AuthorizationInterceptor::ResponseError', response || $q.when(response));
+            return $q.reject(response);
+          }
+        };
+      }).config(function ($httpProvider) {
+        $httpProvider.interceptors.push('AuthorizationInterceptor');
+      });
+
+}());
 
 'use strict';
 
@@ -294,88 +331,69 @@ angular.module('FieldStack')
  * Main module of the application.
  */
 angular.module('FieldStack')
-  .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
+  .config(function($routeProvider, commonscloud) {
 
     $routeProvider
       .when('/projects', {
-        templateUrl: '/modules/shared/default.html',
+        templateUrl: '/modules/components/projects/views/projectsList--view.html',
         controller: 'ProjectsCtrl',
+        controllerAs: 'page',
         reloadOnSearch: false,
         resolve: {
-          user: function(User) {
-            return User.getUser();
+          projects: function(Project) {
+            return Project.query();
           },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.project.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.project.templateId);
-          },
-          storage: function() {
-            return commonscloud.collections.project.storage;
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
           }
         }
       })
       .when('/projects/:projectId', {
-        templateUrl: '/modules/shared/default.html',
+        templateUrl: '/modules/components/projects/views/projectsSingle--view.html',
         controller: 'ProjectViewCtrl',
+        controllerAs: 'page',
         resolve: {
-          user: function(User) {
-            return User.getUser();
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
           },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.project.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.project.templateId, 'object');
-          },
-          site: function() {
-            return commonscloud.collections.site;
-          },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
+          project: function(Project, $route) {
+            return Project.get({
+                'id': $route.current.params.projectId
             });
           },
-          sites: function(Feature, $route) {
-            return Feature.GetRelatedFeatures({
-              storage: commonscloud.collections.project.storage,
-              relationship: commonscloud.collections.site.storage,
-              featureId: $route.current.params.projectId
+          sites: function(Project, $route) {
+            return Project.sites({
+                'id': $route.current.params.projectId
             });
-          },
-          storage: function() {
-            return commonscloud.collections.project.storage;
           }
         }
       })
       .when('/projects/:projectId/edit', {
-        templateUrl: '/modules/shared/default.html',
+        templateUrl: '/modules/components/projects/views/projectsEdit--view.html',
         controller: 'ProjectEditCtrl',
+        controllerAs: 'page',
         resolve: {
-          user: function(User) {
-            return User.getUser();
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
           },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.project.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.project.templateId, 'object');
-          },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
+          project: function(Project, $route) {
+            return Project.get({
+                'id': $route.current.params.projectId
             });
-          },
-          storage: function() {
-            return commonscloud.collections.project.storage;
           }
         }
       })
       .when('/projects/:projectId/users', {
-        templateUrl: '/modules/shared/default.html',
+        templateUrl: '/modules/components/projects/views/projectsUsers--view.html',
         controller: 'ProjectUsersCtrl',
         resolve: {
           user: function(User, $route) {
@@ -411,29 +429,25 @@ angular.module('FieldStack')
         }
       });
 
-  }]);
+  });
 
 'use strict';
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:ProjectsCtrl
+ * @name
  * @description
- * # ProjectsCtrl
- * Controller of the FieldStack
  */
 angular.module('FieldStack')
-  .controller('ProjectsCtrl', ['$rootScope', '$scope', '$route', '$routeParams', '$location', '$timeout', 'Feature', 'template', 'fields', 'storage', 'user', function ($rootScope, $scope, $route, $routeParams, $location, $timeout, Feature, template, fields, storage, user) {
+  .controller('ProjectsCtrl', function (Account, $location, $log, Project, projects, $rootScope, user) {
 
-    var timeout;
+    var self = this;
 
     //
     // Setup basic page variables
     //
     $rootScope.page = {
-      template: '/modules/components/projects/views/projects--list.html',
       title: 'Projects',
-      back: '/',
       links: [
         {
           text: 'Projects',
@@ -445,181 +459,43 @@ angular.module('FieldStack')
         {
           type: 'button-link new',
           action: function() {
-            $scope.project.create();
+            self.createProject();
           },
           text: 'Create project'
         }
-      ],
-      refresh: function() {
-        $route.reload();
-      }
+      ]
     };
-
-    $scope.user = user;
-
-
-    //
-    // We need the Template and it's associated Field list so that we can automatically populate
-    // the Filter options for the user and display the Fields/Options specific to this Template,
-    // in the case of this specific application and route we are only dealing with a single Template
-    // for the Projects Feature Collection
-    //
-    $scope.template = template;
-    $scope.defaults = $location.search();
-
-
-    //
-    // When the page initially loads, we should check to see if existing filters are present in the
-    // browser's address bar. We should pass those filters along to the Feature Search. The Projects
-    // that populate the list shown to the user, we update this later on based upon filters that the
-    // user applies
-    //
-    Feature.GetFeatures({
-      storage: storage,
-      page: $route.current.params.page,
-      q: $route.current.params.q,
-      location: $scope.defaults,
-      fields: fields
-    }).then(function(response) {
-      $scope.projects = response;
-    });
-
-    //
-    // Setup project filter functionality
-    //
-    var filters_ = Feature.buildFilters(fields, $scope.defaults);
-
-    $scope.filters = {
-      page: ($scope.defaults.page) ? $scope.defaults.page : null,
-      results_per_page: ($scope.defaults.results_per_page) ? $scope.defaults.results_per_page : null,
-      callback: ($scope.defaults.callback) ? $scope.defaults.callback : null,
-      selected: filters_,
-      available: filters_
-    };
-
-    $scope.filters.select = function ($index) {
-      $scope.filters.available[$index].active = true;
-    };
-
-    $scope.filters.remove = function ($index) {
-      $scope.filters.available[$index].active = false;
-
-      //
-      // Each Filter can have multiple criteria such as single ilike, or
-      // a combination of gte and lte. We need to null the values of all
-      // filters in order for the URL to change appropriately
-      //
-      angular.forEach($scope.filters.available[$index].filter, function(criteria, $_index) {
-        $scope.filters.available[$index].filter[$_index].value = null;
-      });
-
-      $scope.search.execute();
-    };
-
-
-    //
-    // Filter existing Projects to a specified list based on the user's input
-    //
-    $scope.search = {};
-
-    $scope.search.projects = function() {
-
-      $timeout.cancel(timeout);
-
-      timeout = $timeout(function () {
-        $scope.search.execute();
-      }, 1000);
-
-    };
-
-    $scope.search.execute = function(page_number) {
-
-      var Q = Feature.getFilters($scope.filters);
-
-      console.log('Q', Q);
-
-      $scope.filters.page = page_number;
-
-      Feature.query({
-        storage: $scope.template.storage,
-        q: {
-          filters: Q,
-          order_by: [
-            {
-              field: 'created',
-              direction: 'desc'
-            }
-          ]
-        },
-        page: ($scope.filters.page) ? $scope.filters.page: null,
-        results_per_page: ($scope.filters.results_per_page) ? $scope.filters.results_per_page: null,
-        callback: ($scope.filters.callback) ? $scope.filters.callback: null,
-        updated: new Date().getTime()
-      }).$promise.then(function(response) {
-
-        //
-        // Check to see if there are Filters remaining and if not, we should just remove the Q
-        //
-        var Q_ = null;
-
-        if (Q.length) {
-          Q_ = angular.toJson({
-            filters: Q
-          });
-        }
-
-        $location.search({
-          q: Q_,
-          page: ($scope.filters.page) ? $scope.filters.page: null,
-          results_per_page: ($scope.filters.results_per_page) ? $scope.filters.results_per_page: null,
-          callback: ($scope.filters.callback) ? $scope.filters.callback: null
-        });
-
-		$scope.projects = response;
-      });
-    };
-
-    $scope.search.paginate = function(page_number) {
-
-      //
-      // First, we need to make sure we preserve any filters that the user has defined
-      //
-      $scope.search.execute(page_number);
-
-      //
-      // Next we go to the selected page `page_number`
-      //
-
-      console.log('Go to page', page_number);
-    };
-
 
     //
     // Project functionality
     //
-    $scope.project = {};
+    self.projects = projects;
 
-    $scope.project.create = function() {
+    self.createProject = function() {
+        self.project = new Project({
+            'name': 'Untitled Project'
+        });
 
-      Feature.CreateFeature({
-        storage: storage,
-        data: {
-          project_title: 'Untitled Project',
-          owner: $scope.user.id,
-          status: 'private'
-        }
-      }).then(function(project) {
-
-        console.log('New Project', project);
-
-        //
-        // Forward the user along to the new project
-        //
-        $location.path('/projects/' + project + '/edit');
-      });
+        self.project.$save(function(successResponse) {
+            $location.path('/projects/' + successResponse.id + '/edit');
+        }, function(errorResponse) {
+            $log.error('Unable to create Project object');
+        });
     };
 
-  }]);
+    //
+    // Verify Account information for proper UI element display
+    //
+    if (Account.userObject && user) {
+        user.$promise.then(function(userResponse) {
+            $rootScope.user = Account.userObject = userResponse;
+            self.permissions = {
+                isLoggedIn: Account.hasToken()
+            };
+        });
+    }
+
+  });
 
 'use strict';
 
@@ -631,254 +507,171 @@ angular.module('FieldStack')
  * Controller of the FieldStack
  */
 angular.module('FieldStack')
-  .controller('ProjectViewCtrl', ['$rootScope', '$scope', '$route', '$location', '$anchorScroll', 'mapbox', 'Template', 'Feature', 'project', 'storage', 'user', 'template', 'site', 'sites', function ($rootScope, $scope, $route, $location, $anchorScroll, mapbox, Template, Feature, project, storage, user, template, site, sites) {
+  .controller('ProjectViewCtrl', function (Account, $rootScope, $route, $location, mapbox, project, Site, sites, user) {
+
+    var self = this;
+    $rootScope.page = {};
+
+    self.sites = sites;
 
     //
     // Assign project to a scoped variable
     //
-    $scope.template = template;
-    $scope.project = project;
-    $scope.project.sites = {
-      list: sites,
-      create: function() {
-        //
-        // Creating a site is a two step process.
-        //
-        //  1. Create the new site record, including the owner and a new UserFeatures entry
-        //     for the Site table
-        //  2. Update the Project to create a relationship with the Site created in step 1 
-        //
-        Feature.CreateFeature({
-          storage: site.storage,
-          data: {
-            site_number: 'Untitled Site',
-            owner: $scope.user.id,
-            status: 'private'
-          }
-        }).then(function(siteId) {
+    project.$promise.then(function(projectResponse) {
+        self.project = projectResponse;
 
-          console.log('New Site', siteId);
-
-          //
-          // Create the relationship with the parent, Project, to ensure we're doing this properly we need
-          // to submit all relationships that are created and should remain. If we only submit the new
-          // ID the system will kick out the sites that were added previously.
-          //
-          Feature.UpdateFeature({
-            storage: storage,
-            featureId: $route.current.params.projectId,
-            data: {
-              type_646f23aa91a64f7c89a008322f4f1093: $scope.GetAllChildren(siteId),
+        $rootScope.page.title = self.project.properties.name;
+        $rootScope.page.links = [
+            {
+                text: 'Projects',
+                url: '/projects'
+            },
+            {
+                text: self.project.properties.name,
+                url: '/projects/' + $route.current.params.projectId,
+                type: 'active'
             }
-          }).then(function() {
-            //
-            // Forward the user along to the new site now that it has been associated with the Project
-            //
-            $location.path('/projects/' + $route.current.params.projectId + '/sites/' + siteId + '/edit');
-          });
+        ];
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+            user.$promise.then(function(userResponse) {
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0].properties.name,
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: Account.canEdit(project)
+                };
+            });
+        }
+
+    });
+
+
+    self.createSite = function() {
+        self.site = new Site({
+            'name': 'Untitled Site',
+            'project_id': self.project.id,
+            'account_id': self.project.properties.account_id
         });
-      }
+
+        self.site.$save(function(successResponse) {
+            $location.path('/projects/' + self.project.id + '/sites/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('Unable to create your site, please try again later');
+          });
     };
-
-    $scope.user = user;
-    $scope.user.owner = false;
-    $scope.user.feature = {};
-    $scope.user.template = {};
-
 
     //
     // Setup basic page variables
     //
-    $rootScope.page = {
-      template: '/modules/components/projects/views/projects--view.html',
-      title: $scope.project.project_title,
-      display_title: false,
-      back: '/',
-      links: [
-        {
-          text: 'Projects',
-          url: '/projects'
+    $rootScope.page.actions = [
+      {
+        type: 'button-link new',
+        action: function() {
+          self.createSite();
         },
-        {
-          text: $scope.project.project_title,
-          url: '/projects/' + $route.current.params.projectId,
-          type: 'active'
-        }
-      ],
-      actions: [
-        {
-          type: 'button-link new',
-          action: function() {
-            $scope.project.sites.create();
-          },
-          text: 'Create site'
-        }
-      ],
-      refresh: function() {
-        $route.reload();
+        text: 'Create site'
       }
-    };
+    ];
 
-
-    $scope.GetAllChildren = function(siteId) {
-
-      var existingSites = $scope.project.sites.list,
-          updatedSites = [{
-            id: siteId // Start by adding the newest relationships, then we'll add the existing sites
-          }];
-
-      angular.forEach(existingSites, function(site, $index) {
-        updatedSites.push({
-          id: site.id
-        });
-      });
-
-      return updatedSites;
-    };
-
-
-    $scope.$watch('project.sites.list', function(processedSites, existingSites) {
-      // console.log('$scope.project.sites.list,', $scope.project.sites.list)
-      angular.forEach(processedSites, function(feature, $index) {
-        var coords = [0,0];
-        
-        if (feature.geometry !== null) {
-          console.log('feature.geometry', feature.geometry);
-          if (feature.geometry.geometries[0].type === 'Point') {
-            coords = feature.geometry.geometries[0].coordinates;
-          }
-        }
-        
-        $scope.project.sites.list[$index].site_thumbnail = 'https://api.tiles.mapbox.com/v4/' + mapbox.satellite + '/pin-s+b1c11d(' + coords[0] + ',' + coords[1] + ',17)/' + coords[0] + ',' + coords[1] + ',17/80x80@2x.png?access_token=' + mapbox.access_token;
-      });      
-    });
-
-
+    // self.$watch('project.sites.list', function(processedSites, existingSites) {
+    //  // console.log('self.project.sites.list,', self.project.sites.list)
+    //  angular.forEach(processedSites, function(feature, $index) {
+    //    var coords = [0,0];
     //
-    // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
-    // backend functionality. Even if the user guesses the URL the API will stop them from editing the
-    // actual Feature within the system
+    //    if (feature.geometry !== null) {
+    //      console.log('feature.geometry', feature.geometry);
+    //      if (feature.geometry.geometries[0].type === 'Point') {
+    //        coords = feature.geometry.geometries[0].coordinates;
+    //      }
+    //    }
     //
-    if ($scope.user.id === $scope.project.owner) {
-      $scope.user.owner = true;
-    } else {
-      Template.GetTemplateUser({
-        storage: storage,
-        templateId: $scope.template.id,
-        userId: $scope.user.id
-      }).then(function(response) {
-
-        $scope.user.template = response;
-        
-        //
-        // If the user is not a Template Moderator or Admin then we need to do a final check to see
-        // if there are permissions on the individual Feature
-        //
-        if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
-          Feature.GetFeatureUser({
-            storage: storage,
-            featureId: $route.current.params.projectId,
-            userId: $scope.user.id
-          }).then(function(response) {
-            $scope.user.feature = response;
-            if ($scope.user.feature.is_admin || $scope.user.feature.write) {
-            } else {
-              $location.path('/projects/' + $route.current.params.projectId);
-            }
-          });
-        }
-
-      });
-    }
-    
-  }]);
+    //    self.project.sites.list[$index].site_thumbnail = 'https://api.tiles.mapbox.com/v4/' + mapbox.satellite + '/pin-s+b1c11d(' + coords[0] + ',' + coords[1] + ',17)/' + coords[0] + ',' + coords[1] + ',17/80x80@2x.png?access_token=' + mapbox.access_token;
+    //  });
+    //});
 
 
-
+  });
 
 'use strict';
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:ProjecteditCtrl
+ * @name
  * @description
- * # ProjecteditCtrl
- * Controller of the FieldStack
  */
 angular.module('FieldStack')
-  .controller('ProjectEditCtrl', ['$rootScope', '$scope', '$route', '$location', 'project', 'Template', 'Feature', 'Field', 'template', 'fields', 'storage', 'user', function ($rootScope, $scope, $route, $location, project, Template, Feature, Field, template, fields, storage, user) {
+  .controller('ProjectEditCtrl', function (Account, $location, $log, Project, project, $rootScope, $route, user) {
+
+    var self = this;
+    $rootScope.page = {};
 
     //
     // Assign project to a scoped variable
     //
-    $scope.template = template;
-    $scope.fields = fields;
-    $scope.project = project;
-    $scope.user = user;
-    $scope.user.owner = false;
-    $scope.user.feature = {};
-    $scope.user.template = {};
+    project.$promise.then(function(successResponse) {
+        self.project = successResponse;
+
+        $rootScope.page.title = self.project.properties.name;
+        $rootScope.page.links = [
+            {
+              text: 'Projects',
+              url: '/projects'
+            },
+            {
+              text: self.project.properties.name,
+              url: '/projects/' + self.project.id
+            },
+            {
+              text: 'Edit',
+              url: '/projects/' + self.project.id + '/edit',
+              type: 'active'
+            }
+        ];
+        $rootScope.page.actions = [];
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+            user.$promise.then(function(userResponse) {
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0].properties.name,
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: Account.canEdit(project)
+                };
+            });
+        }
+
+    }, function(errorResponse) {
+        $log.error('Unable to load request project');
+    });
 
     //
-    // Setup basic page variables
     //
-    $rootScope.page = {
-      template: '/modules/components/projects/views/projects--edit.html',
-      title: $scope.project.project_title,
-      display_title: false,
-      editable: true,
-      back: '/',
-      links: [
-        {
-          text: 'Projects',
-          url: '/projects'
-        },
-        {
-          text: $scope.project.project_title,
-          url: '/projects/' + $scope.project.id
-        },
-        {
-          text: 'Edit',
-          url: '/projects/' + $scope.project.id + '/edit',
-          type: 'active'
-        }
-      ],
-      actions: [
-        {
-          type: 'button-link',
-          action: function($index) {
-            $scope.project.delete();
-          },
-          visible: false,
-          loading: false,
-          text: 'Delete Project'
-        },
-        {
-          type: 'button-link new',
-          action: function($index) {
-            $scope.project.save();
-            $scope.page.actions[$index].loading = ! $scope.page.actions[$index].loading;
-          },
-          visible: false,
-          loading: false,
-          text: 'Save Changes'
-        }
-      ],
-      refresh: function() {
-        $route.reload();
-      }
+    //
+    self.saveProject = function() {
+      self.project.$update().then(function(response) {
+
+        $location.path('/projects/' + self.project.id);
+
+      }).then(function(error) {
+        // Do something with the error
+      });
+
     };
 
-    $scope.project.save = function() {
-      Feature.UpdateFeature({
-        storage: storage,
-        featureId: $scope.project.id,
-        data: $scope.project
-      }).then(function(response) {
+    self.deleteProject = function() {
+      self.project.$delete().then(function(response) {
 
-        //
-        // Refresh the page so that those things update appropriately.
-        //
         $location.path('/projects/');
 
       }).then(function(error) {
@@ -886,54 +679,7 @@ angular.module('FieldStack')
       });
     };
 
-
-    $scope.project.delete = function() {
-      Feature.DeleteFeature({
-        storage: storage,
-        featureId: $scope.project.id
-      }).then(function(response) {
-        $location.path('/projects');
-      });
-    };
-
-    //
-    // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
-    // backend functionality. Even if the user guesses the URL the API will stop them from editing the
-    // actual Feature within the system
-    //
-    if ($scope.user.id === $scope.project.owner) {
-      $scope.user.owner = true;
-    } else {
-      Template.GetTemplateUser({
-        storage: storage,
-        templateId: $scope.template.id,
-        userId: $scope.user.id
-      }).then(function(response) {
-
-        $scope.user.template = response;
-
-        //
-        // If the user is not a Template Moderator or Admin then we need to do a final check to see
-        // if there are permissions on the individual Feature
-        //
-        if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
-          Feature.GetFeatureUser({
-            storage: storage,
-            featureId: $scope.project.id,
-            userId: $scope.user.id
-          }).then(function(response) {
-            $scope.user.feature = response;
-            if ($scope.user.feature.is_admin || $scope.user.feature.write) {
-            } else {
-              $location.path('/projects/' + $scope.project.id);
-            }
-          });
-        }
-
-      });
-    }
-
-  }]);
+  });
 
 'use strict';
 
@@ -1148,90 +894,48 @@ angular.module('FieldStack')
         redirectTo: '/projects/:projectId'
       })
       .when('/projects/:projectId/sites/:siteId', {
-        templateUrl: '/modules/shared/default.html',
+        templateUrl: '/modules/components/sites/views/sites--view.html',
         controller: 'SiteViewCtrl',
+        controllerAs: 'page',
         resolve: {
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.site.templateId
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          site: function(Site, $route) {
+            return Site.get({
+              id: $route.current.params.siteId
             });
           },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
+          practices: function(Site, $route) {
+            return Site.practices({
+              id: $route.current.params.siteId
             });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.practice.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.practice.templateId, 'object');
-          },
-          site: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.site.storage,
-              featureId: $route.current.params.siteId
-            });
-          },
-          practices: function(Feature, $route) {
-            return Feature.GetRelatedFeatures({
-              storage: commonscloud.collections.site.storage,
-              relationship: commonscloud.collections.practice.storage,
-              featureId: $route.current.params.siteId
-            });
-          },
-          variables: function() {
-            return {
-              project: commonscloud.collections.project,
-              site: commonscloud.collections.site,
-              practice: commonscloud.collections.practice,
-              land_river_segment: commonscloud.collections.land_river_segment
-            };
           }
         }
       })
       .when('/projects/:projectId/sites/:siteId/edit', {
-        templateUrl: '/modules/shared/default.html',
+        templateUrl: '/modules/components/sites/views/sites--edit.html',
         controller: 'SiteEditCtrl',
+        controllerAs: 'page',
         resolve: {
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.site.templateId
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          site: function(Site, $route) {
+            return Site.get({
+              id: $route.current.params.siteId
             });
-          },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
-            });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.site.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.site.templateId, 'object');
-          },
-          site: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.site.storage,
-              featureId: $route.current.params.siteId
-            });
-          },
-          storage: function() {
-            return commonscloud.collections.project.storage;
-          },
-          variables: function() {
-            return commonscloud.collections.site;
           }
         }
       });
 
   }]);
-
-
 
 'use strict';
 
@@ -1243,844 +947,683 @@ angular.module('FieldStack')
  * Controller of the FieldStack
  */
 angular.module('FieldStack')
-  .controller('SiteViewCtrl', function ($rootScope, $scope, $route, $location, $timeout, moment, user, mapbox, Template, Feature, template, fields, project, site, practices, variables, leafletData) {
+  .controller('SiteViewCtrl', function (Account, leafletData, $location, site, Practice, practices, $rootScope, $route, user) {
 
-    //
-    // Assign project to a scoped variable
-    //
-    $scope.template = template;
-    $scope.fields = fields;
-    $scope.project = project;
-    $scope.practice = {};
-    $scope.user = user;
-    $scope.user.owner = false;
-    $scope.user.feature = {};
-    $scope.user.template = {};
+    var self = this;
 
-    $scope.site = site;
-    $scope.site.practices = {
-      list: practices,
-      cleanName: function(name) {
-        return Feature.MachineReadable(name);
-      },
-      create: function() {
-        //
-        // Creating a practice is a two step process.
-        //
-        //  1. Create the new Practice record, including the owner and a new UserFeatures entry
-        //     for the Practice table
-        //  2. Update the Site to create a relationship with the Practice created in step 1
-        //
-        Feature.CreateFeature({
-          storage: variables.practice.storage,
-          data: {
-            practice_type: 'Forest Buffer',
-            description: '',
-            owner: $scope.user.id,
-            status: 'private'
-          }
-        }).then(function(practiceId) {
-          //
-          // Create the relationship with the parent, Project, to ensure we're doing this properly we need
-          // to submit all relationships that are created and should remain. If we only submit the new
-          // ID the system will kick out the sites that were added previously.
-          //
-          Feature.UpdateFeature({
-            storage: variables.site.storage,
-            featureId: $route.current.params.siteId,
-            data: {
-              type_77f5c44516674e8da2532939619759dd: $scope.GetAllChildren(practiceId),
-            }
-          }).then(function(response) {
-            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + practiceId + '/edit');
-          });
-        });
-      }
-    };
+    $rootScope.page = {};
 
-    $rootScope.page = {
-      template: '/modules/components/sites/views/sites--view.html',
-      title: $scope.site.site_number,
-      links: [
-        {
-          text: 'Projects',
-          url: '/projects'
-        },
-        {
-          text: $scope.project.project_title,
-          url: '/projects/' + $scope.project.id,
-        },
-        {
-          text: $scope.site.site_number,
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id,
-          type: 'active'
-        }
-      ],
-      actions: [
-        {
-          type: 'button-link new',
-          action: function() {
-            // $scope.modals.open('createPractice');
-            $scope.site.practices.create();
+    self.practices = practices;
+
+    site.$promise.then(function(successResponse) {
+
+      self.site = successResponse;
+
+      $rootScope.page.title = self.site.properties.name;
+      $rootScope.page.links = [
+          {
+              text: 'Projects',
+              url: '/projects'
           },
-          text: 'Add a practice'
-        }
-      ],
-      refresh: function() {
-        $route.reload();
-      }
-    };
-
-    $scope.map = {
-      defaults: {
-        scrollWheelZoom: false,
-        zoomControl: false,
-        maxZoom: 19
-      },
-      layers: {
-        baselayers: {
-          basemap: {
-            name: 'Satellite Imagery',
-            url: 'https://{s}.tiles.mapbox.com/v3/' + mapbox.satellite + '/{z}/{x}/{y}.png',
-            type: 'xyz',
-            layerOptions: {
-              attribution: '<a href="https://www.mapbox.com/about/maps/" target="_blank">&copy; Mapbox &copy; OpenStreetMap</a>'
-            }
+          {
+              text: self.site.properties.project.properties.name,
+              url: '/projects/' + $route.current.params.projectId
+          },
+          {
+            text: self.site.properties.name,
+            url: '/projects/' + $route.current.params.projectId + '/sites/' + self.site.id,
+            type: 'active'
           }
-        }
-      },
-      center: {},
-      markers: {
-        LandRiverSegment: {
-          lat: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[1] : 38.362,
-          lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119,
-          icon: {
-            iconUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d.png?access_token=' + mapbox.access_token,
-            iconRetinaUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d@2x.png?access_token=' + mapbox.access_token,
-            iconSize: [38, 90],
-            iconAnchor: [18, 44],
-            popupAnchor: [0, 0]
-          }
-        }
-      },
-      geojsonToLayer: function (geojson, layer, options) {
+      ];
 
-        //
-        // Make sure the GeoJSON object is added to the layer with appropriate styles
-        //
-        layer.clearLayers();
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
 
-        if (options === undefined || options === null) {
-          options = {
-            stroke: true,
-            fill: false,
-            weight: 1,
-            opacity: 1,
-            color: 'rgb(255,255,255)',
-            lineCap: 'square'
-          };
-        }
-
-        L.geoJson(geojson, {
-          style: options
-        }).eachLayer(function(l) {
-          l.addTo(layer);
-        });
-
-      },
-      drawPolygon: function(geojson, fitBounds, options) {
-
-        leafletData.getMap().then(function(map) {
-          var featureGroup = new L.FeatureGroup();
-
-
-          //
-          // Convert the GeoJSON to a layer and add it to our FeatureGroup
-          //
-          $scope.map.geojsonToLayer(geojson, featureGroup, options);
-
-          //
-          // Add the FeatureGroup to the map
-          //
-          map.addLayer(featureGroup);
-
-          //
-          // If we can getBounds then we can zoom to a specific level, we need to check to see
-          // if the FeatureGroup has any bounds first though, otherwise we'll get an error.
-          //
-          if (fitBounds === true) {
-            var bounds = featureGroup.getBounds();
-
-            if (bounds.hasOwnProperty('_northEast')) {
-              map.fitBounds(featureGroup.getBounds());
-            }
-          }
-        });
-
-      },
-      setupMap: function() {
-        //
-        // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
-        // selected their property, so we just need to display it on the map for them again.
-        //
-        if ($scope.site.type_f9d8609090494dac811e6a58eb8ef4be.length > 0) {
-
-          //
-          // Draw the Land River Segment
-          //
-          $scope.map.drawPolygon({
-            type: 'Feature',
-            geometry: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].geometry
-          }, false, {
-            stroke: false,
-            fill: true,
-            fillOpacity: 0.65,
-            color: 'rgb(25,166,215)'
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: Account.canEdit(self.site.properties.project)
+              };
           });
-
-          //
-          // Load Land river segment details
-          //
-          Feature.GetFeature({
-            storage: variables.land_river_segment.storage,
-            featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
-          }).then(function(response) {
-            $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0] = response;
-          });
-
-          //
-          // Draw the county
-          //
-          if ($scope.site.type_b1baa10ba3ce493d90581a864ec95dc8.length) {
-            $scope.map.drawPolygon({
-              type: 'Feature',
-              geometry: $scope.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].geometry
-            }, true);
-          }
-
-        }
-      }
-    };
-
-    $scope.GetAllChildren = function(practiceId) {
-
-      var existingSites = $scope.site.practices.list,
-          updatedSites = [{
-            id: practiceId // Start by adding the newest relationships, then we'll add the existing sites
-          }];
-
-      angular.forEach(existingSites, function(site, $index) {
-        updatedSites.push({
-          id: site.id
-        });
-      });
-
-      return updatedSites;
-    };
-
-
-    //
-    // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
-    // backend functionality. Even if the user guesses the URL the API will stop them from editing the
-    // actual Feature within the system
-    //
-    if ($scope.user.id === $scope.project.owner) {
-      $scope.user.owner = true;
-    } else {
-      Template.GetTemplateUser({
-        storage: variables.project.storage,
-        templateId: $scope.template.id,
-        userId: $scope.user.id
-      }).then(function(response) {
-
-        $scope.user.template = response;
-
-        //
-        // If the user is not a Template Moderator or Admin then we need to do a final check to see
-        // if there are permissions on the individual Feature
-        //
-        if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
-          Feature.GetFeatureUser({
-            storage: variables.project.storage,
-            featureId: $route.current.params.projectId,
-            userId: $scope.user.id
-          }).then(function(response) {
-            $scope.user.feature = response;
-            if ($scope.user.feature.is_admin || $scope.user.feature.write) {
-            } else {
-              $location.path('/projects/' + $route.current.params.projectId);
-            }
-          });
-        }
-
-      });
-    }
-
-    //
-    // Once the page has loaded we need to load in all Reading Features that are associated with
-    // the Practices related to the Site being viewed
-    //
-    $scope.map.setupMap();
-
-  });
-
-'use strict';
-
-/**
- * @ngdoc function
- * @name FieldStack.controller:SiteEditCtrl
- * @description
- * # SiteEditCtrl
- * Controller of the FieldStack
- */
-angular.module('FieldStack')
-  .controller('SiteEditCtrl', ['$rootScope', '$scope', '$route', '$timeout', '$http', '$location', 'Template', 'Feature', 'mapbox', 'user', 'template', 'fields', 'project', 'site', 'storage', 'variables', 'leafletData', function ($rootScope, $scope, $route, $timeout, $http, $location, Template, Feature, mapbox, user, template, fields, project, site, storage, variables, leafletData) {
-
-    var timeout;
-
-    //
-    // Assign project to a scoped variable
-    //
-    $scope.template = template;
-    $scope.project = project;
-
-    //
-    // Setup the Site
-    //
-    $scope.site = site;
-
-    $scope.site.geolocation = null;
-
-    $scope.site.save = function($actionIndex) {
-
-      console.log('did something happen?', $actionIndex, $scope.page.actions[$actionIndex].loading);
-
-      //
-      // To allow users to continue we must have at least a land river segment
-      // associated with this site. County, Site, and State are not critical.
-      //
-      if (!$scope.site.type_f9d8609090494dac811e6a58eb8ef4be.length) {
-        $scope.page.actions[$actionIndex].loading =! $scope.page.actions[$actionIndex].loading;
-        $scope.site.invalidLandRiverSegment = true;
-        return;
       }
 
-      //
-      // Make sure we've assigned a state to the state field based on user selections in the
-      // site county field.
-      //
-      if ($scope.site.type_b1baa10ba3ce493d90581a864ec95dc8.length) {
-        if ($scope.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].state_name) {
-          $scope.site.site_state = $scope.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].state_name;
-        }
-      }
+    }, function(errorResponse) {
 
-      Feature.UpdateFeature({
-        storage: variables.storage,
-        featureId: $scope.site.id,
-        data: $scope.site
-      }).then(function(response) {
+    });
 
-        var projectId = $route.current.params.projectId,
-            redirect = '/projects/' + projectId;
-
-        $location.path(redirect);
-
-      }).then(function(error) {
-        // Do something with the error
-      });
-    };
-    $scope.site.delete = function() {
-
-      //
-      // Before we can remove the Site we need to remove the relationship it has with the Project
-      //
-      //
-      // Drop the siteId from the list of
-      //
-      angular.forEach($scope.project.type_646f23aa91a64f7c89a008322f4f1093, function(feature, $index) {
-        if (feature.id === $scope.site.id) {
-          $scope.project.type_646f23aa91a64f7c89a008322f4f1093.splice($index, 1);
-        }
-      });
-
-      Feature.UpdateFeature({
-        storage: storage,
-        featureId: $scope.project.id,
-        data: $scope.project
-      }).then(function(response) {
-
-        //
-        // Now that the Project <> Site relationship has been removed, we can remove the Site
-        //
-        Feature.DeleteFeature({
-          storage: variables.storage,
-          featureId: $scope.site.id
-        }).then(function(response) {
-          $location.path('/projects/' + $scope.project.id);
+    self.createPractice = function() {
+        self.practice = new Practice({
+            'practice_type': 'Grass Buffer',
+            'site_id': self.site.id,
+            'account_id': self.site.properties.project.properties.account_id
         });
 
-      });
-
+        self.practice.$save(function(successResponse) {
+            $location.path('/projects/' + self.site.properties.project.id + '/sites/' + self.site.id + '/practices/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('Unable to create your site, please try again later');
+          });
     };
-
-
-    $scope.user = user;
-    $scope.user.owner = false;
-    $scope.user.feature = {};
-    $scope.user.template = {};
 
     //
     // Setup basic page variables
     //
-    $rootScope.page = {
-      template: '/modules/components/sites/views/sites--edit.html',
-      title: $scope.site.site_number,
-      links: [
-        {
-          text: 'Projects',
-          url: '/projects'
+    $rootScope.page.actions = [
+      {
+        type: 'button-link new',
+        action: function() {
+          self.createPractice();
         },
-        {
-          text: $scope.project.project_title,
-          url: '/projects/' + $scope.project.id,
-        },
-        {
-          text: $scope.site.site_number,
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id,
-        },
-        {
-          text: 'Edit',
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/edit',
-          type: 'active'
-        }
-      ],
-      actions: [
-        {
-          type: 'button-link',
-          action: function($index) {
-            $scope.site.delete();
-          },
-          visible: false,
-          loading: false,
-          text: 'Delete Site'
-        },
-        {
-          type: 'button-link new',
-          action: function($index) {
-            $scope.site.save($index);
-            $scope.page.actions[$index].loading = ! $scope.page.actions[$index].loading;
-          },
-          visible: false,
-          loading: false,
-          text: 'Save Changes'
-        }
-      ],
-      refresh: function() {
-        $route.reload();
+        text: 'Create practice'
       }
-    };
-
-
-    //
-    // Define a layer to add geometries to later
-    //
-    var featureGroup = new L.FeatureGroup();
-
-    $scope.map = {
-      defaults: {
-        scrollWheelZoom: false,
-        zoomControl: false,
-        maxZoom: 19
-      },
-      layers: {
-        baselayers: {
-          basemap: {
-            name: 'Satellite Imagery',
-            url: 'https://{s}.tiles.mapbox.com/v3/' + mapbox.satellite + '/{z}/{x}/{y}.png',
-            type: 'xyz',
-            layerOptions: {
-              attribution: '<a href="https://www.mapbox.com/about/maps/" target="_blank">&copy; Mapbox &copy; OpenStreetMap</a>'
-            }
-          }
-        }
-      },
-      center: {
-        lat: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[1] : 38.362,
-        lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119,
-        zoom: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? 16 : 6
-      },
-      markers: {
-        LandRiverSegment: {
-          lat: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[1] : 38.362,
-          lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119,
-          focus: false,
-          draggable: true,
-          icon: {
-            iconUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d.png?access_token=' + mapbox.access_token,
-            iconRetinaUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d@2x.png?access_token=' + mapbox.access_token,
-            iconSize: [38, 90],
-            iconAnchor: [18, 44],
-            popupAnchor: [0, 0]
-          }
-        }
-      }
-    };
-
+    ];
 
     //
-    // Convert a GeoJSON Feature Collection to a valid Leaflet Layer
+    // $scope.map = {
+    //   defaults: {
+    //     scrollWheelZoom: false,
+    //     zoomControl: false,
+    //     maxZoom: 19
+    //   },
+    //   layers: {
+    //     baselayers: {
+    //       basemap: {
+    //         name: 'Satellite Imagery',
+    //         url: 'https://{s}.tiles.mapbox.com/v3/' + mapbox.satellite + '/{z}/{x}/{y}.png',
+    //         type: 'xyz',
+    //         layerOptions: {
+    //           attribution: '<a href="https://www.mapbox.com/about/maps/" target="_blank">&copy; Mapbox &copy; OpenStreetMap</a>'
+    //         }
+    //       }
+    //     }
+    //   },
+    //   center: {},
+    //   markers: {
+    //     LandRiverSegment: {
+    //       lat: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[1] : 38.362,
+    //       lng: ($scope.site.geometry !== null && $scope.site.geometry !== undefined) ? $scope.site.geometry.geometries[0].coordinates[0] : -81.119,
+    //       icon: {
+    //         iconUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d.png?access_token=' + mapbox.access_token,
+    //         iconRetinaUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d@2x.png?access_token=' + mapbox.access_token,
+    //         iconSize: [38, 90],
+    //         iconAnchor: [18, 44],
+    //         popupAnchor: [0, 0]
+    //       }
+    //     }
+    //   },
+    //   geojsonToLayer: function (geojson, layer, options) {
     //
-    $scope.geojsonToLayer = function (geojson, layer) {
-      layer.clearLayers();
-      function add(l) {
-        l.addTo(layer);
-      }
+    //     //
+    //     // Make sure the GeoJSON object is added to the layer with appropriate styles
+    //     //
+    //     layer.clearLayers();
+    //
+    //     if (options === undefined || options === null) {
+    //       options = {
+    //         stroke: true,
+    //         fill: false,
+    //         weight: 1,
+    //         opacity: 1,
+    //         color: 'rgb(255,255,255)',
+    //         lineCap: 'square'
+    //       };
+    //     }
+    //
+    //     L.geoJson(geojson, {
+    //       style: options
+    //     }).eachLayer(function(l) {
+    //       l.addTo(layer);
+    //     });
+    //
+    //   },
+    //   drawPolygon: function(geojson, fitBounds, options) {
+    //
+    //     leafletData.getMap().then(function(map) {
+    //       var featureGroup = new L.FeatureGroup();
+    //
+    //
+    //       //
+    //       // Convert the GeoJSON to a layer and add it to our FeatureGroup
+    //       //
+    //       $scope.map.geojsonToLayer(geojson, featureGroup, options);
+    //
+    //       //
+    //       // Add the FeatureGroup to the map
+    //       //
+    //       map.addLayer(featureGroup);
+    //
+    //       //
+    //       // If we can getBounds then we can zoom to a specific level, we need to check to see
+    //       // if the FeatureGroup has any bounds first though, otherwise we'll get an error.
+    //       //
+    //       if (fitBounds === true) {
+    //         var bounds = featureGroup.getBounds();
+    //
+    //         if (bounds.hasOwnProperty('_northEast')) {
+    //           map.fitBounds(featureGroup.getBounds());
+    //         }
+    //       }
+    //     });
+    //
+    //   },
+    //   setupMap: function() {
+    //     //
+    //     // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
+    //     // selected their property, so we just need to display it on the map for them again.
+    //     //
+    //     if ($scope.site.type_f9d8609090494dac811e6a58eb8ef4be.length > 0) {
+    //
+    //       //
+    //       // Draw the Land River Segment
+    //       //
+    //       $scope.map.drawPolygon({
+    //         type: 'Feature',
+    //         geometry: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].geometry
+    //       }, false, {
+    //         stroke: false,
+    //         fill: true,
+    //         fillOpacity: 0.65,
+    //         color: 'rgb(25,166,215)'
+    //       });
+    //
+    //       //
+    //       // Load Land river segment details
+    //       //
+    //       Feature.GetFeature({
+    //         storage: variables.land_river_segment.storage,
+    //         featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
+    //       }).then(function(response) {
+    //         $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0] = response;
+    //       });
+    //
+    //       //
+    //       // Draw the county
+    //       //
+    //       if ($scope.site.type_b1baa10ba3ce493d90581a864ec95dc8.length) {
+    //         $scope.map.drawPolygon({
+    //           type: 'Feature',
+    //           geometry: $scope.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].geometry
+    //         }, true);
+    //       }
+    //
+    //     }
+    //   }
+    // };
+    //
+    // //
+    // // Once the page has loaded we need to load in all Reading Features that are associated with
+    // // the Practices related to the Site being viewed
+    // //
+    // $scope.map.setupMap();
 
-      //
-      // Make sure the GeoJSON object is added to the layer with appropriate styles
-      //
-      L.geoJson(geojson, {
-        style: {
-          stroke: true,
-          fill: false,
-          weight: 2,
-          opacity: 1,
-          color: 'rgb(255,255,255)',
-          lineCap: 'square'
-        }
-      }).eachLayer(add);
-    };
+  });
 
-    $scope.geolocation = {
-      drawSegment: function(geojson) {
+(function() {
 
-        leafletData.getMap().then(function(map) {
-          //
-          // Reset the FeatureGroup because we don't want multiple parcels drawn on the map
-          //
-          map.removeLayer(featureGroup);
+  'use strict';
 
-          //
-          // Convert the GeoJSON to a layer and add it to our FeatureGroup
-          //
-          $scope.geojsonToLayer(geojson, featureGroup);
+  /**
+   * @ngdoc function
+   * @name FieldStack.controller:SiteEditCtrl
+   * @description
+   * # SiteEditCtrl
+   * Controller of the FieldStack
+   */
+  angular.module('FieldStack')
+    .controller('SiteEditCtrl', function (Account, environment, $http, leafletData, $location, mapbox, Site, site, $rootScope, $route, $scope, Segment, $timeout, user) {
 
-          //
-          // Add the FeatureGroup to the map
-          //
-          map.addLayer(featureGroup);
-        });
+      var self = this,
+          timeout;
 
-      },
-      getSegment: function(coordinates) {
+      $rootScope.page = {};
 
-        $http({
-          method: 'GET',
-          url: '//api.commonscloud.org/v2/type_f9d8609090494dac811e6a58eb8ef4be/intersects.geojson',
-          params: {
-            geometry: coordinates.lng + ' ' + coordinates.lat
-          }
-        }).
-          success(function(data, status, headers, config) {
-            // console.log('LandRiverSegment Request', data);
-            $scope.geolocation.drawSegment(data);
-            if (data.features.length > 0) {
-              $scope.site.type_f9d8609090494dac811e6a58eb8ef4be = [];
-              $scope.site.type_f9d8609090494dac811e6a58eb8ef4be.push(data.features[0].properties);
-            }
-          }).
-          error(function(data, status, headers, config) {
-            // called asynchronously if an error occurs
-            // or server returns response with an error status.
-            console.log('error', data);
+      site.$promise.then(function(successResponse) {
 
-            return data;
-          });
-      },
-      search: function() {
-        $timeout.cancel(timeout);
+        self.site = successResponse;
 
-        timeout = $timeout(function () {
-          $scope.geolocation.initGeocoder();
-        }, 800);
-      },
-      initGeocoder: function() {
-        var requested_location = $scope.site.geolocation;
+        self.site.geolocation = null;
 
-        if (requested_location.length >= 3) {
-          var geocode_service_url = '//api.tiles.mapbox.com/v4/geocode/mapbox.places-v1/' + requested_location + '.json';
-          $http({
-            method: 'get',
-            url: geocode_service_url,
-            params: {
-              'callback': 'JSON_CALLBACK',
-              'access_token': mapbox.access_token
+        $rootScope.page.title = self.site.properties.name;
+        $rootScope.page.links = [
+            {
+                text: 'Projects',
+                url: '/projects'
             },
-            headers: {
-              'Authorization': 'external'
+            {
+                text: self.site.properties.project.properties.name,
+                url: '/projects/' + $route.current.params.projectId
+            },
+            {
+              text: self.site.properties.name,
+              url: '/projects/' + $route.current.params.projectId + '/sites/' + self.site.id
+            },
+            {
+              text: 'Edit',
+              type: 'active'
             }
-          }).success(function(data) {
-            $scope.geocode_features = data.features;
-          }).error(function(data, status, headers, config) {
-            console.log('ERROR: ', data);
-          });
-        }
-      },
-      select: function(geocode) {
+        ];
 
         //
-        // Move the draggable marker to the newly selected address
+        // Verify Account information for proper UI element display
         //
-        $scope.map.markers.LandRiverSegment = {
-          lat: geocode.center[1],
-          lng: geocode.center[0],
-          focus: false,
-          draggable: true,
-          icon: {
-            iconUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d.png?access_token=' + mapbox.access_token,
-            iconRetinaUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d@2x.png?access_token=' + mapbox.access_token,
-            iconSize: [38, 90],
-            iconAnchor: [18, 44],
-            popupAnchor: [0, 0]
+        if (Account.userObject && user) {
+            user.$promise.then(function(userResponse) {
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0].properties.name,
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: Account.canEdit(self.site.properties.project)
+                };
+            });
+        }
+
+        self.map = {
+          defaults: {
+            scrollWheelZoom: false,
+            zoomControl: false,
+            maxZoom: 19
+          },
+          layers: {
+            baselayers: {
+              basemap: {
+                name: 'Satellite Imagery',
+                url: 'https://{s}.tiles.mapbox.com/v3/' + mapbox.satellite + '/{z}/{x}/{y}.png',
+                type: 'xyz',
+                layerOptions: {
+                  attribution: '<a href="https://www.mapbox.com/about/maps/" target="_blank">&copy; Mapbox &copy; OpenStreetMap</a>'
+                }
+              }
+            }
+          },
+          center: {
+            lat: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[1] : 38.362,
+            lng: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[0] : -81.119,
+            zoom: (self.site.geometry !== null && self.site.geometry !== undefined) ? 16 : 6
+          },
+          markers: {
+            LandRiverSegment: {
+              lat: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[1] : 38.362,
+              lng: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[0] : -81.119,
+              focus: false,
+              draggable: true,
+              icon: {
+                iconUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d.png?access_token=' + mapbox.access_token,
+                iconRetinaUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d@2x.png?access_token=' + mapbox.access_token,
+                iconSize: [38, 90],
+                iconAnchor: [18, 44],
+                popupAnchor: [0, 0]
+              }
+            }
           }
         };
 
-        //
-        // Center the map view on the newly selected address
-        //
-        $scope.map.center = {
-          lat: geocode.center[1],
-          lng: geocode.center[0],
-          zoom: 16
-        };
+      }, function(errorResponse) {
+
+      });
+
+      self.saveSite = function() {
+        self.site.$update().then(function(successResponse) {
+          $location.path('/projects/' + $route.current.params.projectId + '/sites/' + $route.current.params.siteId);
+        }, function(errorResponse) {
+
+        });
+      };
+
+      self.deleteSite = function() {
+        self.site.$delete().then(function(successResponse) {
+          $location.path('/projects/' + $route.current.params.projectId);
+        }, function(errorResponse) {
+
+        });
+      };
+
+      /**
+       * Mapping functionality
+       *
+       *
+       *
+       *
+       *
+       *
+       */
+
+      //
+      // Define a layer to add geometries to later
+      //
+      var featureGroup = new L.FeatureGroup();
+
+      //
+      // Convert a GeoJSON Feature Collection to a valid Leaflet Layer
+      //
+      self.geojsonToLayer = function (geojson, layer) {
+        layer.clearLayers();
+        function add(l) {
+          l.addTo(layer);
+        }
 
         //
-        // Get the parcel for the property if one exists
+        // Make sure the GeoJSON object is added to the layer with appropriate styles
         //
-        $scope.geolocation.getSegment($scope.map.center);
+        L.geoJson(geojson, {
+          style: {
+            stroke: true,
+            fill: false,
+            weight: 2,
+            opacity: 1,
+            color: 'rgb(255,255,255)',
+            lineCap: 'square'
+          }
+        }).eachLayer(add);
+      };
+
+      self.geolocation = {
+        drawSegment: function(geojson) {
+
+          leafletData.getMap().then(function(map) {
+            //
+            // Reset the FeatureGroup because we don't want multiple parcels drawn on the map
+            //
+            map.removeLayer(featureGroup);
+
+            //
+            // Convert the GeoJSON to a layer and add it to our FeatureGroup
+            //
+            self.geojsonToLayer(geojson, featureGroup);
+
+            //
+            // Add the FeatureGroup to the map
+            //
+            map.addLayer(featureGroup);
+          });
+
+        },
+        getSegment: function(coordinates) {
+
+          leafletData.getMap().then(function(map) {
+
+            Segment.query({
+                 q: {
+                   filters: [
+                     {
+                       name: 'geometry',
+                       op: 'intersects',
+                       val: 'SRID=4326;POINT(' + coordinates.lng + ' ' + coordinates.lat + ')'
+                     }
+                   ]
+                 }
+               }).$promise.then(function(response) {
+
+                 self.geolocation.drawSegment(successResponse);
+
+                 if (response.features.length) {
+                   self.site.properties.segment_id = response.features[0].id;
+                 }
+
+               }, function(errorResponse) {
+                 console.error('Error', errorResponse);
+               });
+
+          });
+
+        },
+        search: function() {
+          $timeout.cancel(timeout);
+
+          timeout = $timeout(function () {
+            self.geolocation.initGeocoder();
+          }, 800);
+        },
+        initGeocoder: function() {
+          var requested_location = self.site.geolocation;
+
+          if (requested_location.length >= 3) {
+            var geocode_service_url = '//api.tiles.mapbox.com/v4/geocode/mapbox.places-v1/' + requested_location + '.json';
+            $http({
+              method: 'get',
+              url: geocode_service_url,
+              params: {
+                'callback': 'JSON_CALLBACK',
+                'access_token': mapbox.access_token
+              },
+              headers: {
+                'Authorization': 'external'
+              }
+            }).success(function(data) {
+              self.geocode_features = data.features;
+            }).error(function(data, status, headers, config) {
+              console.log('ERROR: ', data);
+            });
+          }
+        },
+        select: function(geocode) {
+
+          //
+          // Move the draggable marker to the newly selected address
+          //
+          self.map.markers.LandRiverSegment = {
+            lat: geocode.center[1],
+            lng: geocode.center[0],
+            focus: false,
+            draggable: true,
+            icon: {
+              iconUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d.png?access_token=' + mapbox.access_token,
+              iconRetinaUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d@2x.png?access_token=' + mapbox.access_token,
+              iconSize: [38, 90],
+              iconAnchor: [18, 44],
+              popupAnchor: [0, 0]
+            }
+          };
+
+          //
+          // Center the map view on the newly selected address
+          //
+          self.map.center = {
+            lat: geocode.center[1],
+            lng: geocode.center[0],
+            zoom: 16
+          };
+
+          //
+          // Get the parcel for the property if one exists
+          //
+          self.geolocation.getSegment(self.map.center);
+
+          //
+          // Since an address has been select, we should clear the drop down so the user
+          // can focus on the map.
+          //
+          self.geocode_features = [];
+
+          //
+          // We should also make sure we save this information to the
+          // User's Site object, that way if we come back later it is
+          // retained within the system
+          //
+          self.site.geometry = {
+            type: 'GeometryCollection',
+            geometries: []
+          };
+          self.site.geometry.geometries.push(geocode.geometry);
+
+
+          $timeout(function () {
+            leafletData.getMap().then(function(map) {
+              map.invalidateSize();
+            });
+          }, 200);
+
+        }
+      };
+
+      self.processPin = function(coordinates, zoom) {
 
         //
-        // Since an address has been select, we should clear the drop down so the user
-        // can focus on the map.
+        // Update the LandRiver Segment
         //
-        $scope.geocode_features = [];
+        self.geolocation.getSegment(coordinates);
 
         //
-        // We should also make sure we save this information to the
-        // User's Site object, that way if we come back later it is
-        // retained within the system
+        // Update the geometry for this Site
         //
-        $scope.site.geometry = {
+        self.site.geometry = {
           type: 'GeometryCollection',
           geometries: []
         };
-        $scope.site.geometry.geometries.push(geocode.geometry);
+        self.site.geometry.geometries.push({
+          type: 'Point',
+          coordinates: [
+            coordinates.lng,
+            coordinates.lat
+          ]
+        });
 
+        //
+        // Update the visible pin on the map
+        //
+        self.map.markers.LandRiverSegment.lat = coordinates.lat;
+        self.map.markers.LandRiverSegment.lng = coordinates.lng;
 
-        $timeout(function () {
-          leafletData.getMap().then(function(map) {
-            map.invalidateSize();
-          });
-        }, 200);
+        //
+        // Update the map center and zoom level
+        //
+        self.map.center = {
+          lat: coordinates.lat,
+          lng: coordinates.lng,
+          zoom: (zoom < 10) ? 10 : zoom
+        };
+      };
 
+      //
+      // Define our map interactions via the Angular Leaflet Directive
+      //
+      leafletData.getMap().then(function(map) {
+
+        //
+        // Move Zoom Control position to bottom/right
+        //
+        new L.Control.Zoom({
+          position: 'bottomright'
+        }).addTo(map);
+
+        //
+        // Update the pin and segment information when the user clicks on the map
+        // or drags the pin to a new location
+        //
+        $scope.$on('leafletDirectiveMap.click', function(event, args) {
+          self.processPin(args.leafletEvent.latlng, map._zoom);
+        });
+
+        $scope.$on('leafletDirectiveMap.dblclick', function(event, args) {
+          self.processPin(args.leafletEvent.latlng, map._zoom+1);
+        });
+
+        $scope.$on('leafletDirectiveMarker.dragend', function(event, args) {
+          self.processPin(args.leafletEvent.target._latlng, map._zoom);
+        });
+
+        $scope.$on('leafletDirectiveMarker.dblclick', function(event, args) {
+          var zoom = map._zoom+1;
+          map.setZoom(zoom);
+        });
+
+      });
+
+      //
+      // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
+      // selected their property, so we just need to display it on the map for them again.
+      //
+      if (self.site && self.site.properties && self.site.properties.segment) {
+        var geojson = {
+          type: 'Feature',
+          geometry: self.site.properties.segment.geometry
+        };
+        self.geolocation.drawSegment(geojson);
       }
-    };
-
-
-
-    $scope.site.processPin = function(coordinates, zoom) {
-
-      //
-      // Update the LandRiver Segment
-      //
-      $scope.geolocation.getSegment(coordinates);
-
-      //
-      // Update the geometry for this Site
-      //
-      $scope.site.geometry = {
-        type: 'GeometryCollection',
-        geometries: []
-      };
-      $scope.site.geometry.geometries.push({
-        type: 'Point',
-        coordinates: [
-          coordinates.lng,
-          coordinates.lat
-        ]
-      });
-
-      //
-      // Update the visible pin on the map
-      //
-      $scope.map.markers.LandRiverSegment.lat = coordinates.lat;
-      $scope.map.markers.LandRiverSegment.lng = coordinates.lng;
-
-      //
-      // Update the map center and zoom level
-      //
-      $scope.map.center = {
-        lat: coordinates.lat,
-        lng: coordinates.lng,
-        zoom: (zoom < 10) ? 10 : zoom
-      };
-    };
-
-    //
-    // Define our map interactions via the Angular Leaflet Directive
-    //
-    leafletData.getMap().then(function(map) {
-
-      //
-      // Move Zoom Control position to bottom/right
-      //
-      new L.Control.Zoom({
-        position: 'bottomright'
-      }).addTo(map);
-
-      //
-      // Update the pin and segment information when the user clicks on the map
-      // or drags the pin to a new location
-      //
-      $scope.$on('leafletDirectiveMap.click', function(event, args) {
-        $scope.site.processPin(args.leafletEvent.latlng, map._zoom);
-      });
-
-      $scope.$on('leafletDirectiveMap.dblclick', function(event, args) {
-        $scope.site.processPin(args.leafletEvent.latlng, map._zoom+1);
-      });
-
-      $scope.$on('leafletDirectiveMarker.dragend', function(event, args) {
-        $scope.site.processPin(args.leafletEvent.target._latlng, map._zoom);
-      });
-
-      $scope.$on('leafletDirectiveMarker.dblclick', function(event, args) {
-        var zoom = map._zoom+1;
-        map.setZoom(zoom);
-      });
 
     });
 
+}());
 
-    //
-    // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
-    // backend functionality. Even if the user guesses the URL the API will stop them from editing the
-    // actual Feature within the system
-    //
-    if ($scope.user.id === $scope.project.owner) {
-      $scope.user.owner = true;
-    } else {
-      Template.GetTemplateUser({
-        storage: storage,
-        templateId: $scope.template.id,
-        userId: $scope.user.id
-      }).then(function(response) {
+(function() {
 
-        $scope.user.template = response;
+  'use strict';
 
-        //
-        // If the user is not a Template Moderator or Admin then we need to do a final check to see
-        // if there are permissions on the individual Feature
-        //
-        if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
-          Feature.GetFeatureUser({
-            storage: storage,
-            featureId: $route.current.params.projectId,
-            userId: $scope.user.id
-          }).then(function(response) {
-            $scope.user.feature = response;
-            if ($scope.user.feature.is_admin || $scope.user.feature.write) {
-            } else {
-              $location.path('/projects/' + $route.current.params.projectId);
+  /**
+   * @ngdoc
+   * @name
+   * @description
+   */
+  angular.module('FieldStack')
+    .config(function($routeProvider, commonscloud) {
+
+      $routeProvider
+        .when('/projects/:projectId/sites/:siteId/practices', {
+          redirectTo: '/projects/:projectId/sites/:siteId'
+        })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId', {
+          templateUrl: '/modules/components/practices/views/practices--view.html',
+          controller: 'PracticeViewController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            site: function(Site, $route) {
+              return Site.get({
+                id: 1
+              });
+            },
+            practice: function(Practice, $route) {
+              return Practice.get({
+                id: $route.current.params.practiceId
+              });
             }
-          });
-        }
-
-      });
-    }
-
-    //
-    // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
-    // selected their property, so we just need to display it on the map for them again.
-    //
-    if ($scope.site.type_f9d8609090494dac811e6a58eb8ef4be.length > 0) {
-      var json = $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0];
-      var geojson = {
-        type: 'Feature',
-        geometry: json.geometry
-      };
-      $scope.geolocation.drawSegment(geojson);
-    }
-
-  }]);
-
-'use strict';
-
-/**
- * @ngdoc overview
- * @name FieldStack
- * @description
- * # FieldStack
- *
- * Main module of the application.
- */
-angular.module('FieldStack')
-  .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
-
-    $routeProvider
-      .when('/projects/:projectId/sites/:siteId/practices', {
-        redirectTo: '/projects/:projectId/sites/:siteId'
-      })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/edit', {
-        templateUrl: '/modules/shared/default.html',
-        controller: 'PracticeEditController',
-        resolve: {
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.site.templateId
-            });
-          },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
-            });
-          },
-          site: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.site.storage,
-              featureId: $route.current.params.siteId
-            });
-          },
-          practice: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.practice.storage,
-              featureId: $route.current.params.practiceId
-            });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.practice.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.practice.templateId, 'object');
           }
-        }
-      });
+        })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/edit', {
+          templateUrl: '/modules/components/practices/views/practices--edit.html',
+          controller: 'PracticeEditController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            site: function(Site, $route) {
+              return Site.get({
+                id: $route.current.params.siteId
+              });
+            },
+            practice: function(Practice, $route) {
+              return Practice.get({
+                id: $route.current.params.practiceId
+              });
+            }
+          }
+        });
 
-  }]);
+    });
 
-
+}());
 
 'use strict';
 
 /**
  * @ngdoc service
- * @name FieldStack.Storage
+ * @name
  * @description
- *    Provides site/application specific variables to the entire application
- * Service in the FieldStack.
  */
 angular.module('FieldStack')
   .constant('Storage', {
@@ -2198,307 +1741,224 @@ angular.module('FieldStack')
     }
   });
 
-'use strict';
+(function() {
 
-/**
- * @ngdoc service
- * @name FieldStack.Storage
- * @description
- * Service in the FieldStack.
- */
-angular.module('FieldStack')
-  .service('Calculate', ['Load', function(Load) {
-    return {
-      getLoadVariables: function(segment, landuse) {
-        var promise = Load.query({
-          q: {
-            filters: [
-              {
-                name: 'landriversegment',
-                op: 'eq',
-                val: segment
-              },
-              {
-                name: 'landuse',
-                op: 'eq',
-                val: landuse
-              }
-            ]
-          }
-        }, function(response) {
-          return response;
-        });
+  'use strict';
 
-        return promise;
-      },
-      getLoadTotals: function(area, efficiency) {
-        return {
-          nitrogen: (area*(efficiency.eos_totn/efficiency.eos_acres)),
-          phosphorus: (area*(efficiency.eos_totp/efficiency.eos_acres)),
-          sediment: ((area*(efficiency.eos_tss/efficiency.eos_acres))/2000)
-        };
-      }
-    };
-  }]);
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('FieldStack')
+    .service('Calculate', function(Load) {
+      return {
+        getLoadVariables: function(segment, landuse) {
+          var promise = Load.query({
+            q: {
+              filters: [
+                {
+                  name: 'landriversegment',
+                  op: 'eq',
+                  val: segment
+                },
+                {
+                  name: 'landuse',
+                  op: 'eq',
+                  val: landuse
+                }
+              ]
+            }
+          }, function(response) {
+            return response;
+          });
+
+          return promise;
+        },
+        getLoadTotals: function(area, efficiency) {
+          return {
+            nitrogen: (area*(efficiency.eos_totn/efficiency.eos_acres)),
+            phosphorus: (area*(efficiency.eos_totp/efficiency.eos_acres)),
+            sediment: ((area*(efficiency.eos_tss/efficiency.eos_acres))/2000)
+          };
+        }
+      };
+    });
+
+}());
 
 'use strict';
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:PracticeEditController
+ * @name
  * @description
- * # PracticeEditController
- * Controller of the FieldStack
  */
 angular.module('FieldStack')
-  .controller('PracticeEditController', ['$rootScope', '$scope', '$route', '$location', '$timeout', 'moment', 'user', 'Attachment', 'Feature', 'Template', 'template', 'fields', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, $timeout, moment, user, Attachment, Feature, Template, template, fields, project, site, practice, commonscloud
-    ) {
+  .controller('PracticeEditController', function (Account, $location, Practice, practice, $rootScope, $route, site, user) {
 
-    //
-    // Assign project to a scoped variable
-    //
-    $scope.template = template;
-    $scope.fields = fields;
-    $scope.project = project;
-    $scope.practice = practice;
+    var self = this,
+        projectId = $route.current.params.projectId,
+        siteId = $route.current.params.siteId;
 
-    $scope.files = {};
-    $scope.files[$scope.fields.installation_photos.relationship] = $scope.practice[$scope.fields.installation_photos.relationship];
-    $scope.files[$scope.fields.mature_photos.relationship] = $scope.practice[$scope.fields.mature_photos.relationship];
+    $rootScope.page = {};
 
-    $scope.practice_type = $scope.practice.practice_type;
+    practice.$promise.then(function(successResponse) {
 
-    $scope.site = site;
-    $scope.user = user;
-    $scope.user.owner = false;
-    $scope.user.feature = {};
-    $scope.user.template = {};
+      self.practice = successResponse;
 
+      site.$promise.then(function(successResponse) {
+        self.site = successResponse;
 
-    //
-    // Setup basic page variables
-    //
-    $rootScope.page = {
-      template: '/modules/components/practices/views/practices--edit.html',
-      title: $scope.site.site_number,
-      links: [
-        {
-          text: 'Projects',
-          url: '/projects'
-        },
-        {
-          text: $scope.project.project_title,
-          url: '/projects/' + $scope.project.id,
-        },
-        {
-          text: $scope.site.site_number,
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id
-        },
-        {
-          text: $scope.practice.practice_type,
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice_type
-        },
-        {
-          text: 'Edit',
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/edit',
-          type: 'active'
-        }
-      ],
-      actions: [
-        {
-          type: 'button-link',
-          action: function($index) {
-            $scope.practice.delete();
-          },
-          visible: false,
-          loading: false,
-          text: 'Delete Practice'
-        },
-        {
-          type: 'button-link new',
-          action: function($index) {
-            $scope.practice.save();
-            $scope.page.actions[$index].loading = ! $scope.page.actions[$index].loading;
-          },
-          visible: false,
-          loading: false,
-          text: 'Save Changes'
-        }
-      ],
-      refresh: function() {
-        $route.reload();
-      }
-    };
-
-
-    $scope.practice.save = function() {
-      $scope.practice.name = $scope.practice.practice_type;
-
-      Feature.UpdateFeature({
-        storage: commonscloud.collections.practice.storage,
-        featureId: $scope.practice.id,
-        data: $scope.practice
-      }).then(function(response) {
-
-        var fileData = new FormData();
-
-        angular.forEach($scope.files[$scope.fields.installation_photos.relationship], function(file, index) {
-          fileData.append(file.field, file.file);
-        });
-
-        angular.forEach($scope.files[$scope.fields.mature_photos.relationship], function(file, index) {
-          fileData.append(file.field, file.file);
-        });
-
-        Feature.postFiles({
-          storage: commonscloud.collections.practice.storage,
-          featureId: $scope.practice.id
-        }, fileData).$promise.then(function(response) {
-          $scope.feature = response.response;
-          $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id);
-        }, function(error) {
-          console.error('$scope.practice.save::postFiles', error);
-        });
-
-      }).then(function(error) {
-          console.error('$scope.practice.save', error);
-      });
-    };
-
-    $scope.practice.delete = function() {
-
-      //
-      // Before we can remove the Practice we need to remove the relationship it has with the Site
-      //
-      //
-      // Drop the siteId from the list of
-      //
-      angular.forEach($scope.site.type_77f5c44516674e8da2532939619759dd, function(feature, $index) {
-        if (feature.id === $scope.practice.id) {
-          $scope.site.type_77f5c44516674e8da2532939619759dd.splice($index, 1);
-        }
-      });
-
-      Feature.UpdateFeature({
-        storage: commonscloud.collections.site.storage,
-        featureId: $scope.site.id,
-        data: $scope.site
-      }).then(function(response) {
-
-        //
-        // Now that the Project <> Site relationship has been removed, we can remove the Site
-        //
-        Feature.DeleteFeature({
-          storage: commonscloud.collections.practice.storage,
-          featureId: $scope.practice.id
-        }).then(function(response) {
-          $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id);
-        });
-
-      });
-
-    };
-
-    // $scope.onFileRemove = function(file, field_name, index) {
-    //   $scope.files[$scope.fields[field_name].relationship].splice(index, 1);
-    // };
-
-    $scope.onFileSelect = function(files, field_name) {
-
-      angular.forEach(files, function(file, index) {
-        // Check to see if we can load previews
-        if (window.FileReader && file.type.indexOf('image') > -1) {
-
-          var fileReader = new FileReader();
-          fileReader.readAsDataURL(file);
-          fileReader.onload = function (event) {
-            file.preview = event.target.result;
-            $scope.files[field_name].push({
-              'field': field_name,
-              'file': file
-            });
-            $scope.$apply();
-          };
-        } else {
-          $scope.files.push({
-            'field': field_name,
-            'file': file
-          });
-          $scope.$apply();
-        }
-      });
-
-    };
-
-    $scope.DeleteAttachment = function(file, $index, attachment_storage) {
-
-      $scope.practice[attachment_storage].splice($index, 1);
-
-      // console.log($scope.template.storage, $scope.feature.id, attachment_storage, file.id)
-
-      //
-      // Send the 'DELETE' method to the API so it's removed from the database
-      //
-      Attachment.delete({
-        storage: commonscloud.collections.practice.storage,
-        featureId: $scope.practice.id,
-        attachmentStorage: attachment_storage,
-        attachmentId: file.id
-      }).$promise.then(function(response) {
-        console.log('DeleteAttachment', response);
-        $route.reload();
-      });
-
-    };
-
-
-    //
-    // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
-    // backend functionality. Even if the user guesses the URL the API will stop them from editing the
-    // actual Feature within the system
-    //
-    if ($scope.user.id === $scope.project.owner) {
-      $scope.user.owner = true;
-    } else {
-      Template.GetTemplateUser({
-        storage: commonscloud.collections.project.storage,
-        templateId: $scope.template.id,
-        userId: $scope.user.id
-      }).then(function(response) {
-
-        $scope.user.template = response;
-
-        //
-        // If the user is not a Template Moderator or Admin then we need to do a final check to see
-        // if there are permissions on the individual Feature
-        //
-        if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
-          Feature.GetFeatureUser({
-            storage: commonscloud.collections.project.storage,
-            featureId: $route.current.params.projectId,
-            userId: $scope.user.id
-          }).then(function(response) {
-            $scope.user.feature = response;
-            if ($scope.user.feature.is_admin || $scope.user.feature.write) {
-            } else {
-              $location.path('/projects/' + $route.current.params.projectId);
+        $rootScope.page.title = self.practice.properties.practice_type;
+        $rootScope.page.links = [
+            {
+                text: 'Projects',
+                url: '/projects'
+            },
+            {
+                text: self.site.properties.project.properties.name,
+                url: '/projects/' + projectId
+            },
+            {
+              text: self.site.properties.name,
+              url: '/projects/' + projectId + '/sites/' + siteId
+            },
+            {
+              text: self.practice.properties.practice_type,
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id
+            },
+            {
+              text: 'Edit',
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id + '/edit',
+              type: 'active'
             }
-          });
-        }
-
+        ];
+      }, function(errorResponse) {
+        //
       });
-    }
 
-  }]);
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
+
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: true
+              };
+          });
+      }
+    });
+
+    self.savePractice = function() {
+      var practice = new Practice(self.practice.properties);
+      practice.$update().then(function(successResponse) {
+        $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id);
+      }, function(errorResponse) {
+        // Error message
+      });
+    };
+
+    self.deletePractice = function() {
+      self.practice.$delete().then(function(successResponse) {
+        $location.path('/projects/' + projectId + '/sites/' + siteId);
+      }, function(errorResponse) {
+        // Error message
+      });
+    };
+
+  });
+
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldStack')
+  .controller('PracticeViewController', function (Account, $location, Practice, practice, $rootScope, $route, site, user, Utility) {
+
+    var self = this,
+        projectId = $route.current.params.projectId,
+        siteId = $route.current.params.siteId,
+        practiceType;
+
+    $rootScope.page = {};
+
+    practice.$promise.then(function(successResponse) {
+
+      self.practice = successResponse;
+
+      practiceType = Utility.machineName(self.practice.properties.practice_type);
+
+      //
+      //
+      //
+      self.template = {
+        path: '/modules/components/practices/modules/' + practiceType + '/views/report--view.html'
+      };
+
+      //
+      //
+      //
+      site.$promise.then(function(successResponse) {
+        self.site = successResponse;
+
+        $rootScope.page.title = self.practice.properties.practice_type;
+        $rootScope.page.links = [
+            {
+                text: 'Projects',
+                url: '/projects'
+            },
+            {
+                text: self.site.properties.project.properties.name,
+                url: '/projects/' + projectId
+            },
+            {
+              text: self.site.properties.name,
+              url: '/projects/' + projectId + '/sites/' + siteId
+            },
+            {
+              text: self.practice.properties.practice_type,
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
+              type: 'active'
+            }
+        ];
+      }, function(errorResponse) {
+        //
+      });
+
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
+
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: Account.canEdit(self.site.properties.project)
+              };
+          });
+      }
+    });
+
+  });
 
 'use strict';
 
 /**
  * @ngdoc service
- * @name FieldStack.Storage
+ * @name.
  * @description
- *    Provides site/application specific variables to the entire application
- * Service in the FieldStack.
  */
 angular.module('FieldStack')
   .constant('AnimalType', {
@@ -2587,14 +2047,13 @@ angular.module('FieldStack')
         total_phosphorus: 0.025
       }
   });
+
 'use strict';
 
 /**
  * @ngdoc service
- * @name FieldStack.Storage
+ * @name
  * @description
- *    Provides site/application specific variables to the entire application
- * Service in the FieldStack.
  */
 angular.module('FieldStack')
   .constant('Landuse', {
@@ -2730,8 +2189,6 @@ angular.module('FieldStack')
       });
 
   }]);
-
-
 
 'use strict';
 
@@ -10856,6 +10313,285 @@ angular.module('FieldStack')
     street: 'developedsimple.k1057ndn',
   });
 
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name 
+   * @description
+   */
+  angular.module('FieldStack')
+    .service('Account', function (ipCookie, User) {
+
+      var Account = {
+        userObject: {}
+      };
+
+      Account.getUser = function() {
+
+        var userId = ipCookie('FIELDSTACKIO_CURRENTUSER');
+
+        if (!userId) {
+          return false;
+        }
+
+        var $promise = User.get({
+          id: userId
+        });
+
+        return $promise;
+      };
+
+      Account.setUserId = function() {
+        var $promise = User.me(function(accountResponse) {
+
+          ipCookie('FIELDSTACKIO_CURRENTUSER', accountResponse.id, {
+            path: '/',
+            expires: 2
+          });
+
+          return accountResponse.id;
+        });
+
+        return $promise;
+      };
+
+      Account.hasToken = function() {
+        if (ipCookie('FIELDSTACKIO_CURRENTUSER') && ipCookie('FIELDSTACKIO_SESSION')) {
+          return true;
+        }
+
+        return false;
+      };
+
+      Account.hasRole = function(roleNeeded) {
+
+        var roles = this.userObject.properties.roles;
+
+        if (!roles) {
+          return false;
+        }
+
+        for (var index = 0; index < roles.length; index++) {
+          if (roleNeeded === roles[index].properties.name) {
+            return true;
+          }
+        }
+
+        return false;
+      };
+
+      Account.inGroup = function(userId, group) {
+
+            var return_ = false;
+
+            angular.forEach(group, function(member) {
+                console.log(member.id, userId);
+
+                if (member.id === userId) {
+                    return_ = true;
+                }
+            });
+
+            return return_;
+      };
+
+      Account.canEdit = function(resource) {
+        if (Account.userObject && !Account.userObject.id) {
+            console.log('Account.userObject', Account.userObject);
+            return false;
+        }
+        
+        if (Account.hasRole('admin')) {
+            console.log('admin');
+            return true;
+        } else if (Account.hasRole('manager') && Account.inGroup(resource.properties.account_id, Account.userObject.properties.account)) {
+            console.log('manager');
+            return true;
+        } else if (Account.hasRole('grantee') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(Account.userObject.id, resource.properties.members))) {
+            console.log('grantee');
+            return true;
+        }
+
+        return false;
+      };
+
+      return Account;
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('FieldStack')
+    .service('Practice', function (environment, Preprocessors, $resource) {
+      return $resource(environment.apiUrl.concat('/v1/data/practice/:id'), {
+        id: '@id'
+      }, {
+        query: {
+          isArray: false
+        },
+        'update': {
+          method: 'PATCH',
+          transformRequest: function(data) {
+            var feature = Preprocessors.geojson(data);
+            return angular.toJson(feature);
+          }
+        }
+      });
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('FieldStack')
+    .service('Project', function (environment, Preprocessors, $resource) {
+      return $resource(environment.apiUrl.concat('/v1/data/project/:id'), {
+        id: '@id'
+      }, {
+        query: {
+          isArray: false
+        },
+        update: {
+          method: 'PATCH',
+          transformRequest: function(data) {
+            var feature = Preprocessors.geojson(data);
+            return angular.toJson(feature);
+          }
+        },
+        sites: {
+          method: 'GET',
+          isArray: false,
+          url: environment.apiUrl.concat('/v1/data/project/:id/sites')
+        }
+      });
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('FieldStack')
+    .service('Security', function(environment, ipCookie, $http, $resource) {
+
+      var Security = $resource(environment.apiUrl.concat('/login'), {}, {
+        save: {
+          method: 'POST',
+          url: environment.apiUrl.concat('/v1/auth/remote'),
+          params: {
+            response_type: 'token',
+            client_id: environment.clientId,
+            redirect_uri: environment.siteUrl.concat('/authorize'),
+            scope: 'user',
+            state: 'json'
+          }
+        },
+        register: {
+          method: 'POST',
+          url: environment.apiUrl.concat('/v1/user/register')
+        },
+        reset: {
+          method: 'POST',
+          url: environment.apiUrl.concat('/reset')
+        }
+      });
+
+      Security.has_token = function() {
+        return (ipCookie('FIELDSTACKIO_SESSION')) ? true: false;
+      };
+
+      return Security;
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('FieldStack')
+    .service('Site', function (environment, Preprocessors, $resource) {
+      return $resource(environment.apiUrl.concat('/v1/data/site/:id'), {
+        id: '@id'
+      }, {
+        query: {
+          isArray: false
+        },
+        update: {
+          method: 'PATCH',
+          transformRequest: function(data) {
+            var feature = Preprocessors.geojson(data);
+            return angular.toJson(feature);
+          }
+        },
+        practices: {
+          method: 'GET',
+          isArray: false,
+          url: environment.apiUrl.concat('/v1/data/site/:id/practices')
+        }
+      });
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('FieldStack')
+    .service('Segment', function (environment, Preprocessors, $resource) {
+      return $resource(environment.apiUrl.concat('/v1/data/segment/:id'), {
+        id: '@id'
+      }, {
+        query: {
+          isArray: false
+        },
+        update: {
+          method: 'PATCH',
+          transformRequest: function(data) {
+            var feature = Preprocessors.geojson(data);
+            return angular.toJson(feature);
+          }
+        }
+      });
+    });
+
+}());
+
 'use strict';
 
 /**
@@ -11763,6 +11499,76 @@ angular.module('FieldStack')
 
   });
 
+(function () {
+
+    'use strict';
+
+    /**
+     * @ngdoc function
+     * @name
+     * @description
+     */
+     angular.module('FieldStack')
+       .service('Preprocessors', function ($resource) {
+
+         return {
+           geojson: function(raw) {
+
+             var self = this;
+
+             if (raw && raw.id && !raw.properties) {
+               return {
+                 id: parseInt(raw.id)
+               };
+             }
+             else if (raw && !raw.id && !raw.properties) {
+               return;
+             }
+
+             var feature = {};
+
+             //
+             // Process all of the object, array, string, numeric, and boolean
+             // fields; Adding them to the main feature object;
+             //
+             angular.forEach(raw.properties, function(attribute, index) {
+
+               var value = null;
+
+               if (angular.isArray(attribute)) {
+                 var newArray = [];
+
+                 angular.forEach(attribute, function (childObject) {
+                   newArray.push(self.geojson(childObject));
+                 });
+
+                 value = newArray;
+               }
+               else if (angular.isObject(attribute)) {
+                 value = self.geojson(attribute);
+               }
+               else {
+                 value = attribute;
+               }
+               feature[index] = value;
+             });
+
+             //
+             // If a `geometry` attribute is present add it to the main feature
+             // object;
+             //
+             if (raw.geometry) {
+               feature.geometry = raw.geometry;
+             }
+
+             return feature;
+           }
+         };
+
+       });
+
+}());
+
 'use strict';
 
 /**
@@ -11773,215 +11579,67 @@ angular.module('FieldStack')
  * Provider in the FieldStack.
  */
 angular.module('FieldStack')
-  .provider('Template', function () {
+  .service('Utility', function () {
 
-    this.$get = ['$resource', function ($resource) {
+    return {
+      machineName: function(name) {
+        if (name) {
+          var removeDashes = name.replace(/-/g, ''),
+              removeSpaces = removeDashes.replace(/ /g, '-'),
+              convertLowerCase = removeSpaces.toLowerCase();
 
-      var Template = $resource('//api.commonscloud.org/v2/templates/:templateId.json', {
+          return convertLowerCase;
+        }
 
+        return null;
+      }
+    };
+
+  });
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name 
+   * @description
+   */
+  angular.module('FieldStack')
+    .service('User', function (environment, $resource) {
+      return $resource(environment.apiUrl.concat('/v1/data/user/:id'), {
+        id: '@id'
       }, {
-        activity: {
-          method: 'GET',
-          url: '//api.commonscloud.org/v2/templates/:templateId/activity.json'
-        },
-        user: {
-          method: 'GET',
-          url: '//api.commonscloud.org/v2/templates/:templateId/users/:userId.json'
-        },
-        users: {
-          method: 'GET',
-          url: '//api.commonscloud.org/v2/templates/:templateId/users.json'
-        },
-        get: {
-          method: 'GET',
-          url: '//api.commonscloud.org/v2/templates/:templateId.json'
-        },
         query: {
-          method: 'GET',
-          isArray: true,
-          url: '//api.commonscloud.org/v2/applications/:applicationId/templates.json',
-          transformResponse: function (data, headersGetter) {
-
-            var templates = angular.fromJson(data);
-
-            return templates.response.templates;
-          }
-        },
-        save: {
-          method: 'POST',
-          url: '//api.commonscloud.org/v2/applications/:applicationId/templates.json'
+          isArray: false
         },
         update: {
           method: 'PATCH'
-        }
-      });
-
-      Template.GetTemplate = function(templateId) {
-  
-        var promise = Template.get({
-            templateId: templateId,
-            updated: new Date().getTime()
-          }).$promise.then(function(response) {
-            return response.response;
-          });
-
-        return promise;
-      };
-
-      Template.GetTemplateList = function(applicationId) {
-        
-        //
-        // Get a list of templates associated with the current application
-        //
-        var promise = Template.query({
-            applicationId: applicationId,
-            updated: new Date().getTime()
-          }).$promise.then(function(response) {
-            return response;
-          });
-
-        return promise;
-      };
-
-      Template.GetActivities = function(templateId) {
-
-        var promise = Template.activity({
-            templateId: templateId,
-            updated: new Date().getTime()
-          }).$promise.then(function(response) {
-            return response.response.activities;
-          });
-
-        return promise;
-      };
-
-
-      //
-      // User Specific Permissions or User Lists for a specific Feature
-      //
-      //
-      // User Specific Permissions or User Lists for a specific Feature
-      //
-      Template.GetTemplateUsers = function(options) {
-
-        var promise = Template.users({
-          storage: options.storage,
-          templateId: options.templateId
-        }).$promise.then(function(response) {
-          return response.response;
-        });
-
-        return promise;
-
-      };
-
-      Template.GetTemplateUser = function(options) {
-
-        var promise = Template.user({
-          storage: options.storage,
-          templateId: options.templateId,
-          userId: options.userId
-        }).$promise.then(function(response) {
-          return response.response;
-        });
-
-        return promise;
-
-      };
-
-
-      return Template;
-    }];
-
-  });
-
-'use strict';
-
-/**
- * @ngdoc service
- * @name FieldStack.user
- * @description
- * # user
- * Provider in the FieldStack.
- */
-angular.module('FieldStack')
-  .provider('User', function () {
-
-    this.$get = ['$resource', '$rootScope', '$location', '$q', 'ipCookie', '$timeout', function($resource, $rootScope, $location, $q, ipCookie, $timeout) {
-
-      var User = $resource('//api.commonscloud.org/v2/user/me.json', {
-
-      }, {
-        query: {
+        },
+        groups: {
           method: 'GET',
-          url: '//api.commonscloud.org/v2/users.json',
           isArray: false,
-          transformResponse: function (data, headersGetter) {
-            return angular.fromJson(data);
-          }
+          url: environment.apiUrl.concat('/v1/data/user/:id/groups')
+        },
+        getOrganizations: {
+          method: 'GET',
+          isArray: false,
+          url: environment.apiUrl.concat('/v1/data/user/:id/organization')
+        },
+        me: {
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/user/me')
+        },
+        classifications: {
+          method: 'GET',
+          isArray: false,
+          url: environment.apiUrl.concat('/v1/data/user/:id/classifications')
         }
       });
+    });
 
-      User.GetUsers = function() {
-
-        var promise = User.query().$promise.then(function(response) {
-          return response.response.users;
-        });
-
-        return promise;
-
-      };
-
-      User.getUser = function (options) {
-
-        var promise = User.get().$promise.then(function(response) {
-          $rootScope.user = response.response;
-
-          var user = response.response;
-
-          return user;
-        }, function (response) {
-
-          if (response.status === 401 || response.status === 403) {
-            console.error('Couldn\'t retrieve user information from server., need to redirect and clear cookies');
-
-            var session_cookie = ipCookie('COMMONS_SESSION');
-
-            if (session_cookie && session_cookie !== undefined && session_cookie !== 'undefined') {
-              //
-              // Clear out existing COMMONS_SESSION cookies that may be invalid or
-              // expired. This may happen when a user closes the window and comes back
-              //
-              ipCookie.remove('COMMONS_SESSION');
-              ipCookie.remove('COMMONS_SESSION', { path: '/' });
-
-              //
-              // Start a new Alerts array that is empty, this clears out any previous
-              // messages that may have been presented on another page
-              //
-              $rootScope.alerts = ($rootScope.alerts) ? $rootScope.alerts: [];
-
-              $rootScope.alerts.push({
-                'type': 'info',
-                'title': 'Please sign in again',
-                'details': 'You may only sign in at one location at a time'
-              });
-
-              $location.hash('');
-              $location.path('/');
-            }
-
-          }
-
-        });
-
-        return promise;
-      };
-
-      return User;
-    }];
-
-  });
+}());
 
 'use strict';
 
