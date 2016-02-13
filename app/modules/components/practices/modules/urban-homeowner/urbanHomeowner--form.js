@@ -99,7 +99,7 @@ angular.module('FieldStack')
     self.saveReport = function() {
       self.report.$update().then(function(successResponse) {
         $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
-      }).then(function(errorResponse) {
+      }, function(errorResponse) {
         console.error('ERROR: ', errorResponse);
       });
     };
@@ -107,7 +107,7 @@ angular.module('FieldStack')
     self.deleteReport = function() {
       self.report.$delete().then(function(successResponse) {
         $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
-      }).then(function(errorResponse) {
+      }, function(errorResponse) {
         console.error('ERROR: ', errorResponse);
       });
     };
