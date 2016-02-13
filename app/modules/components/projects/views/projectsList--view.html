@@ -47,9 +47,14 @@
       <article class="row list-item" data-ng-repeat="project in page.projects.features track by $index">
         <div class="column-16 list-item-content">
           <h4>
-            <span data-ng-if="project.properties.program_type" class="label">{{ project.properties.program_type }}</span>
+            <span data-ng-if="project.id && project.properties.program_type" class="label label-info">{{ project.properties.program_type }}</span>
+            <span data-ng-if="project.id && project.properties.account.properties.name" class="label">{{ project.properties.account.properties.name }}</span>
+            <span data-ng-if="project.id && !project.properties.account.properties.name" class="label label-danger">No Funder</span>
+            <span data-ng-if="project.id && project.properties.last_modified_by.properties.first_name && project.properties.last_modified_by.properties.last_name" class="label">Last Modified by: {{ project.properties.last_modified_by.properties.first_name }} {{ project.properties.last_modified_by.properties.last_name }}</span>
+            <span data-ng-if="project.id && project.properties.modified_on" class="label">Modified on: {{ project.properties.modified_on | date }}</span>
           </h4>
           <h1><a href="/projects/{{ project.id }}#top" title="{{ project.properties.name }} project details">{{ project.properties.name }}</a></h1>
+          <p data-ng-bind-html="project.properties.description"></p>
         </div>
       </article>
     </div>

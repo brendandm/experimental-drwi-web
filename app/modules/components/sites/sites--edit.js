@@ -113,7 +113,17 @@
 
       self.saveSite = function() {
 
-        self.site.properties.county_id = self.site.properties.county.id;
+        //
+        // Prior to saving the Site we need to make sure the user has specified
+        // their county and state.
+        //
+        if (self.site.properties.county) {
+          self.site.properties.county_id = self.site.properties.county.id;
+          self.site.properties.state = self.site.properties.county.properties.state_name;
+        } else {
+          console.error('Couldn\'t save your Site because you didn\'t select a county and state');
+          return;
+        }
 
         self.site.$update().then(function(successResponse) {
           $location.path('/projects/' + $route.current.params.projectId + '/sites/' + $route.current.params.siteId);
