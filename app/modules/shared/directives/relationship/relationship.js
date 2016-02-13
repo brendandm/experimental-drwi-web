@@ -3,10 +3,12 @@
   'use strict';
 
   angular.module('FieldStack')
-    .directive('relationship', function ($http, $timeout) {
+    .directive('relationship', function (environment, $http, $timeout) {
       return {
         scope: {
           table: '=',
+          field: '=',
+          display: '=',
           model: '=',
           multiple: '=',
           placeholder: '='
@@ -21,11 +23,9 @@
               timeout;
 
           scope.relationship_focus = false;
-          console.log('multiple', scope.multiple);
-          console.log('placeholder', scope.placeholder);
 
           var getFilteredResults = function(table){
-            var url = '//api.commonscloud.org/v2/' + table + '.json';
+            var url = environment.apiUrl.concat('/v1/data/', table);
 
             $http({
               method: 'GET',
@@ -35,7 +35,7 @@
                   'filters':
                   [
                     {
-                      'name': 'name',
+                      'name': scope.field,
                       'op': 'ilike',
                       'val': scope.searchText + '%'
                     }
@@ -44,8 +44,29 @@
                 'results_per_page': 25
               }
             }).success(function(data){
-              //assign feature objects to scope for use in template
-              scope.features = data.response.features;
+
+              var features = data.features;
+
+              scope.features = [];
+
+              //
+              // Process features prior to display
+              //
+              angular.forEach(features, function(feature, $index) {
+
+                var result = [];
+
+                angular.forEach(scope.display, function(field) {
+                  result.push(feature.properties[field]);
+                });
+
+                scope.features.push({
+                  'id': feature.id,
+                  'feature': feature,
+                  'text': result.join(', ')
+                });
+              });
+
             });
           };
 
@@ -71,12 +92,11 @@
 
             if (angular.isArray(scope.model)) {
               scope.model.push(feature);
+              scope.model = set(scope.model);
             } else {
-              scope.model = [];
-              scope.model.push(feature);
+              scope.model = feature;
             }
 
-            scope.model = set(scope.model);
 
             // Clear out input field
             scope.searchText = '';

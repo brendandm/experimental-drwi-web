@@ -8,13 +8,8 @@
         <ul>
           <!-- <li data-ng-if="relationship_focus && !features.length"><p><em>Begin typing to select the {{ field.label }} you want</em></p></li> -->
           <li data-ng-repeat="feature in features track by $index">
-            <a data-ng-click="addFeatureToRelationships(feature)">
-              <span data-ng-if="multiple !== 'true'">
-                {{ feature.name }}
-              </span>
-              <span data-ng-if="multiple === 'true'">
-                {{ feature.name }}, {{ feature.state_name }}
-              </span>
+            <a data-ng-click="addFeatureToRelationships(feature.feature)">
+              {{ feature.text }}
             </a>
           </li>
         </ul>

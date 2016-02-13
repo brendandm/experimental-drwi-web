@@ -30,46 +30,40 @@
             </div>
           </div>
           <div class="column-1"></div>
-          <div class="column-8" data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
+          <div class="column-8" data-ng-if="!page.site.properties.county">
             <!-- County -->
             <div class="form-group">
               <label for="site_county" class="control-label">County</label>
-              <relationship data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8.length"
-                            model="page.site.type_b1baa10ba3ce493d90581a864ec95dc8"
-                            table="'type_b1baa10ba3ce493d90581a864ec95dc8'"
+              <relationship data-ng-if="!page.site.properties.county"
+                            model="page.site.properties.county"
+                            table="'county'"
+                            field="'county_name'"
                             multiple="'true'"
+                            display="['county_name','state_name']"
                             placeholder="'Enter the name of the county'">
               </relationship>
-              <p data-ng-if="page.site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
-                {{ page.site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['name'] }},
-                <!-- If the state name is available from the county then use it -->
-                <span data-ng-if="page.site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name']">
-                  {{ page.site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name'] }}
-                </span>
-                <!-- If not, try and get the site_state field from the site -->
-                <span data-ng-if="!site.type_b1baa10ba3ce493d90581a864ec95dc8[0]['state_name'] && site.site_state">
-                  {{ page.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].state_name }}
-                </span>
-                <span data-ng-if="page.site.type_b1baa10ba3ce493d90581a864ec95dc8.length" class="help-text action"><a data-ng-click="page.site.type_b1baa10ba3ce493d90581a864ec95dc8 = [];" class="remove">Clear value</a></span>
-              </p>
             </div>
           </div>
-          <div class="column-4" data-ng-if="page.site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
+          <div class="column-4" data-ng-if="page.site.properties.county">
             <!-- County -->
             <div class="form-group">
               <label for="site_county" class="control-label">County</label>
-              <p data-ng-if="page.site.properties.county.length">
-                {{ page.site.county }}
+              <p>
+                {{ page.site.properties.county.properties.county_name }}
               </p>
             </div>
           </div>
-          <div class="column-4" data-ng-if="page.site.type_b1baa10ba3ce493d90581a864ec95dc8.length">
+          <div class="column-4" data-ng-if="page.site.properties.county.properties.state_name || page.site.properties.state">
             <!-- County -->
             <div class="form-group">
               <label for="site_state" class="control-label">State</label>
               <p>
-                {{ page.site.type_b1baa10ba3ce493d90581a864ec95dc8[0].state_name || site.state }}
-                <span data-ng-if="page.site.type_b1baa10ba3ce493d90581a864ec95dc8.length" class="help-text action"><a data-ng-click="page.site.type_b1baa10ba3ce493d90581a864ec95dc8 = [];" class="remove">Clear value</a></span>
+                {{ page.site.properties.county.properties.state_name || page.site.properties.state }}
+                <span data-ng-if="page.site.properties.county" class="help-text action">
+                  <a data-ng-click="page.site.properties.county = null;" class="remove">
+                    Clear value
+                  </a>
+                </span>
               </p>
             </div>
           </div>

@@ -43,7 +43,6 @@
             }
         ];
 
-
         //
         // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
         // selected their property, so we just need to display it on the map for them again.
@@ -113,6 +112,9 @@
       });
 
       self.saveSite = function() {
+
+        self.site.properties.county_id = self.site.properties.county.id;
+
         self.site.$update().then(function(successResponse) {
           $location.path('/projects/' + $route.current.params.projectId + '/sites/' + $route.current.params.siteId);
         }, function(errorResponse) {
