@@ -14,10 +14,30 @@
         <h1 class="large">{{ page.project.properties.name }}</h1>
         <p data-ng-bind-html="page.project.properties.description"></p>
 
-        <section data-ng-if="page.sites.features" id="sites">
+        <section id="sites">
           <div class="list">
             <h6 class="rule-above"><strong>Project</strong> Sites</h6>
-            <article class="row list-item list-item-thin" data-ng-repeat="site in page.sites.features | orderBy:'id' track by $index">
+
+            <article class="row list-item list-item-thin"
+                     data-ng-if="!page.sites.features.length">
+              <div class="column-16 list-item-content align-center empty-data">
+                <div class="icon retinaicon-file-096"></div>
+                <p>
+                  Project sites will show up here,
+                  so you can easily view them later.
+                </p>
+                <p>
+                  <a href="javascript:void(0)"
+                     data-ng-click="page.createSite()">
+                    Create your first site now
+                  </a>
+                </p>
+              </div>
+            </article>
+
+            <article class="row list-item list-item-thin"
+                     data-ng-if="page.sites.features.length"
+                     data-ng-repeat="site in page.sites.features | orderBy:'id' track by $index">
               <div class="column-16 list-item-content">
                 <div class="row">
                   <div class="column-2">

@@ -297,3 +297,24 @@
   }
 
 }
+
+
+//
+//
+//
+.empty-data {
+  margin-top: 2em;
+  
+  .icon {
+    color: rgba($color-black-base, 0.15);
+    font-size: 8em;
+    line-height: 1.2;
+  }
+
+  p {
+    color: rgba($color-black-base, 0.25);
+    font-weight: 400;
+    margin: 0 auto;
+    max-width: 40%;
+  }
+}
