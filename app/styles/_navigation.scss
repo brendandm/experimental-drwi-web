@@ -50,7 +50,7 @@
   border-radius: 0;
   -moz-border-radius: 0;
   -webkit-border-radius: 0;
-  margin: 6px 0 0;
+  margin: 12px 0 0;
   padding: 0;
 
   .user img {
@@ -92,11 +92,15 @@
         border: 1px solid $color-white-base;
         padding: 4px 12px 5px;
         display: inline-block;
-        font-weight: 400;
+        font-weight: 500;
 
         &:active {
           margin: 4px 0 0;
         }
+      }
+
+      .add {
+        font-size: 1.125em;
       }
     }
 
@@ -154,7 +158,7 @@
         color: $color-white-base;
         padding: 7px 12px 8px;
         display: inline-block;
-        font-weight: 400;
+        font-weight: 500;
         line-height: 1;
 
         &.new {

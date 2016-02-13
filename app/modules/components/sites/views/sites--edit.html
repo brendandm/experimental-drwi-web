@@ -102,8 +102,8 @@
               <p class="form-value form-value-static" data-ng-if="!page.site.properties.segment">
                 Not Specified, use "Find a Location" or relocate the pin
               </p>
-              <p class="form-value" data-ng-if="page.site.properties.county.length" data-ng-repeat="segment in page.site.properties.segment track by $index">
-                {{ segment.name }}
+              <p class="form-value" data-ng-if="page.site.properties.segment">
+                {{ page.site.properties.segment.properties.hgmr_code }}
                 <span data-ng-if="page.site.properties.segment" class="help-text action"><a data-ng-click="page.site.properties.segment = '';" class="remove">Clear value</a></span>
               </p>
               <p class="help-text">

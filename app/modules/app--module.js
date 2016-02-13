@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc overview
- * @name 
+ * @name
  * @description
  */
 angular
@@ -15,7 +15,6 @@ angular
     'leaflet-directive',
     'angularFileUpload',
     'geolocation',
-    'angular-loading-bar',
     'monospaced.elastic',
     'angularMoment',
     'config'

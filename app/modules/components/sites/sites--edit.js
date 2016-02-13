@@ -43,6 +43,15 @@
             }
         ];
 
+
+        //
+        // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
+        // selected their property, so we just need to display it on the map for them again.
+        //
+        if (self.site && self.site.properties && self.site.properties.segment) {
+          self.geolocation.drawSegment(self.site.properties.segment);
+        }
+
         //
         // Verify Account information for proper UI element display
         //
@@ -193,12 +202,15 @@
                      }
                    ]
                  }
-               }).$promise.then(function(response) {
+               }).$promise.then(function(successResponse) {
 
-                 self.geolocation.drawSegment(successResponse);
+                 var segments = successResponse;
 
-                 if (response.features.length) {
-                   self.site.properties.segment_id = response.features[0].id;
+                 self.geolocation.drawSegment(segments);
+
+                 if (segments.features.length) {
+                   self.site.properties.segment_id = segments.features[0].id;
+                   self.site.properties.segment = segments.features[0];
                  }
 
                }, function(errorResponse) {
@@ -369,18 +381,6 @@
         });
 
       });
-
-      //
-      // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
-      // selected their property, so we just need to display it on the map for them again.
-      //
-      if (self.site && self.site.properties && self.site.properties.segment) {
-        var geojson = {
-          type: 'Feature',
-          geometry: self.site.properties.segment.geometry
-        };
-        self.geolocation.drawSegment(geojson);
-      }
 
     });
 

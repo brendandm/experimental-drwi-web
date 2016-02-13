@@ -11,7 +11,15 @@
 // Site Header
 //
 .site-header {
-  background-color: $color-black-base;
+  background-color: $color-darkBlue-base;
+  min-height: 64px;
+}
+
+.site-brand {
+  margin-top: 14px;
+  img {
+    width: 128px;
+  }
 }
 
 //
@@ -172,7 +180,7 @@
         h1.large {
           font-size: 2em;
         }
-        
+
         h4.tall {
           margin-top: 32px;
         }
