@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc overview
- * @name 
+ * @name
  * @description
  */
 angular.module('FieldStack')
@@ -14,5 +14,6 @@ angular.module('FieldStack')
       });
 
     $locationProvider.html5Mode(true);
+    $locationProvider.hashPrefix('!');
 
   });

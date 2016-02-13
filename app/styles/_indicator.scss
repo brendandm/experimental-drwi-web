@@ -40,21 +40,21 @@
   }
 }
 
-#loading-bar-spinner .spinner-icon {
+.loading {
     display: block;
     position: relative;
-    width: 32px;
-    height: 32px;
+    width: 64px;
+    height: 64px;
     -webkit-animation: rotate 0.6s linear infinite;
     -moz-animation: rotate 0.6s linear infinite;
     -ms-animation: rotate 0.6s linear infinite;
     -o-animation: rotate 0.6s linear infinite;
     animation: rotate 0.6s linear infinite;
     border-radius: 100%;
-    border-top: 2px solid #545a6a;
-    border-bottom: 2px solid #29d;
-    border-left: 2px solid #545a6a;
-    border-right: 2px solid #29d;
+    border-top: 2px solid rgba(25,166,215, 0.5);
+    border-bottom: 2px solid rgb(25,166,215);
+    border-left: 2px solid rgba(25,166,215, 0.5);
+    border-right: 2px solid rgb(25,166,215);
 }
 
 //
