@@ -104,7 +104,7 @@ angular.module('FieldStack')
       });
     };
 
-    $scope.deleteReport = function() {
+    self.deleteReport = function() {
       self.report.$delete().then(function(successResponse) {
         $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
       }).then(function(errorResponse) {

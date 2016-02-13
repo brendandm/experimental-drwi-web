@@ -101,8 +101,6 @@ angular.module('FieldStack')
               };
             });
 
-            console.log('self.loaddata', self.loaddata);
-            
           }, function(errorResponse) {
             console.log('errorResponse', errorResponse);
           });
@@ -125,7 +123,7 @@ angular.module('FieldStack')
                   isLoggedIn: Account.hasToken(),
                   role: $rootScope.user.properties.roles[0].properties.name,
                   account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                  can_edit: Account.canEdit(self.site.properties.project)
+                  can_edit: true
               };
           });
       }
