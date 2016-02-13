@@ -5,30 +5,32 @@
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
         <h4>
-          <span data-ng-if="page.project.properties.program_type" class="label">{{ page.project.properties.program_type }}</span>
+          <span data-ng-if="page.project.id && page.project.properties.program_type" class="label label-info">{{ page.project.properties.program_type }}</span>
+          <span data-ng-if="page.project.id && page.project.properties.account.properties.name" class="label">{{ page.project.properties.account.properties.name }}</span>
+          <span data-ng-if="page.project.id && !page.project.properties.account.properties.name" class="label label-danger">No Funder</span>
         </h4>
         <h1 class="large">{{ page.project.properties.name }}</h1>
-        <div class="project-abstract" data-ng-bind-html="page.project.properties.project_abstract"></div>
+        <p data-ng-bind-html="page.project.properties.description"></p>
 
         <section data-ng-if="page.sites.features" id="sites">
           <div class="list">
             <h6 class="rule-above"><strong>Project</strong> Sites</h6>
-            <article class="row list-item list-item-thin" data-ng-repeat="site in page.sites.features track by $index">
+            <article class="row list-item list-item-thin" data-ng-repeat="site in page.sites.features | orderBy:'id' track by $index">
               <div class="column-16 list-item-content">
-                <img data-ng-if="site.site_thumbnail" data-ng-src="{{ site.site_thumbnail }}" alt="{{ site.site_description }} location preview" width="80" height="80" />
+                <img data-ng-if="site.geometry"
+                     data-ng-src="https://api.tiles.mapbox.com/v4/{{ page.mapbox.satellite }}/pin-s+b1c11d({{ site.geometry.geometries[0].coordinates[0] }},{{ site.geometry.geometries[0].coordinates[1] }},17)/{{ site.geometry.geometries[0].coordinates[0] }},{{ site.geometry.geometries[0].coordinates[1] }},17/80x80@2x.png?access_token={{ page.mapbox.access_token }}"
+                     alt="{{ site.site_description }} location preview" width="80" height="80" />
                 <h1 class="project-site-number">
                     <a href="/projects/{{ page.project.id }}/sites/{{ site.id }}" title="{{ site.properties.name }} project details">
                         {{ site.properties.name }}
                     </a>
                 </h1>
-                <h4 class="project-site-title">{{ site.properties.description }}</h4>
-                <h4 class="project-site-city" data-ng-if="site.properties.city">
-                  {{ site.properties.city }}
+                <h4 class="project-site-title">
+                  {{ site.properties.description | limitTo:140 }}<span data-ng-if="site.properties.description.length >= 140">...</span>
                 </h4>
-                <h4>
-                  <span data-ng-if="site.properties.state && site.county.properties.name">
-                    {{ site.county.properties.name }} County, {{ site.properties.state }}
-                  </span>
+                <h4 class="project-site-city">
+                  <span data-ng-if="site.properties.city">{{ site.properties.city }}</span><span data-ng-if="site.properties.city && site.properties.county.properties.county_name">,</span>
+                  <span data-ng-if="site.properties.county.properties.county_name">{{ site.properties.county.properties.county_name }} County</span><span data-ng-if="site.properties.state && site.properties.county.properties.county_name">,</span> {{ site.properties.state }}
                 </h4>
               </div>
             </article>

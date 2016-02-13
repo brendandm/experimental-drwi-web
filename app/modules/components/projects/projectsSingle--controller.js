@@ -14,6 +14,7 @@ angular.module('FieldStack')
     $rootScope.page = {};
 
     self.sites = sites;
+    self.mapbox = mapbox;
 
     //
     // Assign project to a scoped variable
