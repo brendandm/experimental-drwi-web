@@ -1,4 +1,4 @@
-<div data-ng-if="!total.planning">
+<div data-ng-if="!page.total.planning">
   <h2><strong>Empty</strong> Summary</h2>
 
   <p>
@@ -6,19 +6,19 @@
   </p>
 
   <p>
-    <a class="button" data-ng-click="readings.add(practice, 'Planning')">Add Planning Data</a>
+    <a class="button" data-ng-click="page.addReading('Planning')">Add Planning Data</a>
   </p>
 </div>
 
 
 <!-- INSTALLATION SUMMARY -->
 
-<div data-ng-if="total.planning || total.installation">
+<div data-ng-if="page.total.planning || page.total.installation">
   <table class="table">
     <tbody>
       <!-- Section Heading -->
       <tr class="no-rule">
-        <td class="align-left" colspan="{{ total.planning + total.installation + 5 }}">
+        <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 5 }}">
           <h2><strong>Installation</strong> Summary</h2>
         </td>
       </tr>
@@ -26,12 +26,12 @@
       <!-- Measurement Period Headings -->
       <tr>
         <th colspan="2" class="align-center">Structural Features</th>
-        <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
-            <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
-            <span data-ng-if="report.measurement_period === 'Installation'">Installed</span>
+        <th data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
+            <span data-ng-if="page.report.properties.measurement_period === 'Planning'">Planned</span>
+            <span data-ng-if="page.report.properties.measurement_period === 'Installation'">Installed</span>
             <br />
-            {{ report.report_date }}
+            {{ report.properties.report_date }}
           </a>
         </th>
         <th>Installed To-Date</th>
@@ -46,7 +46,7 @@
         <th class="align-center">
           Units
         </th>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
           &nbsp;
         </td>
         <td>
@@ -63,96 +63,96 @@
 
       <!-- Installation Summary -->
       <tr>
-        <td class="align-center" data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.installation_structure_type_1 }}
+        <td class="align-center" data-ng-if="page.report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.installation_structure_type_1 }}
         </td>
-        <td class="align-center" data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.installation_structure_units_1 }}
+        <td class="align-center" data-ng-if="page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.installation_structure_units_1 }}
         </td>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.installation_structure_extent_1 | number:2 }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.installation_structure_extent_1 | number:2 }}
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'installation_structure_extent_1') || 0 | number:2 }}
+            {{ calculate.quantityInstalled(page.readings.features, 'installation_structure_extent_1') || 0 | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'installation_structure_extent_1', '%') || 0 | number:2 }}%
-          </strong>
-        </td>
-      </tr>
-
-      <tr>
-        <td class="align-center" data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.installation_structure_type_2 }}
-        </td>
-        <td class="align-center" data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.installation_structure_units_2 }}
-        </td>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.installation_structure_extent_2 | number:2 }}
-        </td>
-        <td>
-          <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'installation_structure_extent_2') || 0 | number:2 }}
-          </strong>
-        </td>
-        <td>
-          <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'installation_structure_extent_2', '%') || 0 | number:2 }}%
+            {{ calculate.quantityInstalled(page.readings.features, 'installation_structure_extent_1', '%') || 0 | number:2 }}%
           </strong>
         </td>
       </tr>
 
       <tr>
-        <td class="align-center" data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.installation_structure_type_3 }}
+        <td class="align-center" data-ng-if="page.report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.installation_structure_type_2 }}
         </td>
-        <td class="align-center" data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.installation_structure_units_3 }}
+        <td class="align-center" data-ng-if="page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.installation_structure_units_2 }}
         </td>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.installation_structure_extent_3 | number:2 }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.installation_structure_extent_2 | number:2 }}
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'installation_structure_extent_3') || 0 | number:2 }}
+            {{ calculate.quantityInstalled(page.readings.features, 'installation_structure_extent_2') || 0 | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'installation_structure_extent_3', '%') || 0 | number:2 }}%
+            {{ calculate.quantityInstalled(page.readings.features, 'installation_structure_extent_2', '%') || 0 | number:2 }}%
           </strong>
         </td>
       </tr>
 
       <tr>
-        <td class="align-center" data-ng-if="report.measurement_period === 'Planning'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.installation_structure_type_4 }}
+        <td class="align-center" data-ng-if="page.report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.installation_structure_type_3 }}
         </td>
-        <td class="align-center" data-ng-if="report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.installation_structure_units_4 }}
+        <td class="align-center" data-ng-if="page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.installation_structure_units_3 }}
         </td>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.installation_structure_extent_4 | number:2 }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.installation_structure_extent_3 | number:2 }}
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'installation_structure_extent_4') || 0 | number:2 }}
+            {{ calculate.quantityInstalled(page.readings.features, 'installation_structure_extent_3') || 0 | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'installation_structure_extent_4', '%') || 0 | number:2 }}%
+            {{ calculate.quantityInstalled(page.readings.features, 'installation_structure_extent_3', '%') || 0 | number:2 }}%
+          </strong>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="align-center" data-ng-if="page.report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.installation_structure_type_4 }}
+        </td>
+        <td class="align-center" data-ng-if="page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.installation_structure_units_4 }}
+        </td>
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.installation_structure_extent_4 | number:2 }}
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(page.readings.features, 'installation_structure_extent_4') || 0 | number:2 }}
+          </strong>
+        </td>
+        <td>
+          <strong>
+            {{ calculate.quantityInstalled(page.readings.features, 'installation_structure_extent_4', '%') || 0 | number:2 }}%
           </strong>
         </td>
       </tr>
 
       <!-- Section Heading -->
       <tr class="no-rule">
-        <td class="align-left" colspan="{{ total.planning + total.installation + 5 }}">
+        <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 5 }}">
           <h2><strong>Chesapeake Bay</strong> Metrics</h2>
         </td>
       </tr>
@@ -160,12 +160,12 @@
       <!-- Measurement Period Headings -->
       <tr>
         <th colspan="2">&nbsp;</th>
-        <th data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
-            <span data-ng-if="report.measurement_period === 'Planning'">Planned</span>
-            <span data-ng-if="report.measurement_period === 'Installation'">Installed</span>
+        <th data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
+            <span data-ng-if="page.report.properties.measurement_period === 'Planning'">Planned</span>
+            <span data-ng-if="page.report.properties.measurement_period === 'Installation'">Installed</span>
             <br />
-            {{ report.report_date }}
+            {{ report.properties.report_date }}
           </a>
         </th>
         <th>Installed To-Date</th>
@@ -176,17 +176,17 @@
         <th colspan="2">
           Acres Protected Under Long-term Easment (permanent or >=30 years)
         </th>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.metrics_areas_protected }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.metrics_areas_protected }}
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_areas_protected') || 0 | number:2 }}
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_areas_protected') || 0 | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_areas_protected', '%') || 0 | number:2 }}%
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_areas_protected', '%') || 0 | number:2 }}%
           </strong>
         </td>
       </tr>
@@ -195,8 +195,8 @@
         <th colspan="2">
           Habitat Restoration Target Species 1
         </th>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.metrics_habitat_restoration_target_species_1 }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.metrics_habitat_restoration_target_species_1 }}
         </td>
         <td>
           <strong>
@@ -214,8 +214,8 @@
         <th colspan="2">
           Habitat Restoration Target Species 2
         </th>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.metrics_habitat_restoration_target_species_2 }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.metrics_habitat_restoration_target_species_2 }}
         </td>
         <td>
           <strong>
@@ -233,17 +233,17 @@
         <th colspan="2">
           Acres of Habitat Restored
         </th>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.metrics_areas_of_habitat_restored }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.metrics_areas_of_habitat_restored }}
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_areas_of_habitat_restored') || 0 | number:2 }}
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_areas_of_habitat_restored') || 0 | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_areas_of_habitat_restored', '%') || 0 | number:2 }}%
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_areas_of_habitat_restored', '%') || 0 | number:2 }}%
           </strong>
         </td>
       </tr>
@@ -252,17 +252,17 @@
         <th colspan="2">
           Acres of Wetlands Restored
         </th>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.metrics_acres_of_wetlands_restored }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.metrics_acres_of_wetlands_restored }}
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_acres_of_wetlands_restored') || 0 | number:2 }}
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_acres_of_wetlands_restored') || 0 | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_acres_of_wetlands_restored', '%') || 0 | number:2 }}%
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_acres_of_wetlands_restored', '%') || 0 | number:2 }}%
           </strong>
         </td>
       </tr>
@@ -271,17 +271,17 @@
         <th colspan="2">
           Miles of Living Shoreline Restored
         </th>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.metrics_miles_of_living_shoreline_restored }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.metrics_miles_of_living_shoreline_restored }}
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_miles_of_living_shoreline_restored') || 0 | number:2 }}
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_miles_of_living_shoreline_restored') || 0 | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_miles_of_living_shoreline_restored', '%') || 0 | number:2 }}%
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_miles_of_living_shoreline_restored', '%') || 0 | number:2 }}%
           </strong>
         </td>
       </tr>
@@ -290,17 +290,17 @@
         <th colspan="2">
           Miles of Stream Opened
         </th>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.metrics_miles_of_stream_opened }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.metrics_miles_of_stream_opened }}
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_miles_of_stream_opened') || 0 | number:2 }}
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_miles_of_stream_opened') || 0 | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_miles_of_stream_opened', '%') || 0 | number:2 }}%
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_miles_of_stream_opened', '%') || 0 | number:2 }}%
           </strong>
         </td>
       </tr>
@@ -309,17 +309,17 @@
         <th colspan="2">
           Acres of Oyster Habitat Restored
         </th>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.metrics_acres_of_oyster_habitat_restored }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.metrics_acres_of_oyster_habitat_restored }}
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_acres_of_oyster_habitat_restored') || 0 | number:2 }}
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_acres_of_oyster_habitat_restored') || 0 | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_acres_of_oyster_habitat_restored', '%') || 0 | number:2 }}%
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_acres_of_oyster_habitat_restored', '%') || 0 | number:2 }}%
           </strong>
         </td>
       </tr>
@@ -327,17 +327,17 @@
         <th colspan="2">
           Fish Passage Improvements: # of Passage Barriers Rectified
         </th>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.metrics_fish_passage_improvements_number_of_passage_barriers_re }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.metrics_fish_passage_improvements_number_of_passage_barriers_re }}
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_fish_passage_improvements_number_of_passage_barriers_re') || 0 | number:2 }}
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_fish_passage_improvements_number_of_passage_barriers_re') || 0 | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_fish_passage_improvements_number_of_passage_barriers_re', '%') || 0 | number:2 }}%
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_fish_passage_improvements_number_of_passage_barriers_re', '%') || 0 | number:2 }}%
           </strong>
         </td>
       </tr>
@@ -346,17 +346,17 @@
         <th colspan="2">
           Fish Passage Improvements: # of Fish Crossing Barriers
         </th>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.metrics_fish_passage_improvements_number_of_fish_crossing_barri }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.metrics_fish_passage_improvements_number_of_fish_crossing_barri }}
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_fish_passage_improvements_number_of_fish_crossing_barri') || 0 | number:2 }}
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_fish_passage_improvements_number_of_fish_crossing_barri') || 0 | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_fish_passage_improvements_number_of_fish_crossing_barri', '%') || 0 | number:2 }}%
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_fish_passage_improvements_number_of_fish_crossing_barri', '%') || 0 | number:2 }}%
           </strong>
         </td>
       </tr>
@@ -365,17 +365,17 @@
         <th colspan="2">
           Eastern Brook Trout: # of Reintroduced Subwatersheds
         </th>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.metrics_number_of_reintroduced_subwatersheds_eastern_brook_trou }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.metrics_number_of_reintroduced_subwatersheds_eastern_brook_trou }}
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_number_of_reintroduced_subwatersheds_eastern_brook_trou') || 0 | number:2 }}
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_number_of_reintroduced_subwatersheds_eastern_brook_trou') || 0 | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_number_of_reintroduced_subwatersheds_eastern_brook_trou', '%') || 0 | number:2 }}%
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_number_of_reintroduced_subwatersheds_eastern_brook_trou', '%') || 0 | number:2 }}%
           </strong>
         </td>
       </tr>
@@ -384,17 +384,17 @@
         <th colspan="2">
           Eastern Brook Trout: # of Habitat Units Improved
         </th>
-        <td data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          {{ report.metrics_number_of_habitat_units_improved_eastern_brook_trout }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          {{ report.properties.metrics_number_of_habitat_units_improved_eastern_brook_trout }}
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_number_of_habitat_units_improved_eastern_brook_trout') || 0 | number:2 }}
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_number_of_habitat_units_improved_eastern_brook_trout') || 0 | number:2 }}
           </strong>
         </td>
         <td>
           <strong>
-            {{ calculate.quantityInstalled(practice.readings, 'metrics_number_of_habitat_units_improved_eastern_brook_trout', '%') || 0 | number:2 }}%
+            {{ calculate.quantityInstalled(page.readings.features, 'metrics_number_of_habitat_units_improved_eastern_brook_trout', '%') || 0 | number:2 }}%
           </strong>
         </td>
       </tr>
@@ -406,122 +406,122 @@
 
 <!-- MONITORING -->
 
-<div data-ng-if="total.monitoring">
+<div data-ng-if="page.total.monitoring">
   <div class="table-responsive"><table class="table">
 
       <tr class="no-rule">
-        <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+        <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
           <h2><strong>Interim</strong> Metrics</h2>
         </td>
       </tr>
 
       <tr>
         <th>&nbsp;</th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
+        <td data-ng-if="page.report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
             Monitored on<br />
-            {{ report.report_date }}
+            {{ report.properties.report_date }}
           </a>
         </td>
       </tr>
 
       <tr>
         <th class="align-left">Riffle Stability Index</th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'"
-            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-            {{ report.metrics_riffle_stability_index }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+            {{ report.properties.metrics_riffle_stability_index }}
         </td>
       </tr>
       <tr>
         <th class="align-left">Relative Bed Stability (LRBS)</th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'"
-            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-            {{ report.metrics_relative_bed_stability }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+            {{ report.properties.metrics_relative_bed_stability }}
         </td>
       </tr>
       <tr>
         <th class="align-left">Substrate Mean Particle Size (D50)</th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'"
-            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-            {{ report.metrics_substrate_mean_particle_size }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+            {{ report.properties.metrics_substrate_mean_particle_size }}
         </td>
       </tr>
       <tr>
         <th class="align-left">Streambed Percent Fines</th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'"
-            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-            {{ report.metrics_streambed_percent_fines }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+            {{ report.properties.metrics_streambed_percent_fines }}
         </td>
       </tr>
       <tr>
         <th class="align-left">Bed Armoring Ratio</th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'"
-            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-            {{ report.metrics_bed_armoring_ratio }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+            {{ report.properties.metrics_bed_armoring_ratio }}
         </td>
       </tr>
       <tr>
         <th class="align-left">Total Habitat Assessment Score</th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'"
-            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-            {{ report.metrics_total_habitat_assessment_score }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+            {{ report.properties.metrics_total_habitat_assessment_score }}
         </td>
       </tr>
       <tr>
         <th class="align-left">Type of Habitat Assessment</th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'"
-            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-            {{ report.metrics_type_of_habitat_assessment }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+            {{ report.properties.metrics_type_of_habitat_assessment }}
         </td>
       </tr>
       <tr>
         <th class="align-left">Area in Habitat "Patch" Areas</th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'"
-            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-            {{ report.metrics_area_in_habitat_patch_areas }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+            {{ report.properties.metrics_area_in_habitat_patch_areas }}
         </td>
       </tr>
       <tr>
         <th class="align-left">Acres of Target Species 1 Habitat Restored/Protected	</th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'"
-            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-            {{ report.metrics_acres_of_target_species_1_habitat_restoredprotected }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+            {{ report.properties.metrics_acres_of_target_species_1_habitat_restoredprotected }}
         </td>
       </tr>
       <tr>
         <th class="align-left">Acres of Target Species 2 Habitat Restored/Protected	</th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'"
-            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-            {{ report.metrics_acres_of_target_species_2_habitat_restoredprotected }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+            {{ report.properties.metrics_acres_of_target_species_2_habitat_restoredprotected }}
         </td>
       </tr>
       <tr>
         <th class="align-left">WOHL LWD Assessment</th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'"
-            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-            {{ report.metrics_whol_lwd_assessment }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+            {{ report.properties.metrics_whol_lwd_assessment }}
         </td>
       </tr>
       <tr>
         <th class="align-left">Large Woody Debris Index (LWDI)</th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'"
-            data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-            {{ report.metrics_large_woody_debris_index }}
+        <td data-ng-if="page.report.properties.measurement_period === 'Monitoring'"
+            data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+            {{ report.properties.metrics_large_woody_debris_index }}
         </td>
       </tr>
 
       <tr class="no-rule">
-        <td class="align-left" colspan="{{ total.planning + total.installation + 4 }}">
+        <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
           <h2><strong>Adaptive</strong> Management Checks Performed</h2>
         </td>
       </tr>
 
       <tr>
         <th>&nbsp;</th>
-        <th data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
-          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
+        <th data-ng-if="page.report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+          <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
             Monitored on<br />
-            {{ report.report_date }}
+            {{ report.properties.report_date }}
           </a>
         </th>
       </tr>
@@ -530,7 +530,7 @@
         <th class="align-left wrap" width="50%">
           Coir logs, woody debris additions, or other natural structural elements meet all design specifications.
         </th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+        <td data-ng-if="page.report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
           <div data-ng-if="report.monitoring_design_criteria_checklist" class="icon retinaicon-essentials-071"></div>
         </td>
       </tr>
@@ -538,7 +538,7 @@
         <th class="align-left wrap" width="50%">
           Is the bed composition too fine? If so, see Sellner et al., 2012, p. 102.
         </th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+        <td data-ng-if="page.report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
           <div data-ng-if="report.monitoring_geomorphic" class="icon retinaicon-essentials-071"></div>
         </td>
       </tr>
@@ -546,7 +546,7 @@
         <th class="align-left wrap" width="50%">
           Has LWD maintained its planned density? If not, see Sellner et al., 2012, p.104.
         </th>
-        <td data-ng-if="report.measurement_period === 'Monitoring'" data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+        <td data-ng-if="page.report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
           <div data-ng-if="report.monitoring_biological" class="icon retinaicon-essentials-071"></div>
         </td>
       </tr>
@@ -554,7 +554,7 @@
   </table></div>
 </div>
 
-<div data-ng-if="total.planning || total.installation || total.monitoring">
+<div data-ng-if="page.total.planning || page.total.installation || page.total.monitoring">
   <h2><strong>Notes</strong></h2>
   <table class="table">
     <thead>
@@ -564,13 +564,13 @@
       </tr>
     </thead>
     <tbody>
-      <tr data-ng-repeat="report in practice.readings | orderBy:'report_date':false">
+      <tr data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
         <td class="align-left">
-          <a href="/projects/{{ project.id }}/sites/{{ site.id }}/practices/{{ practice.id }}/{{ practice.practice_type }}/{{ report.id }}/edit">
-            {{ report.report_date }}
+          <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
+            {{ report.properties.report_date }}
           </a>
         </td>
-        <td class="align-left" data-ng-if="report.notes">{{ report.notes }}</td>
+        <td class="align-left" data-ng-if="report.notes">{{ report.properties.notes }}</td>
         <td class="align-left" data-ng-if="!report.notes"><em>No notes recorded for this date</em></td>
       </tr>
     </tbody>

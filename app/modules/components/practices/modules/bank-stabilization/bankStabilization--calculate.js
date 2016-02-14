@@ -6,24 +6,24 @@
  * @description
  */
 angular.module('FieldStack')
-  .service('BankStabilizationCalculate', function() {
+  .service('CalculateBankStabilization', function() {
     return {
       preInstallationSedimentLoad: function(value) {
 
-        var baseLength = value.installation_length_of_streambank,
-            ler = value.installation_lateral_erosion_rate,
-            soilDensity = value.installation_soil_bulk_density,
-            squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
+        var baseLength = value.properties.installation_length_of_streambank,
+            ler = value.properties.installation_lateral_erosion_rate,
+            soilDensity = value.properties.installation_soil_bulk_density,
+            squareRoot = Math.sqrt((value.properties.installation_eroding_bank_height*value.properties.installation_eroding_bank_height)+(value.properties.installation_eroding_bank_horizontal_width*value.properties.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
         return (loadTotal)/2000;
       },
       plannedSedimentLoadReduction: function(value) {
 
-        var baseLength = value.installation_length_of_streambank,
-            ler = (parseFloat(value.installation_lateral_erosion_rate)-0.02),
-            soilDensity = value.installation_soil_bulk_density,
-            squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
+        var baseLength = value.properties.installation_length_of_streambank,
+            ler = (parseFloat(value.properties.installation_lateral_erosion_rate)-0.02),
+            soilDensity = value.properties.installation_soil_bulk_density,
+            squareRoot = Math.sqrt((value.properties.installation_eroding_bank_height*value.properties.installation_eroding_bank_height)+(value.properties.installation_eroding_bank_horizontal_width*value.properties.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
         return (loadTotal)/2000;
@@ -38,9 +38,9 @@ angular.module('FieldStack')
         // Get readings organized by their Type
         angular.forEach(values, function(reading, $index) {
 
-          if (reading.measurement_period === 'Planning') {
+          if (reading.properties.measurement_period === 'Planning') {
             planned_total += self.plannedSedimentLoadReduction(reading);
-          } else if (reading.measurement_period === 'Installation') {
+          } else if (reading.properties.measurement_period === 'Installation') {
             installed_total += self.plannedSedimentLoadReduction(reading);
           }
 
@@ -58,22 +58,22 @@ angular.module('FieldStack')
       },
       preInstallationNitrogenLoad: function(value) {
 
-        var baseLength = value.installation_length_of_streambank,
-            ler = value.installation_lateral_erosion_rate,
-            soilDensity = value.installation_soil_bulk_density,
-            soilNDensity = value.installation_soil_n_content,
-            squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
+        var baseLength = value.properties.installation_length_of_streambank,
+            ler = value.properties.installation_lateral_erosion_rate,
+            soilDensity = value.properties.installation_soil_bulk_density,
+            soilNDensity = value.properties.installation_soil_n_content,
+            squareRoot = Math.sqrt((value.properties.installation_eroding_bank_height*value.properties.installation_eroding_bank_height)+(value.properties.installation_eroding_bank_horizontal_width*value.properties.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
         return ((loadTotal)/2000)*soilNDensity;
       },
       plannedNitrogenLoadReduction: function(value) {
 
-        var baseLength = value.installation_length_of_streambank,
-            ler = (value.installation_lateral_erosion_rate-0.02),
-            soilDensity = value.installation_soil_bulk_density,
-            soilNDensity = value.installation_soil_n_content,
-            squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
+        var baseLength = value.properties.installation_length_of_streambank,
+            ler = (value.properties.installation_lateral_erosion_rate-0.02),
+            soilDensity = value.properties.installation_soil_bulk_density,
+            soilNDensity = value.properties.installation_soil_n_content,
+            squareRoot = Math.sqrt((value.properties.installation_eroding_bank_height*value.properties.installation_eroding_bank_height)+(value.properties.installation_eroding_bank_horizontal_width*value.properties.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
         return ((loadTotal)/2000)*soilNDensity;
@@ -88,9 +88,9 @@ angular.module('FieldStack')
         // Get readings organized by their Type
         angular.forEach(values, function(reading, $index) {
 
-          if (reading.measurement_period === 'Planning') {
+          if (reading.properties.measurement_period === 'Planning') {
             planned_total += self.plannedNitrogenLoadReduction(reading);
-          } else if (reading.measurement_period === 'Installation') {
+          } else if (reading.properties.measurement_period === 'Installation') {
             installed_total += self.plannedNitrogenLoadReduction(reading);
           }
 
@@ -108,22 +108,22 @@ angular.module('FieldStack')
       },
       preInstallationPhosphorusLoad: function(value) {
 
-        var baseLength = value.installation_length_of_streambank,
-            ler = value.installation_lateral_erosion_rate,
-            soilDensity = value.installation_soil_bulk_density,
-            soilPDensity = value.installation_soil_p_content,
-            squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
+        var baseLength = value.properties.installation_length_of_streambank,
+            ler = value.properties.installation_lateral_erosion_rate,
+            soilDensity = value.properties.installation_soil_bulk_density,
+            soilPDensity = value.properties.installation_soil_p_content,
+            squareRoot = Math.sqrt((value.properties.installation_eroding_bank_height*value.properties.installation_eroding_bank_height)+(value.properties.installation_eroding_bank_horizontal_width*value.properties.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
         return ((loadTotal)/2000)*soilPDensity;
       },
       plannedPhosphorusLoadReduction: function(value) {
 
-        var baseLength = value.installation_length_of_streambank,
-            ler = (value.installation_lateral_erosion_rate-0.02),
-            soilDensity = value.installation_soil_bulk_density,
-            soilPDensity = value.installation_soil_p_content,
-            squareRoot = Math.sqrt((value.installation_eroding_bank_height*value.installation_eroding_bank_height)+(value.installation_eroding_bank_horizontal_width*value.installation_eroding_bank_horizontal_width)),
+        var baseLength = value.properties.installation_length_of_streambank,
+            ler = (value.properties.installation_lateral_erosion_rate-0.02),
+            soilDensity = value.properties.installation_soil_bulk_density,
+            soilPDensity = value.properties.installation_soil_p_content,
+            squareRoot = Math.sqrt((value.properties.installation_eroding_bank_height*value.properties.installation_eroding_bank_height)+(value.properties.installation_eroding_bank_horizontal_width*value.properties.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
 
         return ((loadTotal)/2000)*soilPDensity;
@@ -138,9 +138,9 @@ angular.module('FieldStack')
         // Get readings organized by their Type
         angular.forEach(values, function(reading, $index) {
 
-          if (reading.measurement_period === 'Planning') {
+          if (reading.properties.measurement_period === 'Planning') {
             planned_total += self.plannedPhosphorusLoadReduction(reading);
-          } else if (reading.measurement_period === 'Installation') {
+          } else if (reading.properties.measurement_period === 'Installation') {
             installed_total += self.plannedPhosphorusLoadReduction(reading);
           }
 
@@ -157,7 +157,7 @@ angular.module('FieldStack')
         return 0;
       },
       milesStreambankRestored: function(value) {
-        return (value.installation_length_of_streambank/5280);
+        return (value.properties.installation_length_of_streambank/5280);
       },
       milesStreambankInstalledFromPlan: function(values, format) {
 
@@ -168,10 +168,10 @@ angular.module('FieldStack')
         // Get readings organized by their Type
         angular.forEach(values, function(reading, $index) {
 
-          if (reading.measurement_period === 'Planning') {
-            planned_total += (reading.installation_length_of_streambank/5280);
-          } else if (reading.measurement_period === 'Installation') {
-            installed_total += (reading.installation_length_of_streambank/5280);
+          if (reading.properties.measurement_period === 'Planning') {
+            planned_total += (reading.properties.installation_length_of_streambank/5280);
+          } else if (reading.properties.measurement_period === 'Installation') {
+            installed_total += (reading.properties.installation_length_of_streambank/5280);
           }
 
         });
@@ -195,10 +195,10 @@ angular.module('FieldStack')
         // Get readings organized by their Type
         angular.forEach(values, function(reading, $index) {
 
-          if (reading.measurement_period === 'Planning') {
-            planned_total += reading[field];
-          } else if (reading.measurement_period === 'Installation') {
-            installed_total += reading[field];
+          if (reading.properties.measurement_period === 'Planning') {
+            planned_total += reading.properties[field];
+          } else if (reading.properties.measurement_period === 'Installation') {
+            installed_total += reading.properties[field];
           }
 
         });

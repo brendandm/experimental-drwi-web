@@ -27,6 +27,11 @@
           'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_urban_homeowner'),
           'isArray': false
         },
+        'bankStabilization': {
+          'method': 'GET',
+          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_bank_stabilization'),
+          'isArray': false
+        },
         'bioretention': {
           'method': 'GET',
           'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_bioretention'),

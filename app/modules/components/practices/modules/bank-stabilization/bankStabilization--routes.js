@@ -10,80 +10,57 @@ angular.module('FieldStack')
 
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/bank-stabilization', {
-        templateUrl: '/modules/shared/default.html',
+        templateUrl: '/modules/components/practices/modules/bank-stabilization/views/report--view.html',
         controller: 'BankStabilizationReportController',
+        controllerAs: 'page',
         resolve: {
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.site.templateId, 'object');
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
           },
-          practice: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.practice.storage,
-              featureId: $route.current.params.practiceId
+          site: function(Site, $route) {
+            return Site.get({
+              id: $route.current.params.siteId
             });
           },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
+          practice: function(Practice, $route) {
+            return Practice.get({
+              id: $route.current.params.practiceId
             });
           },
-          readings: function(Storage, Feature, $route) {
-            return Feature.GetRelatedFeatures({
-              storage: commonscloud.collections.practice.storage,
-              relationship: Storage['bank-stabilization'].storage,
-              featureId: $route.current.params.practiceId
-            });
-          },
-          site: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.site.storage,
-              featureId: $route.current.params.siteId
-            });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.site.templateId);
-          },
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.site.templateId
+          readings: function(Practice, $route) {
+            return Practice.bankStabilization({
+              id: $route.current.params.practiceId
             });
           }
         }
       })
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/bank-stabilization/:reportId/edit', {
-        templateUrl: '/modules/shared/default.html',
+        templateUrl: '/modules/components/practices/modules/bank-stabilization/views/form--view.html',
         controller: 'BankStabilizationFormController',
+        controllerAs: 'page',
         resolve: {
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.practice.templateId, 'object');
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
           },
-          practice: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.practice.storage,
-              featureId: $route.current.params.practiceId
+          site: function(Site, $route) {
+            return Site.get({
+              id: $route.current.params.siteId
             });
           },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
+          practice: function(Practice, $route) {
+            return Practice.get({
+              id: $route.current.params.practiceId
             });
           },
-          site: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.site.storage,
-              featureId: $route.current.params.siteId
-            });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.practice.templateId);
-          },
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.site.templateId
+          report: function(PracticeBankStabilization, $route) {
+            return PracticeBankStabilization.get({
+              id: $route.current.params.reportId
             });
           }
         }
