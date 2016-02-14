@@ -36,6 +36,11 @@
           'method': 'GET',
           'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_bioretention'),
           'isArray': false
+        },
+        'enhancedStreamRestoration': {
+          'method': 'GET',
+          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_enhanced_stream_restoration'),
+          'isArray': false
         }
       });
     });

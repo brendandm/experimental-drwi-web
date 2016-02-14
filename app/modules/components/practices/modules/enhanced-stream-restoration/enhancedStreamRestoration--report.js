@@ -1,294 +1,162 @@
-(function() {
+'use strict';
 
-  'use strict';
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldStack')
+  .controller('EnhancedStreamRestorationReportController', function (Account, Calculate, CalculateEnhancedStreamRestoration, $location, moment, practice, PracticeEnhancedStreamRestoration, readings, $rootScope, $route, site, $scope, UALStateLoad, user, Utility) {
 
-  /**
-   * @ngdoc function
-   * @name
-   * @description
-   */
-  angular.module('FieldStack')
-    .controller('EnhancedStreamRestorationReportController', function ($rootScope, $scope, $route, $location, $timeout, $http, $q, user, Template, Feature, Field, template, project, site, practice, readings, commonscloud, Storage, Landuse, EnhancedStreamRestorationCalculate, Calculate, StateLoad) {
+    var self = this,
+        projectId = $route.current.params.projectId,
+        siteId = $route.current.params.siteId,
+        practiceId = $route.current.params.practiceId;
+
+    $rootScope.page = {};
+
+    self.practiceType = null;
+    self.project = {
+      'id': projectId
+    };
+
+    self.calculate = Calculate;
+    self.calculateEnhancedStreamRestoration = CalculateEnhancedStreamRestoration;
+
+    practice.$promise.then(function(successResponse) {
+
+      self.practice = successResponse;
+
+      self.practiceType = Utility.machineName(self.practice.properties.practice_type);
 
       //
-      // Assign project to a scoped variable
       //
-      $scope.project = project;
-      $scope.site = site;
-
-      $scope.template = template;
-
-      $scope.practice = practice;
-      $scope.practice.practice_type = 'enhanced-stream-restoration';
-      $scope.practice.readings = readings;
-
-      $scope.practice_efficiency = {
-        n_eff: 0.2,
-        p_eff: 0.3,
-        s_eff: 0.2
+      //
+      self.template = {
+        path: '/modules/components/practices/modules/' + self.practiceType + '/views/report--view.html'
       };
 
-      $scope.storage = Storage[$scope.practice.practice_type];
-
-      $scope.user = user;
-      $scope.user.owner = false;
-      $scope.user.feature = {};
-      $scope.user.template = {};
-
-      $scope.landuse = Landuse;
-      $scope.calculate = EnhancedStreamRestorationCalculate;
-
-      Field.GetPreparedFields($scope.storage.templateId, 'object').then(function(response) {
-        $scope.fields = response;
-      });
-
       //
-      // Retrieve State-specific Load Data
       //
-      StateLoad.query({
-        q: {
-          filters: [
+      //
+      site.$promise.then(function(successResponse) {
+        self.site = successResponse;
+
+        $rootScope.page.title = self.practice.properties.practice_type;
+        $rootScope.page.links = [
             {
-              name: 'state',
-              op: 'eq',
-              val: $scope.site.site_state
+                text: 'Projects',
+                url: '/projects'
+            },
+            {
+                text: self.site.properties.project.properties.name,
+                url: '/projects/' + projectId
+            },
+            {
+              text: self.site.properties.name,
+              url: '/projects/' + projectId + '/sites/' + siteId
+            },
+            {
+              text: self.practice.properties.practice_type,
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
+              type: 'active'
             }
-          ]
-        }
-      }, function(response) {
-        $scope.loaddata = {};
+        ];
 
-        angular.forEach(response.response.features, function(feature, $index) {
-          $scope.loaddata[feature.developed_type] = {
-            tn_ual: feature.tn_ual,
-            tp_ual: feature.tp_ual,
-            tss_ual: feature.tss_ual
-          };
-        });
-
-      });
-
-
-      //
-      //
-      //
-      $scope.GetTotal = function(period) {
-
-        var total = 0;
-
-        for (var i = 0; i < $scope.practice.readings.length; i++) {
-          if ($scope.practice.readings[i].measurement_period === period) {
-            total++;
-          }
-        }
-
-        return total;
-      };
-
-      $scope.total = {
-        preproject: $scope.GetTotal('Pre-Project'),
-        planning: $scope.GetTotal('Planning'),
-        installation: $scope.GetTotal('Installation'),
-        monitoring: $scope.GetTotal('Monitoring')
-      };
-
-      console.log('$scope.total', $scope.total);
-
-      //
-      // Load Land river segment details
-      //
-      Feature.GetFeature({
-        storage: commonscloud.collections.land_river_segment.storage,
-        featureId: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].id
-      }).then(function(response) {
-        $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0] = response;
-      });
-
-      $scope.readings = {
-        bufferWidth: function() {
-          for (var i = 0; i < $scope.practice.readings.length; i++) {
-            if ($scope.practice.readings[i].measurement_period === 'Planning') {
-              return $scope.practice.readings[i].average_width_of_buffer;
-            }
-          }
-        },
-        add: function(practice, readingType) {
-
-          var reportDate = new Date();
-
-          //
-          // Creating a practice reading is a two step process.
-          //
-          //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
-          //     for the Practice Reading table
-          //  2. Update the Practice to create a relationship with the Reading created in step 1
-          //
-          console.log('reportDate', reportDate, angular.isDate(reportDate), typeof reportDate);
-
-          Feature.CreateFeature({
-            storage: $scope.storage.storage,
-            data: {
-              measurement_period: (readingType) ? readingType : null,
-              report_date: reportDate,
-              owner: $scope.user.id,
-              status: 'private'
-            }
-          }).then(function(reportId) {
-
-            var data = {};
-            data[$scope.storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
-
-            //
-            // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
-            // to submit all relationships that are created and should remain. If we only submit the new
-            // ID the system will kick out the sites that were added previously.
-            //
-            Feature.UpdateFeature({
-              storage: commonscloud.collections.practice.storage,
-              featureId: practice.id,
-              data: data
-            }).then(function() {
-              //
-              // Once the new Reading has been associated with the existing Practice we need to
-              // display the form to the user, allowing them to complete it.
-              //
-              $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
-            });
-          });
-        },
-        addReading: function(practice, readingType) {
-          //
-          // Creating a practice reading is a two step process.
-          //
-          //  1. Create the new Practice Reading feature, including the owner and a new UserFeatures entry
-          //     for the Practice Reading table
-          //  2. Update the Practice to create a relationship with the Reading created in step 1
-          //
-          Feature.CreateFeature({
-            storage: $scope.storage.storage,
-            data: {
-              measurement_period: (readingType) ? readingType : null,
-              report_date: new Date(),
-              owner: $scope.user.id,
-              status: 'private'
-            }
-          }).then(function(reportId) {
-
-            var data = {};
-            data[$scope.storage.storage] = $scope.GetAllReadings(practice.readings, reportId);
-
-            //
-            // Create the relationship with the parent, Practice, to ensure we're doing this properly we need
-            // to submit all relationships that are created and should remain. If we only submit the new
-            // ID the system will kick out the sites that were added previously.
-            //
-            Feature.UpdateFeature({
-              storage: commonscloud.collections.practice.storage,
-              featureId: practice.id,
-              data: data
-            }).then(function() {
-              //
-              // Once the new Reading has been associated with the existing Practice we need to
-              // display the form to the user, allowing them to complete it.
-              //
-              $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + reportId + '/edit');
-            });
-          });
-        }
-      };
-
-      //
-      // Setup basic page variables
-      //
-      $rootScope.page = {
-        template: '/modules/components/practices/views/practices--view.html',
-        title: $scope.site.site_number + ' « ' + $scope.project.project_title,
-        links: [
-          {
-            text: 'Projects',
-            url: '/projects'
-          },
-          {
-            text: $scope.project.project_title,
-            url: '/projects/' + $scope.project.id,
-          },
-          {
-            text: $scope.site.site_number,
-            url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id
-          },
-          {
-            text: $scope.practice.name,
-            url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type,
-            type: 'active'
-          }
-        ],
-        actions: [
+        $rootScope.page.actions = [
           {
             type: 'button-link new',
             action: function() {
-              $scope.readings.add($scope.practice);
+              self.addReading();
             },
             text: 'Add Measurement Data'
           }
-        ],
-        refresh: function() {
-          $route.reload();
-        }
-      };
+        ];
 
+        //
+        // After we have returned the Site.$promise we can look up our Site
+        // specific load data
+        //
+        if (self.site.properties.state) {
+          UALStateLoad.query({
+            q: {
+              filters: [
+                {
+                  name: 'state',
+                  op: 'eq',
+                  val: self.site.properties.state
+                }
+              ]
+            }
+          }, function(successResponse) {
 
-      $scope.GetAllReadings = function(existingReadings, readingId) {
+            self.loaddata = {};
 
-        var updatedReadings = [{
-          id: readingId // Start by adding the newest relationships, then we'll add the existing sites
-        }];
-
-        angular.forEach(existingReadings, function(reading, $index) {
-          updatedReadings.push({
-            id: reading.id
-          });
-        });
-
-        return updatedReadings;
-      };
-
-
-      //
-      // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
-      // backend functionality. Even if the user guesses the URL the API will stop them from editing the
-      // actual Feature within the system
-      //
-      if ($scope.user.id === $scope.project.owner) {
-        $scope.user.owner = true;
-      } else {
-        Template.GetTemplateUser({
-          storage: commonscloud.collections.project.storage,
-          templateId: $scope.template.id,
-          userId: $scope.user.id
-        }).then(function(response) {
-
-          $scope.user.template = response;
-
-          //
-          // If the user is not a Template Moderator or Admin then we need to do a final check to see
-          // if there are permissions on the individual Feature
-          //
-          if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
-            Feature.GetFeatureUser({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId,
-              userId: $scope.user.id
-            }).then(function(response) {
-              $scope.user.feature = response;
-              if ($scope.user.feature.is_admin || $scope.user.feature.write) {
-              } else {
-                $location.path('/projects/' + $route.current.params.projectId);
-              }
+            angular.forEach(successResponse.features, function(feature, $index) {
+              self.loaddata[feature.properties.developed_type] = {
+                tn_ual: feature.properties.tn_ual,
+                tp_ual: feature.properties.tp_ual,
+                tss_ual: feature.properties.tss_ual
+              };
             });
-          }
 
-        });
+          }, function(errorResponse) {
+            console.log('errorResponse', errorResponse);
+          });
+        } else {
+          console.warning('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
+        }
+
+      }, function(errorResponse) {
+        //
+      });
+
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
+
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: true
+              };
+          });
       }
     });
 
-}());
+    readings.$promise.then(function(successResponse) {
+
+      self.readings = successResponse;
+
+      self.total = {
+        preproject: self.calculate.getTotalReadingsByCategory('Pre-Project', self.readings.features),
+        planning: self.calculate.getTotalReadingsByCategory('Planning', self.readings.features),
+        installation: self.calculate.getTotalReadingsByCategory('Installation', self.readings.features),
+        monitoring: self.calculate.getTotalReadingsByCategory('Monitoring', self.readings.features)
+      };
+
+    }, function(errorResponse) {
+
+    });
+
+    self.addReading = function(measurementPeriod) {
+
+      var newReading = new PracticeEnhancedStreamRestoration({
+          'measurement_period': measurementPeriod,
+          'report_date': moment().format('YYYY-MM-DD'),
+          'practice_id': practiceId,
+          'account_id': self.site.properties.project.properties.account_id
+        });
+
+      newReading.$save().then(function(successResponse) {
+          $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+        }, function(errorResponse) {
+          console.error('ERROR: ', errorResponse);
+        });
+    };
+
+  });
