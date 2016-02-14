@@ -26,6 +26,11 @@
           'method': 'GET',
           'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_urban_homeowner'),
           'isArray': false
+        },
+        'bioretention': {
+          'method': 'GET',
+          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_bioretention'),
+          'isArray': false
         }
       });
     });

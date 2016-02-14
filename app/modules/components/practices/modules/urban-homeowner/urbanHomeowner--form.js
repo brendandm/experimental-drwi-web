@@ -8,7 +8,7 @@
  * Controller of the FieldStack
  */
 angular.module('FieldStack')
-.controller('UrbanHomeownerFormController', function (Account, Calculate, CalculateUrbanHomeowner, $location, moment, practice, PracticeUrbanHomeowner, report, $rootScope, $route, site, $scope, user, Utility) {
+  .controller('UrbanHomeownerFormController', function (Account, $location, moment, practice, PracticeUrbanHomeowner, report, $rootScope, $route, site, $scope, user, Utility) {
 
     var self = this,
         projectId = $route.current.params.projectId,
