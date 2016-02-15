@@ -1,92 +1,74 @@
-'use strict';
+(function() {
 
-/**
- * @ngdoc overview
- * @name
- * @description
- */
-angular.module('FieldStack')
-  .config(function($routeProvider, commonscloud) {
+  'use strict';
 
-    $routeProvider
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/instream-habitat', {
-        templateUrl: '/modules/shared/default.html',
-        controller: 'InstreamHabitatReportController',
-        resolve: {
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.site.templateId, 'object');
-          },
-          practice: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.practice.storage,
-              featureId: $route.current.params.practiceId
-            });
-          },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
-            });
-          },
-          readings: function(Storage, Feature, $route) {
-            return Feature.GetRelatedFeatures({
-              storage: commonscloud.collections.practice.storage,
-              relationship: Storage['instream-habitat'].storage,
-              featureId: $route.current.params.practiceId
-            });
-          },
-          site: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.site.storage,
-              featureId: $route.current.params.siteId
-            });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.site.templateId);
-          },
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.site.templateId
-            });
+  /**
+   * @ngdoc overview
+   * @name
+   * @description
+   */
+  angular.module('FieldStack')
+    .config(function($routeProvider, commonscloud) {
+
+      $routeProvider
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/instream-habitat', {
+          templateUrl: '/modules/components/practices/modules/instream-habitat/views/report--view.html',
+          controller: 'InstreamHabitatReportController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            site: function(Site, $route) {
+              return Site.get({
+                id: $route.current.params.siteId
+              });
+            },
+            practice: function(Practice, $route) {
+              return Practice.get({
+                id: $route.current.params.practiceId
+              });
+            },
+            readings: function(Practice, $route) {
+              return Practice.instreamHabitat({
+                id: $route.current.params.practiceId
+              });
+            }
           }
-        }
-      })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/instream-habitat/:reportId/edit', {
-        templateUrl: '/modules/shared/default.html',
-        controller: 'InstreamHabitatFormController',
-        resolve: {
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.practice.templateId, 'object');
-          },
-          practice: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.practice.storage,
-              featureId: $route.current.params.practiceId
-            });
-          },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
-            });
-          },
-          site: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.site.storage,
-              featureId: $route.current.params.siteId
-            });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.practice.templateId);
-          },
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.site.templateId
-            });
+        })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/instream-habitat/:reportId/edit', {
+          templateUrl: '/modules/components/practices/modules/instream-habitat/views/form--view.html',
+          controller: 'InstreamHabitatFormController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            site: function(Site, $route) {
+              return Site.get({
+                id: $route.current.params.siteId
+              });
+            },
+            practice: function(Practice, $route) {
+              return Practice.get({
+                id: $route.current.params.practiceId
+              });
+            },
+            report: function(PracticeInstreamHabitat, $route) {
+              return PracticeInstreamHabitat.get({
+                id: $route.current.params.reportId
+              });
+            }
           }
-        }
-      });
+        });
 
-  });
+    });
+
+
+}());

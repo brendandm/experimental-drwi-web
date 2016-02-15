@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldStack')
-  .service('InstreamHabitatCalculate', function() {
+  .service('CalculateInstreamHabitat', function() {
     return {
       quantityInstalled: function(values, field, format) {
 

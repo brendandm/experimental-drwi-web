@@ -22,11 +22,6 @@
             return angular.toJson(feature);
           }
         },
-        'urbanHomeowner': {
-          'method': 'GET',
-          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_urban_homeowner'),
-          'isArray': false
-        },
         'bankStabilization': {
           'method': 'GET',
           'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_bank_stabilization'),
@@ -50,6 +45,21 @@
         'grassBuffer': {
           'method': 'GET',
           'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_grass_buffer'),
+          'isArray': false
+        },
+        'instreamHabitat': {
+          'method': 'GET',
+          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_instream_habitat'),
+          'isArray': false
+        },
+        'livestockExclusion': {
+          'method': 'GET',
+          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_livestock_exclusion'),
+          'isArray': false
+        },
+        'urbanHomeowner': {
+          'method': 'GET',
+          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_urban_homeowner'),
           'isArray': false
         }
       });
