@@ -1,18 +1,28 @@
-'use strict';
+(function() {
 
-/**
- * @ngdoc service
- * @name
- * @description
- */
-angular.module('FieldStack')
-  .provider('Efficiency', function () {
-    this.$get = ['$resource', function ($resource) {
-      return $resource('//api.commonscloud.org/v2/type_056e01e3bbf44359866b4861cde24808.json', {}, {
-        query: {
-          method: 'GET',
-          isArray: false,
-        }
+    'use strict';
+
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldStack')
+      .service('Efficiency', function (environment, Preprocessors, $resource) {
+        return $resource(environment.apiUrl.concat('/v1/data/efficiency/:id'), {
+          'id': '@id'
+        }, {
+          'query': {
+            'isArray': false
+          },
+          'update': {
+            'method': 'PATCH',
+            transformRequest: function(data) {
+              var feature = Preprocessors.geojson(data);
+              return angular.toJson(feature);
+            }
+          }
+        });
       });
-    }];
-  });
+
+  }());

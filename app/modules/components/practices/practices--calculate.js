@@ -8,14 +8,41 @@
    * @description
    */
   angular.module('FieldStack')
-    .service('Calculate', function(Load) {
+    .service('Calculate', function(LoadData, $q) {
       return {
-        getLoadVariables: function(segment, landuse) {
-          var promise = Load.query({
+        getExistingLanduse: function(measurementPeriod, readings) {
+
+          var landuse;
+
+          angular.forEach(readings, function(reading) {
+            if (reading.properties.measurement_period === measurementPeriod) {
+              landuse = reading.properties.existing_riparian_landuse;
+            }
+          });
+
+          return landuse;
+        },
+        getUplandLanduse: function(measurementPeriod, readings) {
+
+          var landuse;
+
+          angular.forEach(readings, function(reading) {
+            if (reading.properties.measurement_period === measurementPeriod) {
+              landuse = reading.properties.upland_landuse;
+            }
+          });
+
+          return landuse;
+        },
+        getLoadPromise: function(landuse, segment) {
+
+          var defer = $q.defer();
+
+          var request = LoadData.query({
             q: {
               filters: [
                 {
-                  name: 'landriversegment',
+                  name: 'land_river_segment',
                   op: 'eq',
                   val: segment
                 },
@@ -24,13 +51,14 @@
                   op: 'eq',
                   val: landuse
                 }
-              ]
+              ],
+              single: true
             }
-          }, function(response) {
-            return response;
+          }, function() {
+            defer.resolve(request);
           });
 
-          return promise;
+          return defer.promise;
         },
         getLoadTotals: function(area, efficiency) {
           return {
