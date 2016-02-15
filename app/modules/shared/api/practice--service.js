@@ -41,6 +41,11 @@
           'method': 'GET',
           'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_enhanced_stream_restoration'),
           'isArray': false
+        },
+        'forestBuffer': {
+          'method': 'GET',
+          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_forest_buffer'),
+          'isArray': false
         }
       });
     });
