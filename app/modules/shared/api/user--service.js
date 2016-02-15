@@ -4,7 +4,7 @@
 
   /**
    * @ngdoc service
-   * @name 
+   * @name
    * @description
    */
   angular.module('FieldStack')
@@ -18,24 +18,9 @@
         update: {
           method: 'PATCH'
         },
-        groups: {
-          method: 'GET',
-          isArray: false,
-          url: environment.apiUrl.concat('/v1/data/user/:id/groups')
-        },
-        getOrganizations: {
-          method: 'GET',
-          isArray: false,
-          url: environment.apiUrl.concat('/v1/data/user/:id/organization')
-        },
         me: {
           method: 'GET',
           url: environment.apiUrl.concat('/v1/data/user/me')
-        },
-        classifications: {
-          method: 'GET',
-          isArray: false,
-          url: environment.apiUrl.concat('/v1/data/user/:id/classifications')
         }
       });
     });

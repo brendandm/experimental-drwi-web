@@ -1,97 +1,82 @@
-'use strict';
+(function() {
 
-/**
- * @ngdoc overview
- * @name FieldStack
- * @description
- * # FieldStack
- *
- * Main module of the application.
- */
-angular.module('FieldStack')
-  .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
+  'use strict';
 
-    $routeProvider
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/livestock-exclusion', {
-        templateUrl: '/modules/shared/default.html',
-        controller: 'LivestockExclusionReportController',
-        resolve: {
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.site.templateId
-            });
-          },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
-            });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.site.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.site.templateId, 'object');
-          },
-          site: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.site.storage,
-              featureId: $route.current.params.siteId
-            });
-          },
-          practice: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.practice.storage,
-              featureId: $route.current.params.practiceId
-            });
-          },
-          readings: function(Storage, Feature, $route) {
-            return Feature.GetRelatedFeatures({
-              storage: commonscloud.collections.practice.storage,
-              relationship: Storage['livestock-exclusion'].storage,
-              featureId: $route.current.params.practiceId
-            });
+  /**
+   * @ngdoc overview
+   * @name
+   * @description
+   */
+  angular.module('FieldStack')
+    .config(function($routeProvider) {
+
+      $routeProvider
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/livestock-exclusion', {
+          templateUrl: '/modules/components/practices/modules/livestock-exclusion/views/report--view.html',
+          controller: 'LivestockExclusionReportController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            site: function(Site, $route) {
+              return Site.get({
+                id: $route.current.params.siteId
+              });
+            },
+            practice: function(Practice, $route) {
+              return Practice.get({
+                id: $route.current.params.practiceId
+              });
+            },
+            readings: function(Practice, $route) {
+              return Practice.livestockExclusion({
+                id: $route.current.params.practiceId
+              });
+            }
           }
-        }
-      })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/livestock-exclusion/:reportId/edit', {
-        templateUrl: '/modules/shared/default.html',
-        controller: 'LivestockExclusionFormController',
-        resolve: {
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.site.templateId
-            });
-          },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
-            });
-          },
-          site: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.site.storage,
-              featureId: $route.current.params.siteId
-            });
-          },
-          practice: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.practice.storage,
-              featureId: $route.current.params.practiceId
-            });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.practice.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.practice.templateId, 'object');
+        })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/livestock-exclusion/:reportId/edit', {
+          templateUrl: '/modules/components/practices/modules/livestock-exclusion/views/form--view.html',
+          controller: 'LivestockExclusionFormController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            site: function(Site, $route) {
+              return Site.get({
+                id: $route.current.params.siteId
+              });
+            },
+            practice: function(Practice, $route) {
+              return Practice.get({
+                id: $route.current.params.practiceId
+              });
+            },
+            report: function(PracticeLivestockExclusion, $route) {
+              return PracticeLivestockExclusion.get({
+                id: $route.current.params.reportId
+              });
+            },
+            animals: function(AnimalManure) {
+              return AnimalManure.query();
+            },
+            landuse: function(Landuse) {
+              return Landuse.query({
+                results_per_page: 50
+              });
+            }
           }
-        }
-      });
+        });
 
-  }]);
+    });
 
 
+}());

@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldStack')
-    .config(function($routeProvider, commonscloud) {
+    .config(function($routeProvider) {
 
       $routeProvider
         .when('/projects/:projectId/sites/:siteId/practices/:practiceId/instream-habitat', {

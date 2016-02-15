@@ -23,9 +23,6 @@ angular.module('FieldStack')
         return totalHoursPerYearInStream;
       },
       averageDaysPerYearInStream: function(values) {
-        // var dpm = this.totalDaysPerYearInStream(values),
-        //     hpd = this.averageHoursPerYearInStream(values);
-
         var sumproduct = (values.instream_hpdjan*values.instream_dpmjan)+(values.instream_hpdfeb*values.instream_dpmfeb)+(values.instream_hpdmar*values.instream_dpmmar)+(values.instream_hpdapr*values.instream_dpmapr)+(values.instream_hpdmay*values.instream_dpmmay)+(values.instream_hpdjun*values.instream_dpmjun)+(values.instream_hpdjul*values.instream_dpmjul)+(values.instream_hpdaug*values.instream_dpmaug)+(values.instream_hpdsep*values.instream_dpmsep)+(values.instream_hpdoct*values.instream_dpmoct)+(values.instream_hpdnov*values.instream_dpmnov)+(values.instream_hpddec*values.instream_dpmdec);
 
         return (sumproduct/24);
@@ -39,10 +36,10 @@ angular.module('FieldStack')
         // Get readings organized by their Type
         angular.forEach(values, function(reading, $index) {
 
-          if (reading.measurement_period === 'Planning') {
-            planned_total += reading[field];
-          } else if (reading.measurement_period === 'Installation') {
-            installed_total += reading[field];
+          if (reading.properties.measurement_period === 'Planning') {
+            planned_total += reading.properties[field];
+          } else if (reading.properties.measurement_period === 'Installation') {
+            installed_total += reading.properties[field];
           }
 
         });
@@ -66,11 +63,11 @@ angular.module('FieldStack')
             feetInMiles = 5280;
 
         angular.forEach(values, function(value, $index) {
-          if (values[$index].measurement_period === 'Planning') {
-            planned_length += values[$index][field];
+          if (value.properties.measurement_period === 'Planning') {
+            planned_length += value.properties[field];
           }
-          else if (values[$index].measurement_period === 'Installation') {
-            installed_length += values[$index][field];
+          else if (value.properties.measurement_period === 'Installation') {
+            installed_length += value.properties[field];
           }
         });
 
