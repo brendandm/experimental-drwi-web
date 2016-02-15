@@ -7,8 +7,8 @@
  * Service in the FieldStack.
  */
 angular.module('FieldStack')
-  .service('GrassBufferCalculate', [function() {
+  .service('CalculateGrassBuffer', function() {
     return {
 
     };
-  }]);
+  });

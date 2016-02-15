@@ -46,6 +46,11 @@
           'method': 'GET',
           'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_forest_buffer'),
           'isArray': false
+        },
+        'grassBuffer': {
+          'method': 'GET',
+          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_grass_buffer'),
+          'isArray': false
         }
       });
     });

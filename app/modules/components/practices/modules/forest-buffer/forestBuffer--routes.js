@@ -9,7 +9,7 @@
  * Main module of the application.
  */
 angular.module('FieldStack')
-  .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
+  .config(function($routeProvider) {
 
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/forest-buffer', {
@@ -74,4 +74,4 @@ angular.module('FieldStack')
         }
       });
 
-  }]);
+  });

@@ -1,231 +1,155 @@
-'use strict';
+(function() {
 
-/**
- * @ngdoc function
- * @name FieldStack.controller:GrassBufferFormController
- * @description
- * # GrassBufferFormController
- * Controller of the FieldStack
- */
-angular.module('FieldStack')
-  .controller('GrassBufferFormController', ['$rootScope', '$scope', '$route', '$location', 'moment', 'user', 'Template', 'Field', 'Feature', 'Storage', 'template', 'project', 'site', 'practice', 'commonscloud', function ($rootScope, $scope, $route, $location, moment, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
+  'use strict';
 
-    //
-    // Assign project to a scoped variable
-    //
-    $scope.template = template;
+  /**
+   * @ngdoc function
+   * @name
+   * @description
+   */
+  angular.module('FieldStack')
+    .controller('GrassBufferFormController', function (Account, landuse, $location, practice, PracticeGrassBuffer, report, $rootScope, $route, site, $scope, user, Utility) {
 
-    $scope.report = {};
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
 
-    $scope.project = project;
-    $scope.practice = practice;
-    $scope.practice.practice_type = 'grass-buffer';
+      $rootScope.page = {};
 
-    $scope.storage = Storage[$scope.practice.practice_type];
-
-    Field.GetPreparedFields($scope.storage.templateId, 'object').then(function(response) {
-      $scope.fields = response;
-    });
-
-    Feature.GetFeature({
-      storage: $scope.storage.storage,
-      featureId: $route.current.params.reportId
-    }).then(function(report) {
-
-      //
-      // Load the reading into the scope
-      //
-      $scope.report = report;
-      $scope.report.template = $scope.storage.templates.form;
-
-      //
-      // Watch the Tree Canopy Value, when it changes we need to update the lawn area value
-      //
-      $scope.calculateBufferComposition = function() {
-
-        var running_total = $scope.report.buffer_composition_woody + $scope.report.buffer_composition_shrub + $scope.report.buffer_composition_bare + $scope.report.buffer_composition_grass;
-
-        var remainder = 100-running_total;
-
-        $scope.report.buffer_composition_other = remainder;
-      };
-      $scope.$watch('report.buffer_composition_woody', function() {
-        $scope.calculateBufferComposition();
-      });
-      $scope.$watch('report.buffer_composition_shrub', function() {
-        $scope.calculateBufferComposition();
-      });
-      $scope.$watch('report.buffer_composition_bare', function() {
-        $scope.calculateBufferComposition();
-      });
-      $scope.$watch('report.buffer_composition_grass', function() {
-        $scope.calculateBufferComposition();
-      });
-
-
-      $scope.report.save = function() {
-        Feature.UpdateFeature({
-          storage: $scope.storage.storage,
-          featureId: $scope.report.id,
-          data: $scope.report
-        }).then(function(response) {
-          $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type);
-        }).then(function(error) {
-          // Do something with the error
-        });
+      self.practiceType = null;
+      self.project = {
+        'id': projectId
       };
 
-      $scope.report.delete = function() {
+      self.landuse = landuse;
+
+      practice.$promise.then(function(successResponse) {
+
+        self.practice = successResponse;
+
+        self.practiceType = Utility.machineName(self.practice.properties.practice_type);
 
         //
-        // Before we can remove the Practice we need to remove the relationship it has with the Site
         //
         //
-        angular.forEach($scope.practice[$scope.storage.storage], function(feature, $index) {
-          if (feature.id === $scope.report.id) {
-            $scope.practice[$scope.storage.storage].splice($index, 1);
-          }
-        });
+        self.template = {
+          path: '/modules/components/practices/modules/' + self.practiceType + '/views/report--view.html'
+        };
 
-        Feature.UpdateFeature({
-          storage: commonscloud.collections.practice.storage,
-          featureId: $scope.practice.id,
-          data: $scope.practice
-        }).then(function(response) {
-          
+        //
+        //
+        //
+        site.$promise.then(function(successResponse) {
+          self.site = successResponse;
+
           //
-          // Now that the Project <> Site relationship has been removed, we can remove the Site
+          // Assign project to a scoped variable
           //
-          Feature.DeleteFeature({
-            storage: $scope.storage.storage,
-            featureId: $scope.report.id
-          }).then(function(response) {
-            $location.path('/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type);
+          report.$promise.then(function(successResponse) {
+            self.report = successResponse;
+
+            $rootScope.page.title = self.practice.properties.practice_type;
+            $rootScope.page.links = [
+                {
+                    text: 'Projects',
+                    url: '/projects'
+                },
+                {
+                    text: self.site.properties.project.properties.name,
+                    url: '/projects/' + projectId
+                },
+                {
+                  text: self.site.properties.name,
+                  url: '/projects/' + projectId + '/sites/' + siteId
+                },
+                {
+                  text: self.practice.properties.practice_type,
+                  url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
+                },
+                {
+                  text: 'Edit',
+                  url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + self.report.id + '/edit',
+                  type: 'active'
+                }
+            ];
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
           });
 
+        }, function(errorResponse) {
+          //
         });
 
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+            user.$promise.then(function(userResponse) {
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0].properties.name,
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: Account.canEdit(self.site.properties.project)
+                };
+            });
+        }
+      });
+
+      self.saveReport = function() {
+        self.report.$update().then(function(successResponse) {
+          $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
+        }, function(errorResponse) {
+          console.error('ERROR: ', errorResponse);
+        });
       };
 
-      //
-      // Add the reading information to the breadcrumbs
-      //
-      var page_title = 'Editing the ' + $scope.report.measurement_period + ' Report from ' + moment($scope.report.report_date).format('MMM d, YYYY');
+      self.deleteReport = function() {
+        self.report.$delete().then(function(successResponse) {
+          $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
+        }, function(errorResponse) {
+          console.error('ERROR: ', errorResponse);
+        });
+      };
 
-      $rootScope.page.links.push({
-        text: page_title,
-        url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + $scope.practice.practice_type + '/' + $scope.report.id + '/edit'
-      });
-
-      $rootScope.page.title = page_title;
-
+    //   Feature.GetFeature({
+    //     storage: $scope.storage.storage,
+    //     featureId: $route.current.params.reportId
+    //   }).then(function(report) {
+    //
+    //     //
+    //     // Load the reading into the scope
+    //     //
+    //     $scope.report = report;
+    //     $scope.report.template = $scope.storage.templates.form;
+    //
+    //     //
+    //     // Watch the Tree Canopy Value, when it changes we need to update the lawn area value
+    //     //
+    //     $scope.calculateBufferComposition = function() {
+    //
+    //       var running_total = $scope.report.buffer_composition_woody + $scope.report.buffer_composition_shrub + $scope.report.buffer_composition_bare + $scope.report.buffer_composition_grass;
+    //
+    //       var remainder = 100-running_total;
+    //
+    //       $scope.report.buffer_composition_other = remainder;
+    //     };
+    //
+    //     $scope.$watch('report.buffer_composition_woody', function() {
+    //       $scope.calculateBufferComposition();
+    //     });
+    //     $scope.$watch('report.buffer_composition_shrub', function() {
+    //       $scope.calculateBufferComposition();
+    //     });
+    //     $scope.$watch('report.buffer_composition_bare', function() {
+    //       $scope.calculateBufferComposition();
+    //     });
+    //     $scope.$watch('report.buffer_composition_grass', function() {
+    //       $scope.calculateBufferComposition();
+    //     });
+    //
     });
 
-    $scope.site = site;
-    $scope.user = user;
-    $scope.user.owner = false;
-    $scope.user.feature = {};
-    $scope.user.template = {};
-
-    //
-    // Setup basic page variables
-    //
-    $rootScope.page = {
-      template: '/modules/components/practices/views/practices--form.html',
-      title: null,
-      links: [
-        {
-          text: 'Projects',
-          url: '/projects'
-        },
-        {
-          text: $scope.project.project_title,
-          url: '/projects/' + $scope.project.id,
-        },
-        {
-          text: $scope.site.site_number,
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id
-        },
-        {
-          text: $scope.practice.name,
-          url: '/projects/' + $scope.project.id + '/sites/' + $scope.site.id + '/practices/' + $scope.practice.id + '/' + Feature.MachineReadable($scope.practice.practice_type)
-        }    
-      ],
-      actions: [
-        {
-          type: 'button-link',
-          action: function($index) {
-            $scope.report.delete();
-          },
-          visible: false,
-          loading: false,
-          text: 'Delete Report'
-        },
-        {
-          type: 'button-link new',
-          action: function($index) {
-            $scope.report.save();
-            $scope.page.actions[$index].loading = ! $scope.page.actions[$index].loading;
-          },
-          visible: false,
-          loading: false,
-          text: 'Save Changes'
-        }
-      ],
-      refresh: function() {
-        $route.reload();
-      }
-    };
-
-
-    $scope.in = function(search_value, list) {
-
-      if (!list.length) {
-        return true;
-      }
-        
-      var $index;
-
-      for ($index = 0; $index < list.length; $index++) {
-        if (list[$index] === search_value) {
-          return true;
-        }
-      }
-
-      return false;
-    };
-
-    //
-    // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
-    // backend functionality. Even if the user guesses the URL the API will stop them from editing the
-    // actual Feature within the system
-    //
-    if ($scope.user.id === $scope.project.owner) {
-      $scope.user.owner = true;
-    } else {
-      Template.GetTemplateUser({
-        storage: $scope.storage.storage,
-        templateId: $scope.template.id,
-        userId: $scope.user.id
-      }).then(function(response) {
-
-        $scope.user.template = response;
-        
-        //
-        // If the user is not a Template Moderator or Admin then we need to do a final check to see
-        // if there are permissions on the individual Feature
-        //
-        if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
-          Feature.GetFeatureUser({
-            storage: $scope.storage.storage,
-            featureId: $scope.report.id,
-            userId: $scope.user.id
-          }).then(function(response) {
-            $scope.user.feature = response;
-          });
-        }
-
-      });
-    }
-
-  }]);
+}());
