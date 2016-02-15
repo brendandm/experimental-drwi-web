@@ -316,9 +316,9 @@
               angular.forEach(self.readings.features, function(reading, $index) {
 
                 if (reading.properties.measurement_period === 'Planning') {
-                  planned_total += reading[field];
+                  planned_total += reading.properties[field];
                 } else if (reading.properties.measurement_period === 'Installation') {
-                  installed_total += reading[field];
+                  installed_total += reading.properties[field];
                 }
 
               });
