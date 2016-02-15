@@ -61,9 +61,14 @@ angular.module('FieldStack')
               id: $route.current.params.practiceId
             });
           },
-          report: function(PracticeEnhancedStreamRestoration, $route) {
+          report: function(PracticeForestBuffer, $route) {
             return PracticeForestBuffer.get({
               id: $route.current.params.reportId
+            });
+          },
+          landuse: function(Landuse) {
+            return Landuse.query({
+              results_per_page: 50
             });
           }
         }

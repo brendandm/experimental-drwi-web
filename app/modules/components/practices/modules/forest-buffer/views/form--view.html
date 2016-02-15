@@ -1,294 +1,312 @@
-      <fieldset>
-        <!-- Report Date -->
-        <div class="form-group column-8">
-          <label for="report_date" class="control-label">
-            Report Date
-          </label>
+<div data-ng-include="'/modules/shared/views/header--view.html'"></div>
 
-          <input data-ng-model="report.report_date" class="form-control" class="form-control" type="text" id="report_date" name="report_date" placeholder="Enter a date" />
+<main class="container">
+  <form data-ng-submit="page.saveReport()" class="row feature summary">
+    <article class="feature-detail">
+      <div class="column-16 feature-detail-content">
 
-          <p data-ng-if="fields.report_date.help" class="help-text">{{ fields.report_date.help }}</p>
-        </div>
-
-        <!-- Measurement Period -->
-        <div class="form-group column-8">
-          <label for="measurement_period" class="control-label">
-            Measurement Period
-          </label>
-
-          <select class="form-control" data-ng-model="report.measurement_period" id="measurement_period" name="measurement_period" data-ng-options="value for value in fields.measurement_period.options">
-            <option value="">Select a Measurement Period</option>
-          </select>
-
-          <p data-ng-if="fields.measurement_period.help" class="help-text">{{ fields.measurement_period.help }}</p>
-        </div>
-
-        <!-- WIP Reporting Agency -->
-        <div class="form-group column-8" data-ng-if="report.measurement_period === 'Planning'">
-          <label for="wip_reporting_agency" class="control-label">
-            WIP Reporting Agency
-          </label>
-
-          <select class="form-control" data-ng-model="report.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency" data-ng-options="value for value in fields.wip_reporting_agency.options">
-            <option value="">Select a Report Agency</option>
-          </select>
-        </div>
-      </fieldset>
-
-      <fieldset data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" class="row">
-        <h2><strong>Landuse</strong></h2>
-
-        <!-- Existing Landuse -->
-        <div class="form-group column-7">
-          <label for="existing_riparian_landuse" class="control-label">
-            Existing Landuse
-          </label>
-
-          <select class="form-control" data-ng-model="report.existing_riparian_landuse" id="existing_riparian_landuse" name="existing_riparian_landuse" data-ng-options="value for value in fields.existing_riparian_landuse.options">
-          </select>
-
-          <p data-ng-if="fields.existing_riparian_landuse.help" class="help-text">{{ fields.existing_riparian_landuse.help }}</p>
-        </div>
-
-        <!-- Upland Landuse -->
-        <div class="column-2"></div>
-        <div class="form-group column-7">
-          <label for="upland_landuse" class="control-label">
-            Upland Landuse
-          </label>
-
-          <select class="form-control" data-ng-model="report.upland_landuse" id="upland_landuse" name="upland_landuse" data-ng-options="value for value in fields.upland_landuse.options">
-          </select>
-
-          <p data-ng-if="fields.upland_landuse.help" class="help-text">{{ fields.upland_landuse.help }}</p>
-        </div>
-      </fieldset>
-
-      <fieldset data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation'" class="row">
-        <h2><strong>Installation</strong> Summary</h2>
-
-        <!-- Buffer Length -->
-        <div class="form-group column-5">
-          <label for="length_of_buffer" class="control-label">
-            Length of Buffer
-          </label>
-
-          <input data-ng-model="report.length_of_buffer" class="form-control" class="form-control" type="number" id="length_of_buffer" name="length_of_buffer" placeholder="Length of Buffer" />
-
-          <p data-ng-if="fields.length_of_buffer.help" class="help-text">{{ fields.length_of_buffer.help }}</p>
-        </div>
-
-        <!-- Buffer Width -->
-        <div class="column-1"></div>
-        <div class="form-group column-5">
-          <label for="average_width_of_buffer" class="control-label">
-            Average Buffer Width
-          </label>
-
-          <input data-ng-model="report.average_width_of_buffer" class="form-control" class="form-control" type="number" id="average_width_of_buffer" name="average_width_of_buffer" placeholder="Average Buffer Width" />
-
-          <p data-ng-if="fields.average_width_of_buffer.help" class="help-text">{{ fields.average_width_of_buffer.help }}</p>
-        </div>
-
-        <!-- Number of Trees Planted -->
-        <div class="column-1"></div>
-        <div class="form-group column-4">
-          <label for="number_of_trees_planted" class="control-label">
-            Number of Trees Planted
-          </label>
-
-          <input data-ng-model="report.number_of_trees_planted" class="form-control" class="form-control" type="number" id="number_of_trees_planted" name="number_of_trees_planted" placeholder="Number of Trees Planted" />
-
-          <p data-ng-if="fields.number_of_trees_planted.help" class="help-text">{{ fields.number_of_trees_planted.help }}</p>
-        </div>
-
-      </fieldset>
-
-      <fieldset data-ng-if="report.measurement_period === 'Monitoring'">
-        <h2><strong>Interim</strong> BMP Metrics Data</h2>
-
-        <div class="row">
-          <!-- Vegetative Cover -->
-          <div class="form-group column-5">
-            <label for="native_vegetation_intact" class="control-label">
-              Vegetative Cover
+        <fieldset>
+          <!-- Report Date -->
+          <div class="form-group column-8">
+            <label for="report_date" class="control-label">
+              Report Date
             </label>
 
-            <input data-ng-model="report.native_vegetation_intact" class="form-control" class="form-control" type="number" id="native_vegetation_intact" name="native_vegetation_intact" placeholder="% intact" />
+            <input data-ng-model="page.report.properties.report_date" class="form-control" class="form-control" type="text" id="report_date" name="report_date" placeholder="Enter a date" />
           </div>
 
-          <!-- Buffer Composition (Woody) -->
+          <!-- Measurement Period -->
+          <div class="form-group column-8">
+            <label for="measurement_period" class="control-label">
+              Measurement Period
+            </label>
+
+            <select class="form-control" data-ng-model="page.report.properties.measurement_period" id="measurement_period" name="measurement_period">
+              <option value="Planning">Planning</option>
+              <option value="Installation">Installation</option>
+              <option value="Monitoring">Monitoring</option>
+            </select>
+          </div>
+
+          <!-- WIP Reporting Agency -->
+          <div class="form-group column-8" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+            <label for="wip_reporting_agency" class="control-label">
+              WIP Reporting Agency
+            </label>
+
+            <select class="form-control" data-ng-model="page.report.properties.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency" data-ng-options="value for value in fields.wip_reporting_agency.options">
+              <option value="">Select a Report Agency</option>
+            </select>
+          </div>
+        </fieldset>
+
+        <fieldset data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" class="row">
+          <h2><strong>Landuse</strong></h2>
+
+          <!-- Existing Landuse -->
+          <div class="form-group column-7">
+            <label for="existing_riparian_landuse" class="control-label">
+              Existing Landuse
+            </label>
+
+            <select class="form-control" data-ng-model="page.report.properties.existing_riparian_landuse" id="existing_riparian_landuse" name="existing_riparian_landuse" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | orderBy:'properties.landuse_name'">
+            </select>
+          </div>
+
+          <!-- Upland Landuse -->
+          <div class="column-2"></div>
+          <div class="form-group column-7">
+            <label for="upland_landuse" class="control-label">
+              Upland Landuse
+            </label>
+
+            <select class="form-control" data-ng-model="page.report.properties.upland_landuse" id="upland_landuse" name="upland_landuse" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | orderBy:'properties.landuse_name'">
+            </select>
+          </div>
+        </fieldset>
+
+        <fieldset data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" class="row">
+          <h2><strong>Installation</strong> Summary</h2>
+
+          <!-- Buffer Length -->
+          <div class="form-group column-5">
+            <label for="length_of_buffer" class="control-label">
+              Length of Buffer
+            </label>
+
+            <input data-ng-model="page.report.properties.length_of_buffer" class="form-control" class="form-control" type="number" id="length_of_buffer" name="length_of_buffer" placeholder="Length of Buffer" />
+
+            <p data-ng-if="fields.length_of_buffer.help" class="help-text">{{ fields.length_of_buffer.help }}</p>
+          </div>
+
+          <!-- Buffer Width -->
           <div class="column-1"></div>
           <div class="form-group column-5">
-            <label for="buffer_composition_woody" class="control-label">
-              Buffer Composition (woody)
+            <label for="average_width_of_buffer" class="control-label">
+              Average Buffer Width
             </label>
 
-            <input data-ng-model="report.buffer_composition_woody" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_woody" name="buffer_composition_woody" placeholder="% woody" />
+            <input data-ng-model="page.report.properties.average_width_of_buffer" class="form-control" class="form-control" type="number" id="average_width_of_buffer" name="average_width_of_buffer" placeholder="Average Buffer Width" />
+
+            <p data-ng-if="fields.average_width_of_buffer.help" class="help-text">{{ fields.average_width_of_buffer.help }}</p>
           </div>
 
-          <!-- Buffer Composition (Shrub) -->
+          <!-- Number of Trees Planted -->
           <div class="column-1"></div>
           <div class="form-group column-4">
-            <label for="buffer_composition_shrub" class="control-label">
-              Buffer Composition (shrub)
+            <label for="number_of_trees_planted" class="control-label">
+              Number of Trees Planted
             </label>
 
-            <input data-ng-model="report.buffer_composition_shrub" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_shrub" name="buffer_composition_shrub" placeholder="% shrub" />
+            <input data-ng-model="page.report.properties.number_of_trees_planted" class="form-control" class="form-control" type="number" id="number_of_trees_planted" name="number_of_trees_planted" placeholder="Number of Trees Planted" />
+
+            <p data-ng-if="fields.number_of_trees_planted.help" class="help-text">{{ fields.number_of_trees_planted.help }}</p>
           </div>
+
+        </fieldset>
+
+        <fieldset data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
+          <h2><strong>Interim</strong> BMP Metrics Data</h2>
+
+          <div class="row">
+            <!-- Vegetative Cover -->
+            <div class="form-group column-5">
+              <label for="native_vegetation_intact" class="control-label">
+                Vegetative Cover
+              </label>
+
+              <input data-ng-model="page.report.properties.native_vegetation_intact" class="form-control" class="form-control" type="number" id="native_vegetation_intact" name="native_vegetation_intact" placeholder="% intact" />
+            </div>
+
+            <!-- Buffer Composition (Woody) -->
+            <div class="column-1"></div>
+            <div class="form-group column-5">
+              <label for="buffer_composition_woody" class="control-label">
+                Buffer Composition (woody)
+              </label>
+
+              <input data-ng-model="page.report.properties.buffer_composition_woody" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_woody" name="buffer_composition_woody" placeholder="% woody" />
+            </div>
+
+            <!-- Buffer Composition (Shrub) -->
+            <div class="column-1"></div>
+            <div class="form-group column-4">
+              <label for="buffer_composition_shrub" class="control-label">
+                Buffer Composition (shrub)
+              </label>
+
+              <input data-ng-model="page.report.properties.buffer_composition_shrub" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_shrub" name="buffer_composition_shrub" placeholder="% shrub" />
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Buffer Composition (Grass) -->
+            <div class="form-group column-5">
+              <label for="buffer_composition_grass" class="control-label">
+                Buffer Composition (grass)
+              </label>
+
+              <input data-ng-model="page.report.properties.buffer_composition_grass" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_grass" name="buffer_composition_grass" placeholder="% grass" />
+            </div>
+
+            <!-- Buffer Composition (Bare) -->
+            <div class="column-1"></div>
+            <div class="form-group column-5">
+              <label for="buffer_composition_bare" class="control-label">
+                Buffer Composition (bare)
+              </label>
+
+              <input data-ng-model="page.report.properties.buffer_composition_bare" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_bare" name="buffer_composition_bare" placeholder="% bare" />
+            </div>
+
+            <!-- Buffer Composition (Other) -->
+            <div class="column-1"></div>
+            <div class="form-group column-4">
+              <label for="buffer_composition_other" class="control-label">
+                Buffer Composition (other)
+              </label>
+
+              <input readonly="readonly" data-ng-model="page.report.properties.buffer_composition_other" class="form-control" class="form-control" max="100" min="0" type="number" id="buffer_composition_other" name="buffer_composition_other" placeholder="% other" />
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Vegetative Protection -->
+            <div class="form-group column-5">
+              <label for="vegetative_protection_left_bank" class="control-label">
+                Vegetative Protection (left bank)
+              </label>
+
+              <input data-ng-model="page.report.properties.vegetative_protection_left_bank" class="form-control" class="form-control" type="number" id="vegetative_protection_left_bank" name="vegetative_protection_left_bank" placeholder="" step="0.0001" />
+            </div>
+
+            <div class="column-1"></div>
+            <div class="form-group column-5">
+              <label for="vegetative_protection_right_bank" class="control-label">
+                Vegetative Protection (right bank)
+              </label>
+
+              <input data-ng-model="page.report.properties.vegetative_protection_right_bank" class="form-control" class="form-control" type="number" id="vegetative_protection_right_bank" name="vegetative_protection_right_bank" placeholder="" step="0.0001" />
+            </div>
+
+          </div>
+
+          <div class="row">
+            <!-- Riparian Vegetative Zone Width -->
+            <div class="form-group column-5">
+              <label for="riparian_vegetative_zone_width_left_bank" class="control-label">
+                Riparian Vegetative Zone Width (left bank)
+              </label>
+
+              <input data-ng-model="page.report.properties.riparian_vegetative_zone_width_left_bank" class="form-control" class="form-control" type="number" id="riparian_vegetative_zone_width_left_bank" name="riparian_vegetative_zone_width_left_bank" placeholder="" step="0.0001" />
+            </div>
+
+            <div class="column-1"></div>
+            <div class="form-group column-5">
+              <label for="riparian_vegetative_zone_width_right_bank" class="control-label">
+                Riparian Vegetative Zone Width (right bank)
+              </label>
+
+              <input data-ng-model="page.report.properties.riparian_vegetative_zone_width_right_bank" class="form-control" class="form-control" type="number" id="riparian_vegetative_zone_width_right_bank" name="riparian_vegetative_zone_width_right_bank" placeholder="" step="0.0001" />
+            </div>
+
+          </div>
+        </fieldset>
+
+        <fieldset data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
+          <h2><strong>Adaptive</strong> Management Checks Performed</h2>
+
+          <!-- Number of Trees Surviving -->
+          <div class="form-group">
+            <label for="number_of_trees_surviving" class="control-label">
+              Number of Trees Surviving
+            </label>
+
+            <input data-ng-model="page.report.properties.number_of_trees_surviving" class="form-control" class="form-control" type="number" id="number_of_trees_surviving" name="number_of_trees_surviving" placeholder="Number of Trees Planted" />
+
+            <p data-ng-if="fields.number_of_trees_surviving.help" class="help-text">{{ fields.number_of_trees_surviving.help }}</p>
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox">
+              <label class="control-label">
+                <input data-ng-model="page.report.properties.sediment_deposition" type="checkbox" id="sediment_deposition" name="sediment_deposition" /> Check for, and correct, causes of excess sediment build-up at the field-buffer interface that re-directs flow
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox">
+              <label class="control-label">
+                <input data-ng-model="page.report.properties.concentrated_flow_paths" type="checkbox" id="concentrated_flow_paths" name="concentrated_flow_paths" /> Perform maintenance to remove concentrated flow paths through the buffer
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox">
+              <label class="control-label">
+                <input data-ng-model="page.report.properties.monthly_buffer_maintenance" type="checkbox" id="monthly_buffer_maintenance" name="monthly_buffer_maintenance" /> Check for, correct causes, and path bare and/or eroded areas in the buffer
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox">
+              <label class="control-label">
+                <input data-ng-model="page.report.properties.stream_shading" type="checkbox" id="stream_shading" name="stream_shading" /> Check tree shelters and stakes, especially after flooding and high wind events
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox">
+              <label class="control-label">
+                <input data-ng-model="page.report.properties.vegetative_cover" type="checkbox" id="vegetative_cover" name="vegetative_cover" /> Apply herbicide around shelters in spring and fall to reduce competing vegetation
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox">
+              <label class="control-label">
+                <input data-ng-model="page.report.properties.invasive_species_control" type="checkbox" id="invasive_species_control" name="invasive_species_control" /> Control noxious and invasive weeds
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox">
+              <label class="control-label">
+                <input data-ng-model="page.report.properties.tree_survival_rate" type="checkbox" id="tree_survival_rate" name="tree_survival_rate" /> Replant, as needed, after addressing cause of failure
+              </label>
+            </div>
+          </div>
+
+        </fieldset>
+
+        <fieldset data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation' || page.report.properties.measurement_period === 'Monitoring'">
+          <h2><strong>Notes</strong></h2>
+
+          <div class="form-group">
+            <textarea rows="1" data-ng-model="page.report.properties.notes" class="form-control animate"  msd-elastic id="notes" name="notes" placeholder="Notes">{{ report.notes }}</textarea>
+          </div>
+
+        </fieldset>
+
+        <div class="form-actions">
+          <button type="submit"class="button button-submit">
+            Save Changes
+          </button>
+          <button type="button" data-ng-click="page.deleteReport()"
+                  class="button button-submit">
+            Delete
+          </button>
         </div>
 
-        <div class="row">
-          <!-- Buffer Composition (Grass) -->
-          <div class="form-group column-5">
-            <label for="buffer_composition_grass" class="control-label">
-              Buffer Composition (grass)
-            </label>
+      </div>
+    </article>
+  </form>
+</main>
 
-            <input data-ng-model="report.buffer_composition_grass" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_grass" name="buffer_composition_grass" placeholder="% grass" />
-          </div>
-
-          <!-- Buffer Composition (Bare) -->
-          <div class="column-1"></div>
-          <div class="form-group column-5">
-            <label for="buffer_composition_bare" class="control-label">
-              Buffer Composition (bare)
-            </label>
-
-            <input data-ng-model="report.buffer_composition_bare" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_bare" name="buffer_composition_bare" placeholder="% bare" />
-          </div>
-
-          <!-- Buffer Composition (Other) -->
-          <div class="column-1"></div>
-          <div class="form-group column-4">
-            <label for="buffer_composition_other" class="control-label">
-              Buffer Composition (other)
-            </label>
-
-            <input readonly="readonly" data-ng-model="report.buffer_composition_other" class="form-control" class="form-control" max="100" min="0" type="number" id="buffer_composition_other" name="buffer_composition_other" placeholder="% other" />
-          </div>
-        </div>
-
-        <div class="row">
-          <!-- Vegetative Protection -->
-          <div class="form-group column-5">
-            <label for="vegetative_protection_left_bank" class="control-label">
-              Vegetative Protection (left bank)
-            </label>
-
-            <input data-ng-model="report.vegetative_protection_left_bank" class="form-control" class="form-control" type="number" id="vegetative_protection_left_bank" name="vegetative_protection_left_bank" placeholder="" />
-          </div>
-
-          <div class="column-1"></div>
-          <div class="form-group column-5">
-            <label for="vegetative_protection_right_bank" class="control-label">
-              Vegetative Protection (right bank)
-            </label>
-
-            <input data-ng-model="report.vegetative_protection_right_bank" class="form-control" class="form-control" type="number" id="vegetative_protection_right_bank" name="vegetative_protection_right_bank" placeholder="" />
-          </div>
-
-        </div>
-
-        <div class="row">
-          <!-- Riparian Vegetative Zone Width -->
-          <div class="form-group column-5">
-            <label for="riparian_vegetative_zone_width_left_bank" class="control-label">
-              Riparian Vegetative Zone Width (left bank)
-            </label>
-
-            <input data-ng-model="report.riparian_vegetative_zone_width_left_bank" class="form-control" class="form-control" type="number" id="riparian_vegetative_zone_width_left_bank" name="riparian_vegetative_zone_width_left_bank" placeholder="" />
-          </div>
-
-          <div class="column-1"></div>
-          <div class="form-group column-5">
-            <label for="riparian_vegetative_zone_width_right_bank" class="control-label">
-              Riparian Vegetative Zone Width (right bank)
-            </label>
-
-            <input data-ng-model="report.riparian_vegetative_zone_width_right_bank" class="form-control" class="form-control" type="number" id="riparian_vegetative_zone_width_right_bank" name="riparian_vegetative_zone_width_right_bank" placeholder="" />
-          </div>
-
-        </div>
-      </fieldset>
-
-      <fieldset data-ng-if="report.measurement_period === 'Monitoring'">
-        <h2><strong>Adaptive</strong> Management Checks Performed</h2>
-
-        <!-- Number of Trees Surviving -->
-        <div class="form-group">
-          <label for="number_of_trees_surviving" class="control-label">
-            Number of Trees Surviving
-          </label>
-
-          <input data-ng-model="report.number_of_trees_surviving" class="form-control" class="form-control" type="number" id="number_of_trees_surviving" name="number_of_trees_surviving" placeholder="Number of Trees Planted" />
-
-          <p data-ng-if="fields.number_of_trees_surviving.help" class="help-text">{{ fields.number_of_trees_surviving.help }}</p>
-        </div>
-
-        <div class="form-group">
-          <div class="checkbox">
-            <label class="control-label">
-              <input data-ng-model="report.sediment_deposition" type="checkbox" id="sediment_deposition" name="sediment_deposition" /> Check for, and correct, causes of excess sediment build-up at the field-buffer interface that re-directs flow
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="checkbox">
-            <label class="control-label">
-              <input data-ng-model="report.concentrated_flow_paths" type="checkbox" id="concentrated_flow_paths" name="concentrated_flow_paths" /> Perform maintenance to remove concentrated flow paths through the buffer
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="checkbox">
-            <label class="control-label">
-              <input data-ng-model="report.monthly_buffer_maintenance" type="checkbox" id="monthly_buffer_maintenance" name="monthly_buffer_maintenance" /> Check for, correct causes, and path bare and/or eroded areas in the buffer
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="checkbox">
-            <label class="control-label">
-              <input data-ng-model="report.stream_shading" type="checkbox" id="stream_shading" name="stream_shading" /> Check tree shelters and stakes, especially after flooding and high wind events
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="checkbox">
-            <label class="control-label">
-              <input data-ng-model="report.vegetative_cover" type="checkbox" id="vegetative_cover" name="vegetative_cover" /> Apply herbicide around shelters in spring and fall to reduce competing vegetation
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="checkbox">
-            <label class="control-label">
-              <input data-ng-model="report.invasive_species_control" type="checkbox" id="invasive_species_control" name="invasive_species_control" /> Control noxious and invasive weeds
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="checkbox">
-            <label class="control-label">
-              <input data-ng-model="report.tree_survival_rate" type="checkbox" id="tree_survival_rate" name="tree_survival_rate" /> Replant, as needed, after addressing cause of failure
-            </label>
-          </div>
-        </div>
-
-      </fieldset>
-
-      <fieldset data-ng-if="report.measurement_period === 'Planning' || report.measurement_period === 'Installation' || report.measurement_period === 'Monitoring'">
-        <h2><strong>Notes</strong></h2>
-
-        <div class="form-group">
-          <textarea rows="1" data-ng-model="report.notes" class="form-control animate"  msd-elastic id="notes" name="notes" placeholder="Notes">{{ report.notes }}</textarea>
-        </div>
-
-      </fieldset>
+<div data-ng-include="'/modules/shared/views/footer--view.html'"></div>
