@@ -8,7 +8,7 @@
  * Controller of the FieldStack
  */
 angular.module('FieldStack')
-  .controller('EnhancedStreamRestorationFormController', function (Account, $location, moment, practice, PracticeEnhancedStreamRestoration, report, $rootScope, $route, site, $scope, user, Utility) {
+  .controller('EnhancedStreamRestorationFormController', function (Account, $location, practice, PracticeEnhancedStreamRestoration, report, $rootScope, $route, site, $scope, user, Utility) {
 
     var self = this,
         projectId = $route.current.params.projectId,

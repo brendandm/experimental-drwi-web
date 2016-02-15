@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldStack')
-  .controller('EnhancedStreamRestorationReportController', function (Account, Calculate, CalculateEnhancedStreamRestoration, $location, moment, practice, PracticeEnhancedStreamRestoration, readings, $rootScope, $route, site, $scope, UALStateLoad, user, Utility) {
+  .controller('EnhancedStreamRestorationReportController', function (Account, Calculate, CalculateEnhancedStreamRestoration, $location, practice, PracticeEnhancedStreamRestoration, readings, $rootScope, $route, site, $scope, UALStateLoad, user, Utility) {
 
     var self = this,
         projectId = $route.current.params.projectId,
@@ -147,7 +147,7 @@ angular.module('FieldStack')
 
       var newReading = new PracticeEnhancedStreamRestoration({
           'measurement_period': measurementPeriod,
-          'report_date': moment().format('YYYY-MM-DD'),
+          'report_date': new Date(),
           'practice_id': practiceId,
           'account_id': self.site.properties.project.properties.account_id
         });
