@@ -24,12 +24,12 @@
             controller: 'SecurityController',
             controllerAs: 'page'
           })
-          .when('/user/register', {
+          .when('/account/register', {
             templateUrl: '/modules/shared/security/views/securityRegister--view.html',
             controller: 'SecurityController',
             controllerAs: 'page'
           })
-          .when('/user/reset', {
+          .when('/account/reset', {
             templateUrl: '/modules/shared/security/views/securityResetPassword--view.html',
             controller: 'SecurityResetPasswordController',
             controllerAs: 'page'

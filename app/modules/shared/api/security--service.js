@@ -10,7 +10,7 @@
   angular.module('FieldStack')
     .service('Security', function(environment, ipCookie, $http, $resource) {
 
-      var Security = $resource(environment.apiUrl.concat('/login'), {}, {
+      var Security = $resource(environment.apiUrl.concat('/v1/auth/account/login'), {}, {
         save: {
           method: 'POST',
           url: environment.apiUrl.concat('/v1/auth/remote'),
@@ -24,11 +24,11 @@
         },
         register: {
           method: 'POST',
-          url: environment.apiUrl.concat('/v1/user/register')
+          url: environment.apiUrl.concat('/v1/auth/account/register')
         },
         reset: {
           method: 'POST',
-          url: environment.apiUrl.concat('/reset')
+          url: environment.apiUrl.concat('/v1/auth/password/reset')
         }
       });
 
