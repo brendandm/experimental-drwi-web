@@ -14,19 +14,22 @@
       .config(function ($routeProvider) {
         $routeProvider
           .when('/', {
-            redirectTo: '/user/login'
+            redirectTo: '/account/login'
           })
           .when('/user', {
-            redirectTo: '/user/login'
+            redirectTo: '/account/login'
           })
           .when('/user/login', {
+            redirectTo: '/account/login'
+          })
+          .when('/account/login', {
             templateUrl: '/modules/shared/security/views/securityLogin--view.html',
             controller: 'SecurityController',
             controllerAs: 'page'
           })
           .when('/account/register', {
             templateUrl: '/modules/shared/security/views/securityRegister--view.html',
-            controller: 'SecurityController',
+            controller: 'SecurityRegisterController',
             controllerAs: 'page'
           })
           .when('/account/reset', {
