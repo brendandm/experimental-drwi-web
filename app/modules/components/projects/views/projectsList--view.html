@@ -45,6 +45,23 @@
 
     <!-- Project List -->
     <div class="list">
+      <article class="row list-item"
+               data-ng-if="page.projects.features && !page.projects.features.length">
+        <div class="column-16 list-item-content align-center empty-data">
+          <div class="icon retinaicon-file-096"></div>
+          <p>
+            Projects will show up here,
+            so you can easily view them later.
+          </p>
+          <p>
+            <a href="javascript:void(0)"
+               data-ng-click="page.createProject()">
+              Create your first project now
+            </a>
+          </p>
+        </div>
+      </article>
+
       <article class="row list-item" data-ng-repeat="project in page.projects.features track by $index">
         <div class="column-16 list-item-content">
           <h4>
