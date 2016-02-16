@@ -55,7 +55,7 @@
       <ul data-ng-if="$root.page.actions" class="breadcrumb-navigation">
         <li data-ng-repeat="action in $root.page.actions track by $index">
           <button data-ng-if="!action.loading && action.button !== 'submit'" data-ng-click="action.action($index)" class="button {{ action.type }}">
-            <span class="add">+</span>
+            <span class="add" data-ng-if="!action.hideIcon">+</span>
             <span data-ng-if="(!action.visible && action.alt) || (!action.alt)">{{ action.text }}</span>
             <span data-ng-if="action.alt && action.visible">{{ action.alt }}</span>
           </button>

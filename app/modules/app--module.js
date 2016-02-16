@@ -18,5 +18,6 @@ angular
     'monospaced.elastic',
     'angularMoment',
     'config',
-    'Mapbox'
+    'Mapbox',
+    'save2pdf'
   ]);

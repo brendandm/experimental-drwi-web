@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldStack')
-    .controller('ForestBufferReportController', function (Account, Calculate, CalculateForestBuffer, Efficiency, LoadData, $location, $log, practice, PracticeForestBuffer, $q, readings, $rootScope, $route, site, $scope, user, Utility) {
+    .controller('ForestBufferReportController', function (Account, Calculate, CalculateForestBuffer, Efficiency, LoadData, $location, $log, practice, PracticeForestBuffer, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -66,6 +66,22 @@
           ];
 
           $rootScope.page.actions = [
+            {
+              type: 'button-link',
+              action: function() {
+                $window.print();
+              },
+              hideIcon: true,
+              text: 'Print'
+            },
+            {
+              type: 'button-link',
+              action: function() {
+                $scope.$emit('saveToPdf');
+              },
+              hideIcon: true,
+              text: 'Save as PDF'
+            },
             {
               type: 'button-link new',
               action: function() {

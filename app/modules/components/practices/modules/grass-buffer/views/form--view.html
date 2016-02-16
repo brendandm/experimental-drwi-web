@@ -1,35 +1,39 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
 <main class="container">
-  <form data-ng-submit="page.saveReport()" class="row feature summary">
-    <article class="feature-detail">
-      <div class="column-16 feature-detail-content">
+  <article class="feature-detail">
+    <div class="column-16 feature-detail-content">
+      <form data-ng-submit="page.saveReport()" class="row" role="form">
 
         <fieldset>
           <!-- Report Date -->
-          <div class="form-group column-8">
-            <label for="report_date" class="control-label">
-              Report Date
-            </label>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="report_date" class="control-label">
+                Report Date
+              </label>
 
-            <input data-ng-model="page.report.properties.report_date" class="form-control" class="form-control" type="text" id="report_date" name="report_date" placeholder="Enter a date" />
+              <input data-ng-model="page.report.properties.report_date" class="form-control" class="form-control" type="text" id="report_date" name="report_date" placeholder="Enter a date" />
+            </div>
           </div>
 
           <!-- Measurement Period -->
-          <div class="form-group column-8">
-            <label for="measurement_period" class="control-label">
-              Measurement Period
-            </label>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="measurement_period" class="control-label">
+                Measurement Period
+              </label>
 
-            <select class="form-control" data-ng-model="page.report.properties.measurement_period" id="measurement_period" name="measurement_period">
-              <option value="Planning">Planning</option>
-              <option value="Installation">Installation</option>
-              <option value="Monitoring">Monitoring</option>
-            </select>
+              <select class="form-control" data-ng-model="page.report.properties.measurement_period" id="measurement_period" name="measurement_period">
+                <option value="Planning">Planning</option>
+                <option value="Installation">Installation</option>
+                <option value="Monitoring">Monitoring</option>
+              </select>
+            </div>
           </div>
 
           <!-- WIP Reporting Agency -->
-          <div class="form-group column-8" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+          <div class="form-group" data-ng-if="page.report.properties.measurement_period === 'Planning'">
             <label for="wip_reporting_agency" class="control-label">
               WIP Reporting Agency
             </label>
@@ -40,8 +44,8 @@
           </div>
         </fieldset>
 
-        <fieldset data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" class="row">
-          <h2><strong>Landuse</strong></h2>
+        <fieldset data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+          <legend><strong>Landuse</strong></legend>
 
           <!-- Existing Landuse -->
           <div class="form-group column-7">
@@ -65,8 +69,8 @@
           </div>
         </fieldset>
 
-        <fieldset data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" class="row">
-          <h2><strong>Installation</strong> Summary</h2>
+        <fieldset data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+          <legend><strong>Installation</strong> Summary</legend>
 
           <!-- Buffer Length -->
           <div class="form-group column-5">
@@ -94,7 +98,7 @@
         </fieldset>
 
         <fieldset data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
-          <h2><strong>Interim</strong> BMP Metrics Data</h2>
+          <legend><strong>Interim</strong> BMP Metrics Data</legend>
 
           <div class="row">
             <!-- Vegetative Cover -->
@@ -202,7 +206,7 @@
         </fieldset>
 
         <fieldset data-ng-if="report.measurement_period === 'Monitoring'">
-          <h2><strong>Adaptive</strong> Management Checks Performed</h2>
+          <legend><strong>Adaptive</strong> Management Checks Performed</legend>
 
           <div class="form-group">
             <div class="checkbox">
@@ -247,7 +251,7 @@
         </fieldset>
 
         <fieldset data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation' || page.report.properties.measurement_period === 'Monitoring'">
-          <h2><strong>Notes</strong></h2>
+          <legend><strong>Notes</strong></legend>
 
           <div class="form-group">
             <textarea rows="1" data-ng-model="page.report.properties.notes" class="form-control animate"  msd-elastic id="notes" name="notes" placeholder="Notes">{{ report.notes }}</textarea>
@@ -256,18 +260,19 @@
         </fieldset>
 
         <div class="form-actions">
-          <button type="submit"class="button button-submit">
-            Save Changes
-          </button>
-          <button type="button" data-ng-click="page.deleteReport()"
-                  class="button button-submit">
-            Delete
-          </button>
+          <div class="form-actions-buttons">
+            <button type="submit"class="button button-submit">
+              Save Changes
+            </button>
+            <button type="button" data-ng-click="page.deleteReport()"
+                    class="button button-link button-outline pull-right">
+              Delete
+            </button>
+          </div>
         </div>
-
-      </div>
-    </article>
-  </form>
+      </form>
+    </div>
+  </article>
 </main>
 
 <div data-ng-include="'/templates/footer--view.html'"></div>
