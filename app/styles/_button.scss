@@ -11,133 +11,214 @@
 //
 // Buttons
 //
-.button,
 a.button,
-button.button {
+.button {
   background-color: $color-green-base;
   border: 0;
-  box-shadow: 0px 2px 3px rgba(0,0,0,0.2);
+  -webkit-border-radius: 4em;
+  -moz-border-radius: 4em;
+  border-radius: 4em;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.2);
   color: rgb(255, 255, 255);
   cursor: pointer;
   display: inline-block;
   font-family: $font-sans;
-  font-size: 0.875em;
-  font-weight: 500;
+  font-size: 0.6125em;
+  font-weight: 400;
   font-style: normal;
-  letter-spacing: 0.025em;
-  padding: 4px 48px;
+  letter-spacing: 0.125em;
+  padding: 0.6875em 2em;
   text-decoration: none;
   text-align: center;
-  text-shadow: none;
   text-transform: uppercase;
+  white-space: nowrap;
 
   &:hover {
     background-color: $color-green-base;
   }
 
-  &:active,
-  &:focus {
-    outline: none;
-    position:relative;
-    top: 1px;
+  &.button-large {
+    font-size: 1em;
   }
-}
 
-.button.button-inverse,
-.button.button-inverse:hover {
-  background-color: $color-white-base;
-  border: 2px solid $color-green-base, 10%;
-  color: $color-green-base, 10%;
+  em {
+    font-style: italic;
 
-  &:hover {
-    background-color: $color-white-base;
-    border: 2px solid $color-green-base;
-  }
-}
-
-.button.button-default,
-.button.button-default:hover {
-  background-color: rgb(252,252,252);
-  color: rgb(58,58,58);
-}
-
-.button.button-info,
-.button.button-info:hover {
-  background-color: $color-brightBlue;
-  color: rgb(252,252,252);
-  &:hover {
-    background-color: darken($color-brightBlue, 5%);
-  }
-}
-  .button.button-info.button-inverse,
-  .button.button-info.button-inverse:hover {
-    background-color: $color-white-base;
-    border: 2px solid $color-brightBlue;
-    color: $color-brightBlue;
-
-    &:hover {
-      background-color: $color-white-base;
-      border: 2px solid darken($color-brightBlue, 5%);
+    &.fancy {
+      font-family: $font-serif;
+      font-weight: 300;
+      text-transform: none;
+      -webkit-font-smoothing: antialiased;
     }
   }
 
-.button.button-link,
-.button.button-link:hover {
-  background-color: rgb(252,252,252);
-  border-bottom: 2px solid rgb(252,252,252);
-  box-shadow: none;
 }
 
-.button.button-cancel,
-.button.button-cancel:hover {
-  background-color: darken($color-red-base, 5%);
-  color: rgb(252,252,252);
+a.button-outline,
+.button-outline {
+  background-color: $color-white-base;
+  border: 1px solid $color-green-base;
+  color: $color-green-base;
+  font-weight: 600;
+  text-shadow: none;
+
+  &:hover {
+    background-color: rgb(252,252,252);
+  }
+}
+
+
+a.button-warning,
+.button-warning {
+  background-color: $color-gold-base;
+  font-weight: 600;
+  text-shadow: none;
+
+  &:hover {
+    background-color: $color-gold-base;
+  }
+
+  &.button-outline {
+    background-color: $color-white-base;
+    border-color: $color-gold-base;
+    color: $color-gold-base;
+  }
+}
+
+a.button-danger,
+.button-danger {
+  background-color: $color-red-base;
+  font-weight: 600;
+  text-shadow: none;
+
   &:hover {
     background-color: $color-red-base;
   }
-}
-  .button.button-cancel.button-inverse,
-  .button.button-cancel.button-inverse:hover {
-    background-color: $color-white-base;
-    border: 2px solid darken($color-red-base, 5%);
-    color: darken($color-red-base, 5%);
 
-    &:hover {
-      background-color: $color-white-base;
-      border: 2px solid $color-red-base;
-    }
+  &.button-outline {
+    background-color: $color-white-base;
+    border-color: $color-red-base;
+    color: $color-red-base;
+  }
+}
+
+a.button-reverse,
+.button-reverse {
+  background-color: $color-white-base;
+  font-weight: 600;
+  text-shadow: none;
+
+  &:hover {
+    background-color: $color-white-base;
   }
 
-.button.success {
-    background-color: rgb(108,196,14);
-    box-shadow: 0 0.2em 0 darken(rgb(108,196,14), 10%);
-}
-.button.success:active,
-.button.success:focus {
-    box-shadow: 0 0.1em 0 darken(rgb(108,196,14), 10%);
+  &.button-outline {
+    background-color: transparent;
+    border-color: $color-white-base;
+    color: $color-white-base;
+  }
 }
 
-.button.button-danger {
-  background-color: rgb(187, 17, 17);
+a.button-link,
+.button-link {
+  background-color: transparent;
+  color: $color-gray-light;
+  box-shadow: none;
+  letter-spacing: 0.025em;
+  text-shadow: none;
+
+  &:hover {
+    background-color: transparent;
+  }
+
+  &.button-outline {
+    border-color: $color-gray-light;
+  }
 }
 
-.button.button-small,
-.button.button-small:hover {
-  font-size: 0.6875em;
-  padding: 8px 24px;
+.button-success.button-link,
+a.button-success.button-link {
+  color: $color-green-base;
 }
 
-.button.button-xsmall,
-.button.button-xsmall:hover {
-  font-size: 0.5em;
-  padding: 4px 16px;
+.button-danger.button-link,
+a.button-danger.button-link {
+  color: $color-red-base;
 }
 
-.button.button-round,
-.button.button-round:hover {
-  border-radius: 16px;
-  -moz-border-radius: 16px;
-  -ms-border-radius: 16px;
-  -o-border-radius: 16px;
-  -webkit-border-radius: 16px;
+
+a.button:focus,
+.button:focus {
+  outline: none;
+}
+
+a.button:active,
+.button:active {
+  position:relative;
+  top: 1px;
+}
+
+
+.button.button-info,
+a.button.button-info {
+  background-color: $color-blue-bright;
+  text-shadow: 0 1px 3px darken($color-blue-bright, 10%);
+
+  &:hover {
+    background-color: darken($color-blue-bright, 3%);
+  }
+}
+
+.button.button-center,
+a.button.button-center {
+  display: block;
+  margin: 0 auto;
+}
+
+.button.button-delete,
+a.button.button-delete {
+  background-color: transparent;
+  box-shadow: none;
+  color: rgb(161, 162, 166);
+  text-shadow: none;
+
+  &:hover {
+    background-color: transparent;
+    text-decoration: underline;
+  }
+}
+
+a.button-delete.button-outline,
+.button-delete.button-outline {
+  background-color: rgb(242,242,242);
+  border: 1px solid rgb(161, 162, 166);
+  color: rgb(161, 162, 166);
+  font-weight: 600;
+  text-shadow: none;
+
+  &:hover {
+    background-color: rgb(252,252,252);
+  }
+}
+
+
+
+//
+//
+//
+.button-left {
+  float: left;
+}
+
+.button-center {
+  display: block;
+  margin: 0 auto;
+}
+
+.button-right {
+  float: right;
+}
+
+.button-indent {
+  margin-left: 10%;
 }

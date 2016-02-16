@@ -133,7 +133,7 @@ $susy: (
   //
   @media screen and (min-width: $screen-xs-landscape-min) {
     body {
-      
+
     }
 
     .hidden-sm {
@@ -221,7 +221,7 @@ $susy: (
     .column-16 {
       @include span(16);
     }
-  }  
+  }
 
   //
   // Medium Device sizes
@@ -386,7 +386,7 @@ $susy: (
     body {
       font-size: 118%;
     }
-    
+
     .container {
       @include container($screen-lg-min);
     }

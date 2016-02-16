@@ -11,7 +11,7 @@
 
 .form {
   display: table;
-  margin: 4em auto;
+  margin: 1em auto;
   width: 100%;
 }
 
@@ -138,13 +138,14 @@ pre.form-value {
 //
 .control-label,
 label.control-label {
-  color: $color-gray-light;
+  color: rgb(93,93,93);
   display: block;
-  font-family: $font-sans;
-  font-size: 0.875em;
+  font-family: $font-sans-plain;
+  font-size: 0.6875em;
   font-weight: 500;
-  line-height: 1.5;
-  margin-bottom: 0.15em;
+  line-height: 1;
+  margin-bottom: 4px;
+  text-transform: none;
 }
 
 .form-label p {
@@ -186,7 +187,7 @@ input.form-control,
   color: $color-gray-dark;
   font-family: $font-sans;
   font-size: 1em;
-  font-weight: bold;
+  font-weight: 300;
   line-height: 1;
   margin: 0;
   padding: 0.5em 0.75em;
@@ -346,7 +347,7 @@ select.form-control {
     color: $color-gray-dark;
     font-family: $font-sans;
     font-size: 1em;
-    font-weight: normal;
+    font-weight: 300;
     margin: 0;
     padding: 0.5em 0.75em;
 

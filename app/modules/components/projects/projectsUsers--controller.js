@@ -83,7 +83,7 @@ angular.module('FieldStack')
       },
       remove: function(user) {
         var index = $scope.project.users.indexOf(user);
-        
+
         Feature.RemoveUser({
             storage: storage,
             featureId: $scope.project.id,
@@ -169,7 +169,7 @@ angular.module('FieldStack')
       }).then(function(response) {
 
         $scope.user.template = response;
-        
+
         //
         // If the user is not a Template Moderator or Admin then we need to do a final check to see
         // if there are permissions on the individual Feature
