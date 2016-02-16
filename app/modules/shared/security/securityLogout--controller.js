@@ -1,25 +1,34 @@
-'use strict';
+(function () {
 
-/**
- * @ngdoc function
- * @name FieldStack.controller:SecurityLogout
- * @description
- * # SecurityLogout
- * Controller of the FieldStack
- */
-angular.module('FieldStack')
-  .controller('SecurityLogout', ['$location', 'token', function($location, token) {
+    'use strict';
 
-    console.log('SecurityLogout');
-    
-    //
-    // Remove the access token from our session cookie
-    //
-    token.remove();
+    /**
+     * @ngdoc function
+     * @name
+     * @description
+     */
+     angular.module('FieldStack')
+       .controller('SecurityLogoutController', function (Account, ipCookie, $location, $rootScope) {
 
-    //
-    // Redirect the user to the home page
-    //
-    $location.path('/');
-    
-  }]);
+         /**
+          * Remove all cookies present for authentication
+          */
+         ipCookie.remove('FIELDSTACKIO_SESSION');
+         ipCookie.remove('FIELDSTACKIO_SESSION', { path: '/' });
+
+         ipCookie.remove('FIELDSTACKIO_CURRENTUSER');
+         ipCookie.remove('FIELDSTACKIO_CURRENTUSER', { path: '/' });
+
+         /**
+          * Remove all data from the User and Account objects, this is really just
+          * for display purposes and has no bearing on the actual session
+          */
+         $rootScope.user = Account.userObject = null;
+
+         /**
+          * Redirect individuals back to the activity list
+          */
+         $location.path('/');
+       });
+
+}());
