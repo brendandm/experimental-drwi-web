@@ -157,11 +157,10 @@ angular.module('FieldStack')
                             op: 'eq',
                             val: planned.landuse
                           }
-                        ],
-                        single: true
+                        ]
                       }
                     }).$promise.then(function(successResponse) {
-                      planned.efficieny = successResponse.properties;
+                      planned.efficieny = successResponse.features[0].properties;
                       deferred.resolve(planned);
                     });
                 }

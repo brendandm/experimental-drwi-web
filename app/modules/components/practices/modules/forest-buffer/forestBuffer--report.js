@@ -146,11 +146,10 @@
                             op: 'eq',
                             val: planned.landuse
                           }
-                        ],
-                        single: true
+                        ]
                       }
                     }).$promise.then(function(successResponse) {
-                      planned.efficieny = successResponse.properties;
+                      planned.efficieny = successResponse.features[0].properties;
                       deferred.resolve(planned);
                     });
                 }
@@ -231,14 +230,11 @@
                           op: 'eq',
                           val: (existingLanduseType === 'pas' || existingLanduseType === 'npa') ? 'ForestBuffersTrp': 'ForestBuffers'
                         }
-                      ],
-                      single: true
+                      ]
                     }
                   }).$promise.then(function(efficiencyResponse) {
 
-                    console.log('efficiencyResponse', efficiencyResponse);
-
-                    self.practice_efficiency = efficiencyResponse.properties;
+                    self.practice_efficiency = efficiencyResponse.features[0].properties;
 
                     //
                     // EXISTING CONDITION — LOAD VALUES
