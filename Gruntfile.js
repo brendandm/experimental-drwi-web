@@ -90,8 +90,8 @@ module.exports = function (grunt) {
         constants: {
           environment: {
             name: 'production',
-            apiUrl: 'https://api.fieldstack.io',
-            siteUrl: 'https://www.fieldstack.io',
+            apiUrl: 'http://api.fieldstack.io',
+            siteUrl: 'http://www.fieldstack.io',
             clientId: ''
           }
         }
