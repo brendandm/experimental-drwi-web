@@ -500,3 +500,74 @@ select.form-control {
     font-size: 0.8125em;
     line-height: 1.25;
   }
+
+
+// //
+// // Autocomplete field drop down lists for elements such as the Relationship autocomplete
+// // or the Mapbox geocoder/address search
+// //
+// .autocomplete {
+//   position: relative;
+//   .dropdown {
+//     color: rgb(242, 242, 242);
+//     left: 0;
+//     position: absolute;
+//     top: 37px;
+//     width: 100%;
+//     z-index: 9999;
+//
+//     ul {
+//       background-color: $color-white-bright;
+//       box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+//       list-style-type: none;
+//       padding: 0;
+//       width: 100%;
+//     }
+//
+//     li {
+//       font-size: 13px;
+//       font-weight: 400;
+//       list-style-type: none;
+//       margin: 0;
+//       padding: 8px 16px;
+//       -webkit-font-smoothing: antialiased;
+//
+//       a {
+//         color: $color-black-base;
+//         display: block;
+//         width: 100%;
+//
+//         &:hover {
+//           color: $color-brightBlue;
+//         }
+//       }
+//     }
+//   }
+// }
+//
+// .relationship-values {
+//   padding: 16px 0 0;
+//
+//   .row {
+//     border-bottom: 1px solid rgb(232, 232, 232);
+//     margin-bottom: 16px;
+//   }
+//   .row:last-child {
+//     border-bottom: 0;
+//     margin-bottom: 0;
+//   }
+// }
+
+//
+// Errors
+//
+.input-error {
+  .form-control {
+    border-color: $color-red-base;
+  }
+
+  .control-label,
+  .form-value-static {
+    color: $color-red-base;
+  }
+}

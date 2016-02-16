@@ -3,14 +3,14 @@
 /**
  * @ngdoc service
  *
- * @name FieldStack.Geocode
+ * @name cleanWaterCommunitiesApp.Geocode
  *
  * @description
  *   The Geocode Service provides access to the Mapbox Geocoding API
  *
  * @see https://www.mapbox.com/developers/api/geocoding/
  */
-angular.module('FieldStack')
+angular.module('Mapbox')
   .service('geocoding', ['$http', 'mapbox', function Navigation($http, mapbox) {
     return {
 
@@ -52,9 +52,6 @@ angular.module('FieldStack')
           params: {
             'callback': 'JSON_CALLBACK',
             'access_token': mapbox.access_token
-          },
-          headers: {
-            'Authorization': 'external'
           }
         })
           .success(function(featureCollection) {

@@ -10,18 +10,110 @@
    * Controller of the FieldStack
    */
   angular.module('FieldStack')
-    .controller('SiteEditCtrl', function (Account, environment, $http, leafletData, $location, mapbox, Site, site, $rootScope, $route, $scope, Segment, $timeout, user) {
+    .controller('SiteEditCtrl', function (Account, environment, $http, leafletData, $location, Map, mapbox, Site, site, $rootScope, $route, $scope, Segment, $timeout, user) {
 
       var self = this,
           timeout;
 
       $rootScope.page = {};
 
+      self.map = Map;
+
+      //
+      // We use this function for handle any type of geographic change, whether
+      // through the map or through the fields
+      //
+      self.processPin = function(coordinates, zoom) {
+
+        if (coordinates.lat === null || coordinates.lat === undefined || coordinates.lng === null || coordinates.lng === undefined) {
+          return;
+        }
+
+        self.geolocation.getSegment(coordinates);
+
+        //
+        // Move the map pin/marker and recenter the map on the new location
+        //
+        self.map.markers = {
+          reportGeometry: {
+            lng: coordinates.lng,
+            lat: coordinates.lat,
+            focus: false,
+            draggable: true
+          }
+        };
+
+        // //
+        // // Update the coordinates for the Report
+        // //
+        self.site.geometry = {
+          type: 'GeometryCollection',
+          geometries: []
+        };
+        self.site.geometry.geometries.push({
+          type: 'Point',
+          coordinates: [
+            coordinates.lng,
+            coordinates.lat
+          ]
+        });
+
+        //
+        // Update the visible pin on the map
+        //
+
+        self.map.center = {
+          lat: coordinates.lat,
+          lng: coordinates.lng,
+          zoom: (zoom < 10) ? 10 : zoom
+        };
+
+        self.showGeocoder = false;
+      };
+
+      //
+      // Empty Geocode object
+      //
+      // We need to have an empty geocode object so that we can fill it in later
+      // in the address geocoding process. This allows us to pass the results along
+      // to the Form Submit function we have in place below.
+      //
+      self.geocode = {};
+
+      //
+      // When the user has selected a response, we need to perform a few extra
+      // tasks so that our scope is updated properly.
+      //
+      $scope.$watch(angular.bind(this, function() {
+        return this.geocode.response;
+      }), function (response) {
+
+        //
+        // Only execute the following block of code if the user has geocoded an
+        // address. This block of code expects this to be a single feature from a
+        // Carmen GeoJSON object.
+        //
+        // @see https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+        //
+        if (response) {
+          console.log('self.map', self.map);
+
+          self.processPin({
+            lat: response.geometry.coordinates[1],
+            lng: response.geometry.coordinates[0]
+          }, 16);
+
+          self.geocode = {
+            query: null,
+            response: null
+          };
+        }
+
+      });
+
       site.$promise.then(function(successResponse) {
 
         self.site = successResponse;
-
-        self.site.geolocation = null;
 
         $rootScope.page.title = self.site.properties.name;
         $rootScope.page.links = [
@@ -95,14 +187,7 @@
               lat: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[1] : 38.362,
               lng: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[0] : -81.119,
               focus: false,
-              draggable: true,
-              icon: {
-                iconUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d.png?access_token=' + mapbox.access_token,
-                iconRetinaUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d@2x.png?access_token=' + mapbox.access_token,
-                iconSize: [38, 90],
-                iconAnchor: [18, 44],
-                popupAnchor: [0, 0]
-              }
+              draggable: true
             }
           }
         };
@@ -231,145 +316,13 @@
 
           });
 
-        },
-        search: function() {
-          $timeout.cancel(timeout);
-
-          timeout = $timeout(function () {
-            self.geolocation.initGeocoder();
-          }, 800);
-        },
-        initGeocoder: function() {
-          var requested_location = self.site.geolocation;
-
-          if (requested_location.length >= 3) {
-            var geocode_service_url = '//api.tiles.mapbox.com/v4/geocode/mapbox.places-v1/' + requested_location + '.json';
-            $http({
-              method: 'get',
-              url: geocode_service_url,
-              params: {
-                'callback': 'JSON_CALLBACK',
-                'access_token': mapbox.access_token
-              },
-              headers: {
-                'Authorization': 'external'
-              }
-            }).success(function(data) {
-              self.geocode_features = data.features;
-            }).error(function(data, status, headers, config) {
-              console.log('ERROR: ', data);
-            });
-          }
-        },
-        select: function(geocode) {
-
-          //
-          // Move the draggable marker to the newly selected address
-          //
-          self.map.markers.LandRiverSegment = {
-            lat: geocode.center[1],
-            lng: geocode.center[0],
-            focus: false,
-            draggable: true,
-            icon: {
-              iconUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d.png?access_token=' + mapbox.access_token,
-              iconRetinaUrl: '//api.tiles.mapbox.com/v4/marker/pin-l+b1c11d@2x.png?access_token=' + mapbox.access_token,
-              iconSize: [38, 90],
-              iconAnchor: [18, 44],
-              popupAnchor: [0, 0]
-            }
-          };
-
-          //
-          // Center the map view on the newly selected address
-          //
-          self.map.center = {
-            lat: geocode.center[1],
-            lng: geocode.center[0],
-            zoom: 16
-          };
-
-          //
-          // Get the parcel for the property if one exists
-          //
-          self.geolocation.getSegment(self.map.center);
-
-          //
-          // Since an address has been select, we should clear the drop down so the user
-          // can focus on the map.
-          //
-          self.geocode_features = [];
-
-          //
-          // We should also make sure we save this information to the
-          // User's Site object, that way if we come back later it is
-          // retained within the system
-          //
-          self.site.geometry = {
-            type: 'GeometryCollection',
-            geometries: []
-          };
-          self.site.geometry.geometries.push(geocode.geometry);
-
-
-          $timeout(function () {
-            leafletData.getMap().then(function(map) {
-              map.invalidateSize();
-            });
-          }, 200);
-
         }
-      };
-
-      self.processPin = function(coordinates, zoom) {
-
-        //
-        // Update the LandRiver Segment
-        //
-        self.geolocation.getSegment(coordinates);
-
-        //
-        // Update the geometry for this Site
-        //
-        self.site.geometry = {
-          type: 'GeometryCollection',
-          geometries: []
-        };
-        self.site.geometry.geometries.push({
-          type: 'Point',
-          coordinates: [
-            coordinates.lng,
-            coordinates.lat
-          ]
-        });
-
-        //
-        // Update the visible pin on the map
-        //
-        self.map.markers.LandRiverSegment.lat = coordinates.lat;
-        self.map.markers.LandRiverSegment.lng = coordinates.lng;
-
-        //
-        // Update the map center and zoom level
-        //
-        self.map.center = {
-          lat: coordinates.lat,
-          lng: coordinates.lng,
-          zoom: (zoom < 10) ? 10 : zoom
-        };
       };
 
       //
       // Define our map interactions via the Angular Leaflet Directive
       //
       leafletData.getMap().then(function(map) {
-
-        //
-        // Move Zoom Control position to bottom/right
-        //
-        new L.Control.Zoom({
-          position: 'bottomright'
-        }).addTo(map);
 
         //
         // Update the pin and segment information when the user clicks on the map

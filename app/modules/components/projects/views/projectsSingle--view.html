@@ -42,7 +42,7 @@
                 <div class="row">
                   <div class="column-2">
                     <img data-ng-if="site.geometry"
-                         data-ng-src="https://api.tiles.mapbox.com/v4/{{ page.mapbox.satellite }}/pin-s+b1c11d({{ site.geometry.geometries[0].coordinates[0] }},{{ site.geometry.geometries[0].coordinates[1] }},17)/{{ site.geometry.geometries[0].coordinates[0] }},{{ site.geometry.geometries[0].coordinates[1] }},17/80x80@2x.png?access_token={{ page.mapbox.access_token }}"
+                         data-ng-src="https://api.tiles.mapbox.com/v4/{{ page.mapbox.map_id }}/pin-s+b1c11d({{ site.geometry.geometries[0].coordinates[0] }},{{ site.geometry.geometries[0].coordinates[1] }},17)/{{ site.geometry.geometries[0].coordinates[0] }},{{ site.geometry.geometries[0].coordinates[1] }},17/80x80@2x.png?access_token={{ page.mapbox.access_token }}"
                          alt="{{ site.site_description }} location preview" width="80" height="80" />
                   </div>
                   <div class="column-14">

@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc service
- * @name FieldStack.state
+ * @name cleanWaterCommunitiesApp.state
  * @description
  * # state
- * Service in the FieldStack.
+ * Service in the cleanWaterCommunitiesApp.
  */
-angular.module('FieldStack')
+angular.module('Mapbox')
   .constant('states', {
     list: [
       {

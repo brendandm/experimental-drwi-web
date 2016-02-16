@@ -17,5 +17,6 @@ angular
     'geolocation',
     'monospaced.elastic',
     'angularMoment',
-    'config'
+    'config',
+    'Mapbox'
   ]);

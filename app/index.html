@@ -61,11 +61,6 @@
     <![endif]-->
     <!-- endbuild -->
 
-    <script src='//api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js'></script>
-    <script>
-        L.mapbox.accessToken = 'pk.eyJ1IjoiZGV2ZWxvcGVkc2ltcGxlIiwiYSI6IlZGVXhnM3MifQ.Q4wmA49ggy9i1rLr8-Mc-w';
-    </script>
-
     <!-- build:js(.) /modules/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/angular/angular.js"></script>
@@ -176,9 +171,14 @@
             <script src="modules/shared/commons-cloud/map--service.js"></script>
 
             <!-- Mapbox Module -->
+            <script src="modules/shared/mapbox/mapbox--module.js"></script>
             <script src="modules/shared/mapbox/geocoding--directive.js"></script>
             <script src="modules/shared/mapbox/geocoding--service.js"></script>
+            <script src="modules/shared/mapbox/geometry--service.js"></script>
+            <script src="modules/shared/mapbox/leaflet--service.js"></script>
             <script src="modules/shared/mapbox/mapbox--constant.js"></script>
+            <script src="modules/shared/mapbox/states--constant.js"></script>
+            <script src="modules/shared/mapbox/template--service.js"></script>
 
             <!-- Providers -->
             <script src="modules/shared/api/account--service.js"></script>

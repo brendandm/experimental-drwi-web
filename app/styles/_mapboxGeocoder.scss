@@ -1,0 +1,61 @@
+//
+// _mapboxGeocoder.scss
+//
+// This stylesheet is written in SASS(1) and compiles all of the styles
+// we use throughout the site.
+//
+// @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
+//
+
+.mapboxGeocoder {
+  position: relative;
+
+  input {
+    position: relative;
+  }
+}
+.mapboxGeocoder--results {
+  background-color: rgba(252,252,252,0.92);
+  box-shadow: 0 2px 5px rgba(66, 66, 66, 1);
+  border-bottom-left-radius: 5px;
+  -moz-border-bottom-left-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  -moz-border-bottom-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  list-style: none;
+  margin: 0;
+  max-height: 640px;
+  overflow: scroll;
+  padding: 6px 0;
+  position: absolute;
+  width: 100%;
+  z-index: 9999;
+
+  .mapboxGeocoder--results--result {
+    cursor: pointer;
+    font-family: "Helvetica", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.75;
+    list-style-type: none;
+    margin: 0;
+    overflow: hidden;
+    padding: 2px 16px 0px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: rgb(36,144,250);
+      color: rgb(255,255,255);
+    }
+
+    &:active,
+    &:focus {
+      border: none;
+      outline: none;
+    }
+  }
+
+}
