@@ -245,3 +245,20 @@ a:hover {
 .align-right {
   text-align: right;
 }
+
+
+//
+//
+//
+.page-content-form > h1 {
+  text-align: center;
+}
+
+.page-content-form > p {
+  font-family: $font-sans;
+  font-size: 1.2em;
+  line-height: 1.5;
+  margin: 0 auto 2em;
+  text-align: center;
+  max-width: 46.25em;
+}

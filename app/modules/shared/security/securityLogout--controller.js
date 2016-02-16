@@ -23,7 +23,7 @@
           * Remove all data from the User and Account objects, this is really just
           * for display purposes and has no bearing on the actual session
           */
-         $rootScope.user = Account.userObject = null;
+         $rootScope.user = $rootScope.page.links = $rootScope.page.actions = Account.userObject = null;
 
          /**
           * Redirect individuals back to the activity list
