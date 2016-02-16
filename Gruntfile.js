@@ -403,6 +403,7 @@ module.exports = function (grunt) {
             '*.html',
             '**/*.html',
             'images/{,*/}*.*',
+            'styles/{,*/}*.*',
             'fonts/{,*/}*.*'
           ]
         }, {
