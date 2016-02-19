@@ -9,7 +9,7 @@
   <div role="alert" class="notify notify-{{ notification.type }} notify-dismissable"
        data-ng-repeat="notification in $root.notifications.objects track by $index">
 
-      <div data-ng-switch="notification.title | isArray">
+      <div data-ng-switch="notification.message | isArray">
 
         <div data-ng-switch-when="true">
           <div data-ng-repeat="message_ in notification.title">

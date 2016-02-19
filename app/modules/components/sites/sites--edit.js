@@ -10,7 +10,7 @@
    * Controller of the FieldStack
    */
   angular.module('FieldStack')
-    .controller('SiteEditCtrl', function (Account, environment, $http, leafletData, $location, Map, mapbox, Site, site, $rootScope, $route, $scope, Segment, $timeout, user) {
+    .controller('SiteEditCtrl', function (Account, environment, $http, leafletData, $location, Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, Segment, $timeout, user) {
 
       var self = this,
           timeout;
@@ -96,7 +96,6 @@
         // @see https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
         //
         if (response) {
-          console.log('self.map', self.map);
 
           self.processPin({
             lat: response.geometry.coordinates[1],
@@ -205,8 +204,23 @@
         if (self.site.properties.county) {
           self.site.properties.county_id = self.site.properties.county.id;
           self.site.properties.state = self.site.properties.county.properties.state_name;
-        } else {
-          console.error('Couldn\'t save your Site because you didn\'t select a county and state');
+        } else if (!self.site.properties.county || !self.site.properties.state) {
+          $rootScope.notifications.error('Missing County and State Information', 'Please add a county and state to continue saving your site');
+
+          $timeout(function() {
+            $rootScope.notifications.objects = [];
+          }, 3500);
+
+          return;
+        }
+
+        if (!self.site.properties.segment) {
+          $rootScope.notifications.error('Missing Land River Segment', 'Please add a land river segment to continue saving your site');
+
+          $timeout(function() {
+            $rootScope.notifications.objects = [];
+          }, 3500);
+
           return;
         }
 

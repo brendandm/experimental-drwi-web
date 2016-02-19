@@ -1,0 +1,116 @@
+//
+// _notifications.scss
+//
+// This stylesheet is written in SASS(1) and contains site specific layout
+// elements.
+//
+// @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
+//
+
+
+.notifications {
+  border: 1px solid transparent;
+
+  left: 50%;
+  margin-left: -16em;
+  position: fixed;
+  top: 1em;
+  width: 32em;
+  z-index: 99999;
+}
+
+.notify {
+  box-shadow: 0 1px 3px $color-white-dark;
+  font-family: $font-sans;
+  font-size: 1.2em;
+  margin-bottom: 6px;
+  padding: 32px 64px;
+  text-align: center;
+
+  .notify-link {
+    font-weight: bold;
+  }
+
+  h4  {
+    margin-top: 0;
+    color: inherit;
+  }
+
+  & > p,
+  & > ul {
+    margin-bottom: 0;
+  }
+  & > p + p {
+    margin-top: 5px;
+  }
+}
+
+.notify-dismissable {
+  padding-right: 35px;
+
+  .close {
+
+    position: relative;
+    top: -2px;
+    right: -21px;
+    color: inherit;
+
+    &:hover {
+      color: $color-black-base;
+      text-decoration: none;
+    }
+  }
+}
+
+.notify-success {
+  background-color: #dff0d8;
+  color: #3c763d;
+
+  hr {
+    border-top-color: #c9e2b3;
+  }
+
+  .notify-link {
+    color: #2b542c;
+  }
+}
+
+
+.notify-info {
+  background-color: #d9edf7;
+  color: #31708f;
+
+  hr {
+    border-top-color: #a6e1ec;
+  }
+
+  .notify-link {
+    color: #245269;
+  }
+}
+
+.notify-warning {
+  background-color: #fcf8e3;
+  color: #8a6d3b;
+
+  hr {
+    border-top-color: #f7e1b5;
+  }
+
+  .notify-link {
+    color: #66512c;
+  }
+}
+
+.notify-error {
+  background-color: #f2dede;
+  color: #a94442;
+
+  hr {
+    border-top-color: #e4b9c0;
+  }
+
+  .notify-link {
+    color: #843534;
+  }
+}

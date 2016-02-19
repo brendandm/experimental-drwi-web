@@ -8,7 +8,7 @@
      * @description
      */
      angular.module('FieldStack')
-        .controller('SecurityController', function(Account, $location, Security, ipCookie, $route, $rootScope, $timeout) {
+        .controller('SecurityController', function(Account, $location, Security, ipCookie, Notifications, $route, $rootScope, $timeout) {
 
             var self = this;
 
@@ -76,12 +76,14 @@
                   }
                 }, function(){
                   self.login.processing = false;
-                  self.login.errors = {
-                    email: ['The email or password you provided was incorrect']
-                  };
+
+                  var messageTitle = 'Incorrect Credentials',
+                      messageDescription = ['The email or password you provided was incorrect'];
+
+                  $rootScope.notifications.error(messageTitle, messageDescription);
 
                   $timeout(function() {
-                    self.login.errors = null;
+                    $rootScope.notifications.objects = [];
                   }, 3500);
                 });
               }
