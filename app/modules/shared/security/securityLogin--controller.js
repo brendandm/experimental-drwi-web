@@ -68,15 +68,7 @@
                         $rootScope.isLoggedIn = Account.hasToken();
                         $rootScope.isAdmin = Account.hasRole('admin');
 
-                        if ($rootScope.isAdmin) {
-                          $location.path('/projects');
-                        }
-                        else if (firstTime) {
-                          $location.path('/profiles/' + $rootScope.user.id + '/edit');
-                        }
-                        else {
-                          $location.path('/activity');
-                        }
+                        $location.path('/projects');
                       });
                     });
 
