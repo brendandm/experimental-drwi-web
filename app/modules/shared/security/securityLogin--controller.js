@@ -25,6 +25,7 @@
             }
 
             self.login = {
+              processing: false,
               submit: function(firstTime) {
 
                 self.login.processing = true;
