@@ -73,36 +73,23 @@ angular.module('FieldStack')
       .when('/projects/:projectId/users', {
         templateUrl: '/modules/components/projects/views/projectsUsers--view.html',
         controller: 'ProjectUsersCtrl',
+        controllerAs: 'page',
         resolve: {
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.project.templateId
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          project: function(Project, $route) {
+            return Project.get({
+                'id': $route.current.params.projectId
             });
           },
-          users: function(User) {
-            return User.GetUsers();
-          },
-          projectUsers: function(Feature, $route) {
-            return Feature.GetFeatureUsers({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
+          members: function(Project, $route) {
+            return Project.members({
+                'id': $route.current.params.projectId
             });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.project.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.project.templateId, 'object');
-          },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
-            });
-          },
-          storage: function() {
-            return commonscloud.collections.project.storage;
           }
         }
       });

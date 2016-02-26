@@ -1,58 +1,69 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
 <main class="container">
   <div class="row feature">
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
-        <h1>Collaborators</h1>
-        
+        <h1 class="large">Collaborators</h1>
+
         <!-- List of existing users -->
         <table class="table table-hover">
           <tbody>
-            <tr data-ng-repeat="user in project.users track by $index">
+            <tr data-ng-repeat="user in page.project.users.features track by $index">
               <td>
-                {{ user.name }}<br />
-                <a class="email-address" href="mailto:{{ user.email }}" target="_blank">{{ user.email }}</a>
+                {{ user.properties.first_name }} {{ user.properties.last_name }}<br />
+                <a class="email-address" href="mailto:{{ user.properties.email }}" target="_blank">{{ user.properties.email }}</a>
               </td>
-              <td data-ng-if="project.users_edit" class="action align-right">
-                <a data-ng-if="!project.users[$index].remove_confirm" data-ng-click="project.users[$index].remove_confirm = true;" class="remove">Remove</a>
-                <span data-ng-if="project.users[$index].remove_confirm" class="confirm">
-                  <a data-ng-click="users.remove(user);" class="remove">Remove</a>
-                  <span>or</span>
-                  <a data-ng-click="project.users[$index].remove_confirm = false;" class="cancel">Nevermind</a>
-                </span>
+              <td class="action align-right">
+                <div data-ng-if="page.project.users_edit && user.id != $root.user.id">
+                  <a data-ng-if="!page.project.users[$index].remove_confirm" data-ng-click="page.project.users[$index].remove_confirm = true;" class="remove">Remove</a>
+                  <span data-ng-if="page.project.users[$index].remove_confirm" class="confirm">
+                    <a data-ng-click="page.users.remove(user);" class="remove">Remove</a>
+                    <span>or</span>
+                    <a data-ng-click="page.project.users.features[$index].remove_confirm = false;" class="cancel">Nevermind</a>
+                  </span>
+                </div>
               </td>
-              <td data-ng-if="!project.users_edit">&nbsp;</td>
             </tr>
           </tbody>
         </table>
       </div>
+
       <nav class="column-5 contextual-navigation-wrapper">
         <h6><strong>Tools</strong></h6>
         <ul class="contextual-navigation">
           <!-- Proect Manangement Navigation -->
-          <li data-ng-if="user.owner || user.feature.read || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}">Project Overview</a></li>
-          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator"><a href="/projects/{{ project.id }}/edit">Edit</a></li>
-          <li data-ng-if="user.owner || user.feature.write || user.feature.is_admin || user.template.is_admin || user.template.is_moderator" class="active"><a href="/projects/{{ project.id }}/users">Users</a></li>
+          <li>
+            <a href="/projects/{{ page.project.id }}">
+                Project Overview
+            </a>
+          </li>
+          <li data-ng-if="page.permissions.can_edit">
+            <a href="/projects/{{ page.project.id }}/edit">Edit</a>
+          </li>
+          <li class="active" data-ng-if="page.permissions.can_edit">
+            <a href="/projects/{{ page.project.id }}/users">Collaborators</a>
+          </li>
         </ul>
       </nav>
-      <aside class="column-5 feature-sidebar pull-right">
-      </aside>
+
     </article>
   </div>
 </main>
 
-<div data-ng-show="modals.windows.inviteUser.visible" class="modal">
+<div data-ng-show="page.modals.windows.inviteUser.visible" class="modal">
   <div class="container">
     <div class="row">
       <div class="column-16">
-        <div data-ng-click="modals.close('inviteUser')" class="pull-right close icon retinaicon-essentials-045"></div>
+        <div data-ng-click="page.modals.close('inviteUser')" class="pull-right close icon retinaicon-essentials-045"></div>
       </div>
     </div>
     <div class="row">
       <div class="column-4"></div>
       <div class="column-8">
-        <h1>{{ modals.windows.inviteUser.title }}</h1>
+        <h1>{{ page.modals.windows.inviteUser.title }}</h1>
         <p>
-          You can add people to collaborate with you on this Project. Begin by typing in their name and we will lookup their CommonsCloud account for you.
+          You can add people to collaborate with you on this page.project. Begin by typing in their name and we will lookup their CommonsCloud account for you.
         </p>
 
         <div class="row step first">
@@ -66,11 +77,11 @@
             <article class="step-content">
               <form method="POST" id="form-invite-user" name="form-invite-user">
                 <div class="form-group autocomplete">
-                  <input type="text" class="form-control input-xl" data-ng-model="users.search" id="search-text" name="search-text" placeholder="Jeff Trandahl" autofocus="autofocus" />
-                  <div data-ng-if="users.search" class="dropdown">
+                  <input type="text" class="form-control input-xl" data-ng-model="page.users.search" id="search-text" name="search-text" placeholder="Jeff Trandahl" autofocus="autofocus" />
+                  <div data-ng-if="page.users.search" class="dropdown">
                     <ul>
-                      <li data-ng-repeat="user in users.list | filter:users.search">
-                        <a data-ng-click="users.invite(user);">{{ user.name }} <span data-ng-if="user.name">, </span> {{ user.email }}</a>
+                      <li data-ng-repeat="user in page.users.list | filter:page.users.search">
+                        <a data-ng-click="page.users.invite(user);">{{ user.name }} <span data-ng-if="user.name">, </span> {{ user.email }}</a>
                       </li>
                     </ul>
                   </div>
@@ -94,7 +105,7 @@
                   {{ user.name }} <span data-ng-if="user.name">, </span> {{ user.email }}
                 </li>
               </ul>
-              <a class="button" data-ng-click="users.add()">Add Collaborators</a>
+              <a class="button" data-ng-click="page.users.add()">Add Collaborators</a>
             </article>
           </div>
         </div>
@@ -107,9 +118,11 @@
         </p>
         <p>
           <strong>What happens if they don't have an account?</strong><br />
-          If they don't already have a CommonsCloud account, they will need to register for one before you can invite them to the collaborate with you on this Project.
+          If they don't already have a CommonsCloud account, they will need to register for one before you can invite them to the collaborate with you on this page.project.
         </p>
       </div>
     </div>
   </div>
 </div>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>

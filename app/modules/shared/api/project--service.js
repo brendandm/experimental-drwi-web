@@ -26,6 +26,11 @@
           method: 'GET',
           isArray: false,
           url: environment.apiUrl.concat('/v1/data/project/:id/sites')
+        },
+        members: {
+          method: 'GET',
+          isArray: false,
+          url: environment.apiUrl.concat('/v1/data/project/:id/members')
         }
       });
     });
