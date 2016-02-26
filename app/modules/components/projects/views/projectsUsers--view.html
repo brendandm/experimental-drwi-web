@@ -9,7 +9,7 @@
         <!-- List of existing users -->
         <table class="table table-hover">
           <tbody>
-            <tr data-ng-repeat="user in page.project.users.features track by $index">
+            <tr data-ng-repeat="user in page.project.properties.members track by $index">
               <td>
                 {{ user.properties.first_name }} {{ user.properties.last_name }}<br />
                 <a class="email-address" href="mailto:{{ user.properties.email }}" target="_blank">{{ user.properties.email }}</a>
@@ -18,9 +18,9 @@
                 <div data-ng-if="page.project.users_edit && user.id != $root.user.id">
                   <a data-ng-if="!page.project.users[$index].remove_confirm" data-ng-click="page.project.users[$index].remove_confirm = true;" class="remove">Remove</a>
                   <span data-ng-if="page.project.users[$index].remove_confirm" class="confirm">
-                    <a data-ng-click="page.users.remove(user);" class="remove">Remove</a>
+                    <a data-ng-click="page.project.properties.members.splice($index, 1); page.users.remove(user);" class="remove">Remove</a>
                     <span>or</span>
-                    <a data-ng-click="page.project.users.features[$index].remove_confirm = false;" class="cancel">Nevermind</a>
+                    <a data-ng-click="page.project.properties.members[$index].remove_confirm = false;" class="cancel">Nevermind</a>
                   </span>
                 </div>
               </td>
@@ -76,16 +76,13 @@
             </header>
             <article class="step-content">
               <form method="POST" id="form-invite-user" name="form-invite-user">
-                <div class="form-group autocomplete">
-                  <input type="text" class="form-control input-xl" data-ng-model="page.users.search" id="search-text" name="search-text" placeholder="Jeff Trandahl" autofocus="autofocus" />
-                  <div data-ng-if="page.users.search" class="dropdown">
-                    <ul>
-                      <li data-ng-repeat="user in page.users.list | filter:page.users.search">
-                        <a data-ng-click="page.users.invite(user);">{{ user.name }} <span data-ng-if="user.name">, </span> {{ user.email }}</a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
+                <relationship model="page.project.properties.members"
+                              table="'user'"
+                              field="'email'"
+                              multiple="'true'"
+                              display="['first_name','last_name']"
+                              placeholder="'Begin typing collaborator\'s name'">
+                </relationship>
               </form>
             </article>
           </div>
@@ -100,9 +97,10 @@
               <p>2. Add people to the project</p>
             </header>
             <article class="step-content">
+              {{ invite }}
               <ul>
                 <li data-ng-repeat="user in invite">
-                  {{ user.name }} <span data-ng-if="user.name">, </span> {{ user.email }}
+                  {{ user.properties.first_name }} {{ user.properties.last_name }} <span data-ng-if="user.name">, </span> {{ user.properties.email }}
                 </li>
               </ul>
               <a class="button" data-ng-click="page.users.add()">Add Collaborators</a>

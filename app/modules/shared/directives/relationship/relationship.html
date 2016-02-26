@@ -1,12 +1,9 @@
-{{ valueFields }}
-
 <div class="autocomplete">
   <div class="row">
     <div class="column-15">
       <input data-ng-focus="relationship_focus=true" data-ng-blur="relationship_focus=false" type="text" placeholder="{{ placeholder }}" data-ng-model="searchText" data-ng-change="search()" class="form-control" />
       <div data-ng-if="features.length" class="dropdown">
         <ul>
-          <!-- <li data-ng-if="relationship_focus && !features.length"><p><em>Begin typing to select the {{ field.label }} you want</em></p></li> -->
           <li data-ng-repeat="feature in features track by $index">
             <a data-ng-click="addFeatureToRelationships(feature.feature)">
               {{ feature.text }}
