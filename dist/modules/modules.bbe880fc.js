@@ -110,7 +110,7 @@ angular.module('FieldStack')
      * @description
      */
      angular.module('FieldStack')
-        .controller('SecurityController', function(Account, $location, Security, ipCookie, $route, $rootScope, $timeout) {
+        .controller('SecurityController', function(Account, $location, Security, ipCookie, Notifications, $route, $rootScope, $timeout) {
 
             var self = this;
 
@@ -127,6 +127,7 @@ angular.module('FieldStack')
             }
 
             self.login = {
+              processing: false,
               submit: function(firstTime) {
 
                 self.login.processing = true;
@@ -170,27 +171,21 @@ angular.module('FieldStack')
                         $rootScope.isLoggedIn = Account.hasToken();
                         $rootScope.isAdmin = Account.hasRole('admin');
 
-                        if ($rootScope.isAdmin) {
-                          $location.path('/projects');
-                        }
-                        else if (firstTime) {
-                          $location.path('/profiles/' + $rootScope.user.id + '/edit');
-                        }
-                        else {
-                          $location.path('/activity');
-                        }
+                        $location.path('/projects');
                       });
                     });
 
                   }
                 }, function(){
                   self.login.processing = false;
-                  self.login.errors = {
-                    email: ['The email or password you provided was incorrect']
-                  };
+
+                  var messageTitle = 'Incorrect Credentials',
+                      messageDescription = ['The email or password you provided was incorrect'];
+
+                  $rootScope.notifications.error(messageTitle, messageDescription);
 
                   $timeout(function() {
-                    self.login.errors = null;
+                    $rootScope.notifications.objects = [];
                   }, 3500);
                 });
               }
@@ -647,36 +642,23 @@ angular.module('FieldStack')
       .when('/projects/:projectId/users', {
         templateUrl: '/modules/components/projects/views/projectsUsers--view.html',
         controller: 'ProjectUsersCtrl',
+        controllerAs: 'page',
         resolve: {
-          user: function(User, $route) {
-            return User.getUser({
-              featureId: $route.current.params.projectId,
-              templateId: commonscloud.collections.project.templateId
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          project: function(Project, $route) {
+            return Project.get({
+                'id': $route.current.params.projectId
             });
           },
-          users: function(User) {
-            return User.GetUsers();
-          },
-          projectUsers: function(Feature, $route) {
-            return Feature.GetFeatureUsers({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
+          members: function(Project, $route) {
+            return Project.members({
+                'id': $route.current.params.projectId
             });
-          },
-          template: function(Template, $route) {
-            return Template.GetTemplate(commonscloud.collections.project.templateId);
-          },
-          fields: function(Field, $route) {
-            return Field.GetPreparedFields(commonscloud.collections.project.templateId, 'object');
-          },
-          project: function(Feature, $route) {
-            return Feature.GetFeature({
-              storage: commonscloud.collections.project.storage,
-              featureId: $route.current.params.projectId
-            });
-          },
-          storage: function() {
-            return commonscloud.collections.project.storage;
           }
         }
       });
@@ -934,200 +916,153 @@ angular.module('FieldStack')
 
   });
 
-'use strict';
+(function() {
 
-/**
- * @ngdoc function
- * @name FieldStack.controller:ProjectUsersCtrl
- * @description
- * # ProjectUsersCtrl
- * Controller of the FieldStack
- */
-angular.module('FieldStack')
-  .controller('ProjectUsersCtrl', ['$rootScope', '$scope', '$route', '$location', 'project', 'Template', 'Feature', 'Field', 'template', 'fields', 'storage', 'user', 'users', 'projectUsers', function ($rootScope, $scope, $route, $location, project, Template, Feature, Field, template, fields, storage, user, users, projectUsers) {
+  'use strict';
 
-    //
-    // Setup necessary Template and Field lists
-    //
-    $scope.template = template;
-    $scope.fields = fields;
+  /**
+   * @ngdoc function
+   * @name FieldStack.controller:ProjectUsersCtrl
+   * @description
+   * # ProjectUsersCtrl
+   * Controller of the FieldStack
+   */
+  angular.module('FieldStack')
+    .controller('ProjectUsersCtrl', function (Account, $rootScope, $scope, $route, $location, project, user, members) {
 
+      var self = this;
+      $rootScope.page = {};
 
-    //
-    // Setup the Project
-    //
-    $scope.project = project;
-    $scope.project.users = projectUsers;
-    $scope.project.users_edit = false;
+      //
+      // Assign project to a scoped variable
+      //
+      project.$promise.then(function(successResponse) {
+          self.project = successResponse;
 
+          $rootScope.page.title = self.project.properties.name;
+          $rootScope.page.links = [
+              {
+                text: 'Projects',
+                url: '/projects'
+              },
+              {
+                text: self.project.properties.name,
+                url: '/projects/' + self.project.id
+              },
+              {
+                text: 'Edit',
+                url: '/projects/' + self.project.id + '/edit',
+                type: 'active'
+              },
+              {
+                text: 'Collaborators',
+                url: '/projects/' + self.project.id + '/users'
+              }
+          ];
+          $rootScope.page.actions = [
+              {
+                type: 'button-link',
+                action: function($index) {
+                  self.project.users_edit = ! self.project.users_edit;
+                  $rootScope.page.actions[$index].visible = ! $rootScope.page.actions[$index].visible;
+                },
+                visible: false,
+                text: 'Edit collaborators',
+                alt: 'Done Editing'
+              },
+              {
+                type: 'button-link new',
+                action: function() {
+                  console.log('modal');
+                  self.modals.open('inviteUser');
+                },
+                text: 'Add a collaborator'
+              }
+          ];
 
-    //
-    // Modal Windows
-    //
-    $scope.modals = {
-      open: function($index) {
-        $scope.modals.windows[$index].visible = true;
-      },
-      close: function($index) {
-        $scope.modals.windows[$index].visible = false;
-      },
-      windows: {
-        inviteUser: {
-          title: 'Add a collaborator',
-          body: '',
-          visible: false
-        }
-      }
-    };
+          self.project.users = members;
+          self.project.users_edit = false;
 
+          //
+          // Verify Account information for proper UI element display
+          //
+          if (Account.userObject && user) {
+              user.$promise.then(function(userResponse) {
+                  $rootScope.user = Account.userObject = userResponse;
 
-    //
-    // Setup User information
-    //
-    $scope.user = user;
-    $scope.user.owner = false;
-    $scope.user.feature = {};
-    $scope.user.template = {};
+                  self.permissions = {
+                      isLoggedIn: Account.hasToken(),
+                      role: $rootScope.user.properties.roles[0].properties.name,
+                      account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                      can_edit: Account.canEdit(project)
+                  };
+              });
+          }
 
-    $scope.users = {
-      list: users,
-      search: null,
-      invite: function(user) {
-        $scope.invite.push(user); // Add selected User object to invitation list
-        this.search = null; // Clear search text
-      },
-      add: function() {
-        angular.forEach($scope.invite, function(user_, $index) {
-          Feature.AddUser({
-            storage: storage,
-            featureId: $scope.project.id,
-            userId: user_.id,
-            data: {
-              read: true,
-              write: true,
-              is_admin: false
-            }
-          }).then(function(response) {
-            //
-            // Once the users have been added to the project, close the modal
-            // and refresh the page
-            //
-            $scope.modals.close('inviteUser');
-            $scope.page.refresh();
-          });
-        });
-      },
-      remove: function(user) {
-        var index = $scope.project.users.indexOf(user);
-
-        Feature.RemoveUser({
-            storage: storage,
-            featureId: $scope.project.id,
-            userId: user.id
-          }).then(function(response) {
-            //
-            // Once the users have been added to the project, close the modal
-            // and refresh the page
-            //
-            $scope.project.users.splice(index, 1);
-          });
-      },
-      remove_confirm: false
-    };
-
-
-    $scope.invite = [];
-
-
-    //
-    // Setup basic page variables
-    //
-    $rootScope.page = {
-      template: '/modules/components/projects/views/projects--users.html',
-      title: $scope.project.project_title + ' Users',
-      display_title: false,
-      editable: true,
-      back: '/',
-      links: [
-        {
-          text: 'Projects',
-          url: '/projects'
-        },
-        {
-          text: $scope.project.project_title,
-          url: '/projects/' + $scope.project.id
-        },
-        {
-          text: 'Collaborators',
-          url: '/projects/' + $scope.project.id + '/users',
-          type: 'active'
-        }
-      ],
-      actions: [
-        {
-          type: 'button-link',
-          // url: '/projects/' + $scope.project.id + '/users/invite',
-          action: function($index) {
-            $scope.project.users_edit = ! $scope.project.users_edit;
-            $scope.page.actions[$index].visible = ! $scope.page.actions[$index].visible;
-          },
-          visible: false,
-          text: 'Edit collaborators',
-          alt: 'Done Editing'
-        },
-        {
-          type: 'button-link new',
-          // url: '/projects/' + $scope.project.id + '/users/invite',
-          action: function() {
-            console.log('modal');
-            $scope.modals.open('inviteUser');
-          },
-          text: 'Add a collaborator'
-        }
-      ],
-      refresh: function() {
-        $route.reload();
-      }
-    };
-
-    //
-    // Determine whether the Edit button should be shown to the user. Keep in mind, this doesn't effect
-    // backend functionality. Even if the user guesses the URL the API will stop them from editing the
-    // actual Feature within the system
-    //
-    if ($scope.user.id === $scope.project.owner) {
-      $scope.user.owner = true;
-    } else {
-      Template.GetTemplateUser({
-        storage: storage,
-        templateId: $scope.template.id,
-        userId: $scope.user.id
-      }).then(function(response) {
-
-        $scope.user.template = response;
-
-        //
-        // If the user is not a Template Moderator or Admin then we need to do a final check to see
-        // if there are permissions on the individual Feature
-        //
-        if (!$scope.user.template.is_admin || !$scope.user.template.is_moderator) {
-          Feature.GetFeatureUser({
-            storage: storage,
-            featureId: $scope.project.id,
-            userId: $scope.user.id
-          }).then(function(response) {
-            $scope.user.feature = response;
-            if ($scope.user.feature.is_admin || $scope.user.feature.write) {
-            } else {
-              $location.path('/projects/' + $scope.project.id);
-            }
-          });
-        }
-
+      }, function(errorResponse) {
+          $log.error('Unable to load request project');
       });
-    }
 
-  }]);
+      //
+      // Modal Windows
+      //
+      self.modals = {
+        open: function($index) {
+          self.modals.windows[$index].visible = true;
+        },
+        close: function($index) {
+          self.modals.windows[$index].visible = false;
+        },
+        windows: {
+          inviteUser: {
+            title: 'Add a collaborator',
+            body: '',
+            visible: false
+          }
+        }
+      };
+
+      self.users = {
+        list: members,
+        search: null,
+        invite: function(user) {
+          self.invite.push(user); // Add selected User object to invitation list
+          this.search = null; // Clear search text
+        },
+        add: function() {
+          angular.forEach(self.invite, function(user_, $index) {
+            Feature.AddUser({
+              storage: storage,
+              featureId: $scope.project.id,
+              userId: user_.id,
+              data: {
+                read: true,
+                write: true,
+                is_admin: false
+              }
+            }).then(function(response) {
+              //
+              // Once the users have been added to the project, close the modal
+              // and refresh the page
+              //
+              self.modals.close('inviteUser');
+              self.page.refresh();
+            });
+          });
+        },
+        remove: function() {
+          self.project.$update().then(function(response) {
+            $route.reload();
+          }).then(function(error) {
+            // Do something with the error
+          });
+        },
+        remove_confirm: false
+      };
+
+    });
+
+}());
 
 'use strict';
 
@@ -1428,7 +1363,7 @@ angular.module('FieldStack')
    * Controller of the FieldStack
    */
   angular.module('FieldStack')
-    .controller('SiteEditCtrl', function (Account, environment, $http, leafletData, $location, Map, mapbox, Site, site, $rootScope, $route, $scope, Segment, $timeout, user) {
+    .controller('SiteEditCtrl', function (Account, environment, $http, leafletData, $location, Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, Segment, $timeout, user) {
 
       var self = this,
           timeout;
@@ -1514,7 +1449,6 @@ angular.module('FieldStack')
         // @see https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
         //
         if (response) {
-          console.log('self.map', self.map);
 
           self.processPin({
             lat: response.geometry.coordinates[1],
@@ -1623,8 +1557,23 @@ angular.module('FieldStack')
         if (self.site.properties.county) {
           self.site.properties.county_id = self.site.properties.county.id;
           self.site.properties.state = self.site.properties.county.properties.state_name;
-        } else {
-          console.error('Couldn\'t save your Site because you didn\'t select a county and state');
+        } else if (!self.site.properties.county || !self.site.properties.state) {
+          $rootScope.notifications.error('Missing County and State Information', 'Please add a county and state to continue saving your site');
+
+          $timeout(function() {
+            $rootScope.notifications.objects = [];
+          }, 3500);
+
+          return;
+        }
+
+        if (!self.site.properties.segment) {
+          $rootScope.notifications.error('Missing Land River Segment', 'Please add a land river segment to continue saving your site');
+
+          $timeout(function() {
+            $rootScope.notifications.objects = [];
+          }, 3500);
+
           return;
         }
 
@@ -9594,6 +9543,11 @@ angular.module('Mapbox')
           method: 'GET',
           isArray: false,
           url: environment.apiUrl.concat('/v1/data/project/:id/sites')
+        },
+        members: {
+          method: 'GET',
+          isArray: false,
+          url: environment.apiUrl.concat('/v1/data/project/:id/members')
         }
       });
     });
@@ -10066,3 +10020,21 @@ angular.module('FieldStack')
     };
 
   });
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc function
+   * @name
+   * @description
+   */
+  angular.module('FieldStack')
+    .filter('isArray', function() {
+      return function (input) {
+        return (angular.isArray(input)) ? true : false;
+      };
+    });
+
+}());
