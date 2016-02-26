@@ -1670,12 +1670,21 @@ angular.module('FieldStack')
 
                  var segments = successResponse;
 
-                 self.geolocation.drawSegment(segments);
-
                  if (segments.features.length) {
-                   self.site.properties.segment_id = segments.features[0].id;
-                   self.site.properties.segment = segments.features[0];
+                   self.geolocation.drawSegment(segments);
+
+                   if (segments.features.length) {
+                     self.site.properties.segment_id = segments.features[0].id;
+                     self.site.properties.segment = segments.features[0];
+                   }
+                 } else {
+                   $rootScope.notifications.error('Outside Chesapeake Bay Watershed', 'Please select a project site that falls within the Chesapeake Bay Watershed');
+
+                   $timeout(function() {
+                     $rootScope.notifications.objects = [];
+                   }, 3500);
                  }
+
 
                }, function(errorResponse) {
                  console.error('Error', errorResponse);
