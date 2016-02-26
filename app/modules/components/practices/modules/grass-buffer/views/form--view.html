@@ -18,28 +18,34 @@
           </div>
 
           <!-- Measurement Period -->
-          <div class="form-row">
-            <div class="form-field">
-              <label for="measurement_period" class="control-label">
-                Measurement Period
-              </label>
+          <div class="form-group column-8">
+            <label for="measurement_period" class="control-label">
+              Measurement Period
+            </label>
 
-              <select class="form-control" data-ng-model="page.report.properties.measurement_period" id="measurement_period" name="measurement_period">
-                <option value="Planning">Planning</option>
-                <option value="Installation">Installation</option>
-                <option value="Monitoring">Monitoring</option>
-              </select>
-            </div>
+            <select class="form-control" data-ng-model="page.report.properties.measurement_period" id="measurement_period" name="measurement_period">
+              <option value="Planning">Planning</option>
+              <option value="Installation">Installation</option>
+              <option value="Monitoring">Monitoring</option>
+            </select>
           </div>
 
           <!-- WIP Reporting Agency -->
-          <div class="form-group" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+          <div class="form-group column-8" data-ng-if="page.report.properties.measurement_period === 'Planning'">
             <label for="wip_reporting_agency" class="control-label">
               WIP Reporting Agency
             </label>
 
-            <select class="form-control" data-ng-model="page.report.properties.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency" data-ng-options="value for value in fields.wip_reporting_agency.options">
-              <option value="">Select a Report Agency</option>
+            <select class="form-control" data-ng-model="page.report.properties.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency">
+              <option value="DC District Department of the Environment">DC District Department of the Environment</option>
+              <option value="Delaware Department of Natural Resources and Environmental Control">Delaware Department of Natural Resources and Environmental Control</option>
+              <option value="Maryland Department of Natural Resources">MD Department of Natural Resources</option>
+              <option value="Maryland Department of the Environment">MD Department of the Environment</option>
+              <option value="Maryland Department of Agriculture">MD Department of Agriculture</option>
+              <option value="New York Department of Environmental Conservation">New York Department of Environmental Conservation</option>
+              <option value="Pennsylvania Department of Environmental Protection">Pennsylvania Department of Environmental Protection</option>
+              <option value="Virginia Department of Conservation and Recreation">Virginia Department of Conservation and Recreation</option>
+              <option value="West Virginia Department of Environmental Protection">West Virginia Department of Environmental Protection</option>
             </select>
           </div>
         </fieldset>
@@ -80,7 +86,7 @@
 
             <input data-ng-model="page.report.properties.length_of_buffer" class="form-control" class="form-control" type="number" id="length_of_buffer" name="length_of_buffer" placeholder="Length of Buffer" />
 
-            <p data-ng-if="fields.length_of_buffer.help" class="help-text">{{ fields.length_of_buffer.help }}</p>
+            <p class="help-text">feet</p>
           </div>
 
           <!-- Buffer Width -->
@@ -92,7 +98,7 @@
 
             <input data-ng-model="page.report.properties.average_width_of_buffer" class="form-control" class="form-control" type="number" id="average_width_of_buffer" name="average_width_of_buffer" placeholder="Average Buffer Width" />
 
-            <p data-ng-if="fields.average_width_of_buffer.help" class="help-text">{{ fields.average_width_of_buffer.help }}</p>
+            <p class="help-text">feet</p>
           </div>
 
         </fieldset>
@@ -254,7 +260,7 @@
           <legend><strong>Notes</strong></legend>
 
           <div class="form-group">
-            <textarea rows="1" data-ng-model="page.report.properties.notes" class="form-control animate"  msd-elastic id="notes" name="notes" placeholder="Notes">{{ report.notes }}</textarea>
+            <textarea rows="1" data-ng-model="page.report.properties.notes" class="form-control animate"  msd-elastic id="notes" name="notes" placeholder="Notes">{{ page.report.properties.notes }}</textarea>
           </div>
 
         </fieldset>

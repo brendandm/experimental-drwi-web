@@ -24,7 +24,6 @@
             </label>
 
             <select class="form-control" data-ng-model="page.report.properties.measurement_period" id="measurement_period" name="measurement_period">
-              <option value="Pre-Project">Pre-Project</option>
               <option value="Planning">Planning</option>
               <option value="Installation">Installation</option>
               <option value="Monitoring">Monitoring</option>
@@ -32,13 +31,21 @@
           </div>
 
           <!-- WIP Reporting Agency -->
-          <div class="form-group column-8" data-ng-if="page.report.properties.measurement_period === 'Pre-Project' || page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+          <div class="form-group column-8" data-ng-if="page.report.properties.measurement_period === 'Planning'">
             <label for="wip_reporting_agency" class="control-label">
               WIP Reporting Agency
             </label>
 
-            <select class="form-control" data-ng-model="page.report.properties.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency" data-ng-options="value for value in fields.wip_reporting_agency.options">
-              <option value="">Select a Report Agency</option>
+            <select class="form-control" data-ng-model="page.report.properties.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency">
+              <option value="DC District Department of the Environment">DC District Department of the Environment</option>
+              <option value="Delaware Department of Natural Resources and Environmental Control">Delaware Department of Natural Resources and Environmental Control</option>
+              <option value="Maryland Department of Natural Resources">MD Department of Natural Resources</option>
+              <option value="Maryland Department of the Environment">MD Department of the Environment</option>
+              <option value="Maryland Department of Agriculture">MD Department of Agriculture</option>
+              <option value="New York Department of Environmental Conservation">New York Department of Environmental Conservation</option>
+              <option value="Pennsylvania Department of Environmental Protection">Pennsylvania Department of Environmental Protection</option>
+              <option value="Virginia Department of Conservation and Recreation">Virginia Department of Conservation and Recreation</option>
+              <option value="West Virginia Department of Environmental Protection">West Virginia Department of Environmental Protection</option>
             </select>
           </div>
 
@@ -58,6 +65,8 @@
             </label>
 
             <input data-ng-model="page.report.properties.stream_width_at_bankfull" class="form-control" class="form-control" type="number" id="stream_width_at_bankfull" name="stream_width_at_bankfull" step="0.0001" />
+
+            <p class="help-text">feet</p>
           </div>
           <div class="form-group column-8">
             <label for="stream_width_at_mean_base_flow" class="control-label">
@@ -65,6 +74,8 @@
             </label>
 
             <input data-ng-model="page.report.properties.stream_width_at_mean_base_flow" class="form-control" class="form-control" type="number" id="stream_width_at_mean_base_flow" name="stream_width_at_mean_base_flow" step="0.0001" />
+
+            <p class="help-text">feet</p>
           </div>
 
           <!-- Left Bank Metrics -->
@@ -189,7 +200,7 @@
 
             <input data-ng-model="page.report.properties.rainfall_depth_where_connection_occurs" class="form-control" class="form-control" type="number" id="rainfall_depth_where_connection_occurs" name="rainfall_depth_where_connection_occurs" step="0.0001" />
 
-            <p class="help-text">acres</p>
+            <p class="help-text">Floodplain Access</p>
           </div>
           <div class="form-group column-4">
             <label for="floodplain_connection_volume" class="control-label">
@@ -197,6 +208,10 @@
             </label>
 
             <input data-ng-model="page.report.properties.floodplain_connection_volume" class="form-control" class="form-control" type="number" id="floodplain_connection_volume" name="floodplain_connection_volume" step="0.0001" />
+
+            <p class="help-text">
+              Floodplain treated
+            </p>
           </div>
         </fieldset>
 

@@ -612,8 +612,8 @@
                       {{ report.properties.report_date }}
                     </a>
                   </td>
-                  <td class="align-left" data-ng-if="report.notes">{{ report.properties.notes }}</td>
-                  <td class="align-left" data-ng-if="!report.notes"><em>No notes recorded for this date</em></td>
+                  <td class="align-left" data-ng-if="report.properties.notes">{{ report.properties.notes }}</td>
+                  <td class="align-left" data-ng-if="!report.properties.notes"><em>No notes recorded for this date</em></td>
                 </tr>
               </tbody>
             </table>

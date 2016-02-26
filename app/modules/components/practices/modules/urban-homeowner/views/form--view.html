@@ -25,7 +25,7 @@
             <option value="Planning">Planning</option>
             <option value="Installation">Installation</option>
             <option value="Monitoring">Monitoring</option>
-\          </select>
+          </select>
         </div>
 
         <!-- WIP Reporting Agency -->
@@ -34,8 +34,16 @@
             WIP Reporting Agency
           </label>
 
-          <select class="form-control" data-ng-model="page.report.properties.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency" data-ng-options="value for value in fields.wip_reporting_agency.options">
-            <option value="">Select a Report Agency</option>
+          <select class="form-control" data-ng-model="page.report.properties.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency">
+            <option value="DC District Department of the Environment">DC District Department of the Environment</option>
+            <option value="Delaware Department of Natural Resources and Environmental Control">Delaware Department of Natural Resources and Environmental Control</option>
+            <option value="Maryland Department of Natural Resources">MD Department of Natural Resources</option>
+            <option value="Maryland Department of the Environment">MD Department of the Environment</option>
+            <option value="Maryland Department of Agriculture">MD Department of Agriculture</option>
+            <option value="New York Department of Environmental Conservation">New York Department of Environmental Conservation</option>
+            <option value="Pennsylvania Department of Environmental Protection">Pennsylvania Department of Environmental Protection</option>
+            <option value="Virginia Department of Conservation and Recreation">Virginia Department of Conservation and Recreation</option>
+            <option value="West Virginia Department of Environmental Protection">West Virginia Department of Environmental Protection</option>
           </select>
         </div>
 
@@ -44,7 +52,11 @@
             Type of Urban BMP Homeowner Certification
           </label>
 
-          <select class="form-control" data-ng-model="page.report.properties.certification_type" id="certification_type" name="certification_type" data-ng-options="value for value in fields.certification_type.options">
+          <select class="form-control" data-ng-model="page.report.properties.certification_type" id="certification_type" name="certification_type">
+            <option value="DC River Smart Homes">DC River Smart Homes</option>
+            <option value="Green Homes Challenge">Green Homes Challenge</option>
+            <option value="CBP Protocols">CBP Protocols</option>
+            <option value="Homeowner (self)">Homeowner (self)</option>
           </select>
 
           <p data-ng-if="fields.certification_type.help" class="help-text">{{ fields.certification_type.help }}</p>
@@ -62,7 +74,7 @@
 
             <input data-ng-model="page.report.properties.rain_garden_area" class="form-control" class="form-control" type="number" id="rain_garden_area" name="rain_garden_area" />
 
-            <p data-ng-if="fields.rain_garden_area.help" class="help-text">{{ fields.rain_garden_area.help }}</p>
+            <p class="help-text">drainage area (sq ft)</p>
           </div>
         </div>
 
@@ -74,7 +86,7 @@
 
             <input data-ng-model="page.report.properties.rain_barrel_drainage_area" class="form-control" class="form-control" type="number" id="rain_barrel_drainage_area" name="rain_barrel_drainage_area" />
 
-            <p data-ng-if="fields.rain_barrel_drainage_area.help" class="help-text">{{ fields.rain_barrel_drainage_area.help }}</p>
+            <p class="help-text">drainage area (sq ft)</p>
           </div>
         </div>
 
@@ -86,7 +98,7 @@
 
             <input data-ng-model="page.report.properties.permeable_pavement_area" class="form-control" class="form-control" type="number" id="permeable_pavement_area" name="permeable_pavement_area" />
 
-            <p data-ng-if="fields.permeable_pavement_area.help" class="help-text">{{ fields.permeable_pavement_area.help }}</p>
+            <p class="help-text">practice area (sq ft)</p>
           </div>
         </div>
 
@@ -98,7 +110,7 @@
 
             <input data-ng-model="page.report.properties.downspout_disconnection_drainage_area" class="form-control" class="form-control" type="number" id="downspout_disconnection_drainage_area" name="downspout_disconnection_drainage_area" />
 
-            <p data-ng-if="fields.downspout_disconnection_drainage_area.help" class="help-text">{{ fields.downspout_disconnection_drainage_area.help }}</p>
+            <p class="help-text">drainage area (sq ft)</p>
           </div>
         </div>
 
@@ -110,7 +122,7 @@
 
             <input data-ng-model="page.report.properties.urban_nutrient_management_pledge_area" class="form-control" class="form-control" type="number" id="urban_nutrient_management_pledge_area" name="urban_nutrient_management_pledge_area" />
 
-            <p data-ng-if="fields.urban_nutrient_management_pledge_area.help" class="help-text">{{ fields.urban_nutrient_management_pledge_area.help }}</p>
+            <p class="help-text">pledge area (sq ft)</p>
           </div>
         </div>
 
@@ -122,7 +134,7 @@
 
             <input data-ng-model="page.report.properties.urban_nutrient_management_plan_area_hi_risk" class="form-control" class="form-control" type="number" id="urban_nutrient_management_plan_area_hi_risk" name="urban_nutrient_management_plan_area_hi_risk" />
 
-            <p data-ng-if="fields.urban_nutrient_management_plan_area_hi_risk.help" class="help-text">{{ fields.urban_nutrient_management_plan_area_hi_risk.help }}</p>
+            <p class="help-text">plan area, high risk (sq ft)</p>
           </div>
         </div>
 
@@ -134,7 +146,7 @@
 
             <input data-ng-model="page.report.properties.conservation_landscaping" class="form-control" class="form-control" type="number" id="conservation_landscaping" name="conservation_landscaping" />
 
-            <p data-ng-if="fields.conservation_landscaping.help" class="help-text">{{ fields.conservation_landscaping.help }}</p>
+            <p class="help-text">sq ft</p>
           </div>
         </div>
 
@@ -146,7 +158,7 @@
 
             <input data-ng-model="page.report.properties.tree_planting" class="form-control" class="form-control" type="number" id="tree_planting" name="tree_planting" />
 
-            <p data-ng-if="fields.tree_planting.help" class="help-text">{{ fields.tree_planting.help }}</p>
+            <p class="help-text">number of trees</p>
           </div>
         </div>
 
@@ -158,7 +170,7 @@
 
             <input data-ng-model="page.report.properties.impervious_cover_removal_area" class="form-control" class="form-control" type="number" id="impervious_cover_removal_area" name="impervious_cover_removal_area" />
 
-            <p data-ng-if="fields.impervious_cover_removal_area.help" class="help-text">{{ fields.impervious_cover_removal_area.help }}</p>
+            <p class="help-text">practice area (sq ft)</p>
           </div>
         </div>
 
@@ -174,7 +186,7 @@
 
           <input data-ng-model="page.report.properties.bird_count" class="form-control" class="form-control" type="number" id="bird_count" name="bird_count" />
 
-          <p data-ng-if="fields.bird_count.help" class="help-text">{{ fields.bird_count.help }}</p>
+          <p class="help-text">number of birds</p>
         </div>
 
       </fieldset>
@@ -244,7 +256,7 @@
         <h2><strong>Notes</strong></h2>
 
         <div class="form-group">
-          <textarea rows="1" data-ng-model="page.report.properties.notes" class="form-control animate"  msd-elastic id="notes" name="notes" placeholder="Notes">{{ report.notes }}</textarea>
+          <textarea rows="1" data-ng-model="page.report.properties.notes" class="form-control animate"  msd-elastic id="notes" name="notes" placeholder="Notes">{{ page.report.properties.notes }}</textarea>
         </div>
 
       </fieldset>
