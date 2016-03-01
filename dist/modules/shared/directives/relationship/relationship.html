@@ -1,1 +1,38 @@
-<div class="autocomplete"> <div class="row"> <div class="column-15"> <input data-ng-focus="relationship_focus=true" data-ng-blur="relationship_focus=false" type="text" placeholder="{{ placeholder }}" data-ng-model="searchText" data-ng-change="search()" class="form-control"> <div data-ng-if="features.length" class="dropdown"> <ul> <li data-ng-repeat="feature in features track by $index"> <a data-ng-click="addFeatureToRelationships(feature.feature)"> {{ feature.text }} </a> </li> </ul> </div> </div> <div class="column-1 align-center"> <a data-ng-click="resetField()"><span class="icon retinaicon-essentials-045"></span></a> </div> </div> <div class="row"> <div class="column-16"> <div data-ng-if="model.length >= 1" class="relationship-values"> <div class="row" data-ng-repeat="option in model track by $index"> <div class="column-15"> <span data-ng-if="multiple !== 'true'"> {{ option.name }} </span> <span data-ng-if="multiple === 'true'"> {{ option.name }}, {{ option.state_name }} </span> </div> <div class="column-1 align-center"> <p><a class="icon retinaicon-essentials-068" data-ng-click="removeFeatureFromRelationships($index)"></a></p> </div> </div> </div> </div> </div> </div>
+<div class="autocomplete">
+  <div class="row">
+    <div class="column-15">
+      <input data-ng-focus="relationship_focus=true" data-ng-blur="relationship_focus=false" type="text" placeholder="{{ placeholder }}" data-ng-model="searchText" data-ng-change="search()" class="form-control" />
+      <div data-ng-if="features.length" class="dropdown">
+        <ul>
+          <li data-ng-repeat="feature in features track by $index">
+            <a data-ng-click="addFeatureToRelationships(feature.feature)">
+              {{ feature.text }}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="column-1 align-center">
+        <a data-ng-click="resetField()"><span class="icon retinaicon-essentials-045"></span></a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column-16">
+      <div data-ng-if="model.length >= 1" class="relationship-values">
+        <div class="row" data-ng-repeat="option in model track by $index">
+          <div class="column-15">
+            <span data-ng-if="multiple !== 'true'">
+              {{ option.name }}
+            </span>
+            <span data-ng-if="multiple === 'true'">
+              {{ option.name }}, {{ option.state_name }}
+            </span>
+          </div>
+          <div class="column-1 align-center">
+            <p><a class="icon retinaicon-essentials-068" data-ng-click="removeFeatureFromRelationships($index)"></a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

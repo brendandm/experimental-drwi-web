@@ -19,7 +19,8 @@ angular
     'angularMoment',
     'config',
     'Mapbox',
-    'save2pdf'
+    'save2pdf',
+    'collaborator'
   ]);
 
 'use strict';
@@ -986,7 +987,7 @@ angular.module('FieldStack')
    * Controller of the FieldStack
    */
   angular.module('FieldStack')
-    .controller('ProjectUsersCtrl', function (Account, $rootScope, $scope, $route, $location, project, user, members) {
+    .controller('ProjectUsersCtrl', function (Account, Collaborators, $rootScope, $scope, $route, $location, project, user, members) {
 
       var self = this;
       $rootScope.page = {};
@@ -1017,26 +1018,7 @@ angular.module('FieldStack')
                 url: '/projects/' + self.project.id + '/users'
               }
           ];
-          $rootScope.page.actions = [
-              {
-                type: 'button-link',
-                action: function($index) {
-                  self.project.users_edit = ! self.project.users_edit;
-                  $rootScope.page.actions[$index].visible = ! $rootScope.page.actions[$index].visible;
-                },
-                visible: false,
-                text: 'Edit collaborators',
-                alt: 'Done Editing'
-              },
-              {
-                type: 'button-link new',
-                action: function() {
-                  console.log('modal');
-                  self.modals.open('inviteUser');
-                },
-                text: 'Add a collaborator'
-              }
-          ];
+          $rootScope.page.actions = [];
 
           self.project.users = members;
           self.project.users_edit = false;
@@ -1058,27 +1040,49 @@ angular.module('FieldStack')
           }
 
       }, function(errorResponse) {
-          $log.error('Unable to load request project');
+          console.error('Unable to load request project');
       });
 
       //
-      // Modal Windows
+      // Empty Collaborators object
       //
-      self.modals = {
-        open: function($index) {
-          self.modals.windows[$index].visible = true;
-        },
-        close: function($index) {
-          self.modals.windows[$index].visible = false;
-        },
-        windows: {
-          inviteUser: {
-            title: 'Add a collaborator',
-            body: '',
-            visible: false
-          }
+      // We need to have an empty geocode object so that we can fill it in later
+      // in the address geocoding process. This allows us to pass the results along
+      // to the Form Submit function we have in place below.
+      //
+      self.collaborator = {
+        invitations: [],
+        sendInvitations: function() {
+          Collaborators.invite({
+            'collaborators': self.collaborator.invitations,
+            'project_id': self.project.id
+          }).$promise.then(function(successResponse) {
+            $route.reload();
+          }, function(errorResponse) {
+            console.log('errorResponse', errorResponse);
+          });
         }
       };
+
+      //
+      // When the user has selected a response, we need to perform a few extra
+      // tasks so that our scope is updated properly.
+      //
+      $scope.$watch(angular.bind(this, function() {
+        return this.collaborator.response;
+      }), function (response) {
+
+        if (response) {
+
+          // Reset the fields we are done using
+          self.collaborator.query = null;
+          self.collaborator.response = null;
+
+          // Add the selected user value to the invitations list
+          self.collaborator.invitations.push(response);
+        }
+
+      });
 
       self.users = {
         list: members,
@@ -1100,10 +1104,8 @@ angular.module('FieldStack')
               }
             }).then(function(response) {
               //
-              // Once the users have been added to the project, close the modal
-              // and refresh the page
+              // Once the users have been added to the project refresh the page
               //
-              self.modals.close('inviteUser');
               self.page.refresh();
             });
           });
@@ -8970,6 +8972,176 @@ angular.module('Mapbox')
     };
   });
 
+'use strict';
+
+/**
+ * @ngdoc overview
+ * @name WaterReporter
+ * @description
+ *     The WaterReporter Website and associated User/Manager Site
+ * Main module of the application.
+ */
+angular
+  .module('collaborator', []);
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('collaborator')
+    .service('Collaborators', function (environment, $resource) {
+      return $resource(environment.apiUrl.concat('/v1/data/user'), {
+        id: '@id'
+      }, {
+        query: {
+          method: 'GET',
+          isArray: false
+        },
+        invite: {
+          method: 'POST',
+          isArray: false,
+          url: environment.apiUrl.concat('/v1/data/collaborator/invite')
+        }
+      });
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /*jshint camelcase: false */
+
+  /**
+   * @ngdoc directive
+   * @name managerApp.directive:collaboratorInvite
+   * @description
+   *   The Mapbox Geocoder directive enables developers to quickly add inline
+   *   geocoding capabilities to any HTML <input> or <textarea>
+   */
+  angular.module('collaborator')
+    .directive('collaboratorInvite', function (Collaborators, $compile, $http, $templateCache, $timeout, TemplateLoader) {
+
+      return {
+          restrict: 'A',
+          scope: {
+            collaboratorInviteQuery: '=',
+            collaboratorInviteResponse: '=',
+            collaboratorInviteResults: '=?'
+          },
+          link: function(scope, element, attrs) {
+
+            console.log('collaboratorInvite Directive Loaded Successfully');
+
+            //
+            // Setup up our timeout and the Template we will use for display the
+            // results from the Mapbox Geocoding API back to the user making the
+            // Request
+            //
+            var timeout;
+
+            //
+            // Take the template that we loaded into $templateCache and pull
+            // out the HTML that we need to create our drop down menu that
+            // holds our Mapbox Geocoding API results
+            //
+            TemplateLoader.get('/modules/shared/collaborator/collaboratorInviteResults--view.html')
+              .success(function(templateResult) {
+                element.after($compile(templateResult)(scope));
+              });
+
+            //
+            // Keep an eye on the Query model so that when it's updated we can
+            // execute a the Reuqest agains the Mapbox Geocoding API
+            //
+            scope.$watch('collaboratorInviteQuery', function(query) {
+
+              console.log("scope.$watch('collaboratorInviteQuery' fired", query)
+
+              //
+              // If the user types, make sure we cancel and restart the timeout
+              //
+              $timeout.cancel(timeout);
+
+              //
+              // If the user stops typing for 500 ms then we need to go ahead and
+              // execute the query against the Mapbox Geocoding API
+              //
+              timeout = $timeout(function () {
+
+                //
+                // The Mapbox Geocoding Service in our application provides us
+                // with a deferred promise with our Mapbox Geocoding API request
+                // so that we can handle the results of that request however we
+                // need to.
+                //
+                if (query && !scope.collaboratorInviteResponse) {
+                  var results = Collaborators.query({
+                    q: {
+                      filters: [
+                        {
+                          name: 'email',
+                          op: 'ilike',
+                          val: '%' + query + '%'
+                        }
+                      ]
+                    }
+                  }).$promise.then(function(successResponse) {
+                    console.log('successResponse', successResponse);
+                    scope.collaboratorInviteResults = successResponse;
+                  }, function(errorResponse) {
+                    console.error('errorResponse', errorResponse);
+                  });
+                }
+
+              }, 500);
+
+            });
+
+            //
+            // Geocoded Address Selection
+            //
+            scope.option = {
+              select: function(selectedValue, newUser) {
+
+                //
+                // Assign the selected value to back to our scope. The developer
+                // should be able to use the results however they like. For
+                // instance they may need to use the `Response` from this request
+                // to perform a query against another database for geolookup or
+                // save this value to the database.
+                //
+                if (newUser) {
+                  selectedValue = {
+                    properties: {
+                      email: selectedValue
+                    }
+                  }
+                }
+
+                scope.collaboratorInviteQuery = selectedValue;
+                scope.collaboratorInviteResponse = selectedValue;
+
+                //
+                // Once we're finished we need to make sure we empty the result
+                // list. An empty result list will be hidden.
+                //
+                scope.collaboratorInviteResults = null;
+              }
+            };
+
+          }
+      };
+    });
+
+}());
+
 (function () {
 
   'use strict';
@@ -9032,7 +9204,7 @@ angular.module('Mapbox')
 
   /**
    * @ngdoc service
-   * @name 
+   * @name
    * @description
    */
   angular.module('FieldStack')
@@ -9101,8 +9273,6 @@ angular.module('Mapbox')
             var return_ = false;
 
             angular.forEach(group, function(member) {
-                console.log(member.id, userId);
-
                 if (member.id === userId) {
                     return_ = true;
                 }
@@ -9116,7 +9286,7 @@ angular.module('Mapbox')
             console.log('Account.userObject', Account.userObject);
             return false;
         }
-        
+
         if (Account.hasRole('admin')) {
             console.log('admin');
             return true;

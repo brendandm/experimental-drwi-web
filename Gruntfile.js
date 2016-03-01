@@ -1,4 +1,3 @@
-// Generated on 2015-03-25 using generator-angular 0.11.1
 'use strict';
 
 // # Globbing
@@ -111,7 +110,8 @@ module.exports = function (grunt) {
         files: [
           '<%= yeoman.app %>/modules/**/*.js',
           '<%= yeoman.app %>/modules/components/**/*.js',
-          '<%= yeoman.app %>/modules/shared/**/*.js'
+          '<%= yeoman.app %>/modules/shared/**/*.js',
+          '<%= yeoman.app %>/modules/config/**/*.js'
         ],
         tasks: ['newer:jshint:all'],
         options: {
@@ -119,11 +119,19 @@ module.exports = function (grunt) {
         }
       },
       jsTest: {
-        files: ['test/spec/{,*/}*.js'],
-        tasks: ['newer:jshint:test', 'karma']
+        files: [
+        '<%= yeoman.app %>/modules/**/*.js',
+        '<%= yeoman.app %>/modules/components/**/*.js',
+        '<%= yeoman.app %>/modules/shared/**/*.js',
+        '<%= yeoman.app %>/modules/config/**/*.js',
+        'test/spec/modules/**/*.js',
+        'test/spec/modules/components/**/*.js',
+        'test/spec/modules/shared/**/*.js'
+        ],
+        tasks: ['newer:jshint:test']
       },
       compass: {
-        files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
+        files: ['<%= yeoman.app %>/styles/**/*.{scss,sass}'],
         tasks: ['compass:server', 'autoprefixer']
       },
       gruntfile: {
@@ -137,7 +145,7 @@ module.exports = function (grunt) {
           '<%= yeoman.app %>/**/*.html',
           '<%= yeoman.app %>/modules/components/**/*.html',
           '<%= yeoman.app %>/modules/shared/**/*.html',
-          '.tmp/styles/{,*/}*.css',
+          '.tmp/styles/**/*.css',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
         ]
       }
@@ -214,6 +222,9 @@ module.exports = function (grunt) {
     // Empties folders to start fresh
     clean: {
       dist: {
+        options: {
+          force: true
+        },
         files: [{
           dot: true,
           src: [
@@ -288,11 +299,11 @@ module.exports = function (grunt) {
         generatedImagesDir: '.tmp/images/generated',
         imagesDir: '<%= yeoman.app %>/images',
         javascriptsDir: '<%= yeoman.app %>/modules',
-        fontsDir: '<%= yeoman.app %>/styles/fonts',
+        fontsDir: '<%= yeoman.app %>/fonts',
         importPath: './bower_components',
         httpImagesPath: '/images',
         httpGeneratedImagesPath: '/images/generated',
-        httpFontsPath: '/styles/fonts',
+        httpFontsPath: '/fonts',
         relativeAssets: false,
         assetCacheBuster: false,
         raw: 'Sass::Script::Number.precision = 10\n'
@@ -314,6 +325,10 @@ module.exports = function (grunt) {
       dist: {
         src: [
           '<%= yeoman.dist %>/modules/**/*.js',
+          '<%= yeoman.dist %>/modules/components/**/*.js',
+          '<%= yeoman.dist %>/modules/shared/**/*.js',
+          '<%= yeoman.dist %>/modules/config/**/*.js',
+          '<%= yeoman.dist %>/scripts/**/*.js',
           '<%= yeoman.dist %>/styles/{,*/}*.css'
         ]
       }
@@ -351,23 +366,23 @@ module.exports = function (grunt) {
       }
     },
 
-    htmlmin: {
-      dist: {
-        options: {
-          collapseWhitespace: true,
-          conservativeCollapse: true,
-          collapseBooleanAttributes: true,
-          removeCommentsFromCDATA: true,
-          removeOptionalTags: true
-        },
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.dist %>',
-          src: ['*.html', '**/*.html'],
-          dest: '<%= yeoman.dist %>'
-        }]
-      }
-    },
+    // htmlmin: {
+    //   dist: {
+    //     options: {
+    //       collapseWhitespace: true,
+    //       conservativeCollapse: true,
+    //       collapseBooleanAttributes: true,
+    //       removeCommentsFromCDATA: true,
+    //       removeOptionalTags: true
+    //     },
+    //     files: [{
+    //       expand: true,
+    //       cwd: '<%= yeoman.dist %>',
+    //       src: ['*.html', '**/*.html'],
+    //       dest: '<%= yeoman.dist %>'
+    //     }]
+    //   }
+    // },
 
     // ng-annotate tries to make the code safe for minification automatically
     // by using the Angular long form for dependency injection.
@@ -403,8 +418,7 @@ module.exports = function (grunt) {
             '*.html',
             '**/*.html',
             'images/{,*/}*.*',
-            'styles/{,*/}*.css',
-            'fonts/{,*/}*.*'
+            '/fonts/{,*/}*.*'
           ]
         }, {
           expand: true,
@@ -438,11 +452,10 @@ module.exports = function (grunt) {
     karma: {
       unit: {
         configFile: 'test/karma.conf.js',
-        singleRun: true
+        singleRun: true,
       }
     }
   });
-
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
@@ -474,9 +487,15 @@ module.exports = function (grunt) {
     'karma'
   ]);
 
-  grunt.registerTask('build', [
+  //
+  // BUILD TASKS
+  //
+  // These are Grunt tasks that are run when `grunt build` is executed at the
+  // command prompt
+  //
+  var buildTasks = [
     'clean:dist',
-    'ngconstant:production',
+    'ngconstant:' + environment,
     'wiredep',
     'useminPrepare',
     'concurrent:dist',
@@ -487,9 +506,10 @@ module.exports = function (grunt) {
     'cdnify',
     'cssmin',
     'filerev',
-    'usemin',
-    'htmlmin'
-  ]);
+    'usemin'
+  ];
+
+  grunt.registerTask('build', buildTasks);
 
   grunt.registerTask('default', [
     'newer:jshint',

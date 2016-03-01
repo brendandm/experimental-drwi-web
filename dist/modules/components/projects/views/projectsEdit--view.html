@@ -1,1 +1,85 @@
-<div data-ng-include="'/templates/header--view.html'"></div> <main class="container feature"> <article class="feature-detail"> <div class="column-11 feature-detail-content"> <h1 class="large">Edit Project</h1> <form role="form" class="row form" id="form--ProjectEdit" name="form--ProjectEdit" data-ng-if="page.project.id"> <div class="form-row"> <div class="form-field"> <label for="project_title" class="control-label">1. What is the name of your project?</label> <textarea rows="1" data-ng-model="page.project.properties.name" class="form-control animate" msd-elastic id="name" name="name" placeholder="Project Name">{{ page.project.properties.name }}</textarea> </div> </div> <!-- Program Type --> <div class="form-row"> <div class="form-field"> <label for="program_type" class="control-label">2. Which funder is providing the grant?</label> <select data-ng-model="page.project.properties.account_id" class="form-control" id="program_type" name="program_type"> <option value="2">Maryland – Trust Fund <option value="1">National Fish and Wildlife Foundation </select> </div> </div> <!-- Program Type --> <div class="form-row"> <div class="form-field"> <label for="program_type" class="control-label">3. What type of grant are you requesting?</label> <select data-ng-model="page.project.properties.program_type" class="form-control" id="program_type" name="program_type"> <option value="CBCIG">Chesapeake Bay Conservation Innovation Grant <option value="INSR">Innovative Sediment and Nutrient Reduction <option value="SWG">Small Watershed Grant <option value="Trust Fund">Trust Fund </select> </div> </div> <!-- Project Abstract --> <div class="form-row"> <div class="form-field"> <label for="project_abstract" class="control-label">4. Please provide a short project description.</label> <textarea class="form-control animate" data-ng-model="page.project.properties.description" msd-elastic id="description" name="description" rows="1">{{ page.project.properties.description }}</textarea> </div> </div> <div class="form-actions"> <div class="form-actions-buttons"> <button type="submit" data-ng-click="page.saveProject()" class="button button-submit"> Save Changes </button> <button type="button" data-ng-click="page.deleteProject()" class="button button-link button-outline pull-right"> Delete </button> </div> </div> </form> </div> <nav class="column-5 contextual-navigation-wrapper"> <h6><strong>Tools</strong></h6> <ul class="contextual-navigation"> <!-- Proect Manangement Navigation --> <li> <a href="/projects/{{ page.project.id }}"> Project Overview </a> </li> <li class="active" data-ng-if="page.permissions.can_edit"> <a href="/projects/{{ page.project.id }}/edit">Edit</a> </li> <li data-ng-if="page.permissions.can_edit"> <a href="/projects/{{ page.project.id }}/users">Collaborators</a> </li> </ul> </nav> </article> </main> <div data-ng-include="'/templates/footer--view.html'"></div>
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="container feature">
+  <article class="feature-detail">
+    <div class="column-11 feature-detail-content">
+
+      <h1 class="large">Edit Project</h1>
+
+      <form role="form" class="row form" id="form--ProjectEdit" name="form--ProjectEdit" data-ng-if="page.project.id">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="project_title" class="control-label">1. What is the name of your project?</label>
+            <textarea rows="1" data-ng-model="page.project.properties.name" class="form-control animate"  msd-elastic id="name" name="name" placeholder="Project Name">{{ page.project.properties.name }}</textarea>
+          </div>
+        </div>
+
+        <!-- Program Type -->
+        <div class="form-row">
+          <div class="form-field">
+            <label for="program_type" class="control-label">2. Which funder is providing the grant?</label>
+            <select data-ng-model="page.project.properties.account_id" class="form-control" id="program_type" name="program_type">
+              <option value="2">Maryland – Trust Fund</option>
+              <option value="1">National Fish and Wildlife Foundation</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Program Type -->
+        <div class="form-row">
+          <div class="form-field">
+            <label for="program_type" class="control-label">3. What type of grant are you requesting?</label>
+            <select data-ng-model="page.project.properties.program_type" class="form-control" id="program_type" name="program_type">
+              <option value="CBCIG">Chesapeake Bay Conservation Innovation Grant</option>
+              <option value="INSR">Innovative Sediment and Nutrient Reduction</option>
+              <option value="SWG">Small Watershed Grant</option>
+              <option value="Trust Fund">Trust Fund</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Project Abstract -->
+        <div class="form-row">
+          <div class="form-field">
+            <label for="project_abstract" class="control-label">4. Please provide a short project description.</label>
+            <textarea class="form-control animate" data-ng-model="page.project.properties.description"
+                      msd-elastic id="description" name="description" rows="1">{{ page.project.properties.description }}</textarea>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <div class="form-actions-buttons">
+            <button type="submit" data-ng-click="page.saveProject()"
+                    class="button button-submit">
+              Save Changes
+            </button>
+            <button type="button" data-ng-click="page.deleteProject()"
+                    class="button button-link button-outline pull-right">
+              Delete
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <nav class="column-5 contextual-navigation-wrapper">
+      <h6><strong>Tools</strong></h6>
+      <ul class="contextual-navigation">
+        <!-- Proect Manangement Navigation -->
+        <li>
+          <a href="/projects/{{ page.project.id }}">
+              Project Overview
+          </a>
+        </li>
+        <li class="active" data-ng-if="page.permissions.can_edit">
+          <a href="/projects/{{ page.project.id }}/edit">Edit</a>
+        </li>
+        <li data-ng-if="page.permissions.can_edit">
+          <a href="/projects/{{ page.project.id }}/users">Collaborators</a>
+        </li>
+      </ul>
+    </nav>
+  </article>
+</main>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>
