@@ -1,9 +1,0 @@
-<!DOCTYPE html> <html class="no-js" data-ng-app="FieldStack"> <head> <meta charset="utf-8"> <!-- Sitewide meta tags --> <meta data-ng-repeat="tag in $root.site.meta" name="{{ tag.name }}" content="{{ tag.content }}"> <!-- Page specific meta tags --> <meta data-ng-repeat="tag in $root.page.meta" name="{{ tag.name }}" content="{{ tag.content }}"> <!-- Page Title based on either the root site title or the page specific site title --> <title>{{ $root.page.title }}{{ $root.site.title }}</title> <link rel="stylesheet" type="text/css" href="//api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css"> <!-- Place favicon.ico and apple-touch-icon.png in the root directory --> <link rel="stylesheet" href="/styles/vendor.2717784a.css"> <link rel="stylesheet" href="/styles/main.441d15ec.css" media="screen"> <link href="/styles/print.bb339b7b.css" rel="stylesheet" media="print"> <link rel="shortcut icon" href="/images/favicon.png"> <link rel="author" href="/humans.txt"> <link data-ng-repeat="link in $root.site.links" rel="{{ link.rel }}" href="{{ link.href }}"> <base href="/">  <body class="{{ $root.page.class }}"> <div data-ng-view=""></div> <!-- Google Analytics: change UA-XXXXX-X to be your site's ID --> <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-      ga('create', 'UA-55209146-1', 'auto');
-      ga('send', 'pageview');</script> <!--[if lt IE 9]>
-    <script src="/scripts/oldieshim.js"></script>
-    <![endif]--> <script src="/modules/vendor.3556cab0.js"></script> <script src="/modules/modules.01e83fb2.js"></script>  

@@ -109,11 +109,11 @@
           <div class="row">
             <!-- Vegetative Cover -->
             <div class="form-group column-5">
-              <label for="native_vegetation_intact" class="control-label">
+              <label for="native_vegetation" class="control-label">
                 Vegetative Cover
               </label>
 
-              <input data-ng-model="page.report.properties.native_vegetation_intact" class="form-control" class="form-control" type="number" id="native_vegetation_intact" name="native_vegetation_intact" placeholder="% intact" />
+              <input data-ng-model="page.report.properties.native_vegetation" class="form-control" class="form-control" type="number" id="native_vegetation" name="native_vegetation" placeholder="% intact" />
             </div>
 
             <!-- Buffer Composition (Woody) -->
@@ -211,13 +211,13 @@
           </div>
         </fieldset>
 
-        <fieldset data-ng-if="report.measurement_period === 'Monitoring'">
+        <fieldset data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
           <legend><strong>Adaptive</strong> Management Checks Performed</legend>
 
           <div class="form-group">
             <div class="checkbox">
               <label class="control-label">
-                <input data-ng-model="report.sediment_deposition" type="checkbox" id="sediment_deposition" name="sediment_deposition" /> Check for, and correct, causes of excess sediment build-up at the field-buffer interface that re-directs flow
+                <input data-ng-model="page.report.properties.sediment_deposition" type="checkbox" id="sediment_deposition" name="sediment_deposition" /> Check for, and correct, causes of excess sediment build-up at the field-buffer interface that re-directs flow
               </label>
             </div>
           </div>
@@ -225,7 +225,7 @@
           <div class="form-group">
             <div class="checkbox">
               <label class="control-label">
-                <input data-ng-model="report.concentrated_flow_paths" type="checkbox" id="concentrated_flow_paths" name="concentrated_flow_paths" /> Perform maintenance to remove concentrated flow paths through the buffer
+                <input data-ng-model="page.report.properties.concentrated_flow_paths" type="checkbox" id="concentrated_flow_paths" name="concentrated_flow_paths" /> Perform maintenance to remove concentrated flow paths through the buffer
               </label>
             </div>
           </div>
@@ -233,7 +233,7 @@
           <div class="form-group">
             <div class="checkbox">
               <label class="control-label">
-                <input data-ng-model="report.monthly_buffer_maintenance" type="checkbox" id="monthly_buffer_maintenance" name="monthly_buffer_maintenance" /> Check for, correct causes, and path bare and/or eroded areas in the buffer
+                <input data-ng-model="page.report.properties.monthly_buffer_maintenance" type="checkbox" id="monthly_buffer_maintenance" name="monthly_buffer_maintenance" /> Check for, correct causes, and path bare and/or eroded areas in the buffer
               </label>
             </div>
           </div>
@@ -241,7 +241,7 @@
           <div class="form-group">
             <div class="checkbox">
               <label class="control-label">
-                <input data-ng-model="report.vegetative_cover" type="checkbox" id="vegetative_cover" name="vegetative_cover" /> Apply herbicide around shelters in spring and fall to reduce competing vegetation
+                <input data-ng-model="page.report.properties.vegetative_cover" type="checkbox" id="vegetative_cover" name="vegetative_cover" /> Apply herbicide around shelters in spring and fall to reduce competing vegetation
               </label>
             </div>
           </div>
@@ -249,7 +249,7 @@
           <div class="form-group">
             <div class="checkbox">
               <label class="control-label">
-                <input data-ng-model="report.invasive_species_control" type="checkbox" id="invasive_species_control" name="invasive_species_control" /> Control noxious and invasive weeds
+                <input data-ng-model="page.report.properties.invasive_species_control" type="checkbox" id="invasive_species_control" name="invasive_species_control" /> Control noxious and invasive weeds
               </label>
             </div>
           </div>
