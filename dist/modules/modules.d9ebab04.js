@@ -47,7 +47,7 @@ angular.module('FieldStack')
 
  angular.module('config', [])
 
-.constant('environment', {name:'local',apiUrl:'http://api.fieldstack.io',siteUrl:'http://www.fieldstack.io',clientId:'VYUsqQ4QlO0wSJ3HeIZKyhx3cPa12KoCAZpIVgIE'})
+.constant('environment', {name:'local',apiUrl:'http://api.fieldstack.io',siteUrl:'http://www.fieldstack.io',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
 /**
