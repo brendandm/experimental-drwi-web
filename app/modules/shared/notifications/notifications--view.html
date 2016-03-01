@@ -7,22 +7,8 @@
   </p>
 
   <div role="alert" class="notify notify-{{ notification.type }} notify-dismissable"
-       data-ng-repeat="notification in $root.notifications.objects track by $index">
-
-      <div data-ng-switch="notification.message | isArray">
-
-        <div data-ng-switch-when="true">
-          <div data-ng-repeat="message_ in notification.title">
-             <span data-ng-bind-html="message_"></span>
-          </div>
-        </div>
-
-        <div data-ng-switch-when="false">
-          <strong>{{ notification.title }}</strong> <span>{{ notification.message }}</span>
-        </div>
-
-     </div>
-
+       data-ng-repeat="notification in $root.notifications.objects">
+    <strong>{{ notification.title }}</strong> <span>{{ notification.message }}</span>
   </div>
 
 </div>

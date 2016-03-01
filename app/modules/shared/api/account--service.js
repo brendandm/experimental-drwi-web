@@ -4,7 +4,7 @@
 
   /**
    * @ngdoc service
-   * @name 
+   * @name
    * @description
    */
   angular.module('FieldStack')
@@ -73,8 +73,6 @@
             var return_ = false;
 
             angular.forEach(group, function(member) {
-                console.log(member.id, userId);
-
                 if (member.id === userId) {
                     return_ = true;
                 }
@@ -88,7 +86,7 @@
             console.log('Account.userObject', Account.userObject);
             return false;
         }
-        
+
         if (Account.hasRole('admin')) {
             console.log('admin');
             return true;

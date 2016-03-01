@@ -7,14 +7,16 @@
 // @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
 //
 
-.mapboxGeocoder {
+.mapboxGeocoder,
+.typeAhead {
   position: relative;
 
   input {
     position: relative;
   }
 }
-.mapboxGeocoder--results {
+.mapboxGeocoder--results,
+.typeAhead--results {
   background-color: rgba(252,252,252,0.92);
   box-shadow: 0 2px 5px rgba(66, 66, 66, 1);
   border-bottom-left-radius: 5px;
@@ -32,7 +34,8 @@
   width: 100%;
   z-index: 9999;
 
-  .mapboxGeocoder--results--result {
+  .mapboxGeocoder--results--result,
+  .typeAhead--results--result {
     cursor: pointer;
     font-family: "Helvetica", Arial, sans-serif;
     font-size: 12px;

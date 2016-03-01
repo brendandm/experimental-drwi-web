@@ -10,7 +10,7 @@
    * Controller of the FieldStack
    */
   angular.module('FieldStack')
-    .controller('ProjectUsersCtrl', function (Account, $rootScope, $scope, $route, $location, project, user, members) {
+    .controller('ProjectUsersCtrl', function (Account, Collaborators, $rootScope, $scope, $route, $location, project, user, members) {
 
       var self = this;
       $rootScope.page = {};
@@ -41,26 +41,7 @@
                 url: '/projects/' + self.project.id + '/users'
               }
           ];
-          $rootScope.page.actions = [
-              {
-                type: 'button-link',
-                action: function($index) {
-                  self.project.users_edit = ! self.project.users_edit;
-                  $rootScope.page.actions[$index].visible = ! $rootScope.page.actions[$index].visible;
-                },
-                visible: false,
-                text: 'Edit collaborators',
-                alt: 'Done Editing'
-              },
-              {
-                type: 'button-link new',
-                action: function() {
-                  console.log('modal');
-                  self.modals.open('inviteUser');
-                },
-                text: 'Add a collaborator'
-              }
-          ];
+          $rootScope.page.actions = [];
 
           self.project.users = members;
           self.project.users_edit = false;
@@ -82,27 +63,49 @@
           }
 
       }, function(errorResponse) {
-          $log.error('Unable to load request project');
+          console.error('Unable to load request project');
       });
 
       //
-      // Modal Windows
+      // Empty Collaborators object
       //
-      self.modals = {
-        open: function($index) {
-          self.modals.windows[$index].visible = true;
-        },
-        close: function($index) {
-          self.modals.windows[$index].visible = false;
-        },
-        windows: {
-          inviteUser: {
-            title: 'Add a collaborator',
-            body: '',
-            visible: false
-          }
+      // We need to have an empty geocode object so that we can fill it in later
+      // in the address geocoding process. This allows us to pass the results along
+      // to the Form Submit function we have in place below.
+      //
+      self.collaborator = {
+        invitations: [],
+        sendInvitations: function() {
+          Collaborators.invite({
+            'collaborators': self.collaborator.invitations,
+            'project_id': self.project.id
+          }).$promise.then(function(successResponse) {
+            $route.reload();
+          }, function(errorResponse) {
+            console.log('errorResponse', errorResponse);
+          });
         }
       };
+
+      //
+      // When the user has selected a response, we need to perform a few extra
+      // tasks so that our scope is updated properly.
+      //
+      $scope.$watch(angular.bind(this, function() {
+        return this.collaborator.response;
+      }), function (response) {
+
+        if (response) {
+
+          // Reset the fields we are done using
+          self.collaborator.query = null;
+          self.collaborator.response = null;
+
+          // Add the selected user value to the invitations list
+          self.collaborator.invitations.push(response);
+        }
+
+      });
 
       self.users = {
         list: members,
@@ -124,10 +127,8 @@
               }
             }).then(function(response) {
               //
-              // Once the users have been added to the project, close the modal
-              // and refresh the page
+              // Once the users have been added to the project refresh the page
               //
-              self.modals.close('inviteUser');
               self.page.refresh();
             });
           });

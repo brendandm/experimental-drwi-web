@@ -19,5 +19,6 @@ angular
     'angularMoment',
     'config',
     'Mapbox',
-    'save2pdf'
+    'save2pdf',
+    'collaborator'
   ]);
