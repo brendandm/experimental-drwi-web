@@ -48,8 +48,6 @@
             //
             scope.$watch('collaboratorInviteQuery', function(query) {
 
-              console.log("scope.$watch('collaboratorInviteQuery' fired", query)
-
               //
               // If the user types, make sure we cancel and restart the timeout
               //

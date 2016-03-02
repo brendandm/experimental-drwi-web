@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldStack')
-  .controller('ProjectsCtrl', function (Account, $location, $log, Project, projects, $rootScope, user) {
+  .controller('ProjectsCtrl', function (Account, $location, $log, Project, projects, $rootScope, $scope, user) {
 
     var self = this;
 
@@ -37,6 +37,70 @@ angular.module('FieldStack')
     // Project functionality
     //
     self.projects = projects;
+
+    self.search = {
+      query: '',
+      execute: function() {
+
+        //
+        // Get all of our existing URL Parameters so that we can
+        // modify them to meet our goals
+        //
+        var q = {
+          filters: [{
+            "and": [
+              {
+                name: 'name',
+                op: 'ilike',
+                val: '%' + self.search.query + '%'
+              }
+            ]
+          }],
+          order_by: [{
+            field: 'created_on',
+            direction: 'desc'
+          }]
+        };
+
+        $location.path('/projects/').search({
+          q: angular.toJson(q),
+          page: 1
+        });
+
+      },
+      paginate: function(pageNumber) {
+
+        //
+        // Get all of our existing URL Parameters so that we can
+        // modify them to meet our goals
+        //
+        var searchParams = $location.search();
+
+        searchParams.page = pageNumber;
+
+        $location.path('/projects/').search(searchParams);
+      },
+      clear: function() {
+        $location.path('/projects/').search('');
+      }
+    };
+
+    //
+    // Set Default Search Filter value
+    //
+    if (self.search && self.search.query === '') {
+
+      var searchParams = $location.search(),
+          q = angular.fromJson(searchParams.q);
+
+      if (q && q.filters && q.filters.length) {
+        angular.forEach(q.filters[0].and, function(filter) {
+            if (filter.name === 'name') {
+              self.search.query = filter.val.replace(/%/g, '');;
+            }
+        });
+      }
+    };
 
     self.createProject = function() {
         self.project = new Project({

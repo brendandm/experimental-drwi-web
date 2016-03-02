@@ -7,7 +7,20 @@
     <div class="row toolbox">
 
       <!-- Filter Tools -->
-      <div class="column-12"></div>
+      <div class="column-12">
+        <form role="form" id="formFilterProjects" name="formFilterProjects"
+              data-ng-submit="page.search.execute()">
+          <div class="form-element">
+            <input type="text" placeholder="Begin typing a project name..."
+                   id="search" name="search" class="form-control"
+                   data-ng-model="page.search.query" />
+          </div>
+          <div class="form-actions">
+            <button type="submit">Search</button>
+            <button type="button" data-ng-click="page.search.clear()">Clear Search</button>
+          </div>
+        </form>
+      </div>
 
       <!-- Pagination Tools -->
       <div class="column-4">
@@ -19,25 +32,31 @@
             </span>
 
             <!-- If there are 25 or less projects to display -->
-            <span data-ng-if="page.projects.properties.num_results <= 25 && page.projects.properties.num_results !== 0">
+            <span data-ng-if="page.projects.properties.num_results <= 10 && page.projects.properties.num_results !== 0">
                 1-{{ page.projects.properties.num_results }} of {{ page.projects.properties.num_results }}
             </span>
 
             <!-- If user is on the first page and there are more than 25 results -->
-            <span data-ng-if="page.projects.properties.page === 1 && page.projects.properties.num_results > 25">
-                1-25 of {{ page.projects.properties.num_results | number }}
+            <span data-ng-if="page.projects.properties.page === 1 && page.projects.properties.num_results > 10">
+                1-10 of {{ page.projects.properties.num_results | number }}
             </span>
 
             <!-- If the current page is no the first page -->
             <span data-ng-if="page.projects.properties.page && page.projects.properties.page > 1">
-                {{ (page.projects.properties.page*page.projects.properties.features_per_page)-page.projects.properties.features_per_page | number }}-{{ (page.projects.properties.page*page.projects.properties.features_per_page) | number }} of {{ page.projects.properties.num_results | number }}
+                {{ (page.projects.properties.page*10)-10 | number }}-{{ (page.projects.properties.page*10) | number }} of {{ page.projects.properties.num_results | number }}
             </span>
           </li>
           <li data-ng-if="page.projects.properties.page !== page.projects.properties.total_pages && page.projects.properties.num_results !== 0"
-              class="next pull-right"><a title="Older" data-ng-click="search.paginate(projects.properties.page+1)">
-                <div class="icon retinaicon-retina-icons-v-1-5"></div>
-          </a></li>
-          <li data-ng-if="page.projects.properties.page !== 1" class="previous pull-right"><a title="Newer" data-ng-click="search.paginate(page.projects.properties.page-1)"><div class="icon retinaicon-retina-icons-v-1-4"></div></a></li>
+              class="next pull-right">
+            <a title="Older" data-ng-click="page.search.paginate(page.projects.properties.page+1)">
+              <div class="icon retinaicon-retina-icons-v-1-5"></div>
+            </a>
+          </li>
+          <li data-ng-if="page.projects.properties.page !== 1" class="previous pull-right">
+            <a title="Newer" data-ng-click="page.search.paginate(page.projects.properties.page-1)">
+              <div class="icon retinaicon-retina-icons-v-1-4"></div>
+            </a>
+          </li>
         </ul>
       </div>
 
