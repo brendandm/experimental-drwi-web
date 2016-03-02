@@ -1,13 +1,13 @@
 <div class="autocomplete">
   <div class="row">
-    <div class="column-15">
+    <div class="column-15 typeAhead">
       <input data-ng-focus="relationship_focus=true" data-ng-blur="relationship_focus=false" type="text" placeholder="{{ placeholder }}" data-ng-model="searchText" data-ng-change="search()" class="form-control" />
       <div data-ng-if="features.length" class="dropdown">
-        <ul>
-          <li data-ng-repeat="feature in features track by $index">
-            <a data-ng-click="addFeatureToRelationships(feature.feature)">
+        <ul class="typeAhead--results">
+          <li class="typeAhead--results--result"
+              data-ng-repeat="feature in features track by $index"
+              data-ng-click="addFeatureToRelationships(feature.feature)">
               {{ feature.text }}
-            </a>
           </li>
         </ul>
       </div>

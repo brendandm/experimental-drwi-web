@@ -2,7 +2,7 @@
   <li class="typeAhead--results--result" data-ng-repeat="result in collaboratorInviteResults.features" data-ng-click="option.select(result)">
     {{ result.properties.first_name }} {{ result.properties.last_name }}, <em>{{ result.properties.email }}</em>
   </li>
-  <li class="typeAhead--results--result" data-ng-click="option.select(collaboratorInviteQuery, true)">
+  <li data-ng-if="collaboratorInviteResults.length === 0" class="typeAhead--results--result" data-ng-click="option.select(collaboratorInviteQuery, true)">
     {{ collaboratorInviteQuery }}
   </li>
 </ul>

@@ -83,18 +83,14 @@
 
       Account.canEdit = function(resource) {
         if (Account.userObject && !Account.userObject.id) {
-            console.log('Account.userObject', Account.userObject);
             return false;
         }
 
         if (Account.hasRole('admin')) {
-            console.log('admin');
             return true;
         } else if (Account.hasRole('manager') && Account.inGroup(resource.properties.account_id, Account.userObject.properties.account)) {
-            console.log('manager');
             return true;
         } else if (Account.hasRole('grantee') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(Account.userObject.id, resource.properties.members))) {
-            console.log('grantee');
             return true;
         }
 
