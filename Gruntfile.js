@@ -329,7 +329,8 @@ module.exports = function (grunt) {
           '<%= yeoman.dist %>/modules/shared/**/*.js',
           '<%= yeoman.dist %>/modules/config/**/*.js',
           '<%= yeoman.dist %>/scripts/**/*.js',
-          '<%= yeoman.dist %>/styles/{,*/}*.css'
+          '<%= yeoman.dist %>/styles/{,*/}*.css',
+          '<%= yeoman.dist %>/fonts/{,*/}*.*'
         ]
       }
     },
@@ -361,28 +362,29 @@ module.exports = function (grunt) {
         assetsDirs: [
           '<%= yeoman.dist %>',
           '<%= yeoman.dist %>/images',
-          '<%= yeoman.dist %>/styles'
+          '<%= yeoman.dist %>/styles',
+          '<%= yeoman.dist %>/fonts'
         ]
       }
     },
 
-    // htmlmin: {
-    //   dist: {
-    //     options: {
-    //       collapseWhitespace: true,
-    //       conservativeCollapse: true,
-    //       collapseBooleanAttributes: true,
-    //       removeCommentsFromCDATA: true,
-    //       removeOptionalTags: true
-    //     },
-    //     files: [{
-    //       expand: true,
-    //       cwd: '<%= yeoman.dist %>',
-    //       src: ['*.html', '**/*.html'],
-    //       dest: '<%= yeoman.dist %>'
-    //     }]
-    //   }
-    // },
+    htmlmin: {
+      dist: {
+        options: {
+          collapseWhitespace: true,
+          conservativeCollapse: true,
+          collapseBooleanAttributes: true,
+          removeCommentsFromCDATA: true,
+          removeOptionalTags: true
+        },
+        files: [{
+          expand: true,
+          cwd: '<%= yeoman.dist %>',
+          src: ['*.html', '**/*.html'],
+          dest: '<%= yeoman.dist %>'
+        }]
+      }
+    },
 
     // ng-annotate tries to make the code safe for minification automatically
     // by using the Angular long form for dependency injection.
@@ -418,7 +420,8 @@ module.exports = function (grunt) {
             '*.html',
             '**/*.html',
             'images/{,*/}*.*',
-            '/fonts/{,*/}*.*'
+            'styles/{,*/}*.css',
+            'fonts/{,*/}*.*'
           ]
         }, {
           expand: true,
