@@ -29,6 +29,17 @@
 
             if (sessionCookie) {
               config.headers.Authorization = 'Bearer ' + sessionCookie;
+            } else {
+              /**
+               * Remove all cookies present for authentication
+               */
+              ipCookie.remove('FIELDSTACKIO_SESSION');
+              ipCookie.remove('FIELDSTACKIO_SESSION', { path: '/' });
+
+              ipCookie.remove('FIELDSTACKIO_CURRENTUSER');
+              ipCookie.remove('FIELDSTACKIO_CURRENTUSER', { path: '/' });
+
+              $location.path('/account/login').search('');
             }
 
             config.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate';
