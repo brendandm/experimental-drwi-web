@@ -39,7 +39,6 @@ angular.module('FieldStack')
               direction: 'desc'
             }];
 
-
             //
             // Execute our query so that we can get the Reports back
             //

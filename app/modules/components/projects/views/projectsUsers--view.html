@@ -15,7 +15,7 @@
               <th>&nbsp;</th>
               <th>Email</th>
               <th>Role</th>
-              <th>Action</th>
+              <th style="width:40%">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -36,7 +36,7 @@
                 <div data-ng-if="user.id != $root.user.id">
                   <a data-ng-if="!page.project.properties.members[$index].remove_confirm" data-ng-click="page.project.properties.members[$index].remove_confirm = true;" class="remove">remove</a>
                   <span data-ng-if="page.project.properties.members[$index].remove_confirm" class="confirm">
-                    <a data-ng-click="page.project.properties.members.splice($index, 1); page.users.remove(user);" class="remove">remove</a>
+                    <a data-ng-click="page.project.properties.members.splice($index, 1); page.users.remove(user);" class="remove">Remove from project?</a>
                     <span>or</span>
                     <a data-ng-click="page.project.properties.members[$index].remove_confirm = false;" class="cancel">go back</a>
                   </span>
@@ -69,9 +69,7 @@
               <div class="form-element">
                 <ul data-ng-if="page.collaborator.invitations && page.collaborator.invitations.length">
                   <li data-ng-repeat="collaborator in page.collaborator.invitations track by $index">
-                    <span data-ng-if-"collaborator.properties.email">
-                      {{ collaborator.properties.email }}
-                    </span>
+                    <span data-ng-if="collaborator.properties.first_name">{{ collaborator.properties.first_name }}</span> <span data-ng-if="collaborator.properties.last_name">{{ collaborator.properties.last_name }}, </span><em>{{ collaborator.properties.email }}</em>
                   </li>
                 </ul>
               </div>
