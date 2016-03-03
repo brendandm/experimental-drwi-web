@@ -73,7 +73,7 @@ angular.module('Mapbox')
        *
        * @param (array) requestedCoordinates
        *    A two value array containing the longitude and latitude respectively
-       *    
+       *
        *    Example:
        *    [
        *       '<LONGITUDE>',
@@ -146,7 +146,7 @@ angular.module('Mapbox')
        *
        */
       batch: function(requestedQueries) {
-        console.warning('Mapbox Geocoding Batch Geocoding not implemented, see https://www.mapbox.com/developers/api/geocoding/ for more information.');
+        console.log('Mapbox Geocoding Batch Geocoding not implemented, see https://www.mapbox.com/developers/api/geocoding/ for more information.');
       }
     };
 

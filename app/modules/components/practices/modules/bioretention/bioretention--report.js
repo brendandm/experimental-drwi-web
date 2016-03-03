@@ -122,7 +122,7 @@ angular.module('FieldStack')
             console.log('errorResponse', errorResponse);
           });
         } else {
-          console.warning('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
+          console.log('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
         }
 
       }, function(errorResponse) {

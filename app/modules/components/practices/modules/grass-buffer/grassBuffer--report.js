@@ -161,7 +161,7 @@
                   sediment: (((loaddata.area * 2)*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
                 };
 
-                console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad);
+                // console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad);
 
                 var existingPreInstallationLoad = {
                   nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
@@ -169,7 +169,7 @@
                   sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
                 };
 
-                console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad);
+                // console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad);
 
                 self.calculateGrassBuffer.results.totalPreInstallationLoad = {
                   efficieny: loaddata.efficieny,
@@ -224,41 +224,43 @@
                     }
                   }).$promise.then(function(efficiencyResponse) {
 
-                    self.practice_efficiency = efficiencyResponse.features[0].properties;
+                    if (efficiencyResponse.features && efficiencyResponse.features.length) {
+                      self.practice_efficiency = efficiencyResponse.features[0].properties;
 
-                    //
-                    // EXISTING CONDITION — LOAD VALUES
-                    //
-                    var uplandPlannedInstallationLoad = {
-                      sediment: self.calculateGrassBuffer.results.totalPreInstallationLoad.uplandLanduse.sediment*(self.practice_efficiency.s_efficiency),
-                      nitrogen: self.calculateGrassBuffer.results.totalPreInstallationLoad.uplandLanduse.nitrogen*(self.practice_efficiency.n_efficiency),
-                      phosphorus: self.calculateGrassBuffer.results.totalPreInstallationLoad.uplandLanduse.phosphorus*(self.practice_efficiency.p_efficiency)
-                    };
+                      //
+                      // EXISTING CONDITION — LOAD VALUES
+                      //
+                      var uplandPlannedInstallationLoad = {
+                        sediment: self.calculateGrassBuffer.results.totalPreInstallationLoad.uplandLanduse.sediment*(self.practice_efficiency.s_efficiency),
+                        nitrogen: self.calculateGrassBuffer.results.totalPreInstallationLoad.uplandLanduse.nitrogen*(self.practice_efficiency.n_efficiency),
+                        phosphorus: self.calculateGrassBuffer.results.totalPreInstallationLoad.uplandLanduse.phosphorus*(self.practice_efficiency.p_efficiency)
+                      };
 
-                    console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
+                      // console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
 
-                    var existingPlannedInstallationLoad = {
-                      sediment: ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000),
-                      nitrogen: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres))),
-                      phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
-                    };
+                      var existingPlannedInstallationLoad = {
+                        sediment: ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000),
+                        nitrogen: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres))),
+                        phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
+                      };
 
-                    console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
+                      // console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
 
-                    //
-                    // PLANNED CONDITIONS — LANDUSE VALUES
-                    //
-                    var totals = {
-                      efficiency: {
-                        new: newLoaddata,
-                        existing: existingLoaddata
-                      },
-                      nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen,
-                      phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus,
-                      sediment: uplandPlannedInstallationLoad.sediment + existingPlannedInstallationLoad.sediment
-                    };
+                      //
+                      // PLANNED CONDITIONS — LANDUSE VALUES
+                      //
+                      var totals = {
+                        efficiency: {
+                          new: newLoaddata,
+                          existing: existingLoaddata
+                        },
+                        nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen,
+                        phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus,
+                        sediment: uplandPlannedInstallationLoad.sediment + existingPlannedInstallationLoad.sediment
+                      };
 
-                    self.calculateGrassBuffer.results.totalPlannedLoad = totals;
+                      self.calculateGrassBuffer.results.totalPlannedLoad = totals;
+                    }
 
                   });
                 });
