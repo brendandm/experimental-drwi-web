@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldStack')
-  .controller('ProjectsCtrl', function (Account, $location, $log, Project, projects, $rootScope, $scope, user) {
+  .controller('ProjectsCtrl', function (Account, $location, $log, Project, projects, $rootScope, $scope, Site, user) {
 
     var self = this;
 
@@ -23,6 +23,13 @@ angular.module('FieldStack')
         }
       ],
       actions: [
+        {
+          type: 'button-link',
+          action: function() {
+            self.createPlan();
+          },
+          text: 'Create Pre-Project Plan'
+        },
         {
           type: 'button-link new',
           action: function() {
@@ -112,6 +119,31 @@ angular.module('FieldStack')
         }, function(errorResponse) {
             $log.error('Unable to create Project object');
         });
+    };
+
+    self.createPlan = function() {
+      self.project = new Project({
+          'name': 'Project Plan',
+          'program_type': 'Pre-Project Plan',
+          'description': 'This project plan was created to estimate the potential benefits of a project\'s site and best management practices.'
+      });
+
+      self.project.$save(function(successResponse) {
+
+          self.site = new Site({
+            'name': 'Planned Site',
+            'project_id': successResponse.id
+          });
+
+          self.site.$save(function(siteSuccessResponse) {
+            $location.path('/projects/' + successResponse.id + '/sites/' + siteSuccessResponse.id + '/edit');
+          }, function(siteErrorResponse) {
+            console.error('Could not save your new Project Plan');
+          });
+
+      }, function(errorResponse) {
+          $log.error('Unable to create Project object');
+      });
     };
 
     //
