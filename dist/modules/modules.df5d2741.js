@@ -6,7 +6,7 @@
  * @description
  */
 angular
-  .module('FieldStack', [
+  .module('FieldDoc', [
     'ngResource',
     'ngRoute',
     'ngSanitize',
@@ -30,7 +30,7 @@ angular
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .config(function($routeProvider, $locationProvider) {
 
     $routeProvider
@@ -47,10 +47,9 @@ angular.module('FieldStack')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'http://api.fieldstack.io',siteUrl:'http://www.fieldstack.io',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+ .constant('environment', {name:'production',apiUrl:'http://api.fieldstack.io',siteUrl:'http://www.fieldstack.io',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
-
 /**
  * angular-save2pdf - angular jsPDF wrapper
  * Copyright (c) 2015 John Daily Jr.,
@@ -115,13 +114,13 @@ angular.module('FieldStack')
 
     /**
      * @ngdoc overview
-     * @name FieldStack
+     * @name FieldDoc
      * @description
-     * # FieldStack
+     * # FieldDoc
      *
      * Main module of the application.
      */
-    angular.module('FieldStack')
+    angular.module('FieldDoc')
       .config(function ($routeProvider) {
         $routeProvider
           .when('/', {
@@ -169,7 +168,7 @@ angular.module('FieldStack')
      * @name
      * @description
      */
-     angular.module('FieldStack')
+     angular.module('FieldDoc')
         .controller('SecurityController', function(Account, $location, Security, ipCookie, Notifications, $route, $rootScope, $timeout) {
 
             var self = this;
@@ -263,10 +262,11 @@ angular.module('FieldStack')
      * @name
      * @description
      */
-     angular.module('FieldStack')
-       .controller('SecurityRegisterController', function (Account, $location, Security, ipCookie, $rootScope, $timeout) {
+     angular.module('FieldDoc')
+       .controller('SecurityRegisterController', function (Account, $location, Security, ipCookie, $rootScope, $timeout, User) {
 
-             var self = this;
+             var self = this,
+                 userId = null;
 
              self.cookieOptions = {
                path: '/',
@@ -284,7 +284,7 @@ angular.module('FieldStack')
 
              self.register = {
                visible: false,
-               login: function() {
+               login: function(userId) {
 
                  var credentials = new Security({
                    email: self.register.email,
@@ -319,6 +319,14 @@ angular.module('FieldStack')
 
                      ipCookie('FIELDSTACKIO_SESSION', response.access_token, self.cookieOptions);
 
+                     self.newUser = new User({
+                       id: userId,
+                       properties: {
+                         first_name: self.register.first_name,
+                         last_name: self.register.last_name
+                       }
+                     });
+
                      //
                      // Make sure we also set the User ID Cookie, so we need to wait to
                      // redirect until we're really sure the cookie is set
@@ -332,7 +340,18 @@ angular.module('FieldStack')
 
                          $rootScope.isLoggedIn = Account.hasToken();
 
-                         $location.path('/projects');
+                         self.newUser = new User({
+                           id: $rootScope.user.id,
+                           first_name: self.register.first_name,
+                           last_name: self.register.last_name
+                         });
+
+                         self.newUser.$update().then(function (updateUserSuccessResponse) {
+                           $location.path('/projects');
+                         }, function(updateUserErrorResponse) {
+                           console.log('updateUserErrorResponse', updateUserErrorResponse);
+                         });
+
                        });
                      });
 
@@ -420,7 +439,7 @@ angular.module('FieldStack')
 
                      self.register.processingLogin = true;
 
-                     self.register.login();
+                     self.register.login(response.response.user.id);
                    }
                  });
                }
@@ -439,7 +458,7 @@ angular.module('FieldStack')
      * @name
      * @description
      */
-     angular.module('FieldStack')
+     angular.module('FieldDoc')
        .controller('SecurityLogoutController', function (Account, ipCookie, $location, $rootScope) {
 
          /**
@@ -474,7 +493,7 @@ angular.module('FieldStack')
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .controller('SecurityResetPasswordController', function ($location, Security, $timeout) {
 
       var self = this;
@@ -533,12 +552,12 @@ angular.module('FieldStack')
 
     /**
      * @ngdoc service
-     * @name FieldStack.authorizationInterceptor
+     * @name FieldDoc.authorizationInterceptor
      * @description
      * # authorizationInterceptor
-     * Service in the FieldStack.
+     * Service in the FieldDoc.
      */
-    angular.module('FieldStack')
+    angular.module('FieldDoc')
       .factory('AuthorizationInterceptor', function($location, $q, ipCookie, $log) {
 
         return {
@@ -558,6 +577,17 @@ angular.module('FieldStack')
 
             if (sessionCookie) {
               config.headers.Authorization = 'Bearer ' + sessionCookie;
+            } else {
+              /**
+               * Remove all cookies present for authentication
+               */
+              ipCookie.remove('FIELDSTACKIO_SESSION');
+              ipCookie.remove('FIELDSTACKIO_SESSION', { path: '/' });
+
+              ipCookie.remove('FIELDSTACKIO_CURRENTUSER');
+              ipCookie.remove('FIELDSTACKIO_CURRENTUSER', { path: '/' });
+
+              $location.path('/account/login').search('');
             }
 
             config.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate';
@@ -590,12 +620,12 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc service
- * @name FieldStack.Navigation
+ * @name FieldDoc.Navigation
  * @description
  * # Navigation
- * Service in the FieldStack.
+ * Service in the FieldDoc.
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .service('token', ['$location', 'ipCookie', function ($location, ipCookie) {
 
     return {
@@ -631,13 +661,13 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc overview
- * @name FieldStack
+ * @name FieldDoc
  * @description
- * # FieldStack
+ * # FieldDoc
  *
  * Main module of the application.
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .config(function($routeProvider, commonscloud) {
 
     $routeProvider
@@ -755,7 +785,7 @@ angular.module('FieldStack')
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('ProjectsCtrl', function (Account, $location, $log, Project, projects, $rootScope, $scope, Site, user) {
 
     var self = this;
@@ -914,12 +944,12 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:ProjectviewCtrl
+ * @name FieldDoc.controller:ProjectviewCtrl
  * @description
  * # ProjectviewCtrl
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('ProjectViewCtrl', function (Account, $rootScope, $route, $location, mapbox, project, Site, sites, user) {
 
     var self = this;
@@ -1019,7 +1049,7 @@ angular.module('FieldStack')
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('ProjectEditCtrl', function (Account, $location, $log, Project, project, $rootScope, $route, user) {
 
     var self = this;
@@ -1101,12 +1131,12 @@ angular.module('FieldStack')
 
   /**
    * @ngdoc function
-   * @name FieldStack.controller:ProjectUsersCtrl
+   * @name FieldDoc.controller:ProjectUsersCtrl
    * @description
    * # ProjectUsersCtrl
-   * Controller of the FieldStack
+   * Controller of the FieldDoc
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .controller('ProjectUsersCtrl', function (Account, Collaborators, $rootScope, $scope, $route, $location, project, user, members) {
 
       var self = this;
@@ -1248,13 +1278,13 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc overview
- * @name FieldStack
+ * @name FieldDoc
  * @description
- * # FieldStack
+ * # FieldDoc
  *
  * Main module of the application.
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
 
     $routeProvider
@@ -1309,12 +1339,12 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:SiteViewCtrl
+ * @name FieldDoc.controller:SiteViewCtrl
  * @description
  * # SiteViewCtrl
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('SiteViewCtrl', function (Account, leafletData, $location, site, Practice, practices, $rootScope, $route, user) {
 
     var self = this;
@@ -1537,12 +1567,12 @@ angular.module('FieldStack')
 
   /**
    * @ngdoc function
-   * @name FieldStack.controller:SiteEditCtrl
+   * @name FieldDoc.controller:SiteEditCtrl
    * @description
    * # SiteEditCtrl
-   * Controller of the FieldStack
+   * Controller of the FieldDoc
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .controller('SiteEditCtrl', function (Account, environment, $http, leafletData, $location, Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, Segment, $timeout, user) {
 
       var self = this,
@@ -1916,7 +1946,7 @@ angular.module('FieldStack')
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .config(function($routeProvider, commonscloud) {
 
       $routeProvider
@@ -1970,7 +2000,7 @@ angular.module('FieldStack')
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .constant('Storage', {
     'forest-buffer': {
       landuse: 'for',
@@ -2095,7 +2125,7 @@ angular.module('FieldStack')
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('Calculate', function(LoadData, $q) {
       return {
         getExistingLanduse: function(measurementPeriod, readings) {
@@ -2178,12 +2208,14 @@ angular.module('FieldStack')
  * @name
  * @description
  */
-angular.module('FieldStack')
-  .controller('PracticeEditController', function (Account, $location, Practice, practice, $rootScope, $route, site, user) {
+angular.module('FieldDoc')
+  .controller('PracticeEditController', function (Account, Image, $location, $log, Media, Practice, practice, $q, $rootScope, $route, site, user) {
 
     var self = this,
         projectId = $route.current.params.projectId,
         siteId = $route.current.params.siteId;
+
+    self.files = Media;
 
     $rootScope.page = {};
 
@@ -2240,11 +2272,39 @@ angular.module('FieldStack')
     });
 
     self.savePractice = function() {
-      self.practice.$update().then(function(successResponse) {
-        $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id);
-      }, function(errorResponse) {
-        // Error message
-      });
+
+      if (self.files.images.length) {
+
+        var savedQueries = self.files.preupload(self.files.images);
+
+        $q.all(savedQueries).then(function(successResponse) {
+
+            $log.log('Images::successResponse', successResponse);
+
+            angular.forEach(successResponse, function(image){
+                self.practice.properties.images.push({
+                    id: image.id
+                });
+            });
+
+            self.practice.$update().then(function(successResponse) {
+              $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id);
+            }, function(errorResponse) {
+              // Error message
+            });
+
+        }, function(errorResponse) {
+            $log.log('errorResponse', errorResponse);
+        });
+
+      }
+      else {
+        self.practice.$update().then(function(successResponse) {
+          $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id);
+        }, function(errorResponse) {
+          // Error message
+        });
+      }
     };
 
     self.deletePractice = function() {
@@ -2264,7 +2324,7 @@ angular.module('FieldStack')
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('PracticeViewController', function ($location, practice, $route, Utility) {
 
     var self = this,
@@ -2292,7 +2352,7 @@ angular.module('FieldStack')
  * @name.
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .constant('AnimalType', {
       beef: {
         average_weight: 877.19,
@@ -2384,13 +2444,13 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc overview
- * @name FieldStack
+ * @name FieldDoc
  * @description
- * # FieldStack
+ * # FieldDoc
  *
  * Main module of the application.
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .config(function($routeProvider) {
 
     $routeProvider
@@ -2464,12 +2524,12 @@ angular.module('FieldStack')
 
   /**
    * @ngdoc service
-   * @name FieldStack.Storage
+   * @name FieldDoc.Storage
    * @description
    *    Provides site/application specific variables to the entire application
-   * Service in the FieldStack.
+   * Service in the FieldDoc.
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('CalculateForestBuffer', function(LoadData, $q) {
       return {
         getPreInstallationLoad: function(bufferArea, loaddata) {
@@ -2769,7 +2829,7 @@ angular.module('FieldStack')
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .controller('ForestBufferReportController', function (Account, Calculate, CalculateForestBuffer, Efficiency, LoadData, $location, $log, practice, PracticeForestBuffer, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
 
       var self = this,
@@ -3276,7 +3336,7 @@ angular.module('FieldStack')
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .controller('ForestBufferFormController', function (Account, landuse, $location, practice, PracticeForestBuffer, report, $rootScope, $route, site, $scope, user, Utility) {
 
       var self = this,
@@ -3427,13 +3487,13 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc overview
- * @name FieldStack
+ * @name FieldDoc
  * @description
- * # FieldStack
+ * # FieldDoc
  *
  * Main module of the application.
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .config(function($routeProvider) {
 
     $routeProvider
@@ -3505,11 +3565,11 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc service
- * @name FieldStack.Storage
+ * @name FieldDoc.Storage
  * @description
- * Service in the FieldStack.
+ * Service in the FieldDoc.
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .service('CalculateGrassBuffer', function() {
     return {
 
@@ -3525,7 +3585,7 @@ angular.module('FieldStack')
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .controller('GrassBufferReportController', function (Account, Calculate, CalculateGrassBuffer, Efficiency, LoadData, $location, $log, practice, PracticeGrassBuffer, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
 
       var self = this,
@@ -3679,7 +3739,7 @@ angular.module('FieldStack')
                   sediment: (((loaddata.area * 2)*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
                 };
 
-                console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad);
+                // console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad);
 
                 var existingPreInstallationLoad = {
                   nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
@@ -3687,7 +3747,7 @@ angular.module('FieldStack')
                   sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
                 };
 
-                console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad);
+                // console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad);
 
                 self.calculateGrassBuffer.results.totalPreInstallationLoad = {
                   efficieny: loaddata.efficieny,
@@ -3742,41 +3802,43 @@ angular.module('FieldStack')
                     }
                   }).$promise.then(function(efficiencyResponse) {
 
-                    self.practice_efficiency = efficiencyResponse.features[0].properties;
+                    if (efficiencyResponse.features && efficiencyResponse.features.length) {
+                      self.practice_efficiency = efficiencyResponse.features[0].properties;
 
-                    //
-                    // EXISTING CONDITION — LOAD VALUES
-                    //
-                    var uplandPlannedInstallationLoad = {
-                      sediment: self.calculateGrassBuffer.results.totalPreInstallationLoad.uplandLanduse.sediment*(self.practice_efficiency.s_efficiency),
-                      nitrogen: self.calculateGrassBuffer.results.totalPreInstallationLoad.uplandLanduse.nitrogen*(self.practice_efficiency.n_efficiency),
-                      phosphorus: self.calculateGrassBuffer.results.totalPreInstallationLoad.uplandLanduse.phosphorus*(self.practice_efficiency.p_efficiency)
-                    };
+                      //
+                      // EXISTING CONDITION — LOAD VALUES
+                      //
+                      var uplandPlannedInstallationLoad = {
+                        sediment: self.calculateGrassBuffer.results.totalPreInstallationLoad.uplandLanduse.sediment*(self.practice_efficiency.s_efficiency),
+                        nitrogen: self.calculateGrassBuffer.results.totalPreInstallationLoad.uplandLanduse.nitrogen*(self.practice_efficiency.n_efficiency),
+                        phosphorus: self.calculateGrassBuffer.results.totalPreInstallationLoad.uplandLanduse.phosphorus*(self.practice_efficiency.p_efficiency)
+                      };
 
-                    console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
+                      // console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
 
-                    var existingPlannedInstallationLoad = {
-                      sediment: ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000),
-                      nitrogen: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres))),
-                      phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
-                    };
+                      var existingPlannedInstallationLoad = {
+                        sediment: ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000),
+                        nitrogen: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres))),
+                        phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
+                      };
 
-                    console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
+                      // console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
 
-                    //
-                    // PLANNED CONDITIONS — LANDUSE VALUES
-                    //
-                    var totals = {
-                      efficiency: {
-                        new: newLoaddata,
-                        existing: existingLoaddata
-                      },
-                      nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen,
-                      phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus,
-                      sediment: uplandPlannedInstallationLoad.sediment + existingPlannedInstallationLoad.sediment
-                    };
+                      //
+                      // PLANNED CONDITIONS — LANDUSE VALUES
+                      //
+                      var totals = {
+                        efficiency: {
+                          new: newLoaddata,
+                          existing: existingLoaddata
+                        },
+                        nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen,
+                        phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus,
+                        sediment: uplandPlannedInstallationLoad.sediment + existingPlannedInstallationLoad.sediment
+                      };
 
-                    self.calculateGrassBuffer.results.totalPlannedLoad = totals;
+                      self.calculateGrassBuffer.results.totalPlannedLoad = totals;
+                    }
 
                   });
                 });
@@ -4021,7 +4083,7 @@ angular.module('FieldStack')
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .controller('GrassBufferFormController', function (Account, landuse, $location, practice, PracticeGrassBuffer, report, $rootScope, $route, site, $scope, user, Utility) {
 
       var self = this,
@@ -4177,7 +4239,7 @@ angular.module('FieldStack')
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .config(function($routeProvider) {
 
       $routeProvider
@@ -4255,11 +4317,11 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc service
- * @name FieldStack.LivestockExclusionCalculate
+ * @name FieldDoc.LivestockExclusionCalculate
  * @description
- * Service in the FieldStack.
+ * Service in the FieldDoc.
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .service('CalculateLivestockExclusion', ['Calculate', 'Landuse', function(Calculate, Landuse) {
     return {
       toMiles: function(feet) {
@@ -4348,7 +4410,7 @@ angular.module('FieldStack')
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('LivestockExclusionReportController', function (Account, Calculate, CalculateLivestockExclusion, Efficiency, LoadData, $location, practice, PracticeLivestockExclusion, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
 
     var self = this,
@@ -4987,7 +5049,7 @@ angular.module('FieldStack')
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('LivestockExclusionFormController', function (Account, animals, landuse, $location, practice, PracticeLivestockExclusion, report, $rootScope, $route, site, $scope, user, Utility) {
 
     var self = this,
@@ -5101,13 +5163,13 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc overview
- * @name FieldStack
+ * @name FieldDoc
  * @description
- * # FieldStack
+ * # FieldDoc
  *
  * Main module of the application.
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
 
     $routeProvider
@@ -5179,7 +5241,7 @@ angular.module('FieldStack')
    * @name CalculateUrbanHomeowner
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('CalculateUrbanHomeowner', function() {
       return {
         gallonsReducedPerYear: function(value) {
@@ -5395,12 +5457,12 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:UrbanHomeownerReportController
+ * @name FieldDoc.controller:UrbanHomeownerReportController
  * @description
  * # UrbanHomeownerReportController
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('UrbanHomeownerReportController', function (Account, Calculate, CalculateUrbanHomeowner, $location, moment, practice, PracticeUrbanHomeowner, readings, $rootScope, $route, site, $scope, UALStateLoad, user, Utility, $window) {
 
     var self = this,
@@ -5515,7 +5577,7 @@ angular.module('FieldStack')
             console.log('errorResponse', errorResponse);
           });
         } else {
-          console.warning('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
+          console.log('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
         }
 
       }, function(errorResponse) {
@@ -5575,12 +5637,12 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:UrbanHomeownerFormController
+ * @name FieldDoc.controller:UrbanHomeownerFormController
  * @description
  * # UrbanHomeownerFormController
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('UrbanHomeownerFormController', function (Account, $location, moment, practice, PracticeUrbanHomeowner, report, $rootScope, $route, site, $scope, user, Utility) {
 
     var self = this,
@@ -5691,13 +5753,13 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc overview
- * @name FieldStack
+ * @name FieldDoc
  * @description
- * # FieldStack
+ * # FieldDoc
  *
  * Main module of the application.
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
 
     $routeProvider
@@ -5766,11 +5828,11 @@ angular.module('FieldStack')
 
   /**
    * @ngdoc service
-   * @name FieldStack.CalculateBioretention
+   * @name FieldDoc.CalculateBioretention
    * @description
-   * Service in the FieldStack.
+   * Service in the FieldDoc.
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('CalculateBioretention', function() {
       return {
         adjustorCurveNitrogen: function(value, format) {
@@ -5982,12 +6044,12 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:BioretentionReportController
+ * @name FieldDoc.controller:BioretentionReportController
  * @description
  * # BioretentionReportController
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('BioretentionReportController', function (Account, Calculate, CalculateBioretention, $location, moment, practice, PracticeBioretention, readings, $rootScope, $route, site, $scope, UALStateLoad, user, Utility, $window) {
 
     var self = this,
@@ -6102,7 +6164,7 @@ angular.module('FieldStack')
             console.log('errorResponse', errorResponse);
           });
         } else {
-          console.warning('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
+          console.log('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
         }
 
       }, function(errorResponse) {
@@ -6162,12 +6224,12 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:BioretentionFormController
+ * @name FieldDoc.controller:BioretentionFormController
  * @description
  * # BioretentionFormController
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('BioretentionFormController', function (Account, $location, moment, practice, PracticeBioretention, report, $rootScope, $route, site, $scope, user, Utility) {
 
     var self = this,
@@ -6283,7 +6345,7 @@ angular.module('FieldStack')
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .config(function($routeProvider) {
 
       $routeProvider
@@ -6356,7 +6418,7 @@ angular.module('FieldStack')
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .service('CalculateInstreamHabitat', function() {
     return {
       quantityInstalled: function(values, field, format) {
@@ -6396,7 +6458,7 @@ angular.module('FieldStack')
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('InstreamHabitatReportController', function (Account, Calculate, CalculateInstreamHabitat, $location, practice, PracticeInstreamHabitat, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
 
     var self = this,
@@ -6511,7 +6573,7 @@ angular.module('FieldStack')
         //     console.log('errorResponse', errorResponse);
         //   });
         // } else {
-        //   console.warning('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
+        //   console.log('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
         // }
 
       }, function(errorResponse) {
@@ -6573,7 +6635,7 @@ angular.module('FieldStack')
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('InstreamHabitatFormController', function (Account, $location, practice, PracticeInstreamHabitat, report, $rootScope, $route, site, $scope, user, Utility) {
 
     var self = this,
@@ -6704,7 +6766,7 @@ angular.module('FieldStack')
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .config(function($routeProvider, commonscloud) {
 
     $routeProvider
@@ -6774,7 +6836,7 @@ angular.module('FieldStack')
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .service('CalculateBankStabilization', function() {
     return {
       preInstallationSedimentLoad: function(value) {
@@ -6994,7 +7056,7 @@ angular.module('FieldStack')
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('BankStabilizationReportController', function (Account, Calculate, CalculateBankStabilization, $location, moment, practice, PracticeBankStabilization, readings, $rootScope, $route, site, $scope, UALStateLoad, user, Utility, $window) {
 
     var self = this,
@@ -7109,7 +7171,7 @@ angular.module('FieldStack')
             console.log('errorResponse', errorResponse);
           });
         } else {
-          console.warning('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
+          console.log('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
         }
 
       }, function(errorResponse) {
@@ -7169,12 +7231,12 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:BankStabilizationFormController
+ * @name FieldDoc.controller:BankStabilizationFormController
  * @description
  * # BankStabilizationFormController
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('BankStabilizationFormController', function (Account, $location, moment, practice, PracticeBankStabilization, report, $rootScope, $route, site, $scope, user, Utility) {
 
     var self = this,
@@ -7290,7 +7352,7 @@ angular.module('FieldStack')
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .config(function($routeProvider, commonscloud) {
 
       $routeProvider
@@ -7365,7 +7427,7 @@ angular.module('FieldStack')
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('CalculateEnhancedStreamRestoration', function($q) {
       return {
         efficiency: {
@@ -7748,7 +7810,7 @@ angular.module('FieldStack')
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('EnhancedStreamRestorationReportController', function (Account, Calculate, CalculateEnhancedStreamRestoration, $location, practice, PracticeEnhancedStreamRestoration, readings, $rootScope, $route, site, $scope, UALStateLoad, user, Utility, $window) {
 
     var self = this,
@@ -7863,7 +7925,7 @@ angular.module('FieldStack')
             console.log('errorResponse', errorResponse);
           });
         } else {
-          console.warning('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
+          console.log('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
         }
 
       }, function(errorResponse) {
@@ -7924,12 +7986,12 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:EnhancedStreamRestorationFormController
+ * @name FieldDoc.controller:EnhancedStreamRestorationFormController
  * @description
  * # EnhancedStreamRestorationFormController
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('EnhancedStreamRestorationFormController', function (Account, $location, practice, PracticeEnhancedStreamRestoration, report, $rootScope, $route, site, $scope, user, Utility) {
 
     var self = this,
@@ -8040,12 +8102,12 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc service
- * @name FieldStack.CommonsCloud
+ * @name FieldDoc.CommonsCloud
  * @description
  * # Site
- * Service in the FieldStack.
+ * Service in the FieldDoc.
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .constant('commonscloud', {
     baseurl: 'https://api.commonscloud.org/v2/',
     collections: {
@@ -8080,11 +8142,11 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc service
- * @name FieldStack.GeometryService
+ * @name FieldDoc.GeometryService
  * @description
- *   
+ *
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .service('commonsGeometry', ['$http', 'commonscloud', 'leafletData', function Navigation($http, commonscloud, leafletData) {
     return {
       drawGeoJSON: function(geojson, featureGroup) {
@@ -8236,7 +8298,7 @@ angular.module('FieldStack')
  * @description
  *   Assist Directives in loading templates
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .service('Map', ['mapbox', function (mapbox) {
 
     var self = this;
@@ -8259,7 +8321,7 @@ angular.module('FieldStack')
         }
       },
       center: {
-        lng: -76.534, 
+        lng: -76.534,
         lat: 39.134,
         zoom: 11
       },
@@ -8304,7 +8366,7 @@ angular.module('FieldStack')
       },
       geojson: {}
     };
-    
+
     return Map;
   }]);
 'use strict';
@@ -8507,7 +8569,7 @@ angular.module('Mapbox')
        *
        * @param (array) requestedCoordinates
        *    A two value array containing the longitude and latitude respectively
-       *    
+       *
        *    Example:
        *    [
        *       '<LONGITUDE>',
@@ -8580,7 +8642,7 @@ angular.module('Mapbox')
        *
        */
       batch: function(requestedQueries) {
-        console.warning('Mapbox Geocoding Batch Geocoding not implemented, see https://www.mapbox.com/developers/api/geocoding/ for more information.');
+        console.log('Mapbox Geocoding Batch Geocoding not implemented, see https://www.mapbox.com/developers/api/geocoding/ for more information.');
       }
     };
 
@@ -9269,7 +9331,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('Notifications', function Notifications($rootScope, $timeout) {
 
       $rootScope.notifications = {
@@ -9321,11 +9383,42 @@ angular
   'use strict';
 
   /**
+   * @ngdoc function
+   * @name WaterReporter.report.controller:SingleReportController
+   * @description
+   *     Display a single report based on the current `id` provided in the URL
+   * Controller of the waterReporterApp
+   */
+  angular.module('FieldDoc')
+    .directive('fileUpload', function ($parse) {
+        return {
+            restrict: 'A',
+            link: function(scope, element, attrs) {
+                var model = $parse(attrs.fileModel);
+
+                var modelSetter = model.assign;
+
+                element.bind('change', function() {
+                    scope.$apply(function() {
+                        modelSetter(scope, element[0].files);
+                    });
+                });
+            }
+        };
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
    * @ngdoc service
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('Account', function (ipCookie, User) {
 
       var Account = {
@@ -9429,7 +9522,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('AnimalManure', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/animal-manure/:id'), {
         'id': '@id'
@@ -9458,7 +9551,7 @@ angular
      * @name
      * @description
      */
-    angular.module('FieldStack')
+    angular.module('FieldDoc')
       .service('Efficiency', function (environment, Preprocessors, $resource) {
         return $resource(environment.apiUrl.concat('/v1/data/efficiency/:id'), {
           'id': '@id'
@@ -9478,6 +9571,86 @@ angular
 
   }());
 
+(function () {
+
+    'use strict';
+
+    /**
+     * @ngdoc function
+     * @name
+     * @description
+     */
+     angular.module('FieldDoc')
+       .service('File', function (environment, Preprocessors, $resource) {
+
+         return $resource(environment.apiUrl.concat('/v1/media/file/:id'), {
+           id: '@id'
+         }, {
+           query: {
+             isArray: false
+           },
+           upload: {
+             method: 'POST',
+             transformRequest: angular.identity,
+             headers: {
+               'Content-Type': undefined
+             }
+           },
+           update: {
+             method: 'PATCH',
+             transformRequest: function(data) {
+               var feature = Preprocessors.geojson(data);
+               return angular.toJson(feature);
+             }
+           }
+         });
+
+       });
+
+}());
+
+(function () {
+
+    'use strict';
+
+    /**
+     * @ngdoc function
+     * @name
+     * @description
+     */
+     angular.module('FieldDoc')
+       .service('Image', function (environment, Preprocessors, $resource) {
+
+         return $resource(environment.apiUrl.concat('/v1/media/image/:id'), {
+           id: '@id'
+         }, {
+           query: {
+             isArray: false
+           },
+           upload: {
+             method: 'POST',
+             transformRequest: angular.identity,
+             headers: {
+               'Content-Type': undefined
+             }
+           },
+           update: {
+             method: 'PATCH',
+             transformRequest: function(data) {
+               var feature = Preprocessors.geojson(data);
+               return angular.toJson(feature);
+             }
+           },
+           delete: {
+             method: 'DELETE',
+             url: environment.apiUrl.concat('/v1/data/image/:id')
+           }
+         });
+
+       });
+
+}());
+
 (function() {
 
   'use strict';
@@ -9487,7 +9660,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('Landuse', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/landuse/:id'), {
         'id': '@id'
@@ -9509,6 +9682,76 @@ angular
 
 (function() {
 
+    'use strict';
+
+    /**
+     * @ngdoc service
+     * @name Media Service
+     * @description Enable consistent, system-wide handling of images
+     */
+    angular.module('FieldDoc')
+        .service('Media', function(Image, $q) {
+            return {
+                images: new Array(), // empty image array for handling files
+                preupload: function(filesList, fieldName) {
+                    /**Process all media prior to uploading to server.
+
+                    Create a usable array of deferred requests that will allow
+                    us to keep tabs on uploads, so that we know when all
+                    uploads have completed with an HTTP Response.
+
+                    @param (array) filesList
+                        A list of files to process
+
+                    @return (array) savedQueries
+                        A list of deferred upload requests
+                    */
+
+                    var self = this,
+                        savedQueries = [],
+                        field = (fieldName) ? fieldName : 'image';
+
+                    angular.forEach(filesList, function(_file) {
+                        savedQueries.push(self.upload(_file, field));
+                    });
+
+                    return savedQueries;
+                },
+                upload: function(file, field) {
+                    /**Upload a single file to the server.
+
+                    Create a single deferred request that enables us to keep
+                    better track of all of the things that are happening so
+                    that we are defining in what order things happen.
+
+                    @param (file) file
+                        A qualified Javascript `File` object
+
+                    @return (object) defer.promise
+                        A promise
+                    */
+
+                    var defer = $q.defer(),
+                        fileData = new FormData();
+
+                    fileData.append(field, file);
+
+                    var request = Image.upload({}, fileData, function() {
+                        defer.resolve(request);
+                    });
+
+                    return defer.promise;
+                },
+                remove: function(fileIndex) {
+                    this.images.splice(fileIndex, 1);
+                }
+            };
+        });
+
+}());
+
+(function() {
+
   'use strict';
 
   /**
@@ -9516,7 +9759,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('LoadData', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/load-data/:id'), {
         'id': '@id'
@@ -9545,7 +9788,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('Practice', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/practice/:id'), {
         'id': '@id'
@@ -9614,7 +9857,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('PracticeUrbanHomeowner', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/bmp-urban-homeowner/:id'), {
         'id': '@id'
@@ -9643,7 +9886,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('PracticeBioretention', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/bmp-bioretention/:id'), {
         'id': '@id'
@@ -9672,7 +9915,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('PracticeBankStabilization', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/bmp-bank-stabilization/:id'), {
         'id': '@id'
@@ -9701,7 +9944,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('PracticeEnhancedStreamRestoration', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/bmp-enhanced-stream-restoration/:id'), {
         'id': '@id'
@@ -9730,7 +9973,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('PracticeForestBuffer', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/bmp-forest-buffer/:id'), {
         'id': '@id'
@@ -9759,7 +10002,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('PracticeGrassBuffer', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/bmp-grass-buffer/:id'), {
         'id': '@id'
@@ -9788,7 +10031,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('PracticeInstreamHabitat', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/bmp-instream-habitat/:id'), {
         'id': '@id'
@@ -9817,7 +10060,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('PracticeLivestockExclusion', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/bmp-livestock-exclusion/:id'), {
         'id': '@id'
@@ -9846,7 +10089,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('PracticeWetlandsNonTidal', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/bmp-wetlands-nontidal/:id'), {
         'id': '@id'
@@ -9875,7 +10118,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('Project', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/project/:id'), {
         id: '@id'
@@ -9914,7 +10157,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('Security', function(environment, ipCookie, $http, $resource) {
 
       var Security = $resource(environment.apiUrl.concat('/v1/auth/account/login'), {}, {
@@ -9957,7 +10200,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('Site', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/site/:id'), {
         id: '@id'
@@ -9991,7 +10234,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('Segment', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/segment/:id'), {
         id: '@id'
@@ -10020,7 +10263,7 @@ angular
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('UALStateLoad', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/urban-ual-state/:id'), {
         id: '@id'
@@ -10037,12 +10280,12 @@ angular
 
 /**
  * @ngdoc service
- * @name FieldStack.template
+ * @name FieldDoc.template
  * @description
  * # template
- * Provider in the FieldStack.
+ * Provider in the FieldDoc.
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .service('Utility', function () {
 
     return {
@@ -10070,7 +10313,7 @@ angular.module('FieldStack')
      * @name
      * @description
      */
-     angular.module('FieldStack')
+     angular.module('FieldDoc')
        .service('Preprocessors', function ($resource) {
 
          return {
@@ -10140,7 +10383,7 @@ angular.module('FieldStack')
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('User', function (environment, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/user/:id'), {
         id: '@id'
@@ -10164,7 +10407,7 @@ angular.module('FieldStack')
 
   'use strict';
 
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .directive('relationship', function (environment, $http, $timeout) {
       return {
         scope: {
@@ -10286,12 +10529,12 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc function
- * @name FieldStack.toAcres
+ * @name FieldDoc.toAcres
  * @description
  * # toAcres
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .filter('toAcres', [function(){
 
     /**
@@ -10316,12 +10559,12 @@ angular.module('FieldStack')
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:MainCtrl
+ * @name FieldDoc.controller:MainCtrl
  * @description
  * # MainCtrl
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .filter('toArray', function(){
 
     //
@@ -10330,13 +10573,13 @@ angular.module('FieldStack')
     // with structured objects.
     //
     return  function(object) {
-      
+
       var result = [];
 
       angular.forEach(object, function(value) {
         result.push(value);
       });
-      
+
       return result;
     };
 
@@ -10351,7 +10594,7 @@ angular.module('FieldStack')
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .filter('isArray', function() {
       return function (input) {
         return (angular.isArray(input)) ? true : false;

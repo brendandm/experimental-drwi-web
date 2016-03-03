@@ -38,20 +38,28 @@
         <div class="form-row">
           <div class="form-field">
             <label for="images" class="control-label">
-              Installation Photos
+              Installation and Monitoring Photos
             </label>
             <input type="file" class="form-control"
                    id="images" name="images" file-upload
                    file-model="page.files.images" multiple="multiple" />
-
-            <p>
-              <img data-ng-repeat="image in page.practice.properties.images track by $index"
-                   data-ng-src="{{ image.properties.original }}"
-                   alt="" title=""  />
-            </p>
           </div>
         </div>
         <div class="form-row">
+          <br />
+          <ul>
+             <li data-ng-repeat="image in page.practice.properties.images track by $index">
+                 <img data-ng-src="{{ image.properties.original }}"
+                      width="100" alt="" />
+                 <a href="javascript:void(0)"
+                    data-ng-click="page.practice.properties.images.splice($index, 1)">
+                    Remove Image
+                 </a>
+             </li>
+          </ul>
+        </div>
+
+        <!-- <div class="form-row">
           <div class="form-field">
             <label for="images" class="control-label">
               Monitoring Photos
@@ -66,7 +74,7 @@
                    alt="" title=""  />
             </p>
           </div>
-        </div>
+        </div> -->
 
         <!-- <h6><strong>Installation</strong> Photos</h6>
 
