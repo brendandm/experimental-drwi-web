@@ -575,9 +575,11 @@ angular.module('FieldDoc')
               return config || $q.when(config);
             }
 
+            console.log('$location.path()', $location.path())
+
             if (sessionCookie) {
               config.headers.Authorization = 'Bearer ' + sessionCookie;
-            } else {
+            } else if (!sessionCookie && $location.path() !== '/account/register') {
               /**
                * Remove all cookies present for authentication
                */
