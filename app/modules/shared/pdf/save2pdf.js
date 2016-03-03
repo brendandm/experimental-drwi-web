@@ -22,7 +22,7 @@
                 if (!element[0]) { return;}
 
                 var pagesplit = true,
-                height = pagesplit || element[0].offsetHeight,
+                height = element[0].offsetHeight,
                 pdfName = Attrs.pdfName;
 
                 $scope.$on('saveToPdf', function(event, mass) {
@@ -46,9 +46,6 @@
                     // All units are in the set measurement for the document
                     // This can be changed to "pt" (points), "mm" (Default), "cm", "in"
                     pdf.addHTML(element[0], interior_margins.left, interior_margins.top, {
-                      'pagesplit': pagesplit,
-                      'height': height,
-                      'elementHandlers': specialElementHandlers
                     }, function(dispose) {
                         pdf.save(pdfName + '.pdf');
                     });
