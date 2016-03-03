@@ -19,11 +19,24 @@
           name="formRegister" data-ng-submit="page.register.submit()">
       <div class="form-element">
         <label for="email" class="control-label">
-          Email Address
+          Your Email Address
         </label>
         <input type="text" class="form-control" type="text" id="email"
                name="email" data-ng-model="page.register.email" tabindex="1"
-               data-ng-required />
+               required="required" placeholder="" />
+      </div>
+      <div class="form-element">
+        <label for="email" class="control-label">
+          Your Name
+        </label>
+        <input type="text" class="form-control form-control-half"
+               id="first_name" name="first_name" placeholder="First Name"
+               data-ng-model="page.register.first_name" required="required"
+               tabindex="2" />
+        <input type="text" class="form-control form-control-half"
+               id="last_name" name="last_name"  placeholder="Last Name"
+               data-ng-model="page.register.last_name" required="required"
+               tabindex="3" />
       </div>
       <div class="form-element">
         <label for="password" class="control-label">
@@ -31,7 +44,7 @@
         </label>
         <input type="password" class="form-control" type="text" id="password"
                name="password" data-ng-model="page.register.password"
-               tabindex="2" data-ng-required />
+               tabindex="4" required="required" />
       </div>
       <div class="form-element">
         <label for="password" class="control-label">
@@ -39,7 +52,7 @@
         </label>
         <input type="password" class="form-control" type="text" id="confirm_password"
                name="confirm_password" data-ng-model="page.register.confirm_password"
-               tabindex="3" data-ng-required />
+               tabindex="5" required="required" />
         <p class="help-text" data-ng-if="page.register.password !== page.register.confirm_password">
             Passwords do not match
         </p>

@@ -8,9 +8,10 @@
      * @description
      */
      angular.module('FieldStack')
-       .controller('SecurityRegisterController', function (Account, $location, Security, ipCookie, $rootScope, $timeout) {
+       .controller('SecurityRegisterController', function (Account, $location, Security, ipCookie, $rootScope, $timeout, User) {
 
-             var self = this;
+             var self = this,
+                 userId = null;
 
              self.cookieOptions = {
                path: '/',
@@ -28,7 +29,7 @@
 
              self.register = {
                visible: false,
-               login: function() {
+               login: function(userId) {
 
                  var credentials = new Security({
                    email: self.register.email,
@@ -63,6 +64,14 @@
 
                      ipCookie('FIELDSTACKIO_SESSION', response.access_token, self.cookieOptions);
 
+                     self.newUser = new User({
+                       id: userId,
+                       properties: {
+                         first_name: self.register.first_name,
+                         last_name: self.register.last_name
+                       }
+                     });
+
                      //
                      // Make sure we also set the User ID Cookie, so we need to wait to
                      // redirect until we're really sure the cookie is set
@@ -76,7 +85,18 @@
 
                          $rootScope.isLoggedIn = Account.hasToken();
 
-                         $location.path('/projects');
+                         self.newUser = new User({
+                           id: $rootScope.user.id,
+                           first_name: self.register.first_name,
+                           last_name: self.register.last_name
+                         });
+
+                         self.newUser.$update().then(function (updateUserSuccessResponse) {
+                           $location.path('/projects');
+                         }, function(updateUserErrorResponse) {
+                           console.log('updateUserErrorResponse', updateUserErrorResponse);
+                         });
+
                        });
                      });
 
@@ -164,7 +184,7 @@
 
                      self.register.processingLogin = true;
 
-                     self.register.login();
+                     self.register.login(response.response.user.id);
                    }
                  });
                }

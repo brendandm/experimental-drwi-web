@@ -234,7 +234,16 @@ module.exports = function (grunt) {
           ]
         }]
       },
-      server: '.tmp'
+      server: {
+        options: {
+          force: true
+        },
+        files: [{
+          src: [
+
+          ]
+        }]
+      }
     },
 
     // Add vendor prefixed styles
