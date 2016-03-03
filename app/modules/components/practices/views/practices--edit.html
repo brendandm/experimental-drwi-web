@@ -43,18 +43,20 @@
             <input type="file" class="form-control"
                    id="images" name="images" file-upload
                    file-model="page.files.images" multiple="multiple" />
-
-            <ul>
-               <li data-ng-repeat="image in page.practice.properties.images track by $index">
-                   <img data-ng-src="{{ image.properties.original }}"
-                        width="100" alt="" />
-                   <a href="javascript:void(0)"
-                      data-ng-click="page.practice.properties.images.splice($index, 1)">
-                      Remove Image
-                   </a>
-               </li>
-            </ul>
           </div>
+        </div>
+        <div class="form-row">
+          <br />
+          <ul>
+             <li data-ng-repeat="image in page.practice.properties.images track by $index">
+                 <img data-ng-src="{{ image.properties.original }}"
+                      width="100" alt="" />
+                 <a href="javascript:void(0)"
+                    data-ng-click="page.practice.properties.images.splice($index, 1)">
+                    Remove Image
+                 </a>
+             </li>
+          </ul>
         </div>
 
         <!-- <div class="form-row">

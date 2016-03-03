@@ -143,15 +143,6 @@
           }
         }
 
-        img {
-          float: left;
-          margin-right: 16px;
-
-          &.pull-right {
-            margin-left: 16px;
-            margin-right: 0;
-          }
-        }
       }
     }
     .feature-detail {
@@ -304,7 +295,7 @@
 //
 .empty-data {
   margin-top: 2em;
-  
+
   .icon {
     color: rgba($color-black-base, 0.15);
     font-size: 8em;
