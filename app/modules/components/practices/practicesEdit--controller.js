@@ -6,11 +6,13 @@
  * @description
  */
 angular.module('FieldDoc')
-  .controller('PracticeEditController', function (Account, $location, Practice, practice, $rootScope, $route, site, user) {
+  .controller('PracticeEditController', function (Account, Image, $location, $log, Media, Practice, practice, $q, $rootScope, $route, site, user) {
 
     var self = this,
         projectId = $route.current.params.projectId,
         siteId = $route.current.params.siteId;
+
+    self.files = Media;
 
     $rootScope.page = {};
 
@@ -67,11 +69,39 @@ angular.module('FieldDoc')
     });
 
     self.savePractice = function() {
-      self.practice.$update().then(function(successResponse) {
-        $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id);
-      }, function(errorResponse) {
-        // Error message
-      });
+
+      if (self.files.images.length) {
+
+        var savedQueries = self.files.preupload(self.files.images);
+
+        $q.all(savedQueries).then(function(successResponse) {
+
+            $log.log('Images::successResponse', successResponse);
+
+            angular.forEach(successResponse, function(image){
+                self.practice.properties.images.push({
+                    id: image.id
+                });
+            });
+
+            self.practice.$update().then(function(successResponse) {
+              $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id);
+            }, function(errorResponse) {
+              // Error message
+            });
+
+        }, function(errorResponse) {
+            $log.log('errorResponse', errorResponse);
+        });
+
+      }
+      else {
+        self.practice.$update().then(function(successResponse) {
+          $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id);
+        }, function(errorResponse) {
+          // Error message
+        });
+      }
     };
 
     self.deletePractice = function() {
