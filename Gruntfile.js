@@ -91,7 +91,7 @@ module.exports = function (grunt) {
             name: 'production',
             apiUrl: 'http://api.fieldstack.io',
             siteUrl: 'http://www.fieldstack.io',
-            clientId: ''
+            clientId: 'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'
           }
         }
       }
@@ -467,7 +467,7 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
-      'ngconstant:local',
+      'ngconstant:' + environment,
       'wiredep',
       'concurrent:server',
       'autoprefixer:server',
@@ -483,6 +483,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', [
     'clean:server',
+    'ngconstant:' + environment,
     'wiredep',
     'concurrent:test',
     'autoprefixer',

@@ -1,8 +1,8 @@
 <ul class="typeAhead--results" data-ng-if="collaboratorInviteResults">
   <li class="typeAhead--results--result" data-ng-repeat="result in collaboratorInviteResults.features" data-ng-click="option.select(result)">
-    {{ result.properties.first_name }} {{ result.properties.last_name }}, <em>{{ result.properties.email }}</em>
+    <span data-ng-if="result.properties.first_name">{{ result.properties.first_name }}</span> <span data-ng-if="result.properties.last_name">{{ result.properties.last_name }}, </span><em>{{ result.properties.email }}</em>
   </li>
-  <li class="typeAhead--results--result" data-ng-click="option.select(collaboratorInviteQuery, true)">
-    {{ collaboratorInviteQuery }}
+  <li data-ng-if="collaboratorInviteResults.features.length === 0" class="typeAhead--results--result" data-ng-click="option.select(collaboratorInviteQuery, true)">
+    Invite <strong>{{ collaboratorInviteQuery }}</strong> as a new user
   </li>
 </ul>

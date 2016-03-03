@@ -15,7 +15,7 @@
         </div>
 
         <!-- Program Type -->
-        <div class="form-row">
+        <div class="form-row" data-ng-if="page.project.properties.program_type !== 'Pre-Project Plan'">
           <div class="form-field">
             <label for="program_type" class="control-label">2. Which funder is providing the grant?</label>
             <select data-ng-model="page.project.properties.account_id" class="form-control" id="program_type" name="program_type">
@@ -28,12 +28,14 @@
         <!-- Program Type -->
         <div class="form-row">
           <div class="form-field">
-            <label for="program_type" class="control-label">3. What type of grant are you requesting?</label>
+            <label for="program_type" class="control-label" data-ng-if="page.project.properties.program_type !== 'Pre-Project Plan'">3. What type of grant are you requesting?</label>
+            <label for="program_type" class="control-label" data-ng-if="page.project.properties.program_type === 'Pre-Project Plan'">2. What type of grant are you requesting?</label>
             <select data-ng-model="page.project.properties.program_type" class="form-control" id="program_type" name="program_type">
               <option value="CBCIG">Chesapeake Bay Conservation Innovation Grant</option>
               <option value="INSR">Innovative Sediment and Nutrient Reduction</option>
               <option value="SWG">Small Watershed Grant</option>
               <option value="Trust Fund">Trust Fund</option>
+              <option value="Pre-Project Plan">Pre-Project Plan</option>
             </select>
           </div>
         </div>
@@ -41,7 +43,8 @@
         <!-- Project Abstract -->
         <div class="form-row">
           <div class="form-field">
-            <label for="project_abstract" class="control-label">4. Please provide a short project description.</label>
+            <label for="project_abstract" class="control-label" data-ng-if="page.project.properties.program_type !== 'Pre-Project Plan'">4. Please provide a short project description.</label>
+            <label for="project_abstract" class="control-label" data-ng-if="page.project.properties.program_type === 'Pre-Project Plan'">3. Please provide a short project description.</label>
             <textarea class="form-control animate" data-ng-model="page.project.properties.description"
                       msd-elastic id="description" name="description" rows="1">{{ page.project.properties.description }}</textarea>
           </div>

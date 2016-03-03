@@ -47,9 +47,10 @@ angular.module('FieldStack')
 
  angular.module('config', [])
 
-.constant('environment', {name:'local',apiUrl:'http://api.fieldstack.io',siteUrl:'http://www.fieldstack.io',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+.constant('environment', {name:'production',apiUrl:'http://api.fieldstack.io',siteUrl:'http://www.fieldstack.io',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
+
 /**
  * angular-save2pdf - angular jsPDF wrapper
  * Copyright (c) 2015 John Daily Jr.,
@@ -644,10 +645,33 @@ angular.module('FieldStack')
         templateUrl: '/modules/components/projects/views/projectsList--view.html',
         controller: 'ProjectsCtrl',
         controllerAs: 'page',
-        reloadOnSearch: false,
+        reloadOnSearch: true,
         resolve: {
-          projects: function(Project) {
-            return Project.query();
+          projects: function($location, Project) {
+
+            //
+            // Get all of our existing URL Parameters so that we can
+            // modify them to meet our goals
+            //
+            var search_params = $location.search();
+
+            //
+            // Prepare any pre-filters to append to any of our user-defined
+            // filters in the browser address bar
+            //
+            search_params.q = (search_params.q) ? angular.fromJson(search_params.q) : {};
+
+            search_params.q.filters = (search_params.q.filters) ? search_params.q.filters : [];
+
+            search_params.q.order_by = [{
+              field: 'created_on',
+              direction: 'desc'
+            }];
+
+            //
+            // Execute our query so that we can get the Reports back
+            //
+            return Project.query(search_params);
           },
           user: function(Account) {
             if (Account.userObject && !Account.userObject.id) {
@@ -732,7 +756,7 @@ angular.module('FieldStack')
  * @description
  */
 angular.module('FieldStack')
-  .controller('ProjectsCtrl', function (Account, $location, $log, Project, projects, $rootScope, user) {
+  .controller('ProjectsCtrl', function (Account, $location, $log, Project, projects, $rootScope, $scope, Site, user) {
 
     var self = this;
 
@@ -750,6 +774,13 @@ angular.module('FieldStack')
       ],
       actions: [
         {
+          type: 'button-link',
+          action: function() {
+            self.createPlan();
+          },
+          text: 'Create Pre-Project Plan'
+        },
+        {
           type: 'button-link new',
           action: function() {
             self.createProject();
@@ -764,6 +795,70 @@ angular.module('FieldStack')
     //
     self.projects = projects;
 
+    self.search = {
+      query: '',
+      execute: function() {
+
+        //
+        // Get all of our existing URL Parameters so that we can
+        // modify them to meet our goals
+        //
+        var q = {
+          filters: [{
+            "and": [
+              {
+                name: 'name',
+                op: 'ilike',
+                val: '%' + self.search.query + '%'
+              }
+            ]
+          }],
+          order_by: [{
+            field: 'created_on',
+            direction: 'desc'
+          }]
+        };
+
+        $location.path('/projects/').search({
+          q: angular.toJson(q),
+          page: 1
+        });
+
+      },
+      paginate: function(pageNumber) {
+
+        //
+        // Get all of our existing URL Parameters so that we can
+        // modify them to meet our goals
+        //
+        var searchParams = $location.search();
+
+        searchParams.page = pageNumber;
+
+        $location.path('/projects/').search(searchParams);
+      },
+      clear: function() {
+        $location.path('/projects/').search('');
+      }
+    };
+
+    //
+    // Set Default Search Filter value
+    //
+    if (self.search && self.search.query === '') {
+
+      var searchParams = $location.search(),
+          q = angular.fromJson(searchParams.q);
+
+      if (q && q.filters && q.filters.length) {
+        angular.forEach(q.filters[0].and, function(filter) {
+            if (filter.name === 'name') {
+              self.search.query = filter.val.replace(/%/g, '');;
+            }
+        });
+      }
+    };
+
     self.createProject = function() {
         self.project = new Project({
             'name': 'Untitled Project'
@@ -774,6 +869,31 @@ angular.module('FieldStack')
         }, function(errorResponse) {
             $log.error('Unable to create Project object');
         });
+    };
+
+    self.createPlan = function() {
+      self.project = new Project({
+          'name': 'Project Plan',
+          'program_type': 'Pre-Project Plan',
+          'description': 'This project plan was created to estimate the potential benefits of a project\'s site and best management practices.'
+      });
+
+      self.project.$save(function(successResponse) {
+
+          self.site = new Site({
+            'name': 'Planned Site',
+            'project_id': successResponse.id
+          });
+
+          self.site.$save(function(siteSuccessResponse) {
+            $location.path('/projects/' + successResponse.id + '/sites/' + siteSuccessResponse.id + '/edit');
+          }, function(siteErrorResponse) {
+            console.error('Could not save your new Project Plan');
+          });
+
+      }, function(errorResponse) {
+          $log.error('Unable to create Project object');
+      });
     };
 
     //
@@ -9062,8 +9182,6 @@ angular
             //
             scope.$watch('collaboratorInviteQuery', function(query) {
 
-              console.log("scope.$watch('collaboratorInviteQuery' fired", query)
-
               //
               // If the user types, make sure we cancel and restart the timeout
               //
@@ -9283,18 +9401,14 @@ angular
 
       Account.canEdit = function(resource) {
         if (Account.userObject && !Account.userObject.id) {
-            console.log('Account.userObject', Account.userObject);
             return false;
         }
 
         if (Account.hasRole('admin')) {
-            console.log('admin');
             return true;
         } else if (Account.hasRole('manager') && Account.inGroup(resource.properties.account_id, Account.userObject.properties.account)) {
-            console.log('manager');
             return true;
         } else if (Account.hasRole('grantee') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(Account.userObject.id, resource.properties.members))) {
-            console.log('grantee');
             return true;
         }
 
@@ -10045,36 +10159,6 @@ angular.module('FieldStack')
     });
 
 }());
-
-'use strict';
-
-/**
- * @ngdoc function
- * @name FieldStack.controller:imageResize
- * @description
- * # imageResize
- * Directive of the FieldStack
- */
-angular.module('FieldStack')
-  .directive('imageResize', ['$parse', function($parse) {
-      return {
-        link: function(scope, elm, attrs) {
-          var imagePercent;
-          imagePercent = $parse(attrs.imagePercent)(scope);
-          return elm.one('load', function() {
-            var canvas, ctx, neededHeight, neededWidth;
-            neededHeight = elm.height() * imagePercent / 100;
-            neededWidth = elm.width() * imagePercent / 100;
-            canvas = document.createElement('canvas');
-            canvas.width = neededWidth;
-            canvas.height = neededHeight;
-            ctx = canvas.getContext('2d');
-            ctx.drawImage(elm[0], 0, 0, neededWidth, neededHeight);
-            return elm.attr('src', canvas.toDataURL('image/jpeg'));
-          });
-        }
-      };
-  }]);
 
 (function() {
 
