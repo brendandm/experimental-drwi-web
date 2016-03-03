@@ -5,7 +5,7 @@
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('BankStabilizationReportController', function (Account, Calculate, CalculateBankStabilization, $location, moment, practice, PracticeBankStabilization, readings, $rootScope, $route, site, $scope, UALStateLoad, user, Utility, $window) {
 
     var self = this,

@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:BankStabilizationFormController
+ * @name FieldDoc.controller:BankStabilizationFormController
  * @description
  * # BankStabilizationFormController
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('BankStabilizationFormController', function (Account, $location, moment, practice, PracticeBankStabilization, report, $rootScope, $route, site, $scope, user, Utility) {
 
     var self = this,

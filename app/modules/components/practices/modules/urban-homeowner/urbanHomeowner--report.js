@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:UrbanHomeownerReportController
+ * @name FieldDoc.controller:UrbanHomeownerReportController
  * @description
  * # UrbanHomeownerReportController
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('UrbanHomeownerReportController', function (Account, Calculate, CalculateUrbanHomeowner, $location, moment, practice, PracticeUrbanHomeowner, readings, $rootScope, $route, site, $scope, UALStateLoad, user, Utility, $window) {
 
     var self = this,

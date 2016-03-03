@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('Security', function(environment, ipCookie, $http, $resource) {
 
       var Security = $resource(environment.apiUrl.concat('/v1/auth/account/login'), {}, {

@@ -4,10 +4,10 @@
 
   /**
    * @ngdoc function
-   * @name FieldStack.controller:WetlandsNonTidalFormController
+   * @name FieldDoc.controller:WetlandsNonTidalFormController
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .controller('WetlandsNonTidalFormController', function ($rootScope, $scope, $route, $location, user, Template, Field, Feature, Storage, template, project, site, practice, commonscloud) {
 
     });

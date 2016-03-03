@@ -2,11 +2,11 @@
 
 /**
  * @ngdoc service
- * @name FieldStack.LivestockExclusionCalculate
+ * @name FieldDoc.LivestockExclusionCalculate
  * @description
- * Service in the FieldStack.
+ * Service in the FieldDoc.
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .service('CalculateLivestockExclusion', ['Calculate', 'Landuse', function(Calculate, Landuse) {
     return {
       toMiles: function(feet) {

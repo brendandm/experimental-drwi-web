@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('Practice', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/practice/:id'), {
         'id': '@id'

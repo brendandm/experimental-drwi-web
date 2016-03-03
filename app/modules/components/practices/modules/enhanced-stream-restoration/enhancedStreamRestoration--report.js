@@ -5,7 +5,7 @@
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('EnhancedStreamRestorationReportController', function (Account, Calculate, CalculateEnhancedStreamRestoration, $location, practice, PracticeEnhancedStreamRestoration, readings, $rootScope, $route, site, $scope, UALStateLoad, user, Utility, $window) {
 
     var self = this,

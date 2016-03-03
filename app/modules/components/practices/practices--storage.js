@@ -5,7 +5,7 @@
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .constant('Storage', {
     'forest-buffer': {
       landuse: 'for',

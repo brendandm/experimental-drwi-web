@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc service
- * @name FieldStack.CommonsCloud
+ * @name FieldDoc.CommonsCloud
  * @description
  * # Site
- * Service in the FieldStack.
+ * Service in the FieldDoc.
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .constant('commonscloud', {
     baseurl: 'https://api.commonscloud.org/v2/',
     collections: {

@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:SiteViewCtrl
+ * @name FieldDoc.controller:SiteViewCtrl
  * @description
  * # SiteViewCtrl
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('SiteViewCtrl', function (Account, leafletData, $location, site, Practice, practices, $rootScope, $route, user) {
 
     var self = this;

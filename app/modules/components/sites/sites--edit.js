@@ -4,12 +4,12 @@
 
   /**
    * @ngdoc function
-   * @name FieldStack.controller:SiteEditCtrl
+   * @name FieldDoc.controller:SiteEditCtrl
    * @description
    * # SiteEditCtrl
-   * Controller of the FieldStack
+   * Controller of the FieldDoc
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .controller('SiteEditCtrl', function (Account, environment, $http, leafletData, $location, Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, Segment, $timeout, user) {
 
       var self = this,

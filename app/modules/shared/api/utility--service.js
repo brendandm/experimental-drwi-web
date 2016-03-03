@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc service
- * @name FieldStack.template
+ * @name FieldDoc.template
  * @description
  * # template
- * Provider in the FieldStack.
+ * Provider in the FieldDoc.
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .service('Utility', function () {
 
     return {

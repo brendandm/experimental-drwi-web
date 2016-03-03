@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('PracticeForestBuffer', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/bmp-forest-buffer/:id'), {
         'id': '@id'

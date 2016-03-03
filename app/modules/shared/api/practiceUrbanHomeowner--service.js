@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('PracticeUrbanHomeowner', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/bmp-urban-homeowner/:id'), {
         'id': '@id'

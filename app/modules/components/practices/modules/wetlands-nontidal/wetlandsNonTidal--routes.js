@@ -4,10 +4,10 @@
 
   /**
    * @ngdoc overview
-   * @name FieldStack
+   * @name FieldDoc
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .config(function($routeProvider, commonscloud) {
 
     });

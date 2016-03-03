@@ -5,7 +5,7 @@
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .service('CalculateBankStabilization', function() {
     return {
       preInstallationSedimentLoad: function(value) {

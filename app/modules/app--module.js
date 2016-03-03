@@ -6,7 +6,7 @@
  * @description
  */
 angular
-  .module('FieldStack', [
+  .module('FieldDoc', [
     'ngResource',
     'ngRoute',
     'ngSanitize',

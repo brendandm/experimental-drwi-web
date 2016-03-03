@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('PracticeLivestockExclusion', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/bmp-livestock-exclusion/:id'), {
         'id': '@id'

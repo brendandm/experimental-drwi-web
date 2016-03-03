@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:BioretentionFormController
+ * @name FieldDoc.controller:BioretentionFormController
  * @description
  * # BioretentionFormController
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('BioretentionFormController', function (Account, $location, moment, practice, PracticeBioretention, report, $rootScope, $route, site, $scope, user, Utility) {
 
     var self = this,

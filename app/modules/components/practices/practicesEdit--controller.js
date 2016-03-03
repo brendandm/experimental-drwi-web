@@ -5,7 +5,7 @@
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('PracticeEditController', function (Account, $location, Practice, practice, $rootScope, $route, site, user) {
 
     var self = this,

@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('AnimalManure', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/animal-manure/:id'), {
         'id': '@id'

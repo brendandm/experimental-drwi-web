@@ -5,7 +5,7 @@
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('LivestockExclusionFormController', function (Account, animals, landuse, $location, practice, PracticeLivestockExclusion, report, $rootScope, $route, site, $scope, user, Utility) {
 
     var self = this,

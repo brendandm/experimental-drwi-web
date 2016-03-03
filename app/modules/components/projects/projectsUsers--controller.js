@@ -4,12 +4,12 @@
 
   /**
    * @ngdoc function
-   * @name FieldStack.controller:ProjectUsersCtrl
+   * @name FieldDoc.controller:ProjectUsersCtrl
    * @description
    * # ProjectUsersCtrl
-   * Controller of the FieldStack
+   * Controller of the FieldDoc
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .controller('ProjectUsersCtrl', function (Account, Collaborators, $rootScope, $scope, $route, $location, project, user, members) {
 
       var self = this;

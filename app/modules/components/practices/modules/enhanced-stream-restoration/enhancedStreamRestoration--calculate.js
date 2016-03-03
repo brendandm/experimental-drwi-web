@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('CalculateEnhancedStreamRestoration', function($q) {
       return {
         efficiency: {

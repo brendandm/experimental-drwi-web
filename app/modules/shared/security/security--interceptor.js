@@ -4,12 +4,12 @@
 
     /**
      * @ngdoc service
-     * @name FieldStack.authorizationInterceptor
+     * @name FieldDoc.authorizationInterceptor
      * @description
      * # authorizationInterceptor
-     * Service in the FieldStack.
+     * Service in the FieldDoc.
      */
-    angular.module('FieldStack')
+    angular.module('FieldDoc')
       .factory('AuthorizationInterceptor', function($location, $q, ipCookie, $log) {
 
         return {

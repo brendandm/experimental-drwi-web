@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('Calculate', function(LoadData, $q) {
       return {
         getExistingLanduse: function(measurementPeriod, readings) {

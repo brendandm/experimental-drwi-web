@@ -7,7 +7,7 @@
    * @name CalculateUrbanHomeowner
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('CalculateUrbanHomeowner', function() {
       return {
         gallonsReducedPerYear: function(value) {

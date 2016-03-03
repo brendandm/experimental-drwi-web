@@ -5,7 +5,7 @@
  * @name.
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .constant('AnimalType', {
       beef: {
         average_weight: 877.19,

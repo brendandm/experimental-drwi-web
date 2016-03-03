@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .controller('SecurityResetPasswordController', function ($location, Security, $timeout) {
 
       var self = this;

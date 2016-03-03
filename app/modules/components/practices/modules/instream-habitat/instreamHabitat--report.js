@@ -5,7 +5,7 @@
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('InstreamHabitatReportController', function (Account, Calculate, CalculateInstreamHabitat, $location, practice, PracticeInstreamHabitat, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
 
     var self = this,

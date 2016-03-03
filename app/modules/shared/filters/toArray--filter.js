@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:MainCtrl
+ * @name FieldDoc.controller:MainCtrl
  * @description
  * # MainCtrl
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .filter('toArray', function(){
 
     //

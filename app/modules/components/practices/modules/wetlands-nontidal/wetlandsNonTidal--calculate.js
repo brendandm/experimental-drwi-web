@@ -4,10 +4,10 @@
 
   /**
    * @ngdoc service
-   * @name FieldStack.CalculateWetlandsNonTidal
+   * @name FieldDoc.CalculateWetlandsNonTidal
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('CalculateWetlandsNonTidal', function(Calculate, Landuse, StateLoad) {
 
     });

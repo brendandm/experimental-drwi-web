@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .controller('ForestBufferFormController', function (Account, landuse, $location, practice, PracticeForestBuffer, report, $rootScope, $route, site, $scope, user, Utility) {
 
       var self = this,

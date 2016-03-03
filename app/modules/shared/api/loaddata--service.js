@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('LoadData', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/load-data/:id'), {
         'id': '@id'

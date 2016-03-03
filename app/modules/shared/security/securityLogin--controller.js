@@ -7,7 +7,7 @@
      * @name
      * @description
      */
-     angular.module('FieldStack')
+     angular.module('FieldDoc')
         .controller('SecurityController', function(Account, $location, Security, ipCookie, Notifications, $route, $rootScope, $timeout) {
 
             var self = this;

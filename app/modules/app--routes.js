@@ -5,7 +5,7 @@
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .config(function($routeProvider, $locationProvider) {
 
     $routeProvider

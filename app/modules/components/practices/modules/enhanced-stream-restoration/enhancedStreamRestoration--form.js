@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name FieldStack.controller:EnhancedStreamRestorationFormController
+ * @name FieldDoc.controller:EnhancedStreamRestorationFormController
  * @description
  * # EnhancedStreamRestorationFormController
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('EnhancedStreamRestorationFormController', function (Account, $location, practice, PracticeEnhancedStreamRestoration, report, $rootScope, $route, site, $scope, user, Utility) {
 
     var self = this,

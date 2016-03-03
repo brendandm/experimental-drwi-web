@@ -2,11 +2,11 @@
 
 /**
  * @ngdoc service
- * @name FieldStack.GeometryService
+ * @name FieldDoc.GeometryService
  * @description
  *   
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .service('commonsGeometry', ['$http', 'commonscloud', 'leafletData', function Navigation($http, commonscloud, leafletData) {
     return {
       drawGeoJSON: function(geojson, featureGroup) {

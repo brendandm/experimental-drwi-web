@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .filter('isArray', function() {
       return function (input) {
         return (angular.isArray(input)) ? true : false;

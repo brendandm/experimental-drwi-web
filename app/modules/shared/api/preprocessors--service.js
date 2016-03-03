@@ -7,7 +7,7 @@
      * @name
      * @description
      */
-     angular.module('FieldStack')
+     angular.module('FieldDoc')
        .service('Preprocessors', function ($resource) {
 
          return {

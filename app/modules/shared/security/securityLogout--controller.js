@@ -7,7 +7,7 @@
      * @name
      * @description
      */
-     angular.module('FieldStack')
+     angular.module('FieldDoc')
        .controller('SecurityLogoutController', function (Account, ipCookie, $location, $rootScope) {
 
          /**

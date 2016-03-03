@@ -6,7 +6,7 @@
  * @description
  *   Assist Directives in loading templates
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .service('Map', ['mapbox', function (mapbox) {
 
     var self = this;

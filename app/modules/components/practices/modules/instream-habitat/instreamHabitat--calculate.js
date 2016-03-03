@@ -5,7 +5,7 @@
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .service('CalculateInstreamHabitat', function() {
     return {
       quantityInstalled: function(values, field, format) {

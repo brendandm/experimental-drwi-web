@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name FieldStack.toAcres
+ * @name FieldDoc.toAcres
  * @description
  * # toAcres
- * Controller of the FieldStack
+ * Controller of the FieldDoc
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .filter('toAcres', [function(){
 
     /**

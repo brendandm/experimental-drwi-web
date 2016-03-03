@@ -4,12 +4,12 @@
 
   /**
    * @ngdoc service
-   * @name FieldStack.Storage
+   * @name FieldDoc.Storage
    * @description
    *    Provides site/application specific variables to the entire application
-   * Service in the FieldStack.
+   * Service in the FieldDoc.
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('CalculateForestBuffer', function(LoadData, $q) {
       return {
         getPreInstallationLoad: function(bufferArea, loaddata) {

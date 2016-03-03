@@ -2,7 +2,7 @@
 
   'use strict';
 
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .directive('relationship', function (environment, $http, $timeout) {
       return {
         scope: {

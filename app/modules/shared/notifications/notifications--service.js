@@ -7,7 +7,7 @@
    * @name
    * @description
    */
-  angular.module('FieldStack')
+  angular.module('FieldDoc')
     .service('Notifications', function Notifications($rootScope, $timeout) {
 
       $rootScope.notifications = {

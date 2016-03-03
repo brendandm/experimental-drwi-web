@@ -5,7 +5,7 @@
  * @name
  * @description
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .controller('ProjectEditCtrl', function (Account, $location, $log, Project, project, $rootScope, $route, user) {
 
     var self = this;

@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc overview
- * @name FieldStack
+ * @name FieldDoc
  * @description
- * # FieldStack
+ * # FieldDoc
  *
  * Main module of the application.
  */
-angular.module('FieldStack')
+angular.module('FieldDoc')
   .config(function($routeProvider) {
 
     $routeProvider
