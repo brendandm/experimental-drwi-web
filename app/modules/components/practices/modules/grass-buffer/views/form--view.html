@@ -3,7 +3,82 @@
 <main class="container">
   <article class="feature-detail">
     <div class="column-16 feature-detail-content">
-      <form data-ng-submit="page.saveReport()" class="row" role="form">
+      <form data-ng-submit="page.saveReport()" class="form" role="form">
+
+        <div class="form--row">
+          <div class="form--label">
+            <p>
+              Event Date
+            </p>
+          </div>
+          <div class="form--field">
+            <section class="">
+              <label for="project_name" class="control-label">
+                Please set the date to the day you took the photos
+              </label>
+
+              <div class="form--element form--element--quarters">
+                <p class="form--control form--control--disabled">
+                  {{ page.date.day }}
+                </p>
+                <p class="help--text">
+                  Day
+                </p>
+              </div>
+
+              <div class="form--element form--element--quarters">
+                <select class="form--control"
+                        id="report_date_month" name="report_date_month"
+                        data-ng-model="page.date.month"
+                        data-ng-options="month for month in page.months">
+                </select>
+                <p class="help--text">
+                  Month
+                </p>
+              </div>
+
+              <div class="form--element form--element--quarters">
+                <input number type="number" min="1" max="31" step="1"
+                       class="form--control"
+                       id="report_date_date" name="report_date_date"
+                       data-ng-model="page.date.date"
+                       data-ng-if="page.date.month === 'Jan' ||
+                                   page.date.month === 'Mar' ||
+                                   page.date.month === 'May' ||
+                                   page.date.month === 'Jul' ||
+                                   page.date.month === 'Aug' ||
+                                   page.date.month === 'Oct' ||
+                                   page.date.month === 'Dec'" />
+               <input number type="number" min="1" max="30" step="1"
+                      class="form--control"
+                      id="report_date_date" name="report_date_date"
+                      data-ng-model="page.date.date"
+                      data-ng-if="page.date.month === 'Apr' ||
+                                  page.date.month === 'Jun' ||
+                                  page.date.month === 'Sep' ||
+                                  page.date.month === 'Nov'" />
+                <input number type="number" min="1" max="29" step="1"
+                       class="form--control"
+                       id="report_date_date" name="report_date_date"
+                       data-ng-model="page.date.date"
+                       data-ng-if="page.date.month === 'Feb'" />
+               <p class="help--text">
+                 Date
+               </p>
+             </div>
+
+             <div class="form--element form--element--quarters">
+               <input number type="number" min="1900" step="1"
+                      class="form--control"
+                      id="report_date_year" name="report_date_year"
+                      data-ng-model="page.date.year" />
+                <p class="help--text">
+                  Year
+                </p>
+              </div>
+           </section>
+          </div>
+        </div>
 
         <fieldset>
           <!-- Report Date -->
