@@ -63,8 +63,8 @@ module.exports = function (grunt) {
         constants: {
           environment: {
             name: 'development',
-            apiUrl: 'http://dev.api.fieldstack.io',
-            siteUrl: 'http://dev.fieldstack.io',
+            apiUrl: 'http://dev.api.fielddoc.org',
+            siteUrl: 'http://dev.fielddoc.org',
             clientId: ''
           }
         }
@@ -76,8 +76,8 @@ module.exports = function (grunt) {
         constants: {
           environment: {
             name: 'staging',
-            apiUrl: 'http://stg.api.fieldstack.io',
-            siteUrl: 'http://stg.fieldstack.io',
+            apiUrl: 'http://stg.api.fielddoc.org',
+            siteUrl: 'http://stg.fielddoc.org',
             clientId: ''
           }
         }
@@ -89,8 +89,8 @@ module.exports = function (grunt) {
         constants: {
           environment: {
             name: 'production',
-            apiUrl: 'http://api.fieldstack.io',
-            siteUrl: 'http://www.fieldstack.io',
+            apiUrl: 'http://api.fielddoc.org',
+            siteUrl: 'http://www.fielddoc.org',
             clientId: 'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'
           }
         }
