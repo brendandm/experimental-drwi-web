@@ -22,8 +22,6 @@
         'id': projectId
       };
 
-      self.date = null;
-
       self.landuse = landuse;
 
       //
@@ -134,16 +132,6 @@
           //
         });
 
-        $scope.$watch(angular.bind(this, function() {
-            return this.date;
-        }), function (response) {
-            if (response) {
-                var _new = response.month + ' ' + response.date + ' ' + response.year,
-                _date = new Date(_new);
-                self.date.day = self.days[_date.getDay()];
-            }
-        }, true);
-
         //
         // Verify Account information for proper UI element display
         //
@@ -160,6 +148,17 @@
             });
         }
       });
+
+      $scope.$watch(angular.bind(this, function() {
+          return this.date;
+      }), function (response) {
+        console.log('response', response)
+          if (response) {
+              var _new = response.month + ' ' + response.date + ' ' + response.year,
+              _date = new Date(_new);
+              self.date.day = self.days[_date.getDay()];
+          }
+      }, true);
 
       self.saveReport = function() {
         self.report.$update().then(function(successResponse) {
