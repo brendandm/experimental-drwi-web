@@ -26,6 +26,11 @@ angular.module('FieldDoc')
             }
             return Account.userObject;
           },
+          project: function(Project, $route) {
+            return Project.get({
+              id: $route.current.params.projectId
+            });
+          },
           site: function(Site, $route) {
             return Site.get({
               id: $route.current.params.siteId

@@ -8,7 +8,7 @@
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('SiteViewCtrl', function (Account, leafletData, $location, site, Practice, practices, $rootScope, $route, user) {
+  .controller('SiteViewCtrl', function (Account, leafletData, $location, site, Practice, practices, project, $rootScope, $route, user) {
 
     var self = this;
 
@@ -44,12 +44,15 @@ angular.module('FieldDoc')
           user.$promise.then(function(userResponse) {
               $rootScope.user = Account.userObject = userResponse;
 
-              self.permissions = {
-                  isLoggedIn: Account.hasToken(),
-                  role: $rootScope.user.properties.roles[0].properties.name,
-                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                  can_edit: Account.canEdit(self.site.properties.project)
-              };
+              project.$promise.then(function(projectResponse) {
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0].properties.name,
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: Account.canEdit(projectResponse)
+                };
+              });
+
           });
       }
 
