@@ -5,41 +5,40 @@
     <div class="column-16 feature-detail-content">
       <form data-ng-submit="page.saveReport()" class="form" role="form">
 
-        <div class="form--row">
-          <div class="form--label">
+        <div class="form-row">
+          <div class="form-label">
             <p>
-              Event Date
+              Report Date
             </p>
           </div>
-          <div class="form--field">
-            <section class="">
-              <label for="project_name" class="control-label">
+          <div class="form-field">
+              <label for="report_date" class="control-label">
                 Please set the date to the day you took the photos
               </label>
 
-              <div class="form--element form--element--quarters">
-                <p class="form--control form--control--disabled">
+              <div class="form-element form-element-quarters">
+                <p class="form-control form-control-disabled">
                   {{ page.date.day }}
                 </p>
-                <p class="help--text">
+                <p class="help-text">
                   Day
                 </p>
               </div>
 
-              <div class="form--element form--element--quarters">
-                <select class="form--control"
+              <div class="form-element form-element-quarters">
+                <select class="form-control"
                         id="report_date_month" name="report_date_month"
                         data-ng-model="page.date.month"
                         data-ng-options="month for month in page.months">
                 </select>
-                <p class="help--text">
+                <p class="help-text">
                   Month
                 </p>
               </div>
 
-              <div class="form--element form--element--quarters">
+              <div class="form-element form-element-quarters">
                 <input number type="number" min="1" max="31" step="1"
-                       class="form--control"
+                       class="form-control"
                        id="report_date_date" name="report_date_date"
                        data-ng-model="page.date.date"
                        data-ng-if="page.date.month === 'Jan' ||
@@ -50,7 +49,7 @@
                                    page.date.month === 'Oct' ||
                                    page.date.month === 'Dec'" />
                <input number type="number" min="1" max="30" step="1"
-                      class="form--control"
+                      class="form-control"
                       id="report_date_date" name="report_date_date"
                       data-ng-model="page.date.date"
                       data-ng-if="page.date.month === 'Apr' ||
@@ -58,72 +57,78 @@
                                   page.date.month === 'Sep' ||
                                   page.date.month === 'Nov'" />
                 <input number type="number" min="1" max="29" step="1"
-                       class="form--control"
+                       class="form-control"
                        id="report_date_date" name="report_date_date"
                        data-ng-model="page.date.date"
                        data-ng-if="page.date.month === 'Feb'" />
-               <p class="help--text">
+               <p class="help-text">
                  Date
                </p>
              </div>
 
-             <div class="form--element form--element--quarters">
+             <div class="form-element form-element-quarters">
                <input number type="number" min="1900" step="1"
-                      class="form--control"
+                      class="form-control"
                       id="report_date_year" name="report_date_year"
                       data-ng-model="page.date.year" />
-                <p class="help--text">
+                <p class="help-text">
                   Year
                 </p>
               </div>
-           </section>
           </div>
         </div>
 
-        <fieldset>
-          <!-- Report Date -->
-          <div class="form-row">
-            <div class="form-field">
-              <label for="report_date" class="control-label">
-                Report Date
-              </label>
-
-              <input data-ng-model="page.report.properties.report_date" class="form-control" class="form-control" type="text" id="report_date" name="report_date" placeholder="Enter a date" />
-            </div>
+        <!-- Report Date -->
+        <!-- <div class="form-row">
+          <div class="form-label">
+            <p>
+              Report Date
+            </p>
           </div>
+          <div class="form-field">
+            <label for="report_date" class="control-label">
+              Report Date
+            </label>
 
-          <!-- Measurement Period -->
-          <div class="form-group column-8">
+            <input data-ng-model="page.report.properties.report_date" class="form-control" class="form-control" type="text" id="report_date" name="report_date" placeholder="Enter a date" />
+          </div>
+        </div> -->
+
+        <!-- Measurement Period -->
+        <div class="form-row">
+          <div class="form-label">
             <label for="measurement_period" class="control-label">
               Measurement Period
             </label>
+          </div>
 
+          <div class="form-field">
             <select class="form-control" data-ng-model="page.report.properties.measurement_period" id="measurement_period" name="measurement_period">
               <option value="Planning">Planning</option>
               <option value="Installation">Installation</option>
               <option value="Monitoring">Monitoring</option>
             </select>
           </div>
+        </div>
 
-          <!-- WIP Reporting Agency -->
-          <div class="form-group column-8" data-ng-if="page.report.properties.measurement_period === 'Planning'">
-            <label for="wip_reporting_agency" class="control-label">
-              WIP Reporting Agency
-            </label>
+        <!-- WIP Reporting Agency -->
+        <div class="form-group column-8" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+          <label for="wip_reporting_agency" class="control-label">
+            WIP Reporting Agency
+          </label>
 
-            <select class="form-control" data-ng-model="page.report.properties.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency">
-              <option value="DC District Department of the Environment">DC District Department of the Environment</option>
-              <option value="Delaware Department of Natural Resources and Environmental Control">Delaware Department of Natural Resources and Environmental Control</option>
-              <option value="Maryland Department of Natural Resources">MD Department of Natural Resources</option>
-              <option value="Maryland Department of the Environment">MD Department of the Environment</option>
-              <option value="Maryland Department of Agriculture">MD Department of Agriculture</option>
-              <option value="New York Department of Environmental Conservation">New York Department of Environmental Conservation</option>
-              <option value="Pennsylvania Department of Environmental Protection">Pennsylvania Department of Environmental Protection</option>
-              <option value="Virginia Department of Conservation and Recreation">Virginia Department of Conservation and Recreation</option>
-              <option value="West Virginia Department of Environmental Protection">West Virginia Department of Environmental Protection</option>
-            </select>
-          </div>
-        </fieldset>
+          <select class="form-control" data-ng-model="page.report.properties.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency">
+            <option value="DC District Department of the Environment">DC District Department of the Environment</option>
+            <option value="Delaware Department of Natural Resources and Environmental Control">Delaware Department of Natural Resources and Environmental Control</option>
+            <option value="Maryland Department of Natural Resources">MD Department of Natural Resources</option>
+            <option value="Maryland Department of the Environment">MD Department of the Environment</option>
+            <option value="Maryland Department of Agriculture">MD Department of Agriculture</option>
+            <option value="New York Department of Environmental Conservation">New York Department of Environmental Conservation</option>
+            <option value="Pennsylvania Department of Environmental Protection">Pennsylvania Department of Environmental Protection</option>
+            <option value="Virginia Department of Conservation and Recreation">Virginia Department of Conservation and Recreation</option>
+            <option value="West Virginia Department of Environmental Protection">West Virginia Department of Environmental Protection</option>
+          </select>
+        </div>
 
         <fieldset data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
           <legend><strong>Landuse</strong></legend>

@@ -22,7 +22,45 @@
         'id': projectId
       };
 
+      self.date = null;
+
       self.landuse = landuse;
+
+      //
+      // Setup all of our basic date information so that we can use it
+      // throughout the page
+      //
+      self.today = new Date();
+
+      self.days = [
+          'Sunday',
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday'
+      ];
+
+      self.months = [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec'
+      ];
+
+      function parseISOLike(s) {
+          var b = s.split(/\D/);
+          return new Date(b[0], b[1]-1, b[2])
+      }
 
       practice.$promise.then(function(successResponse) {
 
@@ -48,6 +86,21 @@
           //
           report.$promise.then(function(successResponse) {
             self.report = successResponse;
+
+            if (self.report.properties.report_date) {
+                console.log('self.report.propertiesreport_date', self.report.properties.report_date);
+                self.today = parseISOLike(self.report.properties.report_date);
+            }
+
+            //
+            // Check to see if there is a valid date
+            //
+            self.date = {
+                month: self.months[self.today.getMonth()],
+                date: self.today.getDate(),
+                day: self.days[self.today.getDay()],
+                year: self.today.getFullYear()
+            };
 
             $rootScope.page.title = self.practice.properties.practice_type;
             $rootScope.page.links = [
@@ -80,6 +133,16 @@
         }, function(errorResponse) {
           //
         });
+
+        $scope.$watch(angular.bind(this, function() {
+            return this.date;
+        }), function (response) {
+            if (response) {
+                var _new = response.month + ' ' + response.date + ' ' + response.year,
+                _date = new Date(_new);
+                self.date.day = self.days[_date.getDay()];
+            }
+        }, true);
 
         //
         // Verify Account information for proper UI element display
