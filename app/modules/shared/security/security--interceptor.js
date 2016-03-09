@@ -27,11 +27,9 @@
               return config || $q.when(config);
             }
 
-            console.log('$location.path()', $location.path())
-
             if (sessionCookie) {
               config.headers.Authorization = 'Bearer ' + sessionCookie;
-            } else if (!sessionCookie && $location.path() !== '/account/register') {
+            } else if (!sessionCookie && $location.path() !== '/account/register' && $location.path() !== '/account/reset') {
               /**
                * Remove all cookies present for authentication
                */
