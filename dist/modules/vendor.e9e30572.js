@@ -51313,7 +51313,7 @@ _html2canvas.Renderer.Canvas = function(options) {
                     // This can be changed to "pt" (points), "mm" (Default), "cm", "in"
                     pdf.addHTML(element[0], interior_margins.left, interior_margins.top, {
                     }, function(dispose) {
-                        pdf.save(pdfName + '.pdf');
+                        pdf.save('FieldStack-PracticeMetrics-' + new Date() + '.pdf');
                     });
              });
             }

@@ -23,7 +23,11 @@
               Measurement Period
             </label>
 
-            <select class="form-control" data-ng-model="page.report.properties.measurement_period" id="measurement_period" name="measurement_period">
+            <select class="form-control"
+                    data-ng-disabled="page.report.properties.measurement_period === 'Pre-Project'"
+                    data-ng-model="page.report.properties.measurement_period"
+                    id="measurement_period" name="measurement_period">
+              <option value="Pre-Project">Pre-Project</option>
               <option value="Planning">Planning</option>
               <option value="Installation">Installation</option>
               <option value="Monitoring">Monitoring</option>

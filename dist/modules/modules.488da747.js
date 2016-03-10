@@ -47,7 +47,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
- .constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+.constant('environment', {name:'local',apiUrl:'http://127.0.0.1:5000',siteUrl:'http://127.0.0.1:9000',clientId:'VYUsqQ4QlO0wSJ3HeIZKyhx3cPa12KoCAZpIVgIE'})
 
 ;
 /**
@@ -63,43 +63,20 @@ angular.module('FieldDoc')
 
     angular
         .module('save2pdf', [])
-            .value('ngHtmlPdfConfig', {
-                pagesplit : true,
-                height : null,
-                pdfName : 'exportedPDF'
-            })
         .directive('save2pdf', function() {
             return {
               link: function($scope, element, Attrs, controller) {
                 if (!element[0]) { return;}
 
-                var pagesplit = true,
-                height = element[0].offsetHeight,
-                pdfName = Attrs.pdfName;
-
                 $scope.$on('saveToPdf', function(event, mass) {
 
                     var pdf = new jsPDF('p','px','letter');
 
-                    // We'll make our own renderer to skip this editor
-                    var specialElementHandlers = {
-                        '#editor': function(element, renderer){
-                            return true;
-                        }
-                    };
-
-                    var interior_margins = {
-                      top: 5,
-                      bottom: 5,
-                      left: 5,
-                      width: 532
-                    };
-
+                    //
                     // All units are in the set measurement for the document
                     // This can be changed to "pt" (points), "mm" (Default), "cm", "in"
-                    pdf.addHTML(element[0], interior_margins.left, interior_margins.top, {
-                    }, function(dispose) {
-                        pdf.save(pdfName + '.pdf');
+                    pdf.addHTML(document.body, {}, function(dispose) {
+                        pdf.save('FieldStack-PracticeMetrics-' + new Date() + '.pdf');
                     });
              });
             }
@@ -575,11 +552,9 @@ angular.module('FieldDoc')
               return config || $q.when(config);
             }
 
-            console.log('$location.path()', $location.path())
-
             if (sessionCookie) {
               config.headers.Authorization = 'Bearer ' + sessionCookie;
-            } else if (!sessionCookie && $location.path() !== '/account/register') {
+            } else if (!sessionCookie && $location.path() !== '/account/register' && $location.path() !== '/account/reset') {
               /**
                * Remove all cookies present for authentication
                */
@@ -1304,6 +1279,11 @@ angular.module('FieldDoc')
             }
             return Account.userObject;
           },
+          project: function(Project, $route) {
+            return Project.get({
+              id: $route.current.params.projectId
+            });
+          },
           site: function(Site, $route) {
             return Site.get({
               id: $route.current.params.siteId
@@ -1347,7 +1327,7 @@ angular.module('FieldDoc')
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('SiteViewCtrl', function (Account, leafletData, $location, site, Practice, practices, $rootScope, $route, user) {
+  .controller('SiteViewCtrl', function (Account, leafletData, $location, site, Practice, practices, project, $rootScope, $route, user) {
 
     var self = this;
 
@@ -1383,12 +1363,15 @@ angular.module('FieldDoc')
           user.$promise.then(function(userResponse) {
               $rootScope.user = Account.userObject = userResponse;
 
-              self.permissions = {
-                  isLoggedIn: Account.hasToken(),
-                  role: $rootScope.user.properties.roles[0].properties.name,
-                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                  can_edit: Account.canEdit(self.site.properties.project)
-              };
+              project.$promise.then(function(projectResponse) {
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0].properties.name,
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: Account.canEdit(projectResponse)
+                };
+              });
+
           });
       }
 
@@ -4102,6 +4085,42 @@ angular.module('FieldDoc')
 
       self.landuse = landuse;
 
+      //
+      // Setup all of our basic date information so that we can use it
+      // throughout the page
+      //
+      self.today = new Date();
+
+      self.days = [
+          'Sunday',
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday'
+      ];
+
+      self.months = [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec'
+      ];
+
+      function parseISOLike(s) {
+          var b = s.split(/\D/);
+          return new Date(b[0], b[1]-1, b[2])
+      }
+
       practice.$promise.then(function(successResponse) {
 
         self.practice = successResponse;
@@ -4126,6 +4145,21 @@ angular.module('FieldDoc')
           //
           report.$promise.then(function(successResponse) {
             self.report = successResponse;
+
+            if (self.report.properties.report_date) {
+                console.log('self.report.propertiesreport_date', self.report.properties.report_date);
+                self.today = parseISOLike(self.report.properties.report_date);
+            }
+
+            //
+            // Check to see if there is a valid date
+            //
+            self.date = {
+                month: self.months[self.today.getMonth()],
+                date: self.today.getDate(),
+                day: self.days[self.today.getDay()],
+                year: self.today.getFullYear()
+            };
 
             $rootScope.page.title = self.practice.properties.practice_type;
             $rootScope.page.links = [
@@ -4176,7 +4210,21 @@ angular.module('FieldDoc')
         }
       });
 
+      $scope.$watch(angular.bind(this, function() {
+          return this.date;
+      }), function (response) {
+        console.log('response', response)
+          if (response) {
+              var _new = response.month + ' ' + response.date + ' ' + response.year,
+              _date = new Date(_new);
+              self.date.day = self.days[_date.getDay()];
+          }
+      }, true);
+
       self.saveReport = function() {
+
+        self.report.properties.report_date = self.date.month + ' ' + self.date.date + ' ' + self.date.year;
+
         self.report.$update().then(function(successResponse) {
           $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
         }, function(errorResponse) {
@@ -8146,7 +8194,7 @@ angular.module('FieldDoc')
  * @ngdoc service
  * @name FieldDoc.GeometryService
  * @description
- *
+ *   
  */
 angular.module('FieldDoc')
   .service('commonsGeometry', ['$http', 'commonscloud', 'leafletData', function Navigation($http, commonscloud, leafletData) {
@@ -8323,7 +8371,7 @@ angular.module('FieldDoc')
         }
       },
       center: {
-        lng: -76.534,
+        lng: -76.534, 
         lat: 39.134,
         zoom: 11
       },
@@ -8368,7 +8416,7 @@ angular.module('FieldDoc')
       },
       geojson: {}
     };
-
+    
     return Map;
   }]);
 'use strict';
@@ -10575,13 +10623,13 @@ angular.module('FieldDoc')
     // with structured objects.
     //
     return  function(object) {
-
+      
       var result = [];
 
       angular.forEach(object, function(value) {
         result.push(value);
       });
-
+      
       return result;
     };
 

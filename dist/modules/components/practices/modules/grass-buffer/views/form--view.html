@@ -3,112 +3,208 @@
 <main class="container">
   <article class="feature-detail">
     <div class="column-16 feature-detail-content">
-      <form data-ng-submit="page.saveReport()" class="row" role="form">
+      <form data-ng-submit="page.saveReport()" class="form" role="form">
 
-        <fieldset>
-          <!-- Report Date -->
-          <div class="form-row">
-            <div class="form-field">
+        <div class="form-row">
+          <div class="form-label">
+            <label for="report_date" class="control-label">
+              Report Date
+            </label>
+          </div>
+          <div class="form-field">
               <label for="report_date" class="control-label">
-                Report Date
+                Please set the date to the day you took the photos
               </label>
 
-              <input data-ng-model="page.report.properties.report_date" class="form-control" class="form-control" type="text" id="report_date" name="report_date" placeholder="Enter a date" />
-            </div>
-          </div>
+              <div class="form-element form-element-quarters">
+                <p class="form-control form-control-disabled">
+                  {{ page.date.day }}
+                </p>
+                <p class="help-text">
+                  Day
+                </p>
+              </div>
 
-          <!-- Measurement Period -->
-          <div class="form-group column-8">
+              <div class="form-element form-element-quarters">
+                <select class="form-control"
+                        id="report_date_month" name="report_date_month"
+                        data-ng-model="page.date.month"
+                        data-ng-options="month for month in page.months">
+                </select>
+                <p class="help-text">
+                  Month
+                </p>
+              </div>
+
+              <div class="form-element form-element-quarters">
+                <input number type="number" min="1" max="31" step="1"
+                       class="form-control"
+                       id="report_date_date" name="report_date_date"
+                       data-ng-model="page.date.date"
+                       data-ng-if="page.date.month === 'Jan' ||
+                                   page.date.month === 'Mar' ||
+                                   page.date.month === 'May' ||
+                                   page.date.month === 'Jul' ||
+                                   page.date.month === 'Aug' ||
+                                   page.date.month === 'Oct' ||
+                                   page.date.month === 'Dec'" />
+               <input number type="number" min="1" max="30" step="1"
+                      class="form-control"
+                      id="report_date_date" name="report_date_date"
+                      data-ng-model="page.date.date"
+                      data-ng-if="page.date.month === 'Apr' ||
+                                  page.date.month === 'Jun' ||
+                                  page.date.month === 'Sep' ||
+                                  page.date.month === 'Nov'" />
+                <input number type="number" min="1" max="29" step="1"
+                       class="form-control"
+                       id="report_date_date" name="report_date_date"
+                       data-ng-model="page.date.date"
+                       data-ng-if="page.date.month === 'Feb'" />
+               <p class="help-text">
+                 Date
+               </p>
+             </div>
+
+             <div class="form-element form-element-quarters">
+               <input number type="number" min="1900" step="1"
+                      class="form-control"
+                      id="report_date_year" name="report_date_year"
+                      data-ng-model="page.date.year" />
+                <p class="help-text">
+                  Year
+                </p>
+              </div>
+          </div>
+        </div>
+
+        <!-- Measurement Period -->
+        <div class="form-row">
+          <div class="form-label">
             <label for="measurement_period" class="control-label">
               Measurement Period
             </label>
-
-            <select class="form-control" data-ng-model="page.report.properties.measurement_period" id="measurement_period" name="measurement_period">
-              <option value="Planning">Planning</option>
-              <option value="Installation">Installation</option>
-              <option value="Monitoring">Monitoring</option>
-            </select>
           </div>
+          <div class="form-field">
 
-          <!-- WIP Reporting Agency -->
-          <div class="form-group column-8" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+            <div class="form-element">
+              <select class="form-control"
+                      data-ng-model="page.report.properties.measurement_period"
+                      id="measurement_period" name="measurement_period"
+                      required="required">
+                <option value="Planning">Planning</option>
+                <option value="Installation">Installation</option>
+                <option value="Monitoring">Monitoring</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- WIP Reporting Agency -->
+        <div class="form-row" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+          <div class="form-label">
             <label for="wip_reporting_agency" class="control-label">
               WIP Reporting Agency
             </label>
-
-            <select class="form-control" data-ng-model="page.report.properties.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency">
-              <option value="DC District Department of the Environment">DC District Department of the Environment</option>
-              <option value="Delaware Department of Natural Resources and Environmental Control">Delaware Department of Natural Resources and Environmental Control</option>
-              <option value="Maryland Department of Natural Resources">MD Department of Natural Resources</option>
-              <option value="Maryland Department of the Environment">MD Department of the Environment</option>
-              <option value="Maryland Department of Agriculture">MD Department of Agriculture</option>
-              <option value="New York Department of Environmental Conservation">New York Department of Environmental Conservation</option>
-              <option value="Pennsylvania Department of Environmental Protection">Pennsylvania Department of Environmental Protection</option>
-              <option value="Virginia Department of Conservation and Recreation">Virginia Department of Conservation and Recreation</option>
-              <option value="West Virginia Department of Environmental Protection">West Virginia Department of Environmental Protection</option>
-            </select>
           </div>
-        </fieldset>
+          <div class="form-field">
 
-        <fieldset data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
-          <legend><strong>Landuse</strong></legend>
+            <div class="form-element">
+              <select class="form-control" data-ng-model="page.report.properties.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency">
+                <option value="DC District Department of the Environment">DC District Department of the Environment</option>
+                <option value="DE Department of Natural Resources and Environmental Control">DE Department of Natural Resources and Environmental Control</option>
+                <option value="MD Department of Natural Resources">MD Department of Natural Resources</option>
+                <option value="MD Department of the Environment">MD Department of the Environment</option>
+                <option value="MD Department of Agriculture">MD Department of Agriculture</option>
+                <option value="NY Department of Environmental Conservation">NY Department of Environmental Conservation</option>
+                <option value="PA Department of Environmental Protection">PA Department of Environmental Protection</option>
+                <option value="VA Department of Conservation and Recreation">VA Department of Conservation and Recreation</option>
+                <option value="WV Department of Environmental Protection">WV Department of Environmental Protection</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
-          <!-- Existing Landuse -->
-          <div class="form-group column-7">
-            <label for="existing_riparian_landuse" class="control-label">
-              Existing Landuse
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+          <div class="form-label">
+            <label for="wip_reporting_agency" class="control-label">
+              Landuse
             </label>
-
-            <select class="form-control" data-ng-model="page.report.properties.existing_riparian_landuse" id="existing_riparian_landuse" name="existing_riparian_landuse" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | orderBy:'properties.landuse_name'">
-            </select>
           </div>
+          <div class="form-field">
 
-          <!-- Upland Landuse -->
-          <div class="column-2"></div>
-          <div class="form-group column-7">
-            <label for="upland_landuse" class="control-label">
-              Upland Landuse
+            <!-- Existing Landuse -->
+            <div class="form-element form-element-half">
+              <label for="existing_riparian_landuse" class="control-label">
+                Existing Landuse
+              </label>
+
+              <select class="form-control" data-ng-model="page.report.properties.existing_riparian_landuse" id="existing_riparian_landuse" name="existing_riparian_landuse" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | orderBy:'properties.landuse_name'">
+              </select>
+            </div>
+
+            <!-- Upland Landuse -->
+            <div class="form-element form-element-half">
+              <label for="upland_landuse" class="control-label">
+                Upland Landuse
+              </label>
+
+              <select class="form-control" data-ng-model="page.report.properties.upland_landuse" id="upland_landuse" name="upland_landuse" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | orderBy:'properties.landuse_name'">
+              </select>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+          <div class="form-label">
+            <label for="wip_reporting_agency" class="control-label">
+              Installation Summary
             </label>
-
-            <select class="form-control" data-ng-model="page.report.properties.upland_landuse" id="upland_landuse" name="upland_landuse" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | orderBy:'properties.landuse_name'">
-            </select>
           </div>
-        </fieldset>
+          <div class="form-field">
 
-        <fieldset data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
-          <legend><strong>Installation</strong> Summary</legend>
+            <!-- Buffer Length -->
+            <div class="form-element form-element-half">
+              <label for="length_of_buffer" class="control-label">
+                Length of Buffer
+              </label>
 
-          <!-- Buffer Length -->
-          <div class="form-group column-5">
-            <label for="length_of_buffer" class="control-label">
-              Length of Buffer
+              <input data-ng-model="page.report.properties.length_of_buffer"
+                     class="form-control" class="form-control" type="number"
+                     id="length_of_buffer" name="length_of_buffer"
+                     placeholder="Length of Buffer" />
+
+              <p class="help-text">feet</p>
+            </div>
+
+            <!-- Buffer Width -->
+            <div class="form-element form-element-half">
+              <label for="average_width_of_buffer" class="control-label">
+                Average Buffer Width
+              </label>
+
+              <input data-ng-model="page.report.properties.average_width_of_buffer" class="form-control" class="form-control" type="number" id="average_width_of_buffer" name="average_width_of_buffer" placeholder="Average Buffer Width" />
+
+              <p class="help-text">feet</p>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
+          <div class="form-label">
+            <label for="wip_reporting_agency" class="control-label">
+              Interim BMP Metrics Data
             </label>
-
-            <input data-ng-model="page.report.properties.length_of_buffer" class="form-control" class="form-control" type="number" id="length_of_buffer" name="length_of_buffer" placeholder="Length of Buffer" />
-
-            <p class="help-text">feet</p>
           </div>
+          <div class="form-field">
 
-          <!-- Buffer Width -->
-          <div class="column-1"></div>
-          <div class="form-group column-5">
-            <label for="average_width_of_buffer" class="control-label">
-              Average Buffer Width
-            </label>
-
-            <input data-ng-model="page.report.properties.average_width_of_buffer" class="form-control" class="form-control" type="number" id="average_width_of_buffer" name="average_width_of_buffer" placeholder="Average Buffer Width" />
-
-            <p class="help-text">feet</p>
-          </div>
-
-        </fieldset>
-
-        <fieldset data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
-          <legend><strong>Interim</strong> BMP Metrics Data</legend>
-
-          <div class="row">
             <!-- Vegetative Cover -->
-            <div class="form-group column-5">
+            <div class="form-element form-element-thirds">
               <label for="native_vegetation" class="control-label">
                 Vegetative Cover
               </label>
@@ -117,8 +213,7 @@
             </div>
 
             <!-- Buffer Composition (Woody) -->
-            <div class="column-1"></div>
-            <div class="form-group column-5">
+            <div class="form-element form-element-thirds">
               <label for="buffer_composition_woody" class="control-label">
                 Buffer Composition (woody)
               </label>
@@ -127,19 +222,15 @@
             </div>
 
             <!-- Buffer Composition (Shrub) -->
-            <div class="column-1"></div>
-            <div class="form-group column-4">
+            <div class="form-element form-element-thirds">
               <label for="buffer_composition_shrub" class="control-label">
                 Buffer Composition (shrub)
               </label>
 
               <input data-ng-model="page.report.properties.buffer_composition_shrub" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_shrub" name="buffer_composition_shrub" placeholder="% shrub" />
             </div>
-          </div>
 
-          <div class="row">
-            <!-- Buffer Composition (Grass) -->
-            <div class="form-group column-5">
+            <div class="form-element form-element-thirds">
               <label for="buffer_composition_grass" class="control-label">
                 Buffer Composition (grass)
               </label>
@@ -148,8 +239,7 @@
             </div>
 
             <!-- Buffer Composition (Bare) -->
-            <div class="column-1"></div>
-            <div class="form-group column-5">
+            <div class="form-element form-element-thirds">
               <label for="buffer_composition_bare" class="control-label">
                 Buffer Composition (bare)
               </label>
@@ -158,19 +248,16 @@
             </div>
 
             <!-- Buffer Composition (Other) -->
-            <div class="column-1"></div>
-            <div class="form-group column-4">
+            <div class="form-element form-element-thirds">
               <label for="buffer_composition_other" class="control-label">
                 Buffer Composition (other)
               </label>
 
               <input data-ng-model="page.report.properties.buffer_composition_other" class="form-control" class="form-control" max="100" min="0" type="number" id="buffer_composition_other" name="buffer_composition_other" placeholder="% other" />
             </div>
-          </div>
 
-          <div class="row">
             <!-- Vegetative Protection -->
-            <div class="form-group column-5">
+            <div class="form-element form-element-thirds">
               <label for="vegetative_protection_left_bank" class="control-label">
                 Vegetative Protection (left bank)
               </label>
@@ -178,8 +265,7 @@
               <input data-ng-model="page.report.properties.vegetative_protection_left_bank" class="form-control" class="form-control" type="number" id="vegetative_protection_left_bank" name="vegetative_protection_left_bank" placeholder="" step="0.0001" />
             </div>
 
-            <div class="column-1"></div>
-            <div class="form-group column-5">
+            <div class="form-element form-element-thirds">
               <label for="vegetative_protection_right_bank" class="control-label">
                 Vegetative Protection (right bank)
               </label>
@@ -187,11 +273,7 @@
               <input data-ng-model="page.report.properties.vegetative_protection_right_bank" class="form-control" class="form-control" type="number" id="vegetative_protection_right_bank" name="vegetative_protection_right_bank" placeholder="" step="0.0001" />
             </div>
 
-          </div>
-
-          <div class="row">
-            <!-- Riparian Vegetative Zone Width -->
-            <div class="form-group column-5">
+            <div class="form-element form-element-thirds">
               <label for="riparian_vegetative_zone_width_left_bank" class="control-label">
                 Riparian Vegetative Zone Width (left bank)
               </label>
@@ -199,8 +281,7 @@
               <input data-ng-model="page.report.properties.riparian_vegetative_zone_width_left_bank" class="form-control" class="form-control" type="number" id="riparian_vegetative_zone_width_left_bank" name="riparian_vegetative_zone_width_left_bank" placeholder="" step="0.0001" />
             </div>
 
-            <div class="column-1"></div>
-            <div class="form-group column-5">
+            <div class="form-element form-element-thirds">
               <label for="riparian_vegetative_zone_width_right_bank" class="control-label">
                 Riparian Vegetative Zone Width (right bank)
               </label>
@@ -209,63 +290,79 @@
             </div>
 
           </div>
-        </fieldset>
+        </div>
 
-        <fieldset data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
-          <legend><strong>Adaptive</strong> Management Checks Performed</legend>
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
+          <div class="form-label">
+            <label for="wip_reporting_agency" class="control-label">
+              Adaptive Management Checks Performed
+            </label>
+          </div>
+          <div class="form-field">
 
-          <div class="form-group">
-            <div class="checkbox">
-              <label class="control-label">
-                <input data-ng-model="page.report.properties.sediment_deposition" type="checkbox" id="sediment_deposition" name="sediment_deposition" /> Check for, and correct, causes of excess sediment build-up at the field-buffer interface that re-directs flow
-              </label>
+            <div class="form-element">
+              <div class="checkbox">
+                <label class="control-label">
+                  <input data-ng-model="page.report.properties.sediment_deposition" type="checkbox" id="sediment_deposition" name="sediment_deposition" /> Check for, and correct, causes of excess sediment build-up at the field-buffer interface that re-directs flow
+                </label>
+              </div>
+            </div>
+
+            <div class="form-element">
+              <div class="checkbox">
+                <label class="control-label">
+                  <input data-ng-model="page.report.properties.concentrated_flow_paths" type="checkbox" id="concentrated_flow_paths" name="concentrated_flow_paths" /> Perform maintenance to remove concentrated flow paths through the buffer
+                </label>
+              </div>
+            </div>
+
+            <div class="form-element">
+              <div class="checkbox">
+                <label class="control-label">
+                  <input data-ng-model="page.report.properties.monthly_buffer_maintenance" type="checkbox" id="monthly_buffer_maintenance" name="monthly_buffer_maintenance" /> Check for, correct causes, and path bare and/or eroded areas in the buffer
+                </label>
+              </div>
+            </div>
+
+            <div class="form-element">
+              <div class="checkbox">
+                <label class="control-label">
+                  <input data-ng-model="page.report.properties.vegetative_cover" type="checkbox" id="vegetative_cover" name="vegetative_cover" /> Apply herbicide around shelters in spring and fall to reduce competing vegetation
+                </label>
+              </div>
+            </div>
+
+            <div class="form-element">
+              <div class="checkbox">
+                <label class="control-label">
+                  <input data-ng-model="page.report.properties.invasive_species_control" type="checkbox" id="invasive_species_control" name="invasive_species_control" /> Control noxious and invasive weeds
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation' || page.report.properties.measurement_period === 'Monitoring'">
+          <div class="form-label">
+            <label for="notes" class="control-label">
+              Notes
+            </label>
+          </div>
+          <div class="form-field">
+
+            <div class="form-element">
+              <textarea rows="8" data-ng-model="page.report.properties.notes"
+                        class="form-control animate"  msd-elastic id="notes"
+                        name="notes">{{ page.report.properties.notes }}</textarea>
             </div>
           </div>
-
-          <div class="form-group">
-            <div class="checkbox">
-              <label class="control-label">
-                <input data-ng-model="page.report.properties.concentrated_flow_paths" type="checkbox" id="concentrated_flow_paths" name="concentrated_flow_paths" /> Perform maintenance to remove concentrated flow paths through the buffer
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="checkbox">
-              <label class="control-label">
-                <input data-ng-model="page.report.properties.monthly_buffer_maintenance" type="checkbox" id="monthly_buffer_maintenance" name="monthly_buffer_maintenance" /> Check for, correct causes, and path bare and/or eroded areas in the buffer
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="checkbox">
-              <label class="control-label">
-                <input data-ng-model="page.report.properties.vegetative_cover" type="checkbox" id="vegetative_cover" name="vegetative_cover" /> Apply herbicide around shelters in spring and fall to reduce competing vegetation
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="checkbox">
-              <label class="control-label">
-                <input data-ng-model="page.report.properties.invasive_species_control" type="checkbox" id="invasive_species_control" name="invasive_species_control" /> Control noxious and invasive weeds
-              </label>
-            </div>
-          </div>
-
-        </fieldset>
-
-        <fieldset data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation' || page.report.properties.measurement_period === 'Monitoring'">
-          <legend><strong>Notes</strong></legend>
-
-          <div class="form-group">
-            <textarea rows="1" data-ng-model="page.report.properties.notes" class="form-control animate"  msd-elastic id="notes" name="notes" placeholder="Notes">{{ page.report.properties.notes }}</textarea>
-          </div>
-
-        </fieldset>
+        </div>
 
         <div class="form-actions">
+          <div class="form-actions-buttons"></div>
           <div class="form-actions-buttons">
             <button type="submit"class="button button-submit">
               Save Changes

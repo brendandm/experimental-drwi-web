@@ -104,10 +104,21 @@
             <button type="submit" class="button button-submit">
               Save Changes
             </button>
-            <button type="button" data-ng-click="page.deleteSite()"
-                    class="button button-link button-outline pull-right">
+            <button type="button" class="button button-link button-outline pull-right"
+                    data-ng-click="page.confirmDelete =! page.confirmDelete"
+                    data-ng-if="!page.confirmDelete && !page.confirmDeleteReallySure">
               Delete
             </button>
+            <span data-ng-if="page.confirmDelete" class="action pull-right">
+              <a data-ng-click="page.confirmDelete =! page.confirmDelete; page.confirmDeleteReallySure =! page.confirmDeleteReallySure;"
+                    class="remove">
+                Remove site and all associated practices?</a> or <a class="cancel" data-ng-click="page.confirmDelete =! page.confirmDelete">nevermind</a>
+            </span>
+            <span data-ng-if="page.confirmDeleteReallySure" class="action pull-right">
+              <a data-ng-click="page.deleteSite()"
+                    class="remove">
+                Yes, I'm sure, delete this site forever</a> or <a class="cancel" data-ng-click="page.confirmDelete = false; page.confirmDeleteReallySure = false;">nevermind</a>
+            </span>
           </div>
         </div>
       </form>
