@@ -161,6 +161,9 @@
       }, true);
 
       self.saveReport = function() {
+
+        self.report.properties.report_date = self.date.month + ' ' + self.date.date + ' ' + self.date.year;
+
         self.report.$update().then(function(successResponse) {
           $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
         }, function(errorResponse) {
