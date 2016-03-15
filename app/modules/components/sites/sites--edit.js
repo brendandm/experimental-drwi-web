@@ -204,7 +204,7 @@
         if (self.site.properties.county) {
           self.site.properties.county_id = self.site.properties.county.id;
           self.site.properties.state = self.site.properties.county.properties.state_name;
-        } else if (!self.site.properties.county || !self.site.properties.state) {
+        } else if (!self.site.properties.county && !self.site.properties.state) {
           $rootScope.notifications.error('Missing County and State Information', 'Please add a county and state to continue saving your site');
 
           $timeout(function() {
