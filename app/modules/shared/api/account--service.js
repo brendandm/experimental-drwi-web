@@ -70,8 +70,6 @@
 
       Account.inGroup = function(userId, group) {
 
-          console.log(userId, group)
-
             var return_ = false;
 
             angular.forEach(group, function(member) {
