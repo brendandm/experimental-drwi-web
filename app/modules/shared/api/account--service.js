@@ -106,7 +106,7 @@
 
         if (Account.hasRole('admin')) {
             return true;
-        } else if (Account.hasRole('manager') && (Account.userObject.id === resource.properties.creator_id)) {
+        } else if (Account.hasRole('manager') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(Account.userObject.id, resource.properties.members))) {
             return true;
         } else if (Account.hasRole('grantee') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(Account.userObject.id, resource.properties.members))) {
             return true;
