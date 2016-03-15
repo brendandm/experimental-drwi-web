@@ -46,7 +46,8 @@ angular.module('FieldDoc')
                     isLoggedIn: Account.hasToken(),
                     role: $rootScope.user.properties.roles[0].properties.name,
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                    can_edit: Account.canEdit(project)
+                    can_edit: Account.canEdit(project),
+                    can_delete: Account.canDelete(project)
                 };
             });
         }

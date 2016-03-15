@@ -70,6 +70,8 @@
 
       Account.inGroup = function(userId, group) {
 
+          console.log(userId, group)
+
             var return_ = false;
 
             angular.forEach(group, function(member) {
@@ -88,7 +90,23 @@
 
         if (Account.hasRole('admin')) {
             return true;
-        } else if (Account.hasRole('manager') && Account.inGroup(resource.properties.account_id, Account.userObject.properties.account)) {
+        } else if (Account.hasRole('manager') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(resource.properties.account_id, Account.userObject.properties.account))) {
+            return true;
+        } else if (Account.hasRole('grantee') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(Account.userObject.id, resource.properties.members))) {
+            return true;
+        }
+
+        return false;
+      };
+
+      Account.canDelete = function(resource) {
+        if (Account.userObject && !Account.userObject.id) {
+            return false;
+        }
+
+        if (Account.hasRole('admin')) {
+            return true;
+        } else if (Account.hasRole('manager') && (Account.userObject.id === resource.properties.creator_id)) {
             return true;
         } else if (Account.hasRole('grantee') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(Account.userObject.id, resource.properties.members))) {
             return true;
