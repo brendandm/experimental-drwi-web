@@ -59,6 +59,11 @@
           },
           responseError: function (response) {
             $log.info('AuthorizationInterceptor::ResponseError', response || $q.when(response));
+
+            if (response.config.url.indexOf('data/user') > -1) {
+              $location.path('/user/logout');
+            }
+
             return $q.reject(response);
           }
         };

@@ -23,7 +23,11 @@
                     //
                     // All units are in the set measurement for the document
                     // This can be changed to "pt" (points), "mm" (Default), "cm", "in"
-                    pdf.addHTML(document.body, {}, function(dispose) {
+                    pdf.addHTML(document.body, {
+                      pagesplit: true,
+                      height: document.body.offsetHeight,
+                      width: document.body.offsetWidth
+                    }, function(dispose) {
                         pdf.save('FieldStack-PracticeMetrics-' + new Date() + '.pdf');
                     });
              });
