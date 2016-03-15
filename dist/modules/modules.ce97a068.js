@@ -47,7 +47,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
- .constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+.constant('environment', {name:'local',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
 /**
@@ -1072,7 +1072,8 @@ angular.module('FieldDoc')
                     isLoggedIn: Account.hasToken(),
                     role: $rootScope.user.properties.roles[0].properties.name,
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                    can_edit: Account.canEdit(project)
+                    can_edit: Account.canEdit(project),
+                    can_delete: Account.canDelete(project)
                 };
             });
         }
@@ -1757,7 +1758,7 @@ angular.module('FieldDoc')
         if (self.site.properties.county) {
           self.site.properties.county_id = self.site.properties.county.id;
           self.site.properties.state = self.site.properties.county.properties.state_name;
-        } else if (!self.site.properties.county || !self.site.properties.state) {
+        } else if (!self.site.properties.county && !self.site.properties.state) {
           $rootScope.notifications.error('Missing County and State Information', 'Please add a county and state to continue saving your site');
 
           $timeout(function() {
@@ -9554,7 +9555,23 @@ angular
 
         if (Account.hasRole('admin')) {
             return true;
-        } else if (Account.hasRole('manager') && Account.inGroup(resource.properties.account_id, Account.userObject.properties.account)) {
+        } else if (Account.hasRole('manager') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(resource.properties.account_id, Account.userObject.properties.account) || Account.inGroup(Account.userObject.id, resource.properties.members))) {
+            return true;
+        } else if (Account.hasRole('grantee') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(Account.userObject.id, resource.properties.members))) {
+            return true;
+        }
+
+        return false;
+      };
+
+      Account.canDelete = function(resource) {
+        if (Account.userObject && !Account.userObject.id) {
+            return false;
+        }
+
+        if (Account.hasRole('admin')) {
+            return true;
+        } else if (Account.hasRole('manager') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(Account.userObject.id, resource.properties.members))) {
             return true;
         } else if (Account.hasRole('grantee') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(Account.userObject.id, resource.properties.members))) {
             return true;

@@ -58,7 +58,7 @@
             </button>
             <button type="button" class="button button-link button-outline pull-right"
                     data-ng-click="page.confirmDelete =! page.confirmDelete"
-                    data-ng-if="!page.confirmDelete && !page.confirmDeleteReallySure">
+                    data-ng-if="!page.confirmDelete && !page.confirmDeleteReallySure && page.permissions.can_delete">
               Delete
             </button>
             <span data-ng-if="page.confirmDelete" class="action pull-right">
