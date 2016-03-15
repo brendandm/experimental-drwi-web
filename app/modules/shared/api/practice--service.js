@@ -61,6 +61,11 @@
           'method': 'GET',
           'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_urban_homeowner'),
           'isArray': false
+        },
+        'wetlandsNontidal': {
+          'method': 'GET',
+          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_wetlands_nontidal'),
+          'isArray': false
         }
       });
     });

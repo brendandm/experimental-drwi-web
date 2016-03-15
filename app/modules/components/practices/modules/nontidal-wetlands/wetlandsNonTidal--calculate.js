@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .service('CalculateWetlandsNonTidal', function(Calculate, Landuse, StateLoad) {
+    .service('CalculateWetlandsNonTidal', function($q) {
 
     });
 
