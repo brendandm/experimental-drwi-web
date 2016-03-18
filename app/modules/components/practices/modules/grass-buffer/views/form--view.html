@@ -140,7 +140,7 @@
                 Existing Landuse
               </label>
 
-              <select class="form-control" data-ng-model="page.report.properties.existing_riparian_landuse" id="existing_riparian_landuse" name="existing_riparian_landuse" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | orderBy:'properties.landuse_name'">
+              <select class="form-control" data-ng-model="page.report.properties.existing_riparian_landuse" id="existing_riparian_landuse" name="existing_riparian_landuse" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | filter:value.properties.landuse_type='agriculture' | orderBy:'properties.landuse_name'">
               </select>
             </div>
 
@@ -150,7 +150,7 @@
                 Upland Landuse
               </label>
 
-              <select class="form-control" data-ng-model="page.report.properties.upland_landuse" id="upland_landuse" name="upland_landuse" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | orderBy:'properties.landuse_name'">
+              <select class="form-control" data-ng-model="page.report.properties.upland_landuse" id="upland_landuse" name="upland_landuse" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | filter:value.properties.landuse_type='agriculture' | orderBy:'properties.landuse_name'">
               </select>
             </div>
           </div>
