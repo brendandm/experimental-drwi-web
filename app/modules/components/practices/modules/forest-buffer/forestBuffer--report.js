@@ -239,14 +239,14 @@
                     //
                     // EXISTING CONDITION — LOAD VALUES
                     //
-                    console.log('uplandPlannedInstallationLoad', self.calculateForestBuffer.results.totalPreInstallationLoad.uplandLanduse.nitrogen, self.practice_efficiency.n_efficiency)
+                    // console.log('uplandPlannedInstallationLoad', self.calculateForestBuffer.results.totalPreInstallationLoad.uplandLanduse.nitrogen, self.practice_efficiency.n_efficiency)
                     var uplandPlannedInstallationLoad = {
                       sediment: self.calculateForestBuffer.results.totalPreInstallationLoad.uplandLanduse.sediment*(self.practice_efficiency.s_efficiency),
                       nitrogen: self.calculateForestBuffer.results.totalPreInstallationLoad.uplandLanduse.nitrogen*(self.practice_efficiency.n_efficiency),
                       phosphorus: self.calculateForestBuffer.results.totalPreInstallationLoad.uplandLanduse.phosphorus*(self.practice_efficiency.p_efficiency)
                     };
 
-                    console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
+                    // console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
 
                     var existingPlannedInstallationLoad = {
                       sediment: ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000),
@@ -254,7 +254,7 @@
                       phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
                     };
 
-                    console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
+                    // console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
 
                     //
                     // PLANNED CONDITIONS — LANDUSE VALUES

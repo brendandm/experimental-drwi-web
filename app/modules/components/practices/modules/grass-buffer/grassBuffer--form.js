@@ -57,7 +57,7 @@
 
       function parseISOLike(s) {
           var b = s.split(/\D/);
-          return new Date(b[0], b[1]-1, b[2])
+          return new Date(b[0], b[1]-1, b[2]);
       }
 
       practice.$promise.then(function(successResponse) {
@@ -152,7 +152,6 @@
       $scope.$watch(angular.bind(this, function() {
           return this.date;
       }), function (response) {
-        console.log('response', response)
           if (response) {
               var _new = response.month + ' ' + response.date + ' ' + response.year,
               _date = new Date(_new);

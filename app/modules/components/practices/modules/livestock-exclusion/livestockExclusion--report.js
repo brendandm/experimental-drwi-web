@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-  .controller('LivestockExclusionReportController', function (Account, Calculate, CalculateLivestockExclusion, Efficiency, LoadData, $location, practice, PracticeLivestockExclusion, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
+  .controller('LivestockExclusionReportController', function (Account, animals, Calculate, CalculateLivestockExclusion, Efficiency, LoadData, $location, practice, PracticeLivestockExclusion, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
 
     var self = this,
         projectId = $route.current.params.projectId,
@@ -185,8 +185,6 @@ angular.module('FieldDoc')
 
               self.calculateLivestockExclusion.GetLoadVariables('Planning', existingLanduseType).then(function(existingLoaddata) {
                 self.calculateLivestockExclusion.GetLoadVariables('Planning', uplandLanduseType).then(function(loaddata) {
-
-                  console.log('loaddata', loaddata, 'existingLoaddata', existingLoaddata)
 
                   //
                   // =X38*2*AA$10/2000 + Z34*(AA$10/2000)*(AE$5/100)
@@ -390,8 +388,6 @@ angular.module('FieldDoc')
 
             self.calculateLivestockExclusion.GetSingleInstalledLoad = function(value) {
 
-              console.log('value', value)
-
               /********************************************************************/
               // Setup
               /********************************************************************/
@@ -418,7 +414,7 @@ angular.module('FieldDoc')
                   existingLoaddata = self.calculateLivestockExclusion.results.totalPlannedLoad.efficiency.existing.efficieny,
                   uplandLoaddata = self.calculateLivestockExclusion.results.totalPreInstallationLoad.efficieny,
                   rotationalGrazingArea = (value.properties.length_of_fencing*200/43560),
-                  animal = AnimalType[value.properties.animal_type],
+                  animal = value.properties.animal_type,
                   auDaysYr,
                   planningValue;
 
@@ -449,8 +445,8 @@ angular.module('FieldDoc')
               };
 
               var preDirectDeposit = {
-                nitrogen: (auDaysYr*animal.manure)*animal.total_nitrogen,
-                phosphorus: (auDaysYr*animal.manure)*animal.total_phosphorus,
+                nitrogen: (auDaysYr*animal.properties.manure)*animal.properties.total_nitrogen,
+                phosphorus: (auDaysYr*animal.properties.manure)*animal.properties.total_phosphorus,
               };
 
                var preInstallationeBMPLoadTotals = {

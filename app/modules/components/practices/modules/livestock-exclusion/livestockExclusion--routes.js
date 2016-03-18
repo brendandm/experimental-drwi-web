@@ -32,6 +32,9 @@
                 id: $route.current.params.practiceId
               });
             },
+            animals: function(AnimalManure) {
+              return AnimalManure.query();
+            },
             readings: function(Practice, $route) {
               return Practice.livestockExclusion({
                 id: $route.current.params.practiceId
