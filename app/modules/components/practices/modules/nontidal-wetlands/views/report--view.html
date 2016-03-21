@@ -1,6 +1,6 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main class="container" save2pdf pdfName="NonTidalWetlands">
+<main class="container" save2pdf>
   <section class="row feature summary">
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
@@ -43,27 +43,35 @@
           <div data-ng-if="!page.total.planning">
             <h2><strong>Empty</strong> Summary</h2>
 
-            <p>No planning or measurement data has been added to this Practice yet. Please add a new Planning measurement period to this Practice to begin.</p>
+            <p>
+              Please add a new Planning measurement period to this Practice to begin.
+            </p>
 
             <p>
               <a class="button" data-ng-click="page.addReading('Planning')">Add Planning Data</a>
             </p>
           </div>
 
+          <!-- INSTALLATION SUMMARY -->
+
           <div data-ng-if="page.total.planning || page.total.installation">
             <table class="table">
               <tbody>
+                <!-- Section Heading -->
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
+                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 5 }}">
                     <h2><strong>Installation</strong> Summary</h2>
                   </td>
                 </tr>
 
+                <!-- Measurement Period Headings -->
                 <tr>
                   <th>&nbsp;</th>
-                  <th>&nbsp;</th> <!-- Empty because of Pre-BMP Load -->
+                  <td>
+                    &nbsp;
+                  </td>
                   <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/g/{{ report.properties.id }}/edit">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
                       <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
                       <br />
@@ -74,103 +82,54 @@
                   <th>% of Planned</th>
                 </tr>
 
+                <!-- Installation Summary -->
                 <tr>
-                  <th>Length of Buffer Installed (ft)</th>
-                  <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
-                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">{{ report.properties.length_of_buffer }}</td>
-                  <td><strong data-ng-if="page.calculateNontidalWetlands.results.percentageLengthOfBuffer">{{ page.calculateNontidalWetlands.results.percentageLengthOfBuffer.total | number:2 }}</strong></td>
-                  <td><strong data-ng-if="page.calculateNontidalWetlands.results.percentageLengthOfBuffer">{{ page.calculateNontidalWetlands.results.percentageLengthOfBuffer.percentage | number:0 }}%</strong></td>
+                  <th>Wetland Surface Area (acres)</th>
+                  <td>
+                    &nbsp;
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    {{ report.properties.installation_surface_area | number:2 }}
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.calculateWetlandsNonTidal.quantityInstalled(page.readings.features, 'installation_surface_area') | number:2 }}
+                    </strong>
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.calculateWetlandsNonTidal.quantityInstalled(page.readings.features, 'installation_surface_area', '%') | number:2 }}%
+                    </strong>
+                  </td>
                 </tr>
                 <tr>
-                  <th>Average Buffer Width (ft)</th>
-                  <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
-                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">{{ report.properties.average_width_of_buffer }}</td>
-                  <td>--</td>
-                  <td>--</td>
+                  <th>Type of Non-Tidal Wetlands Project</th>
+                  <td>
+                    &nbsp;
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    {{ report.properties.planning_project_type }}
+                  </td>
+                  <td>
+                    -
+                  </td>
+                  <td>
+                    -
+                  </td>
                 </tr>
 
+                <!-- Section Heading -->
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
-                    <h2><strong>Load</strong> &amp; Reductions</h2>
+                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 5 }}">
+                    <h2><strong>Load</strong> Reductions</h2>
                   </td>
                 </tr>
 
                 <tr>
                   <th>&nbsp;</th>
-                  <th>Pre-BMP Load</th>
+                  <td>Pre-BMP Loads</td>
                   <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/nontidal-wetlands/{{ report.properties.id }}/edit">
-                      <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned Reduction</span><span data-ng-if="report.properties.measurement_period === 'Installation'">Installed Reduction</span><br />
-                      {{ report.properties.report_date }}
-                    </a>
-                  </th>
-                  <th>Reduction To-date</th>
-                  <th>% of Planned</th>
-                </tr>
-
-                <tr data-ng-if="page.calculateNontidalWetlands.results.totalPreInstallationLoad">
-                  <th>Nitrogen (lbs/yr)</th>
-                  <td>{{ page.calculateNontidalWetlands.results.totalPreInstallationLoad.nitrogen || 0 | number:2 }}</td>
-                  <td>{{ page.calculateNontidalWetlands.results.totalPlannedLoad.nitrogen || 0 | number:2 }}</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ page.calculateNontidalWetlands.GetSingleInstalledLoad(report).nitrogen || 0 | number:2 }}
-                  </td>
-                  <td>
-                    <strong>
-                      {{ page.calculateNontidalWetlands.quantityInstalled(page.readings.features, 'nitrogen') || 0 | number:2 }}
-                    </strong> lbs/yr</td>
-                  <td>
-                    <strong>
-                      {{ page.calculateNontidalWetlands.quantityInstalled(page.readings.features, 'nitrogen', '%') || 0 | number:2 }}
-                    </strong> %</td>
-                  </td>
-                </tr>
-                <tr data-ng-if="page.calculateNontidalWetlands.results.totalPreInstallationLoad">
-                  <th>Phosphorus (lbs/yr)</th>
-                  <td>{{ page.calculateNontidalWetlands.results.totalPreInstallationLoad.phosphorus || 0 | number:2 }}</td>
-                  <td>{{ page.calculateNontidalWetlands.results.totalPlannedLoad.phosphorus || 0 | number:2 }}</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ page.calculateNontidalWetlands.GetSingleInstalledLoad(report).phosphorus || 0 | number:2 }}
-                  </td>
-                  <td>
-                    <strong>
-                      {{ page.calculateNontidalWetlands.quantityInstalled(page.readings.features, 'phosphorus') || 0 | number:2 }}
-                    </strong> lbs/yr</td>
-                  <td>
-                    <strong>
-                      {{ page.calculateNontidalWetlands.quantityInstalled(page.readings.features, 'phosphorus', '%') || 0 | number:2 }}
-                    </strong> %</td>
-                  </td>
-                </tr>
-                <tr data-ng-if="page.calculateNontidalWetlands.results.totalPreInstallationLoad">
-                  <th>Sediment (tons/yr)</th>
-                  <td>{{ page.calculateNontidalWetlands.results.totalPreInstallationLoad.sediment || 0 | number:2 }}</td>
-                  <td>{{ page.calculateNontidalWetlands.results.totalPlannedLoad.sediment || 0 | number:2 }}</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ page.calculateNontidalWetlands.GetSingleInstalledLoad(report).sediment || 0 | number:2 }}
-                  </td>
-                  <td>
-                    <strong>
-                      {{ page.calculateNontidalWetlands.quantityInstalled(page.readings.features, 'sediment') || 0 | number:2 }}
-                    </strong> lbs/yr</td>
-                  <td>
-                    <strong>
-                      {{ page.calculateNontidalWetlands.quantityInstalled(page.readings.features, 'sediment', '%') || 0 | number:2 }}
-                    </strong> %</td>
-                  </td>
-                </tr>
-
-                <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
-                    <h2><strong>Chesapeake</strong> Bay Metrics</h2>
-                  </td>
-                </tr>
-
-                <tr>
-                  <th>&nbsp;</th>
-                  <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
-                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/nontidal-wetlands/{{ report.properties.id }}/edit">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
                       <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
                       <br />
@@ -182,29 +141,139 @@
                 </tr>
 
                 <tr>
-                  <th>Acres of Riparian Restoration</th>
-                  <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
-                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <span data-ng-bind="page.calculateNontidalWetlands.GetConversionWithArea(report.properties.length_of_buffer, report.properties.average_width_of_buffer, 43560) | number:2"></span>
+                  <th>Bank Erosion Sediment Reduction (tons/yr)</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ page.calculateWetlandsNonTidal.preInstallationSedimentLoad(report) | number:2 }}
                   </td>
-                  <td><strong>{{ page.calculateNontidalWetlands.results.totalAcresRestored | number:2 }}</strong> acres</td>
-                  <td><strong>{{ page.calculateNontidalWetlands.results.percentageAcresRestored | number:0 }}%</strong></td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ page.calculateWetlandsNonTidal.plannedSedimentLoadReduction(report) | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ page.calculateWetlandsNonTidal.plannedSedimentLoadReduction(report) | number:2 }}
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.calculateWetlandsNonTidal.installedSedimentLoadReduction(page.readings.features) | number:2 }}
+                    </strong>
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.calculateWetlandsNonTidal.installedSedimentLoadReduction(page.readings.features, '%') | number:2 }}
+                    </strong>
+                  </td>
                 </tr>
+
                 <tr>
-                  <th>Miles of Riparian Restoration</th>
-                  <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
-                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <span data-ng-bind="page.calculateNontidalWetlands.GetConversion(report.properties.length_of_buffer, 5280) | number:2"></span>
+                  <th>Bank Erosion Nitrogen Reduction (lbs/yr)</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ page.calculateWetlandsNonTidal.preInstallationNitrogenLoad(report) | number:2 }}
                   </td>
-                  <td><strong>{{ page.calculateNontidalWetlands.results.totalMilesRestored | number:2 }}</strong> miles</td>
-                  <td><strong>{{ page.calculateNontidalWetlands.results.percentageMilesRestored | number:0 }}%</strong></td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ page.calculateWetlandsNonTidal.plannedNitrogenLoadReduction(report) | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ page.calculateWetlandsNonTidal.plannedNitrogenLoadReduction(report) | number:2 }}
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.calculateWetlandsNonTidal.installedNitrogenLoadReduction(page.readings.features) | number:2 }}
+                    </strong>
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.calculateWetlandsNonTidal.installedNitrogenLoadReduction(page.readings.features, '%') | number:2 }}
+                    </strong>
+                  </td>
                 </tr>
+
+                <tr>
+                  <th>Bank Erosion Phosphorus Reduction (lbs/yr)</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ page.calculateWetlandsNonTidal.preInstallationPhosphorusLoad(report) | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ page.calculateWetlandsNonTidal.plannedPhosphorusLoadReduction(report) | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ page.calculateWetlandsNonTidal.plannedPhosphorusLoadReduction(report) | number:2 }}
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.calculateWetlandsNonTidal.installedPhosphorusLoadReduction(page.readings.features) | number:2 }}
+                    </strong>
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.calculateWetlandsNonTidal.installedPhosphorusLoadReduction(page.readings.features, '%') | number:2 }}
+                    </strong>
+                  </td>
+                </tr>
+
+                <tr class="no-rule">
+                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 5 }}">
+                    <h2><strong>Chesapeake Bay</strong> Metrics</h2>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>&nbsp;</th>
+                  <td>
+                    &nbsp;
+                  </td>
+                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
+                      <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
+                      <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
+                      <br />
+                      {{ report.properties.report_date }}
+                    </a>
+                  </th>
+                  <th>Installed To-date</th>
+                  <th>% of Planned</th>
+                </tr>
+
+                <tr>
+                  <th>Miles of Streambank Restored</th>
+                  <td>
+                    &nbsp;
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ page.calculateWetlandsNonTidal.milesStreambankRestored(report) | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ page.calculateWetlandsNonTidal.milesStreambankRestored(report) | number:2 }}
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.calculateWetlandsNonTidal.milesStreambankInstalledFromPlan(page.readings.features) | number:2 }}
+                    </strong>
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.calculateWetlandsNonTidal.milesStreambankInstalledFromPlan(page.readings.features, '%') | number:2 }}%
+                    </strong>
+                  </td>
+                </tr>
+
               </tbody>
             </table>
           </div>
 
+          <!-- MONITORING -->
+
           <div data-ng-if="page.total.monitoring">
-            <table class="table">
+            <div class="table-responsive"><table class="table">
 
                 <tr class="no-rule">
                   <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
@@ -214,74 +283,55 @@
 
                 <tr>
                   <th>&nbsp;</th>
-                  <th data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/nontidal-wetlands/{{ report.properties.id }}/edit">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       Monitored on<br />
                       {{ report.properties.report_date }}
                     </a>
-                  </th>
-                </tr>
-
-                <tr>
-                  <th class="align-left" colspan="{{ page.readings.features.length + 1 }}" style="background: #efefef;">Vegetative Cover</th>
-                </tr>
-                <tr>
-                  <th class="align-left">Cover (%) <a href="#">?</a></th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">{{ report.properties.native_vegetation_intact }}</td>
-                </tr>
-
-                <tr>
-                  <th class="align-left" colspan="{{ page.readings.features.length + 1 }}" style="background: #efefef;">Buffer Composition</th>
-                </tr>
-                <tr>
-                  <th class="align-left">Woody (%)</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ report.properties.buffer_composition_woody }}
-                  </td>
-                </tr>
-                <tr>
-                  <th class="align-left">Shrub (%)</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ report.properties.buffer_composition_shrub }}
-                  </td>
-                </tr>
-                <tr>
-                  <th class="align-left">Grass (%)</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ report.properties.buffer_composition_grass }}
-                  </td>
-                </tr>
-                <tr>
-                  <th class="align-left">Bare (%)</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ report.properties.buffer_composition_bare }}
-                  </td>
-                </tr>
-                <tr>
-                  <th class="align-left">Other (%)</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ report.properties.buffer_composition_other }}
                   </td>
                 </tr>
 
                 <tr>
-                  <th class="align-left" colspan="{{ page.readings.features.length + 1 }}" style="background: #efefef;">Riparian Vegetation</th>
+                  <th class="align-left">Bank Erosion Hazard Index (BEHI) Rating</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ report.properties.metrics_bank_erosion_hazard_index_rating }}
+                  </td>
                 </tr>
                 <tr>
-                  <th class="align-left">Vegetative Protection - Left Bank</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">{{ report.properties.vegetative_protection_left_bank }}</td>
+                  <th class="align-left">Near Bank Stress (NBS) Rating</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ report.properties.metrics_near_bank_stress_rating }}
+                  </td>
                 </tr>
                 <tr>
-                  <th class="align-left">Vegetative Protection - Right Bank</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">{{ report.properties.vegetative_protection_right_bank }}</td>
+                  <th class="align-left">Riffle Stability Index</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ report.properties.metrics_riffle_stability_index }}
+                  </td>
                 </tr>
                 <tr>
-                  <th class="align-left">Riparian Vegetative Zone Width - Left Bank</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">{{ report.properties.riparian_vegetative_zone_width_left_bank }}</td>
+                  <th class="align-left">Logarithm of Relative Bed Stability (LRBS)</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ report.properties.metrics_logarithm_of_relative_bed_stability }}
+                  </td>
                 </tr>
                 <tr>
-                  <th class="align-left">Riparian Vegetative Zone Width - Right Bank</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">{{ report.properties.riparian_vegetative_zone_width_right_bank }}</td>
+                  <th class="align-left">Substrate Mean Particle Size (D50)</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ report.properties.metrics_substrate_mean_particle_size }}
+                  </td>
+                </tr>
+                <tr>
+                  <th class="align-left">Streambed Percent Fines</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      {{ report.properties.metrics_streambed_percent_fines }}
+                  </td>
                 </tr>
 
                 <tr class="no-rule">
@@ -293,7 +343,7 @@
                 <tr>
                   <th>&nbsp;</th>
                   <th data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/nontidal-wetlands/{{ report.properties.id }}/edit">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       Monitored on<br />
                       {{ report.properties.report_date }}
                     </a>
@@ -301,43 +351,55 @@
                 </tr>
 
                 <tr>
-                  <th class="align-left" width="50%">Check for, and correct, causes of excess sediment build-up at the field-buffer interface that re-directs flow</th>
+                  <th class="align-left wrap" width="50%">Step pools, floodplain re-connection, or other built elements should have photos or site inspections to document that design elements were followed by contractors and disturbance to the riparian zone was minimized. No trees should be removed unless absolutely essential. Banks with riparian vegetation should not be re-graded, but the channel invert raised instead.</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <div data-ng-if="report.properties.sediment_deposition" class="icon retinaicon-essentials-071"></div>
+                    <div data-ng-if="report.properties.monitoring_design_criteria_1" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
-                  <th class="align-left" width="50%">Perform maintenance to remove concentrated flow paths through the buffer</th>
+                  <th class="align-left wrap" width="50%">Built elements match design in extent, placement, and type of material - should be reassessed after a 10-yr or greater event. </th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <div data-ng-if="report.properties.concentrated_flow_paths" class="icon retinaicon-essentials-071"></div>
+                    <div data-ng-if="report.properties.monitoring_design_criteria_2" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
-                  <th class="align-left" width="50%">Check for, correct causes, and path bare and/or eroded areas in the buffer</th>
+                  <th class="align-left wrap" width="50%">Coir logs, woody debris additions, or other natural structural elements meet all design specifications.</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <div data-ng-if="report.properties.monthly_buffer_maintenance" class="icon retinaicon-essentials-071"></div>
+                    <div data-ng-if="report.properties.monitoring_design_criteria_3" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
-                  <th class="align-left" width="50%">Apply herbicide around shelters in spring and fall to reduce competing vegetation</th>
+                  <th class="align-left wrap" width="50%">Have any rills or gullies developed along the restored bank?</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <div data-ng-if="report.properties.vegetative_cover" class="icon retinaicon-essentials-071"></div>
+                    <div data-ng-if="report.properties.monitoring_hydraulic" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
-                  <th class="align-left" width="50%">Control noxious and invasive weeds</th>
+                  <th class="align-left wrap" width="50%">Have livestock been kept off of restored areas?</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <div data-ng-if="report.properties.invasive_species_control" class="icon retinaicon-essentials-071"></div>
+                    <div data-ng-if="report.properties.monitoring_geomorphic_1" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
-                  <th class="align-left" width="50%">Replant, as needed, after addressing cause of failure</th>
+                  <th class="align-left wrap" width="50%">Have plantings been protected from destructive fire and destructive grazing?</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <div data-ng-if="report.properties.tree_survival_rate" class="icon retinaicon-essentials-071"></div>
+                    <div data-ng-if="report.properties.monitoring_geomorphic_2" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="align-left wrap" width="50%">Have bare and/or eroded areas appeared in the buffer?</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    <div data-ng-if="report.properties.monitoring_geomorphic_3" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="align-left wrap" width="50%">Have noxious weeds and invasive species appeared which have changed the desired species mix? If so, see Sellner et al., 2012, p.106.</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    <div data-ng-if="report.properties.monitoring_geomorphic_4" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
               </tbody>
-            </table>
+            </table></div>
           </div>
 
           <div data-ng-if="page.total.planning || page.total.installation || page.total.monitoring">
@@ -352,7 +414,7 @@
               <tbody>
                 <tr data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
                   <td class="align-left">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/nontidal-wetlands/{{ report.properties.id }}/edit">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       {{ report.properties.report_date }}
                     </a>
                   </td>
