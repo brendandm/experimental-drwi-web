@@ -60,7 +60,7 @@
                 id: $route.current.params.practiceId
               });
             },
-            report: function(PracticeGrassBuffer, $route) {
+            report: function(PracticeWetlandsNonTidal, $route) {
               return PracticeWetlandsNonTidal.get({
                 id: $route.current.params.reportId
               });

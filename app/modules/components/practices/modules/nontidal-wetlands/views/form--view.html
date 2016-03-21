@@ -127,70 +127,203 @@
 
         <div class="form-row"
              data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+
           <div class="form-label">
-            <label for="wip_reporting_agency" class="control-label">
-              Landuse
-            </label>
+           <label class="control-label">
+             Installation Summary
+           </label>
           </div>
           <div class="form-field">
+           <div class="form-element form-element-half">
+             <label for="planning_project_type" class="control-label">
+               Type of Non-Tidal Wetlands Project
+             </label>
 
-            <!-- Existing Landuse -->
-            <div class="form-element form-element-half">
-              <label for="existing_riparian_landuse" class="control-label">
-                Existing Landuse
-              </label>
+             <select class="form-control" data-ng-model="page.report.properties.planning_project_type" id="planning_project_type" name="planning_project_type">
+               <option value="urban">urban</option>
+               <option value="agriculture">agriculture</option>
+             </select>
 
-              <select class="form-control" data-ng-model="page.report.properties.existing_riparian_landuse" id="existing_riparian_landuse" name="existing_riparian_landuse" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | orderBy:'properties.landuse_name'">
-              </select>
-            </div>
+             <p class="help-text">&nbsp;</p>
+           </div>
+           <div class="form-element form-element-half">
+             <label for="installation_surface_area" class="control-label">
+               Total Wetland Surface Area
+             </label>
 
-            <!-- Upland Landuse -->
-            <div class="form-element form-element-half">
-              <label for="upland_landuse" class="control-label">
-                Upland Landuse
-              </label>
+             <input data-ng-model="page.report.properties.installation_surface_area"
+                    class="form-control" class="form-control" type="number"
+                    id="installation_surface_area" name="installation_surface_area"
+                    step="0.00001" />
 
-              <select class="form-control" data-ng-model="page.report.properties.upland_landuse" id="upland_landuse" name="upland_landuse" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | orderBy:'properties.landuse_name'">
-              </select>
-            </div>
+             <p class="help-text">acres</p>
+           </div>
           </div>
         </div>
-
 
         <div class="form-row"
              data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
           <div class="form-label">
             <label for="wip_reporting_agency" class="control-label">
-              Installation Summary
+              Landuse 1
             </label>
           </div>
           <div class="form-field">
-
-            <!-- Buffer Length -->
+            <!-- Landuse 1 -->
             <div class="form-element form-element-half">
-              <label for="length_of_buffer" class="control-label">
-                Length of Buffer
+              <label for="installation_upland_landuse_1" class="control-label">
+                Upland Landuse
               </label>
 
-              <input data-ng-model="page.report.properties.length_of_buffer"
+              <select class="form-control" data-ng-model="page.report.properties.installation_upland_landuse_1" id="installation_upland_landuse_1" name="installation_upland_landuse_1" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | filter:properties.landuse_type=page.report.properties.planning_project_type | orderBy:'properties.landuse_name'">
+              </select>
+
+              <p class="help-text">{{ page.report.properties.planning_project_type }} landuses</p>
+            </div>
+
+
+            <div class="form-element form-element-half">
+              <label for="installation_landuse_acreage_1" class="control-label">
+
+              </label>
+
+              <input data-ng-model="page.report.properties.installation_landuse_acreage_1"
                      class="form-control" class="form-control" type="number"
-                     id="length_of_buffer" name="length_of_buffer"
-                     placeholder="Length of Buffer" />
+                     id="installation_landuse_acreage_1" name="installation_landuse_acreage_1"
+                     step="0.00001" />
 
-              <p class="help-text">feet</p>
+              <p class="help-text">acres</p>
             </div>
 
-            <!-- Buffer Width -->
+            <!-- Landuse 2 -->
             <div class="form-element form-element-half">
-              <label for="average_width_of_buffer" class="control-label">
-                Average Buffer Width
+              <label for="installation_upland_landuse_2" class="control-label">
+                Upland Landuse
               </label>
 
-              <input data-ng-model="page.report.properties.average_width_of_buffer" class="form-control" class="form-control" type="number" id="average_width_of_buffer" name="average_width_of_buffer" placeholder="Average Buffer Width" />
+              <select class="form-control" data-ng-model="page.report.properties.installation_upland_landuse_2" id="installation_upland_landuse_2" name="installation_upland_landuse_2" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | filter:properties.landuse_type=page.report.properties.planning_project_type | orderBy:'properties.landuse_name'">
+              </select>
 
-              <p class="help-text">feet</p>
+              <p class="help-text">{{ page.report.properties.planning_project_type }} landuses</p>
             </div>
 
+
+            <div class="form-element form-element-half">
+              <label for="installation_landuse_acreage_2" class="control-label">
+
+              </label>
+
+              <input data-ng-model="page.report.properties.installation_landuse_acreage_2"
+                     class="form-control" class="form-control" type="number"
+                     id="installation_landuse_acreage_2" name="installation_landuse_acreage_2"
+                     step="0.00001" />
+
+              <p class="help-text">acres</p>
+            </div>
+
+            <!-- Landuse 3 -->
+            <div class="form-element form-element-half">
+              <label for="installation_upland_landuse_3" class="control-label">
+                Upland Landuse
+              </label>
+
+              <select class="form-control" data-ng-model="page.report.properties.installation_upland_landuse_3" id="installation_upland_landuse_3" name="installation_upland_landuse_3" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | filter:properties.landuse_type=page.report.properties.planning_project_type | orderBy:'properties.landuse_name'">
+              </select>
+
+              <p class="help-text">{{ page.report.properties.planning_project_type }} landuses</p>
+            </div>
+
+
+            <div class="form-element form-element-half">
+              <label for="installation_landuse_acreage_3" class="control-label">
+
+              </label>
+
+              <input data-ng-model="page.report.properties.installation_landuse_acreage_3"
+                     class="form-control" class="form-control" type="number"
+                     id="installation_landuse_acreage_3" name="installation_landuse_acreage_3"
+                     step="0.00001" />
+
+              <p class="help-text">acres</p>
+            </div>
+
+            <!-- Landuse 4 -->
+            <div class="form-element form-element-half">
+              <label for="installation_upland_landuse_4" class="control-label">
+                Upland Landuse
+              </label>
+
+              <select class="form-control" data-ng-model="page.report.properties.installation_upland_landuse_4" id="installation_upland_landuse_4" name="installation_upland_landuse_4" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | orderBy:'properties.landuse_name'">
+              </select>
+
+              <p class="help-text">{{ page.report.properties.planning_project_type }} landuses</p>
+            </div>
+
+
+            <div class="form-element form-element-half">
+              <label for="installation_landuse_acreage_4" class="control-label">
+
+              </label>
+
+              <input data-ng-model="page.report.properties.installation_landuse_acreage_4"
+                     class="form-control" class="form-control" type="number"
+                     id="installation_landuse_acreage_4" name="installation_landuse_acreage_4"
+                     step="0.00001" />
+
+              <p class="help-text">acres</p>
+            </div>
+
+            <!-- Landuse 5 -->
+            <!-- <div class="form-element form-element-half">
+              <label for="installation_upland_landuse_5" class="control-label">
+                Upland Landuse
+              </label>
+
+              <select class="form-control" data-ng-model="page.report.properties.installation_upland_landuse_5" id="installation_upland_landuse_5" name="installation_upland_landuse_5" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | filter:properties.landuse_type=page.report.properties.planning_project_type | orderBy:'properties.landuse_name'">
+              </select>
+
+              <p class="help-text">{{ page.report.properties.planning_project_type }} landuses</p>
+            </div>
+
+
+            <div class="form-element form-element-half">
+              <label for="installation_landuse_acreage_5" class="control-label">
+
+              </label>
+
+              <input data-ng-model="page.report.properties.installation_landuse_acreage_5"
+                     class="form-control" class="form-control" type="number"
+                     id="installation_landuse_acreage_5" name="installation_landuse_acreage_5"
+                     step="0.00001" />
+
+              <p class="help-text">acres</p>
+            </div> -->
+
+            <!-- Landuse 6 -->
+            <!-- <div class="form-element form-element-half">
+              <label for="installation_upland_landuse_6" class="control-label">
+                Upland Landuse
+              </label>
+
+              <select class="form-control" data-ng-model="page.report.properties.installation_upland_landuse_6" id="installation_upland_landuse_6" name="installation_upland_landuse_6" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | filter:properties.landuse_type=page.report.properties.planning_project_type | orderBy:'properties.landuse_name'">
+              </select>
+
+              <p class="help-text">{{ page.report.properties.planning_project_type }} landuses</p>
+            </div>
+
+
+            <div class="form-element form-element-half">
+              <label for="installation_landuse_acreage_6" class="control-label">
+
+              </label>
+
+              <input data-ng-model="page.report.properties.installation_landuse_acreage_6"
+                     class="form-control" class="form-control" type="number"
+                     id="installation_landuse_acreage_6" name="installation_landuse_acreage_6"
+                     step="0.00001" />
+
+              <p class="help-text">acres</p>
+            </div> -->
           </div>
         </div>
 

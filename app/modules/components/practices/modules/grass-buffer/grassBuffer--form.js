@@ -86,7 +86,6 @@
             self.report = successResponse;
 
             if (self.report.properties.report_date) {
-                console.log('self.report.propertiesreport_date', self.report.properties.report_date);
                 self.today = parseISOLike(self.report.properties.report_date);
             }
 
