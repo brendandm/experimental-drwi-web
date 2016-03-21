@@ -77,6 +77,18 @@
           }
 
           return total;
+        },
+        getPlanningData: function(readings) {
+
+          var planningData = {};
+
+          angular.forEach(readings, function(reading) {
+            if (reading.properties.measurement_period === 'Planning') {
+              planningData = reading;
+            }
+          });
+
+          return planningData;
         }
       };
     });

@@ -44,6 +44,8 @@
         site.$promise.then(function(successResponse) {
           self.site = successResponse;
 
+          self.segment = self.site.properties.segment.properties.hgmr_code;
+
           $rootScope.page.title = self.practice.properties.practice_type;
           $rootScope.page.links = [
               {
@@ -122,6 +124,8 @@
           monitoring: self.calculate.getTotalReadingsByCategory('Monitoring', self.readings.features)
         };
 
+        self.calculateWetlandsNonTidal.preInstallationLoads(self.readings.features, self.segment)
+
       }, function(errorResponse) {
 
       });
@@ -141,6 +145,7 @@
             console.error('ERROR: ', errorResponse);
           });
       };
+
 
     });
 
