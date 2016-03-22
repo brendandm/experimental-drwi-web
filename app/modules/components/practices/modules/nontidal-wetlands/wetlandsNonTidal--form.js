@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('WetlandsNonTidalFormController', function (Account, landuse, $location, practice, PracticeWetlandsNonTidal, report, $rootScope, $route, site, $scope, user, Utility) {
+    .controller('WetlandsNonTidalFormController', function (Account, Efficiency, landuse, LoadData, $location, Notifications, practice, PracticeWetlandsNonTidal, report, $rootScope, $route, site, $scope, $timeout, user, Utility) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -22,7 +22,22 @@
         'id': projectId
       };
 
-      self.landuse = landuse;
+      landuse.$promise.then(function(successResponse) {
+        self.landuse = successResponse;
+
+        self.getLanduseById = function(landuseId) {
+
+          var _landuse = {};
+
+          angular.forEach(self.landuse.features, function(thisLanduse) {
+            if (thisLanduse.id === landuseId) {
+              _landuse = thisLanduse;
+            }
+          });
+
+          return _landuse;
+        };
+      });
 
       //
       // Setup all of our basic date information so that we can use it
@@ -78,6 +93,8 @@
         //
         site.$promise.then(function(successResponse) {
           self.site = successResponse;
+
+          self.segment = self.site.properties.segment.properties.hgmr_code;
 
           //
           // Assign project to a scoped variable
@@ -175,6 +192,93 @@
         }, function(errorResponse) {
           console.error('ERROR: ', errorResponse);
         });
+      };
+
+      /**
+       * Get Load Data for specified landuse and assign it to the appropriate
+       * report fields
+       *
+       * @param landuse (object) A fully qualitified Landuse object
+       * @param objectField (string)
+       * @param idField (string)
+       */
+      self.getLoadData = function(report, landuseField, idField) {
+
+        console.log('report', report);
+
+        var landuse = self.getLanduseById(report.properties[landuseField]);
+
+        LoadData.query({
+            q: {
+              filters: [
+                {
+                  name: 'land_river_segment',
+                  op: 'eq',
+                  val: self.segment
+                },
+                {
+                  name: 'landuse',
+                  op: 'eq',
+                  val: landuse.properties.landuse_code
+                }
+              ]
+            }
+          }, function(successResponse) {
+            if (successResponse.features.length) {
+              self.report.properties[idField] = successResponse.features[0].id;
+            } else {
+              $rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
+
+              $timeout(function() {
+                $rootScope.notifications.objects = [];
+              }, 3500);
+            }
+          });
+      };
+
+      self.getEfficiencyData = function(report, landuseIdField, landuseField, idField) {
+
+        var landuse = self.getLanduseById(report.properties[landuseIdField]);
+
+        console.log('report', report);
+
+        Efficiency.query({
+            q: {
+              filters: [
+                {
+                  name: 'type',
+                  op: 'eq',
+                  val: 'Efficiency'
+                },
+                {
+                  name: 'best_management_practice_short_name',
+                  op: 'eq',
+                  val: (landuse.properties.landuse_type === 'urban') ? 'WetPondWetland': 'WetlandRestore'
+                },
+                {
+                  name: 'cbwm_lu',
+                  op: 'eq',
+                  val: landuse.properties.landuse_code
+                },
+                {
+                  name: 'hydrogeomorphic_region',
+                  op: 'eq',
+                  val: self.site.properties.segment.properties.hgmr_name
+                }
+              ]
+            }
+          }, function(successResponse) {
+            console.log('Efficiency::successResponse', successResponse);
+            if (successResponse.features.length) {
+              self.report.properties[idField] = successResponse.features[0].id;
+            } else {
+              $rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
+
+              $timeout(function() {
+                $rootScope.notifications.objects = [];
+              }, 3500);
+            }
+          });
       };
 
 

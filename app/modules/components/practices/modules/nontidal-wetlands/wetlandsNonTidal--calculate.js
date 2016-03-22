@@ -10,132 +10,170 @@
   angular.module('FieldDoc')
     .service('CalculateWetlandsNonTidal', function(Calculate, LoadData, $q) {
       return {
-        loads: {
-          preinstallation: {},
-          planned: {}
-        },
-        loadDataQuery: function(landuse, segment) {
-          console.log('loadDataQuery', landuse, segment);
-          var defer = $q.defer();
-
-          var request = LoadData.query({
-              q: {
-                filters: [
-                  {
-                    name: 'land_river_segment',
-                    op: 'eq',
-                    val: segment
-                  },
-                  {
-                    name: 'landuse',
-                    op: 'eq',
-                    val: landuse
-                  }
-                ]
-              }
-            }, function() {
-              defer.resolve({
-                landuse: request.features[0].properties.landuse,
-                land_river_segment: request.features[0].properties.land_river_segment,
-                nitrogen: (request.features[0].properties.eos_totn/request.features[0].properties.eos_acres),
-                phosphorus: (request.features[0].properties.eos_totp/request.features[0].properties.eos_acres),
-                sediment: (request.features[0].properties.eos_tss/request.features[0].properties.eos_acres)/2000
-              });
-            });
-
-          return defer.promise;
-        },
-        getLoadDataQueries: function(value, segment) {
-
-          var self = this,
-              savedQueries = [],
-              landuseList = [
-                'installation_upland_landuse_1',
-                'installation_upland_landuse_2',
-                'installation_upland_landuse_3',
-                'installation_upland_landuse_4'
-              ];
-
-          for (var i = 0; i < landuseList.length; i++) {
-            savedQueries.push(self.loadDataQuery(value.properties[landuseList[i]], segment));
+        efficiency: {
+          urban: {
+            nitrogen: 0.20,
+            phosphorus: 0.45,
+            sediment: 0.60
           }
-
-          return savedQueries;
         },
         reduceLoadValues: function(previousValue, currentValue) {
           return previousValue + currentValue;
         },
-        preInstallationLoad: function(data, loads, parameter) {
+        preInstallationLoad: function(data, parameter) {
+
+          if (!data.hasOwnProperty('properties')) {
+            return [];
+          }
 
           var landuses = 4,
               calculatedLoads = [];
 
-          for (var i = 0; i < landuses; i++) {
-            var landuse = 'installation_upland_landuse_'+(i+1),
-                acresTreated = 'installation_landuse_acreage_'+(i+1);
+          for (var i = 0; i <= landuses; i++) {
 
-            calculatedLoads.push(data.properties[acresTreated]*loads[i][parameter]);
+            var landuse = 'installation_upland_landuse_'+(i+1),
+                acresTreated = 'installation_landuse_acreage_'+(i+1),
+                loads = 'installation_loaddata_'+(i+1);
+
+            if (data.properties[loads] && data.properties[loads].hasOwnProperty('properties')) {
+              var loadData = {
+                    nitrogen: (data.properties[loads].properties.eos_totn/data.properties[loads].properties.eos_acres),
+                    phosphorus: (data.properties[loads].properties.eos_totp/data.properties[loads].properties.eos_acres),
+                    sediment: (data.properties[loads].properties.eos_tss/data.properties[loads].properties.eos_acres)/2000
+                  };
+
+              calculatedLoads.push(data.properties[acresTreated]*loadData[parameter]);
+            }
           };
 
-          return calculatedLoads.reduce(this.reduceLoadValues);
+          return (calculatedLoads.length) ? calculatedLoads.reduce(this.reduceLoadValues) : 0;
         },
-        plannedLoad: function(data, loads, efficiency, parameter) {
+        plannedLoad: function(data, parameter) {
 
-          var landuses = 4,
-              calculatedLoads = [];
-
-          for (var i = 0; i < landuses; i++) {
-            var landuse = 'installation_upland_landuse_'+(i+1),
-                acresTreated = 'installation_landuse_acreage_'+(i+1);
-
-            calculatedLoads.push(data.properties[acresTreated]*loads[i][parameter]*efficiency[parameter]);
-          };
-
-          return calculatedLoads.reduce(this.reduceLoadValues);
-        },
-        preInstallationLoads: function(reports, segment) {
+          if (!data.hasOwnProperty('properties')) {
+            return [];
+          }
 
           var self = this,
-              planningData = Calculate.getPlanningData(reports),
-              savedQueries = this.getLoadDataQueries(planningData, segment);
+              landuses = 4,
+              calculatedLoads = [],
+              efficiency_parameter,
+              reductionValue = 0;
 
-          $q.all(savedQueries).then(function(successResponse) {
+          switch (parameter) {
+            case 'nitrogen':
+              efficiency_parameter = 'n_efficiency';
+              break;
+            case 'phosphorus':
+              efficiency_parameter = 'p_efficiency';
+              break;
+            case 'sediment':
+              efficiency_parameter = 's_efficiency';
+              break;
+          }
 
-            var loadData = successResponse,
-                efficiency = {
-                  nitrogen: 0.20,
-                  phosphorus: 0.45,
-                  sediment: 0.60
-                };
+          for (var i = 0; i < landuses; i++) {
+            var landuse = 'installation_upland_landuse_'+(i+1),
+                acresTreated = 'installation_landuse_acreage_'+(i+1),
+                efficiency = 'installation_efficiency_'+(i+1),
+                loads = 'installation_loaddata_'+(i+1);
 
-            self.loads.preinstallation = {
-              nitrogen: self.preInstallationLoad(planningData, loadData, 'nitrogen'),
-              phosphorus: self.preInstallationLoad(planningData, loadData, 'phosphorus'),
-              sediment: self.preInstallationLoad(planningData, loadData, 'sediment')
-            };
+            if (data.properties[loads] && data.properties[loads].hasOwnProperty('properties')) {
+              var loadData = {
+                nitrogen: (data.properties[loads].properties.eos_totn/data.properties[loads].properties.eos_acres),
+                phosphorus: (data.properties[loads].properties.eos_totp/data.properties[loads].properties.eos_acres),
+                sediment: (data.properties[loads].properties.eos_tss/data.properties[loads].properties.eos_acres)/2000
+              };
 
-            switch (planningData.properties.planning_project_type) {
-              case 'urban':
-                self.loads.planned = {
-                  nitrogen: self.plannedLoad(planningData, loadData, efficiency, 'nitrogen'),
-                  phosphorus: self.plannedLoad(planningData, loadData, efficiency, 'phosphorus'),
-                  sediment: self.plannedLoad(planningData, loadData, efficiency, 'sediment')
-                }
-              case 'agriculture':
-                self.loads.planned = {
-                  nitrogen: self.plannedLoad(planningData, loadData, efficiency, 'nitrogen'),
-                  phosphorus: self.plannedLoad(planningData, loadData, efficiency, 'phosphorus'),
-                  sediment: self.plannedLoad(planningData, loadData, efficiency, 'sediment')
-                }
+              var parameterReduction = data.properties[acresTreated]*loadData[parameter]*data.properties[efficiency].properties[efficiency_parameter];
+
+              console.log(parameter, efficiency_parameter, data.properties[acresTreated], '*', loadData[parameter], '*', data.properties[efficiency].properties[efficiency_parameter], '=', parameterReduction);
+
+              calculatedLoads.push(parameterReduction);
             }
 
-          }, function(errorResponse) {
-            console.log('errorResponse', errorResponse);
-          });
+          };
+
+          // *data.properties[efficiency].properties[efficiency_parameter]
+
+          if (calculatedLoads.length) {
+            reductionValue = calculatedLoads.reduce(this.reduceLoadValues);
+          }
+
+          return reductionValue;
+        },
+        loads: function(reports, segment) {
+
+          var self = this,
+              planningData = Calculate.getPlanningData(reports);
+
+          return {
+            preinstallation: {
+              nitrogen: self.preInstallationLoad(planningData, 'nitrogen'),
+              phosphorus: self.preInstallationLoad(planningData, 'phosphorus'),
+              sediment: self.preInstallationLoad(planningData, 'sediment')
+            },
+            planned: {
+              nitrogen: self.plannedLoad(planningData, 'nitrogen'),
+              phosphorus: self.plannedLoad(planningData, 'phosphorus'),
+              sediment: self.plannedLoad(planningData, 'sediment')
+            }
+          };
 
         },
-        plannedNitrogenLoadReduction: function(value) {},
-        installedNitrogenLoadReduction: function(values, format) {},
+        installed: function(values, parameter, format) {
+
+          var self = this,
+              plannedTotal = 0,
+              installedTotal = 0;
+
+          for (var i = 0; i < values.length; i++) {
+            if (values[i].properties.measurement_period === 'Installation') {
+              installedTotal += self.plannedLoad(values[i], parameter);
+            }
+            else if (values[i].properties.measurement_period === 'Planning') {
+              plannedTotal += self.plannedLoad(values[i], parameter);
+            }
+          }
+
+          if (plannedTotal >= 1) {
+            if (format === '%') {
+              return ((installedTotal/plannedTotal)*100);
+            } else {
+              return installedTotal;
+            }
+          }
+
+          return 0;
+        },
+        milesRestored: function(values, period, format) {
+
+          var self = this,
+              milesRestored = 0;
+
+          for (var i = 0; i < values.length; i++) {
+            if (values[i].properties.measurement_period === period) {
+
+              var acreage = [
+                values[i].properties.installation_landuse_acreage_1,
+                values[i].properties.installation_landuse_acreage_2,
+                values[i].properties.installation_landuse_acreage_3,
+                values[i].properties.installation_landuse_acreage_4,
+                values[i].properties.installation_landuse_acreage_5,
+                values[i].properties.installation_landuse_acreage_6
+              ]
+
+              milesRestored += acreage.reduce(this.reduceLoadValues);
+            }
+          }
+
+          if (format === '%') {
+            var plannedMilesRestored = self.milesRestored(values, 'Planning');
+            milesRestored = (milesRestored/plannedMilesRestored)*100;
+          }
+
+          return milesRestored;
+        },
         quantityInstalled: function(values, field, format) {
 
           var planned_total = 0,

@@ -124,7 +124,7 @@
           monitoring: self.calculate.getTotalReadingsByCategory('Monitoring', self.readings.features)
         };
 
-        self.calculateWetlandsNonTidal.preInstallationLoads(self.readings.features, self.segment)
+        self.results = self.calculateWetlandsNonTidal.loads(self.readings.features, self.segment)
 
       }, function(errorResponse) {
 

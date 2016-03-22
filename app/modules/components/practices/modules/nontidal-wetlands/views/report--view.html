@@ -88,33 +88,21 @@
                   <td>
                     &nbsp;
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
                     {{ report.properties.installation_surface_area | number:2 }}
                   </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    -
+                  </td>
                   <td>
                     <strong>
-                      {{ page.calculateWetlandsNonTidal.quantityInstalled(page.readings.features, 'installation_surface_area') | number:2 }}
+                      -
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ page.calculateWetlandsNonTidal.quantityInstalled(page.readings.features, 'installation_surface_area', '%') | number:2 }}%
+                      -
                     </strong>
-                  </td>
-                </tr>
-                <tr>
-                  <th>Type of Non-Tidal Wetlands Project</th>
-                  <td>
-                    &nbsp;
-                  </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ report.properties.planning_project_type }}
-                  </td>
-                  <td>
-                    -
-                  </td>
-                  <td>
-                    -
                   </td>
                 </tr>
 
@@ -143,58 +131,62 @@
                 <tr>
                   <th>Nitrogen (lbs/yr)</th>
                   <td>
-                    {{ page.calculateWetlandsNonTidal.loads.preinstallation.nitrogen | number:2 }}
+                    {{ page.results.preinstallation.nitrogen | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateWetlandsNonTidal.loads.planned.nitrogen | number:2 }}
+                    {{ page.results.planned.nitrogen | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    {{ page.calculateWetlandsNonTidal.plannedLoad(report, 'nitrogen') | number:2 }}
                   </td>
                   <td>
-                    &nbsp;
+                    {{ page.calculateWetlandsNonTidal.installed(page.readings.features, 'nitrogen') | number:2 }}
                   </td>
                   <td>
-                    &nbsp;
-                  </td>
-                  <td>
-                    &nbsp;
+                    {{ page.calculateWetlandsNonTidal.installed(page.readings.features, 'nitrogen', '%') | number:2 }}%
                   </td>
                 </tr>
                 <tr>
                   <th>Phosphorus (lbs/yr)</th>
                   <td>
-                    {{ page.calculateWetlandsNonTidal.loads.preinstallation.phosphorus | number:2 }}
+                    {{ page.results.preinstallation.phosphorus | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateWetlandsNonTidal.loads.planned.phosphorus | number:2 }}
+                    {{ page.results.planned.phosphorus | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    {{ page.calculateWetlandsNonTidal.plannedLoad(report, 'phosphorus') | number:2 }}
                   </td>
                   <td>
-                    &nbsp;
+                    {{ page.calculateWetlandsNonTidal.installed(page.readings.features, 'phosphorus') | number:2 }}
                   </td>
                   <td>
-                    &nbsp;
-                  </td>
-                  <td>
-                    &nbsp;
+                    {{ page.calculateWetlandsNonTidal.installed(page.readings.features, 'phosphorus', '%') | number:2 }}%
                   </td>
                 </tr>
                 <tr>
                   <th>Sediment (tons/yr)</th>
                   <td>
-                      {{ page.calculateWetlandsNonTidal.loads.preinstallation.sediment | number:2 }}
+                      {{ page.results.preinstallation.sediment | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateWetlandsNonTidal.loads.planned.sediment | number:2 }}
+                    {{ page.results.planned.sediment | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    {{ page.calculateWetlandsNonTidal.plannedLoad(report, 'sediment') | number:2 }}
                   </td>
                   <td>
-                    &nbsp;
+                    {{ page.calculateWetlandsNonTidal.installed(page.readings.features, 'sediment') | number:2 }}
                   </td>
                   <td>
-                    &nbsp;
-                  </td>
-                  <td>
-                    &nbsp;
+                    {{ page.calculateWetlandsNonTidal.installed(page.readings.features, 'sediment', '%') | number:2 }}%
                   </td>
                 </tr>
 
+                <!-- Section Heading -->
                 <tr class="no-rule">
                   <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 5 }}">
                     <h2><strong>Chesapeake Bay</strong> Metrics</h2>
@@ -202,47 +194,24 @@
                 </tr>
 
                 <tr>
-                  <th>&nbsp;</th>
+                  <th>Acres of Wetland Restored</th>
                   <td>
-                    &nbsp;
+                      -
                   </td>
-                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
-                      <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
-                      <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
-                      <br />
-                      {{ report.properties.report_date }}
-                    </a>
-                  </th>
-                  <th>Installed To-date</th>
-                  <th>% of Planned</th>
-                </tr>
-
-                <tr>
-                  <th>Miles of Streambank Restored</th>
                   <td>
-                    &nbsp;
-                  </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                      {{ page.calculateWetlandsNonTidal.milesStreambankRestored(report) | number:2 }}
+                    {{ page.calculateWetlandsNonTidal.milesRestored(page.readings.features, 'Planning') | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                      {{ page.calculateWetlandsNonTidal.milesStreambankRestored(report) | number:2 }}
+                      {{ page.calculateWetlandsNonTidal.milesRestored([report], 'Installation') | number:2 }}
                   </td>
                   <td>
-                    <strong>
-                      {{ page.calculateWetlandsNonTidal.milesStreambankInstalledFromPlan(page.readings.features) | number:2 }}
-                    </strong>
+                    {{ page.calculateWetlandsNonTidal.milesRestored(page.readings.features, 'Installation') | number:2 }}
                   </td>
                   <td>
-                    <strong>
-                      {{ page.calculateWetlandsNonTidal.milesStreambankInstalledFromPlan(page.readings.features, '%') | number:2 }}%
-                    </strong>
+                    {{ page.calculateWetlandsNonTidal.milesRestored(page.readings.features, 'Installation', '%') | number:2 }}%
                   </td>
                 </tr>
-
               </tbody>
             </table>
           </div>
