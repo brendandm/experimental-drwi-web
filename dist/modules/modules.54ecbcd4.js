@@ -47,7 +47,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'staging',apiUrl:'http://stg.api.fielddoc.org',siteUrl:'http://stg.fielddoc.org',clientId:''})
+.constant('environment', {name:'staging',apiUrl:'http://stg.api.fielddoc.org',siteUrl:'http://stg.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
 /**
@@ -8939,7 +8939,7 @@ angular.module('FieldDoc')
  * @ngdoc service
  * @name FieldDoc.GeometryService
  * @description
- *   
+ *
  */
 angular.module('FieldDoc')
   .service('commonsGeometry', ['$http', 'commonscloud', 'leafletData', function Navigation($http, commonscloud, leafletData) {
@@ -9116,7 +9116,7 @@ angular.module('FieldDoc')
         }
       },
       center: {
-        lng: -76.534, 
+        lng: -76.534,
         lat: 39.134,
         zoom: 11
       },
@@ -9161,7 +9161,7 @@ angular.module('FieldDoc')
       },
       geojson: {}
     };
-    
+
     return Map;
   }]);
 'use strict';
@@ -11389,13 +11389,13 @@ angular.module('FieldDoc')
     // with structured objects.
     //
     return  function(object) {
-      
+
       var result = [];
 
       angular.forEach(object, function(value) {
         result.push(value);
       });
-      
+
       return result;
     };
 
