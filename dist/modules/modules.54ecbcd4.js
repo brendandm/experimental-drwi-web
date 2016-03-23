@@ -47,7 +47,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'local',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+.constant('environment', {name:'staging',apiUrl:'http://stg.api.fielddoc.org',siteUrl:'http://stg.fielddoc.org',clientId:''})
 
 ;
 /**
@@ -2186,6 +2186,18 @@ angular.module('FieldDoc')
           }
 
           return total;
+        },
+        getPlanningData: function(readings) {
+
+          var planningData = {};
+
+          angular.forEach(readings, function(reading) {
+            if (reading.properties.measurement_period === 'Planning') {
+              planningData = reading;
+            }
+          });
+
+          return planningData;
         }
       };
     });
@@ -3052,14 +3064,14 @@ angular.module('FieldDoc')
                     //
                     // EXISTING CONDITION — LOAD VALUES
                     //
-                    console.log('uplandPlannedInstallationLoad', self.calculateForestBuffer.results.totalPreInstallationLoad.uplandLanduse.nitrogen, self.practice_efficiency.n_efficiency)
+                    // console.log('uplandPlannedInstallationLoad', self.calculateForestBuffer.results.totalPreInstallationLoad.uplandLanduse.nitrogen, self.practice_efficiency.n_efficiency)
                     var uplandPlannedInstallationLoad = {
                       sediment: self.calculateForestBuffer.results.totalPreInstallationLoad.uplandLanduse.sediment*(self.practice_efficiency.s_efficiency),
                       nitrogen: self.calculateForestBuffer.results.totalPreInstallationLoad.uplandLanduse.nitrogen*(self.practice_efficiency.n_efficiency),
                       phosphorus: self.calculateForestBuffer.results.totalPreInstallationLoad.uplandLanduse.phosphorus*(self.practice_efficiency.p_efficiency)
                     };
 
-                    console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
+                    // console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
 
                     var existingPlannedInstallationLoad = {
                       sediment: ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000),
@@ -3067,7 +3079,7 @@ angular.module('FieldDoc')
                       phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
                     };
 
-                    console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
+                    // console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
 
                     //
                     // PLANNED CONDITIONS — LANDUSE VALUES
@@ -4124,7 +4136,7 @@ angular.module('FieldDoc')
 
       function parseISOLike(s) {
           var b = s.split(/\D/);
-          return new Date(b[0], b[1]-1, b[2])
+          return new Date(b[0], b[1]-1, b[2]);
       }
 
       practice.$promise.then(function(successResponse) {
@@ -4153,7 +4165,6 @@ angular.module('FieldDoc')
             self.report = successResponse;
 
             if (self.report.properties.report_date) {
-                console.log('self.report.propertiesreport_date', self.report.properties.report_date);
                 self.today = parseISOLike(self.report.properties.report_date);
             }
 
@@ -4219,7 +4230,6 @@ angular.module('FieldDoc')
       $scope.$watch(angular.bind(this, function() {
           return this.date;
       }), function (response) {
-        console.log('response', response)
           if (response) {
               var _new = response.month + ' ' + response.date + ' ' + response.year,
               _date = new Date(_new);
@@ -4319,6 +4329,9 @@ angular.module('FieldDoc')
               return Practice.get({
                 id: $route.current.params.practiceId
               });
+            },
+            animals: function(AnimalManure) {
+              return AnimalManure.query();
             },
             readings: function(Practice, $route) {
               return Practice.livestockExclusion({
@@ -4467,7 +4480,7 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-  .controller('LivestockExclusionReportController', function (Account, Calculate, CalculateLivestockExclusion, Efficiency, LoadData, $location, practice, PracticeLivestockExclusion, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
+  .controller('LivestockExclusionReportController', function (Account, animals, Calculate, CalculateLivestockExclusion, Efficiency, LoadData, $location, practice, PracticeLivestockExclusion, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
 
     var self = this,
         projectId = $route.current.params.projectId,
@@ -4646,8 +4659,6 @@ angular.module('FieldDoc')
 
               self.calculateLivestockExclusion.GetLoadVariables('Planning', existingLanduseType).then(function(existingLoaddata) {
                 self.calculateLivestockExclusion.GetLoadVariables('Planning', uplandLanduseType).then(function(loaddata) {
-
-                  console.log('loaddata', loaddata, 'existingLoaddata', existingLoaddata)
 
                   //
                   // =X38*2*AA$10/2000 + Z34*(AA$10/2000)*(AE$5/100)
@@ -4851,8 +4862,6 @@ angular.module('FieldDoc')
 
             self.calculateLivestockExclusion.GetSingleInstalledLoad = function(value) {
 
-              console.log('value', value)
-
               /********************************************************************/
               // Setup
               /********************************************************************/
@@ -4879,7 +4888,7 @@ angular.module('FieldDoc')
                   existingLoaddata = self.calculateLivestockExclusion.results.totalPlannedLoad.efficiency.existing.efficieny,
                   uplandLoaddata = self.calculateLivestockExclusion.results.totalPreInstallationLoad.efficieny,
                   rotationalGrazingArea = (value.properties.length_of_fencing*200/43560),
-                  animal = AnimalType[value.properties.animal_type],
+                  animal = value.properties.animal_type,
                   auDaysYr,
                   planningValue;
 
@@ -4910,8 +4919,8 @@ angular.module('FieldDoc')
               };
 
               var preDirectDeposit = {
-                nitrogen: (auDaysYr*animal.manure)*animal.total_nitrogen,
-                phosphorus: (auDaysYr*animal.manure)*animal.total_phosphorus,
+                nitrogen: (auDaysYr*animal.properties.manure)*animal.properties.total_nitrogen,
+                phosphorus: (auDaysYr*animal.properties.manure)*animal.properties.total_phosphorus,
               };
 
                var preInstallationeBMPLoadTotals = {
@@ -8154,6 +8163,736 @@ angular.module('FieldDoc')
 
   });
 
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc overview
+   * @name FieldDoc
+   * @description
+   */
+  angular.module('FieldDoc')
+    .config(function($routeProvider) {
+
+      $routeProvider
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/nontidal-wetlands', {
+          templateUrl: '/modules/components/practices/modules/nontidal-wetlands/views/report--view.html',
+          controller: 'WetlandsNonTidalReportController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            site: function(Site, $route) {
+              return Site.get({
+                id: $route.current.params.siteId
+              });
+            },
+            practice: function(Practice, $route) {
+              return Practice.get({
+                id: $route.current.params.practiceId
+              });
+            },
+            readings: function(Practice, $route) {
+              return Practice.wetlandsNontidal({
+                id: $route.current.params.practiceId
+              });
+            }
+          }
+        })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/nontidal-wetlands/:reportId/edit', {
+          templateUrl: '/modules/components/practices/modules/nontidal-wetlands/views/form--view.html',
+          controller: 'WetlandsNonTidalFormController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            site: function(Site, $route) {
+              return Site.get({
+                id: $route.current.params.siteId
+              });
+            },
+            practice: function(Practice, $route) {
+              return Practice.get({
+                id: $route.current.params.practiceId
+              });
+            },
+            report: function(PracticeWetlandsNonTidal, $route) {
+              return PracticeWetlandsNonTidal.get({
+                id: $route.current.params.reportId
+              });
+            },
+            landuse: function(Landuse) {
+              return Landuse.query({
+                results_per_page: 50
+              });
+            }
+          }
+        });
+
+    });
+
+}());
+
+(function(){
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name FieldDoc.CalculateWetlandsNonTidal
+   * @description
+   */
+  angular.module('FieldDoc')
+    .service('CalculateWetlandsNonTidal', function(Calculate, LoadData, $q) {
+      return {
+        efficiency: {
+          urban: {
+            nitrogen: 0.20,
+            phosphorus: 0.45,
+            sediment: 0.60
+          }
+        },
+        reduceLoadValues: function(previousValue, currentValue) {
+          return previousValue + currentValue;
+        },
+        preInstallationLoad: function(data, parameter) {
+
+          if (!data.hasOwnProperty('properties')) {
+            return [];
+          }
+
+          var landuses = 4,
+              calculatedLoads = [];
+
+          for (var i = 0; i <= landuses; i++) {
+
+            var landuse = 'installation_upland_landuse_'+(i+1),
+                acresTreated = 'installation_landuse_acreage_'+(i+1),
+                loads = 'installation_loaddata_'+(i+1);
+
+            if (data.properties[loads] && data.properties[loads].hasOwnProperty('properties')) {
+              var loadData = {
+                    nitrogen: (data.properties[loads].properties.eos_totn/data.properties[loads].properties.eos_acres),
+                    phosphorus: (data.properties[loads].properties.eos_totp/data.properties[loads].properties.eos_acres),
+                    sediment: (data.properties[loads].properties.eos_tss/data.properties[loads].properties.eos_acres)/2000
+                  };
+
+              calculatedLoads.push(data.properties[acresTreated]*loadData[parameter]);
+            }
+          };
+
+          return (calculatedLoads.length) ? calculatedLoads.reduce(this.reduceLoadValues) : 0;
+        },
+        plannedLoad: function(data, parameter) {
+
+          if (!data.hasOwnProperty('properties')) {
+            return [];
+          }
+
+          var self = this,
+              landuses = 4,
+              calculatedLoads = [],
+              efficiency_parameter,
+              reductionValue = 0;
+
+          switch (parameter) {
+            case 'nitrogen':
+              efficiency_parameter = 'n_efficiency';
+              break;
+            case 'phosphorus':
+              efficiency_parameter = 'p_efficiency';
+              break;
+            case 'sediment':
+              efficiency_parameter = 's_efficiency';
+              break;
+          }
+
+          for (var i = 0; i < landuses; i++) {
+            var landuse = 'installation_upland_landuse_'+(i+1),
+                acresTreated = 'installation_landuse_acreage_'+(i+1),
+                efficiency = 'installation_efficiency_'+(i+1),
+                loads = 'installation_loaddata_'+(i+1);
+
+            if (data.properties[loads] && data.properties[loads].hasOwnProperty('properties')) {
+              var loadData = {
+                nitrogen: (data.properties[loads].properties.eos_totn/data.properties[loads].properties.eos_acres),
+                phosphorus: (data.properties[loads].properties.eos_totp/data.properties[loads].properties.eos_acres),
+                sediment: (data.properties[loads].properties.eos_tss/data.properties[loads].properties.eos_acres)/2000
+              };
+
+              var parameterReduction = data.properties[acresTreated]*loadData[parameter]*data.properties[efficiency].properties[efficiency_parameter];
+
+              console.log(parameter, efficiency_parameter, data.properties[acresTreated], '*', loadData[parameter], '*', data.properties[efficiency].properties[efficiency_parameter], '=', parameterReduction);
+
+              calculatedLoads.push(parameterReduction);
+            }
+
+          };
+
+          // *data.properties[efficiency].properties[efficiency_parameter]
+
+          if (calculatedLoads.length) {
+            reductionValue = calculatedLoads.reduce(this.reduceLoadValues);
+          }
+
+          return reductionValue;
+        },
+        loads: function(reports, segment) {
+
+          var self = this,
+              planningData = Calculate.getPlanningData(reports);
+
+          return {
+            preinstallation: {
+              nitrogen: self.preInstallationLoad(planningData, 'nitrogen'),
+              phosphorus: self.preInstallationLoad(planningData, 'phosphorus'),
+              sediment: self.preInstallationLoad(planningData, 'sediment')
+            },
+            planned: {
+              nitrogen: self.plannedLoad(planningData, 'nitrogen'),
+              phosphorus: self.plannedLoad(planningData, 'phosphorus'),
+              sediment: self.plannedLoad(planningData, 'sediment')
+            }
+          };
+
+        },
+        installed: function(values, parameter, format) {
+
+          var self = this,
+              plannedTotal = 0,
+              installedTotal = 0;
+
+          for (var i = 0; i < values.length; i++) {
+            if (values[i].properties.measurement_period === 'Installation') {
+              installedTotal += self.plannedLoad(values[i], parameter);
+            }
+            else if (values[i].properties.measurement_period === 'Planning') {
+              plannedTotal += self.plannedLoad(values[i], parameter);
+            }
+          }
+
+          if (plannedTotal >= 1) {
+            if (format === '%') {
+              return ((installedTotal/plannedTotal)*100);
+            } else {
+              return installedTotal;
+            }
+          }
+
+          return 0;
+        },
+        milesRestored: function(values, period, format) {
+
+          var self = this,
+              milesRestored = 0;
+
+          for (var i = 0; i < values.length; i++) {
+            if (values[i].properties.measurement_period === period) {
+
+              var acreage = [
+                values[i].properties.installation_landuse_acreage_1,
+                values[i].properties.installation_landuse_acreage_2,
+                values[i].properties.installation_landuse_acreage_3,
+                values[i].properties.installation_landuse_acreage_4,
+                values[i].properties.installation_landuse_acreage_5,
+                values[i].properties.installation_landuse_acreage_6
+              ]
+
+              milesRestored += acreage.reduce(this.reduceLoadValues);
+            }
+          }
+
+          if (format === '%') {
+            var plannedMilesRestored = self.milesRestored(values, 'Planning');
+            milesRestored = (milesRestored/plannedMilesRestored)*100;
+          }
+
+          return milesRestored;
+        },
+        quantityInstalled: function(values, field, format) {
+
+          var planned_total = 0,
+              installed_total = 0,
+              percentage = 0;
+
+          // Get readings organized by their Type
+          angular.forEach(values, function(reading, $index) {
+
+            if (reading.properties.measurement_period === 'Planning') {
+              planned_total += reading.properties[field];
+            } else if (reading.properties.measurement_period === 'Installation') {
+              installed_total += reading.properties[field];
+            }
+
+          });
+
+          // Divide the Installed Total by the Planned Total to get a percentage of installed
+          if (planned_total >= 1) {
+            if (format === '%') {
+              percentage = (installed_total/planned_total);
+              return (percentage*100);
+            } else {
+              return installed_total;
+            }
+          }
+
+          return 0;
+        }
+      }
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc function
+   * @name FieldDoc.controller:WetlandsNonTidalReportController
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('WetlandsNonTidalReportController', function (Account, Calculate, CalculateWetlandsNonTidal, Efficiency, LoadData, $location, $log, practice, PracticeWetlandsNonTidal, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
+
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
+
+      $rootScope.page = {};
+
+      self.practiceType = null;
+      self.project = {
+        'id': projectId
+      };
+
+      self.calculate = Calculate;
+      self.calculateWetlandsNonTidal = CalculateWetlandsNonTidal;
+
+      practice.$promise.then(function(successResponse) {
+
+        self.practice = successResponse;
+
+        self.practiceType = Utility.machineName(self.practice.properties.practice_type);
+
+        //
+        //
+        //
+        self.template = {
+          path: '/modules/components/practices/modules/' + self.practiceType + '/views/report--view.html'
+        };
+
+        //
+        //
+        //
+        site.$promise.then(function(successResponse) {
+          self.site = successResponse;
+
+          self.segment = self.site.properties.segment.properties.hgmr_code;
+
+          $rootScope.page.title = self.practice.properties.practice_type;
+          $rootScope.page.links = [
+              {
+                  text: 'Projects',
+                  url: '/projects'
+              },
+              {
+                  text: self.site.properties.project.properties.name,
+                  url: '/projects/' + projectId
+              },
+              {
+                text: self.site.properties.name,
+                url: '/projects/' + projectId + '/sites/' + siteId
+              },
+              {
+                text: self.practice.properties.practice_type,
+                url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
+                type: 'active'
+              }
+          ];
+
+          $rootScope.page.actions = [
+            {
+              type: 'button-link',
+              action: function() {
+                $window.print();
+              },
+              hideIcon: true,
+              text: 'Print'
+            },
+            {
+              type: 'button-link',
+              action: function() {
+                $scope.$emit('saveToPdf');
+              },
+              hideIcon: true,
+              text: 'Save as PDF'
+            },
+            {
+              type: 'button-link new',
+              action: function() {
+                self.addReading();
+              },
+              text: 'Add Measurement Data'
+            }
+          ];
+
+        }, function(errorResponse) {
+          //
+        });
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+            user.$promise.then(function(userResponse) {
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0].properties.name,
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: true
+                };
+            });
+        }
+      });
+
+      readings.$promise.then(function(successResponse) {
+
+        self.readings = successResponse;
+
+        self.total = {
+          planning: self.calculate.getTotalReadingsByCategory('Planning', self.readings.features),
+          installation: self.calculate.getTotalReadingsByCategory('Installation', self.readings.features),
+          monitoring: self.calculate.getTotalReadingsByCategory('Monitoring', self.readings.features)
+        };
+
+        self.results = self.calculateWetlandsNonTidal.loads(self.readings.features, self.segment)
+
+      }, function(errorResponse) {
+
+      });
+
+      self.addReading = function(measurementPeriod) {
+
+        var newReading = new PracticeWetlandsNonTidal({
+            'measurement_period': measurementPeriod,
+            'report_date': new Date(),
+            'practice_id': practiceId,
+            'account_id': self.site.properties.project.properties.account_id
+          });
+
+        newReading.$save().then(function(successResponse) {
+            $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
+          });
+      };
+
+
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc function
+   * @name FieldDoc.controller:WetlandsNonTidalFormController
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('WetlandsNonTidalFormController', function (Account, Efficiency, landuse, LoadData, $location, Notifications, practice, PracticeWetlandsNonTidal, report, $rootScope, $route, site, $scope, $timeout, user, Utility) {
+
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
+
+      $rootScope.page = {};
+
+      self.practiceType = null;
+      self.project = {
+        'id': projectId
+      };
+
+      landuse.$promise.then(function(successResponse) {
+        self.landuse = successResponse;
+
+        self.getLanduseById = function(landuseId) {
+
+          var _landuse = {};
+
+          angular.forEach(self.landuse.features, function(thisLanduse) {
+            if (thisLanduse.id === landuseId) {
+              _landuse = thisLanduse;
+            }
+          });
+
+          return _landuse;
+        };
+      });
+
+      //
+      // Setup all of our basic date information so that we can use it
+      // throughout the page
+      //
+      self.today = new Date();
+
+      self.days = [
+          'Sunday',
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday'
+      ];
+
+      self.months = [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec'
+      ];
+
+      function parseISOLike(s) {
+          var b = s.split(/\D/);
+          return new Date(b[0], b[1]-1, b[2]);
+      }
+
+      practice.$promise.then(function(successResponse) {
+
+        self.practice = successResponse;
+
+        self.practiceType = Utility.machineName(self.practice.properties.practice_type);
+
+        //
+        //
+        //
+        self.template = {
+          path: '/modules/components/practices/modules/' + self.practiceType + '/views/report--view.html'
+        };
+
+        //
+        //
+        //
+        site.$promise.then(function(successResponse) {
+          self.site = successResponse;
+
+          self.segment = self.site.properties.segment.properties.hgmr_code;
+
+          //
+          // Assign project to a scoped variable
+          //
+          report.$promise.then(function(successResponse) {
+            self.report = successResponse;
+
+            if (self.report.properties.report_date) {
+                self.today = parseISOLike(self.report.properties.report_date);
+            }
+
+            //
+            // Check to see if there is a valid date
+            //
+            self.date = {
+                month: self.months[self.today.getMonth()],
+                date: self.today.getDate(),
+                day: self.days[self.today.getDay()],
+                year: self.today.getFullYear()
+            };
+
+            $rootScope.page.title = self.practice.properties.practice_type;
+            $rootScope.page.links = [
+                {
+                    text: 'Projects',
+                    url: '/projects'
+                },
+                {
+                    text: self.site.properties.project.properties.name,
+                    url: '/projects/' + projectId
+                },
+                {
+                  text: self.site.properties.name,
+                  url: '/projects/' + projectId + '/sites/' + siteId
+                },
+                {
+                  text: self.practice.properties.practice_type,
+                  url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
+                },
+                {
+                  text: 'Edit',
+                  url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + self.report.id + '/edit',
+                  type: 'active'
+                }
+            ];
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
+          });
+
+        }, function(errorResponse) {
+          //
+        });
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+            user.$promise.then(function(userResponse) {
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0].properties.name,
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: Account.canEdit(self.site.properties.project)
+                };
+            });
+        }
+      });
+
+      $scope.$watch(angular.bind(this, function() {
+          return this.date;
+      }), function (response) {
+          if (response) {
+              var _new = response.month + ' ' + response.date + ' ' + response.year,
+              _date = new Date(_new);
+              self.date.day = self.days[_date.getDay()];
+          }
+      }, true);
+
+      self.saveReport = function() {
+
+        self.report.properties.report_date = self.date.month + ' ' + self.date.date + ' ' + self.date.year;
+
+        self.report.$update().then(function(successResponse) {
+          $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
+        }, function(errorResponse) {
+          console.error('ERROR: ', errorResponse);
+        });
+      };
+
+      self.deleteReport = function() {
+        self.report.$delete().then(function(successResponse) {
+          $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
+        }, function(errorResponse) {
+          console.error('ERROR: ', errorResponse);
+        });
+      };
+
+      /**
+       * Get Load Data for specified landuse and assign it to the appropriate
+       * report fields
+       *
+       * @param landuse (object) A fully qualitified Landuse object
+       * @param objectField (string)
+       * @param idField (string)
+       */
+      self.getLoadData = function(report, landuseField, idField) {
+
+        console.log('report', report);
+
+        var landuse = self.getLanduseById(report.properties[landuseField]);
+
+        LoadData.query({
+            q: {
+              filters: [
+                {
+                  name: 'land_river_segment',
+                  op: 'eq',
+                  val: self.segment
+                },
+                {
+                  name: 'landuse',
+                  op: 'eq',
+                  val: landuse.properties.landuse_code
+                }
+              ]
+            }
+          }, function(successResponse) {
+            if (successResponse.features.length) {
+              self.report.properties[idField] = successResponse.features[0].id;
+            } else {
+              $rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
+
+              $timeout(function() {
+                $rootScope.notifications.objects = [];
+              }, 3500);
+            }
+          });
+      };
+
+      self.getEfficiencyData = function(report, landuseIdField, landuseField, idField) {
+
+        var landuse = self.getLanduseById(report.properties[landuseIdField]);
+
+        console.log('report', report);
+
+        Efficiency.query({
+            q: {
+              filters: [
+                {
+                  name: 'type',
+                  op: 'eq',
+                  val: 'Efficiency'
+                },
+                {
+                  name: 'best_management_practice_short_name',
+                  op: 'eq',
+                  val: (landuse.properties.landuse_type === 'urban') ? 'WetPondWetland': 'WetlandRestore'
+                },
+                {
+                  name: 'cbwm_lu',
+                  op: 'eq',
+                  val: landuse.properties.landuse_code
+                },
+                {
+                  name: 'hydrogeomorphic_region',
+                  op: 'eq',
+                  val: self.site.properties.segment.properties.hgmr_name
+                }
+              ]
+            }
+          }, function(successResponse) {
+            console.log('Efficiency::successResponse', successResponse);
+            if (successResponse.features.length) {
+              self.report.properties[idField] = successResponse.features[0].id;
+            } else {
+              $rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
+
+              $timeout(function() {
+                $rootScope.notifications.objects = [];
+              }, 3500);
+            }
+          });
+      };
+
+
+    });
+
+}());
+
 'use strict';
 
 /**
@@ -8200,7 +8939,7 @@ angular.module('FieldDoc')
  * @ngdoc service
  * @name FieldDoc.GeometryService
  * @description
- *
+ *   
  */
 angular.module('FieldDoc')
   .service('commonsGeometry', ['$http', 'commonscloud', 'leafletData', function Navigation($http, commonscloud, leafletData) {
@@ -8377,7 +9116,7 @@ angular.module('FieldDoc')
         }
       },
       center: {
-        lng: -76.534,
+        lng: -76.534, 
         lat: 39.134,
         zoom: 11
       },
@@ -8422,7 +9161,7 @@ angular.module('FieldDoc')
       },
       geojson: {}
     };
-
+    
     return Map;
   }]);
 'use strict';
@@ -9914,6 +10653,11 @@ angular
           'method': 'GET',
           'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_urban_homeowner'),
           'isArray': false
+        },
+        'wetlandsNontidal': {
+          'method': 'GET',
+          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_wetlands_nontidal'),
+          'isArray': false
         }
       });
     });
@@ -10645,13 +11389,13 @@ angular.module('FieldDoc')
     // with structured objects.
     //
     return  function(object) {
-
+      
       var result = [];
 
       angular.forEach(object, function(value) {
         result.push(value);
       });
-
+      
       return result;
     };
 
