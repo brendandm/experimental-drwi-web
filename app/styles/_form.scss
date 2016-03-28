@@ -328,6 +328,17 @@ select.form-control {
       margin-right: 0;
     }
 
+  .form-control.form-control-fifths,
+  .form-element.form-element-fifths {
+    display: inline-block;
+    margin-right: 0.625%;
+    width: 18.75%;
+  }
+    .form-control-fifths:last-child,
+    .form-element-fifths:last-child {
+      margin-right: 0;
+    }
+
   //
   // Input Placeholder Text
   //
