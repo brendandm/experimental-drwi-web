@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('ForestBufferFormController', function (Account, landuse, $location, practice, PracticeForestBuffer, report, $rootScope, $route, site, $scope, user, Utility) {
+    .controller('ForestBufferFormController', function (Account, landuse, $location, Notifications, practice, PracticeForestBuffer, report, $rootScope, $route, site, $scope, $timeout, user, Utility) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -167,6 +167,18 @@
       }, true);
 
       self.saveReport = function() {
+
+        //
+        // Before saving the report, we need warn the user if they haven't
+        // entered any landuse information
+        //
+        if (!self.report.properties.type_of_buffer_project || !self.report.properties.existing_riparian_landuse || !self.report.properties.upland_landuse) {
+          $rootScope.notifications.error('Missing Landuse Data', 'We cannot calculate your nutrient load or reductions because you didn\'t select an existing or upland landuse');
+
+          $timeout(function() {
+            $rootScope.notifications.objects = [];
+          }, 7500);
+        }
 
         self.report.properties.report_date = self.date.month + ' ' + self.date.date + ' ' + self.date.year;
 

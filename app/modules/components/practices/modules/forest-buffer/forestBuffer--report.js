@@ -151,6 +151,16 @@
                     }).$promise.then(function(successResponse) {
                       planned.efficieny = successResponse.features[0].properties;
                       deferred.resolve(planned);
+                    }, function(errorResponse) {
+                      deferred.resolve({
+                        area: null,
+                        efficieny: {
+                          eos_totn: null,
+                          eos_tss: null,
+                          eos_totp: null,
+                          eos_acres: null
+                        }
+                      });
                     });
                 }
               });
@@ -165,10 +175,15 @@
               //
               self.calculateForestBuffer.GetLoadVariables(period).then(function(loaddata) {
 
+                if (!loaddata.area) {
+                  self.calculateForestBuffer.results.totalPreInstallationLoad = null;
+                  return;
+                }
+
                 var uplandPreInstallationLoad = {
-                  nitrogen: ((loaddata.area * 4)*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
-                  phosphorus: ((loaddata.area * 2)*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
-                  sediment: (((loaddata.area * 2)*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
+                  nitrogen: ((loaddata.area*1)*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
+                  phosphorus: ((loaddata.area*1)*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
+                  sediment: (((loaddata.area*1)*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
                 };
 
                 console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad);
@@ -197,11 +212,12 @@
 
             self.calculateForestBuffer.GetPlannedLoad = function(period) {
 
-              var existingLanduseType;
+              var existingLanduseType, bufferProjectType;
 
               angular.forEach(self.readings.features, function(reading, $index) {
                 if (reading.properties.measurement_period === 'Planning') {
                   existingLanduseType = reading.properties.existing_riparian_landuse;
+                  bufferProjectType = reading.properties.type_of_buffer_project;
                 }
               });
 
@@ -211,6 +227,16 @@
 
               self.calculateForestBuffer.GetLoadVariables(period, existingLanduseType).then(function(existingLoaddata) {
                 self.calculateForestBuffer.GetLoadVariables(period, self.newLanduse).then(function(newLoaddata) {
+
+                  var best_management_practice_short_name = 'ForestBuffersTrp';
+
+                  if (bufferProjectType === 'agriculture' && (existingLanduseType === 'pas' || existingLanduseType === 'npa')) {
+                    best_management_practice_short_name = 'ForestBuffersTrp';
+                  } else if (bufferProjectType === 'agriculture' && (existingLanduseType !== 'pas' || existingLanduseType === 'npa')) {
+                    best_management_practice_short_name = 'ForestBuffers';
+                  } else if (bufferProjectType === 'urban') {
+                    best_management_practice_short_name = 'ForestBufUrban';
+                  }
 
                   Efficiency.query({
                     q: {
@@ -228,7 +254,7 @@
                         {
                           name: 'best_management_practice_short_name',
                           op: 'eq',
-                          val: (existingLanduseType === 'pas' || existingLanduseType === 'npa') ? 'ForestBuffersTrp': 'ForestBuffers'
+                          val: best_management_practice_short_name
                         }
                       ]
                     }
@@ -360,9 +386,9 @@
 
               if (self.practice_efficiency) {
                 uplandPreInstallationLoad = {
-                  sediment: (((bufferArea*2*(landuseEfficiency.existing.efficieny.eos_tss/landuseEfficiency.existing.efficieny.eos_acres))/2000)*self.practice_efficiency.s_efficiency),
-                  nitrogen: ((bufferArea*4*(landuseEfficiency.existing.efficieny.eos_totn/landuseEfficiency.existing.efficieny.eos_acres))*self.practice_efficiency.n_efficiency),
-                  phosphorus: ((bufferArea*2*(landuseEfficiency.existing.efficieny.eos_totp/landuseEfficiency.existing.efficieny.eos_acres))*self.practice_efficiency.p_efficiency)
+                  sediment: (((bufferArea*1*(landuseEfficiency.existing.efficieny.eos_tss/landuseEfficiency.existing.efficieny.eos_acres))/2000)*self.practice_efficiency.s_efficiency),
+                  nitrogen: ((bufferArea*1*(landuseEfficiency.existing.efficieny.eos_totn/landuseEfficiency.existing.efficieny.eos_acres))*self.practice_efficiency.n_efficiency),
+                  phosphorus: ((bufferArea*1*(landuseEfficiency.existing.efficieny.eos_totp/landuseEfficiency.existing.efficieny.eos_acres))*self.practice_efficiency.p_efficiency)
                 };
               }
 
