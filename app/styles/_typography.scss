@@ -290,10 +290,11 @@ p {
   h2 {
     font-size: 0.75em;
     letter-spacing: 0.025em;
+    text-transform: uppercase;
   }
 
   p {
-    color: $color-gray-light;
+    color: $color-black-light;
     font-family: $font-sans;
     font-size: 0.6875em;
     font-weight: 300;
