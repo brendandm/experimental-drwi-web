@@ -262,3 +262,15 @@ a:hover {
   text-align: center;
   max-width: 46.25em;
 }
+
+
+//
+// Site Footer Typography
+//
+.site--footer p {
+  color: $color-gray-light;
+  font-family: $font-sans;
+  font-size: 0.6875em;
+  font-weight: 300;
+  line-height: 1.25;
+}

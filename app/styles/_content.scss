@@ -330,10 +330,16 @@
     }
   }
 
+.site--footer--container {
+  background-color: $color-black-light;
+  margin: 0;
+  width: 100%;
+}
+
 .site--footer {
   box-sizing: border-box;
   margin: 0 auto;
-  max-width: 68em;
+  max-width: 80em;
   padding: 4em;
 }
 
