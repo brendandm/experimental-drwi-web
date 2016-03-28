@@ -213,68 +213,54 @@
           </div>
         </div>
 
-        <!-- Installation Summary -->
         <div class="form-row" data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
           <div class="form-label">
             <label for="installation_summary" class="control-label">
-              Interim BMP Metics Data
+              Buffer Composition
             </label>
           </div>
           <div class="form-field">
 
-            <!-- Vegetative Cover -->
-            <div class="form-group column-5">
-              <label for="native_vegetation_intact" class="control-label">
-                Vegetative Cover
-              </label>
-
-              <input data-ng-model="page.report.properties.native_vegetation_intact" class="form-control" class="form-control" type="number" id="native_vegetation_intact" name="native_vegetation_intact" placeholder="% intact" min="0" />
-            </div>
-
             <!-- Buffer Composition (Woody) -->
-            <div class="column-1"></div>
-            <div class="form-group column-5">
+            <div class="form-element form-element-fifths">
               <label for="buffer_composition_woody" class="control-label">
-                Buffer Composition (woody)
+                % Woody
               </label>
 
               <input data-ng-model="page.report.properties.buffer_composition_woody" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_woody" name="buffer_composition_woody" placeholder="% woody" min="0" />
             </div>
 
             <!-- Buffer Composition (Shrub) -->
-            <div class="column-1"></div>
-            <div class="form-group column-4">
+            <div class="form-element form-element-fifths">
               <label for="buffer_composition_shrub" class="control-label">
-                Buffer Composition (shrub)
+                % Shrub
               </label>
 
               <input data-ng-model="page.report.properties.buffer_composition_shrub" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_shrub" name="buffer_composition_shrub" placeholder="% shrub" min="0" />
             </div>
 
             <!-- Buffer Composition (Grass) -->
-            <div class="form-group column-5">
+            <div class="form-element form-element-fifths">
               <label for="buffer_composition_grass" class="control-label">
-                Buffer Composition (grass)
+                % Grass
               </label>
 
               <input data-ng-model="page.report.properties.buffer_composition_grass" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_grass" name="buffer_composition_grass" placeholder="% grass" min="0" />
             </div>
 
             <!-- Buffer Composition (Bare) -->
-            <div class="column-1"></div>
-            <div class="form-group column-5">
+            <div class="form-element form-element-fifths">
               <label for="buffer_composition_bare" class="control-label">
-                Buffer Composition (bare)
+                % Bare
               </label>
 
               <input data-ng-model="page.report.properties.buffer_composition_bare" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_bare" name="buffer_composition_bare" placeholder="% bare" min="0" />
             </div>
 
             <!-- Buffer Composition (Other) -->
-            <div class="column-1"></div>
-            <div class="form-group column-4">
+            <div class="form-element form-element-fifths">
               <label for="buffer_composition_other" class="control-label">
-                Buffer Composition (other)
+                % Other
               </label>
 
               <p class="form-control form-control-disabled">
@@ -282,9 +268,31 @@
               </p>
 
             </div>
+          </div>
+        </div>
+
+        <div class="form-row" data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
+          <div class="form-label">
+            <label for="installation_summary" class="control-label">
+              Vegtation
+            </label>
+          </div>
+          <div class="form-field">
+
+            <div class="form-element">
+
+              <label for="native_vegetation_intact" class="control-label">
+                Vegetative Cover
+              </label>
+
+              <!-- Vegetative Cover -->
+              <div class="form-element">
+                <input data-ng-model="page.report.properties.native_vegetation_intact" class="form-control" class="form-control" type="number" id="native_vegetation_intact" name="native_vegetation_intact" placeholder="% intact" min="0" />
+              </div>
+            </div>
 
             <!-- Vegetative Protection -->
-            <div class="form-group column-5">
+            <div class="form-element form-element-half">
               <label for="vegetative_protection_left_bank" class="control-label">
                 Vegetative Protection (left bank)
               </label>
@@ -292,17 +300,8 @@
               <input data-ng-model="page.report.properties.vegetative_protection_left_bank" class="form-control" class="form-control" type="number" id="vegetative_protection_left_bank" name="vegetative_protection_left_bank" placeholder="" step="0.0001" />
             </div>
 
-            <div class="column-1"></div>
-            <div class="form-group column-5">
-              <label for="vegetative_protection_right_bank" class="control-label">
-                Vegetative Protection (right bank)
-              </label>
-
-              <input data-ng-model="page.report.properties.vegetative_protection_right_bank" class="form-control" class="form-control" type="number" id="vegetative_protection_right_bank" name="vegetative_protection_right_bank" placeholder="" step="0.0001" />
-            </div>
-
             <!-- Riparian Vegetative Zone Width -->
-            <div class="form-group column-5">
+            <div class="form-element form-element-half">
               <label for="riparian_vegetative_zone_width_left_bank" class="control-label">
                 Riparian Vegetative Zone Width (left bank)
               </label>
@@ -310,8 +309,15 @@
               <input data-ng-model="page.report.properties.riparian_vegetative_zone_width_left_bank" class="form-control" class="form-control" type="number" id="riparian_vegetative_zone_width_left_bank" name="riparian_vegetative_zone_width_left_bank" placeholder="" step="0.0001" />
             </div>
 
-            <div class="column-1"></div>
-            <div class="form-group column-5">
+            <div class="form-element form-element-half">
+              <label for="vegetative_protection_right_bank" class="control-label">
+                Vegetative Protection (right bank)
+              </label>
+
+              <input data-ng-model="page.report.properties.vegetative_protection_right_bank" class="form-control" class="form-control" type="number" id="vegetative_protection_right_bank" name="vegetative_protection_right_bank" placeholder="" step="0.0001" />
+            </div>
+
+            <div class="form-element form-element-half">
               <label for="riparian_vegetative_zone_width_right_bank" class="control-label">
                 Riparian Vegetative Zone Width (right bank)
               </label>
@@ -322,77 +328,81 @@
           </div>
         </div>
 
-        <fieldset data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
-          <h2><strong>Adaptive</strong> Management Checks Performed</h2>
-
-          <!-- Number of Trees Surviving -->
-          <div class="form-group">
-            <label for="number_of_trees_surviving" class="control-label">
-              Number of Trees Surviving
+        <div class="form-row" data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
+          <div class="form-label">
+            <label for="" class="control-label">
+              Adaptive Management Checks Performed
             </label>
-
-            <input data-ng-model="page.report.properties.number_of_trees_surviving" class="form-control" class="form-control" type="number" id="number_of_trees_surviving" name="number_of_trees_surviving" placeholder="Number of Trees Planted" />
-
-            <p data-ng-if="fields.number_of_trees_surviving.help" class="help-text">{{ fields.number_of_trees_surviving.help }}</p>
           </div>
+          <div class="form-field">
 
-          <div class="form-group">
-            <div class="checkbox">
-              <label class="control-label">
-                <input data-ng-model="page.report.properties.sediment_deposition" type="checkbox" id="sediment_deposition" name="sediment_deposition" /> Check for, and correct, causes of excess sediment build-up at the field-buffer interface that re-directs flow
-              </label>
-            </div>
+              <!-- Number of Trees Surviving -->
+              <div class="form-element">
+                <label for="number_of_trees_surviving" class="control-label">
+                  Number of Trees Surviving
+                </label>
+
+                <input data-ng-model="page.report.properties.number_of_trees_surviving" class="form-control" class="form-control" type="number" id="number_of_trees_surviving" name="number_of_trees_surviving" />
+
+              </div>
+
+              <div class="form-element">
+                <div class="checkbox">
+                  <label class="control-label">
+                    <input data-ng-model="page.report.properties.sediment_deposition" type="checkbox" id="sediment_deposition" name="sediment_deposition" /> Check for, and correct, causes of excess sediment build-up at the field-buffer interface that re-directs flow
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-element">
+                <div class="checkbox">
+                  <label class="control-label">
+                    <input data-ng-model="page.report.properties.concentrated_flow_paths" type="checkbox" id="concentrated_flow_paths" name="concentrated_flow_paths" /> Perform maintenance to remove concentrated flow paths through the buffer
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-element">
+                <div class="checkbox">
+                  <label class="control-label">
+                    <input data-ng-model="page.report.properties.monthly_buffer_maintenance" type="checkbox" id="monthly_buffer_maintenance" name="monthly_buffer_maintenance" /> Check for, correct causes, and path bare and/or eroded areas in the buffer
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-element">
+                <div class="checkbox">
+                  <label class="control-label">
+                    <input data-ng-model="page.report.properties.stream_shading" type="checkbox" id="stream_shading" name="stream_shading" /> Check tree shelters and stakes, especially after flooding and high wind events
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-element">
+                <div class="checkbox">
+                  <label class="control-label">
+                    <input data-ng-model="page.report.properties.vegetative_cover" type="checkbox" id="vegetative_cover" name="vegetative_cover" /> Apply herbicide around shelters in spring and fall to reduce competing vegetation
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-element">
+                <div class="checkbox">
+                  <label class="control-label">
+                    <input data-ng-model="page.report.properties.invasive_species_control" type="checkbox" id="invasive_species_control" name="invasive_species_control" /> Control noxious and invasive weeds
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-element">
+                <div class="checkbox">
+                  <label class="control-label">
+                    <input data-ng-model="page.report.properties.tree_survival_rate" type="checkbox" id="tree_survival_rate" name="tree_survival_rate" /> Replant, as needed, after addressing cause of failure
+                  </label>
+                </div>
+              </div>
           </div>
-
-          <div class="form-group">
-            <div class="checkbox">
-              <label class="control-label">
-                <input data-ng-model="page.report.properties.concentrated_flow_paths" type="checkbox" id="concentrated_flow_paths" name="concentrated_flow_paths" /> Perform maintenance to remove concentrated flow paths through the buffer
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="checkbox">
-              <label class="control-label">
-                <input data-ng-model="page.report.properties.monthly_buffer_maintenance" type="checkbox" id="monthly_buffer_maintenance" name="monthly_buffer_maintenance" /> Check for, correct causes, and path bare and/or eroded areas in the buffer
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="checkbox">
-              <label class="control-label">
-                <input data-ng-model="page.report.properties.stream_shading" type="checkbox" id="stream_shading" name="stream_shading" /> Check tree shelters and stakes, especially after flooding and high wind events
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="checkbox">
-              <label class="control-label">
-                <input data-ng-model="page.report.properties.vegetative_cover" type="checkbox" id="vegetative_cover" name="vegetative_cover" /> Apply herbicide around shelters in spring and fall to reduce competing vegetation
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="checkbox">
-              <label class="control-label">
-                <input data-ng-model="page.report.properties.invasive_species_control" type="checkbox" id="invasive_species_control" name="invasive_species_control" /> Control noxious and invasive weeds
-              </label>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <div class="checkbox">
-              <label class="control-label">
-                <input data-ng-model="page.report.properties.tree_survival_rate" type="checkbox" id="tree_survival_rate" name="tree_survival_rate" /> Replant, as needed, after addressing cause of failure
-              </label>
-            </div>
-          </div>
-
-        </fieldset>
+        </div>
 
         <div class="form-row"
              data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation' || page.report.properties.measurement_period === 'Monitoring'">
