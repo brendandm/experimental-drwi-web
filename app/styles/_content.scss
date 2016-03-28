@@ -309,3 +309,42 @@
     max-width: 40%;
   }
 }
+
+
+.site--legal {
+    background-color: transparent;
+}
+
+  .page--legal {
+    background-color: transparent;
+    margin: 0 auto;
+    padding: 0 3em 3em;
+    max-width: 68em;
+
+    p {
+        font-family: $font-sans;
+        font-size: 0.75em;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 100%;
+    }
+  }
+
+.site--footer {
+  box-sizing: border-box;
+  margin: 0 auto;
+  max-width: 68em;
+  padding: 4em;
+}
+
+  .site--footer--content {
+    display: inline-block;
+    width: 100%;
+  }
+
+    .site--footer--column {
+      float: left;
+      margin: 0;
+      padding: 0;
+      width: 50%;
+    }

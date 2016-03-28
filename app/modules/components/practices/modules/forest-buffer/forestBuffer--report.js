@@ -186,15 +186,11 @@
                   sediment: (((loaddata.area*1)*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
                 };
 
-                console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad);
-
                 var existingPreInstallationLoad = {
                   nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
                   phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
                   sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
                 };
-
-                console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad);
 
                 self.calculateForestBuffer.results.totalPreInstallationLoad = {
                   efficieny: loaddata.efficieny,
