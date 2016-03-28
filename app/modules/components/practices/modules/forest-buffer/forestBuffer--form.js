@@ -23,6 +23,7 @@
       };
 
       self.landuse = landuse;
+      self.report = null;
 
       //
       // Setup all of our basic date information so that we can use it
@@ -123,6 +124,7 @@
                   type: 'active'
                 }
             ];
+
           }, function(errorResponse) {
             console.error('ERROR: ', errorResponse);
           });
@@ -158,6 +160,12 @@
           }
       }, true);
 
+      $scope.$watch(angular.bind(this, function() {
+          return this.report;
+      }), function () {
+        self.calculateBufferComposition();
+      }, true);
+
       self.saveReport = function() {
 
         self.report.properties.report_date = self.date.month + ' ' + self.date.date + ' ' + self.date.year;
@@ -177,42 +185,27 @@
         });
       };
 
-    //   Feature.GetFeature({
-    //     storage: $scope.storage.storage,
-    //     featureId: $route.current.params.reportId
-    //   }).then(function(report) {
-    //
-    //     //
-    //     // Load the reading into the scope
-    //     //
-    //     $scope.report = report;
-    //     $scope.report.template = $scope.storage.templates.form;
-    //
-    //     //
-    //     // Watch the Tree Canopy Value, when it changes we need to update the lawn area value
-    //     //
-    //     $scope.calculateBufferComposition = function() {
-    //
-    //       var running_total = $scope.report.buffer_composition_woody + $scope.report.buffer_composition_shrub + $scope.report.buffer_composition_bare + $scope.report.buffer_composition_grass;
-    //
-    //       var remainder = 100-running_total;
-    //
-    //       $scope.report.buffer_composition_other = remainder;
-    //     };
-    //
-    //     $scope.$watch('report.buffer_composition_woody', function() {
-    //       $scope.calculateBufferComposition();
-    //     });
-    //     $scope.$watch('report.buffer_composition_shrub', function() {
-    //       $scope.calculateBufferComposition();
-    //     });
-    //     $scope.$watch('report.buffer_composition_bare', function() {
-    //       $scope.calculateBufferComposition();
-    //     });
-    //     $scope.$watch('report.buffer_composition_grass', function() {
-    //       $scope.calculateBufferComposition();
-    //     });
-    //
-    });
+      //
+      // Watch the Tree Canopy Value, when it changes we need to update the lawn area value
+      //
+      self.calculateBufferComposition = function() {
+
+        if (!self.report) {
+          return false;
+        }
+
+        var running_total = self.report.properties.buffer_composition_woody + self.report.properties.buffer_composition_shrub + self.report.properties.buffer_composition_bare + self.report.properties.buffer_composition_grass;
+
+        var remainder = 100-running_total;
+
+        if (remainder >= 0) {
+          self.report.properties.buffer_composition_other = remainder;
+        } else {
+          self.report.properties.buffer_composition_other = 0;
+        }
+
+      };
+
+  });
 
 }());

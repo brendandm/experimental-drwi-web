@@ -168,7 +168,7 @@
           </div>
         </div>
 
-        <!-- WIP Reporting Agency -->
+        <!-- Installation Summary -->
         <div class="form-row" data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
           <div class="form-label">
             <label for="installation_summary" class="control-label">
@@ -213,17 +213,22 @@
           </div>
         </div>
 
-        <fieldset data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
-          <h2><strong>Interim</strong> BMP Metrics Data</h2>
+        <!-- Installation Summary -->
+        <div class="form-row" data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
+          <div class="form-label">
+            <label for="installation_summary" class="control-label">
+              Interim BMP Metics Data
+            </label>
+          </div>
+          <div class="form-field">
 
-          <div class="row">
             <!-- Vegetative Cover -->
             <div class="form-group column-5">
               <label for="native_vegetation_intact" class="control-label">
                 Vegetative Cover
               </label>
 
-              <input data-ng-model="page.report.properties.native_vegetation_intact" class="form-control" class="form-control" type="number" id="native_vegetation_intact" name="native_vegetation_intact" placeholder="% intact" />
+              <input data-ng-model="page.report.properties.native_vegetation_intact" class="form-control" class="form-control" type="number" id="native_vegetation_intact" name="native_vegetation_intact" placeholder="% intact" min="0" />
             </div>
 
             <!-- Buffer Composition (Woody) -->
@@ -233,7 +238,7 @@
                 Buffer Composition (woody)
               </label>
 
-              <input data-ng-model="page.report.properties.buffer_composition_woody" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_woody" name="buffer_composition_woody" placeholder="% woody" />
+              <input data-ng-model="page.report.properties.buffer_composition_woody" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_woody" name="buffer_composition_woody" placeholder="% woody" min="0" />
             </div>
 
             <!-- Buffer Composition (Shrub) -->
@@ -243,18 +248,16 @@
                 Buffer Composition (shrub)
               </label>
 
-              <input data-ng-model="page.report.properties.buffer_composition_shrub" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_shrub" name="buffer_composition_shrub" placeholder="% shrub" />
+              <input data-ng-model="page.report.properties.buffer_composition_shrub" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_shrub" name="buffer_composition_shrub" placeholder="% shrub" min="0" />
             </div>
-          </div>
 
-          <div class="row">
             <!-- Buffer Composition (Grass) -->
             <div class="form-group column-5">
               <label for="buffer_composition_grass" class="control-label">
                 Buffer Composition (grass)
               </label>
 
-              <input data-ng-model="page.report.properties.buffer_composition_grass" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_grass" name="buffer_composition_grass" placeholder="% grass" />
+              <input data-ng-model="page.report.properties.buffer_composition_grass" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_grass" name="buffer_composition_grass" placeholder="% grass" min="0" />
             </div>
 
             <!-- Buffer Composition (Bare) -->
@@ -264,7 +267,7 @@
                 Buffer Composition (bare)
               </label>
 
-              <input data-ng-model="page.report.properties.buffer_composition_bare" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_bare" name="buffer_composition_bare" placeholder="% bare" />
+              <input data-ng-model="page.report.properties.buffer_composition_bare" class="form-control" class="form-control" type="number" max="100" min="0" id="buffer_composition_bare" name="buffer_composition_bare" placeholder="% bare" min="0" />
             </div>
 
             <!-- Buffer Composition (Other) -->
@@ -274,11 +277,12 @@
                 Buffer Composition (other)
               </label>
 
-              <input data-ng-model="page.report.properties.buffer_composition_other" class="form-control" class="form-control" max="100" min="0" type="number" id="buffer_composition_other" name="buffer_composition_other" placeholder="% other" />
-            </div>
-          </div>
+              <p class="form-control form-control-disabled">
+                {{ page.report.properties.buffer_composition_other }}
+              </p>
 
-          <div class="row">
+            </div>
+
             <!-- Vegetative Protection -->
             <div class="form-group column-5">
               <label for="vegetative_protection_left_bank" class="control-label">
@@ -297,9 +301,6 @@
               <input data-ng-model="page.report.properties.vegetative_protection_right_bank" class="form-control" class="form-control" type="number" id="vegetative_protection_right_bank" name="vegetative_protection_right_bank" placeholder="" step="0.0001" />
             </div>
 
-          </div>
-
-          <div class="row">
             <!-- Riparian Vegetative Zone Width -->
             <div class="form-group column-5">
               <label for="riparian_vegetative_zone_width_left_bank" class="control-label">
@@ -319,7 +320,7 @@
             </div>
 
           </div>
-        </fieldset>
+        </div>
 
         <fieldset data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
           <h2><strong>Adaptive</strong> Management Checks Performed</h2>
