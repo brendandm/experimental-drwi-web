@@ -267,10 +267,36 @@ a:hover {
 //
 // Site Footer Typography
 //
-.site--footer p {
-  color: $color-gray-light;
+p {
+  color: $color-black-base;
   font-family: $font-sans;
-  font-size: 0.6875em;
+  font-size: 1em;
   font-weight: 300;
   line-height: 1.25;
+}
+
+.site--footer,
+.site--legal {
+  hr {
+    border: 0;
+    border-top: 1px solid rgb(225,225,225);
+    clear: both;
+    float: left;
+    margin-top: 0em;
+    margin-bottom: 1em;
+    width: 100%;
+  }
+
+  h2 {
+    font-size: 0.75em;
+    letter-spacing: 0.025em;
+  }
+
+  p {
+    color: $color-gray-light;
+    font-family: $font-sans;
+    font-size: 0.6875em;
+    font-weight: 300;
+    line-height: 1.25;
+  }
 }
