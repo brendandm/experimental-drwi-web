@@ -433,6 +433,7 @@
                 <tr class="no-rule">
                   <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
                     <h2><strong>Load</strong> &amp; Reductions</h2>
+                    <p>Looking for Protocol 1? Protocol 1 is part of the Bank Stabilization practice. <a href="javascript:void(0);" data-ng-click="page.createBankStabilizationPractice()">Create a Bank Stabilization practice here.</a></p>
                   </td>
                 </tr>
 
@@ -531,11 +532,6 @@
                     <strong data-ng-if="page.loaddata">
                       {{ page.calculateEnhancedStreamRestoration.installedSedimentLoadReduction(page.readings.features, page.loaddata, '%') || 0 | number:2 }}%
                     </strong>
-                  </td>
-                </tr>
-                <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
-                    <p>Looking for Protocol 1? Protocol 1 is part of the Bank Stabilization practice. <a href="javascript:void(0);" data-ng-click="page.createBankStabilizationPractice()">Create a Bank Stabilization practice to enter your protocol 1 values.</a></p>
                   </td>
                 </tr>
 
