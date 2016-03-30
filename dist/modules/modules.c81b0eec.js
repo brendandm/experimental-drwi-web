@@ -47,7 +47,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'staging',apiUrl:'http://stg.api.fielddoc.org',siteUrl:'http://stg.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+.constant('environment', {name:'staging',apiUrl:'http://stg.api.fielddoc.org',siteUrl:'http://stg.fielddoc.org',clientId:''})
 
 ;
 /**
@@ -2534,291 +2534,7 @@ angular.module('FieldDoc')
    */
   angular.module('FieldDoc')
     .service('CalculateForestBuffer', function(LoadData, $q) {
-      return {
-        getPreInstallationLoad: function(bufferArea, loaddata) {
-
-          var bufferAreaAcres = (bufferArea/43560);
-
-          console.log('bufferAreaAcres', bufferAreaAcres);
-
-          if (loaddata) {
-            console.log('loaddata', loaddata);
-
-            var uplandPreInstallationLoad = {
-              nitrogen: ((bufferAreaAcres * 4)*(loaddata.properties.eos_totn/loaddata.properties.eos_acres)),
-              phosphorus: ((bufferAreaAcres * 2)*(loaddata.properties.eos_totp/loaddata.properties.eos_acres)),
-              sediment: (((bufferAreaAcres * 2)*(loaddata.properties.eos_tss/loaddata.properties.eos_acres))/2000)
-            };
-
-            console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad);
-
-            var existingPreInstallationLoad = {
-              nitrogen: (bufferAreaAcres*(loaddata.properties.eos_totn/loaddata.properties.eos_acres)),
-              phosphorus: (bufferAreaAcres*(loaddata.properties.eos_totp/loaddata.properties.eos_acres)),
-              sediment: ((bufferAreaAcres*(loaddata.properties.eos_tss/loaddata.properties.eos_acres))/2000)
-            };
-
-            console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad);
-
-            return {
-              uplandLanduse: uplandPreInstallationLoad,
-              existingLanduse: existingPreInstallationLoad,
-              nitrogen: uplandPreInstallationLoad.nitrogen + existingPreInstallationLoad.nitrogen,
-              phosphorus: uplandPreInstallationLoad.phosphorus + existingPreInstallationLoad.phosphorus,
-              sediment: uplandPreInstallationLoad.sediment + existingPreInstallationLoad.sediment
-            };
-          }
-        }
-
-        // $scope.calculate.GetPlannedLoad = function(period) {
-        //
-        //   var existingLanduseType;
-        //
-        //   for (var i = 0; i < $scope.practice.readings.length; i++) {
-        //     if ($scope.practice.readings[i].measurement_period === 'Planning') {
-        //       existingLanduseType = $scope.landuse[$scope.practice.readings[i].existing_riparian_landuse.toLowerCase()];
-        //     }
-        //   }
-        //
-        //   $scope.calculate.GetLoadVariables(period, existingLanduseType).then(function(existingLoaddata) {
-        //     $scope.calculate.GetLoadVariables(period, $scope.storage.landuse).then(function(newLoaddata) {
-        //
-        //       Efficiency.query({
-        //         q: {
-        //           filters: [
-        //             {
-        //               name: 'cbwm_lu',
-        //               op: 'eq',
-        //               val: existingLanduseType
-        //             },
-        //             {
-        //               name: 'hydrogeomorphic_region',
-        //               op: 'eq',
-        //               val: $scope.site.type_f9d8609090494dac811e6a58eb8ef4be[0].hgmr_nme
-        //             },
-        //             {
-        //               name: 'best_management_practice_short_name',
-        //               op: 'eq',
-        //               val: (existingLanduseType === 'pas' || existingLanduseType === 'npa') ? 'ForestBuffersTrp': 'ForestBuffers'
-        //             }
-        //           ]
-        //         }
-        //       }).$promise.then(function(efficiencyResponse) {
-        //         var efficiency = efficiencyResponse.response.features[0];
-        //         $scope.practice_efficiency = efficiency;
-        //
-        //         //
-        //         // EXISTING CONDITION — LOAD VALUES
-        //         //
-        //         var uplandPlannedInstallationLoad = {
-        //           sediment: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.sediment*(efficiency.s_efficiency/100),
-        //           nitrogen: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.nitrogen*(efficiency.n_efficiency/100),
-        //           phosphorus: $scope.calculate.results.totalPreInstallationLoad.uplandLanduse.phosphorus*(efficiency.p_efficiency/100)
-        //         };
-        //
-        //         console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
-        //
-        //         var existingPlannedInstallationLoad = {
-        //           sediment: ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000),
-        //           nitrogen: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres))),
-        //           phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
-        //         };
-        //
-        //         console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
-        //
-        //         //
-        //         // PLANNED CONDITIONS — LANDUSE VALUES
-        //         //
-        //         var totals = {
-        //           efficiency: {
-        //             new: newLoaddata,
-        //             existing: existingLoaddata
-        //           },
-        //           nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen,
-        //           phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus,
-        //           sediment: uplandPlannedInstallationLoad.sediment + existingPlannedInstallationLoad.sediment
-        //         };
-        //
-        //         $scope.calculate.results.totalPlannedLoad = totals;
-        //
-        //       });
-        //     });
-        //   });
-        //
-        // }
-
-        //
-        // $scope.calculate.quantityInstalled = function(values, element, format) {
-        //
-        //   var planned_total = 0,
-        //       installed_total = 0,
-        //       percentage = 0;
-        //
-        //   // Get readings organized by their Type
-        //   angular.forEach(values, function(reading, $index) {
-        //     if (reading.measurement_period === 'Planning') {
-        //       planned_total += $scope.calculate.GetSingleInstalledLoad(reading)[element];
-        //     } else if (reading.measurement_period === 'Installation') {
-        //       installed_total += $scope.calculate.GetSingleInstalledLoad(reading)[element];
-        //     }
-        //
-        //   });
-        //
-        //   // Divide the Installed Total by the Planned Total to get a percentage of installed
-        //   if (planned_total) {
-        //     console.log('something to show');
-        //     if (format === '%') {
-        //       percentage = (installed_total/planned_total);
-        //       console.log('percentage', (percentage*100));
-        //       return (percentage*100);
-        //     } else {
-        //       console.log('installed_total', installed_total);
-        //       return installed_total;
-        //     }
-        //   }
-        //
-        //   return 0;
-        //
-        // };
-        //
-        // //
-        // // The purpose of this function is to return a percentage of the total installed versus the amount
-        // // that was originally planned on being installed:
-        // //
-        // // (Installation+Installation+Installation) / Planned = % of Planned
-        // //
-        // //
-        // // @param (string) field
-        // //    The `field` parameter should be the field that you would like to get the percentage for
-        // //
-        // $scope.calculate.GetPercentageOfInstalled = function(field, format) {
-        //
-        //   var planned_total = 0,
-        //       installed_total = 0,
-        //       percentage = 0;
-        //
-        //   // Get readings organized by their Type
-        //   angular.forEach($scope.practice.readings, function(reading, $index) {
-        //
-        //     if (reading.measurement_period === 'Planning') {
-        //       planned_total += reading[field];
-        //     } else if (reading.measurement_period === 'Installation') {
-        //       installed_total += reading[field];
-        //     }
-        //
-        //   });
-        //
-        //   // Divide the Installed Total by the Planned Total to get a percentage of installed
-        //   if (planned_total >= 1) {
-        //     if (format === 'percentage') {
-        //       percentage = (installed_total/planned_total);
-        //       return (percentage*100);
-        //     } else {
-        //       return installed_total;
-        //     }
-        //   }
-        //
-        //   return null;
-        // };
-        //
-        // $scope.calculate.GetSingleInstalledLoad = function(value) {
-        //
-        //   var reduction = 0,
-        //       bufferArea = ((value.length_of_buffer * value.average_width_of_buffer)/43560),
-        //       landuse = (value.existing_riparian_landuse) ? $scope.landuse[value.existing_riparian_landuse.toLowerCase()] : null,
-        //       preExistingEfficieny = $scope.calculate.results.totalPreInstallationLoad.efficieny,
-        //       landuseEfficiency = ($scope.calculate.results.totalPlannedLoad && $scope.calculate.results.totalPlannedLoad.efficiency) ? $scope.calculate.results.totalPlannedLoad.efficiency : null,
-        //       uplandPreInstallationLoad = null,
-        //       existingPreInstallationLoad = null;
-        //
-        //   if ($scope.practice_efficiency) {
-        //     uplandPreInstallationLoad = {
-        //       sediment: (((bufferArea*2*(landuseEfficiency.existing.efficieny.eos_tss/landuseEfficiency.existing.efficieny.eos_acres))/2000)*$scope.practice_efficiency.s_efficiency/100),
-        //       nitrogen: ((bufferArea*4*(landuseEfficiency.existing.efficieny.eos_totn/landuseEfficiency.existing.efficieny.eos_acres))*$scope.practice_efficiency.n_efficiency/100),
-        //       phosphorus: ((bufferArea*2*(landuseEfficiency.existing.efficieny.eos_totp/landuseEfficiency.existing.efficieny.eos_acres))*$scope.practice_efficiency.p_efficiency/100)
-        //     };
-        //   }
-        //
-        //   if (landuseEfficiency) {
-        //     existingPreInstallationLoad = {
-        //       sediment: ((bufferArea*((landuseEfficiency.existing.efficieny.eos_tss/landuseEfficiency.existing.efficieny.eos_acres)-(landuseEfficiency.new.efficieny.eos_tss/landuseEfficiency.new.efficieny.eos_acres)))/2000),
-        //       nitrogen: (bufferArea*((landuseEfficiency.existing.efficieny.eos_totn/landuseEfficiency.existing.efficieny.eos_acres)-(landuseEfficiency.new.efficieny.eos_totn/landuseEfficiency.new.efficieny.eos_acres))),
-        //       phosphorus: (bufferArea*((landuseEfficiency.existing.efficieny.eos_totp/landuseEfficiency.existing.efficieny.eos_acres)-(landuseEfficiency.new.efficieny.eos_totp/landuseEfficiency.new.efficieny.eos_acres)))
-        //     };
-        //   }
-        //
-        //   if (uplandPreInstallationLoad && existingPreInstallationLoad) {
-        //     return {
-        //       nitrogen: uplandPreInstallationLoad.nitrogen + existingPreInstallationLoad.nitrogen,
-        //       phosphorus: uplandPreInstallationLoad.phosphorus + existingPreInstallationLoad.phosphorus,
-        //       sediment: uplandPreInstallationLoad.sediment + existingPreInstallationLoad.sediment
-        //     };
-        //   } else {
-        //     return {
-        //       nitrogen: null,
-        //       phosphorus: null,
-        //       sediment: null
-        //     };
-        //   }
-        // };
-        //
-        // $scope.calculate.GetTreeDensity = function(trees, length, width) {
-        //   return (trees/(length*width/43560));
-        // };
-        //
-        // $scope.calculate.GetPercentage = function(part, total) {
-        //   return ((part/total)*100);
-        // };
-        //
-        // $scope.calculate.GetConversion = function(part, total) {
-        //   return (part/total);
-        // };
-        //
-        // $scope.calculate.GetConversionWithArea = function(length, width, total) {
-        //   return ((length*width)/total);
-        // };
-        //
-        // $scope.calculate.GetRestorationTotal = function(unit, area) {
-        //
-        //   var total_area = 0;
-        //
-        //   for (var i = 0; i < $scope.practice.readings.length; i++) {
-        //     if ($scope.practice.readings[i].measurement_period === 'Installation') {
-        //       if (area) {
-        //         total_area += ($scope.practice.readings[i].length_of_buffer*$scope.practice.readings[i].average_width_of_buffer);
-        //       } else {
-        //         total_area += $scope.practice.readings[i].length_of_buffer;
-        //       }
-        //     }
-        //   }
-        //
-        //   // console.log('GetRestorationTotal', total_area, unit, (total_area/unit));
-        //
-        //
-        //   return (total_area/unit);
-        // };
-        //
-        // $scope.calculate.GetRestorationPercentage = function(unit, area) {
-        //
-        //   var planned_area = 0,
-        //       total_area = $scope.calculate.GetRestorationTotal(unit, area);
-        //
-        //   for (var i = 0; i < $scope.practice.readings.length; i++) {
-        //     if ($scope.practice.readings[i].measurement_period === 'Planning') {
-        //       if (area) {
-        //         planned_area = ($scope.practice.readings[i].length_of_buffer*$scope.practice.readings[i].average_width_of_buffer);
-        //       } else {
-        //         planned_area = $scope.practice.readings[i].length_of_buffer;
-        //       }
-        //     }
-        //   }
-        //
-        //   planned_area = (planned_area/unit);
-        //
-        //   return ((total_area/planned_area)*100);
-        // };
-
-      };
+      return {};
     });
 
 }());
@@ -2976,6 +2692,16 @@ angular.module('FieldDoc')
                     }).$promise.then(function(successResponse) {
                       planned.efficieny = successResponse.features[0].properties;
                       deferred.resolve(planned);
+                    }, function(errorResponse) {
+                      deferred.resolve({
+                        area: null,
+                        efficieny: {
+                          eos_totn: null,
+                          eos_tss: null,
+                          eos_totp: null,
+                          eos_acres: null
+                        }
+                      });
                     });
                 }
               });
@@ -2990,21 +2716,22 @@ angular.module('FieldDoc')
               //
               self.calculateForestBuffer.GetLoadVariables(period).then(function(loaddata) {
 
-                var uplandPreInstallationLoad = {
-                  nitrogen: ((loaddata.area * 4)*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
-                  phosphorus: ((loaddata.area * 2)*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
-                  sediment: (((loaddata.area * 2)*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
-                };
+                if (!loaddata.area) {
+                  self.calculateForestBuffer.results.totalPreInstallationLoad = null;
+                  return;
+                }
 
-                console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad);
+                var uplandPreInstallationLoad = {
+                  nitrogen: ((loaddata.area*1)*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
+                  phosphorus: ((loaddata.area*1)*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
+                  sediment: (((loaddata.area*1)*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
+                };
 
                 var existingPreInstallationLoad = {
                   nitrogen: (loaddata.area*(loaddata.efficieny.eos_totn/loaddata.efficieny.eos_acres)),
                   phosphorus: (loaddata.area*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres)),
                   sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
                 };
-
-                console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad);
 
                 self.calculateForestBuffer.results.totalPreInstallationLoad = {
                   efficieny: loaddata.efficieny,
@@ -3022,11 +2749,12 @@ angular.module('FieldDoc')
 
             self.calculateForestBuffer.GetPlannedLoad = function(period) {
 
-              var existingLanduseType;
+              var existingLanduseType, bufferProjectType;
 
               angular.forEach(self.readings.features, function(reading, $index) {
                 if (reading.properties.measurement_period === 'Planning') {
                   existingLanduseType = reading.properties.existing_riparian_landuse;
+                  bufferProjectType = reading.properties.type_of_buffer_project;
                 }
               });
 
@@ -3036,6 +2764,16 @@ angular.module('FieldDoc')
 
               self.calculateForestBuffer.GetLoadVariables(period, existingLanduseType).then(function(existingLoaddata) {
                 self.calculateForestBuffer.GetLoadVariables(period, self.newLanduse).then(function(newLoaddata) {
+
+                  var best_management_practice_short_name = 'ForestBuffersTrp';
+
+                  if (bufferProjectType === 'agriculture' && (existingLanduseType === 'pas' || existingLanduseType === 'npa')) {
+                    best_management_practice_short_name = 'ForestBuffersTrp';
+                  } else if (bufferProjectType === 'agriculture' && (existingLanduseType !== 'pas' || existingLanduseType === 'npa')) {
+                    best_management_practice_short_name = 'ForestBuffers';
+                  } else if (bufferProjectType === 'urban') {
+                    best_management_practice_short_name = 'ForestBufUrban';
+                  }
 
                   Efficiency.query({
                     q: {
@@ -3053,7 +2791,7 @@ angular.module('FieldDoc')
                         {
                           name: 'best_management_practice_short_name',
                           op: 'eq',
-                          val: (existingLanduseType === 'pas' || existingLanduseType === 'npa') ? 'ForestBuffersTrp': 'ForestBuffers'
+                          val: best_management_practice_short_name
                         }
                       ]
                     }
@@ -3185,9 +2923,9 @@ angular.module('FieldDoc')
 
               if (self.practice_efficiency) {
                 uplandPreInstallationLoad = {
-                  sediment: (((bufferArea*2*(landuseEfficiency.existing.efficieny.eos_tss/landuseEfficiency.existing.efficieny.eos_acres))/2000)*self.practice_efficiency.s_efficiency),
-                  nitrogen: ((bufferArea*4*(landuseEfficiency.existing.efficieny.eos_totn/landuseEfficiency.existing.efficieny.eos_acres))*self.practice_efficiency.n_efficiency),
-                  phosphorus: ((bufferArea*2*(landuseEfficiency.existing.efficieny.eos_totp/landuseEfficiency.existing.efficieny.eos_acres))*self.practice_efficiency.p_efficiency)
+                  sediment: (((bufferArea*1*(landuseEfficiency.existing.efficieny.eos_tss/landuseEfficiency.existing.efficieny.eos_acres))/2000)*self.practice_efficiency.s_efficiency),
+                  nitrogen: ((bufferArea*1*(landuseEfficiency.existing.efficieny.eos_totn/landuseEfficiency.existing.efficieny.eos_acres))*self.practice_efficiency.n_efficiency),
+                  phosphorus: ((bufferArea*1*(landuseEfficiency.existing.efficieny.eos_totp/landuseEfficiency.existing.efficieny.eos_acres))*self.practice_efficiency.p_efficiency)
                 };
               }
 
@@ -3340,7 +3078,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('ForestBufferFormController', function (Account, landuse, $location, practice, PracticeForestBuffer, report, $rootScope, $route, site, $scope, user, Utility) {
+    .controller('ForestBufferFormController', function (Account, landuse, $location, Notifications, practice, PracticeForestBuffer, report, $rootScope, $route, site, $scope, $timeout, user, Utility) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -3355,6 +3093,43 @@ angular.module('FieldDoc')
       };
 
       self.landuse = landuse;
+      self.report = null;
+
+      //
+      // Setup all of our basic date information so that we can use it
+      // throughout the page
+      //
+      self.today = new Date();
+
+      self.days = [
+          'Sunday',
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday'
+      ];
+
+      self.months = [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec'
+      ];
+
+      function parseISOLike(s) {
+          var b = s.split(/\D/);
+          return new Date(b[0], b[1]-1, b[2]);
+      }
 
       practice.$promise.then(function(successResponse) {
 
@@ -3381,6 +3156,20 @@ angular.module('FieldDoc')
           report.$promise.then(function(successResponse) {
             self.report = successResponse;
 
+            if (self.report.properties.report_date) {
+                self.today = parseISOLike(self.report.properties.report_date);
+            }
+
+            //
+            // Check to see if there is a valid date
+            //
+            self.date = {
+                month: self.months[self.today.getMonth()],
+                date: self.today.getDate(),
+                day: self.days[self.today.getDay()],
+                year: self.today.getFullYear()
+            };
+
             $rootScope.page.title = self.practice.properties.practice_type;
             $rootScope.page.links = [
                 {
@@ -3405,6 +3194,7 @@ angular.module('FieldDoc')
                   type: 'active'
                 }
             ];
+
           }, function(errorResponse) {
             console.error('ERROR: ', errorResponse);
           });
@@ -3430,7 +3220,38 @@ angular.module('FieldDoc')
         }
       });
 
+      $scope.$watch(angular.bind(this, function() {
+          return this.date;
+      }), function (response) {
+          if (response) {
+              var _new = response.month + ' ' + response.date + ' ' + response.year,
+              _date = new Date(_new);
+              self.date.day = self.days[_date.getDay()];
+          }
+      }, true);
+
+      $scope.$watch(angular.bind(this, function() {
+          return this.report;
+      }), function () {
+        self.calculateBufferComposition();
+      }, true);
+
       self.saveReport = function() {
+
+        //
+        // Before saving the report, we need warn the user if they haven't
+        // entered any landuse information
+        //
+        if (!self.report.properties.type_of_buffer_project || !self.report.properties.existing_riparian_landuse || !self.report.properties.upland_landuse) {
+          $rootScope.notifications.error('Missing Landuse Data', 'We cannot calculate your nutrient load or reductions because you didn\'t select an existing or upland landuse');
+
+          $timeout(function() {
+            $rootScope.notifications.objects = [];
+          }, 7500);
+        }
+
+        self.report.properties.report_date = self.date.month + ' ' + self.date.date + ' ' + self.date.year;
+
         self.report.$update().then(function(successResponse) {
           $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
         }, function(errorResponse) {
@@ -3446,43 +3267,28 @@ angular.module('FieldDoc')
         });
       };
 
-    //   Feature.GetFeature({
-    //     storage: $scope.storage.storage,
-    //     featureId: $route.current.params.reportId
-    //   }).then(function(report) {
-    //
-    //     //
-    //     // Load the reading into the scope
-    //     //
-    //     $scope.report = report;
-    //     $scope.report.template = $scope.storage.templates.form;
-    //
-    //     //
-    //     // Watch the Tree Canopy Value, when it changes we need to update the lawn area value
-    //     //
-    //     $scope.calculateBufferComposition = function() {
-    //
-    //       var running_total = $scope.report.buffer_composition_woody + $scope.report.buffer_composition_shrub + $scope.report.buffer_composition_bare + $scope.report.buffer_composition_grass;
-    //
-    //       var remainder = 100-running_total;
-    //
-    //       $scope.report.buffer_composition_other = remainder;
-    //     };
-    //
-    //     $scope.$watch('report.buffer_composition_woody', function() {
-    //       $scope.calculateBufferComposition();
-    //     });
-    //     $scope.$watch('report.buffer_composition_shrub', function() {
-    //       $scope.calculateBufferComposition();
-    //     });
-    //     $scope.$watch('report.buffer_composition_bare', function() {
-    //       $scope.calculateBufferComposition();
-    //     });
-    //     $scope.$watch('report.buffer_composition_grass', function() {
-    //       $scope.calculateBufferComposition();
-    //     });
-    //
-    });
+      //
+      // Watch the Tree Canopy Value, when it changes we need to update the lawn area value
+      //
+      self.calculateBufferComposition = function() {
+
+        if (!self.report) {
+          return false;
+        }
+
+        var running_total = self.report.properties.buffer_composition_woody + self.report.properties.buffer_composition_shrub + self.report.properties.buffer_composition_bare + self.report.properties.buffer_composition_grass;
+
+        var remainder = 100-running_total;
+
+        if (remainder >= 0) {
+          self.report.properties.buffer_composition_other = remainder;
+        } else {
+          self.report.properties.buffer_composition_other = 0;
+        }
+
+      };
+
+  });
 
 }());
 
@@ -8939,7 +8745,7 @@ angular.module('FieldDoc')
  * @ngdoc service
  * @name FieldDoc.GeometryService
  * @description
- *
+ *   
  */
 angular.module('FieldDoc')
   .service('commonsGeometry', ['$http', 'commonscloud', 'leafletData', function Navigation($http, commonscloud, leafletData) {
@@ -9116,7 +8922,7 @@ angular.module('FieldDoc')
         }
       },
       center: {
-        lng: -76.534,
+        lng: -76.534, 
         lat: 39.134,
         zoom: 11
       },
@@ -9161,7 +8967,7 @@ angular.module('FieldDoc')
       },
       geojson: {}
     };
-
+    
     return Map;
   }]);
 'use strict';
@@ -11389,13 +11195,13 @@ angular.module('FieldDoc')
     // with structured objects.
     //
     return  function(object) {
-
+      
       var result = [];
 
       angular.forEach(object, function(value) {
         result.push(value);
       });
-
+      
       return result;
     };
 
