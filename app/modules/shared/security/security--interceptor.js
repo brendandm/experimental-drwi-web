@@ -49,7 +49,7 @@
             //
             config.params = (config.params === undefined) ? {} : config.params;
 
-            console.debug('SecurityInterceptor::Request', config || $q.when(config));
+            console.log('SecurityInterceptor::Request', config || $q.when(config));
 
             return config || $q.when(config);
           },

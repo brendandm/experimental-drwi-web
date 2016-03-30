@@ -574,7 +574,7 @@ angular.module('FieldDoc')
             //
             config.params = (config.params === undefined) ? {} : config.params;
 
-            console.debug('SecurityInterceptor::Request', config || $q.when(config));
+            console.log('SecurityInterceptor::Request', config || $q.when(config));
 
             return config || $q.when(config);
           },
@@ -7682,7 +7682,7 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-  .controller('EnhancedStreamRestorationReportController', function (Account, Calculate, CalculateEnhancedStreamRestoration, $location, practice, PracticeEnhancedStreamRestoration, readings, $rootScope, $route, site, $scope, UALStateLoad, user, Utility, $window) {
+  .controller('EnhancedStreamRestorationReportController', function (Account, Calculate, CalculateEnhancedStreamRestoration, $location, practice, Practice, PracticeEnhancedStreamRestoration, readings, $rootScope, $route, site, $scope, UALStateLoad, user, Utility, $window) {
 
     var self = this,
         projectId = $route.current.params.projectId,
@@ -10273,7 +10273,7 @@ angular
                return angular.toJson(feature);
              }
            },
-           delete: {
+           'delete': {
              method: 'DELETE',
              url: environment.apiUrl.concat('/v1/data/image/:id')
            }

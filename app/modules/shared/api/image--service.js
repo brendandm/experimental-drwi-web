@@ -30,7 +30,7 @@
                return angular.toJson(feature);
              }
            },
-           delete: {
+           'delete': {
              method: 'DELETE',
              url: environment.apiUrl.concat('/v1/data/image/:id')
            }
