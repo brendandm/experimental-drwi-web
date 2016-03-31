@@ -78,7 +78,7 @@ module.exports = function (grunt) {
             name: 'staging',
             apiUrl: 'http://stg.api.fielddoc.org',
             siteUrl: 'http://stg.fielddoc.org',
-            clientId: ''
+            clientId: 'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'
           }
         }
       },
