@@ -89,8 +89,8 @@ module.exports = function (grunt) {
         constants: {
           environment: {
             name: 'production',
-            apiUrl: 'http://api.fielddoc.org',
-            siteUrl: 'http://www.fielddoc.org',
+            apiUrl: 'https://api.fielddoc.org',
+            siteUrl: 'https://www.fielddoc.org',
             clientId: 'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'
           }
         }
