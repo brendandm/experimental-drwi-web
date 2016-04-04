@@ -47,10 +47,9 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+.constant('environment', {name:'staging',apiUrl:'http://stg.api.fielddoc.org',siteUrl:'http://stg.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
-
 /**
  * angular-save2pdf - angular jsPDF wrapper
  * Copyright (c) 2015 John Daily Jr.,
@@ -67,19 +66,24 @@ angular.module('FieldDoc')
         .directive('save2pdf', function() {
             return {
               link: function($scope, element, Attrs, controller) {
-                if (!element[0]) { return;}
-
                 $scope.$on('saveToPdf', function(event, mass) {
 
-                    var pdf = new jsPDF('p','px','letter');
+                  if (!element[0]) {
+                    return;
+                  }
+                  var pdf = new jsPDF('p', 'pt', 'letter');
 
-                    //
-                    // All units are in the set measurement for the document
-                    // This can be changed to "pt" (points), "mm" (Default), "cm", "in"
-                    pdf.addHTML(document.body, {}, function(dispose) {
-                        pdf.save('FieldStack-PracticeMetrics-' + new Date() + '.pdf');
-                    });
-             });
+                  //
+                  // Make sure we modify the scale of the images.
+                  //
+                  pdf.internal.scaleFactor = 2.25;
+
+                  pdf.addHTML(element[0], 0, 0, {
+                    pagesplit: true
+                  }, function() {
+                    pdf.save('FieldStack-PracticeMetrics-' + new Date() + '.pdf');
+                  });
+                });
             }
           }
         });
@@ -8761,7 +8765,7 @@ angular.module('FieldDoc')
  * @ngdoc service
  * @name FieldDoc.GeometryService
  * @description
- *
+ *   
  */
 angular.module('FieldDoc')
   .service('commonsGeometry', ['$http', 'commonscloud', 'leafletData', function Navigation($http, commonscloud, leafletData) {
@@ -8938,7 +8942,7 @@ angular.module('FieldDoc')
         }
       },
       center: {
-        lng: -76.534,
+        lng: -76.534, 
         lat: 39.134,
         zoom: 11
       },
@@ -8983,7 +8987,7 @@ angular.module('FieldDoc')
       },
       geojson: {}
     };
-
+    
     return Map;
   }]);
 'use strict';
@@ -11211,13 +11215,13 @@ angular.module('FieldDoc')
     // with structured objects.
     //
     return  function(object) {
-
+      
       var result = [];
 
       angular.forEach(object, function(value) {
         result.push(value);
       });
-
+      
       return result;
     };
 

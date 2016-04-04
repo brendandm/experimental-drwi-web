@@ -53029,7 +53029,7 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 
 /**
  * This plugin mimicks the HTML5 Canvas
- * 
+ *
  * The goal is to provide a way for current canvas users to print directly to a PDF.
  */
 
@@ -53147,7 +53147,7 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
         text.style.fontName = fontName;
         text.style.fontSize = fontSize + 'pt';
         try {
-            text.textContent = txt;            
+            text.textContent = txt;
         } catch(e) {
             text.innerText = txt;
         }
@@ -53374,7 +53374,7 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 
                 // get final column width
                 columnWidths[header] = jsPDFAPI.arrayMax(columnMinWidths);
-                
+
                 //have to reset
                 columnMinWidths = [];
             }
@@ -53493,7 +53493,7 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 
 /**
  * This plugin mimicks the HTML5 Canvas's context2d.
- * 
+ *
  * The goal is to provide a way for current canvas implementations to print directly to a PDF.
  */
 
@@ -53913,7 +53913,7 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 							pt.x - this.path[i - 1].x, pt.y - this.path[i - 1].y
 					];
 					deltas.push(delta);
-					break;	
+					break;
 				case 'qct':
 					// convert to bezier
 					var x1 = this.path[i - 1].x + 2.0/3.0 * (pt.x1 - this.path[i - 1].x);
@@ -53980,7 +53980,7 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 							pt.x - this.path[i - 1].x, pt.y - this.path[i - 1].y
 					];
 					deltas.push(delta);
-					break;	
+					break;
 				case 'qct':
 					// convert to bezier
 					var x1 = this.path[i - 1].x + 2.0/3.0 * (pt.x1 - this.path[i - 1].x);
@@ -54039,7 +54039,7 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 					var txtWidth = pdf.getStringUnitWidth(text) * fontSize / pdf.internal.scaleFactor;
 					return txtWidth;
 				},
-			
+
 				get width(){
 					return this.getWidth(text);
 				}
@@ -54134,18 +54134,18 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 	}
 
 	/**
-	 *  Return a array of objects that represent bezier curves which approximate the 
-	 *  circular arc centered at the origin, from startAngle to endAngle (radians) with 
+	 *  Return a array of objects that represent bezier curves which approximate the
+	 *  circular arc centered at the origin, from startAngle to endAngle (radians) with
 	 *  the specified radius.
-	 *  
-	 *  Each bezier curve is an object with four points, where x1,y1 and 
-	 *  x4,y4 are the arc's end points and x2,y2 and x3,y3 are the cubic bezier's 
+	 *
+	 *  Each bezier curve is an object with four points, where x1,y1 and
+	 *  x4,y4 are the arc's end points and x2,y2 and x3,y3 are the cubic bezier's
 	 *  control points.
 	 */
 
 	c2d.internal.createArc = function(radius,startAngle,endAngle,anticlockwise) {
 
-		var EPSILON = 0.00001; // Roughly 1/1000th of a degree, see below    
+		var EPSILON = 0.00001; // Roughly 1/1000th of a degree, see below
 
 		// normalize startAngle, endAngle to [-2PI, 2PI]
 		var twoPI = Math.PI * 2;
@@ -54158,7 +54158,7 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 			endAngleN = endAngleN % twoPI;
 		}
 
-		// Compute the sequence of arc curves, up to PI/2 at a time.  
+		// Compute the sequence of arc curves, up to PI/2 at a time.
 		// Total arc angle is less than 2PI.
 		var curves = [];
 		var piOverTwo = Math.PI / 2.0;
@@ -54177,14 +54177,14 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 	}
 
 	/**
-	 *  Cubic bezier approximation of a circular arc centered at the origin, 
+	 *  Cubic bezier approximation of a circular arc centered at the origin,
 	 *  from (radians) a1 to a2, where a2-a1 < pi/2.  The arc's radius is r.
-	 * 
+	 *
 	 *  Returns an object with four points, where x1,y1 and x4,y4 are the arc's end points
 	 *  and x2,y2 and x3,y3 are the cubic bezier's control points.
-	 * 
+	 *
 	 *  This algorithm is based on the approach described in:
-	 *  A. Riškus, "Approximation of a Cubic Bezier Curve by Circular Arcs and Vice Versa," 
+	 *  A. Riškus, "Approximation of a Cubic Bezier Curve by Circular Arcs and Vice Versa,"
 	 *  Information Technology and Control, 35(4), 2006 pp. 371-378.
 	 */
 
@@ -54208,7 +54208,7 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 		var x3 = x2;
 		var y3 = -y2;
 
-		// Find the arc points' actual locations by computing x1,y1 and x4,y4 
+		// Find the arc points' actual locations by computing x1,y1 and x4,y4
 		// and rotating the control points by a + a1
 
 		var ar = a + a1;
@@ -54481,7 +54481,7 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 		//float and clearing of floats
 		css["float"] = FloatMap[computedCSSElement("cssFloat")] || "none";
 		css["clear"] = ClearMap[computedCSSElement("clear")] || "none";
-		
+
 		css["color"]  = computedCSSElement("color");
 
 		return css;
@@ -54756,7 +54756,7 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 					}
 					// Only add the text if the text node is in the body element
 					if (cn.ownerDocument.body.contains(cn)){
-						renderer.addText(value, fragmentCSS);						
+						renderer.addText(value, fragmentCSS);
 					}
 				} else if (typeof cn === "string") {
 					renderer.addText(cn, fragmentCSS);
@@ -55069,11 +55069,11 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 		// text color
 		var pdfTextColor = this.getPdfColor(style["color"]);
 		if (pdfTextColor !== this.lastTextColor)
-		{	
-			this.pdf.internal.write(pdfTextColor);	
+		{
+			this.pdf.internal.write(pdfTextColor);
 			this.lastTextColor = pdfTextColor;
 		}
-		
+
 		//set the word spacing for e.g. justify style
 		if (style['word-spacing'] !== undefined && style['word-spacing'] > 0) {
 			this.pdf.internal.write(style['word-spacing'].toFixed(2), "Tw");
@@ -55081,18 +55081,18 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 
 		this.pdf.internal.write("/" + font.id, (defaultFontSize * style["font-size"]).toFixed(2), "Tf", "(" + this.pdf.internal.pdfEscape(text) + ") Tj");
 
-		
+
 		//set the word spacing back to neutral => 0
 		if (style['word-spacing'] !== undefined) {
 			this.pdf.internal.write(0, "Tw");
 		}
 	};
-	
+
 	// Accepts #FFFFFF, rgb(int,int,int), or CSS Color Name
 	Renderer.prototype.getPdfColor = function(style) {
 		var textColor;
 		var r,g,b;
-		
+
 		var rx = /rgb\s*\(\s*(\d+),\s*(\d+),\s*(\d+\s*)\)/;
 		var m = rx.exec(style);
 		if (m != null){
@@ -55114,7 +55114,7 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 			b = style.substring(5, 7);
 			b = parseInt(b, 16);
 		}
-		
+
 		if ((typeof r === 'string') && /^#[0-9A-Fa-f]{6}$/.test(r)) {
 			var hex = parseInt(r.substr(1), 16);
 			r = (hex >> 16) & 255;
@@ -55130,12 +55130,12 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 		}
 		return textColor;
 	};
-	
+
 	Renderer.prototype.f3 = function(number) {
 		return number.toFixed(3); // Ie, %.3f
 	},
-	
-	
+
+
 	Renderer.prototype.renderParagraph = function (cb) {
 		var blockstyle,
 		defaultFontSize,
@@ -55180,7 +55180,7 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 			this.y = 0;
 			paragraphspacing_before = ((blockstyle["margin-top"] || 0) + (blockstyle["padding-top"] || 0)) * fontToUnitRatio;
 		}
-		
+
 		out = this.pdf.internal.write;
 		i = void 0;
 		l = void 0;
@@ -55347,10 +55347,10 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 		return process(this, HTML, isNaN(x) ? 4 : x, isNaN(y) ? 4 : y, settings, callback);
 	};
 })(jsPDF.API);
-/** ==================================================================== 
+/** ====================================================================
  * jsPDF JavaScript plugin
  * Copyright (c) 2013 Youssef Beddad, youssef.beddad@gmail.com
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -55358,10 +55358,10 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -55432,7 +55432,7 @@ AcroForm.internal.setBitPosition = function (variable, position, value) {
 				// pdf.internal.write("(page_" + (i + 1) + ")" + dests[i] + " 0
 				// R");
 				// }
-				//				
+				//
 				if (this.outline.root.children.length > 0) {
 					var lines = pdf.outline.render().split(/\r\n/);
 					for (var i = 0; i < lines.length; i++) {
@@ -56506,7 +56506,7 @@ API.splitTextToSize = function(text, maxlen, options) {
 }
 
 })(jsPDF.API);
-/** @preserve 
+/** @preserve
 jsPDF standard_fonts_metrics plugin
 Copyright (c) 2012 Willow Systems Corporation, willow-systems.com
 MIT license.
@@ -56519,10 +56519,10 @@ MIT license.
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -56572,7 +56572,7 @@ def compress(data):
 				raise Exception("Don't know what to do with value type %s" % type(value))
 
 		vals.append(keystring+valuestring)
-	
+
 	return '{' + ''.join(vals) + '}'
 
 def uncompress(data):
@@ -56665,7 +56665,7 @@ def uncompress(data):
 */
 
 /**
-Uncompresses data compressed into custom, base16-like format. 
+Uncompresses data compressed into custom, base16-like format.
 @public
 @function
 @param
@@ -56685,7 +56685,7 @@ var uncompress = function(data){
 	, output = {}
 	, sign = 1
 	, stringparts // undef. will be [] in string mode
-	
+
 	, activeobject = output
 	, parentchain = []
 	, parent_key_pair
@@ -56696,7 +56696,7 @@ var uncompress = function(data){
 	, ch
 
 	i = 1 // stripping starting {
-	
+
 	while (i != datalen){
 		// - { } ' are special.
 
@@ -56707,10 +56707,10 @@ var uncompress = function(data){
 			if (stringparts){
 				// end of string mode
 				key = stringparts.join('')
-				stringparts = undef				
+				stringparts = undef
 			} else {
 				// start of string mode
-				stringparts = []				
+				stringparts = []
 			}
 		} else if (stringparts){
 			stringparts.push(ch)
@@ -56746,7 +56746,7 @@ var uncompress = function(data){
 					key = undef
 					valueparts = ''
 				} else {
-					valueparts += ch					
+					valueparts += ch
 				}
 			}
 		}
@@ -56755,7 +56755,7 @@ var uncompress = function(data){
 	return output
 }
 
-// encoding = 'Unicode' 
+// encoding = 'Unicode'
 // NOT UTF8, NOT UTF16BE/LE, NOT UCS2BE/LE. NO clever BOM behavior
 // Actual 16bit char codes used.
 // no multi-byte logic here
@@ -56764,8 +56764,8 @@ var uncompress = function(data){
 // {402: 131, 8211: 150, 8212: 151, 8216: 145, 8217: 146, 8218: 130, 8220: 147, 8221: 148, 8222: 132, 8224: 134, 8225: 135, 8226: 149, 8230: 133, 8364: 128, 8240:137, 8249: 139, 8250: 155, 710: 136, 8482: 153, 338: 140, 339: 156, 732: 152, 352: 138, 353: 154, 376: 159, 381: 142, 382: 158}
 // as you can see, all Unicode chars are outside of 0-255 range. No char code conflicts.
 // this means that you can give Win cp1252 encoded strings to jsPDF for rendering directly
-// as well as give strings with some (supported by these fonts) Unicode characters and 
-// these will be mapped to win cp1252 
+// as well as give strings with some (supported by these fonts) Unicode characters and
+// these will be mapped to win cp1252
 // for example, you can send char code (cp1252) 0x80 or (unicode) 0x20AC, getting "Euro" glyph displayed in both cases.
 
 var encodingBlock = {
@@ -56788,7 +56788,7 @@ var encodingBlock = {
 //	, 'Symbol'
 //	, 'ZapfDingbats'
 }}
-/** 
+/**
 Resources:
 Font metrics data is reprocessed derivative of contents of
 "Font Metrics for PDF Core 14 Fonts" package, which exhibits the following copyright and license:
@@ -56841,7 +56841,7 @@ char codes to StandardEncoding character codes. The encoding table is to be used
 somewhere around "pdfEscape" call.
 */
 
-API.events.push([ 
+API.events.push([
 	'addFont'
 	,function(font) {
 		var metrics
@@ -57059,10 +57059,10 @@ jsPDFAPI.addSVG = function(svgtext, x, y, w, h) {
 }
 
 })(jsPDF.API);
-/** ==================================================================== 
+/** ====================================================================
  * jsPDF total_pages plugin
  * Copyright (c) 2013 Eduardo Menezes de Morais, eduardo.morais@usp.br
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
  * "Software"), to deal in the Software without restriction, including
@@ -57070,10 +57070,10 @@ jsPDFAPI.addSVG = function(svgtext, x, y, w, h) {
  * distribute, sublicense, and/or sell copies of the Software, and to
  * permit persons to whom the Software is furnished to do so, subject to
  * the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be
  * included in all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
  * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -57934,8 +57934,8 @@ CssColors.colorNameToHex = function(color) {
  1. Redistributions of source code must retain the above copyright notice,
  this list of conditions and the following disclaimer.
 
- 2. Redistributions in binary form must reproduce the above copyright 
- notice, this list of conditions and the following disclaimer in 
+ 2. Redistributions in binary form must reproduce the above copyright
+ notice, this list of conditions and the following disclaimer in
  the documentation and/or other materials provided with the distribution.
 
  3. The names of the authors may not be used to endorse or promote products
@@ -59534,7 +59534,7 @@ var Deflater = (function(obj) {
 		function deflateReset(strm) {
 			strm.total_in = strm.total_out = 0;
 			strm.msg = null; //
-			
+
 			that.pending = 0;
 			that.pending_out = 0;
 
@@ -61871,7 +61871,7 @@ NodeParser.prototype.paintNode = function(container) {
     if (container.node.getAttribute){
 		   var name = container.node.getAttribute('name');
 		   if (name === null){
-			   var name = container.node.getAttribute('id')			   
+			   var name = container.node.getAttribute('id')
 		   }
 		   if (name !== null){
 			   var annotations = this.options.canvas.annotations;
@@ -62022,7 +62022,7 @@ NodeParser.prototype.paintText = function(container) {
                 	this.renderBullet(container, bounds);
                 }
                 if (index == 0){
-                	this.renderAnnotation(container.parent, bounds)                	
+                	this.renderAnnotation(container.parent, bounds)
                 }
             }
         }, this);
@@ -62032,34 +62032,34 @@ NodeParser.prototype.paintText = function(container) {
 NodeParser.prototype.generateListNumber = {
 	listAlpha : function(number) {
 		var tmp = "", modulus;
-	
+
 		do {
 			modulus = number % 26;
 			tmp = String.fromCharCode((modulus) + 64) + tmp;
 			number = number / 26;
 		} while ((number * 26) > 26);
-	
+
 		return tmp;
 	},
-	
+
 	listRoman : function(number) {
 		var romanArray = [
 				"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"
 		], decimal = [
 				1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1
 		], roman = "", v, len = romanArray.length;
-	
+
 		if (number <= 0 || number >= 4000) {
 			return number;
 		}
-	
+
 		for (v = 0; v < len; v += 1) {
 			while (number >= decimal[v]) {
 				number -= decimal[v];
 				roman += romanArray[v];
 			}
 		}
-	
+
 		return roman;
 	}
 };
@@ -62113,7 +62113,7 @@ NodeParser.prototype.renderBullet = function(container, bounds){
 			var list = li.parent;
 			var nodeList = Array.prototype.slice.call(list.node.children);
 			var index = nodeList.indexOf(li.node) + 1;
-			
+
 			var value = this.listItemText(type, index);
 			value += '.';
 			var left = bounds.left - padding;
@@ -62171,7 +62171,7 @@ NodeParser.prototype.renderTextDecoration = function(container, bounds, metrics)
 NodeParser.prototype.renderAnnotation = function(container, bounds) {
    if (container.node.nodeName === 'A'){
 	   var href = container.node.getAttribute('href');
-	   if (href){		   
+	   if (href){
 		   var annotations = this.options.canvas.annotations;
 		   if (annotations){
 			   annotations.createAnnotation(href, container.bounds);
@@ -63124,7 +63124,7 @@ CanvasRenderer.prototype.setVariable = function(property, value) {
 };
 
 CanvasRenderer.prototype.text = function(text, left, bottom) {
-		this.ctx.fillText(text, left, bottom);		
+		this.ctx.fillText(text, left, bottom);
 };
 
 CanvasRenderer.prototype.backgroundRepeatShape = function(imageContainer, backgroundPosition, size, bounds, left, top, width, height, borderData) {
@@ -65523,7 +65523,7 @@ function html2pdf (html,pdf,callback) {
 
 	};
 	canvas.annotations = pdf.annotations;
-	
+
 	pdf.context2d._pageBreakAt = function(y) {
 		this.pageBreaks.push(y);
 	};
@@ -65542,7 +65542,7 @@ function html2pdf (html,pdf,callback) {
 		var iframe = document.createElement('iframe');
 		//iframe.style.width = canvas.width;
 		//iframe.src = "";
-		//iframe.document.domain = 
+		//iframe.document.domain =
 		document.body.appendChild(iframe);
 		var doc;
 		doc = iframe.contentDocument;
@@ -65588,20 +65588,20 @@ function html2pdf (html,pdf,callback) {
 # PNG.js
 # Copyright (c) 2011 Devon Govett
 # MIT LICENSE
-# 
-# Permission is hereby granted, free of charge, to any person obtaining a copy of this 
-# software and associated documentation files (the "Software"), to deal in the Software 
-# without restriction, including without limitation the rights to use, copy, modify, merge, 
-# publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons 
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this
+# software and associated documentation files (the "Software"), to deal in the Software
+# without restriction, including without limitation the rights to use, copy, modify, merge,
+# publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
 # to whom the Software is furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in all copies or 
+#
+# The above copyright notice and this permission notice shall be included in all copies or
 # substantial portions of the Software.
-# 
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
-# BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
-# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
+# BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+# DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
@@ -66269,7 +66269,7 @@ var FlateStream = (function() {
     0x50001, 0x50011, 0x50009, 0x50019, 0x50005, 0x50015, 0x5000d, 0x5001d,
     0x50003, 0x50013, 0x5000b, 0x5001b, 0x50007, 0x50017, 0x5000f, 0x00000
   ]), 5];
-  
+
   function error(e) {
       throw new Error(e)
   }
