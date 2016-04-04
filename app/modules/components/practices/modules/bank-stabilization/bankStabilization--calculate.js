@@ -21,7 +21,7 @@ angular.module('FieldDoc')
       plannedSedimentLoadReduction: function(value) {
 
         var baseLength = value.properties.installation_length_of_streambank,
-            ler = (parseFloat(value.properties.installation_lateral_erosion_rate)-0.02),
+            ler = (parseFloat(value.properties.installation_lateral_erosion_rate)*0.5),
             soilDensity = value.properties.installation_soil_bulk_density,
             squareRoot = Math.sqrt((value.properties.installation_eroding_bank_height*value.properties.installation_eroding_bank_height)+(value.properties.installation_eroding_bank_horizontal_width*value.properties.installation_eroding_bank_horizontal_width)),
             loadTotal = baseLength*squareRoot*ler*soilDensity;
@@ -70,7 +70,7 @@ angular.module('FieldDoc')
       plannedNitrogenLoadReduction: function(value) {
 
         var baseLength = value.properties.installation_length_of_streambank,
-            ler = (value.properties.installation_lateral_erosion_rate-0.02),
+            ler = (value.properties.installation_lateral_erosion_rate*0.5),
             soilDensity = value.properties.installation_soil_bulk_density,
             soilNDensity = value.properties.installation_soil_n_content,
             squareRoot = Math.sqrt((value.properties.installation_eroding_bank_height*value.properties.installation_eroding_bank_height)+(value.properties.installation_eroding_bank_horizontal_width*value.properties.installation_eroding_bank_horizontal_width)),
@@ -120,7 +120,7 @@ angular.module('FieldDoc')
       plannedPhosphorusLoadReduction: function(value) {
 
         var baseLength = value.properties.installation_length_of_streambank,
-            ler = (value.properties.installation_lateral_erosion_rate-0.02),
+            ler = (value.properties.installation_lateral_erosion_rate*0.5),
             soilDensity = value.properties.installation_soil_bulk_density,
             soilPDensity = value.properties.installation_soil_p_content,
             squareRoot = Math.sqrt((value.properties.installation_eroding_bank_height*value.properties.installation_eroding_bank_height)+(value.properties.installation_eroding_bank_horizontal_width*value.properties.installation_eroding_bank_horizontal_width)),
