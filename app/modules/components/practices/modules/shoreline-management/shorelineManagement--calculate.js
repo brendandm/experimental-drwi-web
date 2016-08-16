@@ -4,11 +4,11 @@
 
   /**
    * @ngdoc service
-   * @name FieldDoc.CalculateWetlandsNonTidal
+   * @name FieldDoc.CalculateShorelineManagement
    * @description
    */
   angular.module('FieldDoc')
-    .service('CalculateWetlandsNonTidal', function(Calculate, LoadData, $q) {
+    .service('CalculateShorelineManagement', function(Calculate, LoadData, $q) {
       return {
         efficiency: {
           urban: {
