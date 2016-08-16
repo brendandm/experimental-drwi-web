@@ -125,6 +125,8 @@
           </div>
         </div>
 
+        <!-- INSTALLATION SUMMARY -->
+
         <div class="form-row"
              data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
 
@@ -134,185 +136,133 @@
            </label>
           </div>
           <div class="form-field">
-           <div class="form-element form-element" data-ng-if="page.report.properties.measurement_period === 'Planning'">
-             <label for="installation_surface_area" class="control-label">
-               Total Wetland Surface Area
+           <div class="form-element form-element" data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+             <label for="installation_length_of_living_shoreline_restored" class="control-label">
+               Length of Living Shoreline Restored
              </label>
 
-             <input data-ng-model="page.report.properties.installation_surface_area"
+             <input data-ng-model="page.report.properties.installation_length_of_living_shoreline_restored"
                     class="form-control" class="form-control" type="number"
-                    id="installation_surface_area" name="installation_surface_area"
+                    id="installation_length_of_living_shoreline_restored" name="installation_length_of_living_shoreline_restored"
                     step="0.00001" />
 
-             <p class="help-text">acres</p>
+             <p class="help-text">feet</p>
            </div>
 
-            <!-- Landuse 1 -->
-            <div class="form-element form-element-thirds">
-              <label for="planning_project_type" class="control-label">
-                Type of Non-Tidal Wetlands Project
-              </label>
+           <div class="form-element form-element" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+             <label for="installation_existing_average_bank_height" class="control-label">
+               Existing Average Bank Height
+             </label>
 
-              <select class="form-control" data-ng-model="page.report.properties.installation_project_type_1" id="installation_project_type_1" name="installation_project_type_1">
-                <option value="urban">urban</option>
-                <option value="agriculture">agriculture</option>
+             <input data-ng-model="page.report.properties.installation_existing_average_bank_height"
+                    class="form-control" class="form-control" type="number"
+                    id="installation_existing_average_bank_height" name="installation_existing_average_bank_height"
+                    step="0.00001" />
+
+             <p class="help-text">feet</p>
+           </div>
+
+           <div class="form-element form-element" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+             <label for="installation_existing_shoreline_recession_rate" class="control-label">
+               Existing Shoreline Recession Rate (SRR; ft/yr)
+             </label>
+
+             <input data-ng-model="page.report.properties.installation_existing_shoreline_recession_rate"
+                    class="form-control" class="form-control" type="number"
+                    id="installation_existing_shoreline_recession_rate" name="installation_existing_shoreline_recession_rate"
+                    step="0.00001" placeholder="SRR; ft/yr" />
+
+            <p class="help-text">
+              Select rate from Virginia’s Shoreline Evolution Reports (<a href="http://web.vims.edu/physical/research/shoreline/Publications-Evolution.htm" target="_blank">source</a>); Maryland's ShorelineChange Maps for Tidewater Maryland (<a href="http://www.dnr.state.md.us/ccp/coastalatlas/shorelines.asp" target="_blank">source</a>); or measure in field. Document method used under Notes
+            </p>
+           </div>
+
+           <div class="form-element form-element" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+             <label for="installation_soil_bulk_density" class="control-label">
+               Soil Bulk Density (SBD; lbs/ft3)	
+             </label>
+
+             <input data-ng-model="page.report.properties.installation_soil_bulk_density"
+                    class="form-control" class="form-control" type="number"
+                    id="installation_soil_bulk_density" name="installation_soil_bulk_density"
+                    step="0.00001" />
+
+            <p class="help-text">
+              Use the default value of 93.6 lbs/ft3 (WTWG, 2015), or measure in field and provide details under Notes
+            </p>
+           </div>
+
+           <div class="form-element form-element" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+             <label for="installation_sand_reduction_factor" class="control-label">
+               Sand reduction factor (SRF)	
+             </label>
+
+             <input data-ng-model="page.report.properties.installation_sand_reduction_factor"
+                    class="form-control" class="form-control" type="number"
+                    id="installation_sand_reduction_factor" name="installation_sand_reduction_factor"
+                    step="0.00001" />
+
+            <p class="help-text">
+              The default values of SRF by state are: 0.337 (VA) and 0.551 (MD, DC, DE) from WTWG, 2015; or can be based on site-specific measurements with details provided under Notes. Installed project must meet structural criteria 3 and 4 below, otherwise BIR 
+            </p>
+           </div>
+
+           <div class="form-element form-element" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+             <label for="installation_bank_instability_reduction_factor" class="control-label">
+               Bank instability reduction factor (BIR), if applicable	
+             </label>
+
+             <input data-ng-model="page.report.properties.installation_bank_instability_reduction_factor"
+                    class="form-control" class="form-control" type="number"
+                    id="installation_bank_instability_reduction_factor" name="installation_bank_instability_reduction_factor"
+                    step="0.00001" />
+
+            <p class="help-text">BIR</p>
+           </div>
+
+           <div class="form-element form-element" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+             <label for="installation_existing_area_of_tidal_wetlands" class="control-label">
+               Existing Area of Tidal Wetlands
+             </label>
+
+             <input data-ng-model="page.report.properties.installation_existing_area_of_tidal_wetlands"
+                    class="form-control" class="form-control" type="number"
+                    id="installation_existing_area_of_tidal_wetlands" name="installation_existing_area_of_tidal_wetlands"
+                    step="0.00001" />
+
+            <p class="help-text">acres</p>
+           </div>
+
+           <div class="form-element form-element" data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+             <label for="installation_area_of_planted_or_replanted_tidal_wetlands" class="control-label">
+               Area of Planted or Re-planted Tidal Wetlands
+             </label>
+
+             <input data-ng-model="page.report.properties.installation_area_of_planted_or_replanted_tidal_wetlands"
+                    class="form-control" class="form-control" type="number"
+                    id="installation_area_of_planted_or_replanted_tidal_wetlands" name="installation_area_of_planted_or_replanted_tidal_wetlands"
+                    step="0.00001" />
+
+            <p class="help-text">acres</p>
+           </div>
+
+           <div class="form-element form-element" data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+             <label for="installation_type_of_tidal_wetlands_project" class="control-label">
+               Type of Tidal Wetlands Project
+             </label>
+
+              <select class="form-control"
+                      data-ng-model="page.report.properties.installation_type_of_tidal_wetlands_project"
+                      id="installation_type_of_tidal_wetlands_project" name="installation_type_of_tidal_wetlands_project"
+                      required="required">
+                <option value="Creation">Creation</option>
+                <option value="Restoration">Restoration</option>
+                <option value="Enhancement">Enhancement</option>
               </select>
 
-              <p class="help-text">&nbsp;</p>
-            </div>
+            <p class="help-text">&nbsp;</p>
+           </div>
 
-            <div class="form-element form-element-thirds">
-              <label for="installation_upland_landuse_1" class="control-label">
-                Upland Landuse
-              </label>
-
-              <select class="form-control" id="installation_upland_landuse_1" name="installation_upland_landuse_1"
-                      data-ng-model="page.report.properties.installation_upland_landuse_id_1"
-                      data-ng-options="value.id as value.properties.landuse_name for value in page.landuse.features | filter:properties.landuse_type=page.report.properties.installation_project_type_1 | orderBy:'properties.landuse_name'"
-                      data-ng-change="page.getLoadData(page.report, 'installation_upland_landuse_id_1', 'installation_loaddata_id_1'); page.getEfficiencyData(page.report, 'installation_upland_landuse_id_1', 'installation_upland_landuse_1', 'installation_efficiency_id_1')">
-              </select>
-
-              <p class="help-text">{{ page.report.properties.installation_project_type_1 }} landuses</p>
-            </div>
-
-            <div class="form-element form-element-thirds">
-              <label for="installation_landuse_acreage_1" class="control-label">
-
-              </label>
-
-              <input data-ng-model="page.report.properties.installation_landuse_acreage_1"
-                     class="form-control" class="form-control" type="number"
-                     id="installation_landuse_acreage_1" name="installation_landuse_acreage_1"
-                     step="0.00001" />
-
-              <p class="help-text">acres</p>
-            </div>
-
-            <!-- Landuse 2 -->
-            <div class="form-element form-element-thirds">
-              <label for="planning_project_type" class="control-label">
-                Type of Non-Tidal Wetlands Project
-              </label>
-
-              <select class="form-control" data-ng-model="page.report.properties.installation_project_type_2" id="installation_project_type_2" name="installation_project_type_2">
-                <option value="urban">urban</option>
-                <option value="agriculture">agriculture</option>
-              </select>
-
-              <p class="help-text">&nbsp;</p>
-            </div>
-
-            <div class="form-element form-element-thirds">
-              <label for="installation_upland_landuse_2" class="control-label">
-                Upland Landuse
-              </label>
-
-              <select class="form-control" id="installation_upland_landuse_id_2" name="installation_upland_landuse_id_2"
-                      data-ng-model="page.report.properties.installation_upland_landuse_id_2"
-                      data-ng-options="value.id as value.properties.landuse_name for value in page.landuse.features | filter:properties.landuse_type=page.report.properties.installation_project_type_2 | orderBy:'properties.landuse_name'"
-                      data-ng-change="page.getLoadData(page.report, 'installation_upland_landuse_id_2', 'installation_loaddata_id_2'); page.getEfficiencyData(page.report, 'installation_upland_landuse_id_2', 'installation_upland_landuse_2', 'installation_efficiency_id_2')">
-              </select>
-
-              <p class="help-text">{{ page.report.properties.installation_project_type_2 }} landuses</p>
-            </div>
-
-
-            <div class="form-element form-element-thirds">
-              <label for="installation_landuse_acreage_2" class="control-label">
-
-              </label>
-
-              <input data-ng-model="page.report.properties.installation_landuse_acreage_2"
-                     class="form-control" class="form-control" type="number"
-                     id="installation_landuse_acreage_2" name="installation_landuse_acreage_2"
-                     step="0.00001" />
-
-              <p class="help-text">acres</p>
-            </div>
-
-            <!-- Landuse 3 -->
-            <div class="form-element form-element-thirds">
-              <label for="planning_project_type" class="control-label">
-                Type of Non-Tidal Wetlands Project
-              </label>
-
-              <select class="form-control" data-ng-model="page.report.properties.installation_project_type_3" id="installation_project_type_3" name="installation_project_type_3">
-                <option value="urban">urban</option>
-                <option value="agriculture">agriculture</option>
-              </select>
-
-              <p class="help-text">&nbsp;</p>
-            </div>
-
-            <div class="form-element form-element-thirds">
-              <label for="installation_upland_landuse_3" class="control-label">
-                Upland Landuse
-              </label>
-
-              <select class="form-control" id="installation_upland_landuse_id_3" name="installation_upland_landuse_id_3"
-                      data-ng-model="page.report.properties.installation_upland_landuse_id_3"
-                      data-ng-options="value.id as value.properties.landuse_name for value in page.landuse.features | filter:properties.landuse_type=page.report.properties.installation_project_type_3 | orderBy:'properties.landuse_name'"
-                      data-ng-change="page.getLoadData(page.report, 'installation_upland_landuse_id_3', 'installation_loaddata_id_3'); page.getEfficiencyData(page.report, 'installation_upland_landuse_id_3', 'installation_upland_landuse_3', 'installation_efficiency_id_3')">
-              </select>
-
-              <p class="help-text">{{ page.report.properties.installation_project_type_3 }} landuses</p>
-            </div>
-
-
-            <div class="form-element form-element-thirds">
-              <label for="installation_landuse_acreage_3" class="control-label">
-
-              </label>
-
-              <input data-ng-model="page.report.properties.installation_landuse_acreage_3"
-                     class="form-control" class="form-control" type="number"
-                     id="installation_landuse_acreage_3" name="installation_landuse_acreage_3"
-                     step="0.00001" />
-
-              <p class="help-text">acres</p>
-            </div>
-
-            <!-- Landuse 4 -->
-            <div class="form-element form-element-thirds">
-              <label for="planning_project_type" class="control-label">
-                Type of Non-Tidal Wetlands Project
-              </label>
-
-              <select class="form-control" data-ng-model="page.report.properties.installation_project_type_4" id="installation_project_type_4" name="installation_project_type_4">
-                <option value="urban">urban</option>
-                <option value="agriculture">agriculture</option>
-              </select>
-
-              <p class="help-text">&nbsp;</p>
-            </div>
-
-            <div class="form-element form-element-thirds">
-              <label for="installation_upland_landuse_4" class="control-label">
-                Upland Landuse
-              </label>
-
-              <select class="form-control" id="installation_upland_landuse_id_4" name="installation_upland_landuse_id_4"
-                      data-ng-model="page.report.properties.installation_upland_landuse_id_4"
-                      data-ng-options="value.id as value.properties.landuse_name for value in page.landuse.features | filter:properties.landuse_type=page.report.properties.installation_project_type_4 | orderBy:'properties.landuse_name'"
-                      data-ng-change="page.getLoadData(page.report, 'installation_upland_landuse_id_4', 'installation_loaddata_id_4'); page.getEfficiencyData(page.report, 'installation_upland_landuse_id_4', 'installation_upland_landuse_4', 'installation_efficiency_id_4')">
-              </select>
-
-              <p class="help-text">{{ page.report.properties.installation_project_type_4 }} landuses</p>
-            </div>
-
-
-            <div class="form-element form-element-thirds">
-              <label for="installation_landuse_acreage_4" class="control-label">
-
-              </label>
-
-              <input data-ng-model="page.report.properties.installation_landuse_acreage_4"
-                     class="form-control" class="form-control" type="number"
-                     id="installation_landuse_acreage_4" name="installation_landuse_acreage_4"
-                     step="0.00001" />
-
-              <p class="help-text">acres</p>
-            </div>
           </div>
         </div>
 
@@ -333,21 +283,35 @@
             <div class="form-element">
               <div class="checkbox">
                 <label class="control-label">
-                  <input data-ng-model="page.report.properties.installation_structural_checklist_1" type="checkbox" id="installation_structural_checklist_1" name="installation_structural_checklist_1" /> During construction, do built elements, such as rock layers, depth of excavation, use of filter cloth, etc., match design?
+                  <input data-ng-model="page.report.properties.installation_structural_1" type="checkbox" id="installation_structural_1" name="installation_structural_1" /> During construction, do built elements, such as sills, groins, and breakwaters, match design in extent, placement, and type of material? 	
                 </label>
               </div>
             </div>
             <div class="form-element">
               <div class="checkbox">
                 <label class="control-label">
-                  <input data-ng-model="page.report.properties.installation_structural_checklist_2" type="checkbox" id="installation_structural_checklist_2" name="installation_structural_checklist_2" /> Does topography match design?
+                  <input data-ng-model="page.report.properties.installation_structural_2" type="checkbox" id="installation_structural_2" name="installation_structural_2" /> Does site slope and depth profile match design?	
                 </label>
               </div>
             </div>
             <div class="form-element">
               <div class="checkbox">
                 <label class="control-label">
-                  <input data-ng-model="page.report.properties.installation_structural_checklist_3" type="checkbox" id="installation_structural_checklist_3" name="installation_structural_checklist_3" /> Do natural structural elements, such as large woody debris, meet design specifications?
+                  <input data-ng-model="page.report.properties.installation_structural_3" type="checkbox" id="installation_structural_3" name="installation_structural_3" /> Was the project graded and vegetated so that the bank is stable?	
+                </label>
+              </div>
+            </div>
+            <div class="form-element">
+              <div class="checkbox">
+                <label class="control-label">
+                  <input data-ng-model="page.report.properties.installation_structural_4" type="checkbox" id="installation_structural_4" name="installation_structural_4" /> Was excess sediment removed offsite so that the sediment does not enter nearshore waters?	
+                </label>
+              </div>
+            </div>
+            <div class="form-element">
+              <div class="checkbox">
+                <label class="control-label">
+                  <input data-ng-model="page.report.properties.installation_structural_5" type="checkbox" id="installation_structural_5" name="installation_structural_5" /> Do natural structural elements, such as live staking or coir logs, meet design specifications?	
                 </label>
               </div>
             </div>
@@ -363,14 +327,14 @@
             <div class="form-element">
               <div class="checkbox">
                 <label class="control-label">
-                  <input data-ng-model="page.report.properties.installation_nonstructural_checklist_1" type="checkbox" id="installation_nonstructural_checklist_1" name="installation_nonstructural_checklist_1" /> Were the specified number and types of vegetation planted?
+                  <input data-ng-model="page.report.properties.installation_nonstructural_1" type="checkbox" id="installation_nonstructural_1" name="installation_nonstructural_1" /> Were the specified number and types of vegetation planted?
                 </label>
               </div>
             </div>
             <div class="form-element">
               <div class="checkbox">
                 <label class="control-label">
-                  <input data-ng-model="page.report.properties.installation_nonstructural_checklist_2" type="checkbox" id="installation_nonstructural_checklist_2" name="installation_nonstructural_checklist_2" /> Were the specified extents of vegetated and non-vegetated areas achieved?
+                  <input data-ng-model="page.report.properties.installation_nonstructural_2" type="checkbox" id="installation_nonstructural_2" name="installation_nonstructural_2" /> Were the specified extents of vegetated and non-vegetated areas achieved?
                 </label>
               </div>
             </div>
@@ -378,6 +342,87 @@
           </div>
         </div>
 
+        <!-- -->
+
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning'">
+
+          <div class="form-label">
+           <label class="control-label">
+             Load Reductions
+           </label>
+          </div>
+          <div class="form-field">
+           <div class="form-element form-element form-element-half" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+             <label for="protocol_2_tn_reduction_rate" class="control-label">
+               Protocol 2 > Denitrification > Protocol 2 TN reduction rate
+             </label>
+
+             <input data-ng-model="page.report.properties.protocol_2_tn_reduction_rate"
+                    class="form-control" class="form-control" type="number"
+                    id="protocol_2_tn_reduction_rate" name="protocol_2_tn_reduction_rate"
+                    step="0.00001" />
+
+             <p class="help-text">&nbsp;</p>
+           </div>
+           <div class="form-element form-element form-element-half"></div>
+
+           <div class="form-element form-element form-element-half" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+             <label for="protocol_3_tp_reduction_rate" class="control-label">
+               Protocol 3 > Sedimentation > Protocol 3 TP reduction rate
+             </label>
+
+             <input data-ng-model="page.report.properties.protocol_3_tp_reduction_rate"
+                    class="form-control" class="form-control" type="number"
+                    id="protocol_3_tp_reduction_rate" name="protocol_3_tp_reduction_rate"
+                    step="0.00001" />
+
+             <p class="help-text">&nbsp;</p>
+           </div>
+
+           <div class="form-element form-element form-element-half" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+             <label for="protocol_3_tss_reduction_rate" class="control-label">
+               Protocol 3 > Sedimentation > Protocol 3 TSS reduction rate
+             </label>
+
+             <input data-ng-model="page.report.properties.protocol_3_tss_reduction_rate"
+                    class="form-control" class="form-control" type="number"
+                    id="protocol_3_tss_reduction_rate" name="protocol_3_tss_reduction_rate"
+                    step="0.00001" />
+
+             <p class="help-text">&nbsp;</p>
+           </div>
+          
+           <div class="form-element form-element form-element-half" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+             <label for="protocol_4_tn_reduction_rate" class="control-label">
+               Protocol 4 > Marsh Redfield Ratio > Protocol 4 TN reduction rate
+             </label>
+
+             <input data-ng-model="page.report.properties.protocol_4_tn_reduction_rate"
+                    class="form-control" class="form-control" type="number"
+                    id="protocol_4_tn_reduction_rate" name="protocol_4_tn_reduction_rate"
+                    step="0.00001" />
+
+             <p class="help-text">&nbsp;</p>
+           </div>
+          
+           <div class="form-element form-element form-element-half" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+             <label for="protocol_4_tp_reduction_rate" class="control-label">
+               Protocol 4 > Marsh Redfield Ratio > Protocol 4 TP reduction rate
+             </label>
+
+             <input data-ng-model="page.report.properties.protocol_4_tp_reduction_rate"
+                    class="form-control" class="form-control" type="number"
+                    id="protocol_4_tp_reduction_rate" name="protocol_4_tp_reduction_rate"
+                    step="0.00001" />
+
+             <p class="help-text">&nbsp;</p>
+           </div>
+          </div>
+  
+        </div>
+
+        <!-- MONITORING -->
 
         <div class="form-row"
              data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
@@ -390,26 +435,65 @@
           <div class="form-field">
 
             <div class="form-element form-element-quarters">
-              <label for="monitoring_hydrology_wetland_surface_area" class="control-label">
-                Wetland Surface Area
+              <label for="monitoring_hydrology_inundation_coverage_at_low_tide" class="control-label">
+                Inundation coverage at low tide
               </label>
 
-              <input data-ng-model="page.report.properties.monitoring_hydrology_wetland_surface_area"
+              <input data-ng-model="page.report.properties.monitoring_hydrology_inundation_coverage_at_low_tide"
                      class="form-control" class="form-control" type="number"
-                     id="monitoring_hydrology_wetland_surface_area" name="monitoring_hydrology_wetland_surface_area"
+                     id="monitoring_hydrology_inundation_coverage_at_low_tide" name="monitoring_hydrology_inundation_coverage_at_low_tide"
                      step="0.00001" />
 
-              <p class="help-text">acres</p>
+              <p class="help-text">%</p>
             </div>
 
             <div class="form-element form-element-quarters">
-              <label for="monitoring_hydrology_water_depth" class="control-label">
-                Water Depth (monthly or seasonal)
+              <label for="monitoring_hydrology_average_water_depth_at_low_tid" class="control-label">
+                Average water depth at low tide
               </label>
 
-              <input data-ng-model="page.report.properties.monitoring_hydrology_water_depth"
+              <input data-ng-model="page.report.properties.monitoring_hydrology_average_water_depth_at_low_tid"
                      class="form-control" class="form-control" type="number"
-                     id="monitoring_hydrology_water_depth" name="monitoring_hydrology_water_depth"
+                     id="monitoring_hydrology_average_water_depth_at_low_tid" name="monitoring_hydrology_average_water_depth_at_low_tid"
+                     step="0.00001" />
+
+              <p class="help-text">feet</p>
+            </div>
+
+            <div class="form-element form-element-quarters">
+              <label for="monitoring_hydrology_inundation_cover_at_high_tide" class="control-label">
+                Inundation coverage at high tide
+              </label>
+
+              <input data-ng-model="page.report.properties.monitoring_hydrology_inundation_cover_at_high_tide"
+                     class="form-control" class="form-control" type="number"
+                     id="monitoring_hydrology_inundation_cover_at_high_tide" name="monitoring_hydrology_inundation_cover_at_high_tide"
+                     step="0.00001" />
+
+              <p class="help-text">%</p>
+            </div>
+
+            <div class="form-element form-element-quarters">
+              <label for="monitoring_hydrology_average_water_depth_at_high_tide" class="control-label">
+                Average water depth at high tide
+              </label>
+
+              <input data-ng-model="page.report.properties.monitoring_hydrology_average_water_depth_at_high_tide"
+                     class="form-control" class="form-control" type="number"
+                     id="monitoring_hydrology_average_water_depth_at_high_tide" name="monitoring_hydrology_average_water_depth_at_high_tide"
+                     step="0.00001" />
+
+              <p class="help-text">feet</p>
+            </div>
+
+            <div class="form-element form-element-quarters">
+              <label for="monitoring_hydrology_total_width_of_channels_connecting_wetland" class="control-label">
+                Total width of channels connecting wetland to open water at low tide
+              </label>
+
+              <input data-ng-model="page.report.properties.monitoring_hydrology_total_width_of_channels_connecting_wetland"
+                     class="form-control" class="form-control" type="number"
+                     id="monitoring_hydrology_total_width_of_channels_connecting_wetland" name="monitoring_hydrology_total_width_of_channels_connecting_wetland"
                      step="0.00001" />
 
               <p class="help-text">feet</p>
@@ -442,57 +526,70 @@
             </div>
 
             <div class="form-element form-element-quarters">
-              <label for="monitoring_hydrology_days_per_month_continuous_surface_water" class="control-label">
-                Days/Month of Continuous Surface Water
+              <label for="monitoring_hydrology_slope" class="control-label">
+                Slope (depth profile) perpendicular to shoreline
               </label>
 
-              <input data-ng-model="page.report.properties.monitoring_hydrology_days_per_month_continuous_surface_water"
+              <input data-ng-model="page.report.properties.monitoring_hydrology_slope"
                      class="form-control" class="form-control" type="number"
-                     id="monitoring_hydrology_days_per_month_continuous_surface_water" name="monitoring_hydrology_days_per_month_continuous_surface_water"
-                     step="0.00001" />
-
-              <p class="help-text">number</p>
-            </div>
-
-            <div class="form-element form-element-quarters">
-              <label for="monitoring_hydrology_monthly_percipitation" class="control-label">
-                Monthly Precipitation
-              </label>
-
-              <input data-ng-model="page.report.properties.monitoring_hydrology_monthly_percipitation"
-                     class="form-control" class="form-control" type="number"
-                     id="monitoring_hydrology_monthly_percipitation" name="monitoring_hydrology_monthly_percipitation"
-                     step="0.00001" />
-
-              <p class="help-text">inches</p>
-            </div>
-
-            <div class="form-element form-element-quarters">
-              <label for="monitoring_hydrology_saturation_in_upper_30cm_soil" class="control-label">
-                Saturation in Upper 30cm of Soil
-              </label>
-
-              <input data-ng-model="page.report.properties.monitoring_hydrology_saturation_in_upper_30cm_soil"
-                     class="form-control" class="form-control" type="number"
-                     id="monitoring_hydrology_saturation_in_upper_30cm_soil" name="monitoring_hydrology_saturation_in_upper_30cm_soil"
+                     id="monitoring_hydrology_slope" name="monitoring_hydrology_slope"
                      step="0.00001" />
 
               <p class="help-text">%</p>
             </div>
 
             <div class="form-element form-element-quarters">
-              <label for="monitoring_hydrology_media_depth_to_water_table" class="control-label">
-                Median Depth to Water Table
+              <label for="monitoring_hydrology_topographic_complexity" class="control-label">
+                Topographic complexity
               </label>
 
-              <input data-ng-model="page.report.properties.monitoring_hydrology_media_depth_to_water_table"
+              <input data-ng-model="page.report.properties.monitoring_hydrology_topographic_complexity"
                      class="form-control" class="form-control" type="number"
-                     id="monitoring_hydrology_media_depth_to_water_table" name="monitoring_hydrology_media_depth_to_water_table"
+                     id="monitoring_hydrology_topographic_complexity" name="monitoring_hydrology_topographic_complexity"
                      step="0.00001" />
 
-              <p class="help-text">feet</p>
+              <p class="help-text">&nbsp;</p>
+
             </div>
 
+            <div class="form-element form-element-quarters">
+              <label for="monitoring_hydrology_area_of_mudflats" class="control-label">
+                Area of Mudflats
+              </label>
+
+              <input data-ng-model="page.report.properties.monitoring_hydrology_area_of_mudflats"
+                     class="form-control" class="form-control" type="number"
+                     id="monitoring_hydrology_area_of_mudflats" name="monitoring_hydrology_area_of_mudflats"
+                     step="0.00001" />
+
+              <p class="help-text">acres</p>
+            </div>
+
+            <div class="form-element form-element-quarters">
+              <label for="monitoring_hydrology_area_of_beaches" class="control-label">
+                Area of Beaches
+              </label>
+
+              <input data-ng-model="page.report.properties.monitoring_hydrology_area_of_beaches"
+                     class="form-control" class="form-control" type="number"
+                     id="monitoring_hydrology_area_of_beaches" name="monitoring_hydrology_area_of_beaches"
+                     step="0.00001" />
+
+              <p class="help-text">acres</p>
+            </div>
+
+            <div class="form-element form-element-quarters">
+              <label for="monitoring_hydrology_area_of_vegetated_marshes" class="control-label">
+                Area of Vegetated Marshes
+              </label>
+
+              <input data-ng-model="page.report.properties.monitoring_hydrology_area_of_vegetated_marshes"
+                     class="form-control" class="form-control" type="number"
+                     id="monitoring_hydrology_area_of_vegetated_marshes" name="monitoring_hydrology_area_of_vegetated_marshes"
+                     step="0.00001" />
+
+              <p class="help-text">acres</p>
+            </div>
           </div>
         </div>
 
@@ -507,26 +604,52 @@
           <div class="form-field">
 
             <div class="form-element form-element-quarters">
-              <label for="monitoring_biota_native_plant_cover" class="control-label">
-                Native Plant Cover
+              <label for="monitoring_biota_plant_stem_density" class="control-label">
+                Plant stem density
               </label>
 
-              <input data-ng-model="page.report.properties.monitoring_biota_native_plant_cover"
+              <input data-ng-model="page.report.properties.monitoring_biota_plant_stem_density"
                      class="form-control" class="form-control" type="number"
-                     id="monitoring_biota_native_plant_cover" name="monitoring_biota_native_plant_cover"
+                     id="monitoring_biota_plant_stem_density" name="monitoring_biota_plant_stem_density"
                      step="0.00001" />
 
-              <p class="help-text">%</p>
+              <p class="help-text">no/sqft</p>
             </div>
 
             <div class="form-element form-element-quarters">
-              <label for="monitoring_biota_non_native_plant_cover" class="control-label">
+              <label for="monitoring_biota_vegetated_marsh_width" class="control-label">
+                Vegetated Marsh Width
+              </label>
+
+              <input data-ng-model="page.report.properties.monitoring_biota_vegetated_marsh_width"
+                     class="form-control" class="form-control" type="number"
+                     id="monitoring_biota_vegetated_marsh_width" name="monitoring_biota_vegetated_marsh_width"
+                     step="0.00001" />
+
+              <p class="help-text">feet</p>
+            </div>
+
+            <div class="form-element form-element-quarters">
+              <label for="monitoring_biota_relative_structural_complexity_score" class="control-label">
+                Relative Structural Complexity Score
+              </label>
+
+              <input data-ng-model="page.report.properties.monitoring_biota_relative_structural_complexity_score"
+                     class="form-control" class="form-control" type="number"
+                     id="monitoring_biota_relative_structural_complexity_score" name="monitoring_biota_relative_structural_complexity_score"
+                     step="0.00001" />
+
+              <p class="help-text">&nbsp;</p>
+            </div>
+
+            <div class="form-element form-element-quarters">
+              <label for="monitoring_biota_nonnative_plant_cover" class="control-label">
                 Non-native Plant Cover
               </label>
 
-              <input data-ng-model="page.report.properties.monitoring_biota_non_native_plant_cover"
+              <input data-ng-model="page.report.properties.monitoring_biota_nonnative_plant_cover"
                      class="form-control" class="form-control" type="number"
-                     id="monitoring_biota_non_native_plant_cover" name="monitoring_biota_non_native_plant_cover"
+                     id="monitoring_biota_nonnative_plant_cover" name="monitoring_biota_nonnative_plant_cover"
                      step="0.00001" />
 
               <p class="help-text">%</p>
@@ -572,13 +695,13 @@
             </div>
 
             <div class="form-element form-element-quarters">
-              <label for="monitoring_biota_no_bird_nests_breeding_pairs_offspring" class="control-label">
+              <label for="monitoring_biota_no_birds_nested_breeding_offspring" class="control-label">
                 No. of Bird Nests, Breeding Pairs, or Offspring
               </label>
 
-              <input data-ng-model="page.report.properties.monitoring_biota_no_bird_nests_breeding_pairs_offspring"
+              <input data-ng-model="page.report.properties.monitoring_biota_no_birds_nested_breeding_offspring"
                      class="form-control" class="form-control" type="number"
-                     id="monitoring_biota_no_bird_nests_breeding_pairs_offspring" name="monitoring_biota_no_bird_nests_breeding_pairs_offspring"
+                     id="monitoring_biota_no_birds_nested_breeding_offspring" name="monitoring_biota_no_birds_nested_breeding_offspring"
                      step="0.00001" />
 
               <p class="help-text">number</p>
@@ -636,19 +759,6 @@
               <p class="help-text">number</p>
             </div>
 
-            <div class="form-element form-element-quarters">
-              <label for="monitoring_biota_diatom_diversity_index" class="control-label">
-                Diatom Diversity Index
-              </label>
-
-              <input data-ng-model="page.report.properties.monitoring_biota_diatom_diversity_index"
-                     class="form-control" class="form-control" type="number"
-                     id="monitoring_biota_diatom_diversity_index" name="monitoring_biota_diatom_diversity_index"
-                     step="0.00001" />
-
-              <p class="help-text">number</p>
-            </div>
-
           </div>
         </div>
 
@@ -663,7 +773,7 @@
           <div class="form-field">
 
             <div class="form-element form-element-quarters">
-              <label for="monitoring_hydrology_wetland_surface_area" class="control-label">
+              <label for="monitoring_physicochemical_dissolved_oxygen" class="control-label">
                 Dissolved Oxygen
               </label>
 
@@ -673,6 +783,32 @@
                      step="0.00001" />
 
               <p class="help-text">mg/L</p>
+            </div>
+
+            <div class="form-element form-element-quarters">
+              <label for="monitoring_physicochemical_surface_water_salinity" class="control-label">
+                Surface Water Salinity
+              </label>
+
+              <input data-ng-model="page.report.properties.monitoring_physicochemical_surface_water_salinity"
+                     class="form-control" class="form-control" type="number"
+                     id="monitoring_physicochemical_surface_water_salinity" name="monitoring_physicochemical_surface_water_salinity"
+                     step="0.00001" />
+
+              <p class="help-text">PPT</p>
+            </div>
+
+            <div class="form-element form-element-quarters">
+              <label for="monitoring_physicochemical_surface_water_ph" class="control-label">
+                Surface Water pH
+              </label>
+
+              <input data-ng-model="page.report.properties.monitoring_physicochemical_surface_water_ph"
+                     class="form-control" class="form-control" type="number"
+                     id="monitoring_physicochemical_surface_water_ph" name="monitoring_physicochemical_surface_water_ph"
+                     step="0.00001" />
+
+              <p class="help-text">&nbsp;</p>
             </div>
 
             <div class="form-element form-element-quarters">
@@ -687,7 +823,7 @@
 
               <p class="help-text">NTU</p>
             </div>
-
+            
             <div class="form-element form-element-quarters">
               <label for="monitoring_physicochemical_temperature" class="control-label">
                 Temperature
@@ -698,7 +834,7 @@
                      id="monitoring_physicochemical_temperature" name="monitoring_physicochemical_temperature"
                      step="0.00001" />
 
-              <p class="help-text">mg/L</p>
+              <p class="help-text">degF</p>
             </div>
 
             <div class="form-element form-element-quarters">
@@ -767,55 +903,55 @@
             </div>
 
             <div class="form-element form-element-quarters">
-              <label for="monitoring_physicochemical_porewater_conductivity" class="control-label">
-                Porewater Conductivity
+              <label for="monitoring_physicochemical_porewater_salinity" class="control-label">
+                Porewater Salinity
               </label>
 
-              <input data-ng-model="page.report.properties.monitoring_physicochemical_porewater_conductivity"
+              <input data-ng-model="page.report.properties.monitoring_physicochemical_porewater_salinity"
                      class="form-control" class="form-control" type="number"
-                     id="monitoring_physicochemical_porewater_conductivity" name="monitoring_physicochemical_porewater_conductivity"
+                     id="monitoring_physicochemical_porewater_salinity" name="monitoring_physicochemical_porewater_salinity"
                      step="0.00001" />
 
-              <p class="help-text">μS/cm</p>
+              <p class="help-text">PPT</p>
             </div>
 
             <div class="form-element form-element-quarters">
-              <label for="monitoring_physicochemical_porewater_n" class="control-label">
-                Porewater N
+              <label for="monitoring_physicochemical_porewater_ph" class="control-label">
+                Porewater pH
               </label>
 
-              <input data-ng-model="page.report.properties.monitoring_physicochemical_porewater_n"
+              <input data-ng-model="page.report.properties.monitoring_physicochemical_porewater_ph"
                      class="form-control" class="form-control" type="number"
-                     id="monitoring_physicochemical_porewater_n" name="monitoring_physicochemical_porewater_n"
+                     id="monitoring_physicochemical_porewater_ph" name="monitoring_physicochemical_porewater_ph"
                      step="0.00001" />
 
-              <p class="help-text">mg/L</p>
+              <p class="help-text">&nbsp;</p>
             </div>
 
             <div class="form-element form-element-quarters">
-              <label for="monitoring_physicochemical_porewater_p" class="control-label">
-                Porewater P
+              <label for="monitoring_physicochemical_n_in_accreted_sediment" class="control-label">
+                N in Accreted Sediment
               </label>
 
-              <input data-ng-model="page.report.properties.monitoring_physicochemical_porewater_p"
+              <input data-ng-model="page.report.properties.monitoring_physicochemical_n_in_accreted_sediment"
                      class="form-control" class="form-control" type="number"
-                     id="monitoring_physicochemical_porewater_p" name="monitoring_physicochemical_porewater_p"
+                     id="monitoring_physicochemical_n_in_accreted_sediment" name="monitoring_physicochemical_n_in_accreted_sediment"
                      step="0.00001" />
 
-              <p class="help-text">mg/L</p>
+              <p class="help-text">mg/kg sediment</p>
             </div>
 
             <div class="form-element form-element-quarters">
-              <label for="monitoring_physicochemical_porewater_do" class="control-label">
-                Porewater DO
+              <label for="monitoring_physicochemical_p_in_accreted_sediment" class="control-label">
+                P in Accreted Sediment
               </label>
 
-              <input data-ng-model="page.report.properties.monitoring_physicochemical_porewater_do"
+              <input data-ng-model="page.report.properties.monitoring_physicochemical_p_in_accreted_sediment"
                      class="form-control" class="form-control" type="number"
-                     id="monitoring_physicochemical_porewater_do" name="monitoring_physicochemical_porewater_do"
+                     id="monitoring_physicochemical_p_in_accreted_sediment" name="monitoring_physicochemical_p_in_accreted_sediment"
                      step="0.00001" />
 
-              <p class="help-text">mg/L</p>
+              <p class="help-text">mg/kg sediment</p>
             </div>
 
             <div class="form-element form-element-quarters">
@@ -845,13 +981,13 @@
             </div>
 
             <div class="form-element form-element-quarters">
-              <label for="monitoring_physicochemical_denitrification_potential" class="control-label">
+              <label for="monitoring_physicochemical_denitrifictation_potential" class="control-label">
                 Denitrification Potential
               </label>
 
-              <input data-ng-model="page.report.properties.monitoring_physicochemical_denitrification_potential"
+              <input data-ng-model="page.report.properties.monitoring_physicochemical_denitrifictation_potential"
                      class="form-control" class="form-control" type="number"
-                     id="monitoring_physicochemical_denitrification_potential" name="monitoring_physicochemical_denitrification_potential"
+                     id="monitoring_physicochemical_denitrifictation_potential" name="monitoring_physicochemical_denitrifictation_potential"
                      step="0.00001" />
 
                      <p class="help-text">gm/m<sup>3</sup>/day</p>
@@ -891,21 +1027,28 @@
             <div class="form-element">
               <div class="checkbox">
                 <label class="control-label">
-                  <input data-ng-model="page.report.properties.monitoring_checklist_hydrology_1" type="checkbox" id="monitoring_checklist_hydrology_1" name="monitoring_checklist_hydrology_1" /> Has the designed hydrologic regime established itself? If not, revisit design to improve inflow/outflow.
+                  <input data-ng-model="page.report.properties.monitoring_hydrology_1" type="checkbox" id="monitoring_hydrology_1" name="monitoring_hydrology_1" /> Has the designed hydrologic regime established itself? If not, revisit design to improve inflow/outflow.
                 </label>
               </div>
             </div>
             <div class="form-element">
               <div class="checkbox">
                 <label class="control-label">
-                  <input data-ng-model="page.report.properties.monitoring_checklist_hydrology_2" type="checkbox" id="monitoring_checklist_hydrology_2" name="monitoring_checklist_hydrology_2" /> Do built features and natural structural elements continue to meet design specifications?
+                  <input data-ng-model="page.report.properties.monitoring_hydrology_2" type="checkbox" id="monitoring_hydrology_2" name="monitoring_hydrology_2" /> Do built features and natural structural elements continue to meet design specifications?	
                 </label>
               </div>
             </div>
             <div class="form-element">
               <div class="checkbox">
                 <label class="control-label">
-                  <input data-ng-model="page.report.properties.monitoring_checklist_hydrology_3" type="checkbox" id="monitoring_checklist_hydrology_3" name="monitoring_checklist_hydrology_3" /> Has LWD maintained its planned density? If not, see Sellner et al., 2012, p.104.
+                  <input data-ng-model="page.report.properties.monitoring_hydrology_3" type="checkbox" id="monitoring_hydrology_3" name="monitoring_hydrology_3" /> Is the wetland elevation stable or increasing or positive sediment accretion noted? If not, several options should be considered including adding/redesigning/re-locating structures (groins, sand fences) to promote sediment deposition or increasing vegetation in the marsh.	
+                </label>
+              </div>
+            </div>
+            <div class="form-element">
+              <div class="checkbox">
+                <label class="control-label">
+                  <input data-ng-model="page.report.properties.monitoring_hydrology_4" type="checkbox" id="monitoring_hydrology_4" name="monitoring_hydrology_4" /> Are the various interim wetlands metric values continuing to approach those at reference sites?	
                 </label>
               </div>
             </div>
@@ -921,28 +1064,28 @@
             <div class="form-element">
               <div class="checkbox">
                 <label class="control-label">
-                  <input data-ng-model="page.report.properties.monitoring_checklist_biota_1" type="checkbox" id="monitoring_checklist_biota_1" name="monitoring_checklist_biota_1" /> Has planned vegetation established itself, as expected?
+                  <input data-ng-model="page.report.properties.monitoring_biota_1" type="checkbox" id="monitoring_biota_1" name="monitoring_biota_1" /> Has planned vegetation established itself, as expected? If growth of initial plant species is sub-optimal due to excessive wave energy, consider other taxa with more appropriate growth requirements.	
                 </label>
               </div>
             </div>
             <div class="form-element">
               <div class="checkbox">
                 <label class="control-label">
-                  <input data-ng-model="page.report.properties.monitoring_checklist_biota_2" type="checkbox" id="monitoring_checklist_biota_2" name="monitoring_checklist_biota_2" /> Have invasive species become prevelant? If so remove periodically.
+                  <input data-ng-model="page.report.properties.monitoring_biota_2" type="checkbox" id="monitoring_biota_2" name="monitoring_biota_2" /> Have invasive species become prevelant? If so consider herbicide use or periodic manual removal.	
                 </label>
               </div>
             </div>
             <div class="form-element">
               <div class="checkbox">
                 <label class="control-label">
-                  <input data-ng-model="page.report.properties.monitoring_checklist_biota_3" type="checkbox" id="monitoring_checklist_biota_3" name="monitoring_checklist_biota_3" /> Have muskrats, nutria, or other mammals altered planned development of the wetland? If so, develop a mangement strategy to control them.
+                  <input data-ng-model="page.report.properties.monitoring_biota_3" type="checkbox" id="monitoring_biota_3" name="monitoring_biota_3" /> Have muskrats, nutria, or other mammals altered planned development of the wetland? If so, consider fencing, trapping, or hunting to manage populations.	
                 </label>
               </div>
             </div>
             <div class="form-element">
               <div class="checkbox">
                 <label class="control-label">
-                  <input data-ng-model="page.report.properties.monitoring_checklist_biota_4" type="checkbox" id="monitoring_checklist_biota_4" name="monitoring_checklist_biota_4" /> Have targeted rare or threatened species increased, as planned? If not, revise management strategy.
+                  <input data-ng-model="page.report.properties.monitoring_biota_4" type="checkbox" id="monitoring_biota_4" name="monitoring_biota_4" /> Is fauna ‘success’ as high as anticipated? If not, evaluate whether fish use limitations might indicate low connectivity, and whether low numbers of young birds or mammals might suggest high predation.	
                 </label>
               </div>
             </div>
@@ -958,7 +1101,21 @@
             <div class="form-element">
               <div class="checkbox">
                 <label class="control-label">
-                  <input data-ng-model="page.report.properties.monitoring_checklist_physicochemical_1" type="checkbox" id="monitoring_checklist_physicochemical_1" name="monitoring_checklist_physicochemical_1" /> Perform any additional management, maintenance, or repair indicated by the interim metrics.
+                  <input data-ng-model="page.report.properties.monitoring_physicochemical_1" type="checkbox" id="monitoring_physicochemical_1" name="monitoring_physicochemical_1" /> Do pore or surface salinities or grain size and %OM match reference wetlands values? If not, examine connectivity to surrounding waters.	 
+                </label>
+              </div>
+            </div>
+            <div class="form-element">
+              <div class="checkbox">
+                <label class="control-label">
+                  <input data-ng-model="page.report.properties.monitoring_physicochemical_2" type="checkbox" id="monitoring_physicochemical_2" name="monitoring_physicochemical_2" /> Do pH values match reference wetlands values? If not, adjust pH with lime.	 
+                </label>
+              </div>
+            </div>
+            <div class="form-element">
+              <div class="checkbox">
+                <label class="control-label">
+                  <input data-ng-model="page.report.properties.monitoring_physicochemical_3" type="checkbox" id="monitoring_physicochemical_3" name="monitoring_physicochemical_3" /> Do denitrification rates and plant growth match reference wetlands values? If not, increase OM.	
                 </label>
               </div>
             </div>

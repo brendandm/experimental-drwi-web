@@ -60,7 +60,7 @@
                 id: $route.current.params.practiceId
               });
             },
-            report: function(PracticeWetlandsNonTidal, $route) {
+            report: function(PracticeShorelineManagement, $route) {
               return PracticeShorelineManagement.get({
                 id: $route.current.params.reportId
               });

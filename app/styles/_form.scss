@@ -490,6 +490,11 @@ select.form-control {
 //
 //
 //
+.form-element .checkbox input[type="checkbox"],
+.form-element .checkbox .control-label input {
+  float: left;
+  margin-right: 1em;
+}
 .form-imaginaryCheckbox {
     cursor: pointer;
     display: inline-block;
