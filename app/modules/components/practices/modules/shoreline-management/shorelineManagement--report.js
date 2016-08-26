@@ -118,15 +118,17 @@
 
         self.readings = successResponse;
 
-        console.log('readings.$promise.then', successResponse)
-
         self.total = {
           planning: self.calculate.getTotalReadingsByCategory('Planning', self.readings.features),
           installation: self.calculate.getTotalReadingsByCategory('Installation', self.readings.features),
           monitoring: self.calculate.getTotalReadingsByCategory('Monitoring', self.readings.features)
         };
 
-        self.results = self.calculateShorelineManagement.loads(self.readings.features, self.segment)
+        console.log('self.total', self.total)
+
+        self.results = self.calculateShorelineManagement.loads(self.readings.features)
+
+        console.log('self.results', self.results)
 
       }, function(errorResponse) {
 
