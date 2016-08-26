@@ -118,6 +118,8 @@
 
         self.readings = successResponse;
 
+        console.log('readings.$promise.then', successResponse)
+
         self.total = {
           planning: self.calculate.getTotalReadingsByCategory('Planning', self.readings.features),
           installation: self.calculate.getTotalReadingsByCategory('Installation', self.readings.features),

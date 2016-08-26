@@ -33,7 +33,7 @@
               });
             },
             readings: function(Practice, $route) {
-              return Practice.wetlandsNontidal({
+              return Practice.shorelineManagement({
                 id: $route.current.params.practiceId
               });
             }
