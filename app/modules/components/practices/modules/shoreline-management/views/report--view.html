@@ -96,12 +96,12 @@
                   </td>
                   <td>
                     <strong>
-                      -
+                    {{ page.calculateShorelineManagement.quantityInstalled(page.readings.features, 'installation_length_of_living_shoreline_restored') | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      -
+                    {{ page.calculateShorelineManagement.quantityInstalled(page.readings.features, 'installation_length_of_living_shoreline_restored', '%') | number:2 }}%
                     </strong>
                   </td>
                 </tr>
@@ -258,12 +258,12 @@
                   </td>
                   <td>
                     <strong>
-                      -
+                    {{ page.calculateShorelineManagement.quantityInstalled(page.readings.features, 'installation_area_of_planted_or_replanted_tidal_wetlands') | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      -
+                    {{ page.calculateShorelineManagement.quantityInstalled(page.readings.features, 'installation_area_of_planted_or_replanted_tidal_wetlands', '%') | number:2 }}%
                     </strong>
                   </td>
                 </tr>
@@ -289,6 +289,92 @@
                       -
                     </strong>
                   </td>
+                <tr/>
+
+                <!-- Section Heading -->
+                <tr class="no-rule">
+                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 5 }}">
+                    <h2><strong>"As Built"</strong> Plan Checklist</h2>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td class="align-left wrap" colspan="{{ page.total.planning + page.total.installation + 4 }}">
+                    <em>Structural</em>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th class="align-left wrap" width="50%" colspan="2">During construction, do built elements, such as sills, groins, and breakwaters, match design in extent, placement, and type of material? 	</th>
+                  <td>&nbsp;</td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    <div data-ng-if="report.properties.installation_structural_1" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <th class="align-left wrap" width="50%" colspan="2">Does site slope and depth profile match design?	</th>
+                  <td>&nbsp;</td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    <div data-ng-if="report.properties.installation_structural_2" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <th class="align-left wrap" width="50%" colspan="2">Was the project graded and vegetated so that the bank is stable?	</th>
+                  <td>&nbsp;</td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    <div data-ng-if="report.properties.installation_structural_3" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <th class="align-left wrap" width="50%" colspan="2">Was excess sediment removed offsite so that the sediment does not enter nearshore waters?	</th>
+                  <td>&nbsp;</td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    <div data-ng-if="report.properties.installation_structural_4" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <th class="align-left wrap" width="50%" colspan="2">Do natural structural elements, such as live staking or coir logs, meet design specifications?		</th>
+                  <td>&nbsp;</td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    <div data-ng-if="report.properties.installation_structural_5" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+
+                <tr>
+                  <td class="align-left wrap" colspan="{{ page.total.planning + page.total.installation + 4 }}">
+                    <em>Non-Structural</em>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th class="align-left wrap" width="50%" colspan="2">Were the specified number and types of vegetation planted?	</th>
+                  <td>&nbsp;</td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    <div data-ng-if="report.properties.installation_nonstructural_1" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <th class="align-left wrap" width="50%" colspan="2">Were the specified extents of vegetated and non-vegetated areas achieved?	</th>
+                  <td>&nbsp;</td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    <div data-ng-if="report.properties.installation_nonstructural_2" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                  <td>-</td>
+                  <td>-</td>
+                </tr>
+
                 </tr>
 
                 <!-- Section Heading -->

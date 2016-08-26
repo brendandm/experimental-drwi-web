@@ -139,9 +139,9 @@
               protocol_1_tss: self.loadProtocol1TSS(planningData),
               protocol_2_tn: self.loadProtocol2TN(planningData),
               protocol_3_tp: self.loadProtocol3TP(planningData),
-              protocol_3_tss: self.loadProtocol3TSS(planningData, 'sediment'),
-              protocol_4_tn: self.loadProtocol4TN(planningData, 'nitrogen'),
-              protocol_4_tp: self.loadProtocol4TP(planningData, 'phosphorus')
+              protocol_3_tss: self.loadProtocol3TSS(planningData),
+              protocol_4_tn: self.loadProtocol4TN(planningData),
+              protocol_4_tp: self.loadProtocol4TP(planningData)
             }
           };
 
@@ -149,25 +149,46 @@
         installed: function(values, parameter, format) {
 
           var self = this,
-              plannedTotal = 0,
-              installedTotal = 0;
+              planned_protocol_1_tss_total = 0,
+              planned_protocol_2_tn_total = 0,
+              planned_protocol_3_tp_total = 0,
+              planned_protocol_3_tss_total = 0,
+              planned_protocol_4_tn_total = 0,
+              planned_protocol_4_tp_total = 0,
 
-          // for (var i = 0; i < values.length; i++) {
-          //   if (values[i].properties.measurement_period === 'Installation') {
-          //     installedTotal += self.plannedLoad(values[i], parameter);
-          //   }
-          //   else if (values[i].properties.measurement_period === 'Planning') {
-          //     plannedTotal += self.plannedLoad(values[i], parameter);
-          //   }
-          // }
+              installed_protocol_1_tss_total = 0,
+              installed_protocol_2_tn_total = 0,
+              installed_protocol_3_tp_total = 0,
+              installed_protocol_3_tss_total = 0,
+              installed_protocol_4_tn_total = 0,
+              installed_protocol_4_tp_total = 0;
 
-          // if (plannedTotal >= 1) {
-          //   if (format === '%') {
-          //     return ((installedTotal/plannedTotal)*100);
-          //   } else {
-          //     return installedTotal;
-          //   }
-          // }
+          for (var i = 0; i < values.length; i++) {
+            if (values[i].properties.measurement_period === 'Installation') {
+              installed_protocol_1_tss_total += self.loadProtocol1TSS(values[i]);
+              installed_protocol_2_tn_total += self.loadProtocol2TN(values[i]);
+              installed_protocol_3_tp_total += self.loadProtocol3TP(values[i]);
+              installed_protocol_3_tss_total += self.loadProtocol3TSS(values[i]);
+              installed_protocol_4_tn_total += self.loadProtocol4TN(values[i]);
+              installed_protocol_4_tp_total += self.loadProtocol4TP(values[i]);
+            }
+            else if (values[i].properties.measurement_period === 'Planning') {
+              planned_protocol_1_tss_total += self.loadProtocol1TSS(values[i]);
+              planned_protocol_2_tn_total += self.loadProtocol2TN(values[i]);
+              planned_protocol_3_tp_total += self.loadProtocol3TP(values[i]);
+              planned_protocol_3_tss_total += self.loadProtocol3TSS(values[i]);
+              planned_protocol_4_tn_total += self.loadProtocol4TN(values[i]);
+              planned_protocol_4_tp_total += self.loadProtocol4TP(values[i]);
+            }
+          }
+
+          if (planned_protocol_1_tss_total >= 1) {
+            if (format === '%') {
+              return ((installed_protocol_1_tss_total/planned_protocol_1_tss_total)*100);
+            } else {
+              return installed_protocol_1_tss_total;
+            }
+          }
 
           return 0;
         },
