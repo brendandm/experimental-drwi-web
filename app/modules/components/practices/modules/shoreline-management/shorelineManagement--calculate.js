@@ -11,16 +11,16 @@
     .service('CalculateShorelineManagement', function(Calculate, LoadData, $q) {
       return {
         efficiency: {
-          urban: {
-            nitrogen: 0.20,
-            phosphorus: 0.45,
-            sediment: 0.60
-          }
+          protocol_2_tn_reduction_rate: 0,
+          protocol_3_tp_reduction_rate: 0,
+          protocol_3_tss_reduction_rate: 0,
+          protocol_4_tn_reduction_rate: 0,
+          protocol_4_tp_reduction_rate: 0,
         },
         reduceLoadValues: function(previousValue, currentValue) {
           return previousValue + currentValue;
         },
-        preInstallationLoadProtocol1TSS: function(data) {
+        loadProtocol1TSS: function(data) {
 
           if (!data.hasOwnProperty('properties')) {
             return [];
@@ -39,129 +39,95 @@
 
           return returnValue
         },
-        preInstallationLoadProtocol2TN: function(data) {
+        loadProtocol2TN: function(data) {
 
           if (!data.hasOwnProperty('properties')) {
             return [];
           }
           
+          if (data.properties.protocol_2_tn_reduction_rate) {
+            this.efficiency.protocol_2_tn_reduction_rate = data.properties.protocol_2_tn_reduction_rate;
+          }
+
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
-              multipler_2 = data.properties.protocol_2_tn_reduction_rate,
+              multipler_2 = this.efficiency.protocol_2_tn_reduction_rate,
               returnValue = 0;
 
           returnValue = (multipler_1*multipler_2);
 
           return returnValue
         },
-        preInstallationLoadProtocol3TP: function(data) {
+        loadProtocol3TP: function(data) {
 
           if (!data.hasOwnProperty('properties')) {
             return [];
           }
+
+          if (data.properties.protocol_3_tp_reduction_rate) {
+            this.efficiency.protocol_3_tp_reduction_rate = data.properties.protocol_3_tp_reduction_rate;
+          }
           
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
-              multipler_2 = data.properties.protocol_3_tp_reduction_rate,
+              multipler_2 = this.efficiency.protocol_3_tp_reduction_rate,
               returnValue = 0;
 
           returnValue = (multipler_1*multipler_2);
 
           return returnValue
         },
-        preInstallationLoadProtocol3TSS: function(data) {
+        loadProtocol3TSS: function(data) {
 
           if (!data.hasOwnProperty('properties')) {
             return [];
           }
+
+          if (data.properties.protocol_3_tss_reduction_rate) {
+            this.efficiency.protocol_3_tss_reduction_rate = data.properties.protocol_3_tss_reduction_rate;
+          }
           
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
-              multipler_2 = data.properties.protocol_3_tss_reduction_rate,
+              multipler_2 = this.efficiency.protocol_3_tss_reduction_rate,
               returnValue = 0;
 
           returnValue = (multipler_1*multipler_2);
 
           return returnValue
         },
-        preInstallationLoadProtocol4TN: function(data) {
+        loadProtocol4TN: function(data) {
 
           if (!data.hasOwnProperty('properties')) {
             return [];
           }
-          
+
+          if (data.properties.protocol_4_tn_reduction_rate) {
+            this.efficiency.protocol_4_tn_reduction_rate = data.properties.protocol_4_tn_reduction_rate;
+          }
+
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
-              multipler_2 = data.properties.protocol_4_tn_reduction_rate,
+              multipler_2 = this.efficiency.protocol_4_tn_reduction_rate,
               returnValue = 0;
 
           returnValue = (multipler_1*multipler_2);
 
           return returnValue
         },
-        preInstallationLoadProtocol4TP: function(data) {
+        loadProtocol4TP: function(data) {
 
           if (!data.hasOwnProperty('properties')) {
             return [];
           }
+
+          if (data.properties.protocol_4_tp_reduction_rate) {
+            this.efficiency.protocol_4_tp_reduction_rate = data.properties.protocol_4_tp_reduction_rate;
+          }
           
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
-              multipler_2 = data.properties.protocol_4_tp_reduction_rate,
+              multipler_2 = this.efficiency.protocol_4_tp_reduction_rate,
               returnValue = 0;
 
           returnValue = (multipler_1*multipler_2);
 
           return returnValue
-        },
-        plannedLoad: function(data, parameter) {
-
-          if (!data.hasOwnProperty('properties')) {
-            return [];
-          }
-
-          var self = this,
-              landuses = 4,
-              calculatedLoads = [],
-              efficiency_parameter,
-              reductionValue = 0;
-
-          switch (parameter) {
-            case 'nitrogen':
-              efficiency_parameter = 'n_efficiency';
-              break;
-            case 'phosphorus':
-              efficiency_parameter = 'p_efficiency';
-              break;
-            case 'sediment':
-              efficiency_parameter = 's_efficiency';
-              break;
-          }
-
-          for (var i = 0; i < landuses; i++) {
-            var landuse = 'installation_upland_landuse_'+(i+1),
-                acresTreated = 'installation_landuse_acreage_'+(i+1),
-                efficiency = 'installation_efficiency_'+(i+1),
-                loads = 'installation_loaddata_'+(i+1);
-
-            if (data.properties[loads] && data.properties[loads].hasOwnProperty('properties')) {
-              var loadData = {
-                nitrogen: (data.properties[loads].properties.eos_totn/data.properties[loads].properties.eos_acres),
-                phosphorus: (data.properties[loads].properties.eos_totp/data.properties[loads].properties.eos_acres),
-                sediment: (data.properties[loads].properties.eos_tss/data.properties[loads].properties.eos_acres)/2000
-              };
-
-              var parameterReduction = data.properties[acresTreated]*loadData[parameter]*data.properties[efficiency].properties[efficiency_parameter];
-
-              console.log(parameter, efficiency_parameter, data.properties[acresTreated], '*', loadData[parameter], '*', data.properties[efficiency].properties[efficiency_parameter], '=', parameterReduction);
-
-              calculatedLoads.push(parameterReduction);
-            }
-
-          };
-
-          // *data.properties[efficiency].properties[efficiency_parameter]
-
-          if (calculatedLoads.length) {
-            reductionValue = calculatedLoads.reduce(this.reduceLoadValues);
-          }
-
-          return reductionValue;
         },
         loads: function(reports) {
 
@@ -170,12 +136,12 @@
 
           return {
             planned: {
-              protocol_1_tss: self.preInstallationLoadProtocol1TSS(planningData),
-              protocol_2_tn: self.preInstallationLoadProtocol2TN(planningData),
-              protocol_3_tp: self.preInstallationLoadProtocol3TP(planningData),
-              protocol_3_tss: self.preInstallationLoadProtocol3TSS(planningData, 'sediment'),
-              protocol_4_tn: self.preInstallationLoadProtocol4TN(planningData, 'nitrogen'),
-              protocol_4_tp: self.preInstallationLoadProtocol4TP(planningData, 'phosphorus')
+              protocol_1_tss: self.loadProtocol1TSS(planningData),
+              protocol_2_tn: self.loadProtocol2TN(planningData),
+              protocol_3_tp: self.loadProtocol3TP(planningData),
+              protocol_3_tss: self.loadProtocol3TSS(planningData, 'sediment'),
+              protocol_4_tn: self.loadProtocol4TN(planningData, 'nitrogen'),
+              protocol_4_tp: self.loadProtocol4TP(planningData, 'phosphorus')
             }
           };
 
@@ -186,22 +152,22 @@
               plannedTotal = 0,
               installedTotal = 0;
 
-          for (var i = 0; i < values.length; i++) {
-            if (values[i].properties.measurement_period === 'Installation') {
-              installedTotal += self.plannedLoad(values[i], parameter);
-            }
-            else if (values[i].properties.measurement_period === 'Planning') {
-              plannedTotal += self.plannedLoad(values[i], parameter);
-            }
-          }
+          // for (var i = 0; i < values.length; i++) {
+          //   if (values[i].properties.measurement_period === 'Installation') {
+          //     installedTotal += self.plannedLoad(values[i], parameter);
+          //   }
+          //   else if (values[i].properties.measurement_period === 'Planning') {
+          //     plannedTotal += self.plannedLoad(values[i], parameter);
+          //   }
+          // }
 
-          if (plannedTotal >= 1) {
-            if (format === '%') {
-              return ((installedTotal/plannedTotal)*100);
-            } else {
-              return installedTotal;
-            }
-          }
+          // if (plannedTotal >= 1) {
+          //   if (format === '%') {
+          //     return ((installedTotal/plannedTotal)*100);
+          //   } else {
+          //     return installedTotal;
+          //   }
+          // }
 
           return 0;
         },
@@ -212,17 +178,7 @@
 
           for (var i = 0; i < values.length; i++) {
             if (values[i].properties.measurement_period === period) {
-
-              var acreage = [
-                values[i].properties.installation_landuse_acreage_1,
-                values[i].properties.installation_landuse_acreage_2,
-                values[i].properties.installation_landuse_acreage_3,
-                values[i].properties.installation_landuse_acreage_4,
-                values[i].properties.installation_landuse_acreage_5,
-                values[i].properties.installation_landuse_acreage_6
-              ]
-
-              milesRestored += acreage.reduce(this.reduceLoadValues);
+              milesRestored += values[i].properties.installation_length_of_living_shoreline_restored;
             }
           }
 
@@ -231,35 +187,25 @@
             milesRestored = (milesRestored/plannedMilesRestored)*100;
           }
 
-          return milesRestored;
+          return (milesRestored/5280);
         },
         acresRestored: function(values, period, format) {
 
           var self = this,
-              milesRestored = 0;
+              acresRestored = 0;
 
           for (var i = 0; i < values.length; i++) {
             if (values[i].properties.measurement_period === period) {
-
-              var acreage = [
-                values[i].properties.installation_landuse_acreage_1,
-                values[i].properties.installation_landuse_acreage_2,
-                values[i].properties.installation_landuse_acreage_3,
-                values[i].properties.installation_landuse_acreage_4,
-                values[i].properties.installation_landuse_acreage_5,
-                values[i].properties.installation_landuse_acreage_6
-              ]
-
-              milesRestored += acreage.reduce(this.reduceLoadValues);
+              acresRestored += values[i].properties.installation_area_of_planted_or_replanted_tidal_wetlands;
             }
           }
 
           if (format === '%') {
-            var plannedMilesRestored = self.milesRestored(values, 'Planning');
-            milesRestored = (milesRestored/plannedMilesRestored)*100;
+            var plannedAcresRestored = self.acresRestored(values, 'Planning');
+            acresRestored = (acresRestored/plannedAcresRestored)*100;
           }
 
-          return milesRestored;
+          return acresRestored;
         },
         quantityInstalled: function(values, field, format) {
 

@@ -115,7 +115,7 @@
                     {{ report.properties.installation_existing_average_bank_height | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    -
+                    {{ report.properties.installation_existing_average_bank_height | number:2 }}
                   </td>
                   <td>
                     <strong>
@@ -138,7 +138,7 @@
                     {{ report.properties.installation_existing_shoreline_recession_rate | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    -
+                    {{ report.properties.installation_existing_shoreline_recession_rate | number:2 }}
                   </td>
                   <td>
                     <strong>
@@ -162,7 +162,7 @@
                     {{ report.properties.installation_soil_bulk_density | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    -
+                    {{ report.properties.installation_soil_bulk_density | number:2 }}
                   </td>
                   <td>
                     <strong>
@@ -185,7 +185,7 @@
                     {{ report.properties.installation_sand_reduction_factor | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    -
+                    {{ report.properties.installation_sand_reduction_factor | number:2 }}
                   </td>
                   <td>
                     <strong>
@@ -208,7 +208,7 @@
                     {{ report.properties.installation_bank_instability_reduction_factor | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    -
+                    {{ report.properties.installation_bank_instability_reduction_factor | number:2 }}
                   </td>
                   <td>
                     <strong>
@@ -231,7 +231,7 @@
                     {{ report.properties.installation_existing_area_of_tidal_wetlands | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    -
+                    {{ report.properties.installation_existing_area_of_tidal_wetlands | number:2 }}
                   </td>
                   <td>
                     <strong>
@@ -321,7 +321,7 @@
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ page.calculateShorelineManagement.plannedLoad(report, 'nitrogen') | number:2 }}
+                    {{ page.calculateShorelineManagement.loadProtocol1TSS(report) | number:2 }}
                   </td>
                   <td>
                     {{ page.calculateShorelineManagement.installed(page.readings.features, 'nitrogen') | number:2 }}
@@ -338,7 +338,7 @@
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ page.calculateShorelineManagement.plannedLoad(report, 'phosphorus') | number:2 }}
+                    {{ page.calculateShorelineManagement.loadProtocol2TN(report) | number:2 }}
                   </td>
                   <td>
                     {{ page.calculateShorelineManagement.installed(page.readings.features, 'phosphorus') | number:2 }}
@@ -355,7 +355,7 @@
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ page.calculateShorelineManagement.plannedLoad(report, 'sediment') | number:2 }}
+                    {{ page.calculateShorelineManagement.loadProtocol3TP(report) | number:2 }}
                   </td>
                   <td>
                     {{ page.calculateShorelineManagement.installed(page.readings.features, 'sediment') | number:2 }}
@@ -372,7 +372,7 @@
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ page.calculateShorelineManagement.plannedLoad(report, 'sediment') | number:2 }}
+                    {{ page.calculateShorelineManagement.loadProtocol3TSS(report) | number:2 }}
                   </td>
                   <td>
                     {{ page.calculateShorelineManagement.installed(page.readings.features, 'sediment') | number:2 }}
@@ -389,7 +389,7 @@
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ page.calculateShorelineManagement.plannedLoad(report, 'sediment') | number:2 }}
+                    {{ page.calculateShorelineManagement.loadProtocol4TN(report) | number:2 }}
                   </td>
                   <td>
                     {{ page.calculateShorelineManagement.installed(page.readings.features, 'sediment') | number:2 }}
@@ -406,7 +406,7 @@
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ page.calculateShorelineManagement.plannedLoad(report, 'sediment') | number:2 }}
+                    {{ page.calculateShorelineManagement.loadProtocol4TP(report) | number:2 }}
                   </td>
                   <td>
                     {{ page.calculateShorelineManagement.installed(page.readings.features, 'sediment') | number:2 }}
@@ -434,7 +434,7 @@
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                      {{ page.calculateShorelineManagement.acresRestored([report], 'Installation') || 0 | number:2 }}
+                    {{ report.properties.installation_area_of_planted_or_replanted_tidal_wetlands || 0 | number:2 }}
                   </td>
                   <td>
                     {{ page.calculateShorelineManagement.acresRestored(page.readings.features, 'Installation') || 0 | number:2 }}
@@ -455,7 +455,7 @@
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                      {{ page.calculateShorelineManagement.milesRestored([report], 'Installation') || 0 | number:2 }}
+                    {{ (report.properties.installation_length_of_living_shoreline_restored/5280) || 0 | number:2 }}
                   </td>
                   <td>
                     {{ page.calculateShorelineManagement.milesRestored(page.readings.features, 'Installation') || 0 | number:2 }}
