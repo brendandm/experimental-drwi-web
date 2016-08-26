@@ -47,7 +47,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+.constant('environment', {name:'staging',apiUrl:'http://stg.api.fielddoc.org',siteUrl:'http://stg.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
 /**
@@ -8624,6 +8624,794 @@ angular.module('FieldDoc')
 
 }());
 
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc overview
+   * @name FieldDoc
+   * @description
+   */
+  angular.module('FieldDoc')
+    .config(function($routeProvider) {
+
+      $routeProvider
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/shoreline-management', {
+          templateUrl: '/modules/components/practices/modules/shoreline-management/views/report--view.html',
+          controller: 'ShorelineManagementReportController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            site: function(Site, $route) {
+              return Site.get({
+                id: $route.current.params.siteId
+              });
+            },
+            practice: function(Practice, $route) {
+              return Practice.get({
+                id: $route.current.params.practiceId
+              });
+            },
+            readings: function(Practice, $route) {
+              return Practice.shorelineManagement({
+                id: $route.current.params.practiceId
+              });
+            }
+          }
+        })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/shoreline-management/:reportId/edit', {
+          templateUrl: '/modules/components/practices/modules/shoreline-management/views/form--view.html',
+          controller: 'ShorelineManagementFormController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            site: function(Site, $route) {
+              return Site.get({
+                id: $route.current.params.siteId
+              });
+            },
+            practice: function(Practice, $route) {
+              return Practice.get({
+                id: $route.current.params.practiceId
+              });
+            },
+            report: function(PracticeShorelineManagement, $route) {
+              return PracticeShorelineManagement.get({
+                id: $route.current.params.reportId
+              });
+            },
+            landuse: function(Landuse) {
+              return Landuse.query({
+                results_per_page: 50
+              });
+            }
+          }
+        });
+
+    });
+
+}());
+
+(function(){
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name FieldDoc.CalculateShorelineManagement
+   * @description
+   */
+  angular.module('FieldDoc')
+    .service('CalculateShorelineManagement', function(Calculate, LoadData, $q) {
+      return {
+        efficiency: {
+          protocol_2_tn_reduction_rate: 0,
+          protocol_3_tp_reduction_rate: 0,
+          protocol_3_tss_reduction_rate: 0,
+          protocol_4_tn_reduction_rate: 0,
+          protocol_4_tp_reduction_rate: 0,
+        },
+        reduceLoadValues: function(previousValue, currentValue) {
+          return previousValue + currentValue;
+        },
+        loadProtocol1TSS: function(data) {
+
+          if (!data.hasOwnProperty('properties')) {
+            return [];
+          }
+          
+          var multipler_1 = data.properties.installation_length_of_living_shoreline_restored,
+              multipler_2 = data.properties.installation_existing_average_bank_height,
+              multipler_3 = data.properties.installation_existing_shoreline_recession_rate,
+              multipler_4 = data.properties.installation_soil_bulk_density,
+              multipler_5 = data.properties.installation_sand_reduction_factor,
+              multipler_6 = data.properties.installation_bank_instability_reduction_factor,
+              divider = 2000,
+              returnValue = 0;
+
+          returnValue = (multipler_1*multipler_2*multipler_3*multipler_4*multipler_5*multipler_6)/2000;
+
+          return returnValue
+        },
+        loadProtocol2TN: function(data) {
+
+          if (!data.hasOwnProperty('properties')) {
+            return [];
+          }
+          
+          if (data.properties.protocol_2_tn_reduction_rate) {
+            this.efficiency.protocol_2_tn_reduction_rate = data.properties.protocol_2_tn_reduction_rate;
+          }
+
+          var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
+              multipler_2 = this.efficiency.protocol_2_tn_reduction_rate,
+              returnValue = 0;
+
+          returnValue = (multipler_1*multipler_2);
+
+          return returnValue
+        },
+        loadProtocol3TP: function(data) {
+
+          if (!data.hasOwnProperty('properties')) {
+            return [];
+          }
+
+          if (data.properties.protocol_3_tp_reduction_rate) {
+            this.efficiency.protocol_3_tp_reduction_rate = data.properties.protocol_3_tp_reduction_rate;
+          }
+          
+          var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
+              multipler_2 = this.efficiency.protocol_3_tp_reduction_rate,
+              returnValue = 0;
+
+          returnValue = (multipler_1*multipler_2);
+
+          return returnValue
+        },
+        loadProtocol3TSS: function(data) {
+
+          if (!data.hasOwnProperty('properties')) {
+            return [];
+          }
+
+          if (data.properties.protocol_3_tss_reduction_rate) {
+            this.efficiency.protocol_3_tss_reduction_rate = data.properties.protocol_3_tss_reduction_rate;
+          }
+          
+          var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
+              multipler_2 = this.efficiency.protocol_3_tss_reduction_rate,
+              returnValue = 0;
+
+          returnValue = (multipler_1*multipler_2);
+
+          return returnValue
+        },
+        loadProtocol4TN: function(data) {
+
+          if (!data.hasOwnProperty('properties')) {
+            return [];
+          }
+
+          if (data.properties.protocol_4_tn_reduction_rate) {
+            this.efficiency.protocol_4_tn_reduction_rate = data.properties.protocol_4_tn_reduction_rate;
+          }
+
+          var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
+              multipler_2 = this.efficiency.protocol_4_tn_reduction_rate,
+              returnValue = 0;
+
+          returnValue = (multipler_1*multipler_2);
+
+          return returnValue
+        },
+        loadProtocol4TP: function(data) {
+
+          if (!data.hasOwnProperty('properties')) {
+            return [];
+          }
+
+          if (data.properties.protocol_4_tp_reduction_rate) {
+            this.efficiency.protocol_4_tp_reduction_rate = data.properties.protocol_4_tp_reduction_rate;
+          }
+          
+          var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
+              multipler_2 = this.efficiency.protocol_4_tp_reduction_rate,
+              returnValue = 0;
+
+          returnValue = (multipler_1*multipler_2);
+
+          return returnValue
+        },
+        loads: function(reports) {
+
+          var self = this,
+              planningData = Calculate.getPlanningData(reports);
+
+          return {
+            planned: {
+              protocol_1_tss: self.loadProtocol1TSS(planningData),
+              protocol_2_tn: self.loadProtocol2TN(planningData),
+              protocol_3_tp: self.loadProtocol3TP(planningData),
+              protocol_3_tss: self.loadProtocol3TSS(planningData),
+              protocol_4_tn: self.loadProtocol4TN(planningData),
+              protocol_4_tp: self.loadProtocol4TP(planningData)
+            }
+          };
+
+        },
+        installed: function(values, parameter, format) {
+
+          var self = this,
+              planned_protocol_1_tss_total = 0,
+              planned_protocol_2_tn_total = 0,
+              planned_protocol_3_tp_total = 0,
+              planned_protocol_3_tss_total = 0,
+              planned_protocol_4_tn_total = 0,
+              planned_protocol_4_tp_total = 0,
+
+              installed_protocol_1_tss_total = 0,
+              installed_protocol_2_tn_total = 0,
+              installed_protocol_3_tp_total = 0,
+              installed_protocol_3_tss_total = 0,
+              installed_protocol_4_tn_total = 0,
+              installed_protocol_4_tp_total = 0;
+
+          for (var i = 0; i < values.length; i++) {
+            if (values[i].properties.measurement_period === 'Installation') {
+              installed_protocol_1_tss_total += self.loadProtocol1TSS(values[i]);
+              installed_protocol_2_tn_total += self.loadProtocol2TN(values[i]);
+              installed_protocol_3_tp_total += self.loadProtocol3TP(values[i]);
+              installed_protocol_3_tss_total += self.loadProtocol3TSS(values[i]);
+              installed_protocol_4_tn_total += self.loadProtocol4TN(values[i]);
+              installed_protocol_4_tp_total += self.loadProtocol4TP(values[i]);
+            }
+            else if (values[i].properties.measurement_period === 'Planning') {
+              planned_protocol_1_tss_total += self.loadProtocol1TSS(values[i]);
+              planned_protocol_2_tn_total += self.loadProtocol2TN(values[i]);
+              planned_protocol_3_tp_total += self.loadProtocol3TP(values[i]);
+              planned_protocol_3_tss_total += self.loadProtocol3TSS(values[i]);
+              planned_protocol_4_tn_total += self.loadProtocol4TN(values[i]);
+              planned_protocol_4_tp_total += self.loadProtocol4TP(values[i]);
+            }
+          }
+
+          if (planned_protocol_1_tss_total >= 1) {
+            if (format === '%') {
+              return ((installed_protocol_1_tss_total/planned_protocol_1_tss_total)*100);
+            } else {
+              return installed_protocol_1_tss_total;
+            }
+          }
+
+          return 0;
+        },
+        milesRestored: function(values, period, format) {
+
+          var self = this,
+              milesRestored = 0;
+
+          for (var i = 0; i < values.length; i++) {
+            if (values[i].properties.measurement_period === period) {
+              milesRestored += values[i].properties.installation_length_of_living_shoreline_restored;
+            }
+          }
+
+          if (format === '%') {
+            var plannedMilesRestored = self.milesRestored(values, 'Planning');
+            milesRestored = (milesRestored/plannedMilesRestored)*100;
+          }
+
+          return (milesRestored/5280);
+        },
+        acresRestored: function(values, period, format) {
+
+          var self = this,
+              acresRestored = 0;
+
+          for (var i = 0; i < values.length; i++) {
+            if (values[i].properties.measurement_period === period) {
+              acresRestored += values[i].properties.installation_area_of_planted_or_replanted_tidal_wetlands;
+            }
+          }
+
+          if (format === '%') {
+            var plannedAcresRestored = self.acresRestored(values, 'Planning');
+            acresRestored = (acresRestored/plannedAcresRestored)*100;
+          }
+
+          return acresRestored;
+        },
+        quantityInstalled: function(values, field, format) {
+
+          var planned_total = 0,
+              installed_total = 0,
+              percentage = 0;
+
+          // Get readings organized by their Type
+          angular.forEach(values, function(reading, $index) {
+
+            if (reading.properties.measurement_period === 'Planning') {
+              planned_total += reading.properties[field];
+            } else if (reading.properties.measurement_period === 'Installation') {
+              installed_total += reading.properties[field];
+            }
+
+          });
+
+          // Divide the Installed Total by the Planned Total to get a percentage of installed
+          if (planned_total >= 1) {
+            if (format === '%') {
+              percentage = (installed_total/planned_total);
+              return (percentage*100);
+            } else {
+              return installed_total;
+            }
+          }
+
+          return 0;
+        }
+      }
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc function
+   * @name FieldDoc.controller:ShorelineManagementReportController
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('ShorelineManagementReportController', function (Account, Calculate, CalculateShorelineManagement, Efficiency, LoadData, $location, $log, practice, PracticeShorelineManagement, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
+
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
+
+      $rootScope.page = {};
+
+      self.practiceType = null;
+      self.project = {
+        'id': projectId
+      };
+
+      self.calculate = Calculate;
+      self.calculateShorelineManagement = CalculateShorelineManagement;
+
+      practice.$promise.then(function(successResponse) {
+
+        self.practice = successResponse;
+
+        self.practiceType = Utility.machineName(self.practice.properties.practice_type);
+
+        //
+        //
+        //
+        self.template = {
+          path: '/modules/components/practices/modules/' + self.practiceType + '/views/report--view.html'
+        };
+
+        //
+        //
+        //
+        site.$promise.then(function(successResponse) {
+          self.site = successResponse;
+
+          self.segment = self.site.properties.segment.properties.hgmr_code;
+
+          $rootScope.page.title = self.practice.properties.practice_type;
+          $rootScope.page.links = [
+              {
+                  text: 'Projects',
+                  url: '/projects'
+              },
+              {
+                  text: self.site.properties.project.properties.name,
+                  url: '/projects/' + projectId
+              },
+              {
+                text: self.site.properties.name,
+                url: '/projects/' + projectId + '/sites/' + siteId
+              },
+              {
+                text: self.practice.properties.practice_type,
+                url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
+                type: 'active'
+              }
+          ];
+
+          $rootScope.page.actions = [
+            {
+              type: 'button-link',
+              action: function() {
+                $window.print();
+              },
+              hideIcon: true,
+              text: 'Print'
+            },
+            {
+              type: 'button-link',
+              action: function() {
+                $scope.$emit('saveToPdf');
+              },
+              hideIcon: true,
+              text: 'Save as PDF'
+            },
+            {
+              type: 'button-link new',
+              action: function() {
+                self.addReading();
+              },
+              text: 'Add Measurement Data'
+            }
+          ];
+
+        }, function(errorResponse) {
+          //
+        });
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+            user.$promise.then(function(userResponse) {
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0].properties.name,
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: true
+                };
+            });
+        }
+      });
+
+      readings.$promise.then(function(successResponse) {
+
+        self.readings = successResponse;
+
+        self.total = {
+          planning: self.calculate.getTotalReadingsByCategory('Planning', self.readings.features),
+          installation: self.calculate.getTotalReadingsByCategory('Installation', self.readings.features),
+          monitoring: self.calculate.getTotalReadingsByCategory('Monitoring', self.readings.features)
+        };
+
+        console.log('self.total', self.total)
+
+        self.results = self.calculateShorelineManagement.loads(self.readings.features)
+
+        console.log('self.results', self.results)
+
+      }, function(errorResponse) {
+
+      });
+
+      self.addReading = function(measurementPeriod) {
+
+        var newReading = new PracticeShorelineManagement({
+            'measurement_period': measurementPeriod,
+            'report_date': new Date(),
+            'practice_id': practiceId,
+            'account_id': self.site.properties.project.properties.account_id
+          });
+
+        newReading.$save().then(function(successResponse) {
+            $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
+          });
+      };
+
+
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc function
+   * @name FieldDoc.controller:WetlandsNonTidalFormController
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('ShorelineManagementFormController', function (Account, Efficiency, landuse, LoadData, $location, Notifications, practice, report, $rootScope, $route, site, $scope, $timeout, user, Utility) {
+
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
+
+      $rootScope.page = {};
+
+      self.practiceType = null;
+      self.project = {
+        'id': projectId
+      };
+
+      landuse.$promise.then(function(successResponse) {
+        self.landuse = successResponse;
+
+        self.getLanduseById = function(landuseId) {
+
+          var _landuse = {};
+
+          angular.forEach(self.landuse.features, function(thisLanduse) {
+            if (thisLanduse.id === landuseId) {
+              _landuse = thisLanduse;
+            }
+          });
+
+          return _landuse;
+        };
+      });
+
+      //
+      // Setup all of our basic date information so that we can use it
+      // throughout the page
+      //
+      self.today = new Date();
+
+      self.days = [
+          'Sunday',
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday'
+      ];
+
+      self.months = [
+          'Jan',
+          'Feb',
+          'Mar',
+          'Apr',
+          'May',
+          'Jun',
+          'Jul',
+          'Aug',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dec'
+      ];
+
+      function parseISOLike(s) {
+          var b = s.split(/\D/);
+          return new Date(b[0], b[1]-1, b[2]);
+      }
+
+      practice.$promise.then(function(successResponse) {
+
+        self.practice = successResponse;
+
+        self.practiceType = Utility.machineName(self.practice.properties.practice_type);
+
+        //
+        //
+        //
+        self.template = {
+          path: '/modules/components/practices/modules/' + self.practiceType + '/views/report--view.html'
+        };
+
+        //
+        //
+        //
+        site.$promise.then(function(successResponse) {
+          self.site = successResponse;
+
+          self.segment = self.site.properties.segment.properties.hgmr_code;
+
+          //
+          // Assign project to a scoped variable
+          //
+          report.$promise.then(function(successResponse) {
+            self.report = successResponse;
+
+            if (self.report.properties.report_date) {
+                self.today = parseISOLike(self.report.properties.report_date);
+            }
+
+            //
+            // Check to see if there is a valid date
+            //
+            self.date = {
+                month: self.months[self.today.getMonth()],
+                date: self.today.getDate(),
+                day: self.days[self.today.getDay()],
+                year: self.today.getFullYear()
+            };
+
+            $rootScope.page.title = self.practice.properties.practice_type;
+            $rootScope.page.links = [
+                {
+                    text: 'Projects',
+                    url: '/projects'
+                },
+                {
+                    text: self.site.properties.project.properties.name,
+                    url: '/projects/' + projectId
+                },
+                {
+                  text: self.site.properties.name,
+                  url: '/projects/' + projectId + '/sites/' + siteId
+                },
+                {
+                  text: self.practice.properties.practice_type,
+                  url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
+                },
+                {
+                  text: 'Edit',
+                  url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + self.report.id + '/edit',
+                  type: 'active'
+                }
+            ];
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
+          });
+
+        }, function(errorResponse) {
+          //
+        });
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+            user.$promise.then(function(userResponse) {
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0].properties.name,
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: Account.canEdit(self.site.properties.project)
+                };
+            });
+        }
+      });
+
+      $scope.$watch(angular.bind(this, function() {
+          return this.date;
+      }), function (response) {
+          if (response) {
+              var _new = response.month + ' ' + response.date + ' ' + response.year,
+              _date = new Date(_new);
+              self.date.day = self.days[_date.getDay()];
+          }
+      }, true);
+
+      self.saveReport = function() {
+
+        self.report.properties.report_date = self.date.month + ' ' + self.date.date + ' ' + self.date.year;
+
+        self.report.$update().then(function(successResponse) {
+          $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
+        }, function(errorResponse) {
+          console.error('ERROR: ', errorResponse);
+        });
+      };
+
+      self.deleteReport = function() {
+        self.report.$delete().then(function(successResponse) {
+          $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
+        }, function(errorResponse) {
+          console.error('ERROR: ', errorResponse);
+        });
+      };
+
+      /**
+       * Get Load Data for specified landuse and assign it to the appropriate
+       * report fields
+       *
+       * @param landuse (object) A fully qualitified Landuse object
+       * @param objectField (string)
+       * @param idField (string)
+       */
+      self.getLoadData = function(report, landuseField, idField) {
+
+        console.log('report', report);
+
+        var landuse = self.getLanduseById(report.properties[landuseField]);
+
+        LoadData.query({
+            q: {
+              filters: [
+                {
+                  name: 'land_river_segment',
+                  op: 'eq',
+                  val: self.segment
+                },
+                {
+                  name: 'landuse',
+                  op: 'eq',
+                  val: landuse.properties.landuse_code
+                }
+              ]
+            }
+          }, function(successResponse) {
+            if (successResponse.features.length) {
+              self.report.properties[idField] = successResponse.features[0].id;
+            } else {
+              $rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
+
+              $timeout(function() {
+                $rootScope.notifications.objects = [];
+              }, 3500);
+            }
+          });
+      };
+
+      self.getEfficiencyData = function(report, landuseIdField, landuseField, idField) {
+
+        var landuse = self.getLanduseById(report.properties[landuseIdField]);
+
+        console.log('report', report);
+
+        Efficiency.query({
+            q: {
+              filters: [
+                {
+                  name: 'type',
+                  op: 'eq',
+                  val: 'Efficiency'
+                },
+                {
+                  name: 'best_management_practice_short_name',
+                  op: 'eq',
+                  val: (landuse.properties.landuse_type === 'urban') ? 'WetPondWetland': 'WetlandRestore'
+                },
+                {
+                  name: 'cbwm_lu',
+                  op: 'eq',
+                  val: landuse.properties.landuse_code
+                },
+                {
+                  name: 'hydrogeomorphic_region',
+                  op: 'eq',
+                  val: self.site.properties.segment.properties.hgmr_name
+                }
+              ]
+            }
+          }, function(successResponse) {
+            console.log('Efficiency::successResponse', successResponse);
+            if (successResponse.features.length) {
+              self.report.properties[idField] = successResponse.features[0].id;
+            } else {
+              $rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
+
+              $timeout(function() {
+                $rootScope.notifications.objects = [];
+              }, 3500);
+            }
+          });
+      };
+
+
+    });
+
+}());
+
 'use strict';
 
 /**
@@ -10385,6 +11173,11 @@ angular
           'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_urban_homeowner'),
           'isArray': false
         },
+        'shorelineManagement': {
+          'method': 'GET',
+          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_shoreline_management'),
+          'isArray': false
+        },
         'wetlandsNontidal': {
           'method': 'GET',
           'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_wetlands_nontidal'),
@@ -10639,6 +11432,35 @@ angular
   angular.module('FieldDoc')
     .service('PracticeWetlandsNonTidal', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/bmp-wetlands-nontidal/:id'), {
+        'id': '@id'
+      }, {
+        'query': {
+          isArray: false
+        },
+        'update': {
+          method: 'PATCH',
+          transformRequest: function(data) {
+            var feature = Preprocessors.geojson(data);
+            return angular.toJson(feature);
+          }
+        }
+      });
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .service('PracticeShorelineManagement', function (environment, Preprocessors, $resource) {
+      return $resource(environment.apiUrl.concat('/v1/data/bmp-shoreline-management/:id'), {
         'id': '@id'
       }, {
         'query': {
