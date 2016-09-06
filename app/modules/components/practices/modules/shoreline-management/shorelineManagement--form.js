@@ -107,6 +107,13 @@
             }
 
             //
+            // Set Default BIR Value
+            //
+            if (self.report && !self.report.properties.installation_bank_instability_reduction_factor) {
+              self.report.properties.installation_bank_instability_reduction_factor = 1.0;
+            }
+
+            //
             // Check to see if there is a valid date
             //
             self.date = {
