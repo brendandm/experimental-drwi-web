@@ -113,6 +113,26 @@
               self.report.properties.installation_bank_instability_reduction_factor = 1.0;
             }
 
+            if (self.report && !self.report.properties.protocol_2_tn_reduction_rate) {
+              self.report.properties.protocol_2_tn_reduction_rate = 85.0;
+            }
+
+            if (self.report && !self.report.properties.protocol_3_tp_reduction_rate) {
+              self.report.properties.protocol_3_tp_reduction_rate = 5.29;
+            }
+
+            if (self.report && !self.report.properties.protocol_3_tss_reduction_rate) {
+              self.report.properties.protocol_3_tss_reduction_rate = 3.9795;
+            }
+
+            if (self.report && !self.report.properties.protocol_4_tn_reduction_rate) {
+              self.report.properties.protocol_4_tn_reduction_rate = 6.83;
+            }
+
+            if (self.report && !self.report.properties.protocol_4_tp_reduction_rate) {
+              self.report.properties.protocol_4_tp_reduction_rate = 0.3;
+            }
+
             //
             // Check to see if there is a valid date
             //
