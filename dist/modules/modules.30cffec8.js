@@ -47,11 +47,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {            name: 'staging',
-            apiUrl: 'http://stg.api.fielddoc.org',
-            siteUrl: 'http://stg.fielddoc.org',
-            clientId: 'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'
-})
+.constant('environment', {name:'staging',apiUrl:'http://stg.api.fielddoc.org',siteUrl:'http://stg.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
 /**
@@ -9241,6 +9237,26 @@ angular.module('FieldDoc')
             //
             if (self.report && !self.report.properties.installation_bank_instability_reduction_factor) {
               self.report.properties.installation_bank_instability_reduction_factor = 1.0;
+            }
+
+            if (self.report && !self.report.properties.protocol_2_tn_reduction_rate) {
+              self.report.properties.protocol_2_tn_reduction_rate = 85.0;
+            }
+
+            if (self.report && !self.report.properties.protocol_3_tp_reduction_rate) {
+              self.report.properties.protocol_3_tp_reduction_rate = 5.29;
+            }
+
+            if (self.report && !self.report.properties.protocol_3_tss_reduction_rate) {
+              self.report.properties.protocol_3_tss_reduction_rate = 3.9795;
+            }
+
+            if (self.report && !self.report.properties.protocol_4_tn_reduction_rate) {
+              self.report.properties.protocol_4_tn_reduction_rate = 6.83;
+            }
+
+            if (self.report && !self.report.properties.protocol_4_tp_reduction_rate) {
+              self.report.properties.protocol_4_tp_reduction_rate = 0.3;
             }
 
             //
