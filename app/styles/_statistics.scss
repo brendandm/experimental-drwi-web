@@ -1,0 +1,27 @@
+//
+// _statistics.scss
+//
+// This stylesheet is written in SASS(1) and contains site wide typographic
+// specifications.
+//
+
+
+.statistics {
+  background-color: $color-darkBlue-base;
+  color: $color-white-default;
+  padding: 1em 1.5em; 
+}
+
+.statistics--statistic {
+  .statistic--value {}
+  .statistic--valueLabel {}
+
+  .statistic--title {}
+
+  .statistic--chart {
+    .statistic--chart--bar {}
+    .statistic--chart--value {}
+  }
+}
+
+
