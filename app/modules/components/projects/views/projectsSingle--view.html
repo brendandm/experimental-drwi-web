@@ -17,7 +17,6 @@
 
         <section id="sites">
           <div class="list">
-            <h6 class="rule-above"><strong>Project</strong> Sites</h6>
 
             <article class="row list-item list-item-thin"
                      data-ng-if="!page.sites.features.length">
@@ -36,6 +35,116 @@
               </div>
             </article>
 
+            <h6 class="rule-above statistics--header"><strong>Project</strong> Summary</h6>
+            <article class="row statistics">
+              <div class="column-4 statistics--statistic">
+                <p class="statistic--value">
+                  0 <span class="statistic--valueLabel">of</span> 2.01 <span class="statistic--valueLabel">lbs/yr</span><br />
+                  <span class="statistic--title">Nitrogen</span>
+                </p>
+                <div class="statistic--chart">
+                  <div class="statistic--chart--value"></div>
+                </div>
+              </div>
+              <div class="column-2"></div>
+              <div class="column-4 statistics--statistic">
+                <p class="statistic--value">
+                  0.06 <span class="statistic--valueLabel">of</span> 0.12 <span class="statistic--valueLabel">lbs/yr</span><br />
+                  <span class="statistic--title">Phosphorus</span>
+                </p>
+                <div class="statistic--chart">
+                  <div class="statistic--chart--value" style="width: 50%;"></div>
+                </div>
+              </div>
+              <div class="column-2"></div>
+              <div class="column-4 statistics--statistic">
+                <p class="statistic--value">
+                  0 <span class="statistic--valueLabel">of</span> 0.03 <span class="statistic--valueLabel">tons/yr</span><br />
+                  <span class="statistic--title">Sediment</span>
+                </p>
+                <div class="statistic--chart">
+                  <div class="statistic--chart--value"></div>
+                </div>
+              </div>
+            </article>
+            <section class="row metrics">
+            <article class="row ">
+              <div class="column-7 metrics--metric">
+                <p class="metric--title">
+                  Acres of Riparian Restoration
+                </p>
+                <div class="metric--chart">
+                  <div class="metric--chart--value"></div>
+                </div>
+                <p class="metric--help--text">
+                  0 of 0.331 acres
+                </p>
+              </div>
+	      <div class="column-2"></div>
+              <div class="column-7 metrics--metric">
+                <p class="metric--title">
+                  Miles of Riparian Restoration 
+                </p>
+                <div class="metric--chart">
+                  <div class="metric--chart--value"></div>
+                </div>
+                <p class="metric--help--text">
+                  0 of 972.5 miles
+                </p>
+              </div>
+            </article>
+            <article class="row ">
+              <div class="column-7 metrics--metric">
+                <p class="metric--title">
+                  Miles of Fencing Installed
+                </p>
+                <div class="metric--chart">
+                  <div class="metric--chart--value"></div>
+                </div>
+                <p class="metric--help--text">
+                  0 of 0.331 miles
+                </p>
+              </div>
+	      <div class="column-2"></div>
+              <div class="column-7 metrics--metric">
+                <p class="metric--title">
+                  Miles of Streambank Restored 
+                </p>
+                <div class="metric--chart">
+                  <div class="metric--chart--value"></div>
+                </div>
+                <p class="metric--help--text">
+                  0 of 972.5 miles
+                </p>
+              </div>
+            </article>
+            <article class="row ">
+              <div class="column-7 metrics--metric">
+                <p class="metric--title">
+                  Acres of Hyporheic Area Treated 
+                </p>
+                <div class="metric--chart">
+                  <div class="metric--chart--value"></div>
+                </div>
+                <p class="metric--help--text">
+                  0 of 0.331 acres
+                </p>
+              </div>
+	      <div class="column-2"></div>
+              <div class="column-7 metrics--metric">
+                <p class="metric--title">
+                   Acres of Floodplain Reconnected
+                </p>
+                <div class="metric--chart">
+                  <div class="metric--chart--value"></div>
+                </div>
+                <p class="metric--help--text">
+                  0 of 972.5 acres 
+                </p>
+              </div>
+            </article>
+            </section>
+            <h6 class="rule-above"><strong>Project</strong> Sites</h6>
             <article class="row list-item list-item-thin"
                      data-ng-if="page.sites.features.length"
                      data-ng-repeat="site in page.sites.features | orderBy:'id' track by $index">
