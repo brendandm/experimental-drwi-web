@@ -12,8 +12,67 @@ angular.module('FieldDoc')
 
     var self = this;
     $rootScope.page = {};
+    self.data = {};
+    self.rollups = {
+      nitrogen: {
+	installed: 0,
+	total: 2.11
+      },
+      phosphorus: {
+	installed: 0.6,
+	total: 0.12
+      },
+      sediment: {
+	installed: 0,
+	total: 0.03
+      },
+      metrics: [
+        {
+          label: 'Acres of Riparian Restoration',
+          name: 'acres_of_riparian_restoration',
+          installed: 38,
+          total: 48,
+          chart: (38/48)*100,
+          units: 'acres'
+        },
+        {
+          label: 'Acres of Hyporheic Area Treated',
+          name: 'acres_of_hyporheic_area_treated',
+          installed: 10,
+          total: 48,
+          units: 'acres'
+        },
+        {
+          label: 'Acres of Floodplain Reconnected',
+          name: 'acres_of_floodplain_reconnected',
+          installed: 0,
+          total: 48,
+          units: 'acres'
+        },
+        {
+          label: 'Miles of Fencing Installed',
+          name: 'miles_of_fencing_installed',
+          installed: 0,
+          total: 0,
+          units: 'miles'
+        },
+        {
+          label: 'Miles of Streambank Restored',
+          name: 'miles_of_streambank_restored',
+          installed: 0,
+          total: 0,
+          units: 'miles'
+        },
+        {
+          label: 'Miles of Riparian Restored',
+          name: 'miles_of_riparian_restored',
+          installed: 0,
+          total: 0,
+          units: 'miles'
+        }
+      ]
+    };
 
-    self.sites = sites;
     self.mapbox = mapbox;
 
     //
@@ -52,6 +111,13 @@ angular.module('FieldDoc')
         }
 
     });
+
+    sites.$promise.then(function(sitesResponse) {
+	self.sites = sitesResponse;
+
+        self.data.sites = sitesResponse;
+
+    })
 
 
     self.createSite = function() {

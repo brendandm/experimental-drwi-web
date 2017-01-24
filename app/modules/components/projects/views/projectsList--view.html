@@ -64,6 +64,7 @@
 
     <!-- Project List -->
     <div class="list">
+
       <article class="row list-item"
                data-ng-if="page.projects.features && !page.projects.features.length">
         <div class="column-16 list-item-content align-center empty-data">
@@ -80,6 +81,27 @@
           </p>
         </div>
       </article>
+
+			<div class="row list-item">
+      <div class="responsive-table">
+        <table class="table">
+          <!--<thead>
+            <tr>
+							<td></td>
+            </tr>
+          </thead>-->
+          <tbody>
+            <tr data-ng-repeat="project in page.projects.features track by $index">
+							<td>
+                <a href="/projects/{{ project.id }}#top" title="{{ project.properties.name }} project details">
+                  {{ project.properties.name }}
+                </a>
+							</td>
+            </tr>
+          </tbody>
+       </table>
+      </div>
+			</div>
 
       <article class="row list-item" data-ng-repeat="project in page.projects.features track by $index">
         <div class="column-16 list-item-content">

@@ -62,6 +62,11 @@
           'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_urban_homeowner'),
           'isArray': false
         },
+        'shorelineManagement': {
+          'method': 'GET',
+          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_shoreline_management'),
+          'isArray': false
+        },
         'wetlandsNontidal': {
           'method': 'GET',
           'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_wetlands_nontidal'),

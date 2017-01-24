@@ -119,6 +119,10 @@ pre.form-value {
   font-size: 0.75em;
   font-style: italic;
   max-width: 100%;
+
+  &.help-text-top {
+    margin-bottom: 2em;
+  }
 }
 
 
@@ -486,6 +490,11 @@ select.form-control {
 //
 //
 //
+.form-element .checkbox input[type="checkbox"],
+.form-element .checkbox .control-label input {
+  float: left;
+  margin-right: 1em;
+}
 .form-imaginaryCheckbox {
     cursor: pointer;
     display: inline-block;
