@@ -19,7 +19,7 @@
           <div class="list">
 
             <article class="row list-item list-item-thin"
-                     data-ng-if="!page.sites.features.length">
+                     data-ng-if="!page.sites.length">
               <div class="column-16 list-item-content align-center empty-data">
                 <div class="icon retinaicon-file-096"></div>
                 <p>
@@ -43,31 +43,31 @@
             <article class="row statistics">
               <div class="column-4 statistics--statistic">
                 <p class="statistic--value">
-                  {{ page.rollups.nitrogen.installed }} <span class="statistic--valueLabel">of</span> {{ page.rollups.nitrogen.total }} <span class="statistic--valueLabel">lbs/yr</span><br />
+                  {{ page.rollups.nitrogen.installed | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.rollups.nitrogen.total | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
                   <span class="statistic--title">Nitrogen</span>
                 </p>
                 <div class="statistic--chart">
-                  <div class="statistic--chart--value"></div>
+                  <div data-ng-if="page.rollups.nitrogen.chart" class="statistic--chart--value" data-ng-style="{'width': '{{ page.rollups.nitrogen.chart }}%' }"></div>
                 </div>
               </div>
               <div class="column-2"></div>
               <div class="column-4 statistics--statistic">
                 <p class="statistic--value">
-                  {{ page.rollups.phosphorus.installed }} <span class="statistic--valueLabel">of</span> {{ page.rollups.phosphorus.total }} <span class="statistic--valueLabel">lbs/yr</span><br />
+                  {{ page.rollups.phosphorus.installed | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.rollups.phosphorus.total | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
                   <span class="statistic--title">Phosphorus</span>
                 </p>
                 <div class="statistic--chart">
-                  <div class="statistic--chart--value" style="width: 50%;"></div>
+                  <div data-ng-if="page.rollups.phosphorus.chart" class="statistic--chart--value" data-ng-style="{'width': '{{ page.rollups.phosphorus.chart }}%' }"></div>
                 </div>
               </div>
               <div class="column-2"></div>
               <div class="column-4 statistics--statistic">
                 <p class="statistic--value">
-                  {{ page.rollups.sediment.installed }} <span class="statistic--valueLabel">of</span> {{ page.rollups.sediment.total }} <span class="statistic--valueLabel">tons/yr</span><br />
+                  {{ page.rollups.sediment.installed | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.rollups.sediment.total | number:2 }} <span class="statistic--valueLabel">tons/yr</span><br />
                   <span class="statistic--title">Sediment</span>
                 </p>
                 <div class="statistic--chart">
-                  <div class="statistic--chart--value"></div>
+                  <div data-ng-if="page.rollups.sediment.chart" class="statistic--chart--value" data-ng-style="{'width': '{{ page.rollups.sediment.chart }}%' }"></div>
                 </div>
               </div>
             </article>
@@ -84,15 +84,15 @@
                        data-ng-style="{'width': '{{ metric.chart }}%' }"></div>
                 </div>
                 <p class="metric--help--text">
-                  {{ metric.installed }} of {{ metric.total }} {{ metric.units }} 
+                  {{ metric.installed | number:1 }} of {{ metric.total | number:1 }} {{ metric.units }} 
                 </p>
               </div>
             </article>
             </section>
             <h6 class="rule-above"><strong>Project</strong> Sites</h6>
             <article class="row list-item list-item-thin"
-                     data-ng-if="page.sites.features.length"
-                     data-ng-repeat="site in page.sites.features | orderBy:'id' track by $index">
+                     data-ng-if="page.sites.length"
+                     data-ng-repeat="site in page.sites | orderBy:'id' track by $index">
               <div class="column-16 list-item-content">
                 <div class="row">
                   <div class="column-2">

@@ -8,71 +8,53 @@
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('ProjectViewCtrl', function (Account, $rootScope, $route, $location, mapbox, project, Site, sites, user) {
+  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateBioretention, CalculateUrbanHomeowner, $rootScope, $route, $location, mapbox, project, Site, UALStateLoad, user) {
 
     var self = this;
+    
     $rootScope.page = {};
+
     self.data = {};
+    
     self.rollups = {
       nitrogen: {
 	installed: 0,
-	total: 2.11
+	total: 0
       },
       phosphorus: {
-	installed: 0.6,
-	total: 0.12
+	installed: 0,
+	total: 0
       },
       sediment: {
 	installed: 0,
-	total: 0.03
+	total: 0
       },
-      metrics: [
-        {
-          label: 'Acres of Riparian Restoration',
-          name: 'acres_of_riparian_restoration',
-          installed: 38,
-          total: 48,
-          chart: (38/48)*100,
-          units: 'acres'
-        },
-        {
-          label: 'Acres of Hyporheic Area Treated',
-          name: 'acres_of_hyporheic_area_treated',
-          installed: 10,
-          total: 48,
-          units: 'acres'
-        },
-        {
-          label: 'Acres of Floodplain Reconnected',
-          name: 'acres_of_floodplain_reconnected',
-          installed: 0,
-          total: 48,
-          units: 'acres'
-        },
-        {
-          label: 'Miles of Fencing Installed',
-          name: 'miles_of_fencing_installed',
+      metrics: {
+        'metric_1': {
+          label: 'Gallons/Year of Stormwater Detained or Infiltrated',
           installed: 0,
           total: 0,
           units: 'miles'
         },
-        {
-          label: 'Miles of Streambank Restored',
-          name: 'miles_of_streambank_restored',
-          installed: 0,
-          total: 0,
-          units: 'miles'
-        },
-        {
-          label: 'Miles of Riparian Restored',
-          name: 'miles_of_riparian_restored',
+        'metric_2': {
+          label: 'Acres Protected by BMP to Reduce Stormwater Runoff',
           installed: 0,
           total: 0,
           units: 'miles'
         }
-      ]
+       
+      }
     };
 
+
+    //
+    // 
+    //
+    self.calculate = Calculate;
+
+    //
+    //
+    //
     self.mapbox = mapbox;
 
     //
@@ -80,6 +62,9 @@ angular.module('FieldDoc')
     //
     project.$promise.then(function(projectResponse) {
         self.project = projectResponse;
+        self.sites = self.project.properties.sites
+
+        self.data = projectResponse;
 
         $rootScope.page.title = self.project.properties.name;
         $rootScope.page.links = [
@@ -93,6 +78,11 @@ angular.module('FieldDoc')
                 type: 'active'
             }
         ];
+
+        //
+        //
+        //
+        self.statistics.sites(projectResponse);
 
         //
         // Verify Account information for proper UI element display
@@ -111,14 +101,6 @@ angular.module('FieldDoc')
         }
 
     });
-
-    sites.$promise.then(function(sitesResponse) {
-	self.sites = sitesResponse;
-
-        self.data.sites = sitesResponse;
-
-    })
-
 
     self.createSite = function() {
         self.site = new Site({
@@ -147,21 +129,154 @@ angular.module('FieldDoc')
       }
     ];
 
-    // self.$watch('project.sites.list', function(processedSites, existingSites) {
-    //  // console.log('self.project.sites.list,', self.project.sites.list)
-    //  angular.forEach(processedSites, function(feature, $index) {
-    //    var coords = [0,0];
-    //
-    //    if (feature.geometry !== null) {
-    //      console.log('feature.geometry', feature.geometry);
-    //      if (feature.geometry.geometries[0].type === 'Point') {
-    //        coords = feature.geometry.geometries[0].coordinates;
-    //      }
-    //    }
-    //
-    //    self.project.sites.list[$index].site_thumbnail = 'https://api.tiles.mapbox.com/v4/' + mapbox.satellite + '/pin-s+b1c11d(' + coords[0] + ',' + coords[1] + ',17)/' + coords[0] + ',' + coords[1] + ',17/80x80@2x.png?access_token=' + mapbox.access_token;
-    //  });
-    //});
 
+
+    //
+    // Process rollup statistics for the entire `project`.
+    //
+    self.statistics = {
+        sites: function(_thisProject) {
+          
+          var _self = this;
+
+          angular.forEach(_thisProject.properties.sites, function(_site, _siteIndex) {
+            console.log('Processing Site', _site.id);
+
+            var _thesePractices = _self.practices(_site, _site.properties.practices);
+
+          });
+        },
+        practices: function(_thisSite, _thesePractices) {
+            
+            var _self = this;
+            
+            angular.forEach(_thesePractices, function(_practice, _practiceIndex){
+                
+                console.log('Processing Practice', _practice);
+
+                switch(_practice.properties.practice_type) {
+                  case "In-stream Habitat":
+                    var _readings = _practice.properties.readings_instream_habitat
+                    var _totals = {
+                        "planning": self.calculate.getTotalReadingsByCategory('Planning', _readings), 
+                        "installation": self.calculate.getTotalReadingsByCategory('Installation', _readings)
+                    };
+                    break;
+                  case "Bioretention":
+                    var _calculate = CalculateBioretention;
+                    var _readings = _practice.properties.readings_bioretention;
+                    var _loadData = {};
+
+                    //
+                    //
+                    //
+        if (_thisSite.properties.state) {
+          UALStateLoad.query({
+            q: {
+              filters: [
+                {
+                  name: 'state',
+                  op: 'eq',
+                  val: _thisSite.properties.state
+                }
+              ]
+            }
+          }, function(successResponse) {
+
+            angular.forEach(successResponse.features, function(feature, $index) {
+              _loadData[feature.properties.developed_type] = {
+                tn_ual: feature.properties.tn_ual,
+                tp_ual: feature.properties.tp_ual,
+                tss_ual: feature.properties.tss_ual
+              };
+            });
+
+            console.log('loadData', _loadData);
+
+            //
+            // 
+            //i
+                    angular.forEach(_readings, function(_reading, _readingIndex){
+                        console.log('_reading', _reading.properties);
+
+                        if (_reading.properties.measurement_period === 'Planning') {
+                            var _plannedN = _calculate.plannedNitrogenLoadReduction(_reading, _loadData);
+                            var _plannedP = _calculate.plannedPhosphorusLoadReduction(_reading, _loadData);
+                            var _plannedS = _calculate.plannedSedimentLoadReduction(_reading, _loadData);
+
+                            self.rollups.nitrogen.total += _plannedN;
+                            self.rollups.phosphorus.total += _plannedP;
+                            self.rollups.sediment.total += _plannedS;
+                        } else if (_reading.properties.measurement_period === 'Installation') {
+                            var _installedN = _calculate.plannedNitrogenLoadReduction(_reading, _loadData);
+                            var _installedP = _calculate.plannedPhosphorusLoadReduction(_reading, _loadData);
+                            var _installedS = _calculate.plannedSedimentLoadReduction(_reading, _loadData);
+
+                            self.rollups.nitrogen.installed += _installedN;
+                            self.rollups.phosphorus.installed += _installedP;
+                            self.rollups.sediment.installed += _installedS;
+
+                            //self.rollups.metrics.metric_1.installed += _calculate.gallonsReducedPerYear(_reading);
+                        }
+                    });
+
+                    self.rollups.nitrogen.chart = (self.rollups.nitrogen.installed/self.rollups.nitrogen.total)*100;
+                    self.rollups.phosphorus.chart = (self.rollups.phosphorus.installed/self.rollups.phosphorus.total)*100;
+                    self.rollups.sediment.chart = (self.rollups.sediment.installed/self.rollups.sediment.total)*100;
+
+            
+
+          }, function(errorResponse) {
+            console.log('errorResponse', errorResponse);
+          });
+        } else {
+          console.log('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
+        }
+
+                    
+
+                    //
+                    // CHESAPEAKE BAY METRICS
+                    //
+                    
+                    angular.forEach(_readings, function(_reading, _readingIndex){
+                        console.log('_reading', _reading.properties);
+
+                        if (_reading.properties.measurement_period === 'Planning') {
+                            self.rollups.metrics.metric_1.total += _calculate.gallonsReducedPerYear(_reading);
+                        } else if (_reading.properties.measurement_period === 'Installation') {
+                            self.rollups.metrics.metric_1.installed += _calculate.gallonsReducedPerYear(_reading);
+                        }
+                    });
+
+                    self.rollups.metrics.metric_1.chart = (self.rollups.metrics.metric_1.installed/self.rollups.metrics.metric_1.total)*100;
+
+                    break;
+                  case "Urban Homeowner":
+                    var _calculate = CalculateUrbanHomeowner;
+
+                    var _readings = _practice.properties.readings_urban_homeowner;
+                    
+                    angular.forEach(_readings, function(_reading, _readingIndex){
+                        console.log('_reading', _reading.properties);
+
+                        if (_reading.properties.measurement_period === 'Planning') {
+                            self.rollups.metrics.metric_1.total += CalculateUrbanHomeowner.gallonsReducedPerYear(_reading.properties);
+                        } else if (_reading.properties.measurement_period === 'Installation') {
+                            self.rollups.metrics.metric_1.installed += _calculate.gallonsReducedPerYear(_reading.properties);
+                        }
+                    });
+
+                    self.rollups.metrics.metric_1.chart = (self.rollups.metrics.metric_1.installed/self.rollups.metrics.metric_1.total)*100;
+
+                    break;
+
+                }
+                
+                //var _theseReadings = _self.readings(_practice);    
+            });    
+        },
+        readings: function(_these) {}
+    };
 
   });
