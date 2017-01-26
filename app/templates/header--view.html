@@ -13,30 +13,26 @@
         <ul class="utility-navigation">
           <li data-ng-if="!$root.user.id">
             <a class="button-link" href="/account/register">
-              Create Account
+                Create Account
             </a>
           </li>
-          <li>
-            <a target="_blank" href="http://help.fielddoc.org/">
-              Need Help?
+
+          <li data-ng-if="$root.user.id">
+            <a href="/account/{{ $root.user.id }}" class="user">
+                Account
             </a>
           </li>
           <li data-ng-if="$root.user.id">
             <a href="/logout" class="logout">
-              Logout
+                Logout
             </a>
           </li>
-          <li data-ng-if="$root.user.id">
-            <a target="_blank" href="//api.fielddoc.org/user/profile" class="user">
-              <img data-ng-if="$root.user.properties.picture"
-                   data-ng-src="'{{ $root.user.properties.picture }}'" width="24"
-                   height="24"  />
-              <img data-ng-if="!$root.user.properties.picture"
-                   src="" alt=""
-                   width="24" height="24" />
+          <li>
+            <a target="_blank" href="http://help.fielddoc.org/">
+                Need Help?
             </a>
           </li>
-        </ul>
+       </ul>
       </nav>
     </div>
   </div>
