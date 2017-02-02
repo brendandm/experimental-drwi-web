@@ -39,6 +39,38 @@
                tabindex="3" />
       </div>
       <div class="form-element">
+        <label for="email" class="control-label">
+          Organization search
+        </label>
+        <relationship model="page.register.organization"
+                      table="'organization'"
+                      field="'name'"
+                      multiple="'true'"
+                      display="['name']"
+                      placeholder="'Begin typing an organization name'">
+        </relationship>
+
+        <p class="form-control form-control-disabled align-left"
+           data-ng-if="page.register.organization.properties.name">
+          {{ page.register.organization.properties.name }}
+        </p>
+        <span data-ng-if="page.register.organization" class="help-text action">
+          <a data-ng-click="page.register.organization = null;" class="remove">
+            Clear value
+          </a>
+        </span>
+
+        {{ page.register.organization }}
+
+        <!-- <input type="text" class="form-control form-control-half"
+               id="organization" name="organization"
+               placeholder="Begin typing an organization name"
+               data-ng-model="page.register.organization_name"
+               required="required"
+               tabindex="2" /> -->
+
+      </div>
+      <div class="form-element">
         <label for="password" class="control-label">
           Type a password
         </label>

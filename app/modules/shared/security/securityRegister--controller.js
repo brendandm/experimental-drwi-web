@@ -28,6 +28,9 @@
              });
 
              self.register = {
+               search: {
+                 queryString: ""
+               },
                visible: false,
                login: function(userId) {
 
