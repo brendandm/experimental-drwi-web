@@ -42,15 +42,14 @@
         <label for="email" class="control-label">
           Organization search
         </label>
-        <relationship model="page.register.organization"
+        <organization model="page.register.data.organizations"
                       table="'organization'"
                       field="'name'"
-                      multiple="'true'"
                       display="['name']"
                       placeholder="'Begin typing an organization name'">
-        </relationship>
+        </organization>
 
-        <p class="form-control form-control-disabled align-left"
+        <!-- <p class="form-control form-control-disabled align-left"
            data-ng-if="page.register.organization.properties.name">
           {{ page.register.organization.properties.name }}
         </p>
@@ -58,9 +57,7 @@
           <a data-ng-click="page.register.organization = null;" class="remove">
             Clear value
           </a>
-        </span>
-
-        {{ page.register.organization }}
+        </span> -->
 
         <!-- <input type="text" class="form-control form-control-half"
                id="organization" name="organization"

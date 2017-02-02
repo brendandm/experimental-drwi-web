@@ -28,15 +28,19 @@
              });
 
              self.register = {
-               search: {
-                 queryString: ""
+               data: {
+                 email: null,
+                 first_name: null,
+                 last_name: null,
+                 organizations: [],
+                 password: null
                },
                visible: false,
                login: function(userId) {
 
                  var credentials = new Security({
-                   email: self.register.email,
-                   password: self.register.password,
+                   email: self.register.data.email,
+                   password: self.register.data.password,
                  });
 
                  credentials.$save(function(response) {
@@ -70,8 +74,9 @@
                      self.newUser = new User({
                        id: userId,
                        properties: {
-                         first_name: self.register.first_name,
-                         last_name: self.register.last_name
+                         first_name: self.register.data.first_name,
+                         last_name: self.register.data.last_name,
+                         organizations: self.register.data.organizations
                        }
                      });
 

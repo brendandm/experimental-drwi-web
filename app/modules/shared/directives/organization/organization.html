@@ -18,21 +18,18 @@
   </div>
   <div class="row">
     <div class="column-16">
-      <div data-ng-if="model.length >= 1" class="relationship-values">
-        <div class="row" data-ng-repeat="option in model track by $index">
-          <div class="column-15">
-            <span data-ng-if="multiple !== 'true'">
-              {{ option.name }}
-            </span>
-            <span data-ng-if="multiple === 'true'">
-              {{ option.name }}, {{ option.state_name }}
-            </span>
-          </div>
-          <div class="column-1 align-center">
-            <p><a class="icon retinaicon-essentials-068" data-ng-click="removeFeatureFromRelationships($index)"></a></p>
-          </div>
-        </div>
-      </div>
+      <table data-ng-if="model.length >= 1" class="relationship-values">
+        <tr class="row" data-ng-repeat="option in model track by $index">
+          <td>
+            {{ option.properties.name }}
+          </td>
+          <td>
+            <a class="" data-ng-click="removeFeatureFromRelationships($index)">
+              remove organization from my account
+            </a>
+          </td>
+        </tr>
+      </table>
     </div>
   </div>
 </div>
