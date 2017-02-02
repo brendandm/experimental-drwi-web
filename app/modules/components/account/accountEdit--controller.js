@@ -84,9 +84,8 @@ angular.module('FieldDoc')
 
                 self.status.saving = false;
 
-                $rootScope.notifications.success('Your account changes were successfully saved.');
+                $rootScope.notifications.success("Great!", "Your account changes were saved");
 
-                $rootScope.user = Account.userObject = self.user = successResponse;
                 $location.path('/account/');
 
             }, function(errorResponse) {
