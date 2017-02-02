@@ -55,8 +55,13 @@
           <div class="form-field">
             <label for="project_abstract" class="control-label" data-ng-if="page.project.properties.program_type !== 'Pre-Project Plan'">5. Please tell us which organizations this project is associated with.</label>
             <label for="project_abstract" class="control-label" data-ng-if="page.project.properties.program_type === 'Pre-Project Plan'">4. Please tell us which organizations this project is associated with.</label>
-            <textarea class="form-control animate" data-ng-model="page.project.properties.organization"
-                      msd-elastic id="organization" name="organization" rows="1">{{ page.project.properties.organization }}</textarea>
+            <organization model="page.project.properties.organizations"
+                          table="'organization'"
+                          field="'name'"
+                          display="['name']"
+                          placeholder="'Begin typing an organization name'"
+                          tabindexnumber="4">
+            </organization>
           </div>
         </div>
 

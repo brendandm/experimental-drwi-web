@@ -10,7 +10,7 @@ angular.module('FieldDoc')
 
     var self = this;
 
-    
+
     //
     // Assign project to a scoped variable
     //
@@ -41,7 +41,7 @@ angular.module('FieldDoc')
                         "text": "Edit",
                         "url": "/account/" + $rootScope.user.id + "/edit"
                     }
-                ]    
+                ]
             };
 
 
@@ -53,7 +53,7 @@ angular.module('FieldDoc')
         //
         // If there is not Account.userObject and no user object, then the
         // user is not properly authenticated and we should send them, at
-        // minimum, back to the projects page, and have them attempt to 
+        // minimum, back to the projects page, and have them attempt to
         // come back to this page again.
         //
         self.actions.exit();
@@ -69,6 +69,17 @@ angular.module('FieldDoc')
     };
 
     self.actions = {
+        organizations: function() {
+          var _organizations = [];
+
+          angular.forEach(self.user.properties.organizations, function(_organization, _index) {
+            _organizations.push({
+              "id": _organization.id
+            })
+          });
+
+          return _organizations;
+        },
         save: function() {
 
             self.status.saving = true;
@@ -77,7 +88,7 @@ angular.module('FieldDoc')
                 "id": self.user.id,
                 "first_name": self.user.properties.first_name,
                 "last_name": self.user.properties.last_name,
-                "organizations": []    
+                "organizations": self.actions.organizations
             });
 
             _user.$update(function(successResponse) {

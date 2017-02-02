@@ -11,7 +11,7 @@
           name="form" data-ng-submit="page.actions.save()">
       <div class="form-element">
         <label for="email" class="control-label">
-          Your Email Address 
+          Your Email Address
         </label>
         <input type="text" class="form-control"
                id="email" name="email" disabled="disabled"
@@ -33,6 +33,18 @@
                data-ng-model="page.user.properties.last_name" required="required"
                tabindex="3" />
       </div>
+      <div class="form-element">
+        <label for="email" class="control-label">
+          Organization search
+        </label>
+        <organization model="page.user.properties.organizations"
+                      table="'organization'"
+                      field="'name'"
+                      display="['name']"
+                      placeholder="'Begin typing an organization name'"
+                      tabindexnumber="4">
+        </organization>
+      </div>
       <button type="submit" class="button button-submit"
               id="submit" name="submit" tabindex="3"
               data-ng-if="!page.status.saving">
@@ -42,7 +54,7 @@
       <div class="throbber throbber-small" data-ng-if="page.status.saving">
       </div>
       <p style="text-align: center;" data-ng-if="page.status.saving">
-          Saving changes to your account... 
+          Saving changes to your account...
       </p>
     </form>
 
