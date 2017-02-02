@@ -10,6 +10,7 @@
           field: '=',
           display: '=',
           model: '=',
+          tabindexnumber: '=',
           placeholder: '='
         },
         templateUrl: '/modules/shared/directives/organization/organization.html',

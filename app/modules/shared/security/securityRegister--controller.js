@@ -8,7 +8,7 @@
      * @description
      */
      angular.module('FieldDoc')
-       .controller('SecurityRegisterController', function (Account, $location, Security, ipCookie, $rootScope, $timeout, User) {
+       .controller('SecurityRegisterController', function (Account, $location, Notifications, Security, ipCookie, $rootScope, $timeout, User) {
 
              var self = this,
                  userId = null;
@@ -34,6 +34,17 @@
                  last_name: null,
                  organizations: [],
                  password: null
+               },
+               organizations: function() {
+                 var _organizations = [];
+
+                 angular.forEach(self.register.data.organizations, function(_organization, _index) {
+                   _organizations.push({
+                     "id": _organization.id
+                   })
+                 });
+
+                 return _organizations;
                },
                visible: false,
                login: function(userId) {
@@ -71,15 +82,6 @@
 
                      ipCookie('FIELDSTACKIO_SESSION', response.access_token, self.cookieOptions);
 
-                     self.newUser = new User({
-                       id: userId,
-                       properties: {
-                         first_name: self.register.data.first_name,
-                         last_name: self.register.data.last_name,
-                         organizations: self.register.data.organizations
-                       }
-                     });
-
                      //
                      // Make sure we also set the User ID Cookie, so we need to wait to
                      // redirect until we're really sure the cookie is set
@@ -95,8 +97,9 @@
 
                          self.newUser = new User({
                            id: $rootScope.user.id,
-                           first_name: self.register.first_name,
-                           last_name: self.register.last_name
+                           first_name: self.register.data.first_name,
+                           last_name: self.register.data.last_name,
+                           organizations: self.register.organizations()
                          });
 
                          self.newUser.$update().then(function (updateUserSuccessResponse) {
@@ -135,7 +138,7 @@
                  //
                  // Check to see if Username and Password field are valid
                  //
-                 if (!self.register.email) {
+                 if (!self.register.data.email) {
                    $rootScope.notifications.warning('Email', 'field is required');
 
                    self.register.processing = false;
@@ -146,7 +149,7 @@
 
                    return;
                  }
-                 else if (!self.register.password) {
+                 else if (!self.register.data.password) {
                    $rootScope.notifications.warning('Password', 'field is required');
 
                    self.register.processing = false;
@@ -162,8 +165,8 @@
                  // If all fields have values move on to the next step
                  //
                  Security.register({
-                   email: self.register.email,
-                   password: self.register.password
+                   email: self.register.data.email,
+                   password: self.register.data.password
                  }, function(response) {
 
                    //

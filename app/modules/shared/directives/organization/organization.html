@@ -1,7 +1,11 @@
 <div class="autocomplete">
   <div class="row">
     <div class="column-15 typeAhead">
-      <input data-ng-focus="relationship_focus=true" data-ng-blur="relationship_focus=false" type="text" placeholder="{{ placeholder }}" data-ng-model="searchText" data-ng-change="search()" class="form-control" />
+      <input data-ng-focus="relationship_focus=true"
+             data-ng-blur="relationship_focus=false" type="text"
+             placeholder="{{ placeholder }}" data-ng-model="searchText"
+             data-ng-change="search()" class="form-control"
+             tabindex="{{ tabindexnumber }}" />
       <div data-ng-if="features.length" class="dropdown">
         <ul class="typeAhead--results">
           <li class="typeAhead--results--result"
@@ -18,17 +22,41 @@
   </div>
   <div class="row">
     <div class="column-16">
-      <table data-ng-if="model.length >= 1" class="relationship-values">
-        <tr class="row" data-ng-repeat="option in model track by $index">
-          <td>
-            {{ option.properties.name }}
-          </td>
-          <td>
-            <a class="" data-ng-click="removeFeatureFromRelationships($index)">
-              remove organization from my account
-            </a>
-          </td>
-        </tr>
+      <label class="control-label">
+        My Organizations
+      </label>
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="align-left">
+              Organization name
+            </th>
+            <th>
+              actions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-ng-if="model.length >= 1" data-ng-repeat="option in model track by $index">
+            <td class="align-left">
+              {{ option.properties.name }}
+            </td>
+            <td>
+              <a class="" data-ng-click="removeFeatureFromRelationships($index)">
+                remove organization from my account
+              </a>
+            </td>
+          </tr>
+          <tr data-ng-if="model.length === 0">
+            <td colspan="2" class="align-center">
+              <p>
+                <em>
+                  You are not associated with any organizations
+                </em>
+              </p>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
   </div>
