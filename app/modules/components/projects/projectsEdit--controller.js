@@ -60,6 +60,9 @@ angular.module('FieldDoc')
     //
     //
     self.saveProject = function() {
+
+      self.project.properties.workflow_state = "Draft";
+      
       self.project.$update().then(function(response) {
 
         $location.path('/projects/' + self.project.id);

@@ -308,3 +308,92 @@ p {
     color: $color-gray-light;
   }
 }
+
+
+
+//
+//
+//
+.project--title,
+a.project--title,
+a.project--title:active,
+a.project--title:link,
+a.project--title:visited {
+  color: $color-black-light;
+  font-size: 15px;
+  font-weight: 500;
+  border-bottom: 1px dashed $color-black-light;
+  text-decoration: none;
+
+  &:hover {
+    border-bottom: none;
+    text-decoration: none;
+  }
+}
+
+.project--state {
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.0125em;
+
+  .project--state--highlight {
+    border-radius: 16px;
+    -moz-border-radius: 16px;
+    -webkit-border-radius: 16px;
+    background-color: $color-gray-light;
+    display: inline-block;
+    height: 8px;
+    width: 8px;
+
+    &.project--state--draft {
+      background-color: $color-gray-light;
+    }
+    &.project--state--submitted {
+      background-color: $color-gold-base;
+    }
+    &.project--state--funded {
+      background-color: $color-green-base;
+    }
+    &.project--state--completed {
+      background-color: $color-brightBlue;
+    }
+  }
+
+}
+
+.project--funder {
+  font-size: 13px;
+}
+
+.column--state {
+  width: 10%;
+}
+
+.column--programType {
+  width: 10%;
+}
+
+.column--titleDescription {
+  width: 40%;
+}
+
+.column--funder {
+  width: 20%;
+}
+
+.column--contact {
+  width: 10%;
+}
+
+.column--lastUpdated {
+  width: 10%;
+}
+
+
+.column--vertialCenter {
+  vertical-align: middle !important;
+
+  p {
+    display: inline;
+  }
+}

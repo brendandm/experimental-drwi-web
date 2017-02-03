@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-  .controller('ProjectsCtrl', function (Account, $location, $log, Project, projects, $rootScope, $scope, Site, user) {
+  .controller('ProjectsCtrl', function (Account, $location, $log, Project, projects, $rootScope, $scope, Site, user, years) {
 
     var self = this;
 
@@ -40,6 +40,26 @@ angular.module('FieldDoc')
       ]
     };
 
+    self.filters = {
+        "active": {
+            "workflow_state": null,
+            "year": {
+                "year": null
+            },
+            "sstring": null
+        },
+        "values": {
+          "workflow_states": [
+            'Draft',
+            'Submitted',
+            'Funded',
+            'Completed'
+          ],
+          "years": years
+        }
+    };
+
+
     //
     // Project functionality
     //
@@ -47,7 +67,7 @@ angular.module('FieldDoc')
 
     self.search = {
       query: '',
-      execute: function() {
+      execute: function(page) {
 
         //
         // Get all of our existing URL Parameters so that we can
@@ -69,10 +89,38 @@ angular.module('FieldDoc')
           }]
         };
 
-        $location.path('/projects/').search({
-          q: angular.toJson(q),
-          page: 1
-        });
+        if (self.filters.active.workflow_state !== null) {
+          console.log('add workflow state filter')
+
+          q.filters.push({
+            "name": "workflow_state",
+            "op": "like",
+            "val": self.filters.active.workflow_state
+          });
+        }
+
+        if (self.filters.active.year.year !== null) {
+            q.filters.push({
+              "name": "created_on",
+              "op": "gte",
+              "val": self.filters.active.year.year + "-01-01"
+            });
+            q.filters.push({
+              "name": "created_on",
+              "op": "lte",
+              "val": self.filters.active.year.year + "-12-31"
+            })
+        }
+
+        Project.query({
+            "q": q,
+            "page": (page ? page : 1)
+          }).$promise.then(function(successResponse) {
+            console.log("successResponse", successResponse);
+            self.projects = successResponse;
+          }, function(errorResponse) {
+            console.log("errorResponse", errorResponse);
+          });
 
       },
       paginate: function(pageNumber) {
@@ -81,11 +129,7 @@ angular.module('FieldDoc')
         // Get all of our existing URL Parameters so that we can
         // modify them to meet our goals
         //
-        var searchParams = $location.search();
-
-        searchParams.page = pageNumber;
-
-        $location.path('/projects/').search(searchParams);
+        self.search.execute(pageNumber);
       },
       clear: function() {
         $location.path('/projects/').search('');

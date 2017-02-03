@@ -16,7 +16,7 @@ angular.module('FieldDoc')
         templateUrl: '/modules/components/projects/views/projectsList--view.html',
         controller: 'ProjectsCtrl',
         controllerAs: 'page',
-        reloadOnSearch: true,
+        reloadOnSearch: false,
         resolve: {
           projects: function($location, Project) {
 
@@ -49,6 +49,9 @@ angular.module('FieldDoc')
                 return Account.getUser();
             }
             return Account.userObject;
+          },
+          'years': function(Filters) {
+            return Filters.projectsByYear();
           }
         }
       })

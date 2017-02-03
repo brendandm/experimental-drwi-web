@@ -4,63 +4,109 @@
 
   <div class="site-content">
     <!-- Toolbox -->
-    <div class="row toolbox">
+      <form role="form" id="formFilterProjects" name="formFilterProjects"
+            data-ng-submit="page.search.execute()"
+            class="row toolbox">
 
       <!-- Filter Tools -->
-      <div class="column-12">
-        <form role="form" id="formFilterProjects" name="formFilterProjects"
-              data-ng-submit="page.search.execute()">
+      <div class="column-6">
+        <div class="form-element">
+          <label class="control-label">
+            &nbsp;
+          </label>
+          <ul class="form-element-tabs">
+            <li>
+              <a href="javascript:void(0);"
+                data-ng-class="{'active': page.filters.active.workflow_state === null}"
+                data-ng-click="page.filters.active.workflow_state = null;">
+                <span class="form-element-tabsMarker"></span>
+                All
+              </a>
+            </li>
+            <li data-ng-repeat="filter in page.filters.values.workflow_states">
+              <a href="javascript:void(0);"
+                data-ng-class="{'active': page.filters.active.workflow_state === '{{ filter }}'}"
+                data-ng-click="page.filters.active.workflow_state = filter;">
+                <span class="form-element-tabsMarker"
+                      data-ng-class="{'form-element-tabsMarker-draft': (filter === 'Draft'), 'form-element-tabsMarker-submitted': (filter === 'Submitted'), 'form-element-tabsMarker-funded': (filter === 'Funded'), 'form-element-tabsMarker-completed': (filter === 'Completed')}"></span>
+                {{ filter }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="column-4">
           <div class="form-element">
+            <label class="control-label">
+              Search by Project Creation Date
+            </label>
             <input type="text" placeholder="Begin typing a project name..."
                    id="search" name="search" class="form-control"
                    data-ng-model="page.search.query" />
           </div>
-          <div class="form-actions">
-            <button type="submit">Search</button>
-            <button type="button" data-ng-click="page.search.clear()">Clear Search</button>
-          </div>
-        </form>
       </div>
-
-      <!-- Pagination Tools -->
       <div class="column-4">
-        <ul class="pager pull-right">
-          <li class="pull-left">
-            <!-- No Project Results to Display -->
-            <span data-ng-if="page.projects.properties.num_results === 0">
-                No results
-            </span>
-
-            <!-- If there are 25 or less projects to display -->
-            <span data-ng-if="page.projects.properties.num_results <= 10 && page.projects.properties.num_results !== 0">
-                1-{{ page.projects.properties.num_results }} of {{ page.projects.properties.num_results }}
-            </span>
-
-            <!-- If user is on the first page and there are more than 25 results -->
-            <span data-ng-if="page.projects.properties.page === 1 && page.projects.properties.num_results > 10">
-                1-10 of {{ page.projects.properties.num_results | number }}
-            </span>
-
-            <!-- If the current page is no the first page -->
-            <span data-ng-if="page.projects.properties.page && page.projects.properties.page > 1">
-                {{ (page.projects.properties.page*10)-10 | number }}-{{ (page.projects.properties.page*10) | number }} of {{ page.projects.properties.num_results | number }}
-            </span>
-          </li>
-          <li data-ng-if="page.projects.properties.page !== page.projects.properties.total_pages && page.projects.properties.num_results !== 0"
-              class="next pull-right">
-            <a title="Older" data-ng-click="page.search.paginate(page.projects.properties.page+1)">
-              <div class="icon retinaicon-retina-icons-v-1-5"></div>
-            </a>
-          </li>
-          <li data-ng-if="page.projects.properties.page !== 1" class="previous pull-right">
-            <a title="Newer" data-ng-click="page.search.paginate(page.projects.properties.page-1)">
-              <div class="icon retinaicon-retina-icons-v-1-4"></div>
-            </a>
-          </li>
-        </ul>
+        <div class="form-element" >
+          <label class="control-label">
+            Search by Project Creation Date
+          </label>
+          <select data-ng-model="page.filters.active.year"
+                  data-ng-options="year as year.year for year in page.filters.values.years.years track by year.year"
+                  class="form-control">
+            <option value="">All Years</value>
+          </select>
+        </div>
       </div>
+      <div class="column-2">
+        <div class="form-actions">
+          <label class="control-label">
+            &nbsp;
+          </label>
+          <button type="submit">Search</button>
+          <button type="button" data-ng-click="page.search.clear()">Clear Search</button>
+        </div>
+      </div>
+    </form>
+    <!-- Pagination Tools -->
+  <div class="row toolbox">
+    <div class="column-16">
+      <ul class="pager pull-right">
+        <li class="pull-left">
+          <!-- No Project Results to Display -->
+          <span data-ng-if="page.projects.properties.num_results === 0">
+              No results
+          </span>
 
+          <!-- If there are 25 or less projects to display -->
+          <span data-ng-if="page.projects.properties.num_results <= 10 && page.projects.properties.num_results !== 0">
+              1-{{ page.projects.properties.num_results }} of {{ page.projects.properties.num_results }}
+          </span>
+
+          <!-- If user is on the first page and there are more than 25 results -->
+          <span data-ng-if="page.projects.properties.page === 1 && page.projects.properties.num_results > 10">
+              1-10 of {{ page.projects.properties.num_results | number }}
+          </span>
+
+          <!-- If the current page is no the first page -->
+          <span data-ng-if="page.projects.properties.page && page.projects.properties.page > 1">
+              {{ (page.projects.properties.page*10)-10 | number }}-{{ (page.projects.properties.page*10) | number }} of {{ page.projects.properties.num_results | number }}
+          </span>
+        </li>
+        <li data-ng-if="page.projects.properties.page !== page.projects.properties.total_pages && page.projects.properties.num_results !== 0"
+            class="next pull-right">
+          <a title="Older" data-ng-click="page.search.paginate(page.projects.properties.page+1)">
+            <div class="icon retinaicon-retina-icons-v-1-5"></div>
+          </a>
+        </li>
+        <li data-ng-if="page.projects.properties.page !== 1" class="previous pull-right">
+          <a title="Newer" data-ng-click="page.search.paginate(page.projects.properties.page-1)">
+            <div class="icon retinaicon-retina-icons-v-1-4"></div>
+          </a>
+        </li>
+      </ul>
     </div>
+
+  </div>
 
     <!-- Project List -->
     <div class="list">
@@ -83,44 +129,118 @@
       </article>
 
 			<div class="row list-item">
-      <div class="responsive-table">
-        <table class="table">
-          <!--<thead>
-            <tr>
-							<td></td>
-            </tr>
-          </thead>-->
-          <tbody>
-            <tr data-ng-repeat="project in page.projects.features track by $index">
-							<td>
-                <a href="/projects/{{ project.id }}#top" title="{{ project.properties.name }} project details">
-                  {{ project.properties.name }}
-                </a>
-							</td>
-            </tr>
-          </tbody>
-       </table>
-      </div>
-			</div>
-
-      <article class="row list-item" data-ng-repeat="project in page.projects.features track by $index">
-        <div class="column-16 list-item-content">
-          <h4>
-            <span data-ng-if="project.id && project.properties.program_type" class="label" data-ng-class="{'label-info': (project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (project.properties.program_type === 'Pre-Project Plan')}">{{ project.properties.program_type }}</span>
-            <span data-ng-if="project.id && project.properties.account.properties.name" class="label">{{ project.properties.account.properties.name }}</span>
-            <span data-ng-if="project.id && !project.properties.account.properties.name && project.properties.program_type !== 'Pre-Project Plan'" class="label label-danger">No Funder</span>
-            <span data-ng-if="project.id && project.properties.last_modified_by.properties.first_name && project.properties.last_modified_by.properties.last_name" class="label">Last Modified by: {{ project.properties.last_modified_by.properties.first_name }} {{ project.properties.last_modified_by.properties.last_name }}</span>
-            <span data-ng-if="project.id && project.properties.modified_on" class="label">Modified on: {{ project.properties.modified_on | date }}</span>
-          </h4>
-          <h1>
-            <a href="/projects/{{ project.id }}#top" title="{{ project.properties.name }} project details">
-              {{ project.properties.name }}
-            </a>
-          </h1>
-          <p data-ng-bind-html="project.properties.description"></p>
+        <div class="responsive-table">
+            <table class="table"
+                   data-ng-if="page.projects.features && page.projects.features.length">
+              <thead>
+                <tr>
+                  <td class="align-left column--vertialCenter">&nbsp;</td>
+                  <td class="align-left column--vertialCenter">
+                    <strong>Program</strong>
+                  </td>
+                  <td class="align-left">
+                    <strong>Project</strong>
+                  </td>
+                  <td class="align-left">
+                    <strong>Funder</strong>
+                  </td>
+                  <td class="align-left">
+                    <strong>Contact</strong>
+                  </td>
+                  <td class="align-left">
+                    <strong>Last Updated</strong>
+                  </td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-ng-repeat="project in page.projects.features track by $index">
+                  <td class="align-center column--state column--vertialCenter">
+                    <span class="project--state">
+                      <span class="project--state--highlight"
+                            data-ng-class="{'project--state--draft': (project.properties.workflow_state === 'Draft'), 'project--state--submitted': (project.properties.workflow_state === 'Submitted'), 'project--state--funded': (project.properties.workflow_state === 'Funded'), 'project--state--completed': (project.properties.workflow_state === 'Completed')}"></span>
+                      {{ project.properties.workflow_state }}
+                    </span>
+                  </td>
+                  <td class="align-center column--programType column--vertialCenter">
+                    <p>
+                      <span data-ng-if="project.id && project.properties.program_type" class="label" data-ng-class="{'label-info': (project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (project.properties.program_type === 'Pre-Project Plan')}">
+                        {{ project.properties.program_type }}
+                      </span>
+                    </p>
+                  </td>
+    							<td class="column--titleDescription align-left">
+                    <a class="project--title"
+                       href="/projects/{{ project.id }}#top" title="{{ project.properties.name }} project details">
+                      {{ project.properties.name }}
+                    </a><br />
+                    <span class="project--description"
+                          data-ng-bind-html="project.properties.description"></span>
+    							</td>
+                  <td class="align-left column--funder column--vertialCenter">
+                    <span class="project--funder"
+                          data-ng-if="project.id && project.properties.account.properties.name">
+                      {{ project.properties.account.properties.name }}
+                    </span>
+                  </td>
+                  <td class="align-left column--contact column--vertialCenter">
+                    <a href="mailto:{{ project.properties.last_modified_by.properties.email }}"
+                       data-ng-if="project.id && project.properties.last_modified_by.properties.first_name && project.properties.last_modified_by.properties.last_name">
+                      {{ project.properties.last_modified_by.properties.first_name }} {{ project.properties.last_modified_by.properties.last_name }}
+                    </a>
+                  </td>
+                  <td class="align-left column--lastUpdated column--vertialCenter">
+                    <span data-ng-if="project.id && project.properties.modified_on">
+                      {{ project.properties.modified_on | date }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+           </table>
         </div>
-      </article>
+			</div>
     </div>
+
+    <!-- Pagination Tools -->
+  <div class="row toolbox">
+    <div class="column-16">
+      <ul class="pager pull-right">
+        <li class="pull-left">
+          <!-- No Project Results to Display -->
+          <span data-ng-if="page.projects.properties.num_results === 0">
+              No results
+          </span>
+
+          <!-- If there are 25 or less projects to display -->
+          <span data-ng-if="page.projects.properties.num_results <= 10 && page.projects.properties.num_results !== 0">
+              1-{{ page.projects.properties.num_results }} of {{ page.projects.properties.num_results }}
+          </span>
+
+          <!-- If user is on the first page and there are more than 25 results -->
+          <span data-ng-if="page.projects.properties.page === 1 && page.projects.properties.num_results > 10">
+              1-10 of {{ page.projects.properties.num_results | number }}
+          </span>
+
+          <!-- If the current page is no the first page -->
+          <span data-ng-if="page.projects.properties.page && page.projects.properties.page > 1">
+              {{ (page.projects.properties.page*10)-10 | number }}-{{ (page.projects.properties.page*10) | number }} of {{ page.projects.properties.num_results | number }}
+          </span>
+        </li>
+        <li data-ng-if="page.projects.properties.page !== page.projects.properties.total_pages && page.projects.properties.num_results !== 0"
+            class="next pull-right">
+          <a title="Older" data-ng-click="page.search.paginate(page.projects.properties.page+1)">
+            <div class="icon retinaicon-retina-icons-v-1-5"></div>
+          </a>
+        </li>
+        <li data-ng-if="page.projects.properties.page !== 1" class="previous pull-right">
+          <a title="Newer" data-ng-click="page.search.paginate(page.projects.properties.page-1)">
+            <div class="icon retinaicon-retina-icons-v-1-4"></div>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+  
   </div>
 </main>
 

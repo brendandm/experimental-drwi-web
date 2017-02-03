@@ -622,3 +622,67 @@ select.form-control {
     color: $color-red-base;
   }
 }
+
+
+//
+//
+//
+.form-element-tabs {
+  display: inline-block;
+  list-style: none;
+
+  li {
+    display: inline-block;
+    list-style-type: none;
+
+    a,
+    a:active,
+    a:link,
+    a:visited {
+      border-radius: 16px;
+      -moz-border-radius: 16px;
+      -webkit-border-radius: 16px;
+      background-color: rgb(232,232,232);
+      color: $color-black-light;
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 300;
+      margin-right: 3px;
+      padding: 4px 12px;
+
+      &:hover {
+        background-color: rgb(222,222,222);
+        text-decoration: none;
+      }
+
+      &.active {
+        background-color: $color-black-light;
+        color: $color-white-base;
+      }
+    }
+
+  }
+
+  .form-element-tabsMarker {
+    border-radius: 16px;
+    -moz-border-radius: 16px;
+    -webkit-border-radius: 16px;
+    background-color: $color-white-dark;
+    display: inline-block;
+    height: 8px;
+    width: 8px;
+
+    &.form-element-tabsMarker-draft {
+      background-color: $color-gray-light;
+    }
+    &.form-element-tabsMarker-submitted {
+      background-color: $color-gold-base;
+    }
+    &.form-element-tabsMarker-funded {
+      background-color: $color-green-base;
+    }
+    &.form-element-tabsMarker-completed {
+      background-color: $color-brightBlue;
+    }
+  }
+}
