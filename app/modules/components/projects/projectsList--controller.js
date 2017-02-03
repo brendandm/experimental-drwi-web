@@ -23,13 +23,13 @@ angular.module('FieldDoc')
         }
       ],
       actions: [
-        {
-          type: 'button-link',
-          action: function() {
-            self.createPlan();
-          },
-          text: 'Create Pre-Project Plan'
-        },
+        // {
+        //   type: 'button-link',
+        //   action: function() {
+        //     self.createPlan();
+        //   },
+        //   text: 'Create Pre-Project Plan'
+        // },
         {
           type: 'button-link new',
           action: function() {
@@ -99,7 +99,7 @@ angular.module('FieldDoc')
           });
         }
 
-        if (self.filters.active.year.year !== null) {
+        if (self.filters.active.year && self.filters.active.year.year) {
             q.filters.push({
               "name": "created_on",
               "op": "gte",

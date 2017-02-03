@@ -1,0 +1,63 @@
+<div class="autocomplete">
+  <div class="row">
+    <div class="column-15 typeAhead">
+      <input data-ng-focus="relationship_focus=true"
+             data-ng-blur="relationship_focus=false" type="text"
+             placeholder="{{ placeholder }}" data-ng-model="searchText"
+             data-ng-change="search()" class="form-control"
+             tabindex="{{ tabindexnumber }}" />
+      <div data-ng-if="features.length" class="dropdown">
+        <ul class="typeAhead--results">
+          <li class="typeAhead--results--result"
+              data-ng-repeat="feature in features track by $index"
+              data-ng-click="addFeatureToRelationships(feature.feature)">
+              {{ feature.text }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="column-1 align-center">
+        <a data-ng-click="resetField()"><span class="icon retinaicon-essentials-045"></span></a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="column-16">
+      <label class="control-label">
+        My Organizations
+      </label>
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="align-left">
+              Organization name
+            </th>
+            <th>
+              actions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-ng-if="model.length >= 1" data-ng-repeat="option in model track by $index">
+            <td class="align-left">
+              {{ option.properties.name }}
+            </td>
+            <td>
+              <a class="" data-ng-click="removeFeatureFromRelationships($index)">
+                remove organization from my account
+              </a>
+            </td>
+          </tr>
+          <tr data-ng-if="model.length === 0">
+            <td colspan="2" class="align-center">
+              <p>
+                <em>
+                  You are not associated with any organizations
+                </em>
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

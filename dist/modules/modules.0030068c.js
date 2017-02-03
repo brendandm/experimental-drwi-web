@@ -47,7 +47,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+.constant('environment', {name:'staging',apiUrl:'http://stg.api.fielddoc.org',siteUrl:'http://stg.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
 /**
@@ -245,7 +245,7 @@ angular.module('FieldDoc')
      * @description
      */
      angular.module('FieldDoc')
-       .controller('SecurityRegisterController', function (Account, $location, Security, ipCookie, $rootScope, $timeout, User) {
+       .controller('SecurityRegisterController', function (Account, $location, Notifications, Security, ipCookie, $rootScope, $timeout, User) {
 
              var self = this,
                  userId = null;
@@ -265,12 +265,30 @@ angular.module('FieldDoc')
              });
 
              self.register = {
+               data: {
+                 email: null,
+                 first_name: null,
+                 last_name: null,
+                 organizations: [],
+                 password: null
+               },
+               organizations: function() {
+                 var _organizations = [];
+
+                 angular.forEach(self.register.data.organizations, function(_organization, _index) {
+                   _organizations.push({
+                     "id": _organization.id
+                   })
+                 });
+
+                 return _organizations;
+               },
                visible: false,
                login: function(userId) {
 
                  var credentials = new Security({
-                   email: self.register.email,
-                   password: self.register.password,
+                   email: self.register.data.email,
+                   password: self.register.data.password,
                  });
 
                  credentials.$save(function(response) {
@@ -301,14 +319,6 @@ angular.module('FieldDoc')
 
                      ipCookie('FIELDSTACKIO_SESSION', response.access_token, self.cookieOptions);
 
-                     self.newUser = new User({
-                       id: userId,
-                       properties: {
-                         first_name: self.register.first_name,
-                         last_name: self.register.last_name
-                       }
-                     });
-
                      //
                      // Make sure we also set the User ID Cookie, so we need to wait to
                      // redirect until we're really sure the cookie is set
@@ -324,8 +334,9 @@ angular.module('FieldDoc')
 
                          self.newUser = new User({
                            id: $rootScope.user.id,
-                           first_name: self.register.first_name,
-                           last_name: self.register.last_name
+                           first_name: self.register.data.first_name,
+                           last_name: self.register.data.last_name,
+                           organizations: self.register.organizations()
                          });
 
                          self.newUser.$update().then(function (updateUserSuccessResponse) {
@@ -364,7 +375,7 @@ angular.module('FieldDoc')
                  //
                  // Check to see if Username and Password field are valid
                  //
-                 if (!self.register.email) {
+                 if (!self.register.data.email) {
                    $rootScope.notifications.warning('Email', 'field is required');
 
                    self.register.processing = false;
@@ -375,7 +386,7 @@ angular.module('FieldDoc')
 
                    return;
                  }
-                 else if (!self.register.password) {
+                 else if (!self.register.data.password) {
                    $rootScope.notifications.warning('Password', 'field is required');
 
                    self.register.processing = false;
@@ -391,8 +402,8 @@ angular.module('FieldDoc')
                  // If all fields have values move on to the next step
                  //
                  Security.register({
-                   email: self.register.email,
-                   password: self.register.password
+                   email: self.register.data.email,
+                   password: self.register.data.password
                  }, function(response) {
 
                    //
@@ -662,7 +673,7 @@ angular.module('FieldDoc')
         templateUrl: '/modules/components/projects/views/projectsList--view.html',
         controller: 'ProjectsCtrl',
         controllerAs: 'page',
-        reloadOnSearch: true,
+        reloadOnSearch: false,
         resolve: {
           projects: function($location, Project) {
 
@@ -695,6 +706,9 @@ angular.module('FieldDoc')
                 return Account.getUser();
             }
             return Account.userObject;
+          },
+          'years': function(Filters) {
+            return Filters.projectsByYear();
           }
         }
       })
@@ -711,11 +725,6 @@ angular.module('FieldDoc')
           },
           project: function(Project, $route) {
             return Project.get({
-                'id': $route.current.params.projectId
-            });
-          },
-          sites: function(Project, $route) {
-            return Project.sites({
                 'id': $route.current.params.projectId
             });
           }
@@ -773,7 +782,7 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-  .controller('ProjectsCtrl', function (Account, $location, $log, Project, projects, $rootScope, $scope, Site, user) {
+  .controller('ProjectsCtrl', function (Account, $location, $log, Project, projects, $rootScope, $scope, Site, user, years) {
 
     var self = this;
 
@@ -790,13 +799,13 @@ angular.module('FieldDoc')
         }
       ],
       actions: [
-        {
-          type: 'button-link',
-          action: function() {
-            self.createPlan();
-          },
-          text: 'Create Pre-Project Plan'
-        },
+        // {
+        //   type: 'button-link',
+        //   action: function() {
+        //     self.createPlan();
+        //   },
+        //   text: 'Create Pre-Project Plan'
+        // },
         {
           type: 'button-link new',
           action: function() {
@@ -807,6 +816,26 @@ angular.module('FieldDoc')
       ]
     };
 
+    self.filters = {
+        "active": {
+            "workflow_state": null,
+            "year": {
+                "year": null
+            },
+            "sstring": null
+        },
+        "values": {
+          "workflow_states": [
+            'Draft',
+            'Submitted',
+            'Funded',
+            'Completed'
+          ],
+          "years": years
+        }
+    };
+
+
     //
     // Project functionality
     //
@@ -814,7 +843,7 @@ angular.module('FieldDoc')
 
     self.search = {
       query: '',
-      execute: function() {
+      execute: function(page) {
 
         //
         // Get all of our existing URL Parameters so that we can
@@ -836,10 +865,38 @@ angular.module('FieldDoc')
           }]
         };
 
-        $location.path('/projects/').search({
-          q: angular.toJson(q),
-          page: 1
-        });
+        if (self.filters.active.workflow_state !== null) {
+          console.log('add workflow state filter')
+
+          q.filters.push({
+            "name": "workflow_state",
+            "op": "like",
+            "val": self.filters.active.workflow_state
+          });
+        }
+
+        if (self.filters.active.year && self.filters.active.year.year) {
+            q.filters.push({
+              "name": "created_on",
+              "op": "gte",
+              "val": self.filters.active.year.year + "-01-01"
+            });
+            q.filters.push({
+              "name": "created_on",
+              "op": "lte",
+              "val": self.filters.active.year.year + "-12-31"
+            })
+        }
+
+        Project.query({
+            "q": q,
+            "page": (page ? page : 1)
+          }).$promise.then(function(successResponse) {
+            console.log("successResponse", successResponse);
+            self.projects = successResponse;
+          }, function(errorResponse) {
+            console.log("errorResponse", errorResponse);
+          });
 
       },
       paginate: function(pageNumber) {
@@ -848,11 +905,7 @@ angular.module('FieldDoc')
         // Get all of our existing URL Parameters so that we can
         // modify them to meet our goals
         //
-        var searchParams = $location.search();
-
-        searchParams.page = pageNumber;
-
-        $location.path('/projects/').search(searchParams);
+        self.search.execute(pageNumber);
       },
       clear: function() {
         $location.path('/projects/').search('');
@@ -937,12 +990,52 @@ angular.module('FieldDoc')
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('ProjectViewCtrl', function (Account, $rootScope, $route, $location, mapbox, project, Site, sites, user) {
+  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateBioretention, CalculateUrbanHomeowner, Notifications, $rootScope, Project, $route, $location, mapbox, project, Site, UALStateLoad, user) {
 
     var self = this;
+
     $rootScope.page = {};
 
-    self.sites = sites;
+    self.data = {};
+
+    self.rollups = {
+      nitrogen: {
+      	installed: 0,
+      	total: 0
+      },
+      phosphorus: {
+      	installed: 0,
+      	total: 0
+      },
+      sediment: {
+      	installed: 0,
+      	total: 0
+      },
+      metrics: {
+        'metric_1': {
+          label: 'Gallons/Year of Stormwater Detained or Infiltrated',
+          installed: 0,
+          total: 0,
+          units: 'miles'
+        },
+        'metric_2': {
+          label: 'Acres Protected by BMP to Reduce Stormwater Runoff',
+          installed: 0,
+          total: 0,
+          units: 'miles'
+        }
+      }
+    };
+
+
+    //
+    //
+    //
+    self.calculate = Calculate;
+
+    //
+    //
+    //
     self.mapbox = mapbox;
 
     //
@@ -950,6 +1043,9 @@ angular.module('FieldDoc')
     //
     project.$promise.then(function(projectResponse) {
         self.project = projectResponse;
+        self.sites = self.project.properties.sites
+
+        self.data = projectResponse;
 
         $rootScope.page.title = self.project.properties.name;
         $rootScope.page.links = [
@@ -963,6 +1059,11 @@ angular.module('FieldDoc')
                 type: 'active'
             }
         ];
+
+        //
+        //
+        //
+        self.statistics.sites(projectResponse);
 
         //
         // Verify Account information for proper UI element display
@@ -982,6 +1083,41 @@ angular.module('FieldDoc')
 
     });
 
+    self.submitProject = function() {
+
+      if (!self.project.properties.account_id) {
+        $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.")
+        return;
+      }
+
+      var _project = new Project({
+        "id": self.project.id,
+        "properties": {
+          "workflow_state": "Submitted"
+        }
+      })
+
+      _project.$update(function(successResponse) {
+          self.project = successResponse
+        }, function(errorResponse) {
+
+        });
+    }
+
+    self.rollbackProjectSubmission = function() {
+      var _project = new Project({
+        "id": self.project.id,
+        "properties": {
+          "workflow_state": "Draft"
+        }
+      })
+
+      _project.$update(function(successResponse) {
+          self.project = successResponse
+        }, function(errorResponse) {
+
+        });
+    }
 
     self.createSite = function() {
         self.site = new Site({
@@ -1010,22 +1146,155 @@ angular.module('FieldDoc')
       }
     ];
 
-    // self.$watch('project.sites.list', function(processedSites, existingSites) {
-    //  // console.log('self.project.sites.list,', self.project.sites.list)
-    //  angular.forEach(processedSites, function(feature, $index) {
-    //    var coords = [0,0];
-    //
-    //    if (feature.geometry !== null) {
-    //      console.log('feature.geometry', feature.geometry);
-    //      if (feature.geometry.geometries[0].type === 'Point') {
-    //        coords = feature.geometry.geometries[0].coordinates;
-    //      }
-    //    }
-    //
-    //    self.project.sites.list[$index].site_thumbnail = 'https://api.tiles.mapbox.com/v4/' + mapbox.satellite + '/pin-s+b1c11d(' + coords[0] + ',' + coords[1] + ',17)/' + coords[0] + ',' + coords[1] + ',17/80x80@2x.png?access_token=' + mapbox.access_token;
-    //  });
-    //});
 
+
+    //
+    // Process rollup statistics for the entire `project`.
+    //
+    self.statistics = {
+        sites: function(_thisProject) {
+
+          var _self = this;
+
+          angular.forEach(_thisProject.properties.sites, function(_site, _siteIndex) {
+            console.log('Processing Site', _site.id);
+
+            var _thesePractices = _self.practices(_site, _site.properties.practices);
+
+          });
+        },
+        practices: function(_thisSite, _thesePractices) {
+
+            var _self = this;
+
+            angular.forEach(_thesePractices, function(_practice, _practiceIndex){
+
+                console.log('Processing Practice', _practice);
+
+                switch(_practice.properties.practice_type) {
+                  case "In-stream Habitat":
+                    var _readings = _practice.properties.readings_instream_habitat
+                    var _totals = {
+                        "planning": self.calculate.getTotalReadingsByCategory('Planning', _readings),
+                        "installation": self.calculate.getTotalReadingsByCategory('Installation', _readings)
+                    };
+                    break;
+                  case "Bioretention":
+                    var _calculate = CalculateBioretention;
+                    var _readings = _practice.properties.readings_bioretention;
+                    var _loadData = {};
+
+                    //
+                    //
+                    //
+        if (_thisSite.properties.state) {
+          UALStateLoad.query({
+            q: {
+              filters: [
+                {
+                  name: 'state',
+                  op: 'eq',
+                  val: _thisSite.properties.state
+                }
+              ]
+            }
+          }, function(successResponse) {
+
+            angular.forEach(successResponse.features, function(feature, $index) {
+              _loadData[feature.properties.developed_type] = {
+                tn_ual: feature.properties.tn_ual,
+                tp_ual: feature.properties.tp_ual,
+                tss_ual: feature.properties.tss_ual
+              };
+            });
+
+            console.log('loadData', _loadData);
+
+            //
+            //
+            //i
+                    angular.forEach(_readings, function(_reading, _readingIndex){
+                        console.log('_reading', _reading.properties);
+
+                        if (_reading.properties.measurement_period === 'Planning') {
+                            var _plannedN = _calculate.plannedNitrogenLoadReduction(_reading, _loadData);
+                            var _plannedP = _calculate.plannedPhosphorusLoadReduction(_reading, _loadData);
+                            var _plannedS = _calculate.plannedSedimentLoadReduction(_reading, _loadData);
+
+                            self.rollups.nitrogen.total += _plannedN;
+                            self.rollups.phosphorus.total += _plannedP;
+                            self.rollups.sediment.total += _plannedS;
+                        } else if (_reading.properties.measurement_period === 'Installation') {
+                            var _installedN = _calculate.plannedNitrogenLoadReduction(_reading, _loadData);
+                            var _installedP = _calculate.plannedPhosphorusLoadReduction(_reading, _loadData);
+                            var _installedS = _calculate.plannedSedimentLoadReduction(_reading, _loadData);
+
+                            self.rollups.nitrogen.installed += _installedN;
+                            self.rollups.phosphorus.installed += _installedP;
+                            self.rollups.sediment.installed += _installedS;
+
+                            //self.rollups.metrics.metric_1.installed += _calculate.gallonsReducedPerYear(_reading);
+                        }
+                    });
+
+                    self.rollups.nitrogen.chart = (self.rollups.nitrogen.installed/self.rollups.nitrogen.total)*100;
+                    self.rollups.phosphorus.chart = (self.rollups.phosphorus.installed/self.rollups.phosphorus.total)*100;
+                    self.rollups.sediment.chart = (self.rollups.sediment.installed/self.rollups.sediment.total)*100;
+
+
+
+          }, function(errorResponse) {
+            console.log('errorResponse', errorResponse);
+          });
+        } else {
+          console.log('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
+        }
+
+
+
+                    //
+                    // CHESAPEAKE BAY METRICS
+                    //
+
+                    angular.forEach(_readings, function(_reading, _readingIndex){
+                        console.log('_reading', _reading.properties);
+
+                        if (_reading.properties.measurement_period === 'Planning') {
+                            self.rollups.metrics.metric_1.total += _calculate.gallonsReducedPerYear(_reading);
+                        } else if (_reading.properties.measurement_period === 'Installation') {
+                            self.rollups.metrics.metric_1.installed += _calculate.gallonsReducedPerYear(_reading);
+                        }
+                    });
+
+                    self.rollups.metrics.metric_1.chart = (self.rollups.metrics.metric_1.installed/self.rollups.metrics.metric_1.total)*100;
+
+                    break;
+                  case "Urban Homeowner":
+                    var _calculate = CalculateUrbanHomeowner;
+
+                    var _readings = _practice.properties.readings_urban_homeowner;
+
+                    angular.forEach(_readings, function(_reading, _readingIndex){
+                        console.log('_reading', _reading.properties);
+
+                        if (_reading.properties.measurement_period === 'Planning') {
+                            self.rollups.metrics.metric_1.total += CalculateUrbanHomeowner.gallonsReducedPerYear(_reading.properties);
+                        } else if (_reading.properties.measurement_period === 'Installation') {
+                            self.rollups.metrics.metric_1.installed += _calculate.gallonsReducedPerYear(_reading.properties);
+                        }
+                    });
+
+                    self.rollups.metrics.metric_1.chart = (self.rollups.metrics.metric_1.installed/self.rollups.metrics.metric_1.total)*100;
+
+                    break;
+
+                }
+
+                //var _theseReadings = _self.readings(_practice);
+            });
+        },
+        readings: function(_these) {}
+    };
 
   });
 
@@ -1091,6 +1360,9 @@ angular.module('FieldDoc')
     //
     //
     self.saveProject = function() {
+
+      self.project.properties.workflow_state = "Draft";
+      
       self.project.$update().then(function(response) {
 
         $location.path('/projects/' + self.project.id);
@@ -1261,6 +1533,155 @@ angular.module('FieldDoc')
     });
 
 }());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .config(function($routeProvider, commonscloud) {
+
+      $routeProvider
+        .when('/account', {
+          redirectTo: '/projects'
+        })
+       .when('/account/:userId', {
+          redirectTo: '/account/:userId/edit'
+        })
+        .when('/account/:userId/edit', {
+          templateUrl: '/modules/components/account/views/accountEdit--view.html',
+          controller: 'AccountEditViewController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            }
+          }
+        });
+
+    });
+
+}());
+
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+  .controller('AccountEditViewController', function (Account, $location, $log, Notifications, $rootScope, $route, user, User) {
+
+    var self = this;
+
+
+    //
+    // Assign project to a scoped variable
+    //
+    //
+    // Verify Account information for proper UI element display
+    //
+    if (Account.userObject && user) {
+        user.$promise.then(function(userResponse) {
+            $rootScope.user = Account.userObject = self.user = userResponse;
+
+            self.permissions = {
+                isLoggedIn: Account.hasToken(),
+                role: $rootScope.user.properties.roles[0].properties.name,
+                account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+            };
+
+            //
+            // Setup page meta data
+            //
+            $rootScope.page = {
+                "title": "Edit Account Information « FieldDoc",
+                "links": [
+                    {
+                        "text": "Account",
+                        "url": "/"
+                    },
+                    {
+                        "text": "Edit",
+                        "url": "/account/" + $rootScope.user.id + "/edit"
+                    }
+                ]
+            };
+
+
+        });
+
+
+    }
+    else {
+        //
+        // If there is not Account.userObject and no user object, then the
+        // user is not properly authenticated and we should send them, at
+        // minimum, back to the projects page, and have them attempt to
+        // come back to this page again.
+        //
+        self.actions.exit();
+    }
+
+
+
+    //
+    //
+    //
+    self.status = {
+        "saving": false
+    };
+
+    self.actions = {
+        organizations: function() {
+          var _organizations = [];
+
+          angular.forEach(self.user.properties.organizations, function(_organization, _index) {
+            _organizations.push({
+              "id": _organization.id
+            })
+          });
+
+          return _organizations;
+        },
+        save: function() {
+
+            self.status.saving = true;
+
+            var _user = new User({
+                "id": self.user.id,
+                "first_name": self.user.properties.first_name,
+                "last_name": self.user.properties.last_name,
+                "organizations": self.actions.organizations
+            });
+
+            _user.$update(function(successResponse) {
+
+                self.status.saving = false;
+
+                $rootScope.notifications.success("Great!", "Your account changes were saved");
+
+                $location.path('/account/');
+
+            }, function(errorResponse) {
+                self.status.saving = false;
+            });
+        },
+        exit: function() {
+            $location.path('/projects');
+        }
+    };
+
+  });
 
 'use strict';
 
@@ -10976,6 +11397,30 @@ angular
      * @description
      */
      angular.module('FieldDoc')
+       .service('Filters', function (environment, Preprocessors, $resource) {
+         return $resource(environment.apiUrl.concat('/v1/data/filters'), {
+           id: '@id'
+         }, {
+           projectsByYear: {
+             isArray: false,
+             url: environment.apiUrl.concat('/v1/data/filters/projects-by-year')
+           }
+         });
+
+       });
+
+}());
+
+(function () {
+
+    'use strict';
+
+    /**
+     * @ngdoc function
+     * @name
+     * @description
+     */
+     angular.module('FieldDoc')
        .service('Image', function (environment, Preprocessors, $resource) {
 
          return $resource(environment.apiUrl.concat('/v1/media/image/:id'), {
@@ -11695,6 +12140,15 @@ angular.module('FieldDoc')
         }
 
         return null;
+      },
+      camelName: function(name) {
+        if (name) {
+          return name.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+            return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
+          }).replace(/\s+/g, '');
+        }
+
+        return null;
       }
     };
 
@@ -11815,6 +12269,128 @@ angular.module('FieldDoc')
           placeholder: '='
         },
         templateUrl: '/modules/shared/directives/relationship/relationship.html',
+        restrict: 'E',
+        link: function (scope, el, attrs) {
+
+          var container = el.children()[0],
+              input = angular.element(container.children[0]),
+              dropdown = angular.element(container.children[1]),
+              timeout;
+
+          scope.relationship_focus = false;
+
+          var getFilteredResults = function(table){
+            var url = environment.apiUrl.concat('/v1/data/', table);
+
+            $http({
+              method: 'GET',
+              url: url,
+              params: {
+                'q': {
+                  'filters':
+                  [
+                    {
+                      'name': scope.field,
+                      'op': 'ilike',
+                      'val': scope.searchText + '%'
+                    }
+                  ]
+                },
+                'results_per_page': 25
+              }
+            }).success(function(data){
+
+              var features = data.features;
+
+              scope.features = [];
+
+              //
+              // Process features prior to display
+              //
+              angular.forEach(features, function(feature, $index) {
+
+                var result = [];
+
+                angular.forEach(scope.display, function(field) {
+                  result.push(feature.properties[field]);
+                });
+
+                scope.features.push({
+                  'id': feature.id,
+                  'feature': feature,
+                  'text': result.join(', ')
+                });
+              });
+
+            });
+          };
+
+          var set = function(arr) {
+            return arr.reduce(function (a, val) {
+              if (a.indexOf(val) === -1) {
+                  a.push(val);
+              }
+              return a;
+            }, []);
+          };
+
+          //search with timeout to prevent it from firing on every keystroke
+          scope.search = function(){
+            $timeout.cancel(timeout);
+
+            timeout = $timeout(function () {
+              getFilteredResults(scope.table);
+            }, 200);
+          };
+
+          scope.addFeatureToRelationships = function(feature){
+
+            if (angular.isArray(scope.model)) {
+              scope.model.push(feature);
+              scope.model = set(scope.model);
+            } else {
+              scope.model = feature;
+            }
+
+
+            // Clear out input field
+            scope.searchText = '';
+            scope.features = [];
+          };
+
+          scope.removeFeatureFromRelationships = function(index) {
+            scope.model.splice(index, 1);
+          };
+
+          scope.resetField = function() {
+            scope.searchText = '';
+            scope.features = [];
+            scope.relationship_focus = false;
+            console.log('Field reset');
+          };
+
+        }
+      };
+  });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  angular.module('FieldDoc')
+    .directive('organization', function (environment, $http, $timeout) {
+      return {
+        scope: {
+          table: '=',
+          field: '=',
+          display: '=',
+          model: '=',
+          tabindexnumber: '=',
+          placeholder: '='
+        },
+        templateUrl: '/modules/shared/directives/organization/organization.html',
         restrict: 'E',
         link: function (scope, el, attrs) {
 

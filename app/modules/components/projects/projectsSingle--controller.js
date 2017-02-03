@@ -8,7 +8,7 @@
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateBioretention, CalculateUrbanHomeowner, $rootScope, Project, $route, $location, mapbox, project, Site, UALStateLoad, user) {
+  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateBioretention, CalculateUrbanHomeowner, Notifications, $rootScope, Project, $route, $location, mapbox, project, Site, UALStateLoad, user) {
 
     var self = this;
 
@@ -102,6 +102,12 @@ angular.module('FieldDoc')
     });
 
     self.submitProject = function() {
+
+      if (!self.project.properties.account_id) {
+        $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.")
+        return;
+      }
+
       var _project = new Project({
         "id": self.project.id,
         "properties": {

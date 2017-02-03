@@ -17,10 +17,9 @@
 
         <section id="sites">
           <div class="list">
-            <h6 class="rule-above"><strong>Project</strong> Sites</h6>
 
             <article class="row list-item list-item-thin"
-                     data-ng-if="!page.sites.features.length">
+                     data-ng-if="!page.sites.length">
               <div class="column-16 list-item-content align-center empty-data">
                 <div class="icon retinaicon-file-096"></div>
                 <p>
@@ -36,9 +35,64 @@
               </div>
             </article>
 
+            <h6 class="rule-above statistics--header"><strong>Project</strong> Summary</h6>
+            <p><small><a href="javascript:void(0)" data-ng-click="page.showPageData =! page.showPageData">Show Raw Data</a></small></p>
+            <code data-ng-if="page.showPageData"><pre>
+              {{ page.data | json }}
+            </pre></code>
+            <article class="row statistics">
+              <div class="column-4 statistics--statistic">
+                <p class="statistic--value">
+                  {{ page.rollups.nitrogen.installed | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.rollups.nitrogen.total | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
+                  <span class="statistic--title">Nitrogen</span>
+                </p>
+                <div class="statistic--chart">
+                  <div data-ng-if="page.rollups.nitrogen.chart" class="statistic--chart--value" data-ng-style="{'width': '{{ page.rollups.nitrogen.chart }}%' }"></div>
+                </div>
+              </div>
+              <div class="column-2"></div>
+              <div class="column-4 statistics--statistic">
+                <p class="statistic--value">
+                  {{ page.rollups.phosphorus.installed | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.rollups.phosphorus.total | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
+                  <span class="statistic--title">Phosphorus</span>
+                </p>
+                <div class="statistic--chart">
+                  <div data-ng-if="page.rollups.phosphorus.chart" class="statistic--chart--value" data-ng-style="{'width': '{{ page.rollups.phosphorus.chart }}%' }"></div>
+                </div>
+              </div>
+              <div class="column-2"></div>
+              <div class="column-4 statistics--statistic">
+                <p class="statistic--value">
+                  {{ page.rollups.sediment.installed | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.rollups.sediment.total | number:2 }} <span class="statistic--valueLabel">tons/yr</span><br />
+                  <span class="statistic--title">Sediment</span>
+                </p>
+                <div class="statistic--chart">
+                  <div data-ng-if="page.rollups.sediment.chart" class="statistic--chart--value" data-ng-style="{'width': '{{ page.rollups.sediment.chart }}%' }"></div>
+                </div>
+              </div>
+            </article>
+            <section class="row metrics">
+            <article class="row ">
+              <div class="column-8 metrics--metric"
+                   data-ng-if="metric.total"
+                   data-ng-repeat="metric in page.rollups.metrics track by $index">
+                <p class="metric--title">
+                  {{ metric.label }}
+                </p>
+                <div class="metric--chart">
+                  <div class="metric--chart--value"
+                       data-ng-style="{'width': '{{ metric.chart }}%' }"></div>
+                </div>
+                <p class="metric--help--text">
+                  {{ metric.installed | number:1 }} of {{ metric.total | number:1 }} {{ metric.units }}
+                </p>
+              </div>
+            </article>
+            </section>
+            <h6 class="rule-above"><strong>Project</strong> Sites</h6>
             <article class="row list-item list-item-thin"
-                     data-ng-if="page.sites.features.length"
-                     data-ng-repeat="site in page.sites.features | orderBy:'id' track by $index">
+                     data-ng-if="page.sites.length"
+                     data-ng-repeat="site in page.sites | orderBy:'id' track by $index">
               <div class="column-16 list-item-content">
                 <div class="row">
                   <div class="column-2">
@@ -76,6 +130,26 @@
         </section>
       </div>
 
+      <nav class="column-5 contextual-navigation-wrapper">
+        <h6><strong>Status</strong></h6>
+        <ul class="contextual-navigation">
+          <li data-ng-if="page.project.properties.workflow_state === 'Draft'">
+            <button data-ng-click="page.submitProject()" class="button button-info button-indent">
+              <span>
+                Submit Project to Funder
+              </span>
+            </button>
+          </li>
+
+          <li data-ng-if="page.project.properties.workflow_state === 'Submitted'">
+            <button data-ng-click="page.rollbackProjectSubmission()" class="button button-info button-indent button-outline">
+              <span>
+                Retract Submission
+              </span>
+            </button>
+          </li>
+        </ul>
+      </nav>
       <nav class="column-5 contextual-navigation-wrapper">
         <h6><strong>Tools</strong></h6>
         <ul class="contextual-navigation">
