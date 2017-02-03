@@ -162,10 +162,22 @@ a.button:active,
 .button.button-info,
 a.button.button-info {
   background-color: $color-blue-bright;
-  text-shadow: 0 1px 3px darken($color-blue-bright, 10%);
 
   &:hover {
     background-color: darken($color-blue-bright, 3%);
+  }
+
+  &.button-outline {
+    background-color: $color-white-base;
+    border: 1px solid $color-blue-bright;
+    color: $color-blue-bright;
+    font-weight: 600;
+    text-shadow: none;
+
+    &:hover {
+      background-color: rgb(252,252,252);
+    }
+
   }
 }
 

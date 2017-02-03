@@ -84,7 +84,7 @@
                        data-ng-style="{'width': '{{ metric.chart }}%' }"></div>
                 </div>
                 <p class="metric--help--text">
-                  {{ metric.installed | number:1 }} of {{ metric.total | number:1 }} {{ metric.units }} 
+                  {{ metric.installed | number:1 }} of {{ metric.total | number:1 }} {{ metric.units }}
                 </p>
               </div>
             </article>
@@ -130,6 +130,26 @@
         </section>
       </div>
 
+      <nav class="column-5 contextual-navigation-wrapper">
+        <h6><strong>Status</strong></h6>
+        <ul class="contextual-navigation">
+          <li data-ng-if="page.project.properties.workflow_state === 'Draft'">
+            <button data-ng-click="page.submitProject()" class="button button-info button-indent">
+              <span>
+                Submit Project to Funder
+              </span>
+            </button>
+          </li>
+
+          <li data-ng-if="page.project.properties.workflow_state === 'Submitted'">
+            <button data-ng-click="page.rollbackProjectSubmission()" class="button button-info button-indent button-outline">
+              <span>
+                Retract Submission
+              </span>
+            </button>
+          </li>
+        </ul>
+      </nav>
       <nav class="column-5 contextual-navigation-wrapper">
         <h6><strong>Tools</strong></h6>
         <ul class="contextual-navigation">

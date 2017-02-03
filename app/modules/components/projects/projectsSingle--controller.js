@@ -8,26 +8,26 @@
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateBioretention, CalculateUrbanHomeowner, $rootScope, $route, $location, mapbox, project, Site, UALStateLoad, user) {
+  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateBioretention, CalculateUrbanHomeowner, $rootScope, Project, $route, $location, mapbox, project, Site, UALStateLoad, user) {
 
     var self = this;
-    
+
     $rootScope.page = {};
 
     self.data = {};
-    
+
     self.rollups = {
       nitrogen: {
-	installed: 0,
-	total: 0
+      	installed: 0,
+      	total: 0
       },
       phosphorus: {
-	installed: 0,
-	total: 0
+      	installed: 0,
+      	total: 0
       },
       sediment: {
-	installed: 0,
-	total: 0
+      	installed: 0,
+      	total: 0
       },
       metrics: {
         'metric_1': {
@@ -42,13 +42,12 @@ angular.module('FieldDoc')
           total: 0,
           units: 'miles'
         }
-       
       }
     };
 
 
     //
-    // 
+    //
     //
     self.calculate = Calculate;
 
@@ -102,6 +101,36 @@ angular.module('FieldDoc')
 
     });
 
+    self.submitProject = function() {
+      var _project = new Project({
+        "id": self.project.id,
+        "properties": {
+          "workflow_state": "Submitted"
+        }
+      })
+
+      _project.$update(function(successResponse) {
+          self.project = successResponse
+        }, function(errorResponse) {
+
+        });
+    }
+
+    self.rollbackProjectSubmission = function() {
+      var _project = new Project({
+        "id": self.project.id,
+        "properties": {
+          "workflow_state": "Draft"
+        }
+      })
+
+      _project.$update(function(successResponse) {
+          self.project = successResponse
+        }, function(errorResponse) {
+
+        });
+    }
+
     self.createSite = function() {
         self.site = new Site({
             'name': 'Untitled Site',
@@ -136,7 +165,7 @@ angular.module('FieldDoc')
     //
     self.statistics = {
         sites: function(_thisProject) {
-          
+
           var _self = this;
 
           angular.forEach(_thisProject.properties.sites, function(_site, _siteIndex) {
@@ -147,18 +176,18 @@ angular.module('FieldDoc')
           });
         },
         practices: function(_thisSite, _thesePractices) {
-            
+
             var _self = this;
-            
+
             angular.forEach(_thesePractices, function(_practice, _practiceIndex){
-                
+
                 console.log('Processing Practice', _practice);
 
                 switch(_practice.properties.practice_type) {
                   case "In-stream Habitat":
                     var _readings = _practice.properties.readings_instream_habitat
                     var _totals = {
-                        "planning": self.calculate.getTotalReadingsByCategory('Planning', _readings), 
+                        "planning": self.calculate.getTotalReadingsByCategory('Planning', _readings),
                         "installation": self.calculate.getTotalReadingsByCategory('Installation', _readings)
                     };
                     break;
@@ -194,7 +223,7 @@ angular.module('FieldDoc')
             console.log('loadData', _loadData);
 
             //
-            // 
+            //
             //i
                     angular.forEach(_readings, function(_reading, _readingIndex){
                         console.log('_reading', _reading.properties);
@@ -224,7 +253,7 @@ angular.module('FieldDoc')
                     self.rollups.phosphorus.chart = (self.rollups.phosphorus.installed/self.rollups.phosphorus.total)*100;
                     self.rollups.sediment.chart = (self.rollups.sediment.installed/self.rollups.sediment.total)*100;
 
-            
+
 
           }, function(errorResponse) {
             console.log('errorResponse', errorResponse);
@@ -233,12 +262,12 @@ angular.module('FieldDoc')
           console.log('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
         }
 
-                    
+
 
                     //
                     // CHESAPEAKE BAY METRICS
                     //
-                    
+
                     angular.forEach(_readings, function(_reading, _readingIndex){
                         console.log('_reading', _reading.properties);
 
@@ -256,7 +285,7 @@ angular.module('FieldDoc')
                     var _calculate = CalculateUrbanHomeowner;
 
                     var _readings = _practice.properties.readings_urban_homeowner;
-                    
+
                     angular.forEach(_readings, function(_reading, _readingIndex){
                         console.log('_reading', _reading.properties);
 
@@ -272,9 +301,9 @@ angular.module('FieldDoc')
                     break;
 
                 }
-                
-                //var _theseReadings = _self.readings(_practice);    
-            });    
+
+                //var _theseReadings = _self.readings(_practice);
+            });
         },
         readings: function(_these) {}
     };
