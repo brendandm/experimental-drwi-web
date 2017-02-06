@@ -8,7 +8,7 @@
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateBioretention, CalculateUrbanHomeowner, Notifications, $rootScope, Project, $route, $location, mapbox, project, Site, UALStateLoad, user) {
+  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateUrbanHomeowner, Notifications, $rootScope, Project, $route, $location, mapbox, project, Site, UALStateLoad, user) {
 
     var self = this;
 
@@ -190,17 +190,48 @@ angular.module('FieldDoc')
                 console.log('Processing Practice', _practice);
 
                 switch(_practice.properties.practice_type) {
-                  case "In-stream Habitat":
-                    var _readings = _practice.properties.readings_instream_habitat
-                    var _totals = {
-                        "planning": self.calculate.getTotalReadingsByCategory('Planning', _readings),
-                        "installation": self.calculate.getTotalReadingsByCategory('Installation', _readings)
-                    };
+                  case "Bank Stabilization":
+                    var _calculate = CalculateBankStabilization;
+                    var _readings = _practice.properties.readings_bank_stabilization;
                     break;
                   case "Bioretention":
                     var _calculate = CalculateBioretention;
                     var _readings = _practice.properties.readings_bioretention;
                     var _loadData = {};
+                    break;
+                  case "Enhanced Stream Restoration":
+                    var _calculate = CalculateEnhancedStreamRestoration;
+                    var _readings = _practice.properties.readings_enhanced_stream_restoration;
+                    break;
+                  case "Forest Buffer":
+                    var _calculate = CalculateForestBuffer;
+                    var _readings = _practice.properties.readings_forest_buffer;
+                    break;
+                  case "Grass Buffer":
+                    var _calculate = CalculateGrassBuffer;
+                    var _readings = _practice.properties.readings_grass_buffer;
+                    break;
+                  case "In-stream Habitat":
+                    var _calculate = CalculateInstreamHabitat;
+                    var _readings = _practice.properties.readings_instream_habitat;
+                    break;
+                  case "Livestock Exclusion":
+                    var _calculate = CalculateLivestockExclusion;
+                    var _readings = _practice.properties.readings_livestock_exclusion;
+                    break;
+                  case "Non-tidal Wetlands":
+                    var _calculate = CalculateWetlandsNonTidal;
+                    var _readings = _practice.properties.readings_wetlands_nontidal;
+                    break;
+                  case "Shoreline Management":
+                    var _calculate = CalculateShorelineManagement;
+                    var _readings = _practice.properties.readings_shoreline_management;
+                    break;
+                  case "Urban Homeowner":
+                    var _calculate = CalculateUrbanHomeowner;
+                    var _readings = _practice.properties.readings_urban_homeowner;
+                    break;
+
 
                     //
                     //
@@ -230,7 +261,7 @@ angular.module('FieldDoc')
 
             //
             //
-            //i
+            //
                     angular.forEach(_readings, function(_reading, _readingIndex){
                         console.log('_reading', _reading.properties);
 
