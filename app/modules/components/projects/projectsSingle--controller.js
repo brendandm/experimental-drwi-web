@@ -8,7 +8,7 @@
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateUrbanHomeowner, Notifications, $rootScope, Project, $route, $location, mapbox, project, Site, UALStateLoad, user) {
+  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateUrbanHomeowner, Notifications, $rootScope, Project, $route, $location, mapbox, project, Site, UALStateLoad, user) {
 
     var self = this;
 
@@ -41,6 +41,132 @@ angular.module('FieldDoc')
           installed: 0,
           total: 0,
           units: 'miles'
+        },
+        'metric_3': {
+          label: 'Number of Trees Planted',
+          installed: 0,
+          total: 0,
+          units: 'trees'
+        },
+        'metric_4': {
+          label: 'Square Feet of Impervious Surface Removed',
+          installed: 0,
+          total: 0,
+          units: 'sq ft'
+        },
+        'metric_5': {
+          label: 'Miles of Streambank Restored',
+          installed: 0,
+          total: 0,
+          units: 'miles'
+        },
+        'metric_6': {
+          label: 'Acres of Hyporheic Area Treated',
+          installed: 0,
+          total: 0,
+          units: 'acres'
+        },
+        'metric_7': {
+          label: 'Acres of Floodplain Reconnected',
+          installed: 0,
+          total: 0,
+          units: 'acres'
+        },
+        'metric_8': {
+          label: 'Acres of Riparian Restoration',
+          installed: 0,
+          total: 0,
+          units: 'acres'
+        },
+        'metric_9': {
+          label: 'Miles of Riparian Restoration',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_10': {
+          label: 'Acres Protected Under Long-term Easment',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_11': {
+          label: 'Habitat Restoration Target Species 1',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_12': {
+          label: 'Habitat Restoration Target Species 2',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_13': {
+          label: 'Acres of Habitat Restored',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_14': {
+          label: 'Acres of Wetlands Restored',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_15': {
+          label: 'Miles of Living Shoreline Restored',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_16': {
+          label: 'Miles of Stream Opened',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_17': {
+          label: 'Acres of Oyster Habitat Restored',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_18': {
+          label: 'Fish Passage Improvements: # of Passage Barriers Rectified',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_19': {
+          label: 'Fish Passage Improvements: # of Fish Crossing Barriers',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_20': {
+          label: 'Eastern Brook Trout: # of Reintroduced Subwatersheds',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_21': {
+          label: 'Eastern Brook Trout: # of Habitat Units Improved',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_22': {
+          label: 'Miles of Fencing Installed',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_23': {
+          label: 'Acres of Wetland Restored',
+          installed: 0,
+          total: 0,
+          units: ''
         }
       }
     };
@@ -187,160 +313,262 @@ angular.module('FieldDoc')
 
             angular.forEach(_thesePractices, function(_practice, _practiceIndex){
 
-                console.log('Processing Practice', _practice);
+              switch(_practice.properties.practice_type) {
+                case "Bank Stabilization":
+                  var _calculate = CalculateBankStabilization;
+                  var _readings = _practice.properties.readings_bank_stabilization;
 
-                switch(_practice.properties.practice_type) {
-                  case "Bank Stabilization":
-                    var _calculate = CalculateBankStabilization;
-                    var _readings = _practice.properties.readings_bank_stabilization;
-                    break;
-                  case "Bioretention":
-                    var _calculate = CalculateBioretention;
-                    var _readings = _practice.properties.readings_bioretention;
-                    var _loadData = {};
-                    break;
-                  case "Enhanced Stream Restoration":
-                    var _calculate = CalculateEnhancedStreamRestoration;
-                    var _readings = _practice.properties.readings_enhanced_stream_restoration;
-                    break;
-                  case "Forest Buffer":
-                    var _calculate = CalculateForestBuffer;
-                    var _readings = _practice.properties.readings_forest_buffer;
-                    break;
-                  case "Grass Buffer":
-                    var _calculate = CalculateGrassBuffer;
-                    var _readings = _practice.properties.readings_grass_buffer;
-                    break;
-                  case "In-stream Habitat":
-                    var _calculate = CalculateInstreamHabitat;
-                    var _readings = _practice.properties.readings_instream_habitat;
-                    break;
-                  case "Livestock Exclusion":
-                    var _calculate = CalculateLivestockExclusion;
-                    var _readings = _practice.properties.readings_livestock_exclusion;
-                    break;
-                  case "Non-tidal Wetlands":
-                    var _calculate = CalculateWetlandsNonTidal;
-                    var _readings = _practice.properties.readings_wetlands_nontidal;
-                    break;
-                  case "Shoreline Management":
-                    var _calculate = CalculateShorelineManagement;
-                    var _readings = _practice.properties.readings_shoreline_management;
-                    break;
-                  case "Urban Homeowner":
-                    var _calculate = CalculateUrbanHomeowner;
-                    var _readings = _practice.properties.readings_urban_homeowner;
-                    break;
+                  // BANK STABILIZATION: CHESAPEAKE BAY METRICS
+                  //
+                  // 1. Miles of Streambank Restored
+                  //
+                  angular.forEach(_readings, function(_reading, _readingIndex){
+                      if (_reading.properties.measurement_period === 'Planning') {
+                          self.rollups.metrics.metric_5.total += _calculate.milesStreambankRestored(_reading);
+                      } else if (_reading.properties.measurement_period === 'Installation') {
+                          self.rollups.metrics.metric_5.installed += _calculate.milesStreambankRestored(_reading);
+                      }
+                  });
 
+                  self.rollups.metrics.metric_5.chart = (self.rollups.metrics.metric_5.installed/self.rollups.metrics.metric_5.total)*100;
 
-                    //
-                    //
-                    //
-        if (_thisSite.properties.state) {
-          UALStateLoad.query({
-            q: {
-              filters: [
-                {
-                  name: 'state',
-                  op: 'eq',
-                  val: _thisSite.properties.state
-                }
-              ]
-            }
-          }, function(successResponse) {
+                  // BANK STABILIZATION: LOAD REDUCTIONS
+                  //
 
-            angular.forEach(successResponse.features, function(feature, $index) {
-              _loadData[feature.properties.developed_type] = {
-                tn_ual: feature.properties.tn_ual,
-                tp_ual: feature.properties.tp_ual,
-                tss_ual: feature.properties.tss_ual
-              };
+                  break;
+                case "Bioretention":
+                  var _calculate = CalculateBioretention;
+                  var _readings = _practice.properties.readings_bioretention;
+                  var _loadData = {};
+
+                  // BIORETENTION: CHESAPEAKE BAY METRICS
+                  //
+                  // 1. Gallons/Year of Stormwater Detained or Infiltrated
+                  // 2. Acres of Protected by BMP's to Reduce Stormwater Runoff
+                  //
+                  //
+                  angular.forEach(_readings, function(_reading, _readingIndex){
+                      if (_reading.properties.measurement_period === 'Planning') {
+                          self.rollups.metrics.metric_1.total += _calculate.gallonsReducedPerYear(_reading);
+                          self.rollups.metrics.metric_2.total += _calculate.acresProtected(_reading);
+                      } else if (_reading.properties.measurement_period === 'Installation') {
+                          self.rollups.metrics.metric_1.installed += _calculate.gallonsReducedPerYear(_reading);
+                          self.rollups.metrics.metric_2.installed += _calculate.acresProtected(_reading);
+                      }
+                  });
+
+                  self.rollups.metrics.metric_1.chart = (self.rollups.metrics.metric_1.installed/self.rollups.metrics.metric_1.total)*100;
+                  self.rollups.metrics.metric_2.chart = (self.rollups.metrics.metric_2.installed/self.rollups.metrics.metric_2.total)*100;
+
+                  // BIORETENTION: LOAD REDUCTIONS
+                  //
+
+                  break;
+                case "Enhanced Stream Restoration":
+                  var _calculate = CalculateEnhancedStreamRestoration;
+                  var _readings = _practice.properties.readings_enhanced_stream_restoration;
+
+                  // ENHANCED STREAM RESTORATION: CHESAPEAKE BAY METRICS
+                  //
+                  // 1. Miles of Streambank Restored
+                  // 2. Acres of Hyporheic Area Treated
+                  // 3. Acres of Floodplain Reconnected
+                  //
+                  //
+                  angular.forEach(_readings, function(_reading, _readingIndex){
+                      if (_reading.properties.measurement_period === 'Planning') {
+                        self.rollups.metrics.metric_5.total += _calculate.milesOfStreambankRestored(_reading);
+                        self.rollups.metrics.metric_6.total += _calculate.acresTreated(_reading);
+                        self.rollups.metrics.metric_7.total += _reading.properties.connected_floodplain_surface_area;
+                      } else if (_reading.properties.measurement_period === 'Installation') {
+                        self.rollups.metrics.metric_5.installed += _calculate.milesOfStreambankRestored(_reading);
+                        self.rollups.metrics.metric_6.installed += _calculate.acresTreated(_reading);
+                        self.rollups.metrics.metric_7.installed += _reading.properties.connected_floodplain_surface_area;
+                      }
+                  });
+
+                  self.rollups.metrics.metric_5.chart = (self.rollups.metrics.metric_5.installed/self.rollups.metrics.metric_5.total)*100;
+                  self.rollups.metrics.metric_6.chart = (self.rollups.metrics.metric_6.installed/self.rollups.metrics.metric_6.total)*100;
+                  self.rollups.metrics.metric_7.chart = (self.rollups.metrics.metric_7.installed/self.rollups.metrics.metric_7.total)*100;
+
+                  // ENHANCED STREAM RESTORATION: LOAD REDUCTIONS
+                  //
+
+                  break;
+                case "Forest Buffer":
+                  var _calculate = CalculateForestBuffer;
+                  var _readings = _practice.properties.readings_forest_buffer;
+
+                  // FOREST BUFFER: CHESAPEAKE BAY METRICS
+                  //
+                  // 1. Acres of Riparian Restoration
+                  // 2. Miles of Riparian Restoration
+                  // 3. Number of Trees Planted
+                  //
+                  //
+                  angular.forEach(_readings, function(_reading, _readingIndex){
+                      if (_reading.properties.measurement_period === 'Planning') {
+                        self.rollups.metrics.metric_8.total += 0; // calculateForestBuffer.GetConversionWithArea(report.properties.length_of_buffer, report.properties.average_width_of_buffer, 43560)
+                        self.rollups.metrics.metric_9.total += 0; // calculateForestBuffer.GetConversion(report.properties.length_of_buffer, 5280)
+                        self.rollups.metrics.metric_3.total += _reading.properties.number_of_trees_planted;
+                      } else if (_reading.properties.measurement_period === 'Installation') {
+                        self.rollups.metrics.metric_8.installed += 0;
+                        self.rollups.metrics.metric_9.installed += 0;
+                        self.rollups.metrics.metric_3.installed +=  _reading.properties.number_of_trees_planted;
+                      }
+                  });
+
+                  self.rollups.metrics.metric_8.chart = (self.rollups.metrics.metric_8.installed/self.rollups.metrics.metric_8.total)*100;
+                  self.rollups.metrics.metric_9.chart = (self.rollups.metrics.metric_9.installed/self.rollups.metrics.metric_9.total)*100;
+                  self.rollups.metrics.metric_3.chart = (self.rollups.metrics.metric_3.installed/self.rollups.metrics.metric_3.total)*100;
+
+                  // FOREST BUFFER: LOAD REDUCTIONS
+                  //
+
+                  break;
+                case "Grass Buffer":
+                  var _calculate = CalculateGrassBuffer;
+                  var _readings = _practice.properties.readings_grass_buffer;
+
+                  // GRASS BUFFER: CHESAPEAKE BAY METRICS
+                  //
+                  // 1. Acres of Riparian Restoration
+                  // 2. Miles of Riparian Restoration
+                  //
+                  angular.forEach(_readings, function(_reading, _readingIndex){
+                      if (_reading.properties.measurement_period === 'Planning') {
+                        self.rollups.metrics.metric_8.total += 0; // calculateForestBuffer.GetConversionWithArea(report.properties.length_of_buffer, report.properties.average_width_of_buffer, 43560)
+                        self.rollups.metrics.metric_9.total += 0; // calculateForestBuffer.GetConversion(report.properties.length_of_buffer, 5280)
+                      } else if (_reading.properties.measurement_period === 'Installation') {
+                        self.rollups.metrics.metric_8.installed += 0;
+                        self.rollups.metrics.metric_9.installed += 0;
+                      }
+                  });
+
+                  self.rollups.metrics.metric_8.chart = (self.rollups.metrics.metric_8.installed/self.rollups.metrics.metric_8.total)*100;
+                  self.rollups.metrics.metric_9.chart = (self.rollups.metrics.metric_9.installed/self.rollups.metrics.metric_9.total)*100;
+
+                  // GRASS BUFFER: LOAD REDUCTIONS
+                  //
+
+                  break;
+                case "In-stream Habitat":
+                  var _calculate = CalculateInstreamHabitat;
+                  var _readings = _practice.properties.readings_instream_habitat;
+
+                  // IN-STREAM HABITAT: CHESAPEAKE BAY METRICS
+                  //
+                  // 1. Acres Protected Under Long-term Easment (permanent or >=30 years)
+                  // 2. Habitat Restoration Target Species 1
+                  // 3. Habitat Restoration Target Species 2
+                  // 4. Acres of Habitat Restored
+                  // 5. Acres of Wetlands Restored
+                  // 6. Miles of Living Shoreline Restored
+                  // 7. Miles of Stream Opened
+                  // 8. Acres of Oyster Habitat Restored
+                  // 9. Fish Passage Improvements: # of Passage Barriers Rectified
+                  // 10. Fish Passage Improvements: # of Fish Crossing Barriers
+                  // 11. Eastern Brook Trout: # of Reintroduced Subwatersheds
+                  // 12. Eastern Brook Trout: # of Habitat Units Improved
+                  //
+                  //
+                  angular.forEach(_readings, function(_reading, _readingIndex){
+                      if (_reading.properties.measurement_period === 'Planning') {
+                        self.rollups.metrics.metric_10.total += _reading.properties.metrics_areas_protected; // calculateForestBuffer.GetConversionWithArea(report.properties.length_of_buffer, report.properties.average_width_of_buffer, 43560)
+                      } else if (_reading.properties.measurement_period === 'Installation') {
+                        self.rollups.metrics.metric_10.installed += _reading.properties.metrics_areas_protected;
+                      }
+                  });
+
+                  self.rollups.metrics.metric_10.chart = (self.rollups.metrics.metric_10.installed/self.rollups.metrics.metric_10.total)*100;
+
+                  // IN-STREAM HABITAT: LOAD REDUCTIONS
+                  //
+
+                  break;
+                case "Livestock Exclusion":
+                  var _calculate = CalculateLivestockExclusion;
+                  var _readings = _practice.properties.readings_livestock_exclusion;
+
+                  // LIVESTOCK EXCLUSION: CHESAPEAKE BAY METRICS
+                  //
+                  // 1. Miles of Fencing Installed
+                  //
+                  //
+
+                  // LIVESTOCK EXCLUSION: LOAD REDUCTIONS
+                  //
+
+                  break;
+                case "Non-tidal Wetlands":
+                  var _calculate = CalculateWetlandsNonTidal;
+                  var _readings = _practice.properties.readings_wetlands_nontidal;
+
+                  // NON-TIDAL WETLANDS: CHESAPEAKE BAY METRICS
+                  //
+                  // 1. Acres of Wetland Restored
+                  //
+                  //
+
+                  // NON-TIDAL WETLANDS: LOAD REDUCTIONS
+                  //
+
+                  break;
+                case "Shoreline Management":
+                  var _calculate = CalculateShorelineManagement;
+                  var _readings = _practice.properties.readings_shoreline_management;
+
+                  // SHORELINE MANAGEMENT: CHESAPEAKE BAY METRICS
+                  //
+                  // 1. Acres of Wetland Restored
+                  // 2. Miles of Living Shoreline Restored
+                  //
+                  //
+
+                  // SHORELINE MANAGEMENT: LOAD REDUCTIONS
+                  //
+
+                  break;
+                case "Urban Homeowner":
+                  var _calculate = CalculateUrbanHomeowner;
+                  var _readings = _practice.properties.readings_urban_homeowner;
+
+                  // URBAN HOMEOWNER: CHESAPEAKE BAY METRICS
+                  //
+                  // 1. Number of Trees Planted
+                  // 2. Square Feet of Impervious Surface Removed
+                  // 3. Gallons/Year of Stormwater Detained or Infiltrated
+                  // 4. Areas of Protected by BMP's to Reduce Stormwater Runoff
+                  //
+                  //
+                  angular.forEach(_readings, function(_reading, _readingIndex){
+                      if (_reading.properties.measurement_period === 'Planning') {
+                        self.rollups.metrics.metric_1.total += _calculate.gallonsReducedPerYear(_reading.properties);
+                        self.rollups.metrics.metric_2.total += _calculate.acresProtected(_reading.properties);
+                        self.rollups.metrics.metric_3.total += _calculate.quantityInstalled(_readings, 'tree_planting');
+                        self.rollups.metrics.metric_4.total += _calculate.quantityInstalled(_readings, 'impervious_cover_removal_area');
+                      } else if (_reading.properties.measurement_period === 'Installation') {
+                        self.rollups.metrics.metric_1.installed += _calculate.gallonsReducedPerYear(_reading.properties);
+                        self.rollups.metrics.metric_2.installed += _calculate.acresProtected(_reading.properties);
+                        self.rollups.metrics.metric_3.installed += _calculate.quantityInstalled(_readings, 'tree_planting');
+                        self.rollups.metrics.metric_4.installed += _calculate.quantityInstalled(_readings, 'impervious_cover_removal_area');
+                      }
+                  });
+
+                  self.rollups.metrics.metric_1.chart = (self.rollups.metrics.metric_1.installed/self.rollups.metrics.metric_1.total)*100;
+                  self.rollups.metrics.metric_2.chart = (self.rollups.metrics.metric_2.installed/self.rollups.metrics.metric_2.total)*100;
+                  self.rollups.metrics.metric_3.chart = (self.rollups.metrics.metric_3.installed/self.rollups.metrics.metric_3.total)*100;
+                  self.rollups.metrics.metric_4.chart = (self.rollups.metrics.metric_4.installed/self.rollups.metrics.metric_4.total)*100;
+
+                  // URBAN HOMEOWNER: LOAD REDUCTIONS
+                  //
+
+                  break;
+              }
+
             });
 
-            console.log('loadData', _loadData);
-
-            //
-            //
-            //
-                    angular.forEach(_readings, function(_reading, _readingIndex){
-                        console.log('_reading', _reading.properties);
-
-                        if (_reading.properties.measurement_period === 'Planning') {
-                            var _plannedN = _calculate.plannedNitrogenLoadReduction(_reading, _loadData);
-                            var _plannedP = _calculate.plannedPhosphorusLoadReduction(_reading, _loadData);
-                            var _plannedS = _calculate.plannedSedimentLoadReduction(_reading, _loadData);
-
-                            self.rollups.nitrogen.total += _plannedN;
-                            self.rollups.phosphorus.total += _plannedP;
-                            self.rollups.sediment.total += _plannedS;
-                        } else if (_reading.properties.measurement_period === 'Installation') {
-                            var _installedN = _calculate.plannedNitrogenLoadReduction(_reading, _loadData);
-                            var _installedP = _calculate.plannedPhosphorusLoadReduction(_reading, _loadData);
-                            var _installedS = _calculate.plannedSedimentLoadReduction(_reading, _loadData);
-
-                            self.rollups.nitrogen.installed += _installedN;
-                            self.rollups.phosphorus.installed += _installedP;
-                            self.rollups.sediment.installed += _installedS;
-
-                            //self.rollups.metrics.metric_1.installed += _calculate.gallonsReducedPerYear(_reading);
-                        }
-                    });
-
-                    self.rollups.nitrogen.chart = (self.rollups.nitrogen.installed/self.rollups.nitrogen.total)*100;
-                    self.rollups.phosphorus.chart = (self.rollups.phosphorus.installed/self.rollups.phosphorus.total)*100;
-                    self.rollups.sediment.chart = (self.rollups.sediment.installed/self.rollups.sediment.total)*100;
-
-
-
-          }, function(errorResponse) {
-            console.log('errorResponse', errorResponse);
-          });
-        } else {
-          console.log('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
-        }
-
-
-
-                    //
-                    // CHESAPEAKE BAY METRICS
-                    //
-
-                    angular.forEach(_readings, function(_reading, _readingIndex){
-                        console.log('_reading', _reading.properties);
-
-                        if (_reading.properties.measurement_period === 'Planning') {
-                            self.rollups.metrics.metric_1.total += _calculate.gallonsReducedPerYear(_reading);
-                        } else if (_reading.properties.measurement_period === 'Installation') {
-                            self.rollups.metrics.metric_1.installed += _calculate.gallonsReducedPerYear(_reading);
-                        }
-                    });
-
-                    self.rollups.metrics.metric_1.chart = (self.rollups.metrics.metric_1.installed/self.rollups.metrics.metric_1.total)*100;
-
-                    break;
-                  case "Urban Homeowner":
-                    var _calculate = CalculateUrbanHomeowner;
-
-                    var _readings = _practice.properties.readings_urban_homeowner;
-
-                    angular.forEach(_readings, function(_reading, _readingIndex){
-                        console.log('_reading', _reading.properties);
-
-                        if (_reading.properties.measurement_period === 'Planning') {
-                            self.rollups.metrics.metric_1.total += CalculateUrbanHomeowner.gallonsReducedPerYear(_reading.properties);
-                        } else if (_reading.properties.measurement_period === 'Installation') {
-                            self.rollups.metrics.metric_1.installed += _calculate.gallonsReducedPerYear(_reading.properties);
-                        }
-                    });
-
-                    self.rollups.metrics.metric_1.chart = (self.rollups.metrics.metric_1.installed/self.rollups.metrics.metric_1.total)*100;
-
-                    break;
-
-                }
-
-                //var _theseReadings = _self.readings(_practice);
-            });
+            return;
         },
         readings: function(_these) {}
     };
