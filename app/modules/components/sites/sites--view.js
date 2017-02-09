@@ -8,13 +8,190 @@
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('SiteViewCtrl', function (Account, leafletData, $location, site, Practice, practices, project, $rootScope, $route, user) {
+  .controller('SiteViewCtrl', function (Account, leafletData, $location, mapbox, site, Practice, practices, project, $rootScope, $route, user) {
 
     var self = this;
 
     $rootScope.page = {};
 
+    self.mapbox = mapbox;
+
     self.practices = practices;
+
+    self.rollups = {
+      active: "all",
+      all: {
+        practices: [
+          {
+            name: 'Urban Homeowner',
+            installed: 0,
+            total: 0.32
+          }
+        ]
+      },
+      nitrogen: {
+      	installed: 0,
+      	total: 0.32,
+        practices: [
+          {
+            name: 'Urban Homeowner',
+            installed: 0,
+            total: 0.32
+          }
+        ]
+      },
+      phosphorus: {
+      	installed: 0,
+      	total: 0.04,
+        practices: [
+          {
+            name: 'Urban Homeowner',
+            installed: 0,
+            total: 0.04
+          }
+        ]
+      },
+      sediment: {
+      	installed: 0,
+      	total: 0,
+        practices: []
+      },
+      metrics: {
+        'metric_1': {
+          label: 'Gallons/Year of Stormwater Detained or Infiltrated',
+          installed: 0,
+          total: 712.61,
+          units: 'miles'
+        },
+        'metric_2': {
+          label: 'Acres Protected by BMP to Reduce Stormwater Runoff',
+          installed: 0,
+          total: 0.09,
+          units: 'miles'
+        },
+        'metric_3': {
+          label: 'Number of Trees Planted',
+          installed: 0,
+          total: 12,
+          units: 'trees'
+        },
+        'metric_4': {
+          label: 'Square Feet of Impervious Surface Removed',
+          installed: 0,
+          total: 100,
+          units: 'sq ft'
+        },
+        'metric_5': {
+          label: 'Miles of Streambank Restored',
+          installed: 0,
+          total: 0,
+          units: 'miles'
+        },
+        'metric_6': {
+          label: 'Acres of Hyporheic Area Treated',
+          installed: 0,
+          total: 0,
+          units: 'acres'
+        },
+        'metric_7': {
+          label: 'Acres of Floodplain Reconnected',
+          installed: 0,
+          total: 0,
+          units: 'acres'
+        },
+        'metric_8': {
+          label: 'Acres of Riparian Restoration',
+          installed: 0,
+          total: 0,
+          units: 'acres'
+        },
+        'metric_9': {
+          label: 'Miles of Riparian Restoration',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_10': {
+          label: 'Acres Protected Under Long-term Easment',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_11': {
+          label: 'Habitat Restoration Target Species 1',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_12': {
+          label: 'Habitat Restoration Target Species 2',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_13': {
+          label: 'Acres of Habitat Restored',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_14': {
+          label: 'Acres of Wetlands Restored',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_15': {
+          label: 'Miles of Living Shoreline Restored',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_16': {
+          label: 'Miles of Stream Opened',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_17': {
+          label: 'Acres of Oyster Habitat Restored',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_18': {
+          label: 'Fish Passage Improvements: # of Passage Barriers Rectified',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_19': {
+          label: 'Fish Passage Improvements: # of Fish Crossing Barriers',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_20': {
+          label: 'Eastern Brook Trout: # of Reintroduced Subwatersheds',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_21': {
+          label: 'Eastern Brook Trout: # of Habitat Units Improved',
+          installed: 0,
+          total: 0,
+          units: ''
+        },
+        'metric_22': {
+          label: 'Miles of Fencing Installed',
+          installed: 0,
+          total: 0,
+          units: ''
+        }
+      }
+    };
+
 
     site.$promise.then(function(successResponse) {
 
@@ -51,6 +228,8 @@ angular.module('FieldDoc')
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
                     can_edit: Account.canEdit(projectResponse)
                 };
+
+                self.project = projectResponse;
               });
 
           });

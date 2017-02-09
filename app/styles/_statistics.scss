@@ -15,10 +15,23 @@ h6.rule-above.statistics--header {
   background-color: $color-darkBlue-base;
   color: $color-white-default;
   margin: 0;
-  padding: 2em 2em 2.5em; 
+  padding: 2em 2em 2.5em;
+
+  &.statistics--navigation {
+    padding: 0;
+
+    .statistics--statistic {
+      cursor: pointer;
+      padding: 2em 2em 2.5em;
+    }
+  }
 }
 
 .statistics--statistic {
+  &.statistics--statistic--active {
+    background-color: #373F4A;
+  }
+
   .statistic--value {
     color: $color-white-default;
     font-size: 24px;
@@ -39,7 +52,7 @@ h6.rule-above.statistics--header {
   }
 
   .statistic--chart {
-    background-color: #434B55; 
+    background-color: #535A63;
     border-radius: 6px;
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
@@ -98,5 +111,3 @@ h6.rule-above.statistics--header {
   }
 
 }
-
-
