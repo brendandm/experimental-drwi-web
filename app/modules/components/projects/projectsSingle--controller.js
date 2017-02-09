@@ -8,7 +8,7 @@
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateUrbanHomeowner, Notifications, $rootScope, Project, $route, $location, mapbox, project, Site, UALStateLoad, user) {
+  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateWetlandsNonTidal, CalculateUrbanHomeowner, Notifications, $rootScope, Project, $route, $location, mapbox, project, Site, UALStateLoad, user) {
 
     var self = this;
 
@@ -161,12 +161,6 @@ angular.module('FieldDoc')
           installed: 0,
           total: 0,
           units: ''
-        },
-        'metric_23': {
-          label: 'Acres of Wetland Restored',
-          installed: 0,
-          total: 0,
-          units: ''
         }
       }
     };
@@ -312,7 +306,7 @@ angular.module('FieldDoc')
             var _self = this;
 
             angular.forEach(_thesePractices, function(_practice, _practiceIndex){
-
+              console.log('Processing practice', _practice.properties.practice_type)
               switch(_practice.properties.practice_type) {
                 case "Bank Stabilization":
                   var _calculate = CalculateBankStabilization;
@@ -325,8 +319,16 @@ angular.module('FieldDoc')
                   angular.forEach(_readings, function(_reading, _readingIndex){
                       if (_reading.properties.measurement_period === 'Planning') {
                           self.rollups.metrics.metric_5.total += _calculate.milesStreambankRestored(_reading);
+
+                          self.rollups.nitrogen.total += _calculate.plannedNitrogenLoadReduction(_reading)
+                          self.rollups.phosphorus.total += _calculate.plannedPhosphorusLoadReduction(_reading)
+                          self.rollups.sediment.total += _calculate.plannedSedimentLoadReduction(_reading)
                       } else if (_reading.properties.measurement_period === 'Installation') {
                           self.rollups.metrics.metric_5.installed += _calculate.milesStreambankRestored(_reading);
+
+                          self.rollups.nitrogen.installed += _calculate.plannedNitrogenLoadReduction(_reading)
+                          self.rollups.phosphorus.installed += _calculate.plannedPhosphorusLoadReduction(_reading)
+                          self.rollups.sediment.installed += _calculate.plannedSedimentLoadReduction(_reading)
                       }
                   });
 
@@ -351,9 +353,21 @@ angular.module('FieldDoc')
                       if (_reading.properties.measurement_period === 'Planning') {
                           self.rollups.metrics.metric_1.total += _calculate.gallonsReducedPerYear(_reading);
                           self.rollups.metrics.metric_2.total += _calculate.acresProtected(_reading);
+
+                          // TODO: NEED LOAD DATA
+                          //
+                          // self.rollups.nitrogen.total += _calculate.plannedNitrogenLoadReduction(_reading)
+                          // self.rollups.phosphorus.total += _calculate.plannedPhosphorusLoadReduction(_reading)
+                          // self.rollups.sediment.total += _calculate.plannedSedimentLoadReduction(_reading)
                       } else if (_reading.properties.measurement_period === 'Installation') {
                           self.rollups.metrics.metric_1.installed += _calculate.gallonsReducedPerYear(_reading);
                           self.rollups.metrics.metric_2.installed += _calculate.acresProtected(_reading);
+
+                          // TODO: NEED LOAD DATA
+                          //
+                          // self.rollups.nitrogen.installed += _calculate.plannedNitrogenLoadReduction(_reading)
+                          // self.rollups.phosphorus.installed += _calculate.plannedPhosphorusLoadReduction(_reading)
+                          // self.rollups.sediment.installed += _calculate.plannedSedimentLoadReduction(_reading)
                       }
                   });
 
@@ -380,10 +394,16 @@ angular.module('FieldDoc')
                         self.rollups.metrics.metric_5.total += _calculate.milesOfStreambankRestored(_reading);
                         self.rollups.metrics.metric_6.total += _calculate.acresTreated(_reading);
                         self.rollups.metrics.metric_7.total += _reading.properties.connected_floodplain_surface_area;
+
+                        // TODO: NEED LOAD DATA
+                        //
                       } else if (_reading.properties.measurement_period === 'Installation') {
                         self.rollups.metrics.metric_5.installed += _calculate.milesOfStreambankRestored(_reading);
                         self.rollups.metrics.metric_6.installed += _calculate.acresTreated(_reading);
                         self.rollups.metrics.metric_7.installed += _reading.properties.connected_floodplain_surface_area;
+
+                        // TODO: NEED LOAD DATA
+                        //
                       }
                   });
 
@@ -405,11 +425,13 @@ angular.module('FieldDoc')
                   // 2. Miles of Riparian Restoration
                   // 3. Number of Trees Planted
                   //
+                  // TODO: This is not finished ... Forest buffers has no calculation functions
+                  //
                   //
                   angular.forEach(_readings, function(_reading, _readingIndex){
                       if (_reading.properties.measurement_period === 'Planning') {
-                        self.rollups.metrics.metric_8.total += 0; // calculateForestBuffer.GetConversionWithArea(report.properties.length_of_buffer, report.properties.average_width_of_buffer, 43560)
-                        self.rollups.metrics.metric_9.total += 0; // calculateForestBuffer.GetConversion(report.properties.length_of_buffer, 5280)
+                        self.rollups.metrics.metric_8.total += 1; // calculateForestBuffer.GetConversionWithArea(report.properties.length_of_buffer, report.properties.average_width_of_buffer, 43560)
+                        self.rollups.metrics.metric_9.total += 1; // calculateForestBuffer.GetConversion(report.properties.length_of_buffer, 5280)
                         self.rollups.metrics.metric_3.total += _reading.properties.number_of_trees_planted;
                       } else if (_reading.properties.measurement_period === 'Installation') {
                         self.rollups.metrics.metric_8.installed += 0;
@@ -435,10 +457,13 @@ angular.module('FieldDoc')
                   // 1. Acres of Riparian Restoration
                   // 2. Miles of Riparian Restoration
                   //
+                  // TODO: This is not finished ... Grass buffers has no calculation functions
+                  //
+                  //
                   angular.forEach(_readings, function(_reading, _readingIndex){
                       if (_reading.properties.measurement_period === 'Planning') {
-                        self.rollups.metrics.metric_8.total += 0; // calculateForestBuffer.GetConversionWithArea(report.properties.length_of_buffer, report.properties.average_width_of_buffer, 43560)
-                        self.rollups.metrics.metric_9.total += 0; // calculateForestBuffer.GetConversion(report.properties.length_of_buffer, 5280)
+                        self.rollups.metrics.metric_8.total += 1; // calculateForestBuffer.GetConversionWithArea(report.properties.length_of_buffer, report.properties.average_width_of_buffer, 43560)
+                        self.rollups.metrics.metric_9.total += 1; // calculateForestBuffer.GetConversion(report.properties.length_of_buffer, 5280)
                       } else if (_reading.properties.measurement_period === 'Installation') {
                         self.rollups.metrics.metric_8.installed += 0;
                         self.rollups.metrics.metric_9.installed += 0;
@@ -474,16 +499,56 @@ angular.module('FieldDoc')
                   //
                   angular.forEach(_readings, function(_reading, _readingIndex){
                       if (_reading.properties.measurement_period === 'Planning') {
-                        self.rollups.metrics.metric_10.total += _reading.properties.metrics_areas_protected; // calculateForestBuffer.GetConversionWithArea(report.properties.length_of_buffer, report.properties.average_width_of_buffer, 43560)
+                        self.rollups.metrics.metric_10.total += _reading.properties.metrics_areas_protected;
+                        self.rollups.metrics.metric_11.total += 0;
+                        self.rollups.metrics.metric_12.total += 0;
+                        self.rollups.metrics.metric_13.total += _reading.properties.metrics_areas_of_habitat_restored;
+                        self.rollups.metrics.metric_14.total += _reading.properties.metrics_acres_of_wetlands_restored;
+                        self.rollups.metrics.metric_15.total += _reading.properties.metrics_miles_of_living_shoreline_restored;
+                        self.rollups.metrics.metric_16.total += _reading.properties.metrics_miles_of_stream_opened;
+                        self.rollups.metrics.metric_17.total += _reading.properties.metrics_acres_of_oyster_habitat_restored;
+                        self.rollups.metrics.metric_18.total += _reading.properties.metrics_fish_passage_improvements_number_of_passage_barriers_re;
+                        self.rollups.metrics.metric_19.total += _reading.properties.metrics_fish_passage_improvements_number_of_fish_crossing_barri;
+                        self.rollups.metrics.metric_20.total += _reading.properties.metrics_number_of_reintroduced_subwatersheds_eastern_brook_trou;
+                        self.rollups.metrics.metric_21.total += _reading.properties.metrics_number_of_habitat_units_improved_eastern_brook_trout;
+
+                        // IN-STREAM HABITAT: LOAD REDUCTIONS FOR PLANNED/TOTAL
+                        //
+                        // !!!! NO NITROGEN, PHOSPHORUS, OR SEDIMENT REDUCTIONS
+
                       } else if (_reading.properties.measurement_period === 'Installation') {
                         self.rollups.metrics.metric_10.installed += _reading.properties.metrics_areas_protected;
+                        self.rollups.metrics.metric_11.installed += 0;
+                        self.rollups.metrics.metric_12.installed += 0;
+                        self.rollups.metrics.metric_13.installed += _reading.properties.metrics_areas_of_habitat_restored;
+                        self.rollups.metrics.metric_14.installed += _reading.properties.metrics_acres_of_wetlands_restored;
+                        self.rollups.metrics.metric_15.installed += _reading.properties.metrics_miles_of_living_shoreline_restored;
+                        self.rollups.metrics.metric_16.installed += _reading.properties.metrics_miles_of_stream_opened;
+                        self.rollups.metrics.metric_17.installed += _reading.properties.metrics_acres_of_oyster_habitat_restored;
+                        self.rollups.metrics.metric_18.installed += _reading.properties.metrics_fish_passage_improvements_number_of_passage_barriers_re;
+                        self.rollups.metrics.metric_19.installed += _reading.properties.metrics_fish_passage_improvements_number_of_fish_crossing_barri;
+                        self.rollups.metrics.metric_20.installed += _reading.properties.metrics_number_of_reintroduced_subwatersheds_eastern_brook_trou;
+                        self.rollups.metrics.metric_21.installed += _reading.properties.metrics_number_of_habitat_units_improved_eastern_brook_trout;
+
+                        // IN-STREAM HABITAT: LOAD REDUCTIONS FOR INSTALLATION
+                        //
+                        // !!!! NO NITROGEN, PHOSPHORUS, OR SEDIMENT REDUCTIONS
+
                       }
                   });
 
                   self.rollups.metrics.metric_10.chart = (self.rollups.metrics.metric_10.installed/self.rollups.metrics.metric_10.total)*100;
-
-                  // IN-STREAM HABITAT: LOAD REDUCTIONS
-                  //
+                  self.rollups.metrics.metric_11.chart = (self.rollups.metrics.metric_11.installed/self.rollups.metrics.metric_11.total)*100;
+                  self.rollups.metrics.metric_12.chart = (self.rollups.metrics.metric_12.installed/self.rollups.metrics.metric_12.total)*100;
+                  self.rollups.metrics.metric_13.chart = (self.rollups.metrics.metric_13.installed/self.rollups.metrics.metric_13.total)*100;
+                  self.rollups.metrics.metric_14.chart = (self.rollups.metrics.metric_14.installed/self.rollups.metrics.metric_14.total)*100;
+                  self.rollups.metrics.metric_15.chart = (self.rollups.metrics.metric_15.installed/self.rollups.metrics.metric_15.total)*100;
+                  self.rollups.metrics.metric_16.chart = (self.rollups.metrics.metric_16.installed/self.rollups.metrics.metric_16.total)*100;
+                  self.rollups.metrics.metric_17.chart = (self.rollups.metrics.metric_17.installed/self.rollups.metrics.metric_17.total)*100;
+                  self.rollups.metrics.metric_18.chart = (self.rollups.metrics.metric_18.installed/self.rollups.metrics.metric_18.total)*100;
+                  self.rollups.metrics.metric_19.chart = (self.rollups.metrics.metric_19.installed/self.rollups.metrics.metric_19.total)*100;
+                  self.rollups.metrics.metric_20.chart = (self.rollups.metrics.metric_20.installed/self.rollups.metrics.metric_20.total)*100;
+                  self.rollups.metrics.metric_21.chart = (self.rollups.metrics.metric_21.installed/self.rollups.metrics.metric_21.total)*100;
 
                   break;
                 case "Livestock Exclusion":
@@ -495,12 +560,21 @@ angular.module('FieldDoc')
                   // 1. Miles of Fencing Installed
                   //
                   //
+                  angular.forEach(_readings, function(_reading, _readingIndex){
+                      if (_reading.properties.measurement_period === 'Planning') {
+                        self.rollups.metrics.metric_22.total += _calculate.toMiles(_reading.properties.length_of_fencing);
+                      } else if (_reading.properties.measurement_period === 'Installation') {
+                        self.rollups.metrics.metric_22.installed += _calculate.toMiles(_reading.properties.length_of_fencing);
+                      }
+                  });
+
+                  self.rollups.metrics.metric_22.chart = (self.rollups.metrics.metric_22.installed/self.rollups.metrics.metric_22.total)*100;
 
                   // LIVESTOCK EXCLUSION: LOAD REDUCTIONS
                   //
 
                   break;
-                case "Non-tidal Wetlands":
+                case "Non-Tidal Wetlands":
                   var _calculate = CalculateWetlandsNonTidal;
                   var _readings = _practice.properties.readings_wetlands_nontidal;
 
@@ -508,10 +582,33 @@ angular.module('FieldDoc')
                   //
                   // 1. Acres of Wetland Restored
                   //
+                  // TODO: It appears that this may not be working right for metric_14
                   //
+                  angular.forEach(_readings, function(_reading, _readingIndex){
+                      if (_reading.properties.measurement_period === 'Planning') {
+                        self.rollups.metrics.metric_14.total += _calculate.milesRestored(_readings, 'Planning');
+
+                        // self.rollups.phosphorus.total += _calculate.plannedPhosphorusLoadReduction(_reading)
+                        // self.rollups.sediment.total += _calculate.plannedSedimentLoadReduction(_reading)
+                      } else if (_reading.properties.measurement_period === 'Installation') {
+                        self.rollups.metrics.metric_14.installed += _calculate.milesRestored(_readings, 'Installation');
+
+                        // self.rollups.nitrogen.installed += _calculate.plannedNitrogenLoadReduction(_reading)
+                        // self.rollups.phosphorus.installed += _calculate.plannedPhosphorusLoadReduction(_reading)
+                        // self.rollups.sediment.installed += _calculate.plannedSedimentLoadReduction(_reading)
+                      }
+                  });
+
+                  self.rollups.metrics.metric_14.chart = (self.rollups.metrics.metric_14.installed/self.rollups.metrics.metric_14.total)*100;
 
                   // NON-TIDAL WETLANDS: LOAD REDUCTIONS
                   //
+                  //console.log('_thisSite.properties.segment.properties.hgmr_code', _thisSite)
+                  //var _results = _calculate.loads(_readings.features, _thisSite.properties.segment.properties.hgmr_code);
+                  //console.log('_results', _results)
+
+                  self.rollups.nitrogen.total += _results.planned.nitrogen;
+                  // self.rollups.phosphorus.installed += _calculate.plannedPhosphorusLoadReduction(_reading)
 
                   break;
                 case "Shoreline Management":
@@ -524,6 +621,18 @@ angular.module('FieldDoc')
                   // 2. Miles of Living Shoreline Restored
                   //
                   //
+                  angular.forEach(_readings, function(_reading, _readingIndex){
+                      if (_reading.properties.measurement_period === 'Planning') {
+                        self.rollups.metrics.metric_14.total += _reading.properties.installation_area_of_planted_or_replanted_tidal_wetlands;
+                        self.rollups.metrics.metric_15.total += _reading.properties.installation_length_of_living_shoreline_restored;
+                      } else if (_reading.properties.measurement_period === 'Installation') {
+                        self.rollups.metrics.metric_14.installed += _reading.properties.installation_area_of_planted_or_replanted_tidal_wetlands;
+                        self.rollups.metrics.metric_15.installed += _reading.properties.installation_length_of_living_shoreline_restored;
+                      }
+                  });
+
+                  self.rollups.metrics.metric_14.chart = (self.rollups.metrics.metric_14.installed/self.rollups.metrics.metric_14.total)*100;
+                  self.rollups.metrics.metric_15.chart = (self.rollups.metrics.metric_15.installed/self.rollups.metrics.metric_15.total)*100;
 
                   // SHORELINE MANAGEMENT: LOAD REDUCTIONS
                   //
