@@ -36,10 +36,6 @@
             </article>
 
             <h6 class="rule-above statistics--header"><strong>Project</strong> Summary</h6>
-            <p><small><a href="javascript:void(0)" data-ng-click="page.showPageData =! page.showPageData">Show Raw Data</a></small></p>
-            <code data-ng-if="page.showPageData"><pre>
-              {{ page.data | json }}
-            </pre></code>
             <article class="row statistics">
               <div class="column-4 statistics--statistic">
                 <p class="statistic--value">
@@ -84,7 +80,7 @@
                        data-ng-style="{'width': '{{ metric.chart }}%' }"></div>
                 </div>
                 <p class="metric--help--text">
-                  {{ metric.installed | number:1 }} of {{ metric.total | number:1 }} {{ metric.units }}
+                  {{ metric.installed | number:2 }} of {{ metric.total | number:2 }} {{ metric.units }}
                 </p>
               </div>
             </article>
