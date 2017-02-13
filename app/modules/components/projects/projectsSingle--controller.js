@@ -320,22 +320,23 @@ angular.module('FieldDoc')
                     if (_reading.properties.measurement_period === 'Planning') {
                         self.rollups.metrics.metric_5.total += _calculate.milesStreambankRestored(_reading);
 
+                        // BANK STABILIZATION: LOAD REDUCTIONS
+                        //
                         self.rollups.nitrogen.total += _calculate.plannedNitrogenLoadReduction(_reading)
                         self.rollups.phosphorus.total += _calculate.plannedPhosphorusLoadReduction(_reading)
                         self.rollups.sediment.total += _calculate.plannedSedimentLoadReduction(_reading)
                     } else if (_reading.properties.measurement_period === 'Installation') {
                         self.rollups.metrics.metric_5.installed += _calculate.milesStreambankRestored(_reading);
 
+                        // BANK STABILIZATION: LOAD REDUCTIONS
+                        //
                         self.rollups.nitrogen.installed += _calculate.plannedNitrogenLoadReduction(_reading)
                         self.rollups.phosphorus.installed += _calculate.plannedPhosphorusLoadReduction(_reading)
                         self.rollups.sediment.installed += _calculate.plannedSedimentLoadReduction(_reading)
                     }
                 });
 
-                self.rollups.metrics.metric_5.chart = (self.rollups.metrics.metric_5.installed/self.rollups.metrics.metric_5.total)*100;
-
-                // BANK STABILIZATION: LOAD REDUCTIONS
-                //
+                self.rollups.metrics.metric_5.chart += (self.rollups.metrics.metric_5.installed/self.rollups.metrics.metric_5.total)*100;
 
                 break;
               case "Bioretention":

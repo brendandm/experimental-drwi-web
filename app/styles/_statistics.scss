@@ -10,26 +10,42 @@ h6.rule-above.statistics--header {
     padding-bottom: 0;
 }
 
+.statistics--container {
+  display: table;
+  height: 128px;
+  width: 100%;
+}
+
 .statistics,
 .row .row.statistics {
   background-color: $color-darkBlue-base;
   color: $color-white-default;
+  display: table-row;
+  height: 100%;
   margin: 0;
-  padding: 2em 2em 2.5em;
+  padding: 2em 0 2.5em;
 
   &.statistics--navigation {
     padding: 0;
 
     .statistics--statistic {
       cursor: pointer;
-      padding: 2em 2em 2.5em;
+      padding: 2em 1em 2.5em;
     }
   }
 }
 
 .statistics--statistic {
+  display: table-cell;
+  height: 100%;
+
   &.statistics--statistic--active {
     background-color: #373F4A;
+  }
+
+  &.statistics--statistic--all {
+    text-align: center;
+    vertical-align: middle;
   }
 
   .statistic--value {
@@ -63,6 +79,7 @@ h6.rule-above.statistics--header {
       border-radius: 6px;
       -webkit-border-radius: 6px;
       -moz-border-radius: 6px;
+      -webkit-transition: width 2s;
       height: 12px;
       width: 12px;
     }
@@ -85,6 +102,21 @@ h6.rule-above.statistics--header {
     font-weight: 400;
     margin-bottom: 4px;
     padding-bottom: 0;
+
+    a,
+    a:active,
+    a:link,
+    a:visited {
+      color: $color-white-default;
+      border-bottom: 1px dashed rgba($color-white-default, 0.5);
+      text-decoration: none;
+
+      &:hover {
+        color: $color-white-default;
+        border-bottom: 1px dashed $color-white-default;
+        text-decoration: none;
+      }
+    }
   }
 
   .metric--chart {
@@ -99,6 +131,7 @@ h6.rule-above.statistics--header {
       border-radius: 6px;
       -moz-border-radius: 6px;
       -webkit-border-radius: 6px;
+      -webkit-transition: width 2s;
       height: 12px;
       width: 12px;
     }

@@ -45,10 +45,10 @@
             {{ page.practices.features.length | number }} <span data-ng-if="page.practices.features.length !== 1">practices</span><span data-ng-if="page.practices.features.length === 1">practice</span>
           </strong>
         </p>
-
+        <section class="statistics--container">
         <article class="row statistics statistics--navigation"
                  data-ng-if="page.practices.features">
-          <div class="column-2 statistics--statistic"
+          <div class="column-2 statistics--statistic statistics--statistic--all"
                data-ng-class="{'statistics--statistic--active': (page.rollups.active === 'all')}"
                data-ng-click="page.rollups.active = 'all'">
                <p class="statistic--value">
@@ -89,6 +89,7 @@
             </div>
           </div>
         </article>
+      </section>
 
         <!-- PRACTICE N/P/S BREAKDOWN -->
         <!-- All -->
@@ -142,7 +143,9 @@
                    data-ng-if="practice.total"
                    data-ng-repeat="practice in page.rollups.nitrogen.practices track by $index">
                 <p class="metric--title">
-                  {{ practice.name }} #{{ $index+1 }}
+                  <a href="{{ practice.url }}">
+                    {{ practice.name }} #{{ $index+1 }}
+                  </a>
 
                   <span class="metric--help--text pull-right">
                     {{ practice.installed | number:2 }} of {{ practice.total | number:2 }} lbs/yr
@@ -183,7 +186,9 @@
                     data-ng-if="practice.total"
                     data-ng-repeat="practice in page.rollups.phosphorus.practices track by $index">
                   <p class="metric--title">
-                    {{ practice.name }} #{{ $index+1 }}
+                    <a href="{{ practice.url }}">
+                      {{ practice.name }} #{{ $index+1 }}
+                    </a>
 
                     <span class="metric--help--text pull-right">
                       {{ practice.installed | number:2 }} of {{ practice.total | number:2 }} lbs/yr
@@ -224,7 +229,9 @@
                     data-ng-if="practice.total"
                     data-ng-repeat="practice in page.rollups.sediment.practices track by $index">
                   <p class="metric--title">
-                    {{ practice.name }} #{{ $index+1 }}
+                    <a href="{{ practice.url }}">
+                      {{ practice.name }} #{{ $index+1 }}
+                    </a>
 
                     <span class="metric--help--text pull-right">
                       {{ practice.installed | number:2 }} of {{ practice.total | number:2 }} lbs/yr
