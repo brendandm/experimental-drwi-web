@@ -47,7 +47,10 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'local',apiUrl:'http://127.0.0.1:5000',siteUrl:'http://127.0.0.1:9000',clientId:'VYUsqQ4QlO0wSJ3HeIZKyhx3cPa12KoCAZpIVgIE'})
+.constant('environment', {name: 'staging',
+apiUrl: 'http://stg.api.fielddoc.org',
+siteUrl: 'http://stg.fielddoc.org',
+clientId: 'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
 /**
@@ -1803,7 +1806,7 @@ angular.module('FieldDoc')
     self.saveProject = function() {
 
       self.project.properties.workflow_state = "Draft";
-      
+
       self.project.$update().then(function(response) {
 
         $location.path('/projects/' + self.project.id);
@@ -10385,7 +10388,7 @@ angular.module('FieldDoc')
           if (!data.hasOwnProperty('properties')) {
             return [];
           }
-          
+
           var multipler_1 = data.properties.installation_length_of_living_shoreline_restored,
               multipler_2 = data.properties.installation_existing_average_bank_height,
               multipler_3 = data.properties.installation_existing_shoreline_recession_rate,
@@ -10404,7 +10407,7 @@ angular.module('FieldDoc')
           if (!data.hasOwnProperty('properties')) {
             return [];
           }
-          
+
           if (data.properties.protocol_2_tn_reduction_rate) {
             this.efficiency.protocol_2_tn_reduction_rate = data.properties.protocol_2_tn_reduction_rate;
           }
@@ -10426,7 +10429,7 @@ angular.module('FieldDoc')
           if (data.properties.protocol_3_tp_reduction_rate) {
             this.efficiency.protocol_3_tp_reduction_rate = data.properties.protocol_3_tp_reduction_rate;
           }
-          
+
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
               multipler_2 = this.efficiency.protocol_3_tp_reduction_rate,
               returnValue = 0;
@@ -10444,7 +10447,7 @@ angular.module('FieldDoc')
           if (data.properties.protocol_3_tss_reduction_rate) {
             this.efficiency.protocol_3_tss_reduction_rate = data.properties.protocol_3_tss_reduction_rate;
           }
-          
+
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
               multipler_2 = this.efficiency.protocol_3_tss_reduction_rate,
               returnValue = 0;
@@ -10480,7 +10483,7 @@ angular.module('FieldDoc')
           if (data.properties.protocol_4_tp_reduction_rate) {
             this.efficiency.protocol_4_tp_reduction_rate = data.properties.protocol_4_tp_reduction_rate;
           }
-          
+
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
               multipler_2 = this.efficiency.protocol_4_tp_reduction_rate,
               returnValue = 0;
@@ -11140,7 +11143,7 @@ angular.module('FieldDoc')
  * @ngdoc service
  * @name FieldDoc.GeometryService
  * @description
- *   
+ *
  */
 angular.module('FieldDoc')
   .service('commonsGeometry', ['$http', 'commonscloud', 'leafletData', function Navigation($http, commonscloud, leafletData) {
@@ -11317,7 +11320,7 @@ angular.module('FieldDoc')
         }
       },
       center: {
-        lng: -76.534, 
+        lng: -76.534,
         lat: 39.134,
         zoom: 11
       },
@@ -11362,7 +11365,7 @@ angular.module('FieldDoc')
       },
       geojson: {}
     };
-    
+
     return Map;
   }]);
 'use strict';
@@ -13779,13 +13782,13 @@ angular.module('FieldDoc')
     // with structured objects.
     //
     return  function(object) {
-      
+
       var result = [];
 
       angular.forEach(object, function(value) {
         result.push(value);
       });
-      
+
       return result;
     };
 
