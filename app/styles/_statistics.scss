@@ -95,6 +95,8 @@ h6.rule-above.statistics--header {
 .metrics--metric,
 .row .row.metrics--metric {
   margin-bottom: 8px;
+  padding-left: 2em;
+  padding-right: 2em;
 
   .metric--title {
     color: $color-white-default;
