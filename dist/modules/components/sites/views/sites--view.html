@@ -63,7 +63,9 @@
                 <span class="statistic--title">Nitrogen</span>
             </p>
             <div class="statistic--chart">
-              <div class="statistic--chart--value" data-ng-style="{'width': '{{ page.rollups.nitrogen.chart }}%' }"></div>
+              <div class="statistic--chart--value"
+                   data-ng-style="{'width': ((page.rollups.nitrogen.installed/page.rollups.nitrogen.total)*100) + '%' }">
+              </div>
             </div>
           </div>
           <div class="column-4 statistics--statistic"
@@ -74,7 +76,9 @@
                 <span class="statistic--title">Phosphorus</span>
             </p>
             <div class="statistic--chart">
-              <div class="statistic--chart--value" data-ng-style="{'width': '{{ page.rollups.phosphorus.chart }}%' }"></div>
+              <div class="statistic--chart--value"
+                   data-ng-style="{'width': ((page.rollups.phosphorus.installed/page.rollups.phosphorus.total)*100) + '%' }">
+              </div>
             </div>
           </div>
           <div class="column-5 statistics--statistic"
@@ -85,7 +89,9 @@
                 <span class="statistic--title">Sediment</span>
             </p>
             <div class="statistic--chart">
-              <div class="statistic--chart--value" data-ng-style="{'width': '{{ page.rollups.sediment.chart }}%' }"></div>
+              <div class="statistic--chart--value"
+                   data-ng-style="{'width': ((page.rollups.sediment.installed/page.rollups.sediment.total)*100) + '%' }">
+              </div>
             </div>
           </div>
         </article>
@@ -96,11 +102,11 @@
         <section class="row metrics"
                 data-ng-if="page.rollups.nitrogen.practices"
                 data-ng-show="page.rollups.active === 'all'">
-          <article class="row ">
-             <div class="column-3"></div>
+          <article class="row"
+                   data-ng-repeat="practice in page.rollups.all.practices track by $index">
+            <div class="column-3"></div>
              <div class="column-10 metrics--metric"
-                  data-ng-if="practice.total"
-                  data-ng-repeat="practice in page.rollups.all.practices track by $index">
+                  data-ng-if="practice.total">
                <p class="metric--title">
                  {{ practice.name }}
 
@@ -137,11 +143,11 @@
          <section class="row metrics"
                  data-ng-if="page.rollups.nitrogen.practices"
                  data-ng-show="page.rollups.active === 'nitrogen'">
-           <article class="row ">
+           <article class="row"
+                    data-ng-repeat="practice in page.rollups.nitrogen.practices track by $index">
               <div class="column-3"></div>
               <div class="column-10 metrics--metric"
-                   data-ng-if="practice.total"
-                   data-ng-repeat="practice in page.rollups.nitrogen.practices track by $index">
+                   data-ng-if="practice.total">
                 <p class="metric--title">
                   <a href="{{ practice.url }}">
                     {{ practice.name }} #{{ $index+1 }}
@@ -180,11 +186,11 @@
           <section class="row metrics"
                   data-ng-if="page.rollups.phosphorus.practices"
                   data-ng-show="page.rollups.active === 'phosphorus'">
-            <article class="row ">
+            <article class="row"
+                     data-ng-repeat="practice in page.rollups.phosphorus.practices track by $index">
                <div class="column-3"></div>
                <div class="column-10 metrics--metric"
-                    data-ng-if="practice.total"
-                    data-ng-repeat="practice in page.rollups.phosphorus.practices track by $index">
+                    data-ng-if="practice.total">
                   <p class="metric--title">
                     <a href="{{ practice.url }}">
                       {{ practice.name }} #{{ $index+1 }}
@@ -223,11 +229,11 @@
           <section class="row metrics"
                   data-ng-if="page.rollups.sediment.practices"
                   data-ng-show="page.rollups.active === 'sediment'">
-            <article class="row ">
+            <article class="row"
+                     data-ng-repeat="practice in page.rollups.sediment.practices track by $index">
                <div class="column-3"></div>
                <div class="column-10 metrics--metric"
-                    data-ng-if="practice.total"
-                    data-ng-repeat="practice in page.rollups.sediment.practices track by $index">
+                    data-ng-if="practice.total">
                   <p class="metric--title">
                     <a href="{{ practice.url }}">
                       {{ practice.name }} #{{ $index+1 }}

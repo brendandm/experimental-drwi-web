@@ -187,8 +187,8 @@
                   <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
                     <span data-ng-bind="page.calculateGrassBuffer.GetConversionWithArea(report.properties.length_of_buffer, report.properties.average_width_of_buffer, 43560) | number:2"></span>
                   </td>
-                  <td><strong>{{ page.calculateGrassBuffer.results.totalAcresRestored | number:2 }}</strong> acres</td>
-                  <td><strong>{{ page.calculateGrassBuffer.results.percentageAcresRestored | number:0 }}%</strong></td>
+                  <td><strong>{{ page.calculateGrassBuffer.return.totalAcresRestored | number:2 }}</strong> acres</td>
+                  <td><strong>{{ page.calculateGrassBuffer.return.percentageAcresRestored | number:0 }}%</strong></td>
                 </tr>
                 <tr>
                   <th>Miles of Riparian Restoration</th>
@@ -196,8 +196,8 @@
                   <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
                     <span data-ng-bind="page.calculateGrassBuffer.GetConversion(report.properties.length_of_buffer, 5280) | number:2"></span>
                   </td>
-                  <td><strong>{{ page.calculateGrassBuffer.results.totalMilesRestored | number:2 }}</strong> miles</td>
-                  <td><strong>{{ page.calculateGrassBuffer.results.percentageMilesRestored | number:0 }}%</strong></td>
+                  <td><strong>{{ page.calculateGrassBuffer.return.totalMilesRestored | number:2 }}</strong> miles</td>
+                  <td><strong>{{ page.calculateGrassBuffer.return.percentageMilesRestored | number:0 }}%</strong></td>
                 </tr>
               </tbody>
             </table>
