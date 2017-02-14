@@ -295,7 +295,6 @@ angular.module('FieldDoc')
           var _self = this;
 
           angular.forEach(_thisProject.properties.sites, function(_site, _siteIndex) {
-            console.log('Processing Site', _site.id);
 
             var _thesePractices = _self.practices(_site, _site.properties.practices);
 
@@ -306,7 +305,7 @@ angular.module('FieldDoc')
           var _self = this;
 
           angular.forEach(_thesePractices, function(_practice, _practiceIndex){
-            console.log('Processing practice', _practice.properties.practice_type)
+
             switch(_practice.properties.practice_type) {
               case "Bank Stabilization":
                 var _calculate = CalculateBankStabilization;
@@ -475,8 +474,6 @@ angular.module('FieldDoc')
                         } else if (_reading.properties.measurement_period === 'Installation') {
 
                           var _installed = _calculate.GetSingleInstalledLoad(_reading)
-
-                          console.log('_installed', _installed)
 
                           self.rollups.metrics.metric_8.installed += _calculate.GetConversionWithArea(_reading.properties.length_of_buffer, _reading.properties.average_width_of_buffer, 43560);
                           self.rollups.metrics.metric_9.installed += _calculate.GetConversion(_reading.properties.length_of_buffer, 5280);
