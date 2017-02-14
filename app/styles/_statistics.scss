@@ -25,6 +25,11 @@ h6.rule-above.statistics--header {
   margin: 0;
   padding: 2em 0 2.5em;
 
+  &.project--summary {
+    padding-left: 2em;
+    padding-right: 2em;
+  }
+
   &.statistics--navigation {
     padding: 0;
 
