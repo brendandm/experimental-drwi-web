@@ -1197,7 +1197,8 @@ angular.module('FieldDoc')
                     role: $rootScope.user.properties.roles[0].properties.name,
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
                     can_edit: Account.canEdit(project),
-                    is_manager: (Account.hasRole('manager') || Account.inGroup(resource.properties.account_id, Account.userObject.properties.account))
+                    is_manager: (Account.hasRole('manager') || Account.inGroup(self.project.properties.account_id, Account.userObject.properties.account)),
+                    is_admin: Account.hasRole('admin')
                 };
             });
         }
@@ -1469,7 +1470,7 @@ angular.module('FieldDoc')
                   features: _readings
                 };
 
-                _calculate.metrics = _calculate.metrics();
+                _calculate.metrics();
 
                 _calculate.GetPreInstallationLoad('Planning', function(preUplandPreInstallationLoadReturn) {
 
@@ -1552,7 +1553,7 @@ angular.module('FieldDoc')
                   features: _readings
                 };
 
-                _calculate.metrics = _calculate.metrics();
+                _calculate.metrics();
 
                 _calculate.GetPreInstallationLoad('Planning', function(preUplandPreInstallationLoadReturn) {
 
@@ -2945,7 +2946,7 @@ angular.module('FieldDoc')
                   features: _readings
                 };
 
-                _calculate.metrics = _calculate.metrics();
+                _calculate.metrics();
 
                 _calculate.GetPreInstallationLoad('Planning', function(preUplandPreInstallationLoadReturn) {
 
@@ -3055,7 +3056,7 @@ angular.module('FieldDoc')
                   features: _readings
                 };
 
-                _calculate.metrics = _calculate.metrics();
+                _calculate.metrics();
 
                 _calculate.GetPreInstallationLoad('Planning', function(preUplandPreInstallationLoadReturn) {
 
