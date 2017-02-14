@@ -70,7 +70,7 @@
 
           return deferred.promise;
         },
-        GetPreInstallationLoad: function(period) {
+        GetPreInstallationLoad: function(period, callback) {
 
           var self = this;
 
@@ -105,11 +105,15 @@
               sediment: uplandPreInstallationLoad.sediment + existingPreInstallationLoad.sediment
             };
 
+            if (callback) {
+              callback(self.results.totalPreInstallationLoad)
+            }
+
           });
 
 
         },
-        GetPlannedLoad: function(period) {
+        GetPlannedLoad: function(period, callback) {
 
           var self = this;
 
@@ -198,6 +202,10 @@
 
                 self.results.totalPlannedLoad = totals;
 
+                if (callback) {
+                  callback(self.results.totalPlannedLoad)
+                }
+
               });
             });
           });
@@ -254,7 +262,6 @@
 
           // Get readings organized by their Type
           angular.forEach(self.readings.features, function(reading, $index) {
-
             if (reading.properties.measurement_period === 'Planning') {
               planned_total += reading.properties[field];
             } else if (reading.properties.measurement_period === 'Installation') {
@@ -366,7 +373,8 @@
           planned_area = (planned_area/unit);
 
           return ((total_area/planned_area)*100);
-        },results: function() {
+        },
+        results: function() {
 
           var self = this;
 
@@ -382,6 +390,26 @@
             },
             totalPreInstallationLoad: self.GetPreInstallationLoad('Planning'),
             totalPlannedLoad: self.GetPlannedLoad('Planning'),
+            totalMilesRestored: self.GetRestorationTotal(5280),
+            percentageMilesRestored: self.GetRestorationPercentage(5280, false),
+            totalAcresRestored: self.GetRestorationTotal(43560, true),
+            percentageAcresRestored: self.GetRestorationPercentage(43560, true)
+          }
+        },
+        metrics: function() {
+
+          var self = this;
+
+          return {
+            percentageLengthOfBuffer: {
+              percentage: self.GetPercentageOfInstalled('length_of_buffer', 'percentage'),
+              total: self.GetPercentageOfInstalled('length_of_buffer')
+            },
+            percentageTreesPlanted: {
+
+              percentage: self.GetPercentageOfInstalled('number_of_trees_planted', 'percentage'),
+              total: self.GetPercentageOfInstalled('number_of_trees_planted')
+            },
             totalMilesRestored: self.GetRestorationTotal(5280),
             percentageMilesRestored: self.GetRestorationPercentage(5280, false),
             totalAcresRestored: self.GetRestorationTotal(43560, true),

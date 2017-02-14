@@ -530,33 +530,96 @@ angular.module('FieldDoc')
                   }
                 };
 
-                // FOREST BUFFER: CHESAPEAKE BAY METRICS
-                //
-                // 1. Acres of Riparian Restoration
-                // 2. Miles of Riparian Restoration
-                // 3. Number of Trees Planted
-                //
-                // TODO: This is not finished ... Forest buffers has no calculation functions
-                //
-                //
-                angular.forEach(_readings, function(_reading, _readingIndex){
-                    if (_reading.properties.measurement_period === 'Planning') {
-                      self.rollups.metrics.metric_8.total += 1; // calculateForestBuffer.GetConversionWithArea(report.properties.length_of_buffer, report.properties.average_width_of_buffer, 43560)
-                      self.rollups.metrics.metric_9.total += 1; // calculateForestBuffer.GetConversion(report.properties.length_of_buffer, 5280)
-                      self.rollups.metrics.metric_3.total += _reading.properties.number_of_trees_planted;
-                    } else if (_reading.properties.measurement_period === 'Installation') {
-                      self.rollups.metrics.metric_8.installed += 0;
-                      self.rollups.metrics.metric_9.installed += 0;
-                      self.rollups.metrics.metric_3.installed +=  _reading.properties.number_of_trees_planted;
-                    }
+                _calculate.site = self.site;
+
+                _calculate.readings = {
+                  features: _readings
+                };
+
+                _calculate.metrics = _calculate.metrics();
+
+                _calculate.GetPreInstallationLoad('Planning', function(preUplandPreInstallationLoadReturn) {
+
+                  var preUplandPreInstallationLoad = preUplandPreInstallationLoadReturn;
+
+                  _calculate.GetPlannedLoad('Planning', function(totalPlannedLoadReturn) {
+
+                    var totalPlannedLoad = totalPlannedLoadReturn;
+
+                    // FOREST BUFFER: CHESAPEAKE BAY METRICS
+                    //
+                    // 1. Acres of Riparian Restoration
+                    // 2. Miles of Riparian Restoration
+                    // 3. Number of Trees Planted
+                    //
+                    // TODO: This is not finished ... Forest buffers has no calculation functions
+                    //
+                    //
+                    angular.forEach(_readings, function(_reading, _readingIndex){
+                        if (_reading.properties.measurement_period === 'Planning') {
+                          self.rollups.metrics.metric_8.total += _calculate.GetConversionWithArea(_reading.properties.length_of_buffer, _reading.properties.average_width_of_buffer, 43560);
+                          self.rollups.metrics.metric_9.total += _calculate.GetConversion(_reading.properties.length_of_buffer, 5280);
+                          self.rollups.metrics.metric_3.total += _reading.properties.number_of_trees_planted;
+
+                          _tempReadings.nitrogen.total += totalPlannedLoad.nitrogen;
+                          _tempReadings.phosphorus.total += totalPlannedLoad.phosphorus;
+                          _tempReadings.sediment.total += totalPlannedLoad.sediment;
+
+                        } else if (_reading.properties.measurement_period === 'Installation') {
+
+                          var _installed = _calculate.GetSingleInstalledLoad(_reading)
+
+                          console.log('_installed', _installed)
+
+                          self.rollups.metrics.metric_8.installed += _calculate.GetConversionWithArea(_reading.properties.length_of_buffer, _reading.properties.average_width_of_buffer, 43560);
+                          self.rollups.metrics.metric_9.installed += _calculate.GetConversion(_reading.properties.length_of_buffer, 5280);
+                          self.rollups.metrics.metric_3.installed +=  _reading.properties.number_of_trees_planted;
+
+                          _tempReadings.nitrogen.installed += _installed.nitrogen;
+                          _tempReadings.phosphorus.installed += _installed.phosphorus;
+                          _tempReadings.sediment.installed += _installed.sediment;
+                        }
+                    });
+
+                    self.rollups.metrics.metric_8.chart = (self.rollups.metrics.metric_8.installed/self.rollups.metrics.metric_8.total)*100;
+                    self.rollups.metrics.metric_9.chart = (self.rollups.metrics.metric_9.installed/self.rollups.metrics.metric_9.total)*100;
+                    self.rollups.metrics.metric_3.chart = (self.rollups.metrics.metric_3.installed/self.rollups.metrics.metric_3.total)*100;
+
+                    // ADD TO PRACTICE LIST
+                    //
+                    self.rollups.nitrogen.total += _tempReadings.nitrogen.total
+                    self.rollups.phosphorus.total += _tempReadings.phosphorus.total
+                    self.rollups.sediment.total += _tempReadings.sediment.total
+
+                    self.rollups.nitrogen.installed += _tempReadings.nitrogen.installed
+                    self.rollups.phosphorus.installed += _tempReadings.phosphorus.installed
+                    self.rollups.sediment.installed += _tempReadings.sediment.installed
+
+                    self.rollups.nitrogen.practices.push({
+                      name: 'Forest Buffer',
+                      url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/forest-buffer",
+                      installed: _tempReadings.nitrogen.installed,
+                      total: _tempReadings.nitrogen.total,
+                      chart: (_tempReadings.nitrogen.installed/_tempReadings.nitrogen.total)*100
+                    })
+                    self.rollups.phosphorus.practices.push({
+                      name: 'Forest Buffer',
+                      url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/forest-buffer",
+                      installed: _tempReadings.phosphorus.installed,
+                      total: _tempReadings.phosphorus.total,
+                      chart: (_tempReadings.phosphorus.installed/_tempReadings.phosphorus.total)*100
+                    })
+                    self.rollups.sediment.practices.push({
+                      name: 'Forest Buffer',
+                      url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/forest-buffer",
+                      installed: _tempReadings.sediment.installed,
+                      total: _tempReadings.sediment.total,
+                      chart: (_tempReadings.sediment.installed/_tempReadings.sediment.total)*100
+                    })
+
+                  });
+
                 });
-
-                self.rollups.metrics.metric_8.chart = (self.rollups.metrics.metric_8.installed/self.rollups.metrics.metric_8.total)*100;
-                self.rollups.metrics.metric_9.chart = (self.rollups.metrics.metric_9.installed/self.rollups.metrics.metric_9.total)*100;
-                self.rollups.metrics.metric_3.chart = (self.rollups.metrics.metric_3.installed/self.rollups.metrics.metric_3.total)*100;
-
-                // FOREST BUFFER: LOAD REDUCTIONS
-                //
 
                 break;
               case "Grass Buffer":
