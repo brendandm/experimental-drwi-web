@@ -96,9 +96,6 @@
               sediment: ((loaddata.area*(loaddata.efficieny.eos_tss/loaddata.efficieny.eos_acres))/2000)
             };
 
-            console.log('uplandPreInstallationLoad', uplandPreInstallationLoad)
-            console.log('existingPreInstallationLoad', existingPreInstallationLoad)
-
             self.results.totalPreInstallationLoad = {
               efficieny: loaddata.efficieny,
               uplandLanduse: uplandPreInstallationLoad,
