@@ -72,6 +72,9 @@ angular.module('FieldDoc')
         organizations: function() {
           var _organizations = [];
 
+          console.log('self.user.properties.organizations', self.user.properties.organizations)
+          debugger
+
           angular.forEach(self.user.properties.organizations, function(_organization, _index) {
             _organizations.push({
               "id": _organization.id
@@ -84,11 +87,13 @@ angular.module('FieldDoc')
 
             self.status.saving = true;
 
+            var _organizations = self.actions.organizations()
+
             var _user = new User({
                 "id": self.user.id,
                 "first_name": self.user.properties.first_name,
                 "last_name": self.user.properties.last_name,
-                "organizations": self.actions.organizations
+                "organizations": _organizations
             });
 
             _user.$update(function(successResponse) {
