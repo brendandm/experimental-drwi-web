@@ -63,7 +63,9 @@
                 <span class="statistic--title">Nitrogen</span>
             </p>
             <div class="statistic--chart">
-              <div class="statistic--chart--value" data-ng-style="{'width': '{{ page.rollups.nitrogen.chart }}%' }"></div>
+              <div class="statistic--chart--value"
+                   data-ng-style="{'width': ((page.rollups.nitrogen.installed/page.rollups.nitrogen.total)*100) + '%' }">
+              </div>
             </div>
           </div>
           <div class="column-4 statistics--statistic"
@@ -74,7 +76,9 @@
                 <span class="statistic--title">Phosphorus</span>
             </p>
             <div class="statistic--chart">
-              <div class="statistic--chart--value" data-ng-style="{'width': '{{ page.rollups.phosphorus.chart }}%' }"></div>
+              <div class="statistic--chart--value"
+                   data-ng-style="{'width': ((page.rollups.phosphorus.installed/page.rollups.phosphorus.total)*100) + '%' }">
+              </div>
             </div>
           </div>
           <div class="column-5 statistics--statistic"
@@ -85,7 +89,9 @@
                 <span class="statistic--title">Sediment</span>
             </p>
             <div class="statistic--chart">
-              <div class="statistic--chart--value" data-ng-style="{'width': '{{ page.rollups.sediment.chart }}%' }"></div>
+              <div class="statistic--chart--value"
+                   data-ng-style="{'width': ((page.rollups.sediment.installed/page.rollups.sediment.total)*100) + '%' }">
+              </div>
             </div>
           </div>
         </article>
