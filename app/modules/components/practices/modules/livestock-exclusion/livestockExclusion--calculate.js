@@ -85,7 +85,7 @@ angular.module('FieldDoc')
       getPrePlannedLoad: function(segment, landuse, area) {
 
         var promise = Calculate.getLoadVariables(segment, Landuse[landuse.toLowerCase()]).$promise.then(function(efficiency) {
-          console.log('Efficienies selected', area, efficiency);
+          // console.log('Efficienies selected', area, efficiency);
           return Calculate.getLoadTotals(area, efficiency.features[0].properties);
         });
 
@@ -166,7 +166,7 @@ angular.module('FieldDoc')
               phosphorus: (((loaddata.area * 2)*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres))) + rotationalGrazingArea*((loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres))*(self.practice_efficiency.p_efficiency)
             };
 
-            console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad);
+            // console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad);
 
             var existingPreInstallationLoad = {
               sediment: ((loaddata.area*(existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres))/2000),
@@ -174,14 +174,14 @@ angular.module('FieldDoc')
               phosphorus: (loaddata.area*(existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres))
             };
 
-            console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad);
+            // console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad);
 
             var directDeposit = {
               nitrogen: (auDaysYr*animal.properties.manure)*animal.properties.total_nitrogen,
               phosphorus: (auDaysYr*animal.properties.manure)*animal.properties.total_phosphorus,
             };
 
-            console.log('directDeposit', directDeposit);
+            // console.log('directDeposit', directDeposit);
 
             self.results.totalPreInstallationLoad = {
               directDeposit: directDeposit,
@@ -247,7 +247,7 @@ angular.module('FieldDoc')
                 phosphorus: self.results.totalPreInstallationLoad.uplandLanduse.phosphorus/100*bmpEfficiency.p_efficiency
               };
 
-              console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
+              // console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
 
               var existingPlannedInstallationLoad = {
                 sediment: ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000),
@@ -255,7 +255,7 @@ angular.module('FieldDoc')
                 phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
               };
 
-              console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
+              // console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
 
               var directDeposit = {
                 nitrogen: (auDaysYr*animal.properties.manure)*animal.properties.total_nitrogen,
@@ -303,13 +303,10 @@ angular.module('FieldDoc')
 
         // Divide the Installed Total by the Planned Total to get a percentage of installed
         if (planned_total) {
-          console.log('something to show');
           if (format === '%') {
             percentage = (installed_total/planned_total);
-            console.log('percentage', (percentage*100));
             return (percentage*100);
           } else {
-            console.log('installed_total', installed_total);
             return installed_total;
           }
         }
@@ -429,7 +426,7 @@ angular.module('FieldDoc')
              sediment: preUplandPreInstallationLoad.sediment + preExistingPreInstallationLoad.sediment
          };
 
-         console.log('preInstallationeBMPLoadTotals', preInstallationeBMPLoadTotals);
+        //  console.log('preInstallationeBMPLoadTotals', preInstallationeBMPLoadTotals);
 
          /********************************************************************/
          // Part 2: Loads based on "Installed" buffer size
@@ -440,7 +437,7 @@ angular.module('FieldDoc')
            phosphorus: preUplandPreInstallationLoad.phosphorus/100*bmpEfficiency.p_efficiency
          };
 
-         console.log('postInstallationeBMPLoadTotals uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
+        //  console.log('postInstallationeBMPLoadTotals uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
 
          var existingPlannedInstallationLoad = {
            sediment: ((bufferArea*((existingLoaddata.eos_tss/existingLoaddata.eos_acres)-(newLanduseLoadData.eos_tss/newLanduseLoadData.eos_acres)))/2000),
@@ -448,14 +445,14 @@ angular.module('FieldDoc')
            phosphorus: (bufferArea*((existingLoaddata.eos_totp/existingLoaddata.eos_acres)-(newLanduseLoadData.eos_totp/newLanduseLoadData.eos_acres)))
          };
 
-         console.log('postInstallationeBMPLoadTotals existingPlannedInstallationLoad', existingPlannedInstallationLoad);
+        //  console.log('postInstallationeBMPLoadTotals existingPlannedInstallationLoad', existingPlannedInstallationLoad);
 
          var directDeposit = {
            nitrogen: preDirectDeposit.nitrogen*value.length_of_fencing/planningValue.length_of_fencing,
            phosphorus: preDirectDeposit.phosphorus*value.length_of_fencing/planningValue.length_of_fencing,
          };
 
-         console.log('postInstallationeBMPLoadTotals directDeposit', directDeposit);
+        //  console.log('postInstallationeBMPLoadTotals directDeposit', directDeposit);
 
         if (uplandPlannedInstallationLoad && existingPlannedInstallationLoad && directDeposit) {
           return {
@@ -499,7 +496,7 @@ angular.module('FieldDoc')
           }
         });
 
-        console.log('GetRestorationTotal', total_area, unit, (total_area/unit));
+        // console.log('GetRestorationTotal', total_area, unit, (total_area/unit));
 
 
         return (total_area/unit);
@@ -545,13 +542,10 @@ angular.module('FieldDoc')
 
         // Divide the Installed Total by the Planned Total to get a percentage of installed
         if (planned_total) {
-          console.log('something to show');
           if (format === '%') {
             percentage = (installed_total/planned_total);
-            console.log('percentage', (percentage*100));
             return (percentage*100);
           } else {
-            console.log('installed_total', installed_total);
             return installed_total;
           }
         }
