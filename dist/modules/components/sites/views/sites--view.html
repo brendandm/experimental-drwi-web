@@ -111,13 +111,13 @@
                  {{ practice.name }}
 
                  <span class="metric--help--text pull-right">
-                   {{ practice.chart || 0 | number:2 }}%
+                   {{ practice.installed | number:2 }} of {{ practice.total | number:2 }} lbs/yr
                  </span>
                </p>
 
                <div class="metric--chart">
                  <div class="metric--chart--value"
-                      data-ng-style="{'width': '{{ practice.chart }}%' }"></div>
+                      data-ng-style="{'width': ((practice.installed/practice.total)*100) '%' }"></div>
                </div>
              </div>
              <div class="column-3"></div>
@@ -160,7 +160,7 @@
                 </p>
                 <div class="metric--chart">
                   <div class="metric--chart--value"
-                       data-ng-style="{'width': '{{ practice.chart }}%' }"></div>
+                       data-ng-style="{'width': ((practice.installed/practice.total)*100) '%' }"></div>
                 </div>
               </div>
               <div class="column-3"></div>
@@ -203,7 +203,7 @@
                   </p>
                  <div class="metric--chart">
                    <div class="metric--chart--value"
-                        data-ng-style="{'width': '{{ practice.chart }}%' }"></div>
+                        data-ng-style="{'width': ((practice.installed/practice.total)*100) '%' }"></div>
                  </div>
                </div>
                <div class="column-3"></div>
@@ -247,7 +247,7 @@
 
                  <div class="metric--chart">
                    <div class="metric--chart--value"
-                        data-ng-style="{'width': '{{ practice.chart }}%' }"></div>
+                        data-ng-style="{'width': ((practice.installed/practice.total)*100) '%' }"></div>
                  </div>
                </div>
                <div class="column-3"></div>
