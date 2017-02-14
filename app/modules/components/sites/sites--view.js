@@ -536,7 +536,7 @@ angular.module('FieldDoc')
                   features: _readings
                 };
 
-                _calculate.metrics = _calculate.metrics();
+                _calculate.metrics();
 
                 _calculate.GetPreInstallationLoad('Planning', function(preUplandPreInstallationLoadReturn) {
 
@@ -646,7 +646,7 @@ angular.module('FieldDoc')
                   features: _readings
                 };
 
-                _calculate.metrics = _calculate.metrics();
+                _calculate.metrics();
 
                 _calculate.GetPreInstallationLoad('Planning', function(preUplandPreInstallationLoadReturn) {
 
