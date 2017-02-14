@@ -8,7 +8,7 @@
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('SiteViewCtrl', function (Account, Calculate, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateWetlandsNonTidal, CalculateUrbanHomeowner, leafletData, $location, mapbox, site, Practice, practices, project, $rootScope, $route, UALStateLoad, user) {
+  .controller('SiteViewCtrl', function (Account, Calculate, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateWetlandsNonTidal, CalculateUrbanHomeowner, leafletData, $location, mapbox, site, Practice, practices, project, $rootScope, $route, $timeout, UALStateLoad, user) {
 
     var self = this;
 
@@ -677,7 +677,6 @@ angular.module('FieldDoc')
 
                 break;
               case "Livestock Exclusion":
-                var _calculate = CalculateLivestockExclusion;
                 var _readings = _practice.properties.readings_livestock_exclusion;
                 var _tempReadings = {
                   nitrogen: {
@@ -694,23 +693,98 @@ angular.module('FieldDoc')
                   }
                 };
 
-                // LIVESTOCK EXCLUSION: CHESAPEAKE BAY METRICS
-                //
-                // 1. Miles of Fencing Installed
-                //
-                //
-                angular.forEach(_readings, function(_reading, _readingIndex){
-                    if (_reading.properties.measurement_period === 'Planning') {
-                      self.rollups.metrics.metric_22.total += _calculate.toMiles(_reading.properties.length_of_fencing);
-                    } else if (_reading.properties.measurement_period === 'Installation') {
-                      self.rollups.metrics.metric_22.installed += _calculate.toMiles(_reading.properties.length_of_fencing);
-                    }
-                });
+                var _calculate = CalculateLivestockExclusion;
 
-                self.rollups.metrics.metric_22.chart = (self.rollups.metrics.metric_22.installed/self.rollups.metrics.metric_22.total)*100;
+                _calculate.readings = {
+                  features: _readings
+                };
 
-                // LIVESTOCK EXCLUSION: LOAD REDUCTIONS
-                //
+                _calculate.site = _thisSite;
+
+                _calculate.practice_efficiency = {
+                  s_efficiency: 30/100,
+                  n_efficiency: 9/100,
+                  p_efficiency: 24/100
+                };
+
+                _calculate.grass_efficiency = {
+                  s_efficiency: 60/100,
+                  n_efficiency: 21/100,
+                  p_efficiency: 45/100
+                };
+
+                _calculate.forest_efficiency = {
+                  s_efficiency: 60/100,
+                  n_efficiency: 21/100,
+                  p_efficiency: 45/100
+                };
+
+                _calculate.GetPreInstallationLoad(function(preUplandPreInstallationLoadReturn) {
+
+                  var preUplandPreInstallationLoad = preUplandPreInstallationLoadReturn;
+
+                  _calculate.GetPlannedLoad('Planning', function(totalPlannedLoadReturn) {
+
+                    var totalPlannedLoad = totalPlannedLoadReturn;
+
+                    // LIVESTOCK EXCLUSION: CHESAPEAKE BAY METRICS
+                    //
+                    // 1. Miles of Fencing Installed
+                    //
+                    //
+                    angular.forEach(_readings, function(_reading, _readingIndex){
+                        if (_reading.properties.measurement_period === 'Planning') {
+                          self.rollups.metrics.metric_22.total += _calculate.toMiles(_reading.properties.length_of_fencing);
+
+                          _tempReadings.nitrogen.total += totalPlannedLoad.nitrogen;
+                          _tempReadings.phosphorus.total += totalPlannedLoad.phosphorus;
+                          _tempReadings.sediment.total += totalPlannedLoad.sediment;
+
+                        } else if (_reading.properties.measurement_period === 'Installation') {
+                          self.rollups.metrics.metric_22.installed += _calculate.toMiles(_reading.properties.length_of_fencing);
+
+                          var _installed = _calculate.GetSingleInstalledLoad(_reading)
+
+                          _tempReadings.nitrogen.installed += _installed.nitrogen;
+                          _tempReadings.phosphorus.installed += _installed.phosphorus;
+                          _tempReadings.sediment.installed += _installed.sediment;
+                        }
+                    });
+
+                    self.rollups.metrics.metric_22.chart = (self.rollups.metrics.metric_22.installed/self.rollups.metrics.metric_22.total)*100;
+
+                    // ADD TO PRACTICE LIST
+                    //
+                    self.rollups.nitrogen.total += _tempReadings.nitrogen.total
+                    self.rollups.phosphorus.total += _tempReadings.phosphorus.total
+                    self.rollups.sediment.total += _tempReadings.sediment.total
+
+                    self.rollups.nitrogen.installed += _tempReadings.nitrogen.installed
+                    self.rollups.phosphorus.installed += _tempReadings.phosphorus.installed
+                    self.rollups.sediment.installed += _tempReadings.sediment.installed
+
+                    self.rollups.nitrogen.practices.push({
+                      name: 'Livestock Exclusion',
+                      url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/livestock-exclusion",
+                      installed: _tempReadings.nitrogen.installed,
+                      total: _tempReadings.nitrogen.total
+                    })
+                    self.rollups.phosphorus.practices.push({
+                      name: 'Livestock Exclusion',
+                      url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/livestock-exclusion",
+                      installed: _tempReadings.phosphorus.installed,
+                      total: _tempReadings.phosphorus.total
+                    })
+                    self.rollups.sediment.practices.push({
+                      name: 'Livestock Exclusion',
+                      url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/livestock-exclusion",
+                      installed: _tempReadings.sediment.installed,
+                      total: _tempReadings.sediment.total
+                    })
+
+                  })
+                })
+
 
                 break;
               case "Non-Tidal Wetlands":

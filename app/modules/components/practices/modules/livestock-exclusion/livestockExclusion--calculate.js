@@ -138,7 +138,7 @@ angular.module('FieldDoc')
 
         return deferred.promise;
       },
-      GetPreInstallationLoad: function() {
+      GetPreInstallationLoad: function(callback) {
 
         var self = this;
 
@@ -166,7 +166,7 @@ angular.module('FieldDoc')
               phosphorus: (((loaddata.area * 2)*(loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres))) + rotationalGrazingArea*((loaddata.efficieny.eos_totp/loaddata.efficieny.eos_acres))*(self.practice_efficiency.p_efficiency)
             };
 
-            // console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad);
+            console.log('PRE uplandPreInstallationLoad', uplandPreInstallationLoad);
 
             var existingPreInstallationLoad = {
               sediment: ((loaddata.area*(existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres))/2000),
@@ -174,14 +174,14 @@ angular.module('FieldDoc')
               phosphorus: (loaddata.area*(existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres))
             };
 
-            // console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad);
+            console.log('PRE existingPreInstallationLoad', existingPreInstallationLoad);
 
             var directDeposit = {
               nitrogen: (auDaysYr*animal.properties.manure)*animal.properties.total_nitrogen,
               phosphorus: (auDaysYr*animal.properties.manure)*animal.properties.total_phosphorus,
             };
 
-            // console.log('directDeposit', directDeposit);
+            console.log('directDeposit', directDeposit);
 
             self.results.totalPreInstallationLoad = {
               directDeposit: directDeposit,
@@ -193,11 +193,17 @@ angular.module('FieldDoc')
               sediment: uplandPreInstallationLoad.sediment + existingPreInstallationLoad.sediment
             };
 
+            console.log('self.results.totalPreInstallationLoad', self.results.totalPreInstallationLoad)
+
+            if (callback) {
+              callback(self.results.totalPreInstallationLoad);
+            }
+
           });
         });
 
       },
-      GetPlannedLoad: function(period) {
+      GetPlannedLoad: function(period, callback) {
 
         var self = this;
 
@@ -278,10 +284,12 @@ angular.module('FieldDoc')
 
               self.results.totalPlannedLoad = totals;
 
+              if (callback) {
+                callback(self.results.totalPlannedLoad);
+              }
             });
           });
         });
-
       },
       quantityReductionInstalled: function(values, element, format) {
 
@@ -420,6 +428,8 @@ angular.module('FieldDoc')
           phosphorus: (auDaysYr*animal.properties.manure)*animal.properties.total_phosphorus,
         };
 
+        // console.log('preDirectDeposit', preDirectDeposit)
+
          var preInstallationeBMPLoadTotals = {
              nitrogen: preUplandPreInstallationLoad.nitrogen + preExistingPreInstallationLoad.nitrogen + preDirectDeposit.nitrogen,
              phosphorus: preUplandPreInstallationLoad.phosphorus + preExistingPreInstallationLoad.phosphorus + preDirectDeposit.phosphorus,
@@ -448,11 +458,11 @@ angular.module('FieldDoc')
         //  console.log('postInstallationeBMPLoadTotals existingPlannedInstallationLoad', existingPlannedInstallationLoad);
 
          var directDeposit = {
-           nitrogen: preDirectDeposit.nitrogen*value.length_of_fencing/planningValue.length_of_fencing,
-           phosphorus: preDirectDeposit.phosphorus*value.length_of_fencing/planningValue.length_of_fencing,
+           nitrogen: preDirectDeposit.nitrogen*value.properties.length_of_fencing/planningValue.length_of_fencing,
+           phosphorus: preDirectDeposit.phosphorus*value.properties.length_of_fencing/planningValue.length_of_fencing,
          };
 
-        //  console.log('postInstallationeBMPLoadTotals directDeposit', directDeposit);
+        //  console.log('postInstallationeBMPLoadTotals directDeposit', preDirectDeposit.nitrogen, value.properties.length_of_fencing, planningValue.length_of_fencing);
 
         if (uplandPlannedInstallationLoad && existingPlannedInstallationLoad && directDeposit) {
           return {
