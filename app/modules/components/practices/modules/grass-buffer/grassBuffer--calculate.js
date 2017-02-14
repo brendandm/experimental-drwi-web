@@ -156,18 +156,7 @@ angular.module('FieldDoc')
                   phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
                 };
 
-                console.log('existingLoaddata.area', existingLoaddata.area)
-                console.log('existingLoaddata.efficieny.eos_tss', existingLoaddata.efficieny.eos_tss)
-                console.log('existingLoaddata.efficieny.eos_acres', existingLoaddata.efficieny.eos_acres)
-                console.log('newLoaddata.efficieny.eos_tss', newLoaddata.efficieny.eos_tss)
-                console.log('newLoaddata.efficieny.eos_acres', newLoaddata.efficieny.eos_acres)
-                console.log('(existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)', (existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres))
-                console.log('(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)', (newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres))
-                console.log('(existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))', (existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres))))
-                console.log('((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000)', ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000))
-
                 // console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
-                debugger
 
                 //
                 // PLANNED CONDITIONS — LANDUSE VALUES
