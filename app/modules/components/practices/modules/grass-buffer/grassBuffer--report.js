@@ -109,7 +109,7 @@
             self.calculateGrassBuffer.site = self.site;
             self.calculateGrassBuffer.readings = self.readings;
 
-            self.calculateGrassBuffer.return = self.calculateForestBuffer.results();
+            self.calculateGrassBuffer.return = self.calculateGrassBuffer.results();
 
           }, function(errorResponse) {
 
