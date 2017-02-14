@@ -23,10 +23,7 @@
           controllerAs: 'page',
           resolve: {
             user: function(Account) {
-              if (Account.userObject && !Account.userObject.id) {
-                  return Account.getUser();
-              }
-              return Account.userObject;
+              return Account.getUser();
             }
           }
         });
