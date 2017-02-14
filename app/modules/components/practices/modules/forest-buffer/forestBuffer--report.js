@@ -108,8 +108,7 @@
             self.calculateForestBuffer.site = self.site;
             self.calculateForestBuffer.readings = self.readings;
 
-            self.calculateForestBuffer.results();
-
+            self.calculateForestBuffer.return = self.calculateForestBuffer.results();
 
           }, function(errorResponse) {
 
