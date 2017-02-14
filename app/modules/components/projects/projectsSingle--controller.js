@@ -214,7 +214,8 @@ angular.module('FieldDoc')
                     isLoggedIn: Account.hasToken(),
                     role: $rootScope.user.properties.roles[0].properties.name,
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                    can_edit: Account.canEdit(project)
+                    can_edit: Account.canEdit(project),
+                    is_manager: (Account.hasRole('manager') || Account.inGroup(resource.properties.account_id, Account.userObject.properties.account))
                 };
             });
         }
@@ -232,6 +233,48 @@ angular.module('FieldDoc')
         "id": self.project.id,
         "properties": {
           "workflow_state": "Submitted"
+        }
+      })
+
+      _project.$update(function(successResponse) {
+          self.project = successResponse
+        }, function(errorResponse) {
+
+        });
+    }
+
+    self.fundProject = function() {
+
+      if (!self.project.properties.account_id) {
+        $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.")
+        return;
+      }
+
+      var _project = new Project({
+        "id": self.project.id,
+        "properties": {
+          "workflow_state": "Funded"
+        }
+      })
+
+      _project.$update(function(successResponse) {
+          self.project = successResponse
+        }, function(errorResponse) {
+
+        });
+    }
+
+    self.completeProject = function() {
+
+      if (!self.project.properties.account_id) {
+        $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.")
+        return;
+      }
+
+      var _project = new Project({
+        "id": self.project.id,
+        "properties": {
+          "workflow_state": "Completed"
         }
       })
 
@@ -580,28 +623,6 @@ angular.module('FieldDoc')
                     self.rollups.nitrogen.installed += _tempReadings.nitrogen.installed
                     self.rollups.phosphorus.installed += _tempReadings.phosphorus.installed
                     self.rollups.sediment.installed += _tempReadings.sediment.installed
-
-                    self.rollups.nitrogen.practices.push({
-                      name: 'Grass Buffer',
-                      url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/grass-buffer",
-                      installed: _tempReadings.nitrogen.installed,
-                      total: _tempReadings.nitrogen.total,
-                      chart: (_tempReadings.nitrogen.installed/_tempReadings.nitrogen.total)*100
-                    })
-                    self.rollups.phosphorus.practices.push({
-                      name: 'Grass Buffer',
-                      url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/grass-buffer",
-                      installed: _tempReadings.phosphorus.installed,
-                      total: _tempReadings.phosphorus.total,
-                      chart: (_tempReadings.phosphorus.installed/_tempReadings.phosphorus.total)*100
-                    })
-                    self.rollups.sediment.practices.push({
-                      name: 'Grass Buffer',
-                      url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/grass-buffer",
-                      installed: _tempReadings.sediment.installed,
-                      total: _tempReadings.sediment.total,
-                      chart: (_tempReadings.sediment.installed/_tempReadings.sediment.total)*100
-                    })
 
                   });
 
