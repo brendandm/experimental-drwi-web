@@ -143,7 +143,7 @@
             </button>
           </li>
 
-          <li data-ng-if="(page.permissions.is_admin || page.permissions.is_manager) && (page.project.properties.workflow_state === 'Submitted' || page.project.properties.workflow_state === 'Funded') && page.project.properties.workflow_state !== 'Completed'">
+          <li data-ng-if="(page.permissions.is_admin || page.permissions.is_manager) && page.project.properties.workflow_state === 'Funded'">
             <button data-ng-click="page.completeProject()" class="button button-submit button-indent">
               <span>
                 Mark Project as Complete
