@@ -135,7 +135,7 @@
       <nav class="column-5 contextual-navigation-wrapper">
         <h6><strong>Status</strong></h6>
         <ul class="contextual-navigation">
-          <li data-ng-if="(page.permissions.is_admin || page.permissions.is_manager) && page.project.properties.workflow_state === 'Completed'">
+          <li data-ng-if="(page.permissions.is_admin || page.permissions.is_manager) && (page.project.properties.workflow_state === 'Submitted' || page.project.properties.workflow_state === 'Completed')">
             <button data-ng-click="page.fundProject()" class="button button-submit button-indent" data-ng-class="{'button-outline': (page.project.properties.workflow_state === 'Completed')}">
               <span>
                 Mark Project as Funded
