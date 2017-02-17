@@ -56,13 +56,14 @@ angular.module('FieldDoc')
         $log.error('Unable to load request project');
     });
 
-    //
-    //
-    //
     self.saveProject = function() {
 
       self.project.properties.workflow_state = "Draft";
-      
+
+      // We are simply removing this from the request because we should not
+      // be saving updates to the Projects Sites at this point, just the Project
+      delete self.project.properties.sites;
+
       self.project.$update().then(function(response) {
 
         $location.path('/projects/' + self.project.id);

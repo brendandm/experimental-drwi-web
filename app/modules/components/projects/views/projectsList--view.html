@@ -183,9 +183,9 @@
                     </span>
                   </td>
                   <td class="align-left column--contact column--vertialCenter">
-                    <a href="mailto:{{ project.properties.last_modified_by.properties.email }}"
-                       data-ng-if="project.id && project.properties.last_modified_by.properties.first_name && project.properties.last_modified_by.properties.last_name">
-                      {{ project.properties.last_modified_by.properties.first_name }} {{ project.properties.last_modified_by.properties.last_name }}
+                    <a href="mailto:{{ project.properties.created_by.properties.email }}"
+                       data-ng-if="project.id && project.properties.created_by.properties.first_name && project.properties.created_by.properties.last_name">
+                      {{ project.properties.created_by.properties.first_name }} {{ project.properties.created_by.properties.last_name }}
                     </a>
                   </td>
                   <td class="align-left column--lastUpdated column--vertialCenter">
