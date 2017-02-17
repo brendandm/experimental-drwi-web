@@ -276,9 +276,16 @@ angular.module('FieldDoc')
                  var _organizations = [];
 
                  angular.forEach(self.register.data.organizations, function(_organization, _index) {
-                   _organizations.push({
-                     "id": _organization.id
-                   })
+                   if (_organization.id) {
+                     _organizations.push({
+                       "id": _organization.id
+                     })
+                   }
+                   else {
+                     _organizations.push({
+                       "name": _organization.properties.name
+                     })
+                   }
                  });
 
                  return _organizations;
@@ -2013,13 +2020,14 @@ angular.module('FieldDoc')
         $log.error('Unable to load request project');
     });
 
-    //
-    //
-    //
     self.saveProject = function() {
 
       self.project.properties.workflow_state = "Draft";
-      
+
+      // We are simply removing this from the request because we should not
+      // be saving updates to the Projects Sites at this point, just the Project
+      delete self.project.properties.sites;
+
       self.project.$update().then(function(response) {
 
         $location.path('/projects/' + self.project.id);
@@ -2299,13 +2307,17 @@ angular.module('FieldDoc')
         organizations: function() {
           var _organizations = [];
 
-          console.log('self.user.properties.organizations', self.user.properties.organizations)
-          debugger
-
           angular.forEach(self.user.properties.organizations, function(_organization, _index) {
-            _organizations.push({
-              "id": _organization.id
-            })
+            if (_organization.id) {
+              _organizations.push({
+                "id": _organization.id
+              })
+            }
+            else {
+              _organizations.push({
+                "name": _organization.properties.name
+              })
+            }
           });
 
           return _organizations;
@@ -14139,7 +14151,8 @@ angular.module('FieldDoc')
           display: '=',
           model: '=',
           tabindexnumber: '=',
-          placeholder: '='
+          placeholder: '=',
+          addNew: '='
         },
         templateUrl: '/modules/shared/directives/organization/organization.html',
         restrict: 'E',
@@ -14215,6 +14228,25 @@ angular.module('FieldDoc')
               getFilteredResults(scope.table);
             }, 200);
           };
+
+          scope.addNewFeature = function() {
+            var _newFeature = {
+              properties: {
+                name: scope.searchText
+              }
+            };
+
+            if (angular.isArray(scope.model)) {
+              scope.model.push(_newFeature);
+              scope.model = set(scope.model);
+            } else {
+              scope.model = _newFeature;
+            }
+
+            // Clear out input field
+            scope.searchText = '';
+            scope.features = [];
+          }
 
           scope.addFeatureToRelationships = function(feature){
 

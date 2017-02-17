@@ -686,3 +686,24 @@ select.form-control {
     }
   }
 }
+
+
+.remove {
+  color: $color-red-base;
+  text-decoration: underline;
+
+  &:hover {
+    color: $color-red-base;
+    text-decoration: none;
+  }
+
+  &.remove--reset {
+    display: block;
+    padding-top: 6px;
+    text-decoration: none;
+
+    &:hover {
+      color: darken($color-red-base, 0.5);
+    }
+  }
+}

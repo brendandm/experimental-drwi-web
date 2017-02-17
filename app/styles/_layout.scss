@@ -98,6 +98,10 @@ $susy: (
 
     .row {
       margin: 0;
+
+      &.row--spacer {
+        margin: 8px 0;
+      }
     }
 
     &.nested-row {

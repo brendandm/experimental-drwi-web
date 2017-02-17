@@ -23,14 +23,11 @@
       </div>
     </div>
     <div class="column-1 align-center">
-        <a data-ng-click="resetField()"><span class="icon retinaicon-essentials-045"></span></a>
+        <a data-ng-click="resetField()" class="remove remove--reset"><span class="icon retinaicon-essentials-045"></span></a>
     </div>
   </div>
-  <div class="row">
+  <div class="row row--spacer">
     <div class="column-16">
-      <label class="control-label">
-        My Organizations
-      </label>
       <table class="table">
         <thead>
           <tr>
@@ -48,7 +45,8 @@
               {{ option.properties.name }}
             </td>
             <td>
-              <a class="" data-ng-click="removeFeatureFromRelationships($index)">
+              <a class="remove"
+                 data-ng-click="removeFeatureFromRelationships($index)">
                 remove organization from my account
               </a>
             </td>

@@ -6,25 +6,28 @@
              placeholder="{{ placeholder }}" data-ng-model="searchText"
              data-ng-change="search()" class="form-control"
              tabindex="{{ tabindexnumber }}" />
-      <div data-ng-if="features.length" class="dropdown">
-        <ul class="typeAhead--results">
+      <div class="dropdown">
+        <ul data-ng-if="searchText.length >= 1" class="typeAhead--results">
           <li class="typeAhead--results--result"
               data-ng-repeat="feature in features track by $index"
               data-ng-click="addFeatureToRelationships(feature.feature)">
               {{ feature.text }}
           </li>
+          <li>
+            <a href="javascript:void(0)"
+               data-ng-click="addNewFeature()" style="font-weight: bold;font-size: 12px;padding-left: 14px;">
+               + Add {{ searchText }} as a new organization
+            </a>
+          </li>
         </ul>
       </div>
     </div>
     <div class="column-1 align-center">
-        <a data-ng-click="resetField()"><span class="icon retinaicon-essentials-045"></span></a>
+        <a data-ng-click="resetField()" class="remove remove--reset"><span class="icon retinaicon-essentials-045"></span></a>
     </div>
   </div>
-  <div class="row">
+  <div class="row row--spacer">
     <div class="column-16">
-      <label class="control-label">
-        My Organizations
-      </label>
       <table class="table">
         <thead>
           <tr>
@@ -42,7 +45,8 @@
               {{ option.properties.name }}
             </td>
             <td>
-              <a class="" data-ng-click="removeFeatureFromRelationships($index)">
+              <a class="remove"
+                 data-ng-click="removeFeatureFromRelationships($index)">
                 remove organization from my account
               </a>
             </td>
