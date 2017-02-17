@@ -11,7 +11,8 @@
           display: '=',
           model: '=',
           tabindexnumber: '=',
-          placeholder: '='
+          placeholder: '=',
+          addNew: '='
         },
         templateUrl: '/modules/shared/directives/organization/organization.html',
         restrict: 'E',
@@ -87,6 +88,25 @@
               getFilteredResults(scope.table);
             }, 200);
           };
+
+          scope.addNewFeature = function() {
+            var _newFeature = {
+              properties: {
+                name: scope.searchText
+              }
+            };
+
+            if (angular.isArray(scope.model)) {
+              scope.model.push(_newFeature);
+              scope.model = set(scope.model);
+            } else {
+              scope.model = _newFeature;
+            }
+
+            // Clear out input field
+            scope.searchText = '';
+            scope.features = [];
+          }
 
           scope.addFeatureToRelationships = function(feature){
 

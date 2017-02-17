@@ -72,13 +72,17 @@ angular.module('FieldDoc')
         organizations: function() {
           var _organizations = [];
 
-          console.log('self.user.properties.organizations', self.user.properties.organizations)
-          debugger
-
           angular.forEach(self.user.properties.organizations, function(_organization, _index) {
-            _organizations.push({
-              "id": _organization.id
-            })
+            if (_organization.id) {
+              _organizations.push({
+                "id": _organization.id
+              })
+            }
+            else {
+              _organizations.push({
+                "name": _organization.properties.name
+              })
+            }
           });
 
           return _organizations;

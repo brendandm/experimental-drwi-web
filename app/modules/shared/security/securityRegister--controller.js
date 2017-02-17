@@ -39,9 +39,16 @@
                  var _organizations = [];
 
                  angular.forEach(self.register.data.organizations, function(_organization, _index) {
-                   _organizations.push({
-                     "id": _organization.id
-                   })
+                   if (_organization.id) {
+                     _organizations.push({
+                       "id": _organization.id
+                     })
+                   }
+                   else {
+                     _organizations.push({
+                       "name": _organization.properties.name
+                     })
+                   }
                  });
 
                  return _organizations;

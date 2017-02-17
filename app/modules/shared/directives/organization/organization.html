@@ -6,12 +6,18 @@
              placeholder="{{ placeholder }}" data-ng-model="searchText"
              data-ng-change="search()" class="form-control"
              tabindex="{{ tabindexnumber }}" />
-      <div data-ng-if="features.length" class="dropdown">
-        <ul class="typeAhead--results">
+      <div class="dropdown">
+        <ul data-ng-if="searchText.length >= 1" class="typeAhead--results">
           <li class="typeAhead--results--result"
               data-ng-repeat="feature in features track by $index"
               data-ng-click="addFeatureToRelationships(feature.feature)">
               {{ feature.text }}
+          </li>
+          <li>
+            <a href="javascript:void(0)"
+               data-ng-click="addNewFeature()" style="font-weight: bold;font-size: 12px;padding-left: 14px;">
+               + Add {{ searchText }} as a new organization
+            </a>
           </li>
         </ul>
       </div>
