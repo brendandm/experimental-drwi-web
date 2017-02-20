@@ -556,7 +556,12 @@ angular.module('FieldDoc')
                     //
                     //
                     angular.forEach(_readings, function(_reading, _readingIndex){
+
+                        console.log('Forest Buffer Planning', _reading)
+                        debugger
+
                         if (_reading.properties.measurement_period === 'Planning') {
+
                           self.rollups.metrics.metric_8.total += _calculate.GetConversionWithArea(_reading.properties.length_of_buffer, _reading.properties.average_width_of_buffer, 43560);
                           self.rollups.metrics.metric_9.total += _calculate.GetConversion(_reading.properties.length_of_buffer, 5280);
                           self.rollups.metrics.metric_3.total += _reading.properties.number_of_trees_planted;
@@ -731,6 +736,20 @@ angular.module('FieldDoc')
               case "In-stream Habitat":
                 var _calculate = CalculateInstreamHabitat;
                 var _readings = _practice.properties.readings_instream_habitat;
+                var _tempReadings = {
+                  nitrogen: {
+                    installed: 0,
+                    total: 0
+                  },
+                  phosphorus: {
+                    installed: 0,
+                    total: 0
+                  },
+                  sediment: {
+                    installed: 0,
+                    total: 0
+                  }
+                };
 
                 // IN-STREAM HABITAT: CHESAPEAKE BAY METRICS
                 //
@@ -800,6 +819,31 @@ angular.module('FieldDoc')
                 self.rollups.metrics.metric_19.chart = (self.rollups.metrics.metric_19.installed/self.rollups.metrics.metric_19.total)*100;
                 self.rollups.metrics.metric_20.chart = (self.rollups.metrics.metric_20.installed/self.rollups.metrics.metric_20.total)*100;
                 self.rollups.metrics.metric_21.chart = (self.rollups.metrics.metric_21.installed/self.rollups.metrics.metric_21.total)*100;
+
+                self.rollups.nitrogen.practices.push({
+                  name: 'In-stream Habitat',
+                  url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/instream-habitat",
+                  installed: _tempReadings.nitrogen.installed,
+                  total: _tempReadings.nitrogen.total,
+                  chart: (_tempReadings.nitrogen.installed/_tempReadings.nitrogen.total)*100,
+                  inactive: true
+                })
+                self.rollups.phosphorus.practices.push({
+                  name: 'In-stream Habitat',
+                  url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/instream-habitat",
+                  installed: _tempReadings.phosphorus.installed,
+                  total: _tempReadings.phosphorus.total,
+                  chart: (_tempReadings.phosphorus.installed/_tempReadings.phosphorus.total)*100,
+                  inactive: true
+                })
+                self.rollups.sediment.practices.push({
+                  name: 'In-stream Habitat',
+                  url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/instream-habitat",
+                  installed: _tempReadings.sediment.installed,
+                  total: _tempReadings.sediment.total,
+                  chart: (_tempReadings.sediment.installed/_tempReadings.sediment.total)*100,
+                  inactive: true
+                })
 
                 break;
               case "Livestock Exclusion":
@@ -1166,7 +1210,8 @@ angular.module('FieldDoc')
                   name: 'Urban Homeowner',
                   url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/urban-homeowner",
                   installed: _tempReadings.sediment.installed,
-                  total: _tempReadings.sediment.total
+                  total: _tempReadings.sediment.total,
+                  inactive: true
                 })
 
                 break;
