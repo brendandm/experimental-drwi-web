@@ -111,7 +111,7 @@
                  {{ practice.name }}
 
                  <span class="metric--help--text pull-right">
-                   {{ practice.installed | number:2 }} of {{ practice.total | number:2 }} lbs/yr
+                   {{ (practice.installed/practice.total)*100 | number:0 }}% installed
                  </span>
                </p>
 
@@ -146,20 +146,25 @@
            <article class="row"
                     data-ng-repeat="practice in page.rollups.nitrogen.practices track by $index">
               <div class="column-3"></div>
-              <div class="column-10 metrics--metric"
-                   data-ng-if="practice.total">
+              <div class="column-10 metrics--metric">
                 <p class="metric--title">
                   <a href="{{ practice.url }}">
                     {{ practice.name }} #{{ $index+1 }}
                   </a>
 
-                  <span class="metric--help--text pull-right">
+                  <span class="metric--help--text pull-right"
+                        data-ng-if="!practice.inactive">
                     {{ practice.installed | number:2 }} of {{ practice.total | number:2 }} lbs/yr
+                  </span>
+                  <span class="metric--help--text pull-right"
+                        data-ng-if="practice.inactive">
+                    not applicable
                   </span>
 
                 </p>
                 <div class="metric--chart">
                   <div class="metric--chart--value"
+                       data-ng-if="!practice.inactive"
                        data-ng-style="{'width': ((practice.installed/practice.total)*100) + '%' }"></div>
                 </div>
               </div>
@@ -189,20 +194,25 @@
             <article class="row"
                      data-ng-repeat="practice in page.rollups.phosphorus.practices track by $index">
                <div class="column-3"></div>
-               <div class="column-10 metrics--metric"
-                    data-ng-if="practice.total">
-                  <p class="metric--title">
-                    <a href="{{ practice.url }}">
-                      {{ practice.name }} #{{ $index+1 }}
-                    </a>
+               <div class="column-10 metrics--metric">
+                 <p class="metric--title">
+                   <a href="{{ practice.url }}">
+                     {{ practice.name }} #{{ $index+1 }}
+                   </a>
 
-                    <span class="metric--help--text pull-right">
-                      {{ practice.installed | number:2 }} of {{ practice.total | number:2 }} lbs/yr
-                    </span>
+                   <span class="metric--help--text pull-right"
+                         data-ng-if="!practice.inactive">
+                     {{ practice.installed | number:2 }} of {{ practice.total | number:2 }} lbs/yr
+                   </span>
+                   <span class="metric--help--text pull-right"
+                         data-ng-if="practice.inactive">
+                     not applicable
+                   </span>
 
-                  </p>
+                 </p>
                  <div class="metric--chart">
                    <div class="metric--chart--value"
+                        data-ng-if="!practice.inactive"
                         data-ng-style="{'width': ((practice.installed/practice.total)*100) + '%' }"></div>
                  </div>
                </div>
@@ -232,21 +242,25 @@
             <article class="row"
                      data-ng-repeat="practice in page.rollups.sediment.practices track by $index">
                <div class="column-3"></div>
-               <div class="column-10 metrics--metric"
-                    data-ng-if="practice.total">
-                  <p class="metric--title">
-                    <a href="{{ practice.url }}">
-                      {{ practice.name }} #{{ $index+1 }}
-                    </a>
+               <div class="column-10 metrics--metric">
+                 <p class="metric--title">
+                   <a href="{{ practice.url }}">
+                     {{ practice.name }} #{{ $index+1 }}
+                   </a>
 
-                    <span class="metric--help--text pull-right">
-                      {{ practice.installed | number:2 }} of {{ practice.total | number:2 }} lbs/yr
-                    </span>
+                   <span class="metric--help--text pull-right"
+                         data-ng-if="!practice.inactive">
+                     {{ practice.installed | number:2 }} of {{ practice.total | number:2 }} lbs/yr
+                   </span>
+                   <span class="metric--help--text pull-right"
+                         data-ng-if="practice.inactive">
+                     not applicable
+                   </span>
 
-                  </p>
-
+                 </p>
                  <div class="metric--chart">
                    <div class="metric--chart--value"
+                        data-ng-if="!practice.inactive"
                         data-ng-style="{'width': ((practice.installed/practice.total)*100) + '%' }"></div>
                  </div>
                </div>
