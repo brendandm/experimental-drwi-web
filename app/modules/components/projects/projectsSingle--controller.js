@@ -8,7 +8,7 @@
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateWetlandsNonTidal, CalculateUrbanHomeowner, Notifications, $rootScope, Project, $route, $location, mapbox, project, Site, UALStateLoad, user) {
+  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateWetlandsNonTidal, CalculateUrbanHomeowner, Notifications, $rootScope, Project, $route, $scope, $location, mapbox, project, Site, UALStateLoad, user, $window) {
 
     var self = this;
 
@@ -320,6 +320,22 @@ angular.module('FieldDoc')
     //
     $rootScope.page.actions = [
       {
+        type: 'button-link',
+        action: function() {
+          $window.print();
+        },
+        hideIcon: true,
+        text: 'Print'
+      },
+      {
+        type: 'button-link',
+        action: function() {
+          $scope.$emit('saveToPdf');
+        },
+        hideIcon: true,
+        text: 'Save as PDF'
+      },
+      {
         type: 'button-link new',
         action: function() {
           self.createSite();
@@ -327,6 +343,7 @@ angular.module('FieldDoc')
         text: 'Create site'
       }
     ];
+
 
 
 
