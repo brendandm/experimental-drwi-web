@@ -111,7 +111,7 @@
                  {{ practice.name }}
 
                  <span class="metric--help--text pull-right">
-                   {{ practice.installed | number:2 }} of {{ practice.total | number:2 }} lbs/yr
+                   {{ (practice.installed/practice.total)*100 | number:0 }}% installed
                  </span>
                </p>
 

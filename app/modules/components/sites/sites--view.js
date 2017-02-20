@@ -8,7 +8,7 @@
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('SiteViewCtrl', function (Account, Calculate, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateWetlandsNonTidal, CalculateUrbanHomeowner, leafletData, $location, mapbox, site, Practice, practices, project, $rootScope, $route, $timeout, UALStateLoad, user) {
+  .controller('SiteViewCtrl', function (Account, Calculate, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateWetlandsNonTidal, CalculateUrbanHomeowner, leafletData, $location, mapbox, site, Practice, practices, project, $rootScope, $route, $scope, $timeout, UALStateLoad, user) {
 
     var self = this;
 
@@ -21,7 +21,59 @@ angular.module('FieldDoc')
     self.rollups = {
       active: "all",
       all: {
-        practices: []
+        practices: {
+          bank_stabilization: {
+            name: "Bank Stabilization",
+            installed: 0,
+            total: 0
+          },
+          bioretention: {
+            name: "Bioretention",
+            installed: 0,
+            total: 0
+          },
+          enhanced_stream_restoration: {
+            name: "Enhanced Stream Restoration",
+            installed: 0,
+            total: 0
+          },
+          forest_buffer: {
+            name: "Forest Buffer",
+            installed: 0,
+            total: 0
+          },
+          grass_buffer: {
+            name: "Grass Buffer",
+            installed: 0,
+            total: 0
+          },
+          instream_habitat: {
+            name: "In-stream Habitat",
+            installed: 0,
+            total: 0
+          },
+          livestock_exclusion: {
+            name: "Livestock Exclusion",
+            installed: 0,
+            total: 0
+          },
+          nontidal_wetlands: {
+            name: "Non-tidal Wetlands",
+            installed: 0,
+            total: 0
+          },
+          shoreline_management: {
+            name: "Shoreline Management",
+            installed: 0,
+            total: 0
+          },
+          urban_homeowner: {
+            name: "Urban Homeowner",
+            installed: 0,
+            total: 0
+          }
+
+        }
       },
       nitrogen: {
       	installed: 0,
@@ -271,7 +323,6 @@ angular.module('FieldDoc')
           var _self = this;
 
           angular.forEach(_thesePractices, function(_practice, _practiceIndex){
-            console.log('Processing practice', _practice.properties.practice_type)
             switch(_practice.properties.practice_type) {
               case "Bank Stabilization":
                 var _calculate = CalculateBankStabilization;
@@ -326,6 +377,9 @@ angular.module('FieldDoc')
                 self.rollups.nitrogen.installed += _tempReadings.nitrogen.installed
                 self.rollups.phosphorus.installed += _tempReadings.phosphorus.installed
                 self.rollups.sediment.installed += _tempReadings.sediment.installed
+
+                self.rollups.all.practices.bank_stabilization.installed += _tempReadings.nitrogen.installed;
+                self.rollups.all.practices.bank_stabilization.total += _tempReadings.nitrogen.total;
 
                 self.rollups.nitrogen.practices.push({
                   name: 'Bank Stabilization',
@@ -405,6 +459,9 @@ angular.module('FieldDoc')
                 self.rollups.nitrogen.installed += _tempReadings.nitrogen.installed
                 self.rollups.phosphorus.installed += _tempReadings.phosphorus.installed
                 self.rollups.sediment.installed += _tempReadings.sediment.installed
+
+                self.rollups.all.practices.bioretention.installed += _tempReadings.nitrogen.installed;
+                self.rollups.all.practices.bioretention.total += _tempReadings.nitrogen.total;
 
                 self.rollups.nitrogen.practices.push({
                   name: 'Bioretention',
@@ -557,24 +614,21 @@ angular.module('FieldDoc')
                     //
                     angular.forEach(_readings, function(_reading, _readingIndex){
 
-                        console.log('Forest Buffer Planning', _reading)
-                        debugger
-
                         if (_reading.properties.measurement_period === 'Planning') {
+
+                          var _planned = _calculate.GetSingleInstalledLoad(_reading)
 
                           self.rollups.metrics.metric_8.total += _calculate.GetConversionWithArea(_reading.properties.length_of_buffer, _reading.properties.average_width_of_buffer, 43560);
                           self.rollups.metrics.metric_9.total += _calculate.GetConversion(_reading.properties.length_of_buffer, 5280);
                           self.rollups.metrics.metric_3.total += _reading.properties.number_of_trees_planted;
 
-                          _tempReadings.nitrogen.total += totalPlannedLoad.nitrogen;
-                          _tempReadings.phosphorus.total += totalPlannedLoad.phosphorus;
-                          _tempReadings.sediment.total += totalPlannedLoad.sediment;
+                          _tempReadings.nitrogen.total += _planned.nitrogen;
+                          _tempReadings.phosphorus.total += _planned.phosphorus;
+                          _tempReadings.sediment.total += _planned.sediment;
 
                         } else if (_reading.properties.measurement_period === 'Installation') {
 
                           var _installed = _calculate.GetSingleInstalledLoad(_reading)
-
-                          console.log('_installed', _installed)
 
                           self.rollups.metrics.metric_8.installed += _calculate.GetConversionWithArea(_reading.properties.length_of_buffer, _reading.properties.average_width_of_buffer, 43560);
                           self.rollups.metrics.metric_9.installed += _calculate.GetConversion(_reading.properties.length_of_buffer, 5280);
@@ -592,6 +646,10 @@ angular.module('FieldDoc')
 
                     // ADD TO PRACTICE LIST
                     //
+
+                    self.rollups.all.practices.forest_buffer.installed += _tempReadings.nitrogen.installed;
+                    self.rollups.all.practices.forest_buffer.total += _tempReadings.nitrogen.total;
+
                     self.rollups.nitrogen.total += _tempReadings.nitrogen.total
                     self.rollups.phosphorus.total += _tempReadings.phosphorus.total
                     self.rollups.sediment.total += _tempReadings.sediment.total
@@ -672,12 +730,15 @@ angular.module('FieldDoc')
                     //
                     angular.forEach(_readings, function(_reading, _readingIndex){
                         if (_reading.properties.measurement_period === 'Planning') {
+
+                          var _planned = _calculate.GetSingleInstalledLoad(_reading)
+
                           self.rollups.metrics.metric_8.total += _calculate.GetConversionWithArea(_reading.properties.length_of_buffer, _reading.properties.average_width_of_buffer, 43560);
                           self.rollups.metrics.metric_9.total += _calculate.GetConversion(_reading.properties.length_of_buffer, 5280);
 
-                          _tempReadings.nitrogen.total += totalPlannedLoad.nitrogen;
-                          _tempReadings.phosphorus.total += totalPlannedLoad.phosphorus;
-                          _tempReadings.sediment.total += totalPlannedLoad.sediment;
+                          _tempReadings.nitrogen.total += _planned.nitrogen;
+                          _tempReadings.phosphorus.total += _planned.phosphorus;
+                          _tempReadings.sediment.total += _planned.sediment;
 
                         } else if (_reading.properties.measurement_period === 'Installation') {
 
@@ -697,6 +758,10 @@ angular.module('FieldDoc')
 
                     // ADD TO PRACTICE LIST
                     //
+
+                    self.rollups.all.practices.grass_buffer.installed += _tempReadings.nitrogen.installed;
+                    self.rollups.all.practices.grass_buffer.total += _tempReadings.nitrogen.total;
+
                     self.rollups.nitrogen.total += _tempReadings.nitrogen.total
                     self.rollups.phosphorus.total += _tempReadings.phosphorus.total
                     self.rollups.sediment.total += _tempReadings.sediment.total
@@ -820,6 +885,8 @@ angular.module('FieldDoc')
                 self.rollups.metrics.metric_20.chart = (self.rollups.metrics.metric_20.installed/self.rollups.metrics.metric_20.total)*100;
                 self.rollups.metrics.metric_21.chart = (self.rollups.metrics.metric_21.installed/self.rollups.metrics.metric_21.total)*100;
 
+                self.rollups.all.practices.instream_habitat.inactive = true;
+
                 self.rollups.nitrogen.practices.push({
                   name: 'In-stream Habitat',
                   url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/instream-habitat",
@@ -904,11 +971,13 @@ angular.module('FieldDoc')
                     //
                     angular.forEach(_readings, function(_reading, _readingIndex){
                         if (_reading.properties.measurement_period === 'Planning') {
+                          var _planned = _calculate.GetSingleInstalledLoad(_reading)
+
                           self.rollups.metrics.metric_22.total += _calculate.toMiles(_reading.properties.length_of_fencing);
 
-                          _tempReadings.nitrogen.total += totalPlannedLoad.nitrogen;
-                          _tempReadings.phosphorus.total += totalPlannedLoad.phosphorus;
-                          _tempReadings.sediment.total += totalPlannedLoad.sediment;
+                          _tempReadings.nitrogen.total += _planned.nitrogen;
+                          _tempReadings.phosphorus.total += _planned.phosphorus;
+                          _tempReadings.sediment.total += _planned.sediment;
 
                         } else if (_reading.properties.measurement_period === 'Installation') {
                           self.rollups.metrics.metric_22.installed += _calculate.toMiles(_reading.properties.length_of_fencing);
@@ -925,6 +994,9 @@ angular.module('FieldDoc')
 
                     // ADD TO PRACTICE LIST
                     //
+                    self.rollups.all.practices.livestock_exclusion.installed += _tempReadings.nitrogen.installed;
+                    self.rollups.all.practices.livestock_exclusion.total += _tempReadings.nitrogen.total;
+
                     self.rollups.nitrogen.total += _tempReadings.nitrogen.total
                     self.rollups.phosphorus.total += _tempReadings.phosphorus.total
                     self.rollups.sediment.total += _tempReadings.sediment.total
@@ -1007,6 +1079,9 @@ angular.module('FieldDoc')
 
                 // ADD TO PRACTICE LIST
                 //
+                self.rollups.all.practices.nontidal_wetlands.installed += _tempReadings.nitrogen.installed;
+                self.rollups.all.practices.nontidal_wetlands.total += _tempReadings.nitrogen.total;
+
                 self.rollups.nitrogen.total += _tempReadings.nitrogen.total
                 self.rollups.phosphorus.total += _tempReadings.phosphorus.total
                 self.rollups.sediment.total += _tempReadings.sediment.total
@@ -1099,6 +1174,9 @@ angular.module('FieldDoc')
 
                 // ADD TO PRACTICE LIST
                 //
+                self.rollups.all.practices.shoreline_management.installed += _tempReadings.nitrogen.installed;
+                self.rollups.all.practices.shoreline_management.total += _tempReadings.nitrogen.total;
+
                 self.rollups.nitrogen.total += _tempReadings.nitrogen.total
                 self.rollups.phosphorus.total += _tempReadings.phosphorus.total
                 self.rollups.sediment.total += _tempReadings.sediment.total
@@ -1186,6 +1264,9 @@ angular.module('FieldDoc')
 
                 // ADD TO PRACTICE LIST
                 //
+                self.rollups.all.practices.urban_homeowner.installed += _tempReadings.nitrogen.installed;
+                self.rollups.all.practices.urban_homeowner.total += _tempReadings.nitrogen.total;
+
                 self.rollups.nitrogen.total += _tempReadings.nitrogen.total
                 self.rollups.phosphorus.total += _tempReadings.phosphorus.total
                 self.rollups.sediment.total += _tempReadings.sediment.total
@@ -1261,6 +1342,23 @@ angular.module('FieldDoc')
         },
         readings: function(_these) {}
     };
+
+
+    //
+    //
+    //
+    // $scope.$watch(angular.bind(this, function () {
+    //   return this.rollups;
+    // }), function (newVal) {
+    //
+    //   //
+    //   // Everytime the `self.rollups` variable is updated with more best
+    //   // management practices, we need to rerun this loop to ensure proper
+    //   // rollup to a practice type.
+    //   //
+    //   console.log('self.statistics.all()', newVal);
+    //   debugger;
+    // }, true);
 
 
   });
