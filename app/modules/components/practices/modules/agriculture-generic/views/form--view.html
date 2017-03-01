@@ -1,0 +1,193 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="container">
+  <article class="feature-detail">
+    <div class="column-16 feature-detail-content">
+      <form data-ng-submit="page.saveReport()" class="form" role="form">
+
+        <div class="form-row">
+          <div class="form-label">
+            <label for="report_date" class="control-label">
+              Report Date
+            </label>
+          </div>
+          <div class="form-field">
+              <label for="report_date" class="control-label">
+                Please set the date to the day you took the photos
+              </label>
+
+              <div class="form-element form-element-quarters">
+                <p class="form-control form-control-disabled">
+                  {{ page.date.day }}
+                </p>
+                <p class="help-text">
+                  Day
+                </p>
+              </div>
+
+              <div class="form-element form-element-quarters">
+                <select class="form-control"
+                        id="report_date_month" name="report_date_month"
+                        data-ng-model="page.date.month"
+                        data-ng-options="month for month in page.months">
+                </select>
+                <p class="help-text">
+                  Month
+                </p>
+              </div>
+
+              <div class="form-element form-element-quarters">
+                <input number type="number" min="1" max="31" step="1"
+                       class="form-control"
+                       id="report_date_date" name="report_date_date"
+                       data-ng-model="page.date.date"
+                       data-ng-if="page.date.month === 'Jan' ||
+                                   page.date.month === 'Mar' ||
+                                   page.date.month === 'May' ||
+                                   page.date.month === 'Jul' ||
+                                   page.date.month === 'Aug' ||
+                                   page.date.month === 'Oct' ||
+                                   page.date.month === 'Dec'" />
+               <input number type="number" min="1" max="30" step="1"
+                      class="form-control"
+                      id="report_date_date" name="report_date_date"
+                      data-ng-model="page.date.date"
+                      data-ng-if="page.date.month === 'Apr' ||
+                                  page.date.month === 'Jun' ||
+                                  page.date.month === 'Sep' ||
+                                  page.date.month === 'Nov'" />
+                <input number type="number" min="1" max="29" step="1"
+                       class="form-control"
+                       id="report_date_date" name="report_date_date"
+                       data-ng-model="page.date.date"
+                       data-ng-if="page.date.month === 'Feb'" />
+               <p class="help-text">
+                 Date
+               </p>
+             </div>
+
+             <div class="form-element form-element-quarters">
+               <input number type="number" min="1900" step="1"
+                      class="form-control"
+                      id="report_date_year" name="report_date_year"
+                      data-ng-model="page.date.year" />
+                <p class="help-text">
+                  Year
+                </p>
+              </div>
+          </div>
+        </div>
+
+        <!-- Measurement Period -->
+        <div class="form-row">
+          <div class="form-label">
+            <label for="measurement_period" class="control-label">
+              Measurement Period
+            </label>
+          </div>
+          <div class="form-field">
+
+            <div class="form-element">
+              <select class="form-control"
+                      data-ng-model="page.report.properties.measurement_period"
+                      id="measurement_period" name="measurement_period"
+                      required="required">
+                <option value="Planning">Planning</option>
+                <option value="Installation">Installation</option>
+                <option value="Monitoring">Monitoring</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- WIP Reporting Agency -->
+        <div class="form-row" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+          <div class="form-label">
+            <label for="wip_reporting_agency" class="control-label">
+              WIP Reporting Agency
+            </label>
+          </div>
+          <div class="form-field">
+
+            <div class="form-element">
+              <select class="form-control" data-ng-model="page.report.properties.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency">
+                <option value="DC District Department of the Environment">DC District Department of the Environment</option>
+                <option value="DE Department of Natural Resources and Environmental Control">DE Department of Natural Resources and Environmental Control</option>
+                <option value="MD Department of Natural Resources">MD Department of Natural Resources</option>
+                <option value="MD Department of the Environment">MD Department of the Environment</option>
+                <option value="MD Department of Agriculture">MD Department of Agriculture</option>
+                <option value="NY Department of Environmental Conservation">NY Department of Environmental Conservation</option>
+                <option value="PA Department of Environmental Protection">PA Department of Environmental Protection</option>
+                <option value="VA Department of Conservation and Recreation">VA Department of Conservation and Recreation</option>
+                <option value="WV Department of Environmental Protection">WV Department of Environmental Protection</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+          <div class="form-label">
+            <label for="wip_reporting_agency" class="control-label">
+              Landuse
+            </label>
+          </div>
+          <div class="form-field">
+
+            <!-- Existing Landuse -->
+            <div class="form-element form-element-half">
+              <label for="existing_riparian_landuse" class="control-label">
+                Existing Landuse
+              </label>
+
+              <select class="form-control" data-ng-model="page.report.properties.existing_riparian_landuse" id="existing_riparian_landuse" name="existing_riparian_landuse" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | filter:value.properties.landuse_type='agriculture' | orderBy:'properties.landuse_name'">
+              </select>
+            </div>
+
+            <!-- Upland Landuse -->
+            <div class="form-element form-element-half">
+              <label for="upland_landuse" class="control-label">
+                Upland Landuse
+              </label>
+
+              <select class="form-control" data-ng-model="page.report.properties.upland_landuse" id="upland_landuse" name="upland_landuse" data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | filter:value.properties.landuse_type='agriculture' | orderBy:'properties.landuse_name'">
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation' || page.report.properties.measurement_period === 'Monitoring'">
+          <div class="form-label">
+            <label for="notes" class="control-label">
+              Notes
+            </label>
+          </div>
+          <div class="form-field">
+
+            <div class="form-element">
+              <textarea rows="8" data-ng-model="page.report.properties.notes"
+                        class="form-control animate"  msd-elastic id="notes"
+                        name="notes">{{ page.report.properties.notes }}</textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <div class="form-actions-buttons"></div>
+          <div class="form-actions-buttons">
+            <button type="submit"class="button button-submit">
+              Save Changes
+            </button>
+            <button type="button" data-ng-click="page.deleteReport()"
+                    class="button button-link button-outline pull-right">
+              Delete
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </article>
+</main>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>
