@@ -70,6 +70,11 @@ angular.module('FieldDoc')
             return Landuse.query({
               results_per_page: 50
             });
+          },
+          efficiency_agriculture_generic: function(EfficiencyAgricultureGeneric) {
+            return EfficiencyAgricultureGeneric.query({
+              results_per_page: 150
+            });
           }
         }
       });

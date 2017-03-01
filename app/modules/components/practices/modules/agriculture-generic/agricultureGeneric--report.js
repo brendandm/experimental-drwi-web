@@ -94,6 +94,12 @@
 
             self.readings = successResponse;
 
+            self.total = {
+              planning: self.calculate.getTotalReadingsByCategory('Planning', self.readings.features),
+              installation: self.calculate.getTotalReadingsByCategory('Installation', self.readings.features),
+              monitoring: self.calculate.getTotalReadingsByCategory('Monitoring', self.readings.features)
+            };
+
             self.calculateAgricultureGeneric = CalculateAgricultureGeneric;
 
           }, function(errorResponse) {
