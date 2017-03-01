@@ -1,0 +1,221 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="container" save2pdf pdfName="AgricultureGeneric">
+  <section class="row feature summary">
+    <article class="feature-detail">
+      <div class="column-11 feature-detail-content">
+
+        <h1>Summary for {{ page.practice.properties.practice_type }}</h1>
+        <p data-ng-if="page.practice.properties.description" data-ng-bind-html="page.practice.properties.description"></p>
+
+        <p><small>
+          <strong>Project Title:</strong> {{ page.site.properties.project.properties.name }}
+          <strong>Site Number:</strong> {{ page.site.properties.name }}<br />
+          <strong>Stream Name: </strong> {{ page.site.properties.segment.properties.river_name }}
+          <strong>HGMR: </strong> {{ page.site.properties.segment.properties.hgmr_name }}
+        </small></p>
+      </div>
+
+      <nav class="column-5 contextual-navigation-wrapper">
+        <h6><strong>Tools</strong></h6>
+        <ul class="contextual-navigation">
+          <!-- Practice Manangement Navigation -->
+          <li class="active">
+            <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}">
+              Practice Overview
+            </a>
+          </li>
+          <li data-ng-if="page.permissions.can_edit">
+            <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/edit">
+              Edit
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+    </article>
+  </section>
+  <section class="row feature summary">
+    <article class="feature-detail">
+      <div class="column-16 feature-detail-content">
+        <div class="table-responsive">
+
+          <div data-ng-if="!page.total.planning">
+            <h2><strong>Empty</strong> Summary</h2>
+
+            <p>No planning or measurement data has been added to this Practice yet. Please add a new Planning measurement period to this Practice to begin.</p>
+
+            <p>
+              <a class="button" data-ng-click="page.addReading('Planning')">Add Planning Data</a>
+            </p>
+          </div>
+
+          <div data-ng-if="page.total.planning || page.total.installation">
+            <table class="table">
+              <tbody>
+                <tr class="no-rule">
+                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
+                    <h2><strong>Installation</strong> Summary</h2>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>&nbsp;</th>
+                  <th>&nbsp;</th> <!-- Empty because of Pre-BMP Load -->
+                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/agriculture-generic/{{ report.properties.id }}/edit">
+                      <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
+                      <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
+                      <br />
+                      {{ report.properties.report_date }}
+                    </a>
+                  </th>
+                  <th>Installed To-Date</th>
+                  <th>% of Planned</th>
+                </tr>
+
+                <tr>
+                  <th>Extend (acres)</th>
+                  <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
+                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">{{ report.properties.custom_practice_extent_acres }}</td>
+                  <td>--</td>
+                  <td>--</td>
+                </tr>
+
+                <tr class="no-rule">
+                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
+                    <h2><strong>Load</strong> &amp; Reductions</h2>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>&nbsp;</th>
+                  <th>Pre-BMP Load</th>
+                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/agriculture-generic/{{ report.properties.id }}/edit">
+                      <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned Reduction</span><span data-ng-if="report.properties.measurement_period === 'Installation'">Installed Reduction</span><br />
+                      {{ report.properties.report_date }}
+                    </a>
+                  </th>
+                  <th>Reduction To-date</th>
+                  <th>% of Planned</th>
+                </tr>
+
+                <tr data-ng-if="page.calculateAgricultureGeneric.results.totalPreInstallationLoad">
+                  <th>Nitrogen (lbs/yr)</th>
+                  <td>{{ page.calculateAgricultureGeneric.results.totalPreInstallationLoad.nitrogen || 0 | number:2 }}</td>
+                  <td>{{ page.calculateAgricultureGeneric.results.totalPlannedLoad.nitrogen || 0 | number:2 }}</td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    {{ page.calculateAgricultureGeneric.GetSingleInstalledLoad(report).nitrogen || 0 | number:2 }}
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.calculateAgricultureGeneric.quantityInstalled(page.readings.features, 'nitrogen') || 0 | number:2 }}
+                    </strong> lbs/yr</td>
+                  <td>
+                    <strong>
+                      {{ page.calculateAgricultureGeneric.quantityInstalled(page.readings.features, 'nitrogen', '%') || 0 | number:2 }}
+                    </strong> %</td>
+                  </td>
+                </tr>
+                <tr data-ng-if="page.calculateAgricultureGeneric.results.totalPreInstallationLoad">
+                  <th>Phosphorus (lbs/yr)</th>
+                  <td>{{ page.calculateAgricultureGeneric.results.totalPreInstallationLoad.phosphorus || 0 | number:2 }}</td>
+                  <td>{{ page.calculateAgricultureGeneric.results.totalPlannedLoad.phosphorus || 0 | number:2 }}</td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    {{ page.calculateAgricultureGeneric.GetSingleInstalledLoad(report).phosphorus || 0 | number:2 }}
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.calculateAgricultureGeneric.quantityInstalled(page.readings.features, 'phosphorus') || 0 | number:2 }}
+                    </strong> lbs/yr</td>
+                  <td>
+                    <strong>
+                      {{ page.calculateAgricultureGeneric.quantityInstalled(page.readings.features, 'phosphorus', '%') || 0 | number:2 }}
+                    </strong> %</td>
+                  </td>
+                </tr>
+                <tr data-ng-if="page.calculateAgricultureGeneric.results.totalPreInstallationLoad">
+                  <th>Sediment (tons/yr)</th>
+                  <td>{{ page.calculateAgricultureGeneric.results.totalPreInstallationLoad.sediment || 0 | number:2 }}</td>
+                  <td>{{ page.calculateAgricultureGeneric.results.totalPlannedLoad.sediment || 0 | number:2 }}</td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    {{ page.calculateAgricultureGeneric.GetSingleInstalledLoad(report).sediment || 0 | number:2 }}
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.calculateAgricultureGeneric.quantityInstalled(page.readings.features, 'sediment') || 0 | number:2 }}
+                    </strong> lbs/yr</td>
+                  <td>
+                    <strong>
+                      {{ page.calculateAgricultureGeneric.quantityInstalled(page.readings.features, 'sediment', '%') || 0 | number:2 }}
+                    </strong> %</td>
+                  </td>
+                </tr>
+
+                <tr class="no-rule">
+                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
+                    <h2><strong>Chesapeake</strong> Bay Metrics</h2>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>&nbsp;</th>
+                  <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
+                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/agriculture-generic/{{ report.properties.id }}/edit">
+                      <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
+                      <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
+                      <br />
+                      {{ report.properties.report_date }}
+                    </a>
+                  </th>
+                  <th>Installed To-date</th>
+                  <th>% of Planned</th>
+                </tr>
+
+                <tr>
+                  <th>Acres of Practice Installed</th>
+                  <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
+                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                    <span data-ng-bind="page.calculateAgricultureGeneric.GetConversionWithArea(report.properties.length_of_buffer, report.properties.average_width_of_buffer, 43560) | number:2"></span>
+                  </td>
+                  <td><strong>{{ page.calculateAgricultureGeneric.return.totalAcresRestored | number:2 }}</strong> acres</td>
+                  <td><strong>{{ page.calculateAgricultureGeneric.return.percentageAcresRestored | number:0 }}%</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div data-ng-if="page.total.planning || page.total.installation || page.total.monitoring">
+            <h2><strong>Notes</strong></h2>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="align-left" width="10%">Date</th>
+                  <th class="align-left" width="90%">Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td class="align-left">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/agriculture-generic/{{ report.properties.id }}/edit">
+                      {{ report.properties.report_date }}
+                    </a>
+                  </td>
+                  <td class="align-left" data-ng-if="report.properties.notes">{{ report.properties.notes }}</td>
+                  <td class="align-left" data-ng-if="!report.properties.notes"><em>No notes recorded for this date</em></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </article>
+  </section>
+</main>
+
+<div data-ng-include="'/modules/components/practices/modules/agriculture-generic/views/citations--view.html'"></div>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>
