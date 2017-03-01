@@ -22,6 +22,11 @@
             return angular.toJson(feature);
           }
         },
+        'agricultureGeneric': {
+          'method': 'GET',
+          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_agriculture_generic'),
+          'isArray': false
+        },
         'bankStabilization': {
           'method': 'GET',
           'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_bank_stabilization'),
