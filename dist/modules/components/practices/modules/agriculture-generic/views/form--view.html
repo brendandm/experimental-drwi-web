@@ -142,7 +142,8 @@
 
               <select class="form-control"
                       data-ng-model="page.report.properties.model_type"
-                      id="model_type" name="model_type">
+                      id="model_type" name="model_type"
+                      data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
                 <option value="">-- Select a UAL model --</option>
                 <option value="default">Phase 5.3.2 UAL Model</option>
                 <option value="custom">Custom UAL</option>
@@ -154,7 +155,8 @@
               <select class="form-control"
                       data-ng-model="page.report.properties.existing_riparian_landuse"
                       id="existing_riparian_landuse" name="existing_riparian_landuse"
-                      data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | filter:value.properties.landuse_type='agriculture' | orderBy:'properties.landuse_name'">
+                      data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | filter:value.properties.landuse_type='agriculture' | orderBy:'properties.landuse_name'"
+                      data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
               </select>
             </div>
 
@@ -168,7 +170,8 @@
 
                  <input data-ng-model="page.report.properties.custom_model_name"
                         class="form-control" class="form-control" type="text"
-                        id="custom_model_name" name="custom_model_name" />
+                        id="custom_model_name" name="custom_model_name"
+                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'" />
                </div>
 
                <div class="form-element form-element">
@@ -178,7 +181,8 @@
 
                  <input data-ng-model="page.report.properties.custom_model_source"
                         class="form-control" class="form-control" type="text"
-                        id="custom_model_source" name="custom_model_source" />
+                        id="custom_model_source" name="custom_model_source"
+                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'" />
                </div>
 
               <!-- Custom Nitrogen UAL -->
@@ -189,7 +193,8 @@
 
                 <input data-ng-model="page.report.properties.custom_model_nitrogen"
                        class="form-control" class="form-control" type="number"
-                       step="0.0000000000001" id="custom_model_nitrogen" name="custom_model_nitrogen" />
+                       step="0.0000000000001" id="custom_model_nitrogen" name="custom_model_nitrogen"
+                       data-ng-disabled="page.report.properties.measurement_period === 'Installation'" />
               </div>
 
               <!-- Custom Phosphorus UAL -->
@@ -200,7 +205,8 @@
 
                 <input data-ng-model="page.report.properties.custom_model_phosphorus"
                        class="form-control" class="form-control" type="number"
-                       step="0.0000000000001" id="custom_model_phosphorus" name="custom_model_phosphorus" />
+                       step="0.0000000000001" id="custom_model_phosphorus" name="custom_model_phosphorus"
+                       data-ng-disabled="page.report.properties.measurement_period === 'Installation'" />
               </div>
 
               <!-- Custom Sediment UAL -->
@@ -211,7 +217,8 @@
 
                 <input data-ng-model="page.report.properties.custom_model_sediment"
                        class="form-control" class="form-control" type="number"
-                       step="0.0000000000001" id="custom_model_sediment" name="custom_model_sediment" />
+                       step="0.0000000000001" id="custom_model_sediment" name="custom_model_sediment"
+                       data-ng-disabled="page.report.properties.measurement_period === 'Installation'" />
               </div>
 
             </div>
@@ -237,7 +244,8 @@
               <select class="form-control"
                       data-ng-model="page.report.properties.generic_agriculture_efficiency_id"
                       id="generic_agriculture_efficiency_id" name="generic_agriculture_efficiency_id"
-                      data-ng-options="value.properties.id as value.properties.best_management_practice for value in page.efficiency_agriculture_generic.features | orderBy:'properties.best_management_practice'">
+                      data-ng-options="value.properties.id as value.properties.best_management_practice for value in page.efficiency_agriculture_generic.features | orderBy:'properties.best_management_practice'"
+                      data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
               </select>
 
             </div>

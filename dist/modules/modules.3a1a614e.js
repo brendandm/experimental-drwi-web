@@ -4706,7 +4706,135 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
   .service('CalculateAgricultureGeneric', function(Calculate, EfficiencyAgricultureGeneric, $q) {
 
-    return {};
+    return {
+      readings: null,
+      loadData: null,
+      ual: null,
+      getUAL: function(_planning_data) {
+        /**
+         * Calculate nitrogen, phosphorus, and sediment UALs.
+         *
+         * @param (object) _planning_data
+         *    Planning data reading containing best management practice extent
+         *
+         * @return (object) _ual
+         *    Object containing nitrogen, phosphorus, and sediment UAL values
+         */
+
+        var self = this;
+
+        /**
+         * Ensure that our LoadData has been returned and assigned to this
+         * Agriculture Generic Calculator.
+         */
+        if (!self.loadData) {
+          console.warn("CalculateAgricultureGeneric: Load data not found for practice");
+          return;
+        }
+
+        /**
+         * Load Data is present, we may proceed with calculating the reductions
+         */
+        var _extent = _planning_data.properties.custom_practice_extent_acres;
+
+        /**
+         * UAL's are derived data in the user interface, you get them
+         * for each nutrient as follows:
+         *
+         * Abbreviations:
+         *     PA = Practice Area in Acres
+         *
+         * - Nitrogen = (PA*4)*(EOS_TTON/EOS_ACRES)
+         * - Phosphorus = (PA*2)*(EOS_TTOP/EOS_ACRES)
+         * - Sediment = (PA*2)*((EOS_TSS/EOS_ACRES)/2000)
+         */
+        var _ual = {
+          nitrogen: (_extent*4)*(self.loadData.properties.eos_totn/self.loadData.properties.eos_acres),
+          phosphorus: (_extent*2)*(self.loadData.properties.eos_totp/self.loadData.properties.eos_acres),
+          sediment: (_extent*2)*((self.loadData.properties.eos_tss/self.loadData.properties.eos_acres)/2000)
+        };
+
+        self.ual = _ual;
+      },
+      getReductionValue: function(_extent, _efficiency, _nutrient) {
+        /**
+         * Calculate a single nutrient reduction.
+         *
+         * @param (number) _extent
+         *    Extent of the BMP in Acres
+         * @param (number) _efficiency
+         *    Single nutrient efficiency number from
+         *    efficiency_agriculture_generic table
+         * @param (object) _nutrient
+         *    Nutrient UAL calculated based on current land_river_segment HGMR
+         *    code and existing land use type
+         *
+         * @return (number) _reductionValue
+         *    The reduction value for the specified nutrient
+         */
+
+         var _ual = self.ual,
+             _ualValue = _ual[_nutrient],
+             _efficiencyPercentage = (_efficiency/100),
+             _reductionValue = _extent*_ualValue*_efficiencyPercentage;
+
+        return _reductionValue
+      },
+      totalAcresInstalled: function() {
+
+        var self = this,
+            total_area = 0;
+
+        angular.forEach(self.readings.features, function(reading, $index) {
+          if (reading.properties.measurement_period === 'Installation') {
+            total_area += reading.properties.custom_practice_extent_acres;
+          }
+        });
+
+        return total_area;
+      },
+      percentageAcresInstalled: function() {
+
+        var self = this,
+            total_area = 0,
+            planned_area = 0;
+
+        angular.forEach(self.readings.features, function(reading, $index) {
+          if (reading.properties.measurement_period === 'Planning') {
+            planned_area = reading.properties.custom_practice_extent_acres;
+          }
+          else if (reading.properties.measurement_period === 'Installation') {
+            total_area += reading.properties.custom_practice_extent_acres;
+          }
+        });
+
+        return ((total_area/planned_area)*100);
+      },
+      quantityInstalled: function(_ual, _efficiency, format) {
+
+        var installed = 0,
+            planned = 0,
+            self = this;
+
+
+
+        angular.forEach(self.readings.features, function(value, $index) {
+          if (value.properties.measurement_period === 'Planning') {
+            planned += value.properties.custom_practice_extent_acres*_ual*(value.properties.generic_agriculture_efficiency.properties[_efficiency]/100)
+            console.log('Planning: value.properties.custom_practice_extent_acres*_ual*(_efficiency/100)', value.properties.custom_practice_extent_acres*_ual*(value.properties.generic_agriculture_efficiency.properties[_efficiency]/100))
+          }
+          else if (value.properties.measurement_period === 'Installation') {
+            installed += value.properties.custom_practice_extent_acres*_ual*(value.properties.generic_agriculture_efficiency.properties[_efficiency]/100)
+            console.log('installed: value.properties.custom_practice_extent_acres*_ual*(_efficiency/100)', value.properties.custom_practice_extent_acres*_ual*(value.properties.generic_agriculture_efficiency.properties[_efficiency]/100))
+          }
+        });
+
+        var percentage_installed = installed/planned;
+
+        return (format === '%') ? (percentage_installed*100) : installed;
+
+      }
+    };
 
   });
 
@@ -4720,12 +4848,13 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('AgricultureGenericReportController', function (Account, Calculate, CalculateAgricultureGeneric, Efficiency, LoadData, $location, $log, practice, PracticeAgricultureGeneric, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
+    .controller('AgricultureGenericReportController', function (Account, Calculate, CalculateAgricultureGeneric, Efficiency, LoadData, $location, $log, Notifications, practice, PracticeAgricultureGeneric, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
           siteId = $route.current.params.siteId,
-          practiceId = $route.current.params.practiceId;
+          practiceId = $route.current.params.practiceId,
+          practicePlanningData = null;
 
       $rootScope.page = {};
 
@@ -4812,7 +4941,68 @@ angular.module('FieldDoc')
               monitoring: self.calculate.getTotalReadingsByCategory('Monitoring', self.readings.features)
             };
 
-            self.calculateAgricultureGeneric = CalculateAgricultureGeneric;
+            //
+            // Setup and Find Existing Landuse and BMP Short Name Data
+            //
+            var existingLanduseType = "",
+                landRiverSegmentCode = self.site.properties.segment.properties.hgmr_code,
+                planningData = null;
+
+            angular.forEach(self.readings.features, function(reading, $index) {
+              if (reading.properties.measurement_period === 'Planning') {
+                planningData = practicePlanningData = reading;
+                existingLanduseType = (reading.properties.existing_riparian_landuse) ?  reading.properties.existing_riparian_landuse : "";
+              }
+            });
+
+            // Existing Landuse and Land River Segment Code MUST BE TRUTHY
+            if (existingLanduseType && landRiverSegmentCode && planningData) {
+
+              LoadData.query({
+                  q: {
+                    filters: [
+                      {
+                        name: 'land_river_segment',
+                        op: 'eq',
+                        val: landRiverSegmentCode
+                      },
+                      {
+                        name: 'landuse',
+                        op: 'eq',
+                        val: existingLanduseType
+                      }
+                    ]
+                  }
+                }).$promise.then(function(successResponse) {
+                  if (successResponse.features.length === 0) {
+                    console.warn("LoadData requirements not met by grantee input. Please add a valid Landuse Type and Land River Segment. Input landuse:", existingLanduseType, "land_river_segment", self.site.properties.segment.properties.hgmr_code)
+                    $rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
+                  }
+                  else {
+                    //
+                    // Begin calculating nutrient reductions
+                    //
+                    self.calculateAgricultureGeneric = CalculateAgricultureGeneric;
+
+                    self.calculateAgricultureGeneric.loadData = successResponse.features[0];
+                    self.calculateAgricultureGeneric.readings = self.readings;
+
+                    self.calculateAgricultureGeneric.getUAL(planningData);
+
+                    console.log('self.calculateAgricultureGeneric.ual', self.calculateAgricultureGeneric.ual);
+                  }
+
+                },
+                function(errorResponse) {
+                  console.debug('LoadData::errorResponse', errorResponse)
+                  console.warn("LoadData requirements not met by grantee input. Please add a valid Landuse Type and Land River Segment. Input landuse:", existingLanduseType, "land_river_segment", self.site.properties.segment.properties.hgmr_code)
+                  $rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
+                });
+            }
+            else {
+              console.warn("LoadData requirements not met by grantee input. Please add a valid Landuse Type and Land River Segment. Input landuse:", existingLanduseType, "land_river_segment", self.site.properties.segment.properties.hgmr_code)
+              $rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
+            }
 
           }, function(errorResponse) {
 
@@ -4845,7 +5035,15 @@ angular.module('FieldDoc')
             'measurement_period': measurementPeriod,
             'report_date': new Date(),
             'practice_id': practiceId,
-            'account_id': self.site.properties.project.properties.account_id
+            'account_id': self.site.properties.project.properties.account_id,
+            'generic_agriculture_efficiency_id': practicePlanningData.properties.generic_agriculture_efficiency_id,
+            'model_type': practicePlanningData.properties.model_type,
+            'existing_riparian_landuse': practicePlanningData.properties.existing_riparian_landuse,
+            'custom_model_name': practicePlanningData.properties.custom_model_name,
+            'custom_model_source': practicePlanningData.properties.custom_model_source,
+            'custom_model_nitrogen': practicePlanningData.properties.custom_model_nitrogen,
+            'custom_model_phosphorus': practicePlanningData.properties.custom_model_phosphorus,
+            'custom_model_sediment': practicePlanningData.properties.custom_model_sediment
           });
 
         newReading.$save().then(function(successResponse) {
