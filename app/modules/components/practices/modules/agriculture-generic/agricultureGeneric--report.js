@@ -8,12 +8,13 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('AgricultureGenericReportController', function (Account, Calculate, CalculateAgricultureGeneric, Efficiency, LoadData, $location, $log, practice, PracticeAgricultureGeneric, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
+    .controller('AgricultureGenericReportController', function (Account, Calculate, CalculateAgricultureGeneric, Efficiency, LoadData, $location, $log, Notifications, practice, PracticeAgricultureGeneric, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
           siteId = $route.current.params.siteId,
-          practiceId = $route.current.params.practiceId;
+          practiceId = $route.current.params.practiceId,
+          practicePlanningData = null;
 
       $rootScope.page = {};
 
@@ -100,7 +101,68 @@
               monitoring: self.calculate.getTotalReadingsByCategory('Monitoring', self.readings.features)
             };
 
-            self.calculateAgricultureGeneric = CalculateAgricultureGeneric;
+            //
+            // Setup and Find Existing Landuse and BMP Short Name Data
+            //
+            var existingLanduseType = "",
+                landRiverSegmentCode = self.site.properties.segment.properties.hgmr_code,
+                planningData = null;
+
+            angular.forEach(self.readings.features, function(reading, $index) {
+              if (reading.properties.measurement_period === 'Planning') {
+                planningData = practicePlanningData = reading;
+                existingLanduseType = (reading.properties.existing_riparian_landuse) ?  reading.properties.existing_riparian_landuse : "";
+              }
+            });
+
+            // Existing Landuse and Land River Segment Code MUST BE TRUTHY
+            if (existingLanduseType && landRiverSegmentCode && planningData) {
+
+              LoadData.query({
+                  q: {
+                    filters: [
+                      {
+                        name: 'land_river_segment',
+                        op: 'eq',
+                        val: landRiverSegmentCode
+                      },
+                      {
+                        name: 'landuse',
+                        op: 'eq',
+                        val: existingLanduseType
+                      }
+                    ]
+                  }
+                }).$promise.then(function(successResponse) {
+                  if (successResponse.features.length === 0) {
+                    console.warn("LoadData requirements not met by grantee input. Please add a valid Landuse Type and Land River Segment. Input landuse:", existingLanduseType, "land_river_segment", self.site.properties.segment.properties.hgmr_code)
+                    $rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
+                  }
+                  else {
+                    //
+                    // Begin calculating nutrient reductions
+                    //
+                    self.calculateAgricultureGeneric = CalculateAgricultureGeneric;
+
+                    self.calculateAgricultureGeneric.loadData = successResponse.features[0];
+                    self.calculateAgricultureGeneric.readings = self.readings;
+
+                    self.calculateAgricultureGeneric.getUAL(planningData);
+
+                    console.log('self.calculateAgricultureGeneric.ual', self.calculateAgricultureGeneric.ual);
+                  }
+
+                },
+                function(errorResponse) {
+                  console.debug('LoadData::errorResponse', errorResponse)
+                  console.warn("LoadData requirements not met by grantee input. Please add a valid Landuse Type and Land River Segment. Input landuse:", existingLanduseType, "land_river_segment", self.site.properties.segment.properties.hgmr_code)
+                  $rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
+                });
+            }
+            else {
+              console.warn("LoadData requirements not met by grantee input. Please add a valid Landuse Type and Land River Segment. Input landuse:", existingLanduseType, "land_river_segment", self.site.properties.segment.properties.hgmr_code)
+              $rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
+            }
 
           }, function(errorResponse) {
 
@@ -133,7 +195,15 @@
             'measurement_period': measurementPeriod,
             'report_date': new Date(),
             'practice_id': practiceId,
-            'account_id': self.site.properties.project.properties.account_id
+            'account_id': self.site.properties.project.properties.account_id,
+            'generic_agriculture_efficiency_id': practicePlanningData.properties.generic_agriculture_efficiency_id,
+            'model_type': practicePlanningData.properties.model_type,
+            'existing_riparian_landuse': practicePlanningData.properties.existing_riparian_landuse,
+            'custom_model_name': practicePlanningData.properties.custom_model_name,
+            'custom_model_source': practicePlanningData.properties.custom_model_source,
+            'custom_model_nitrogen': practicePlanningData.properties.custom_model_nitrogen,
+            'custom_model_phosphorus': practicePlanningData.properties.custom_model_phosphorus,
+            'custom_model_sediment': practicePlanningData.properties.custom_model_sediment
           });
 
         newReading.$save().then(function(successResponse) {

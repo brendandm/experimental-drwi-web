@@ -707,3 +707,11 @@ select.form-control {
     }
   }
 }
+
+//
+//
+//
+input[disabled="disabled"],
+select[disabled="disabled"] {
+    opacity: 0.45;
+}
