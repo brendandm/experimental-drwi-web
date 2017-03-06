@@ -105,7 +105,6 @@
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
                       {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["nitrogen"]*(report.properties.generic_agriculture_efficiency.properties.n_efficiency/100) || 0 | number:2 }}
-                      <em data-ng-bind="1"></em>
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
