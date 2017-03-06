@@ -161,7 +161,7 @@
             }
             else {
               console.warn("LoadData requirements not met by grantee input. Please add a valid Landuse Type and Land River Segment. Input landuse:", existingLanduseType, "land_river_segment", self.site.properties.segment.properties.hgmr_code)
-              $rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
+              //$rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
             }
 
           }, function(errorResponse) {
