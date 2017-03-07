@@ -117,18 +117,39 @@ angular.module('FieldDoc')
 
         var installed = 0,
             planned = 0,
-            self = this;
-
-
+            self = this,
+            _efficiencyValue = null;
 
         angular.forEach(self.readings.features, function(value, $index) {
+
+          // Figure out which efficieny to use
+          //
+          switch (_efficiency) {
+            case 'n_efficiency':
+              var _default = value.properties.generic_agriculture_efficiency.properties[_efficiency],
+                  _custom = value.properties.custom_model_nitrogen;
+
+              _efficiencyValue = (_custom === null) ? _default : _custom ;
+              break;
+            case 'p_efficiency':
+              var _default = value.properties.generic_agriculture_efficiency.properties[_efficiency],
+                  _custom = value.properties.custom_model_phosphorus;
+
+              _efficiencyValue = (_custom === null) ? _default : _custom ;
+              break;
+            case 's_efficiency':
+              var _default = value.properties.generic_agriculture_efficiency.properties[_efficiency],
+                  _custom = value.properties.custom_model_sediment;
+
+              _efficiencyValue = (_custom === null) ? _default : _custom ;
+              break;
+          }
+
           if (value.properties.measurement_period === 'Planning') {
-            planned += value.properties.custom_practice_extent_acres*_ual*(value.properties.generic_agriculture_efficiency.properties[_efficiency]/100)
-            console.log('Planning: value.properties.custom_practice_extent_acres*_ual*(_efficiency/100)', value.properties.custom_practice_extent_acres*_ual*(value.properties.generic_agriculture_efficiency.properties[_efficiency]/100))
+            planned += value.properties.custom_practice_extent_acres*_ual*(_efficiencyValue/100)
           }
           else if (value.properties.measurement_period === 'Installation') {
-            installed += value.properties.custom_practice_extent_acres*_ual*(value.properties.generic_agriculture_efficiency.properties[_efficiency]/100)
-            console.log('installed: value.properties.custom_practice_extent_acres*_ual*(_efficiency/100)', value.properties.custom_practice_extent_acres*_ual*(value.properties.generic_agriculture_efficiency.properties[_efficiency]/100))
+            installed += value.properties.custom_practice_extent_acres*_ual*(_efficiencyValue/100)
           }
         });
 

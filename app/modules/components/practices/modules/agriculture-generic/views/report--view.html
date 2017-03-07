@@ -105,11 +105,23 @@
                   <th>Nitrogen (lbs/yr)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
-                      {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["nitrogen"]*(report.properties.generic_agriculture_efficiency.properties.n_efficiency/100) || 0 | number:2 }}
+                      <span data-ng-if="report.properties.custom_model_nitrogen === null">
+                        {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["nitrogen"]*(report.properties.generic_agriculture_efficiency.properties.n_efficiency/100) || 0 | number:2 }}
+                      </span>
+
+                      <span data-ng-if="report.properties.custom_model_nitrogen !== null">
+                        {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["nitrogen"]*(report.properties.custom_model_nitrogen/100) || 0 | number:2 }}
+                      </span>
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
-                      {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["nitrogen"]*(report.properties.generic_agriculture_efficiency.properties.n_efficiency/100) || 0 | number:2 }}
+                      <span data-ng-if="report.properties.custom_model_nitrogen === null">
+                        {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["nitrogen"]*(report.properties.generic_agriculture_efficiency.properties.n_efficiency/100) || 0 | number:2 }}
+                      </span>
+
+                      <span data-ng-if="report.properties.custom_model_nitrogen !== null">
+                        {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["nitrogen"]*(report.properties.custom_model_nitrogen/100) || 0 | number:2 }}
+                      </span>
                   </td>
                   <td>
                     <strong data-ng-if="page.calculateAgricultureGeneric.ual['nitrogen']"
@@ -126,11 +138,23 @@
                   <th>Phosphorus (lbs/yr)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
-                      {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["phosphorus"]*(report.properties.generic_agriculture_efficiency.properties.p_efficiency/100) || 0 | number:2 }}
+                      <span data-ng-if="report.properties.custom_model_phosphorus === null">
+                        {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["phosphorus"]*(report.properties.generic_agriculture_efficiency.properties.p_efficiency/100) || 0 | number:2 }}
+                      </span>
+
+                      <span data-ng-if="report.properties.custom_model_phosphorus !== null">
+                        {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["phosphorus"]*(report.properties.custom_model_phosphorus/100) || 0 | number:2 }}
+                      </span>
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
-                      {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["phosphorus"]*(report.properties.generic_agriculture_efficiency.properties.p_efficiency/100) || 0 | number:2 }}
+                      <span data-ng-if="report.properties.custom_model_phosphorus === null">
+                        {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["phosphorus"]*(report.properties.generic_agriculture_efficiency.properties.p_efficiency/100) || 0 | number:2 }}
+                      </span>
+
+                      <span data-ng-if="report.properties.custom_model_phosphorus !== null">
+                        {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["phosphorus"]*(report.properties.custom_model_phosphorus/100) || 0 | number:2 }}
+                      </span>
                   </td>
                   <td>
                     <strong data-ng-if="page.calculateAgricultureGeneric.ual['phosphorus']"
@@ -146,11 +170,23 @@
                   <th>Sediment (tons/yr)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
-                      {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["sediment"]*(report.properties.generic_agriculture_efficiency.properties.s_efficiency/100) || 0 | number:2 }}
+                      <span data-ng-if="report.properties.custom_model_phosphorus === null">
+                        {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["sediment"]*(report.properties.generic_agriculture_efficiency.properties.s_efficiency/100) || 0 | number:2 }}
+                      </span>
+
+                      <span data-ng-if="report.properties.custom_model_phosphorus !== null">
+                        {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["sediment"]*(report.properties.custom_model_sediment/100) || 0 | number:2 }}
+                      </span>
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
-                      {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["sediment"]*(report.properties.generic_agriculture_efficiency.properties.s_efficiency/100) || 0 | number:2 }}
+                      <span data-ng-if="report.properties.custom_model_phosphorus === null">
+                        {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["sediment"]*(report.properties.generic_agriculture_efficiency.properties.s_efficiency/100) || 0 | number:2 }}
+                      </span>
+
+                      <span data-ng-if="report.properties.custom_model_phosphorus !== null">
+                        {{ report.properties.custom_practice_extent_acres*page.calculateAgricultureGeneric.ual["sediment"]*(report.properties.custom_model_sediment/100) || 0 | number:2 }}
+                      </span>
                   </td>
                   <td>
                     <strong data-ng-if="page.calculateAgricultureGeneric.ual['sediment']"
