@@ -8,7 +8,7 @@
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('SiteViewCtrl', function (Account, Calculate, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateWetlandsNonTidal, CalculateUrbanHomeowner, leafletData, $location, mapbox, site, Practice, practices, project, $rootScope, $route, $scope, $timeout, UALStateLoad, user) {
+  .controller('SiteViewCtrl', function (Account, Calculate, CalculateAgricultureGeneric, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateWetlandsNonTidal, CalculateUrbanHomeowner, leafletData, LoadData, $location, mapbox, site, Practice, practices, project, $rootScope, $route, $scope, $timeout, UALStateLoad, user) {
 
     var self = this;
 
@@ -22,6 +22,11 @@ angular.module('FieldDoc')
       active: "all",
       all: {
         practices: {
+          agriculture_generic: {
+            name: "Agriculture Generic",
+            installed: 0,
+            total: 0
+          },
           bank_stabilization: {
             name: "Bank Stabilization",
             installed: 0,
@@ -143,13 +148,13 @@ angular.module('FieldDoc')
           label: 'Miles of Riparian Restoration',
           installed: 0,
           total: 0,
-          units: ''
+          units: 'miles'
         },
         'metric_10': {
           label: 'Acres Protected Under Long-term Easment',
           installed: 0,
           total: 0,
-          units: ''
+          units: 'acres'
         },
         'metric_11': {
           label: 'Habitat Restoration Target Species 1',
@@ -167,31 +172,31 @@ angular.module('FieldDoc')
           label: 'Acres of Habitat Restored',
           installed: 0,
           total: 0,
-          units: ''
+          units: 'acres'
         },
         'metric_14': {
           label: 'Acres of Wetlands Restored',
           installed: 0,
           total: 0,
-          units: ''
+          units: 'acres'
         },
         'metric_15': {
           label: 'Miles of Living Shoreline Restored',
           installed: 0,
           total: 0,
-          units: ''
+          units: 'miles'
         },
         'metric_16': {
           label: 'Miles of Stream Opened',
           installed: 0,
           total: 0,
-          units: ''
+          units: 'miles'
         },
         'metric_17': {
           label: 'Acres of Oyster Habitat Restored',
           installed: 0,
           total: 0,
-          units: ''
+          units: 'acres'
         },
         'metric_18': {
           label: 'Fish Passage Improvements: # of Passage Barriers Rectified',
@@ -221,7 +226,13 @@ angular.module('FieldDoc')
           label: 'Miles of Fencing Installed',
           installed: 0,
           total: 0,
-          units: ''
+          units: 'miles'
+        },
+        'metric_23': {
+          label: 'Acres of Practice Installed',
+          installed: 0,
+          total: 0,
+          units: 'acres'
         }
       }
     };
@@ -324,6 +335,140 @@ angular.module('FieldDoc')
 
           angular.forEach(_thesePractices, function(_practice, _practiceIndex){
             switch(_practice.properties.practice_type) {
+              case "Agriculture Generic":
+                var _calculate = CalculateAgricultureGeneric;
+                var _readings = _practice.properties.readings_agriculture_generic;
+                var _tempReadings = {
+                  nitrogen: {
+                    installed: 0,
+                    total: 0
+                  },
+                  phosphorus: {
+                    installed: 0,
+                    total: 0
+                  },
+                  sediment: {
+                    installed: 0,
+                    total: 0
+                  }
+                };
+
+                var existingLanduseType = "",
+                    landRiverSegmentCode = self.site.properties.segment.properties.hgmr_code,
+                    planningData = null;
+
+                angular.forEach(_readings, function(reading, $index) {
+                  if (reading.properties.measurement_period === 'Planning') {
+                    planningData = reading;
+                    existingLanduseType = (reading.properties.existing_riparian_landuse) ?  reading.properties.existing_riparian_landuse : "";
+                  }
+                });
+
+                // Existing Landuse and Land River Segment Code MUST BE TRUTHY
+                if (existingLanduseType && landRiverSegmentCode && planningData) {
+
+                  LoadData.query({
+                      q: {
+                        filters: [
+                          {
+                            name: 'land_river_segment',
+                            op: 'eq',
+                            val: landRiverSegmentCode
+                          },
+                          {
+                            name: 'landuse',
+                            op: 'eq',
+                            val: existingLanduseType
+                          }
+                        ]
+                      }
+                    }).$promise.then(function(successResponse) {
+                      if (successResponse.features.length === 0) {
+                        console.warn("LoadData requirements not met by grantee input. Please add a valid Landuse Type and Land River Segment. Input landuse:", existingLanduseType, "land_river_segment", self.site.properties.segment.properties.hgmr_code)
+                        $rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
+                      }
+                      else {
+                        //
+                        // Begin calculating nutrient reductions
+                        //
+                        self.calculateAgricultureGeneric = CalculateAgricultureGeneric;
+
+                        self.calculateAgricultureGeneric.loadData = successResponse.features[0];
+                        self.calculateAgricultureGeneric.readings = _readings;
+
+                        self.calculateAgricultureGeneric.getUAL(planningData);
+
+                        // Agriculture Generic: CHESAPEAKE BAY METRICS
+                        //
+                        // 1. Miles of Streambank Restored
+                        //
+                        angular.forEach(_readings, function(_reading, _readingIndex){
+                            if (_reading.properties.measurement_period === 'Planning') {
+                                self.rollups.metrics.metric_23.total += _reading.properties.custom_practice_extent_acres
+
+                                // Agriculture Generic: LOAD REDUCTIONS
+                                //
+                                _tempReadings.nitrogen.total += (_reading.properties.custom_model_nitrogen === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["nitrogen"]*(_reading.properties.generic_agriculture_efficiency.properties.n_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["nitrogen"]*(_reading.properties.custom_model_nitrogen/100)
+                                _tempReadings.phosphorus.total += (_reading.properties.custom_model_phosphorus === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["phosphorus"]*(_reading.properties.generic_agriculture_efficiency.properties.p_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["phosphorus"]*(_reading.properties.custom_model_phosphorus/100)
+                                _tempReadings.sediment.total += (_reading.properties.custom_model_sediment === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["sediment"]*(_reading.properties.generic_agriculture_efficiency.properties.s_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["sediment"]*(_reading.properties.custom_model_sediment/100)
+
+                            } else if (_reading.properties.measurement_period === 'Installation') {
+                                self.rollups.metrics.metric_23.installed += _reading.properties.custom_practice_extent_acres
+
+                                // Agriculture Generic: LOAD REDUCTIONS
+                                //
+                                _tempReadings.nitrogen.installed += (_reading.properties.custom_model_nitrogen === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["nitrogen"]*(_reading.properties.generic_agriculture_efficiency.properties.n_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["nitrogen"]*(_reading.properties.custom_model_nitrogen/100)
+                                _tempReadings.phosphorus.installed += (_reading.properties.custom_model_phosphorus === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["phosphorus"]*(_reading.properties.generic_agriculture_efficiency.properties.p_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["phosphorus"]*(_reading.properties.custom_model_phosphorus/100)
+                                _tempReadings.sediment.installed += (_reading.properties.custom_model_sediment === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["sediment"]*(_reading.properties.generic_agriculture_efficiency.properties.s_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["sediment"]*(_reading.properties.custom_model_sediment/100)
+                            }
+                        });
+
+
+                        self.rollups.metrics.metric_23.chart += (self.rollups.metrics.metric_23.installed/self.rollups.metrics.metric_23.total)*100;
+
+                        // ADD TO PRACTICE LIST
+                        //
+                        self.rollups.nitrogen.total += _tempReadings.nitrogen.total
+                        self.rollups.phosphorus.total += _tempReadings.phosphorus.total
+                        self.rollups.sediment.total += _tempReadings.sediment.total
+
+                        self.rollups.nitrogen.installed += _tempReadings.nitrogen.installed
+                        self.rollups.phosphorus.installed += _tempReadings.phosphorus.installed
+                        self.rollups.sediment.installed += _tempReadings.sediment.installed
+
+                        self.rollups.all.practices.bank_stabilization.installed += _tempReadings.nitrogen.installed;
+                        self.rollups.all.practices.bank_stabilization.total += _tempReadings.nitrogen.total;
+
+                        self.rollups.nitrogen.practices.push({
+                          name: 'Agriculture Generic',
+                          url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/agriculture-generic",
+                          installed: _tempReadings.nitrogen.installed,
+                          total: _tempReadings.nitrogen.total
+                        })
+                        self.rollups.phosphorus.practices.push({
+                          name: 'Agriculture Generic',
+                          url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/agriculture-generic",
+                          installed: _tempReadings.phosphorus.installed,
+                          total: _tempReadings.phosphorus.total
+                        })
+                        self.rollups.sediment.practices.push({
+                          name: 'Agriculture Generic',
+                          url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/agriculture-generic",
+                          installed: _tempReadings.sediment.installed,
+                          total: _tempReadings.sediment.total
+                        })
+
+
+                        console.log('self.calculateAgricultureGeneric.ual', self.calculateAgricultureGeneric.ual);
+                      }
+
+                    },
+                    function(errorResponse) {
+                      console.debug('LoadData::errorResponse', errorResponse)
+                      console.warn("LoadData requirements not met by grantee input. Please add a valid Landuse Type and Land River Segment. Input landuse:", existingLanduseType, "land_river_segment", self.site.properties.segment.properties.hgmr_code)
+                    });
+                }
+                break;
               case "Bank Stabilization":
                 var _calculate = CalculateBankStabilization;
                 var _readings = _practice.properties.readings_bank_stabilization;
