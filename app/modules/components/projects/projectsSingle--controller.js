@@ -166,6 +166,7 @@ angular.module('FieldDoc')
           label: 'Acres of Practice Installed',
           installed: 0,
           total: 0,
+          chart: 0,
           units: 'acres'
         }
       }
