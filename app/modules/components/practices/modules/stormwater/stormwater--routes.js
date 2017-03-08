@@ -12,9 +12,9 @@ angular.module('FieldDoc')
   .config(function($routeProvider) {
 
     $routeProvider
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/agriculture-generic', {
-        templateUrl: '/modules/components/practices/modules/agriculture-generic/views/report--view.html',
-        controller: 'AgricultureGenericReportController',
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/stormwater', {
+        templateUrl: '/modules/components/practices/modules/stormwater/views/report--view.html',
+        controller: 'StormwaterReportController',
         controllerAs: 'page',
         resolve: {
           user: function(Account) {
@@ -34,15 +34,15 @@ angular.module('FieldDoc')
             });
           },
           readings: function(Practice, $route) {
-            return Practice.agricultureGeneric({
+            return Practice.stormwater({
               id: $route.current.params.practiceId
             });
           }
         }
       })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/agriculture-generic/:reportId/edit', {
-        templateUrl: '/modules/components/practices/modules/agriculture-generic/views/form--view.html',
-        controller: 'AgricultureGenericFormController',
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/stormwater/:reportId/edit', {
+        templateUrl: '/modules/components/practices/modules/stormwater/views/form--view.html',
+        controller: 'StormwaterFormController',
         controllerAs: 'page',
         resolve: {
           user: function(Account) {
@@ -61,19 +61,9 @@ angular.module('FieldDoc')
               id: $route.current.params.practiceId
             });
           },
-          report: function(PracticeAgricultureGeneric, $route) {
-            return PracticeAgricultureGeneric.get({
+          report: function(PracticeStormwater, $route) {
+            return PracticeStormwater.get({
               id: $route.current.params.reportId
-            });
-          },
-          landuse: function(Landuse) {
-            return Landuse.query({
-              results_per_page: 50
-            });
-          },
-          efficiency_agriculture_generic: function(EfficiencyAgricultureGeneric) {
-            return EfficiencyAgricultureGeneric.query({
-              results_per_page: 150
             });
           }
         }
