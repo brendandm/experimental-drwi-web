@@ -2989,8 +2989,8 @@ angular.module('FieldDoc')
                         self.rollups.phosphorus.installed += _tempReadings.phosphorus.installed
                         self.rollups.sediment.installed += _tempReadings.sediment.installed
 
-                        self.rollups.all.practices.bank_stabilization.installed += _tempReadings.nitrogen.installed;
-                        self.rollups.all.practices.bank_stabilization.total += _tempReadings.nitrogen.total;
+                        self.rollups.all.practices.agriculture_generic.installed += _tempReadings.nitrogen.installed;
+                        self.rollups.all.practices.agriculture_generic.total += _tempReadings.nitrogen.total;
 
                         self.rollups.nitrogen.practices.push({
                           name: 'Agriculture Generic',

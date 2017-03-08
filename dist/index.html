@@ -18,11 +18,17 @@
     <link rel="stylesheet" type="text/css" href='//api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' />
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <link rel="stylesheet" href="/styles/vendor.2717784a.css">
+    <!-- build:css(.) /styles/vendor.css -->
+    <!-- bower:css -->
+    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
+    <!-- endbower -->
+    <!-- endbuild -->
 
-    <link rel="stylesheet" href="/styles/main.9c6f6886.css" media="screen">
+    <!-- build:css(.tmp) /styles/main.css -->
+    <link href="/styles/main.css" rel="stylesheet" media="screen" />
+    <!-- endbuild -->
 
-    <link href="/styles/print.bb339b7b.css" rel="stylesheet" media="print" />
+    <link href="/styles/print.css" rel="stylesheet" media="print" />
 
     <link rel="shortcut icon" href="/images/favicon.png" />
     <link rel="author" href="/humans.txt" />
@@ -49,13 +55,215 @@
 
     </script>
 
+    <!-- build:js(.) /scripts/oldieshim.js -->
     <!--[if lt IE 9]>
-    <script src="/scripts/oldieshim.5c6f6a62.js"></script>
+    <script src="bower_components/es5-shim/es5-shim.js"></script>
+    <script src="bower_components/json3/lib/json3.js"></script>
     <![endif]-->
+    <!-- endbuild -->
 
-    <script src="/modules/vendor.978f6585.js"></script>
+    <!-- build:js(.) /modules/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/leaflet/dist/leaflet-src.js"></script>
+    <script src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js"></script>
+    <script src="bower_components/angular-cookie/angular-cookie.js"></script>
+    <script src="bower_components/angularjs-geolocation/src/geolocation.js"></script>
+    <script src="bower_components/angular-elastic/elastic.js"></script>
+    <script src="bower_components/ng-file-upload/angular-file-upload.js"></script>
+    <script src="bower_components/ng-file-upload-shim/angular-file-upload-shim.js"></script>
+    <script src="bower_components/angular-mocks/angular-mocks.js"></script>
+    <script src="bower_components/angular-aria/angular-aria.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/angular-moment/angular-moment.js"></script>
+    <script src="bower_components/jspdf/dist/jspdf.min.js"></script>
+    <script src="bower_components/html2canvas/build/html2canvas.js"></script>
+    <script src="bower_components/angular-save2pdf/angular-save2pdf.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
 
-        <script src="/modules/modules.f7d7aebb.js"></script>
+        <!-- build:js({.tmp,app}) /modules/modules.js -->
+        <script src="modules/app--module.js"></script>
+        <script src="modules/app--routes.js"></script>
+        <script src="config/environment.js"></script>
+
+        <script src="modules/shared/pdf/save2pdf.js"></script>
+
+            <!-- Security Module -->
+            <script src="modules/shared/security/security--routes.js"></script>
+            <script src="modules/shared/security/securityLogin--controller.js"></script>
+            <script src="modules/shared/security/securityRegister--controller.js"></script>
+            <script src="modules/shared/security/securityLogout--controller.js"></script>
+            <script src="modules/shared/security/securityResetPassword--controller.js"></script>
+            <script src="modules/shared/security/security--interceptor.js"></script>
+            <script src="modules/shared/security/token--service.js"></script>
+
+            <!-- Projects Module -->
+            <script src="modules/components/projects/projects--routes.js"></script>
+            <script src="modules/components/projects/projectsList--controller.js"></script>
+            <script src="modules/components/projects/projectsSingle--controller.js"></script>
+            <script src="modules/components/projects/projectsEdit--controller.js"></script>
+            <script src="modules/components/projects/projectsUsers--controller.js"></script>
+
+            <!-- Account Module -->
+            <script src="modules/components/account/account--routes.js"></script>
+            <script src="modules/components/account/accountEdit--controller.js"></script>
+
+           <!-- Sites Module -->
+            <script src="modules/components/sites/sites--routes.js"></script>
+            <script src="modules/components/sites/sites--view.js"></script>
+            <script src="modules/components/sites/sites--edit.js"></script>
+
+            <!-- Practices Module -->
+            <script src="modules/components/practices/practices--routes.js"></script>
+            <script src="modules/components/practices/practices--storage.js"></script>
+            <script src="modules/components/practices/practices--calculate.js"></script>
+            <script src="modules/components/practices/practicesEdit--controller.js"></script>
+            <script src="modules/components/practices/practicesView--controller.js"></script>
+
+                <!-- Agriculture Generic -->
+                <script src="modules/components/practices/modules/agriculture-generic/agricultureGeneric--routes.js"></script>
+                <script src="modules/components/practices/modules/agriculture-generic/agricultureGeneric--calculate.js"></script>
+                <script src="modules/components/practices/modules/agriculture-generic/agricultureGeneric--report.js"></script>
+                <script src="modules/components/practices/modules/agriculture-generic/agricultureGeneric--form.js"></script>
+
+                <!-- Forest Buffer -->
+                <script src="modules/components/practices/modules/forest-buffer/forestBuffer--routes.js"></script>
+                <script src="modules/components/practices/modules/forest-buffer/forestBuffer--calculate.js"></script>
+                <script src="modules/components/practices/modules/forest-buffer/forestBuffer--report.js"></script>
+                <script src="modules/components/practices/modules/forest-buffer/forestBuffer--form.js"></script>
+
+                <!-- Grass Buffer -->
+                <script src="modules/components/practices/modules/grass-buffer/grassBuffer--routes.js"></script>
+                <script src="modules/components/practices/modules/grass-buffer/grassBuffer--calculate.js"></script>
+                <script src="modules/components/practices/modules/grass-buffer/grassBuffer--report.js"></script>
+                <script src="modules/components/practices/modules/grass-buffer/grassBuffer--form.js"></script>
+
+                <!-- Livestock Exclusion -->
+                <script src="modules/components/practices/modules/livestock-exclusion/livestockExclusion--routes.js"></script>
+                <script src="modules/components/practices/modules/livestock-exclusion/livestockExclusion--calculate.js"></script>
+                <script src="modules/components/practices/modules/livestock-exclusion/livestockExclusion--report.js"></script>
+                <script src="modules/components/practices/modules/livestock-exclusion/livestockExclusion--form.js"></script>
+
+                <!-- Urban Homeowner -->
+                <script src="modules/components/practices/modules/urban-homeowner/urbanHomeowner--routes.js"></script>
+                <script src="modules/components/practices/modules/urban-homeowner/urbanHomeowner--calculate.js"></script>
+                <script src="modules/components/practices/modules/urban-homeowner/urbanHomeowner--report.js"></script>
+                <script src="modules/components/practices/modules/urban-homeowner/urbanHomeowner--form.js"></script>
+
+                <!-- Bioretention -->
+                <script src="modules/components/practices/modules/bioretention/bioretention--routes.js"></script>
+                <script src="modules/components/practices/modules/bioretention/bioretention--calculate.js"></script>
+                <script src="modules/components/practices/modules/bioretention/bioretention--report.js"></script>
+                <script src="modules/components/practices/modules/bioretention/bioretention--form.js"></script>
+
+                <!-- In-stream Habitat -->
+                <script src="modules/components/practices/modules/instream-habitat/instreamHabitat--routes.js"></script>
+                <script src="modules/components/practices/modules/instream-habitat/instreamHabitat--calculate.js"></script>
+                <script src="modules/components/practices/modules/instream-habitat/instreamHabitat--report.js"></script>
+                <script src="modules/components/practices/modules/instream-habitat/instreamHabitat--form.js"></script>
+
+                <!-- Bank Stabilization -->
+                <script src="modules/components/practices/modules/bank-stabilization/bankStabilization--routes.js"></script>
+                <script src="modules/components/practices/modules/bank-stabilization/bankStabilization--calculate.js"></script>
+                <script src="modules/components/practices/modules/bank-stabilization/bankStabilization--report.js"></script>
+                <script src="modules/components/practices/modules/bank-stabilization/bankStabilization--form.js"></script>
+
+                <!-- Enhanced Stream Restoration -->
+                <script src="modules/components/practices/modules/enhanced-stream-restoration/enhancedStreamRestoration--routes.js"></script>
+                <script src="modules/components/practices/modules/enhanced-stream-restoration/enhancedStreamRestoration--calculate.js"></script>
+                <script src="modules/components/practices/modules/enhanced-stream-restoration/enhancedStreamRestoration--report.js"></script>
+                <script src="modules/components/practices/modules/enhanced-stream-restoration/enhancedStreamRestoration--form.js"></script>
+
+                <!-- Non-tidal Wetlands -->
+                <script src="modules/components/practices/modules/nontidal-wetlands/wetlandsNonTidal--routes.js"></script>
+                <script src="modules/components/practices/modules/nontidal-wetlands/wetlandsNonTidal--calculate.js"></script>
+                <script src="modules/components/practices/modules/nontidal-wetlands/wetlandsNonTidal--report.js"></script>
+                <script src="modules/components/practices/modules/nontidal-wetlands/wetlandsNonTidal--form.js"></script>
+
+                <!-- Non-tidal Wetlands -->
+                <script src="modules/components/practices/modules/shoreline-management/shorelineManagement--routes.js"></script>
+                <script src="modules/components/practices/modules/shoreline-management/shorelineManagement--calculate.js"></script>
+                <script src="modules/components/practices/modules/shoreline-management/shorelineManagement--report.js"></script>
+                <script src="modules/components/practices/modules/shoreline-management/shorelineManagement--form.js"></script>
+
+            <!-- CommonsCloud Module -->
+            <script src="modules/shared/commons-cloud/configuration--constant.js"></script>
+            <script src="modules/shared/commons-cloud/geometry--service.js"></script>
+            <script src="modules/shared/commons-cloud/map--service.js"></script>
+
+            <!-- Mapbox Module -->
+            <script src="modules/shared/mapbox/mapbox--module.js"></script>
+            <script src="modules/shared/mapbox/geocoding--directive.js"></script>
+            <script src="modules/shared/mapbox/geocoding--service.js"></script>
+            <script src="modules/shared/mapbox/geometry--service.js"></script>
+            <script src="modules/shared/mapbox/leaflet--service.js"></script>
+            <script src="modules/shared/mapbox/mapbox--constant.js"></script>
+            <script src="modules/shared/mapbox/states--constant.js"></script>
+            <script src="modules/shared/mapbox/template--service.js"></script>
+
+            <script src="modules/shared/collaborator/collaborator--module.js"></script>
+            <script src="modules/shared/collaborator/collaborator--service.js"></script>
+            <script src="modules/shared/collaborator/collaboratorInvite--directive.js"></script>
+
+
+            <!-- Notification Module -->
+            <script src="modules/shared/notifications/notifications--service.js"></script>
+
+            <!-- File Upload Module -->
+            <script src="modules/shared/upload/upload--directive.js"></script>
+
+            <!-- Providers -->
+            <script src="modules/shared/api/account--service.js"></script>
+            <script src="modules/shared/api/animalManure--service.js"></script>
+            <script src="modules/shared/api/efficiency--service.js"></script>
+            <script src="modules/shared/api/efficiencyAgricultureGeneric--service.js"></script>
+            <script src="modules/shared/api/file--service.js"></script>
+            <script src="modules/shared/api/filter--service.js"></script>
+            <script src="modules/shared/api/image--service.js"></script>
+            <script src="modules/shared/api/landuse--service.js"></script>
+            <script src="modules/shared/api/media--service.js"></script>
+            <script src="modules/shared/api/loaddata--service.js"></script>
+            <script src="modules/shared/api/practice--service.js"></script>
+            <script src="modules/shared/api/practiceAgricultureGeneric--service.js"></script>
+            <script src="modules/shared/api/practiceUrbanHomeowner--service.js"></script>
+            <script src="modules/shared/api/practiceBioretention--service.js"></script>
+            <script src="modules/shared/api/practiceBankStabilization--service.js"></script>
+            <script src="modules/shared/api/practiceEnhancedStreamRestoration--service.js"></script>
+            <script src="modules/shared/api/practiceForestBuffer--service.js"></script>
+            <script src="modules/shared/api/practiceGrassBuffer--service.js"></script>
+            <script src="modules/shared/api/practiceInstreamHabitat--service.js"></script>
+            <script src="modules/shared/api/practiceLivestockExclusion--service.js"></script>
+            <script src="modules/shared/api/practiceWetlandsNonTidal--service.js"></script>
+            <script src="modules/shared/api/practiceShorelineManagement--service.js"></script>
+            <script src="modules/shared/api/project--service.js"></script>
+            <script src="modules/shared/api/security--service.js"></script>
+            <script src="modules/shared/api/site--service.js"></script>
+            <script src="modules/shared/api/segment--service.js"></script>
+            <script src="modules/shared/api/stateLoad--service.js"></script>
+            <script src="modules/shared/api/utility--service.js"></script>
+
+
+            <script src="modules/shared/api/preprocessors--service.js"></script>
+            <script src="modules/shared/api/user--service.js"></script>
+
+            <!-- Factories -->
+
+            <!-- Directives -->
+            <script src="modules/shared/directives/relationship/relationship.js"></script>
+
+            <script src="modules/shared/directives/organization/organization.js"></script>
+
+            <!-- Filters -->
+            <script src="modules/shared/filters/toAcres--filter.js"></script>
+            <script src="modules/shared/filters/toArray--filter.js"></script>
+            <script src="modules/shared/filters/isArray--filter.js"></script>
+            <!-- endbuild -->
 
   </body>
 
