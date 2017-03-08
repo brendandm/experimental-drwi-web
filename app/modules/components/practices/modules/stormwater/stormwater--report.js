@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('AgricultureGenericReportController', function (Account, Calculate, CalculateStormwater, Efficiency, LoadData, $location, $log, Notifications, practice, PracticeAgricultureGeneric, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
+    .controller('StormwaterReportController', function (Account, Calculate, CalculateStormwater, Efficiency, LoadData, $location, $log, Notifications, practice, PracticeStormwater, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -44,7 +44,7 @@
         site.$promise.then(function(successResponse) {
           self.site = successResponse;
 
-          $rootScope.page.title = "Other Agricultural Practices";
+          $rootScope.page.title = "Stormwater Management";
           $rootScope.page.links = [
               {
                   text: 'Projects',
@@ -59,7 +59,7 @@
                 url: '/projects/' + projectId + '/sites/' + siteId
               },
               {
-                text: "Other Agricultural Practices",
+                text: "Stormwater Management",
                 url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
                 type: 'active'
               }
@@ -101,69 +101,6 @@
               monitoring: self.calculate.getTotalReadingsByCategory('Monitoring', self.readings.features)
             };
 
-            //
-            // Setup and Find Existing Landuse and BMP Short Name Data
-            //
-            var existingLanduseType = "",
-                landRiverSegmentCode = self.site.properties.segment.properties.hgmr_code,
-                planningData = null;
-
-            angular.forEach(self.readings.features, function(reading, $index) {
-              if (reading.properties.measurement_period === 'Planning') {
-                planningData = practicePlanningData = reading;
-                existingLanduseType = (reading.properties.existing_riparian_landuse) ?  reading.properties.existing_riparian_landuse : "";
-              }
-            });
-
-            // Existing Landuse and Land River Segment Code MUST BE TRUTHY
-            if (existingLanduseType && landRiverSegmentCode && planningData) {
-
-              LoadData.query({
-                  q: {
-                    filters: [
-                      {
-                        name: 'land_river_segment',
-                        op: 'eq',
-                        val: landRiverSegmentCode
-                      },
-                      {
-                        name: 'landuse',
-                        op: 'eq',
-                        val: existingLanduseType
-                      }
-                    ]
-                  }
-                }).$promise.then(function(successResponse) {
-                  if (successResponse.features.length === 0) {
-                    console.warn("LoadData requirements not met by grantee input. Please add a valid Landuse Type and Land River Segment. Input landuse:", existingLanduseType, "land_river_segment", self.site.properties.segment.properties.hgmr_code)
-                    $rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
-                  }
-                  else {
-                    //
-                    // Begin calculating nutrient reductions
-                    //
-                    self.CalculateStormwater = CalculateStormwater;
-
-                    self.CalculateStormwater.loadData = successResponse.features[0];
-                    self.CalculateStormwater.readings = self.readings;
-
-                    self.CalculateStormwater.getUAL(planningData);
-
-                    console.log('self.CalculateStormwater.ual', self.CalculateStormwater.ual);
-                  }
-
-                },
-                function(errorResponse) {
-                  console.debug('LoadData::errorResponse', errorResponse)
-                  console.warn("LoadData requirements not met by grantee input. Please add a valid Landuse Type and Land River Segment. Input landuse:", existingLanduseType, "land_river_segment", self.site.properties.segment.properties.hgmr_code)
-                  $rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
-                });
-            }
-            else {
-              console.warn("LoadData requirements not met by grantee input. Please add a valid Landuse Type and Land River Segment. Input landuse:", existingLanduseType, "land_river_segment", self.site.properties.segment.properties.hgmr_code)
-              //$rootScope.notifications.error('Missing Load Data', 'Load Data is unavailable for this within this Land River Segment');
-            }
-
           }, function(errorResponse) {
 
           });
@@ -191,31 +128,12 @@
 
       self.addReading = function(measurementPeriod) {
 
-        if (measurementPeriod === "Planning") {
-          var newReading = new PracticeAgricultureGeneric({
-              'measurement_period': measurementPeriod,
-              'report_date': new Date(),
-              'practice_id': practiceId,
-              'account_id': self.site.properties.project.properties.account_id
-            });
-        }
-        else {
-          var newReading = new PracticeAgricultureGeneric({
-              'measurement_period': measurementPeriod,
-              'report_date': new Date(),
-              'practice_id': practiceId,
-              'account_id': self.site.properties.project.properties.account_id,
-              'generic_agriculture_efficiency_id': practicePlanningData.properties.generic_agriculture_efficiency_id,
-              'model_type': practicePlanningData.properties.model_type,
-              'existing_riparian_landuse': practicePlanningData.properties.existing_riparian_landuse,
-              'custom_model_name': practicePlanningData.properties.custom_model_name,
-              'custom_model_source': practicePlanningData.properties.custom_model_source,
-              'custom_model_nitrogen': practicePlanningData.properties.custom_model_nitrogen,
-              'custom_model_phosphorus': practicePlanningData.properties.custom_model_phosphorus,
-              'custom_model_sediment': practicePlanningData.properties.custom_model_sediment
-            });
-
-        }
+        var newReading = new PracticeStormwater({
+            'measurement_period': measurementPeriod,
+            'report_date': new Date(),
+            'practice_id': practiceId,
+            'account_id': self.site.properties.project.properties.account_id
+          });
 
         newReading.$save().then(function(successResponse) {
             $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
