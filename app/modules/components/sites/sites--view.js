@@ -23,7 +23,7 @@ angular.module('FieldDoc')
       all: {
         practices: {
           agriculture_generic: {
-            name: "Agriculture Generic",
+            name: "Other Agricultural Practices",
             installed: 0,
             total: 0
           },
@@ -336,7 +336,7 @@ angular.module('FieldDoc')
 
           angular.forEach(_thesePractices, function(_practice, _practiceIndex){
             switch(_practice.properties.practice_type) {
-              case "Agriculture Generic":
+              case "Other Agricultural Practices":
                 var _calculate = CalculateAgricultureGeneric;
                 var _readings = _practice.properties.readings_agriculture_generic;
                 var _tempReadings = {
