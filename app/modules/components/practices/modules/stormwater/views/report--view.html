@@ -63,7 +63,7 @@
                   <th>&nbsp;</th>
                   <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/agriculture-generic/{{ report.properties.id }}/edit">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/stormwater/{{ report.properties.id }}/edit">
                       <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
                       <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
                       <br />
@@ -92,7 +92,7 @@
                 <tr>
                   <th>&nbsp;</th>
                   <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/agriculture-generic/{{ report.properties.id }}/edit">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/stormwater/{{ report.properties.id }}/edit">
                       <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned Reduction</span><span data-ng-if="report.properties.measurement_period === 'Installation'">Installed Reduction</span><br />
                       {{ report.properties.report_date }}
                     </a>
@@ -208,7 +208,7 @@
                 <tr>
                   <th>&nbsp;</th>
                   <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/agriculture-generic/{{ report.properties.id }}/edit">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/stormwater/{{ report.properties.id }}/edit">
                       <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
                       <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
                       <br />
@@ -243,7 +243,7 @@
               <tbody>
                 <tr data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
                   <td class="align-left">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/agriculture-generic/{{ report.properties.id }}/edit">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/stormwater/{{ report.properties.id }}/edit">
                       {{ report.properties.report_date }}
                     </a>
                   </td>
@@ -260,6 +260,6 @@
   </section>
 </main>
 
-<div data-ng-include="'/modules/components/practices/modules/agriculture-generic/views/citations--view.html'"></div>
+<div data-ng-include="'/modules/components/practices/modules/stormwater/views/citations--view.html'"></div>
 
 <div data-ng-include="'/templates/footer--view.html'"></div>
