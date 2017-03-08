@@ -318,7 +318,12 @@
              <div class="column-16 list-item-content">
               <h1>
                 <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}/{{ page.site.practices.cleanName(practice.name) }}">
-                  {{ practice.properties.practice_type }}
+                  <span data-ng-if="practice.properties.practice_type === 'Agriculture Generic'">
+                    Other Agricultural Practices
+                  </span>
+                  <span data-ng-if="practice.properties.practice_type !== 'Agriculture Generic'">
+                    {{ practice.properties.practice_type }}
+                  </span>
                 </a>
                 <span class="creation-date">
                   Created on {{ practice.properties.created_on | date:'longDate' }}

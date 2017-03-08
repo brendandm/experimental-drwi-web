@@ -44,7 +44,7 @@
         site.$promise.then(function(successResponse) {
           self.site = successResponse;
 
-          $rootScope.page.title = self.practice.properties.practice_type;
+          $rootScope.page.title = "Other Agricultural Practices";
           $rootScope.page.links = [
               {
                   text: 'Projects',
@@ -59,7 +59,7 @@
                 url: '/projects/' + projectId + '/sites/' + siteId
               },
               {
-                text: self.practice.properties.practice_type,
+                text: "Other Agricultural Practices",
                 url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
                 type: 'active'
               }

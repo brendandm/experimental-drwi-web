@@ -336,7 +336,7 @@ angular.module('FieldDoc')
 
           angular.forEach(_thesePractices, function(_practice, _practiceIndex){
             switch(_practice.properties.practice_type) {
-              case "Other Agricultural Practices":
+              case "Agriculture Generic":
                 var _calculate = CalculateAgricultureGeneric;
                 var _readings = _practice.properties.readings_agriculture_generic;
                 var _tempReadings = {
@@ -441,19 +441,19 @@ angular.module('FieldDoc')
                         self.rollups.all.practices.agriculture_generic.total += _tempReadings.nitrogen.total;
 
                         self.rollups.nitrogen.practices.push({
-                          name: 'Agriculture Generic',
+                          name: 'Other Agricultural Practices',
                           url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/agriculture-generic",
                           installed: _tempReadings.nitrogen.installed,
                           total: _tempReadings.nitrogen.total
                         })
                         self.rollups.phosphorus.practices.push({
-                          name: 'Agriculture Generic',
+                          name: 'Other Agricultural Practices',
                           url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/agriculture-generic",
                           installed: _tempReadings.phosphorus.installed,
                           total: _tempReadings.phosphorus.total
                         })
                         self.rollups.sediment.practices.push({
-                          name: 'Agriculture Generic',
+                          name: 'Other Agricultural Practices',
                           url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/agriculture-generic",
                           installed: _tempReadings.sediment.installed,
                           total: _tempReadings.sediment.total

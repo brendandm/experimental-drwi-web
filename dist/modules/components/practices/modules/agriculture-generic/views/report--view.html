@@ -5,7 +5,7 @@
     <article class="feature-detail">
       <div class="column-11 feature-detail-content">
 
-        <h1>Summary for {{ page.practice.properties.practice_type }}</h1>
+        <h1>Summary for {{ $root.page.title }}</h1>
         <p data-ng-if="page.practice.properties.description" data-ng-bind-html="page.practice.properties.description"></p>
 
         <p><small>
@@ -75,7 +75,7 @@
                 </tr>
 
                 <tr>
-                  <th>Extend (acres)</th>
+                  <th>Extent (acres)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
                     {{ report.properties.custom_practice_extent_acres | number:2 }} acres
                   </td>

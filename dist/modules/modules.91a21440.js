@@ -2575,7 +2575,7 @@ angular.module('FieldDoc')
       all: {
         practices: {
           agriculture_generic: {
-            name: "Agriculture Generic",
+            name: "Other Agricultural Practices",
             installed: 0,
             total: 0
           },
@@ -2993,19 +2993,19 @@ angular.module('FieldDoc')
                         self.rollups.all.practices.agriculture_generic.total += _tempReadings.nitrogen.total;
 
                         self.rollups.nitrogen.practices.push({
-                          name: 'Agriculture Generic',
+                          name: 'Other Agricultural Practices',
                           url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/agriculture-generic",
                           installed: _tempReadings.nitrogen.installed,
                           total: _tempReadings.nitrogen.total
                         })
                         self.rollups.phosphorus.practices.push({
-                          name: 'Agriculture Generic',
+                          name: 'Other Agricultural Practices',
                           url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/agriculture-generic",
                           installed: _tempReadings.phosphorus.installed,
                           total: _tempReadings.phosphorus.total
                         })
                         self.rollups.sediment.practices.push({
-                          name: 'Agriculture Generic',
+                          name: 'Other Agricultural Practices',
                           url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/agriculture-generic",
                           installed: _tempReadings.sediment.installed,
                           total: _tempReadings.sediment.total
@@ -5164,7 +5164,7 @@ angular.module('FieldDoc')
         site.$promise.then(function(successResponse) {
           self.site = successResponse;
 
-          $rootScope.page.title = self.practice.properties.practice_type;
+          $rootScope.page.title = "Other Agricultural Practices";
           $rootScope.page.links = [
               {
                   text: 'Projects',
@@ -5179,7 +5179,7 @@ angular.module('FieldDoc')
                 url: '/projects/' + projectId + '/sites/' + siteId
               },
               {
-                text: self.practice.properties.practice_type,
+                text: "Other Agricultural Practices",
                 url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
                 type: 'active'
               }
@@ -5451,7 +5451,7 @@ angular.module('FieldDoc')
                 year: self.today.getFullYear()
             };
 
-            $rootScope.page.title = self.practice.properties.practice_type;
+            $rootScope.page.title = "Other Agricultural Practices";
             $rootScope.page.links = [
                 {
                     text: 'Projects',
@@ -5466,7 +5466,7 @@ angular.module('FieldDoc')
                   url: '/projects/' + projectId + '/sites/' + siteId
                 },
                 {
-                  text: self.practice.properties.practice_type,
+                  text: "Other Agricultural Practices",
                   url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
                 },
                 {

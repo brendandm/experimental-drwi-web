@@ -171,7 +171,8 @@
                  <input data-ng-model="page.report.properties.custom_model_name"
                         class="form-control" class="form-control" type="text"
                         id="custom_model_name" name="custom_model_name"
-                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'" />
+                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                        data-ng-required="page.report.properties.model_type === 'custom'" />
                </div>
 
                <div class="form-element form-element">
@@ -182,7 +183,8 @@
                  <input data-ng-model="page.report.properties.custom_model_source"
                         class="form-control" class="form-control" type="text"
                         id="custom_model_source" name="custom_model_source"
-                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'" />
+                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                        data-ng-required="page.report.properties.model_type === 'custom'" />
                </div>
 
               <!-- Custom Nitrogen Unit Area Loads -->
@@ -192,9 +194,11 @@
                 </label>
 
                 <input data-ng-model="page.report.properties.custom_model_nitrogen"
-                       class="form-control" class="form-control" type="number"
-                       step="0.0000000000001" id="custom_model_nitrogen" name="custom_model_nitrogen"
-                       data-ng-disabled="page.report.properties.measurement_period === 'Installation'" />
+                       class="form-control" class="form-control" type="number" max="1.0" min="0.0"
+                       step="0.00001" id="custom_model_nitrogen" name="custom_model_nitrogen"
+                       data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                       data-ng-required="page.report.properties.model_type === 'custom'" />
+                       <p class="help-text">Percentages must be in decimal format from 0.0-1.0</p>
               </div>
 
               <!-- Custom Phosphorus Unit Area Loads -->
@@ -204,9 +208,11 @@
                 </label>
 
                 <input data-ng-model="page.report.properties.custom_model_phosphorus"
-                       class="form-control" class="form-control" type="number"
-                       step="0.0000000000001" id="custom_model_phosphorus" name="custom_model_phosphorus"
-                       data-ng-disabled="page.report.properties.measurement_period === 'Installation'" />
+                       class="form-control" class="form-control" type="number" max="1.0" min="0.0"
+                       step="0.00001" id="custom_model_phosphorus" name="custom_model_phosphorus"
+                       data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                       data-ng-required="page.report.properties.model_type === 'custom'" />
+                       <p class="help-text">Percentages must be in decimal format from 0.0-1.0</p>
               </div>
 
               <!-- Custom Sediment Unit Area Loads -->
@@ -216,9 +222,11 @@
                 </label>
 
                 <input data-ng-model="page.report.properties.custom_model_sediment"
-                       class="form-control" class="form-control" type="number"
-                       step="0.0000000000001" id="custom_model_sediment" name="custom_model_sediment"
-                       data-ng-disabled="page.report.properties.measurement_period === 'Installation'" />
+                       class="form-control" class="form-control" type="number" max="1.0" min="0.0"
+                       step="0.00001" id="custom_model_sediment" name="custom_model_sediment"
+                       data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                       data-ng-required="page.report.properties.model_type === 'custom'" />
+               <p class="help-text">Percentages must be in decimal format from 0.0-1.0</p>
               </div>
 
             </div>
@@ -248,6 +256,10 @@
                       data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
               </select>
 
+              <p class="help-text">
+                For full BMP definitions, efficiencies, and input guidance please <a href="http://help.fielddoc.org/#otheragbmps" target="_blank">visit the our help documentation article for the Other Agricultural Practices BMP</a>.
+              </p>
+
             </div>
 
           </div>
@@ -265,10 +277,12 @@
             <!-- Buffer Width -->
             <div class="form-element form-element-half">
               <label for="custom_practice_extent_acres" class="control-label">
-                Extend of Practice
+                Extent of Practice
               </label>
 
-              <input data-ng-model="page.report.properties.custom_practice_extent_acres" class="form-control" class="form-control" type="number" id="custom_practice_extent_acres" name="custom_practice_extent_acres" />
+              <input data-ng-model="page.report.properties.custom_practice_extent_acres"
+                     class="form-control" class="form-control" type="number" id="custom_practice_extent_acres"
+                     name="custom_practice_extent_acres" />
 
               <p class="help-text">acres</p>
             </div>

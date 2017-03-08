@@ -122,6 +122,11 @@ pre.form-value {
   &.help-text-top {
     margin-bottom: 2em;
   }
+
+  &.ng-invalid-number,
+  &.ng-invalid-email {
+    color: $color-red-base;
+  }
 }
 
 
@@ -200,6 +205,11 @@ label.control-label {
   width: 100%;
 }
 
+label.control-label.ng-invalid-required {
+  color: $color-red-base;
+}
+
+
 
 //
 // Input fields
@@ -268,6 +278,12 @@ input.form-control,
     &.ng-invalid-required.ng-touched {
       border-color: $color-red-base;
     }
+
+    &.ng-invalid.ng-touched {
+      background-color: rgba($color-red-base, 0.25);
+      border-color: $color-red-base;
+    }
+
 
 }
 
