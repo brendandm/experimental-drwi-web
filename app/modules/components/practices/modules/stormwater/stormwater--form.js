@@ -53,6 +53,40 @@
           'Dec'
       ];
 
+      self.stormwater_practices = [
+        'All ESD practices in MD 2007 (RR)',
+        'Bioretention or Rain Garden (Standard or Enhanced) (RR)',
+        'Dry Channel Regenerative Stormwater Conveyance (aka Step Pool Storm Conveyance) (RR)',
+        'Dry Swale (RR)',
+        'Expanded Tree Pits (RR)',
+        'Grass Channels (w/ Soil Amendments, aka Bioswale, Vegetated Swale) (RR)',
+        'Green Roof (aka Vegetated Roof) (RR)',
+        'Green Streets (RR)',
+        'Infiltration (aka Infiltration Basin, Infiltration Bed, Infiltration Trench, Dry Well/Seepage Pit, Landscape Infiltration) (RR)',
+        'Landscape Restoration/Reforestation (RR)',
+        'Non-Structural BMPs, PA 2006 BMP Manual, Chapter 5 (RR)',
+        'Permeable Pavement (aka Porous Pavement) (RR)',
+        'Rainwater Harvesting (aka Capture and Re-use) (RR)',
+        'Riparian Buffer Restoration (RR)',
+        'Rooftop Disconnection (aka Simple Disconnection to Amended Soils, to a Conservation Area, to a Pervious Area, Non-Rooftop Disconnection) (RR)',
+        'Sheetflow to Filter/Open Space* (aka Sheetflow to Conservation Area, Vegetated Filter Strip) (RR)',
+        'Constructed Wetlands (ST)',
+        'Filtering Practices (aka Constructed Filters, Sand Filters, Stormwater Filtering Systems) (ST)',
+        'Proprietary Practices (aka Manufactured BMPs) (ST)',
+        'Wet Ponds (aka Retention Basin) (ST)',
+        'Wet Swale (ST)'
+      ];
+
+      self.stormwater_project_types = [
+        'New Development',
+        'Re-development'
+      ];
+
+      self.stormwater_site_classifications = [
+        'Runoff Reduction',
+        'Stormwater Treatment'
+      ];
+
       function parseISOLike(s) {
           var b = s.split(/\D/);
           return new Date(b[0], b[1]-1, b[2]);
