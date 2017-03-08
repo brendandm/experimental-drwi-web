@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('AgricultureGenericFormController', function (Account, efficiency_agriculture_generic, landuse, $location, practice, PracticeAgricultureGeneric, report, $rootScope, $route, site, $scope, user, Utility) {
+    .controller('StormwaterFormController', function (Account, landuse, $location, practice, PracticeStormwater, report, $rootScope, $route, site, $scope, user, Utility) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -23,8 +23,6 @@
       };
 
       self.landuse = landuse;
-
-      self.efficiency_agriculture_generic = efficiency_agriculture_generic;
 
       //
       // Setup all of our basic date information so that we can use it
@@ -101,7 +99,7 @@
                 year: self.today.getFullYear()
             };
 
-            $rootScope.page.title = "Other Agricultural Practices";
+            $rootScope.page.title = "Stormwater Management";
             $rootScope.page.links = [
                 {
                     text: 'Projects',
@@ -116,7 +114,7 @@
                   url: '/projects/' + projectId + '/sites/' + siteId
                 },
                 {
-                  text: "Other Agricultural Practices",
+                  text: "Stormwater Management",
                   url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
                 },
                 {

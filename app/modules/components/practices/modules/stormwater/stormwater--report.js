@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('AgricultureGenericReportController', function (Account, Calculate, CalculateAgricultureGeneric, Efficiency, LoadData, $location, $log, Notifications, practice, PracticeAgricultureGeneric, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
+    .controller('AgricultureGenericReportController', function (Account, Calculate, CalculateStormwater, Efficiency, LoadData, $location, $log, Notifications, practice, PracticeAgricultureGeneric, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -142,14 +142,14 @@
                     //
                     // Begin calculating nutrient reductions
                     //
-                    self.calculateAgricultureGeneric = CalculateAgricultureGeneric;
+                    self.CalculateStormwater = CalculateStormwater;
 
-                    self.calculateAgricultureGeneric.loadData = successResponse.features[0];
-                    self.calculateAgricultureGeneric.readings = self.readings;
+                    self.CalculateStormwater.loadData = successResponse.features[0];
+                    self.CalculateStormwater.readings = self.readings;
 
-                    self.calculateAgricultureGeneric.getUAL(planningData);
+                    self.CalculateStormwater.getUAL(planningData);
 
-                    console.log('self.calculateAgricultureGeneric.ual', self.calculateAgricultureGeneric.ual);
+                    console.log('self.CalculateStormwater.ual', self.CalculateStormwater.ual);
                   }
 
                 },
