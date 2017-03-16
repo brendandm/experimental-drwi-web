@@ -47,10 +47,9 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
- .constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+.constant('environment', {name:'local',apiUrl:'http://127.0.0.1:5000',siteUrl:'http://127.0.0.1:9000',clientId:'VYUsqQ4QlO0wSJ3HeIZKyhx3cPa12KoCAZpIVgIE'})
 
 ;
-
 /**
  * angular-save2pdf - angular jsPDF wrapper
  * Copyright (c) 2015 John Daily Jr.,
@@ -12805,7 +12804,181 @@ angular.module('FieldDoc')
 
     return {
       readings: null,
-      loadData: null
+      loadData: null,
+      plannedRunoffReductionAdjustorCurveNitrogen: function(_report, format) {
+
+        var self = this,
+            depthTreated = 1.0;
+
+        if (_report) {
+          depthTreated = self.runoffDepthTreated(_report)
+        }
+
+        var first = 0.0308*Math.pow(depthTreated, 5),
+            second = 0.2562*Math.pow(depthTreated, 4),
+            third = 0.8634*Math.pow(depthTreated, 3),
+            fourth = 1.5285*Math.pow(depthTreated, 2),
+            fifth = 1.501*depthTreated,
+            reduction = (first-second+third-fourth+fifth-0.013);
+
+        return (format === '%') ? reduction*100 : reduction;
+      },
+      plannedRunoffReductionAdjustorCurvePhosphorus: function(_report, format) {
+
+        var self = this,
+            depthTreated = 1.0;
+
+        if (_report) {
+          depthTreated = self.runoffDepthTreated(_report)
+        }
+
+        var first = 0.0304*Math.pow(depthTreated, 5),
+            second = 0.2619*Math.pow(depthTreated, 4),
+            third = 0.9161*Math.pow(depthTreated, 3),
+            fourth = 1.6837*Math.pow(depthTreated, 2),
+            fifth = 1.7072*depthTreated,
+            reduction = (first-second+third-fourth+fifth-0.0091);
+
+        return (format === '%') ? reduction*100 : reduction;
+      },
+      plannedRunoffReductionAdjustorCurveSediment: function(_report, format) {
+
+        var self = this,
+            depthTreated = 1.0;
+
+        if (_report) {
+          depthTreated = self.runoffDepthTreated(_report)
+        }
+
+        var first = 0.0326*Math.pow(depthTreated, 5),
+            second = 0.2806*Math.pow(depthTreated, 4),
+            third = 0.9816*Math.pow(depthTreated, 3),
+            fourth = 1.8039*Math.pow(depthTreated, 2),
+            fifth = 1.8292*depthTreated,
+            reduction = (first-second+third-fourth+fifth-0.0098);
+
+        return (format === '%') ? reduction*100 : reduction;
+      },
+      plannedStormwaterTreatmentAdjustorCurveNitrogen: function(_report, format) {
+
+        var self = this,
+            depthTreated = 1.0;
+
+        if (_report) {
+          depthTreated = self.runoffDepthTreated(_report)
+        }
+
+        var first = 0.0152*Math.pow(depthTreated, 5),
+            second = 0.131*Math.pow(depthTreated, 4),
+            third = 0.4581*Math.pow(depthTreated, 3),
+            fourth = 0.8418*Math.pow(depthTreated, 2),
+            fifth = 0.8536*depthTreated,
+            reduction = (first-second+third-fourth+fifth-0.0046);
+
+        return (format === '%') ? reduction*100 : reduction;
+      },
+      plannedStormwaterTreatmentAdjustorCurvePhosphorus: function(_report, format) {
+
+        var self = this,
+            depthTreated = 1.0;
+
+        if (_report) {
+          depthTreated = self.runoffDepthTreated(_report)
+        }
+
+        var first = 0.0239*Math.pow(depthTreated, 5),
+            second = 0.2058*Math.pow(depthTreated, 4),
+            third = 0.7198*Math.pow(depthTreated, 3),
+            fourth = 1.3229*Math.pow(depthTreated, 2),
+            fifth = 1.3414*depthTreated,
+            reduction = (first-second+third-fourth+fifth-0.0072);
+
+        return (format === '%') ? reduction*100 : reduction;
+      },
+      plannedStormwaterTreatmentAdjustorCurveSediment: function(_report, format) {
+
+        var self = this,
+            depthTreated = 1.0;
+
+        if (_report) {
+          depthTreated = self.runoffDepthTreated(_report)
+        }
+
+        var first = 0.0304*Math.pow(depthTreated, 5),
+            second = 0.2619*Math.pow(depthTreated, 4),
+            third = 0.9161*Math.pow(depthTreated, 3),
+            fourth = 1.6837*Math.pow(depthTreated, 2),
+            fifth = 1.7072*depthTreated,
+            reduction = (first-second+third-fourth+fifth-0.0091);
+
+        return (format === '%') ? reduction*100 : reduction;
+      },
+      prePlannedNitrogenLoad: function(imperviousArea, drainageArea, loadData) {
+        return ((imperviousArea*loadData.impervious.tn_ual) + (drainageArea-imperviousArea) * (loadData.pervious.tn_ual))/43560;
+      },
+      prePlannedPhosphorusLoad: function(imperviousArea, drainageArea, loadData) {
+        return ((imperviousArea*loadData.impervious.tp_ual) + (drainageArea-imperviousArea) * (loadData.pervious.tp_ual))/43560;
+      },
+      prePlannedSedimentLoad: function(imperviousArea, drainageArea, loadData) {
+        return ((imperviousArea*loadData.impervious.tss_ual) + (drainageArea-imperviousArea) * (loadData.pervious.tss_ual))/43560;
+      },
+      plannedNitrogenReduction: function(imperviousArea, drainageArea, loadData, func, _report) {
+
+        //
+        // NEED TO KNOW IF THE PROJECT IS `RUNOFF REDUCTION` or `STROMWATER
+        // TREATMENT` SO THAT WE CAN SELECT THE RIGHT ADJUSTOR CURVE %
+        //
+        // TO DO this WE PASS THE APPROPRIATE `func` either a `RunoffReduction`
+        // or `StormwaterTreatment`
+        //
+
+        var self = this,
+            _thisReport = (_report) ? _report : null,
+            prePlannedReduction = self.prePlannedNitrogenLoad(imperviousArea, drainageArea, loadData),
+            plannedAdjustorCurve = self[func](_thisReport);
+
+        return (prePlannedReduction*plannedAdjustorCurve);
+      },
+      plannedPhosphorusReduction: function(imperviousArea, drainageArea, loadData, func, _report) {
+
+        //
+        // NEED TO KNOW IF THE PROJECT IS `RUNOFF REDUCTION` or `STROMWATER
+        // TREATMENT` SO THAT WE CAN SELECT THE RIGHT ADJUSTOR CURVE %
+        //
+
+        var self = this,
+            _thisReport = (_report) ? _report : null,
+            prePlannedReduction = self.prePlannedPhosphorusLoad(imperviousArea, drainageArea, loadData),
+            plannedAdjustorCurve = self[func](_thisReport);
+
+        return (prePlannedReduction*plannedAdjustorCurve);
+      },
+      plannedSedimentReduction: function(imperviousArea, drainageArea, loadData, func, _report) {
+
+        //
+        // NEED TO KNOW IF THE PROJECT IS `RUNOFF REDUCTION` or `STROMWATER
+        // TREATMENT` SO THAT WE CAN SELECT THE RIGHT ADJUSTOR CURVE %
+        //
+
+        var self = this,
+            _thisReport = (_report) ? _report : null,
+            prePlannedReduction = self.prePlannedSedimentLoad(imperviousArea, drainageArea, loadData),
+            plannedAdjustorCurve = self[func](_thisReport);
+
+        return (prePlannedReduction*plannedAdjustorCurve);
+      },
+      metricTotalPracticeArea: function(_report) {
+        return _report.properties.practice_1_extent+_report.properties.practice_2_extent+_report.properties.practice_3_extent+_report.properties.practice_4_extent;
+      },
+      metricTotalAcresProtected: function(_report) {
+        return (_report.properties.total_drainage_area/43560)
+      },
+      gallonsPerYearStormwaterDetainedFiltration: function(_report) {
+        return (_report.properties.runoff_volume_captured*325851.4)
+      },
+      runoffDepthTreated: function(_report) {
+        return (_report.properties.runoff_volume_captured*12)/(_report.properties.impervious_area/43560)
+      }
     };
 
   });
@@ -12820,7 +12993,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('StormwaterReportController', function (Account, Calculate, CalculateStormwater, Efficiency, LoadData, $location, $log, Notifications, practice, PracticeStormwater, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
+    .controller('StormwaterReportController', function (Account, Calculate, CalculateStormwater, Efficiency, LoadData, $location, $log, Notifications, practice, PracticeStormwater, $q, readings, $rootScope, $route, site, $scope, UALStateLoad, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -12903,6 +13076,42 @@ angular.module('FieldDoc')
             }
           ];
 
+
+          //
+          // After we have returned the Site.$promise we can look up our Site
+          // specific load data
+          //
+          if (self.site.properties.state) {
+            UALStateLoad.query({
+              q: {
+                filters: [
+                  {
+                    name: 'state',
+                    op: 'eq',
+                    val: self.site.properties.state
+                  }
+                ]
+              }
+            }, function(successResponse) {
+
+              self.loaddata = {};
+
+              angular.forEach(successResponse.features, function(feature, $index) {
+                self.loaddata[feature.properties.developed_type] = {
+                  tn_ual: feature.properties.tn_ual,
+                  tp_ual: feature.properties.tp_ual,
+                  tss_ual: feature.properties.tss_ual
+                };
+              });
+
+            }, function(errorResponse) {
+              console.log('errorResponse', errorResponse);
+            });
+          } else {
+            console.log('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
+          }
+
+
           readings.$promise.then(function(successResponse) {
 
             self.readings = successResponse;
@@ -12912,6 +13121,14 @@ angular.module('FieldDoc')
               installation: self.calculate.getTotalReadingsByCategory('Installation', self.readings.features),
               monitoring: self.calculate.getTotalReadingsByCategory('Monitoring', self.readings.features)
             };
+
+            angular.forEach(self.readings.features, function(reading, $index) {
+              if (reading.properties.measurement_period === 'Planning') {
+                 practicePlanningData = reading;
+              }
+            });
+
+            self.calculateStormwater = CalculateStormwater
 
           }, function(errorResponse) {
 
@@ -12940,12 +13157,29 @@ angular.module('FieldDoc')
 
       self.addReading = function(measurementPeriod) {
 
-        var newReading = new PracticeStormwater({
-            'measurement_period': measurementPeriod,
-            'report_date': new Date(),
-            'practice_id': practiceId,
-            'account_id': self.site.properties.project.properties.account_id
-          });
+        if (measurementPeriod === "Planning") {
+          var newReading = new PracticeStormwater({
+              'measurement_period': measurementPeriod,
+              'report_date': new Date(),
+              'practice_id': practiceId,
+              'account_id': self.site.properties.project.properties.account_id
+            });
+        }
+        else {
+          var newReading = new PracticeStormwater({
+              'measurement_period': measurementPeriod,
+              'report_date': new Date(),
+              'practice_id': practiceId,
+              'account_id': self.site.properties.project.properties.account_id,
+              'practice_1_name': practicePlanningData.properties.practice_1_name,
+              'practice_2_name': practicePlanningData.properties.practice_2_name,
+              'practice_3_name': practicePlanningData.properties.practice_3_name,
+              'practice_4_name': practicePlanningData.properties.practice_4_name,
+              'project_type': practicePlanningData.properties.project_type,
+              'site_reduction_classification': practicePlanningData.properties.site_reduction_classification
+            });
+
+        }
 
         newReading.$save().then(function(successResponse) {
             $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
@@ -13013,29 +13247,33 @@ angular.module('FieldDoc')
           'Dec'
       ];
 
-      self.stormwater_practices = [
-        'All ESD practices in MD 2007 (RR)',
-        'Bioretention or Rain Garden (Standard or Enhanced) (RR)',
-        'Dry Channel Regenerative Stormwater Conveyance (aka Step Pool Storm Conveyance) (RR)',
-        'Dry Swale (RR)',
-        'Expanded Tree Pits (RR)',
-        'Grass Channels (w/ Soil Amendments, aka Bioswale, Vegetated Swale) (RR)',
-        'Green Roof (aka Vegetated Roof) (RR)',
-        'Green Streets (RR)',
-        'Infiltration (aka Infiltration Basin, Infiltration Bed, Infiltration Trench, Dry Well/Seepage Pit, Landscape Infiltration) (RR)',
-        'Landscape Restoration/Reforestation (RR)',
-        'Non-Structural BMPs, PA 2006 BMP Manual, Chapter 5 (RR)',
-        'Permeable Pavement (aka Porous Pavement) (RR)',
-        'Rainwater Harvesting (aka Capture and Re-use) (RR)',
-        'Riparian Buffer Restoration (RR)',
-        'Rooftop Disconnection (aka Simple Disconnection to Amended Soils, to a Conservation Area, to a Pervious Area, Non-Rooftop Disconnection) (RR)',
-        'Sheetflow to Filter/Open Space* (aka Sheetflow to Conservation Area, Vegetated Filter Strip) (RR)',
-        'Constructed Wetlands (ST)',
-        'Filtering Practices (aka Constructed Filters, Sand Filters, Stormwater Filtering Systems) (ST)',
-        'Proprietary Practices (aka Manufactured BMPs) (ST)',
-        'Wet Ponds (aka Retention Basin) (ST)',
-        'Wet Swale (ST)'
-      ];
+      self.stormwater_practices = {
+        'Runoff Reduction': [
+          'All ESD practices in MD 2007',
+          'Bioretention or Rain Garden (Standard or Enhanced)',
+          'Dry Channel Regenerative Stormwater Conveyance (aka Step Pool Storm Conveyance)',
+          'Dry Swale',
+          'Expanded Tree Pits',
+          'Grass Channels (w/ Soil Amendments, aka Bioswale, Vegetated Swale)',
+          'Green Roof (aka Vegetated Roof)',
+          'Green Streets',
+          'Infiltration (aka Infiltration Basin, Infiltration Bed, Infiltration Trench, Dry Well/Seepage Pit, Landscape Infiltration)',
+          'Landscape Restoration/Reforestation',
+          'Non-Structural BMPs, PA 2006 BMP Manual, Chapter 5',
+          'Permeable Pavement (aka Porous Pavement)',
+          'Rainwater Harvesting (aka Capture and Re-use)',
+          'Riparian Buffer Restoration',
+          'Rooftop Disconnection (aka Simple Disconnection to Amended Soils, to a Conservation Area, to a Pervious Area, Non-Rooftop Disconnection)',
+          'Sheetflow to Filter/Open Space* (aka Sheetflow to Conservation Area, Vegetated Filter Strip)'
+        ],
+        'Stormwater Treatment': [
+          'Constructed Wetlands',
+          'Filtering Practices (aka Constructed Filters, Sand Filters, Stormwater Filtering Systems)',
+          'Proprietary Practices (aka Manufactured BMPs)',
+          'Wet Ponds (aka Retention Basin)',
+          'Wet Swale'
+        ]
+      };
 
       self.stormwater_project_types = [
         'New Development',
