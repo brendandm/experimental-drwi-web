@@ -76,7 +76,7 @@
                 </tr>
 
                 <tr>
-                  <th>Impervious area (sq. ft.)</th>
+                  <th>Impervious Area (sq. ft.)</th>
                   <th>&nbsp;</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
                     {{ report.properties.impervious_area | number:2 }}
@@ -88,7 +88,7 @@
                   <td>--</td>
                 </tr>
                 <tr>
-                  <th>Total drainage area (sq. ft.)</th>
+                  <th>Total Drainage Area (sq. ft.)</th>
                   <th>&nbsp;</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
                     {{ report.properties.total_drainage_area | number:2 }}
@@ -100,13 +100,25 @@
                   <td>--</td>
                 </tr>
                 <tr>
-                  <th>Runoff Volume captured (acre-ft.)</th>
+                  <th>Runoff Volume Captured (acre-ft.)</th>
                   <th>&nbsp;</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
                     --
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
                     {{ report.properties.runoff_volume_captured | number:2 }}
+                  </td>
+                  <td>--</td>
+                  <td>--</td>
+                </tr>
+                <tr>
+                  <th>Runoff Depth Treated (in.)</th>
+                  <th>&nbsp;</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
+                    1.00
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
+                    {{ page.calculateStormwater.runoffDepthTreated(report) || 0 | number:3 }}
                   </td>
                   <td>--</td>
                   <td>--</td>
@@ -136,14 +148,19 @@
                   <td>&nbsp;</td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
                     <span data-ng-if="report.properties.site_reduction_classification === 'Runoff Reduction' && page.loaddata">
-                      {{ page.calculateStormwater.plannedRunoffReductionAdjustorCurveNitrogen(report.properties.impervious_area, report.properties.total_drainage_area, page.loaddata) || 0 | number:2 }}
+                      {{ page.calculateStormwater.plannedRunoffReductionAdjustorCurveNitrogen()*100 || 0 | number:2 }}%
                     </span>
                     <span data-ng-if="report.properties.site_reduction_classification === 'Stormwater Treatment' && page.loaddata">
-                      {{ page.calculateStormwater.plannedStormwaterTreatmentAdjustorCurveNitrogen(report.properties.impervious_area, report.properties.total_drainage_area, page.loaddata) || 0 | number:2 }}
+                      {{ page.calculateStormwater.plannedStormwaterTreatmentAdjustorCurveNitrogen()*100 || 0 | number:2 }}%
                     </span>
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
-                    --
+                    <span data-ng-if="report.properties.site_reduction_classification === 'Runoff Reduction' && page.loaddata">
+                      {{ page.calculateStormwater.plannedRunoffReductionAdjustorCurveNitrogen(report)*100 || 0 | number:2 }}%
+                    </span>
+                    <span data-ng-if="report.properties.site_reduction_classification === 'Stormwater Treatment' && page.loaddata">
+                      {{ page.calculateStormwater.plannedStormwaterTreatmentAdjustorCurveNitrogen(report)*100 || 0 | number:2 }}%
+                    </span>
                   </td>
                   <td>--</td>
                   <td>--</td>
@@ -154,14 +171,19 @@
                   <td>&nbsp;</td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
                     <span data-ng-if="report.properties.site_reduction_classification === 'Runoff Reduction' && page.loaddata">
-                      {{ page.calculateStormwater.plannedRunoffReductionAdjustorCurvePhosphorus(report.properties.impervious_area, report.properties.total_drainage_area, page.loaddata) || 0 | number:2 }}
+                      {{ page.calculateStormwater.plannedRunoffReductionAdjustorCurvePhosphorus()*100 || 0 | number:2 }}%
                     </span>
                     <span data-ng-if="report.properties.site_reduction_classification === 'Stormwater Treatment' && page.loaddata">
-                      {{ page.calculateStormwater.plannedStormwaterTreatmentAdjustorCurvePhosphorus(report.properties.impervious_area, report.properties.total_drainage_area, page.loaddata) || 0 | number:2 }}
+                      {{ page.calculateStormwater.plannedStormwaterTreatmentAdjustorCurvePhosphorus()*100 || 0 | number:2 }}%
                     </span>
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
-                    --
+                    <span data-ng-if="report.properties.site_reduction_classification === 'Runoff Reduction' && page.loaddata">
+                      {{ page.calculateStormwater.plannedRunoffReductionAdjustorCurvePhosphorus(report)*100 || 0 | number:2 }}%
+                    </span>
+                    <span data-ng-if="report.properties.site_reduction_classification === 'Stormwater Treatment' && page.loaddata">
+                      {{ page.calculateStormwater.plannedStormwaterTreatmentAdjustorCurvePhosphorus(report)*100 || 0 | number:2 }}%
+                    </span>
                   </td>
                   <td>--</td>
                   <td>--</td>
@@ -172,14 +194,19 @@
                   <td>&nbsp;</td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
                     <span data-ng-if="report.properties.site_reduction_classification === 'Runoff Reduction' && page.loaddata">
-                      {{ page.calculateStormwater.plannedRunoffReductionAdjustorCurveSediment(report.properties.impervious_area, report.properties.total_drainage_area, page.loaddata) || 0 | number:2 }}
+                      {{ page.calculateStormwater.plannedRunoffReductionAdjustorCurveSediment()*100 || 0 | number:2 }}%
                     </span>
                     <span data-ng-if="report.properties.site_reduction_classification === 'Stormwater Treatment' && page.loaddata">
-                      {{ page.calculateStormwater.plannedStormwaterTreatmentAdjustorCurveSediment(report.properties.impervious_area, report.properties.total_drainage_area, page.loaddata) || 0 | number:2 }}
+                      {{ page.calculateStormwater.plannedStormwaterTreatmentAdjustorCurveSediment()*100 || 0 | number:2 }}%
                     </span>
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
-                    --
+                    <span data-ng-if="report.properties.site_reduction_classification === 'Runoff Reduction' && page.loaddata">
+                      {{ page.calculateStormwater.plannedRunoffReductionAdjustorCurveSediment(report)*100 || 0 | number:2 }}%
+                    </span>
+                    <span data-ng-if="report.properties.site_reduction_classification === 'Stormwater Treatment' && page.loaddata">
+                      {{ page.calculateStormwater.plannedStormwaterTreatmentAdjustorCurveSediment(report)*100 || 0 | number:2 }}%
+                    </span>
                   </td>
                   <td>--</td>
                   <td>--</td>
@@ -215,7 +242,12 @@
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
-
+                      <span data-ng-if="report.properties.site_reduction_classification === 'Runoff Reduction' && page.loaddata">
+                        {{ page.calculateStormwater.plannedNitrogenReduction(report.properties.impervious_area, report.properties.total_drainage_area, page.loaddata, 'plannedRunoffReductionAdjustorCurveNitrogen') || 0 | number:2 }}
+                      </span>
+                      <span data-ng-if="report.properties.site_reduction_classification === 'Stormwater Treatment' && page.loaddata">
+                        {{ page.calculateStormwater.plannedNitrogenReduction(report.properties.impervious_area, report.properties.total_drainage_area, page.loaddata, 'plannedRunoffReductionAdjustorCurveNitrogen') || 0 | number:2 }}
+                      </span>
                   </td>
                   <td>
                     <strong data-ng-if="page.CalculateStormwater.ual['nitrogen']"
@@ -239,12 +271,11 @@
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
-                      <span data-ng-if="report.properties.custom_model_phosphorus === null">
-                        {{ report.properties.custom_practice_extent_acres*page.CalculateStormwater.ual["phosphorus"]*(report.properties.generic_agriculture_efficiency.properties.p_efficiency/100) || 0 | number:2 }}
+                      <span data-ng-if="report.properties.site_reduction_classification === 'Runoff Reduction' && page.loaddata">
+                        {{ page.calculateStormwater.plannedPhosphorusReduction(report.properties.impervious_area, report.properties.total_drainage_area, page.loaddata, 'plannedRunoffReductionAdjustorCurveNitrogen') || 0 | number:2 }}
                       </span>
-
-                      <span data-ng-if="report.properties.custom_model_phosphorus !== null">
-                        {{ report.properties.custom_practice_extent_acres*page.CalculateStormwater.ual["phosphorus"]*(report.properties.custom_model_phosphorus/100) || 0 | number:2 }}
+                      <span data-ng-if="report.properties.site_reduction_classification === 'Stormwater Treatment' && page.loaddata">
+                        {{ page.calculateStormwater.plannedPhosphorusReduction(report.properties.impervious_area, report.properties.total_drainage_area, page.loaddata, 'plannedRunoffReductionAdjustorCurveNitrogen') || 0 | number:2 }}
                       </span>
                   </td>
                   <td>
@@ -268,12 +299,11 @@
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.readings.features | orderBy:'properties.report_date':false">
-                      <span data-ng-if="report.properties.custom_model_phosphorus === null">
-                        {{ report.properties.custom_practice_extent_acres*page.CalculateStormwater.ual["sediment"]*(report.properties.generic_agriculture_efficiency.properties.s_efficiency/100) || 0 | number:2 }}
+                      <span data-ng-if="report.properties.site_reduction_classification === 'Runoff Reduction' && page.loaddata">
+                        {{ page.calculateStormwater.plannedSedimentReduction(report.properties.impervious_area, report.properties.total_drainage_area, page.loaddata, 'plannedRunoffReductionAdjustorCurveNitrogen') || 0 | number:2 }}
                       </span>
-
-                      <span data-ng-if="report.properties.custom_model_phosphorus !== null">
-                        {{ report.properties.custom_practice_extent_acres*page.CalculateStormwater.ual["sediment"]*(report.properties.custom_model_sediment/100) || 0 | number:2 }}
+                      <span data-ng-if="report.properties.site_reduction_classification === 'Stormwater Treatment' && page.loaddata">
+                        {{ page.calculateStormwater.plannedSedimentReduction(report.properties.impervious_area, report.properties.total_drainage_area, page.loaddata, 'plannedRunoffReductionAdjustorCurveNitrogen') || 0 | number:2 }}
                       </span>
                   </td>
                   <td>

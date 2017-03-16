@@ -12,10 +12,16 @@ angular.module('FieldDoc')
     return {
       readings: null,
       loadData: null,
-      plannedRunoffReductionAdjustorCurveNitrogen: function(format) {
+      plannedRunoffReductionAdjustorCurveNitrogen: function(_report, format) {
 
-        var depthTreated = 1.0,
-            first = 0.0308*Math.pow(depthTreated, 5),
+        var self = this,
+            depthTreated = 1.0;
+
+        if (_report) {
+          depthTreated = self.runoffDepthTreated(_report)
+        }
+
+        var first = 0.0308*Math.pow(depthTreated, 5),
             second = 0.2562*Math.pow(depthTreated, 4),
             third = 0.8634*Math.pow(depthTreated, 3),
             fourth = 1.5285*Math.pow(depthTreated, 2),
@@ -24,10 +30,16 @@ angular.module('FieldDoc')
 
         return (format === '%') ? reduction*100 : reduction;
       },
-      plannedRunoffReductionAdjustorCurvePhosphorus: function(format) {
+      plannedRunoffReductionAdjustorCurvePhosphorus: function(_report, format) {
 
-        var depthTreated = 1.0,
-            first = 0.0304*Math.pow(depthTreated, 5),
+        var self = this,
+            depthTreated = 1.0;
+
+        if (_report) {
+          depthTreated = self.runoffDepthTreated(_report)
+        }
+
+        var first = 0.0304*Math.pow(depthTreated, 5),
             second = 0.2619*Math.pow(depthTreated, 4),
             third = 0.9161*Math.pow(depthTreated, 3),
             fourth = 1.6837*Math.pow(depthTreated, 2),
@@ -36,10 +48,16 @@ angular.module('FieldDoc')
 
         return (format === '%') ? reduction*100 : reduction;
       },
-      plannedRunoffReductionAdjustorCurveSediment: function(format) {
+      plannedRunoffReductionAdjustorCurveSediment: function(_report, format) {
 
-        var depthTreated = 1.0,
-            first = 0.0326*Math.pow(depthTreated, 5),
+        var self = this,
+            depthTreated = 1.0;
+
+        if (_report) {
+          depthTreated = self.runoffDepthTreated(_report)
+        }
+
+        var first = 0.0326*Math.pow(depthTreated, 5),
             second = 0.2806*Math.pow(depthTreated, 4),
             third = 0.9816*Math.pow(depthTreated, 3),
             fourth = 1.8039*Math.pow(depthTreated, 2),
@@ -48,10 +66,16 @@ angular.module('FieldDoc')
 
         return (format === '%') ? reduction*100 : reduction;
       },
-      plannedStormwaterTreatmentAdjustorCurveNitrogen: function(format) {
+      plannedStormwaterTreatmentAdjustorCurveNitrogen: function(_report, format) {
 
-        var depthTreated = 1.0,
-            first = 0.0152*Math.pow(depthTreated, 5),
+        var self = this,
+            depthTreated = 1.0;
+
+        if (_report) {
+          depthTreated = self.runoffDepthTreated(_report)
+        }
+
+        var first = 0.0152*Math.pow(depthTreated, 5),
             second = 0.131*Math.pow(depthTreated, 4),
             third = 0.4581*Math.pow(depthTreated, 3),
             fourth = 0.8418*Math.pow(depthTreated, 2),
@@ -60,10 +84,16 @@ angular.module('FieldDoc')
 
         return (format === '%') ? reduction*100 : reduction;
       },
-      plannedStormwaterTreatmentAdjustorCurvePhosphorus: function(format) {
+      plannedStormwaterTreatmentAdjustorCurvePhosphorus: function(_report, format) {
 
-        var depthTreated = 1.0,
-            first = 0.0239*Math.pow(depthTreated, 5),
+        var self = this,
+            depthTreated = 1.0;
+
+        if (_report) {
+          depthTreated = self.runoffDepthTreated(_report)
+        }
+
+        var first = 0.0239*Math.pow(depthTreated, 5),
             second = 0.2058*Math.pow(depthTreated, 4),
             third = 0.7198*Math.pow(depthTreated, 3),
             fourth = 1.3229*Math.pow(depthTreated, 2),
@@ -72,10 +102,16 @@ angular.module('FieldDoc')
 
         return (format === '%') ? reduction*100 : reduction;
       },
-      plannedStormwaterTreatmentAdjustorCurveSediment: function(format) {
+      plannedStormwaterTreatmentAdjustorCurveSediment: function(_report, format) {
 
-        var depthTreated = 1.0,
-            first = 0.0304*Math.pow(depthTreated, 5),
+        var self = this,
+            depthTreated = 1.0;
+
+        if (_report) {
+          depthTreated = self.runoffDepthTreated(_report)
+        }
+
+        var first = 0.0304*Math.pow(depthTreated, 5),
             second = 0.2619*Math.pow(depthTreated, 4),
             third = 0.9161*Math.pow(depthTreated, 3),
             fourth = 1.6837*Math.pow(depthTreated, 2),
@@ -93,33 +129,24 @@ angular.module('FieldDoc')
       prePlannedSedimentLoad: function(imperviousArea, drainageArea, loadData) {
         return ((imperviousArea*loadData.impervious.tss_ual) + (drainageArea-imperviousArea) * (loadData.pervious.tss_ual))/43560;
       },
-      plannedNitrogenReduction: function(imperviousArea, drainageArea, loadData, func) {
+      plannedNitrogenReduction: function(imperviousArea, drainageArea, loadData, func, _report) {
 
         //
         // NEED TO KNOW IF THE PROJECT IS `RUNOFF REDUCTION` or `STROMWATER
         // TREATMENT` SO THAT WE CAN SELECT THE RIGHT ADJUSTOR CURVE %
         //
-
-        var self = this,
-            prePlannedReductionNitrogen = self.prePlannedNitrogenLoad(imperviousArea, drainageArea, loadData),
-            plannedAdjustorCurveNitrogen = self[func](); // @TODO Come back to this and fill in the dynamic adjustor curve value
-
-        return (prePlannedReductionNitrogen*plannedAdjustorCurveNitrogen);
-      },
-      plannedPhosphorusReduction: function(imperviousArea, drainageArea, loadData, func) {
-
-        //
-        // NEED TO KNOW IF THE PROJECT IS `RUNOFF REDUCTION` or `STROMWATER
-        // TREATMENT` SO THAT WE CAN SELECT THE RIGHT ADJUSTOR CURVE %
+        // TO DO this WE PASS THE APPROPRIATE `func` either a `RunoffReduction`
+        // or `StormwaterTreatment`
         //
 
         var self = this,
-            prePlannedReduction = self.prePlannedPhosphorusLoad(imperviousArea, drainageArea, loadData),
-            plannedAdjustorCurve = self[func](); // @TODO Come back to this and fill in the dynamic adjustor curve value
+            _thisReport = (_report) ? _report : null,
+            prePlannedReduction = self.prePlannedNitrogenLoad(imperviousArea, drainageArea, loadData),
+            plannedAdjustorCurve = self[func](_thisReport);
 
         return (prePlannedReduction*plannedAdjustorCurve);
       },
-      plannedSedimentReduction: function(imperviousArea, drainageArea, loadData, func) {
+      plannedPhosphorusReduction: function(imperviousArea, drainageArea, loadData, func, _report) {
 
         //
         // NEED TO KNOW IF THE PROJECT IS `RUNOFF REDUCTION` or `STROMWATER
@@ -127,8 +154,23 @@ angular.module('FieldDoc')
         //
 
         var self = this,
+            _thisReport = (_report) ? _report : null,
+            prePlannedReduction = self.prePlannedPhosphorusLoad(imperviousArea, drainageArea, loadData),
+            plannedAdjustorCurve = self[func](_thisReport);
+
+        return (prePlannedReduction*plannedAdjustorCurve);
+      },
+      plannedSedimentReduction: function(imperviousArea, drainageArea, loadData, func, _report) {
+
+        //
+        // NEED TO KNOW IF THE PROJECT IS `RUNOFF REDUCTION` or `STROMWATER
+        // TREATMENT` SO THAT WE CAN SELECT THE RIGHT ADJUSTOR CURVE %
+        //
+
+        var self = this,
+            _thisReport = (_report) ? _report : null,
             prePlannedReduction = self.prePlannedSedimentLoad(imperviousArea, drainageArea, loadData),
-            plannedAdjustorCurve = self[func](); // @TODO Come back to this and fill in the dynamic adjustor curve value
+            plannedAdjustorCurve = self[func](_thisReport);
 
         return (prePlannedReduction*plannedAdjustorCurve);
       },
@@ -137,6 +179,9 @@ angular.module('FieldDoc')
       },
       metricTotalAcresProtected: function(_report) {
         return (_report.properties.total_drainage_area/43560)
+      },
+      runoffDepthTreated: function(_report) {
+        return (_report.properties.runoff_volume_captured*12)/(_report.properties.impervious_area/43560)
       }
     };
 
