@@ -180,6 +180,9 @@ angular.module('FieldDoc')
       metricTotalAcresProtected: function(_report) {
         return (_report.properties.total_drainage_area/43560)
       },
+      gallonsPerYearStormwaterDetainedFiltration: function(_report) {
+        return (_report.properties.runoff_volume_captured*325851.4)
+      },
       runoffDepthTreated: function(_report) {
         return (_report.properties.runoff_volume_captured*12)/(_report.properties.impervious_area/43560)
       }
