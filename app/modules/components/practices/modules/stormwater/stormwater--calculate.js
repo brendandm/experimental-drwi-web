@@ -185,6 +185,259 @@ angular.module('FieldDoc')
       },
       runoffDepthTreated: function(_report) {
         return (_report.properties.runoff_volume_captured*12)/(_report.properties.impervious_area/43560)
+      },
+      quantityInstalled: function(values, field, format) {
+
+        var planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          if (reading.properties.measurement_period === 'Planning') {
+            planned_total += reading.properties[field];
+          } else if (reading.properties.measurement_period === 'Installation') {
+            installed_total += reading.properties[field];
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (planned_total >= 1) {
+          if (format === '%') {
+            percentage = (installed_total/planned_total);
+            return (percentage*100);
+          } else {
+            return installed_total;
+          }
+        }
+
+        return 0;
+      },
+      quantityNitrogenReducedToDate: function(values, loaddata, format) {
+
+        var self = this,
+            planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          var _adjustor;
+
+          if (reading.properties.site_reduction_classification === 'Runoff Reduction') {
+            _adjustor = 'plannedRunoffReductionAdjustorCurveNitrogen';
+          }
+          else {
+            _adjustor = 'plannedStormwaterTreatmentAdjustorCurveNitrogen';
+          }
+
+          if (reading.properties.measurement_period === 'Planning') {
+            var _reduced_nitrogen_planned = self.plannedNitrogenReduction(reading.properties.impervious_area, reading.properties.total_drainage_area, loaddata, _adjustor);
+            planned_total += _reduced_nitrogen_planned;
+          } else if (reading.properties.measurement_period === 'Installation') {
+            var _reduced_nitrogen_installed = self.plannedNitrogenReduction(reading.properties.impervious_area, reading.properties.total_drainage_area, loaddata, _adjustor, reading);
+            installed_total += _reduced_nitrogen_installed;
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (planned_total >= 1) {
+          if (format === '%') {
+            percentage = (installed_total/planned_total);
+            return (percentage*100);
+          } else {
+            return installed_total;
+          }
+        }
+
+        return 0;
+      },
+      quantityPhosphorusReducedToDate: function(values, loaddata, format) {
+
+        var self = this,
+            planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          var _adjustor;
+
+          if (reading.properties.site_reduction_classification === 'Runoff Reduction') {
+            _adjustor = 'plannedRunoffReductionAdjustorCurvePhosphorus';
+          }
+          else {
+            _adjustor = 'plannedStormwaterTreatmentAdjustorCurvePhosphorus';
+          }
+          if (reading.properties.measurement_period === 'Planning') {
+            var _reduced_planned   = self.plannedPhosphorusReduction(reading.properties.impervious_area, reading.properties.total_drainage_area, loaddata, _adjustor);
+            planned_total += _reduced_planned;
+          } else if (reading.properties.measurement_period === 'Installation') {
+            var _reduced_installed = self.plannedPhosphorusReduction(reading.properties.impervious_area, reading.properties.total_drainage_area, loaddata, _adjustor, reading);
+            installed_total += _reduced_installed;
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (planned_total !== 0) {
+          if (format === '%') {
+            percentage = (installed_total/planned_total);
+            return (percentage*100);
+          } else {
+            return installed_total;
+          }
+        }
+
+        return 0;
+      },
+      quantitySedimentReducedToDate: function(values, loaddata, format) {
+
+        var self = this,
+            planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          var _adjustor;
+
+          if (reading.properties.site_reduction_classification === 'Runoff Reduction') {
+            _adjustor = 'plannedRunoffReductionAdjustorCurveSediment';
+          }
+          else {
+            _adjustor = 'plannedStormwaterTreatmentAdjustorCurveSediment';
+          }
+
+          if (reading.properties.measurement_period === 'Planning') {
+            var _reduced_planned = self.plannedSedimentReduction(reading.properties.impervious_area, reading.properties.total_drainage_area, loaddata, _adjustor);
+            planned_total += _reduced_planned;
+          } else if (reading.properties.measurement_period === 'Installation') {
+            var _reduced_installed = self.plannedSedimentReduction(reading.properties.impervious_area, reading.properties.total_drainage_area, loaddata, _adjustor, reading);
+            installed_total += _reduced_installed;
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (planned_total !== 0) {
+          if (format === '%') {
+            percentage = (installed_total/planned_total);
+            return (percentage*100);
+          } else {
+            return installed_total;
+          }
+        }
+
+        return 0;
+      },
+      gallonsPerYearStormwaterDetainedFiltrationInstalled: function(values, format) {
+
+        var self = this,
+            planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          if (reading.properties.measurement_period === 'Planning') {
+            var _reduced_planned = self.gallonsPerYearStormwaterDetainedFiltration(reading)
+            planned_total += _reduced_planned;
+          } else if (reading.properties.measurement_period === 'Installation') {
+            var _reduced_installed = self.gallonsPerYearStormwaterDetainedFiltration(reading)
+            installed_total += _reduced_installed;
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (format === '%') {
+          if (planned_total) {
+            percentage = (installed_total/planned_total);
+            return (percentage*100) > 100 ? 100 : (percentage*100);
+          } else if (planned_total < installed_total) {
+            return 100;
+          }
+          return 0;
+        } else {
+          return installed_total;
+        }
+
+        return 0;
+      },
+      metricInstalledAcresProtected: function(values, format) {
+
+        var self = this,
+            planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          if (reading.properties.measurement_period === 'Planning') {
+            var _reduced_planned = self.metricTotalAcresProtected(reading)
+            planned_total += _reduced_planned;
+          } else if (reading.properties.measurement_period === 'Installation') {
+            var _reduced_installed = self.metricTotalAcresProtected(reading)
+            installed_total += _reduced_installed;
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (format === '%') {
+          if (planned_total) {
+            percentage = (installed_total/planned_total);
+            return (percentage*100) > 100 ? 100 : (percentage*100);
+          }
+          return 0;
+        } else {
+          return installed_total;
+        }
+
+        return 0;
+      },
+      metricInstalledPracticeArea: function(values, format) {
+
+        var self = this,
+            planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          if (reading.properties.measurement_period === 'Planning') {
+            var _reduced_planned = self.metricTotalAcresProtected(reading)
+            planned_total += _reduced_planned;
+          } else if (reading.properties.measurement_period === 'Installation') {
+            var _reduced_installed = self.metricTotalAcresProtected(reading)
+            installed_total += _reduced_installed;
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (format === '%') {
+          if (planned_total) {
+            percentage = (installed_total/planned_total);
+            return (percentage*100) > 100 ? 100 : (percentage*100);
+          }
+          return 0;
+        } else {
+          return installed_total;
+        }
+
+        return 0;
+
       }
     };
 
