@@ -416,10 +416,10 @@ angular.module('FieldDoc')
         angular.forEach(values, function(reading, $index) {
 
           if (reading.properties.measurement_period === 'Planning') {
-            var _reduced_planned = self.metricTotalAcresProtected(reading)
+            var _reduced_planned = self.metricTotalPracticeArea(reading)
             planned_total += _reduced_planned;
           } else if (reading.properties.measurement_period === 'Installation') {
-            var _reduced_installed = self.metricTotalAcresProtected(reading)
+            var _reduced_installed = self.metricTotalPracticeArea(reading)
             installed_total += _reduced_installed;
           }
 
