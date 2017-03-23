@@ -47,7 +47,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
- .constant('environment', {name:'staging',apiUrl:'http://stg.api.fielddoc.org',siteUrl:'http://stg.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+.constant('environment', {name:'staging',apiUrl:'http://stg.api.fielddoc.org',siteUrl:'http://stg.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
 /**
@@ -997,7 +997,7 @@ angular.module('FieldDoc')
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateAgricultureGeneric, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateWetlandsNonTidal, CalculateUrbanHomeowner, LoadData, Notifications, $rootScope, Project, $route, $scope, $location, mapbox, project, Site, UALStateLoad, user, $window) {
+  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateAgricultureGeneric, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateStormwater, CalculateWetlandsNonTidal, CalculateUrbanHomeowner, LoadData, Notifications, $rootScope, Project, $route, $scope, $location, mapbox, project, Site, UALStateLoad, user, $window) {
 
     var self = this;
 
@@ -1153,6 +1153,20 @@ angular.module('FieldDoc')
         },
         'metric_23': {
           label: 'Acres of Practice Installed',
+          installed: 0,
+          total: 0,
+          chart: 0,
+          units: 'acres'
+        },
+        'metric_24': {
+          label: 'Acres protected by BMPs to reduce stormwater runoff	',
+          installed: 0,
+          total: 0,
+          chart: 0,
+          units: 'acres'
+        },
+        'metric_25': {
+          label: 'Acres of stormwater BMPs installed',
           installed: 0,
           total: 0,
           chart: 0,
@@ -1362,6 +1376,8 @@ angular.module('FieldDoc')
           var _self = this;
 
           angular.forEach(_thesePractices, function(_practice, _practiceIndex){
+
+            console.log('_practice.properties.practice_type', _practice.properties.practice_type)
 
             switch(_practice.properties.practice_type) {
               case "Agriculture Generic":
@@ -1999,6 +2015,63 @@ angular.module('FieldDoc')
                 self.rollups.metrics.metric_15.chart = (self.rollups.metrics.metric_15.installed/self.rollups.metrics.metric_15.total)*100;
 
                 break;
+              case "Stormwater":
+                var _calculate = CalculateStormwater;
+                var _readings = _practice.properties.readings_stormwater;
+
+                // URBAN HOMEOWNER: CHESAPEAKE BAY METRICS
+                //
+                // 1. Number of Trees Planted
+                // 2. Square Feet of Impervious Surface Removed
+                // 3. Gallons/Year of Stormwater Detained or Infiltrated
+                // 4. Areas of Protected by BMP's to Reduce Stormwater Runoff
+                //
+                //
+                angular.forEach(_readings, function(_reading, _readingIndex){
+                    if (_reading.properties.measurement_period === 'Planning') {
+                      self.rollups.metrics.metric_1.total += _calculate.gallonsPerYearStormwaterDetainedFiltrationInstalled(_readings)
+                      self.rollups.metrics.metric_23.total += _calculate.metricTotalAcresProtected(_reading)
+                      self.rollups.metrics.metric_24.total += _calculate.metricTotalPracticeArea(_reading)
+
+                      // Stormwater Management: LOAD REDUCTIONS
+                      //
+                      if (_reading.properties.site_reduction_classification === 'Runoff Reduction') {
+                        self.rollups.nitrogen.total += _calculate.plannedNitrogenReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurveNitrogen')
+                        self.rollups.phosphorus.total += _calculate.plannedPhosphorusReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurvePhosphorus')
+                        self.rollups.sediment.total += _calculate.plannedSedimentReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurveSediment')
+                      }
+                      else {
+                        self.rollups.nitrogen.total += _calculate.plannedNitrogenReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedStormwaterTreatmentAdjustorCurveNitrogen')
+                        self.rollups.phosphorus.total += _calculate.plannedPhosphorusReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurvePhosphorus')
+                        self.rollups.sediment.total += _calculate.plannedSedimentReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurveSediment')
+                      }
+
+                    } else if (_reading.properties.measurement_period === 'Installation') {
+                      self.rollups.metrics.metric_1.installed += _calculate.gallonsPerYearStormwaterDetainedFiltrationInstalled(_readings)
+                      self.rollups.metrics.metric_23.installed += _calculate.metricInstalledAcresProtected(_readings);
+                      self.rollups.metrics.metric_24.installed += _calculate.metricInstalledPracticeArea(_readings);
+
+                      // Stormwater Management: LOAD REDUCTIONS
+                      //
+                      if (_reading.properties.site_reduction_classification === 'Runoff Reduction') {
+                        self.rollups.nitrogen.installed += _calculate.plannedNitrogenReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurveNitrogen', _reading)
+                        self.rollups.phosphorus.installed += _calculate.plannedPhosphorusReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurvePhosphorus', _reading)
+                        self.rollups.sediment.installed += _calculate.plannedSedimentReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurveSediment', _reading)
+                      }
+                      else {
+                        self.rollups.nitrogen.installed += _calculate.plannedNitrogenReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedStormwaterTreatmentAdjustorCurveNitrogen', _reading)
+                        self.rollups.phosphorus.installed += _calculate.plannedPhosphorusReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurvePhosphorus', _reading)
+                        self.rollups.sediment.installed += _calculate.plannedSedimentReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurveSediment', _reading)
+                      }
+
+                    }
+                });
+
+                self.rollups.metrics.metric_1.chart = (self.rollups.metrics.metric_1.installed/self.rollups.metrics.metric_1.total)*100;
+                self.rollups.metrics.metric_23.chart = (self.rollups.metrics.metric_23.installed/self.rollups.metrics.metric_23.total)*100;
+                self.rollups.metrics.metric_24.chart = (self.rollups.metrics.metric_24.installed/self.rollups.metrics.metric_24.total)*100;
+
+                break;
               case "Urban Homeowner":
                 var _calculate = CalculateUrbanHomeowner;
                 var _readings = _practice.properties.readings_urban_homeowner;
@@ -2560,7 +2633,7 @@ angular.module('FieldDoc')
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('SiteViewCtrl', function (Account, Calculate, CalculateAgricultureGeneric, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateWetlandsNonTidal, CalculateUrbanHomeowner, leafletData, LoadData, $location, mapbox, site, Practice, practices, project, $rootScope, $route, $scope, $timeout, UALStateLoad, user) {
+  .controller('SiteViewCtrl', function (Account, Calculate, CalculateAgricultureGeneric, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateStormwater, CalculateWetlandsNonTidal, CalculateUrbanHomeowner, leafletData, LoadData, $location, mapbox, site, Practice, practices, project, $rootScope, $route, $scope, $timeout, UALStateLoad, user) {
 
     var self = this;
 
@@ -2621,6 +2694,11 @@ angular.module('FieldDoc')
           },
           shoreline_management: {
             name: "Shoreline Management",
+            installed: 0,
+            total: 0
+          },
+          stormwater: {
+            name: "Stormwater",
             installed: 0,
             total: 0
           },
@@ -2786,6 +2864,20 @@ angular.module('FieldDoc')
           total: 0,
           units: 'acres',
           chart: 0
+        },
+        'metric_24': {
+          label: 'Acres protected by BMPs to reduce stormwater runoff	',
+          installed: 0,
+          total: 0,
+          chart: 0,
+          units: 'acres'
+        },
+        'metric_25': {
+          label: 'Acres of stormwater BMPs installed',
+          installed: 0,
+          total: 0,
+          chart: 0,
+          units: 'acres'
         }
       }
     };
@@ -3898,6 +3990,101 @@ angular.module('FieldDoc')
                 self.rollups.sediment.practices.push({
                   name: 'Shoreline Management',
                   url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/shoreline-management",
+                  installed: _tempReadings.sediment.installed,
+                  total: _tempReadings.sediment.total
+                })
+
+                break;
+              case "Stormwater":
+                var _calculate = CalculateStormwater;
+                var _readings = _practice.properties.readings_stormwater;
+                var _tempReadings = {
+                  nitrogen: {
+                    installed: 0,
+                    total: 0
+                  },
+                  phosphorus: {
+                    installed: 0,
+                    total: 0
+                  },
+                  sediment: {
+                    installed: 0,
+                    total: 0
+                  }
+                };
+
+                angular.forEach(_readings, function(_reading, _readingIndex){
+                    if (_reading.properties.measurement_period === 'Planning') {
+                      self.rollups.metrics.metric_1.total += _calculate.gallonsPerYearStormwaterDetainedFiltrationInstalled(_readings)
+                      self.rollups.metrics.metric_23.total += _calculate.metricTotalAcresProtected(_reading)
+                      self.rollups.metrics.metric_24.total += _calculate.metricTotalPracticeArea(_reading)
+
+                      // Stormwater Management: LOAD REDUCTIONS
+                      //
+                      if (_reading.properties.site_reduction_classification === 'Runoff Reduction') {
+                        // SHORELINE MANAGEMENT: LOAD REDUCTIONS
+                        //
+                        _tempReadings.nitrogen.total += _calculate.plannedNitrogenReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurveNitrogen')
+                        _tempReadings.phosphorus.total += _calculate.plannedPhosphorusReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurvePhosphorus')
+                        _tempReadings.sediment.total += _calculate.plannedSedimentReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurveSediment')
+                      }
+                      else {
+                        _tempReadings.nitrogen.total += _calculate.plannedNitrogenReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedStormwaterTreatmentAdjustorCurveNitrogen')
+                        _tempReadings.phosphorus.total += _calculate.plannedPhosphorusReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurvePhosphorus')
+                        _tempReadings.sediment.total += _calculate.plannedSedimentReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurveSediment')
+                      }
+
+                    } else if (_reading.properties.measurement_period === 'Installation') {
+                      self.rollups.metrics.metric_1.installed += _calculate.gallonsPerYearStormwaterDetainedFiltrationInstalled(_readings)
+                      self.rollups.metrics.metric_23.installed += _calculate.metricInstalledAcresProtected(_readings);
+                      self.rollups.metrics.metric_24.installed += _calculate.metricInstalledPracticeArea(_readings);
+
+                      // Stormwater Management: LOAD REDUCTIONS
+                      //
+                      if (_reading.properties.site_reduction_classification === 'Runoff Reduction') {
+                        _tempReadings.nitrogen.installed += _calculate.plannedNitrogenReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurveNitrogen', _reading)
+                        _tempReadings.phosphorus.installed += _calculate.plannedPhosphorusReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurvePhosphorus', _reading)
+                        _tempReadings.sediment.installed += _calculate.plannedSedimentReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurveSediment', _reading)
+                      }
+                      else {
+                        _tempReadings.nitrogen.installed += _calculate.plannedNitrogenReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedStormwaterTreatmentAdjustorCurveNitrogen', _reading)
+                        _tempReadings.phosphorus.installed += _calculate.plannedPhosphorusReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurvePhosphorus', _reading)
+                        _tempReadings.sediment.installed += _calculate.plannedSedimentReduction(_reading.properties.impervious_area, _reading.properties.total_drainage_area, _loadData, 'plannedRunoffReductionAdjustorCurveSediment', _reading)
+                      }
+
+                    }
+                });
+
+                self.rollups.nitrogen.total += _tempReadings.nitrogen.total
+                self.rollups.phosphorus.total += _tempReadings.phosphorus.total
+                self.rollups.sediment.total += _tempReadings.sediment.total
+
+                self.rollups.nitrogen.installed += _tempReadings.nitrogen.installed
+                self.rollups.phosphorus.installed += _tempReadings.phosphorus.installed
+                self.rollups.sediment.installed += _tempReadings.sediment.installed
+
+                self.rollups.metrics.metric_1.chart = (self.rollups.metrics.metric_1.installed/self.rollups.metrics.metric_1.total)*100;
+                self.rollups.metrics.metric_23.chart = (self.rollups.metrics.metric_23.installed/self.rollups.metrics.metric_23.total)*100;
+                self.rollups.metrics.metric_24.chart = (self.rollups.metrics.metric_24.installed/self.rollups.metrics.metric_24.total)*100;
+
+                self.rollups.all.practices.stormwater.installed += _tempReadings.nitrogen.installed;
+                self.rollups.all.practices.stormwater.total += _tempReadings.nitrogen.total;
+
+                self.rollups.nitrogen.practices.push({
+                  name: 'Stormwater Management',
+                  url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/stormwater",
+                  installed: _tempReadings.nitrogen.installed,
+                  total: _tempReadings.nitrogen.total
+                })
+                self.rollups.phosphorus.practices.push({
+                  name: 'Stormwater Management',
+                  url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/stormwater",
+                  installed: _tempReadings.phosphorus.installed,
+                  total: _tempReadings.phosphorus.total
+                })
+                self.rollups.sediment.practices.push({
+                  name: 'Stormwater Management',
+                  url: "/projects/" + self.site.properties.project_id + "/sites/" + self.site.id + "/practices/" + _practice.id + "/stormwater",
                   installed: _tempReadings.sediment.installed,
                   total: _tempReadings.sediment.total
                 })
@@ -12009,7 +12196,7 @@ angular.module('FieldDoc')
           if (!data.hasOwnProperty('properties')) {
             return [];
           }
-
+          
           var multipler_1 = data.properties.installation_length_of_living_shoreline_restored,
               multipler_2 = data.properties.installation_existing_average_bank_height,
               multipler_3 = data.properties.installation_existing_shoreline_recession_rate,
@@ -12028,7 +12215,7 @@ angular.module('FieldDoc')
           if (!data.hasOwnProperty('properties')) {
             return [];
           }
-
+          
           if (data.properties.protocol_2_tn_reduction_rate) {
             this.efficiency.protocol_2_tn_reduction_rate = data.properties.protocol_2_tn_reduction_rate;
           }
@@ -12050,7 +12237,7 @@ angular.module('FieldDoc')
           if (data.properties.protocol_3_tp_reduction_rate) {
             this.efficiency.protocol_3_tp_reduction_rate = data.properties.protocol_3_tp_reduction_rate;
           }
-
+          
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
               multipler_2 = this.efficiency.protocol_3_tp_reduction_rate,
               returnValue = 0;
@@ -12068,7 +12255,7 @@ angular.module('FieldDoc')
           if (data.properties.protocol_3_tss_reduction_rate) {
             this.efficiency.protocol_3_tss_reduction_rate = data.properties.protocol_3_tss_reduction_rate;
           }
-
+          
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
               multipler_2 = this.efficiency.protocol_3_tss_reduction_rate,
               returnValue = 0;
@@ -12104,7 +12291,7 @@ angular.module('FieldDoc')
           if (data.properties.protocol_4_tp_reduction_rate) {
             this.efficiency.protocol_4_tp_reduction_rate = data.properties.protocol_4_tp_reduction_rate;
           }
-
+          
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
               multipler_2 = this.efficiency.protocol_4_tp_reduction_rate,
               returnValue = 0;
@@ -12978,6 +13165,259 @@ angular.module('FieldDoc')
       },
       runoffDepthTreated: function(_report) {
         return (_report.properties.runoff_volume_captured*12)/(_report.properties.impervious_area/43560)
+      },
+      quantityInstalled: function(values, field, format) {
+
+        var planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          if (reading.properties.measurement_period === 'Planning') {
+            planned_total += reading.properties[field];
+          } else if (reading.properties.measurement_period === 'Installation') {
+            installed_total += reading.properties[field];
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (planned_total >= 1) {
+          if (format === '%') {
+            percentage = (installed_total/planned_total);
+            return (percentage*100);
+          } else {
+            return installed_total;
+          }
+        }
+
+        return 0;
+      },
+      quantityNitrogenReducedToDate: function(values, loaddata, format) {
+
+        var self = this,
+            planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          var _adjustor;
+
+          if (reading.properties.site_reduction_classification === 'Runoff Reduction') {
+            _adjustor = 'plannedRunoffReductionAdjustorCurveNitrogen';
+          }
+          else {
+            _adjustor = 'plannedStormwaterTreatmentAdjustorCurveNitrogen';
+          }
+
+          if (reading.properties.measurement_period === 'Planning') {
+            var _reduced_nitrogen_planned = self.plannedNitrogenReduction(reading.properties.impervious_area, reading.properties.total_drainage_area, loaddata, _adjustor);
+            planned_total += _reduced_nitrogen_planned;
+          } else if (reading.properties.measurement_period === 'Installation') {
+            var _reduced_nitrogen_installed = self.plannedNitrogenReduction(reading.properties.impervious_area, reading.properties.total_drainage_area, loaddata, _adjustor, reading);
+            installed_total += _reduced_nitrogen_installed;
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (planned_total >= 1) {
+          if (format === '%') {
+            percentage = (installed_total/planned_total);
+            return (percentage*100);
+          } else {
+            return installed_total;
+          }
+        }
+
+        return 0;
+      },
+      quantityPhosphorusReducedToDate: function(values, loaddata, format) {
+
+        var self = this,
+            planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          var _adjustor;
+
+          if (reading.properties.site_reduction_classification === 'Runoff Reduction') {
+            _adjustor = 'plannedRunoffReductionAdjustorCurvePhosphorus';
+          }
+          else {
+            _adjustor = 'plannedStormwaterTreatmentAdjustorCurvePhosphorus';
+          }
+          if (reading.properties.measurement_period === 'Planning') {
+            var _reduced_planned   = self.plannedPhosphorusReduction(reading.properties.impervious_area, reading.properties.total_drainage_area, loaddata, _adjustor);
+            planned_total += _reduced_planned;
+          } else if (reading.properties.measurement_period === 'Installation') {
+            var _reduced_installed = self.plannedPhosphorusReduction(reading.properties.impervious_area, reading.properties.total_drainage_area, loaddata, _adjustor, reading);
+            installed_total += _reduced_installed;
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (planned_total !== 0) {
+          if (format === '%') {
+            percentage = (installed_total/planned_total);
+            return (percentage*100);
+          } else {
+            return installed_total;
+          }
+        }
+
+        return 0;
+      },
+      quantitySedimentReducedToDate: function(values, loaddata, format) {
+
+        var self = this,
+            planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          var _adjustor;
+
+          if (reading.properties.site_reduction_classification === 'Runoff Reduction') {
+            _adjustor = 'plannedRunoffReductionAdjustorCurveSediment';
+          }
+          else {
+            _adjustor = 'plannedStormwaterTreatmentAdjustorCurveSediment';
+          }
+
+          if (reading.properties.measurement_period === 'Planning') {
+            var _reduced_planned = self.plannedSedimentReduction(reading.properties.impervious_area, reading.properties.total_drainage_area, loaddata, _adjustor);
+            planned_total += _reduced_planned;
+          } else if (reading.properties.measurement_period === 'Installation') {
+            var _reduced_installed = self.plannedSedimentReduction(reading.properties.impervious_area, reading.properties.total_drainage_area, loaddata, _adjustor, reading);
+            installed_total += _reduced_installed;
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (planned_total !== 0) {
+          if (format === '%') {
+            percentage = (installed_total/planned_total);
+            return (percentage*100);
+          } else {
+            return installed_total;
+          }
+        }
+
+        return 0;
+      },
+      gallonsPerYearStormwaterDetainedFiltrationInstalled: function(values, format) {
+
+        var self = this,
+            planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          if (reading.properties.measurement_period === 'Planning') {
+            var _reduced_planned = self.gallonsPerYearStormwaterDetainedFiltration(reading)
+            planned_total += _reduced_planned;
+          } else if (reading.properties.measurement_period === 'Installation') {
+            var _reduced_installed = self.gallonsPerYearStormwaterDetainedFiltration(reading)
+            installed_total += _reduced_installed;
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (format === '%') {
+          if (planned_total) {
+            percentage = (installed_total/planned_total);
+            return (percentage*100) > 100 ? 100 : (percentage*100);
+          } else if (planned_total < installed_total) {
+            return 100;
+          }
+          return 0;
+        } else {
+          return installed_total;
+        }
+
+        return 0;
+      },
+      metricInstalledAcresProtected: function(values, format) {
+
+        var self = this,
+            planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          if (reading.properties.measurement_period === 'Planning') {
+            var _reduced_planned = self.metricTotalAcresProtected(reading)
+            planned_total += _reduced_planned;
+          } else if (reading.properties.measurement_period === 'Installation') {
+            var _reduced_installed = self.metricTotalAcresProtected(reading)
+            installed_total += _reduced_installed;
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (format === '%') {
+          if (planned_total) {
+            percentage = (installed_total/planned_total);
+            return (percentage*100) > 100 ? 100 : (percentage*100);
+          }
+          return 0;
+        } else {
+          return installed_total;
+        }
+
+        return 0;
+      },
+      metricInstalledPracticeArea: function(values, format) {
+
+        var self = this,
+            planned_total = 0,
+            installed_total = 0,
+            percentage = 0;
+
+        // Get readings organized by their Type
+        angular.forEach(values, function(reading, $index) {
+
+          if (reading.properties.measurement_period === 'Planning') {
+            var _reduced_planned = self.metricTotalPracticeArea(reading)
+            planned_total += _reduced_planned;
+          } else if (reading.properties.measurement_period === 'Installation') {
+            var _reduced_installed = self.metricTotalPracticeArea(reading)
+            installed_total += _reduced_installed;
+          }
+
+        });
+
+        // Divide the Installed Total by the Planned Total to get a percentage of installed
+        if (format === '%') {
+          if (planned_total) {
+            percentage = (installed_total/planned_total);
+            return (percentage*100) > 100 ? 100 : (percentage*100);
+          }
+          return 0;
+        } else {
+          return installed_total;
+        }
+
+        return 0;
+
       }
     };
 
@@ -13457,7 +13897,7 @@ angular.module('FieldDoc')
  * @ngdoc service
  * @name FieldDoc.GeometryService
  * @description
- *
+ *   
  */
 angular.module('FieldDoc')
   .service('commonsGeometry', ['$http', 'commonscloud', 'leafletData', function Navigation($http, commonscloud, leafletData) {
@@ -13634,7 +14074,7 @@ angular.module('FieldDoc')
         }
       },
       center: {
-        lng: -76.534,
+        lng: -76.534, 
         lat: 39.134,
         zoom: 11
       },
@@ -13679,7 +14119,7 @@ angular.module('FieldDoc')
       },
       geojson: {}
     };
-
+    
     return Map;
   }]);
 'use strict';
@@ -16213,13 +16653,13 @@ angular.module('FieldDoc')
     // with structured objects.
     //
     return  function(object) {
-
+      
       var result = [];
 
       angular.forEach(object, function(value) {
         result.push(value);
       });
-
+      
       return result;
     };
 
