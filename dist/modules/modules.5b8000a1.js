@@ -13164,7 +13164,14 @@ angular.module('FieldDoc')
         return (_report.properties.runoff_volume_captured*325851.4)
       },
       runoffDepthTreated: function(_report) {
-        return (_report.properties.runoff_volume_captured*12)/(_report.properties.impervious_area/43560)
+
+        var depthTreated = 1.0;
+
+        if (_report.properties.runoff_volume_captured && _report.properties.impervious_area) {
+          depthTreated = (_report.properties.runoff_volume_captured*12)/(_report.properties.impervious_area/43560);
+        }
+
+        return depthTreated;
       },
       quantityInstalled: function(values, field, format) {
 
