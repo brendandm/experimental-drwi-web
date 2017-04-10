@@ -47,14 +47,14 @@ angular.module('FieldDoc')
          * Abbreviations:
          *     PA = Practice Area in Acres
          *
-         * - Nitrogen = (PA*4)*(EOS_TTON/EOS_ACRES)
-         * - Phosphorus = (PA*2)*(EOS_TTOP/EOS_ACRES)
-         * - Sediment = (PA*2)*((EOS_TSS/EOS_ACRES)/2000)
+         * - Nitrogen = (EOS_TTON/EOS_ACRES)
+         * - Phosphorus = (EOS_TTOP/EOS_ACRES)
+         * - Sediment = ((EOS_TSS/EOS_ACRES)/2000)
          */
         var _ual = {
-          nitrogen: (_extent*4)*(self.loadData.properties.eos_totn/self.loadData.properties.eos_acres),
-          phosphorus: (_extent*2)*(self.loadData.properties.eos_totp/self.loadData.properties.eos_acres),
-          sediment: (_extent*2)*((self.loadData.properties.eos_tss/self.loadData.properties.eos_acres)/2000)
+          nitrogen: (self.loadData.properties.eos_totn/self.loadData.properties.eos_acres),
+          phosphorus: (self.loadData.properties.eos_totp/self.loadData.properties.eos_acres),
+          sediment: ((self.loadData.properties.eos_tss/self.loadData.properties.eos_acres)/2000)
         };
 
         self.ual = _ual;
