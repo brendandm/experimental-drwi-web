@@ -125,128 +125,6 @@
           </div>
         </div>
 
-        <!-- Installation/Planning -->
-        <div class="form-row"
-             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
-          <div class="form-label">
-            <label for="practice_1_name" class="control-label">
-              Stormwater BMP #1
-            </label>
-          </div>
-          <div class="form-field">
-
-            <div class="form-element form-element-half">
-              <select class="form-control"
-                      data-ng-model="page.report.properties.practice_1_name"
-                      data-ng-options="practice for practice in page.stormwater_practices"
-                      id="practice_1_name" name="practice_1_name">
-              </select>
-              <p class="help-text">
-                &nbsp;
-              </p>
-            </div>
-
-            <div class="form-element form-element-half">
-              <input type="number" class="form-control" id="practice_1_extent"
-                      name="practice_1_extent"
-                     data-ng-model="page.report.properties.practice_1_extent" />
-              <p class="help-text">
-                acres
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="form-row"
-             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
-          <div class="form-label">
-            <label for="practice_2_name" class="control-label">
-              Stormwater BMP #2
-            </label>
-          </div>
-          <div class="form-field">
-
-            <div class="form-element form-element-half">
-              <select class="form-control"
-                      data-ng-model="page.report.properties.practice_2_name"
-                      data-ng-options="practice for practice in page.stormwater_practices"
-                      id="practice_2_name" name="practice_2_name">
-              </select>
-              <p class="help-text">
-                &nbsp;
-              </p>
-            </div>
-
-            <div class="form-element form-element-half">
-              <input type="number" class="form-control" id="practice_2_extent"
-                      name="practice_2_extent"
-                     data-ng-model="page.report.properties.practice_2_extent" />
-              <p class="help-text">
-                acres
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="form-row"
-             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
-          <div class="form-label">
-            <label for="practice_3_name" class="control-label">
-              Stormwater BMP #3
-            </label>
-          </div>
-          <div class="form-field">
-
-            <div class="form-element form-element-half">
-              <select class="form-control"
-                      data-ng-model="page.report.properties.practice_3_name"
-                      data-ng-options="practice for practice in page.stormwater_practices"
-                      id="practice_3_name" name="practice_3_name">
-              </select>
-              <p class="help-text">
-                &nbsp;
-              </p>
-            </div>
-
-            <div class="form-element form-element-half">
-              <input type="number" class="form-control" id="practice_3_extent"
-                      name="practice_3_extent"
-                     data-ng-model="page.report.properties.practice_3_extent" />
-              <p class="help-text">
-                acres
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="form-row"
-             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
-          <div class="form-label">
-            <label for="practice_4_name" class="control-label">
-              Stormwater BMP #4
-            </label>
-          </div>
-          <div class="form-field">
-
-            <div class="form-element form-element-half">
-              <select class="form-control"
-                      data-ng-model="page.report.properties.practice_4_name"
-                      data-ng-options="practice for practice in page.stormwater_practices"
-                      id="practice_4_name" name="practice_4_name">
-              </select>
-              <p class="help-text">
-                &nbsp;
-              </p>
-            </div>
-
-            <div class="form-element form-element-half">
-              <input type="number" class="form-control" id="practice_4_extent"
-                      name="practice_4_extent"
-                     data-ng-model="page.report.properties.practice_4_extent" />
-              <p class="help-text">
-                acres
-              </p>
-            </div>
-          </div>
-        </div>
-
         <div class="form-row"
              data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
           <div class="form-label">
@@ -256,8 +134,14 @@
           </div>
           <div class="form-field">
 
+            <p class="help-text help-text-top">
+              New development typically occurs on land without previous impervious area, whereas re-development always occurs in an area with some degree of impervious surface.
+            </p>
+
             <div class="form-element">
               <select class="form-control"
+                      data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                      data-ng-class="{'form-control-disabled': (page.report.properties.measurement_period === 'Installation')}"
                       data-ng-model="page.report.properties.project_type"
                       data-ng-options="practice for practice in page.stormwater_project_types"
                       id="project_type" name="project_type">
@@ -279,8 +163,14 @@
           </div>
           <div class="form-field">
 
+            <p class="help-text help-text-top">
+              In situations where a mix of ST and RR practices are used within the same development project, the user should choose the classification based on either the largest single practice used in the project or the one(s) that provide the majority of the runoff capture volume.
+            </p>
+
             <div class="form-element">
               <select class="form-control"
+                      data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                      data-ng-class="{'form-control-disabled': (page.report.properties.measurement_period === 'Installation')}"
                       data-ng-model="page.report.properties.site_reduction_classification"
                       data-ng-options="practice for practice in page.stormwater_site_classifications"
                       id="site_reduction_classification" name="site_reduction_classification">
@@ -293,40 +183,183 @@
           </div>
         </div>
 
+        <!-- Installation/Planning -->
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+          <div class="form-label">
+            <label for="practice_1_name" class="control-label">
+              Stormwater BMP #1
+            </label>
+          </div>
+          <div class="form-field">
+
+            <div class="form-element form-element-half">
+              <select class="form-control"
+                      data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                      data-ng-class="{'form-control-disabled': (page.report.properties.measurement_period === 'Installation')}"
+                      data-ng-model="page.report.properties.practice_1_name"
+                      data-ng-options="practice for practice in page.stormwater_practices[page.report.properties.site_reduction_classification]"
+                      id="practice_1_name" name="practice_1_name">
+              </select>
+              <p class="help-text">
+                &nbsp;
+              </p>
+            </div>
+
+            <div class="form-element form-element-half">
+              <input type="number" class="form-control" id="practice_1_extent"
+                     name="practice_1_extent"
+                     data-ng-model="page.report.properties.practice_1_extent"
+                     min="0" step="0.00001" />
+              <p class="help-text">
+                acres
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+          <div class="form-label">
+            <label for="practice_2_name" class="control-label">
+              Stormwater BMP #2
+            </label>
+          </div>
+          <div class="form-field">
+
+            <div class="form-element form-element-half">
+              <select class="form-control"
+                      data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                      data-ng-class="{'form-control-disabled': (page.report.properties.measurement_period === 'Installation')}"
+                      data-ng-model="page.report.properties.practice_2_name"
+                      data-ng-options="practice for practice in page.stormwater_practices[page.report.properties.site_reduction_classification]"
+                      id="practice_2_name" name="practice_2_name">
+              </select>
+              <p class="help-text">
+                &nbsp;
+              </p>
+            </div>
+
+            <div class="form-element form-element-half">
+              <input type="number" class="form-control" id="practice_2_extent"
+                      name="practice_2_extent"
+                     data-ng-model="page.report.properties.practice_2_extent"
+                     min="0" step="0.00001" />
+              <p class="help-text">
+                acres
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+          <div class="form-label">
+            <label for="practice_3_name" class="control-label">
+              Stormwater BMP #3
+            </label>
+          </div>
+          <div class="form-field">
+
+            <div class="form-element form-element-half">
+              <select class="form-control"
+                      data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                      data-ng-class="{'form-control-disabled': (page.report.properties.measurement_period === 'Installation')}"
+                      data-ng-model="page.report.properties.practice_3_name"
+                      data-ng-options="practice for practice in page.stormwater_practices[page.report.properties.site_reduction_classification]"
+                      id="practice_3_name" name="practice_3_name">
+              </select>
+              <p class="help-text">
+                &nbsp;
+              </p>
+            </div>
+
+            <div class="form-element form-element-half">
+              <input type="number" class="form-control" id="practice_3_extent"
+                      name="practice_3_extent"
+                     data-ng-model="page.report.properties.practice_3_extent"
+                     min="0" step="0.00001" />
+              <p class="help-text">
+                acres
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+          <div class="form-label">
+            <label for="practice_4_name" class="control-label">
+              Stormwater BMP #4
+            </label>
+          </div>
+          <div class="form-field">
+
+            <div class="form-element form-element-half">
+              <select class="form-control"
+                      data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                      data-ng-class="{'form-control-disabled': (page.report.properties.measurement_period === 'Installation')}"
+                      data-ng-model="page.report.properties.practice_4_name"
+                      data-ng-options="practice for practice in page.stormwater_practices[page.report.properties.site_reduction_classification]"
+                      id="practice_4_name" name="practice_4_name">
+              </select>
+              <p class="help-text">
+                &nbsp;
+              </p>
+            </div>
+
+            <div class="form-element form-element-half">
+              <input type="number" class="form-control" id="practice_4_extent"
+                      name="practice_4_extent"
+                     data-ng-model="page.report.properties.practice_4_extent"
+                     min="0" step="0.00001" />
+              <p class="help-text">
+                acres
+              </p>
+            </div>
+          </div>
+        </div>
 
         <div class="form-row"
              data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
           <div class="form-label">
             <label for="impervious_area" class="control-label">
-              Area Draining to (Treated by) the BMPs
+              Area Draining to/Treated by the BMPs
             </label>
           </div>
           <div class="form-field">
 
-            <div class="form-element form-element-thirds">
+            <p class="help-text help-text-top">
+              Specific Engineering Parameter (EP) values of runoff volume captured by the project are uniquely defined for each state and should be calculated by the user according to each state&#39;s specifications, also included in CSN (2015).
+            </p>
+
+            <div class="form-element form-element-thirds" data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+              <label class="control-label">Impervious Area</label>
               <input type="number" class="form-control" id="impervious_area"
                       name="impervious_area"
-                     data-ng-model="page.report.properties.impervious_area" />
+                     data-ng-model="page.report.properties.impervious_area"
+                     min="0" step="0.00001" />
               <p class="help-text">
-                acres
+                sq. ft.
               </p>
             </div>
 
-            <div class="form-element form-element-thirds">
+            <div class="form-element form-element-thirds" data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+              <label class="control-label">Total Drainage Area</label>
               <input type="number" class="form-control" id="total_drainage_area"
                       name="total_drainage_area"
-                     data-ng-model="page.report.properties.total_drainage_area" />
+                     data-ng-model="page.report.properties.total_drainage_area"
+                     min="0" step="0.00001" />
               <p class="help-text">
-                acres
+                sq. ft.
               </p>
             </div>
 
-            <div class="form-element form-element-thirds">
+            <div class="form-element form-element-thirds" data-ng-if="page.report.properties.measurement_period === 'Installation'">
+              <label class="control-label">Runoff Volume Captured (EP)</label>
               <input type="number" class="form-control" id="runoff_volume_captured"
                       name="runoff_volume_captured"
-                     data-ng-model="page.report.properties.runoff_volume_captured" />
+                     data-ng-model="page.report.properties.runoff_volume_captured"
+                     min="0" step="0.00001" />
               <p class="help-text">
-                acres
+                acre-ft.
               </p>
             </div>
 

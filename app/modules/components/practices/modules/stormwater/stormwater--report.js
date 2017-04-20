@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('StormwaterReportController', function (Account, Calculate, CalculateStormwater, Efficiency, LoadData, $location, $log, Notifications, practice, PracticeStormwater, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
+    .controller('StormwaterReportController', function (Account, Calculate, CalculateStormwater, Efficiency, LoadData, $location, $log, Notifications, practice, PracticeStormwater, $q, readings, $rootScope, $route, site, $scope, UALStateLoad, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -91,6 +91,42 @@
             }
           ];
 
+
+          //
+          // After we have returned the Site.$promise we can look up our Site
+          // specific load data
+          //
+          if (self.site.properties.state) {
+            UALStateLoad.query({
+              q: {
+                filters: [
+                  {
+                    name: 'state',
+                    op: 'eq',
+                    val: self.site.properties.state
+                  }
+                ]
+              }
+            }, function(successResponse) {
+
+              self.loaddata = {};
+
+              angular.forEach(successResponse.features, function(feature, $index) {
+                self.loaddata[feature.properties.developed_type] = {
+                  tn_ual: feature.properties.tn_ual,
+                  tp_ual: feature.properties.tp_ual,
+                  tss_ual: feature.properties.tss_ual
+                };
+              });
+
+            }, function(errorResponse) {
+              console.log('errorResponse', errorResponse);
+            });
+          } else {
+            console.log('No State UAL Load Reductions could be loaded because the `Site.state` field is `null`');
+          }
+
+
           readings.$promise.then(function(successResponse) {
 
             self.readings = successResponse;
@@ -100,6 +136,14 @@
               installation: self.calculate.getTotalReadingsByCategory('Installation', self.readings.features),
               monitoring: self.calculate.getTotalReadingsByCategory('Monitoring', self.readings.features)
             };
+
+            angular.forEach(self.readings.features, function(reading, $index) {
+              if (reading.properties.measurement_period === 'Planning') {
+                 practicePlanningData = reading;
+              }
+            });
+
+            self.calculateStormwater = CalculateStormwater
 
           }, function(errorResponse) {
 
@@ -128,12 +172,29 @@
 
       self.addReading = function(measurementPeriod) {
 
-        var newReading = new PracticeStormwater({
-            'measurement_period': measurementPeriod,
-            'report_date': new Date(),
-            'practice_id': practiceId,
-            'account_id': self.site.properties.project.properties.account_id
-          });
+        if (measurementPeriod === "Planning") {
+          var newReading = new PracticeStormwater({
+              'measurement_period': measurementPeriod,
+              'report_date': new Date(),
+              'practice_id': practiceId,
+              'account_id': self.site.properties.project.properties.account_id
+            });
+        }
+        else {
+          var newReading = new PracticeStormwater({
+              'measurement_period': measurementPeriod,
+              'report_date': new Date(),
+              'practice_id': practiceId,
+              'account_id': self.site.properties.project.properties.account_id,
+              'practice_1_name': practicePlanningData.properties.practice_1_name,
+              'practice_2_name': practicePlanningData.properties.practice_2_name,
+              'practice_3_name': practicePlanningData.properties.practice_3_name,
+              'practice_4_name': practicePlanningData.properties.practice_4_name,
+              'project_type': practicePlanningData.properties.project_type,
+              'site_reduction_classification': practicePlanningData.properties.site_reduction_classification
+            });
+
+        }
 
         newReading.$save().then(function(successResponse) {
             $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');

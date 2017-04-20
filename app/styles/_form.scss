@@ -182,7 +182,7 @@ label.control-label {
   font-family: $font-sans-plain;
   font-size: 0.6875em;
   font-weight: 500;
-  line-height: 1;
+  line-height: 1.5;
   margin-bottom: 4px;
   text-transform: none;
   text-align: left;
@@ -302,6 +302,8 @@ select.form-control {
   background-position: right;
   background-repeat: no-repeat;
   background-size: contain;
+
+  padding: 0.6em 0.75em;
 }
 
 .form-control.form-control-half {
