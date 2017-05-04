@@ -787,9 +787,9 @@ angular.module('FieldDoc')
                           self.rollups.metrics.metric_9.total += _calculate.GetConversion(_reading.properties.length_of_buffer, 5280);
                           self.rollups.metrics.metric_3.total += _reading.properties.number_of_trees_planted;
 
-                          _tempReadings.nitrogen.total += _planned.nitrogen;
-                          _tempReadings.phosphorus.total += _planned.phosphorus;
-                          _tempReadings.sediment.total += _planned.sediment;
+                          _tempReadings.nitrogen.total += (totalPlannedLoad.nitrogen) ? totalPlannedLoad.nitrogen : 0;
+                          _tempReadings.phosphorus.total += (totalPlannedLoad.phosphorus) ? totalPlannedLoad.phosphorus : 0;
+                          _tempReadings.sediment.total += (totalPlannedLoad.sediment) ? totalPlannedLoad.sediment : 0;
 
                         } else if (_reading.properties.measurement_period === 'Installation') {
 
@@ -799,9 +799,9 @@ angular.module('FieldDoc')
                           self.rollups.metrics.metric_9.installed += _calculate.GetConversion(_reading.properties.length_of_buffer, 5280);
                           self.rollups.metrics.metric_3.installed +=  _reading.properties.number_of_trees_planted;
 
-                          _tempReadings.nitrogen.installed += _installed.nitrogen;
-                          _tempReadings.phosphorus.installed += _installed.phosphorus;
-                          _tempReadings.sediment.installed += _installed.sediment;
+                          _tempReadings.nitrogen.installed += (_installed.nitrogen) ? _installed.nitrogen : 0;
+                          _tempReadings.phosphorus.installed += (_installed.phosphorus) ? _installed.phosphorus : 0;
+                          _tempReadings.sediment.installed += (_installed.sediment) ? _installed.sediment : 0;
                         }
                     });
 
