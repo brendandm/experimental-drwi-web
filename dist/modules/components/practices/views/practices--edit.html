@@ -1,0 +1,110 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="container feature">
+  <article class="feature-detail">
+    <div class="column-11 feature-detail-content">
+
+      <h1 class="large">Edit Practice</h1>
+
+      <form role="form" class="form" id="form--PracticeEdit" name="form--PracticeEdit"
+            data-ng-submit="page.savePractice()">
+        <!-- Practice Type -->
+        <div class="form-row">
+          <div class="form-field">
+            <label for="practice_type" class="control-label">Practice Type</label>
+            <select class="form-control" data-ng-model="page.practice.properties.practice_type" id="practice_type" name="practice_type">
+              <option value="Bank Stabilization">Bank Stabilization</option>
+              <option value="Bioretention">Bioretention</option>
+              <option value="Enhanced Stream Restoration">Enhanced Stream Restoration</option>
+              <option value="Forest Buffer">Forest Buffer</option>
+              <option value="Grass Buffer">Grass Buffer</option>
+              <option value="In-stream Habitat">In-stream Habitat</option>
+              <option value="Livestock Exclusion">Livestock Exclusion</option>
+              <option value="Non-Tidal Wetlands">Non-Tidal Wetlands</option>
+              <option value="Agriculture Generic">Other Agricultural Practices</option>
+              <option value="Shoreline Management">Shoreline Management</option>
+              <option value="Stormwater">Stormwater Management</option>
+              <option value="Urban Homeowner">Urban Homeowner</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Practice Description -->
+        <div class="form-row">
+          <div class="form-field">
+            <label for="description" class="control-label">Description</label>
+            <textarea class="form-control" msd-elastic data-ng-model="page.practice.properties.label">{{ page.practice.properties.label }}</textarea>
+          </div>
+        </div>
+
+        <!-- 7. Images -->
+        <div class="form-row">
+          <div class="form-field">
+            <label for="images" class="control-label">
+              Installation and Monitoring Photos
+            </label>
+            <input type="file" class="form-control"
+                   id="images" name="images" file-upload
+                   file-model="page.files.images" multiple="multiple" />
+          </div>
+        </div>
+        <div class="form-row">
+          <br />
+          <ul>
+             <li data-ng-repeat="image in page.practice.properties.images track by $index">
+                 <img data-ng-src="{{ image.properties.original }}"
+                      width="100" alt="" />
+                 <a href="javascript:void(0)"
+                    data-ng-click="page.practice.properties.images.splice($index, 1)">
+                    Remove Image
+                 </a>
+             </li>
+          </ul>
+        </div>
+
+        <div class="form-actions">
+          <div class="form-actions-buttons">
+            <button type="submit"class="button button-submit">
+              Save Changes
+            </button>
+            <button type="button" class="button button-link button-outline pull-right"
+                    data-ng-click="page.confirmDelete =! page.confirmDelete"
+                    data-ng-if="!page.confirmDelete && !page.confirmDeleteReallySure">
+              Delete
+            </button>
+            <span data-ng-if="page.confirmDelete" class="action pull-right">
+              <a data-ng-click="page.confirmDelete =! page.confirmDelete; page.confirmDeleteReallySure =! page.confirmDeleteReallySure;"
+                    class="remove">
+                Remove practice and all associated metrics?</a> or <a class="cancel" data-ng-click="page.confirmDelete =! page.confirmDelete">nevermind</a>
+            </span>
+            <span data-ng-if="page.confirmDeleteReallySure" class="action pull-right">
+              <a data-ng-click="page.deletePractice()"
+                    class="remove">
+                Yes, I'm sure, delete this practice forever</a> or <a class="cancel" data-ng-click="page.confirmDelete = false; page.confirmDeleteReallySure = false;">nevermind</a>
+            </span>
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+    <nav class="column-5 contextual-navigation-wrapper">
+      <h6><strong>Tools</strong></h6>
+      <ul class="contextual-navigation">
+        <!-- Practice Manangement Navigation -->
+        <li>
+          <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}">
+            Practice Overview
+          </a>
+        </li>
+        <li class="active" data-ng-if="page.permissions.can_edit">
+          <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/edit">
+            Edit
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </article>
+</main>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>
