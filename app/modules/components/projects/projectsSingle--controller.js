@@ -384,7 +384,11 @@ angular.module('FieldDoc')
         },
         calculations: function(_thisSite, _thesePractices, _loadData) {
 
-          var _self = this;
+          var _self = this,
+              _site = angular.copy(_thisSite);
+
+          // console.log('Processing Calculations for Site', _site.id);
+          // debugger;
 
           angular.forEach(_thesePractices, function(_practice, _practiceIndex){
 
@@ -392,7 +396,7 @@ angular.module('FieldDoc')
 
             switch(_practice.properties.practice_type) {
               case "Agriculture Generic":
-                var _calculate = CalculateAgricultureGeneric;
+                var _calculate = angular.copy(CalculateAgricultureGeneric);
                 var _readings = _practice.properties.readings_agriculture_generic;
                 var _tempReadings = {
                   nitrogen: {
@@ -498,7 +502,7 @@ angular.module('FieldDoc')
                 break;
 
               case "Bank Stabilization":
-                var _calculate = CalculateBankStabilization;
+                var _calculate = angular.copy(CalculateBankStabilization);
                 var _readings = _practice.properties.readings_bank_stabilization;
 
                 // BANK STABILIZATION: CHESAPEAKE BAY METRICS
@@ -529,7 +533,7 @@ angular.module('FieldDoc')
 
                 break;
               case "Bioretention":
-                var _calculate = CalculateBioretention;
+                var _calculate = angular.copy(CalculateBioretention);
                 var _readings = _practice.properties.readings_bioretention;
 
                 // BIORETENTION: CHESAPEAKE BAY METRICS
@@ -566,7 +570,7 @@ angular.module('FieldDoc')
 
                 break;
               case "Enhanced Stream Restoration":
-                var _calculate = CalculateEnhancedStreamRestoration;
+                var _calculate = angular.copy(CalculateEnhancedStreamRestoration);
                 var _readings = _practice.properties.readings_enhanced_stream_restoration;
 
                 // ENHANCED STREAM RESTORATION: CHESAPEAKE BAY METRICS
@@ -611,7 +615,7 @@ angular.module('FieldDoc')
 
                 break;
               case "Forest Buffer":
-                var _calculate = CalculateForestBuffer;
+                var _calculate = angular.copy(CalculateForestBuffer);
                 var _readings = _practice.properties.readings_forest_buffer;
                 var _tempReadings = {
                   nitrogen: {
@@ -628,7 +632,7 @@ angular.module('FieldDoc')
                   }
                 };
 
-                _calculate.site = _thisSite;
+                _calculate.site = _site;
 
                 _calculate.readings = {
                   features: _readings
@@ -694,7 +698,7 @@ angular.module('FieldDoc')
                 });
                 break;
               case "Grass Buffer":
-                var _calculate = CalculateGrassBuffer;
+                var _calculate = angular.copy(CalculateGrassBuffer);
                 var _readings = _practice.properties.readings_grass_buffer;
                 var _tempReadings = {
                   nitrogen: {
@@ -711,7 +715,7 @@ angular.module('FieldDoc')
                   }
                 };
 
-                _calculate.site = _thisSite;
+                _calculate.site = _site;
 
                 _calculate.readings = {
                   features: _readings
@@ -732,9 +736,6 @@ angular.module('FieldDoc')
                     // 1. Acres of Riparian Restoration
                     // 2. Miles of Riparian Restoration
                     // 3. Number of Trees Planted
-                    //
-                    // TODO: This is not finished ... Forest buffers has no calculation functions
-                    //
                     //
                     angular.forEach(_readings, function(_reading, _readingIndex){
                         if (_reading.properties.measurement_period === 'Planning') {
@@ -777,7 +778,7 @@ angular.module('FieldDoc')
 
                 break;
               case "In-stream Habitat":
-                var _calculate = CalculateInstreamHabitat;
+                var _calculate = angular.copy(CalculateInstreamHabitat);
                 var _readings = _practice.properties.readings_instream_habitat;
 
                 // IN-STREAM HABITAT: CHESAPEAKE BAY METRICS
@@ -868,13 +869,13 @@ angular.module('FieldDoc')
                   }
                 };
 
-                var _calculate = CalculateLivestockExclusion;
+                var _calculate = angular.copy(CalculateLivestockExclusion);
 
                 _calculate.readings = {
                   features: _readings
                 };
 
-                _calculate.site = _thisSite;
+                _calculate.site = _site;
 
                 _calculate.practice_efficiency = {
                   s_efficiency: 30/100,
@@ -943,7 +944,7 @@ angular.module('FieldDoc')
 
                 break;
               case "Non-Tidal Wetlands":
-                var _calculate = CalculateWetlandsNonTidal;
+                var _calculate = angular.copy(CalculateWetlandsNonTidal);
                 var _readings = _practice.properties.readings_wetlands_nontidal;
 
                 // NON-TIDAL WETLANDS: CHESAPEAKE BAY METRICS
@@ -978,7 +979,7 @@ angular.module('FieldDoc')
 
                 break;
               case "Shoreline Management":
-                var _calculate = CalculateShorelineManagement;
+                var _calculate = angular.copy(CalculateShorelineManagement);
                 var _readings = _practice.properties.readings_shoreline_management;
 
                 // SHORELINE MANAGEMENT: CHESAPEAKE BAY METRICS
@@ -1027,7 +1028,7 @@ angular.module('FieldDoc')
 
                 break;
               case "Stormwater":
-                var _calculate = CalculateStormwater;
+                var _calculate = angular.copy(CalculateStormwater);
                 var _readings = _practice.properties.readings_stormwater;
 
                 // URBAN HOMEOWNER: CHESAPEAKE BAY METRICS
@@ -1084,7 +1085,7 @@ angular.module('FieldDoc')
 
                 break;
               case "Urban Homeowner":
-                var _calculate = CalculateUrbanHomeowner;
+                var _calculate = angular.copy(CalculateUrbanHomeowner);
                 var _readings = _practice.properties.readings_urban_homeowner;
 
                 // URBAN HOMEOWNER: CHESAPEAKE BAY METRICS
@@ -1163,6 +1164,9 @@ angular.module('FieldDoc')
                   tss_ual: feature.properties.tss_ual
                 };
               });
+
+              // console.log("UALStateLoad::Response for site_id", _thisSite, "with _loadData", _loadData);
+              // debugger;
 
               self.statistics.calculations(_thisSite, _thesePractices, _loadData);
             }, function(errorResponse) {
