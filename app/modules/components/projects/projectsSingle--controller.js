@@ -8,7 +8,7 @@
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateAgricultureGeneric, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateStormwater, CalculateWetlandsNonTidal, CalculateUrbanHomeowner, LoadData, Notifications, $rootScope, Project, $route, $scope, $location, mapbox, project, Site, UALStateLoad, user, $window) {
+  .controller('ProjectViewCtrl', function (Account, Calculate, CalculateAgricultureGeneric, CalculateBankStabilization, CalculateBioretention, CalculateEnhancedStreamRestoration, CalculateForestBuffer, CalculateGrassBuffer, CalculateInstreamHabitat, CalculateLivestockExclusion, CalculateShorelineManagement, CalculateStormwater, CalculateWetlandsNonTidal, CalculateUrbanHomeowner, LoadData, Notifications, $rootScope, Project, $route, $scope, $location, mapbox, project, Site, $timeout, UALStateLoad, user, $window) {
 
     var self = this;
 
@@ -376,11 +376,25 @@ angular.module('FieldDoc')
 
           var _self = this;
 
-          angular.forEach(_thisProject.properties.sites, function(_site, _siteIndex) {
+          var counter = 0,
+              _sitesLists = _thisProject.properties.sites;
 
-            var _thesePractices = _self.practices(_site, _site.properties.practices);
+          var _timer = setInterval(function() {
+            if (counter <= _sitesLists.length) {
+              _self.practices(_sitesLists[counter], _sitesLists[counter].properties.practices);
+              console.log('Processing', counter);
+              counter++;
+            }
+            else {
+              clearInterval(_timer);
+            }
+          }, 2000);
 
-          });
+          // angular.forEach(_thisProject.properties.sites, function(_site, _siteIndex) {
+          //
+          //   _self.practices(copy.site, copy.practices);
+          //
+          // });
         },
         calculations: function(_thisSite, _thesePractices, _loadData) {
 
@@ -727,9 +741,19 @@ angular.module('FieldDoc')
 
                   var preUplandPreInstallationLoad = preUplandPreInstallationLoadReturn;
 
+                  // if (_site.id === 719) {
+                  //   console.log('preUplandPreInstallationLoad', preUplandPreInstallationLoad)
+                  //   debugger;
+                  // }
+
                   _calculate.GetPlannedLoad('Planning', function(totalPlannedLoadReturn) {
 
                     var totalPlannedLoad = totalPlannedLoadReturn;
+
+                    // if (_site.id === 719) {
+                    //   console.log('totalPlannedLoad', totalPlannedLoad)
+                    //   debugger;
+                    // }
 
                     // FOREST BUFFER: CHESAPEAKE BAY METRICS
                     //
@@ -764,13 +788,14 @@ angular.module('FieldDoc')
 
                     // ADD TO PRACTICE LIST
                     //
-                    self.rollups.nitrogen.total += _tempReadings.nitrogen.total
-                    self.rollups.phosphorus.total += _tempReadings.phosphorus.total
-                    self.rollups.sediment.total += _tempReadings.sediment.total
+                    // self.rollups.nitrogen.total.push({"site_id": _site.id, "name": "Grass Buffer", "value": _tempReadings.nitrogen.total});
+                    self.rollups.nitrogen.total += _tempReadings.nitrogen.total;
+                    self.rollups.phosphorus.total += _tempReadings.phosphorus.total;
+                    self.rollups.sediment.total += _tempReadings.sediment.total;
 
-                    self.rollups.nitrogen.installed += _tempReadings.nitrogen.installed
-                    self.rollups.phosphorus.installed += _tempReadings.phosphorus.installed
-                    self.rollups.sediment.installed += _tempReadings.sediment.installed
+                    self.rollups.nitrogen.installed += _tempReadings.nitrogen.installed;
+                    self.rollups.phosphorus.installed += _tempReadings.phosphorus.installed;
+                    self.rollups.sediment.installed += _tempReadings.sediment.installed;
 
                   });
 
@@ -946,6 +971,20 @@ angular.module('FieldDoc')
               case "Non-Tidal Wetlands":
                 var _calculate = angular.copy(CalculateWetlandsNonTidal);
                 var _readings = _practice.properties.readings_wetlands_nontidal;
+                var _tempReadings = {
+                  nitrogen: {
+                    installed: 0,
+                    total: 0
+                  },
+                  phosphorus: {
+                    installed: 0,
+                    total: 0
+                  },
+                  sediment: {
+                    installed: 0,
+                    total: 0
+                  }
+                };
 
                 // NON-TIDAL WETLANDS: CHESAPEAKE BAY METRICS
                 //
@@ -961,21 +1000,33 @@ angular.module('FieldDoc')
 
                       // NON-TIDAL WETLANDS: LOAD REDUCTIONS
                       //
-                      self.rollups.nitrogen.total += _results.planned.nitrogen
-                      self.rollups.phosphorus.total += _results.planned.phosphorus
-                      self.rollups.sediment.total += _results.planned.sediment
+                      _tempReadings.nitrogen.total += _results.planned.nitrogen
+                      _tempReadings.phosphorus.total += _results.planned.phosphorus
+                      _tempReadings.sediment.total += _results.planned.sediment
                     } else if (_reading.properties.measurement_period === 'Installation') {
                       self.rollups.metrics.metric_14.installed += _calculate.milesRestored(_readings, 'Installation');
 
                       // NON-TIDAL WETLANDS: LOAD REDUCTIONS
                       //
-                      self.rollups.nitrogen.installed += _calculate.plannedLoad(_reading, 'nitrogen')
-                      self.rollups.phosphorus.installed += _calculate.plannedLoad(_reading, 'phosphorus')
-                      self.rollups.sediment.installed += _calculate.plannedLoad(_reading, 'sediment')
+                      _tempReadings.nitrogen.installed += _calculate.plannedLoad(_reading, 'nitrogen')
+                      _tempReadings.phosphorus.installed += _calculate.plannedLoad(_reading, 'phosphorus')
+                      _tempReadings.sediment.installed += _calculate.plannedLoad(_reading, 'sediment')
                     }
                 });
 
                 self.rollups.metrics.metric_14.chart = (self.rollups.metrics.metric_14.installed/self.rollups.metrics.metric_14.total)*100;
+
+                console.log('Site', _site.id, '_tempReadings', _tempReadings.nitrogen.total)
+                console.log('Site', _site.id, '_tempReadings', _tempReadings.phosphorus.total)
+
+                // self.rollups.nitrogen.total.push({"site_id": _site.id, "name": "Non-Tidal Wetlands", "value": _tempReadings.nitrogen.total});
+                self.rollups.nitrogen.total += _tempReadings.nitrogen.total;
+                self.rollups.phosphorus.total += _tempReadings.phosphorus.total
+                self.rollups.sediment.total += _tempReadings.sediment.total
+
+                self.rollups.nitrogen.installed += _tempReadings.nitrogen.installed
+                self.rollups.phosphorus.installed += _tempReadings.phosphorus.installed
+                self.rollups.sediment.installed += _tempReadings.sediment.installed
 
                 break;
               case "Shoreline Management":
