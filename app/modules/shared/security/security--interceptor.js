@@ -60,7 +60,7 @@
           responseError: function (response) {
             $log.info('AuthorizationInterceptor::ResponseError', response || $q.when(response));
 
-            if (response.config.url.indexOf('data/user') > -1) {
+            if (response.config.url.indexOf('data/user') > -1 || response.status === 403) {
               $location.path('/user/logout');
             }
 
