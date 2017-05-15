@@ -366,7 +366,7 @@ angular.module('FieldDoc')
     ];
 
 
-
+    var _timer;
 
     //
     // Process rollup statistics for the entire `project`.
@@ -379,7 +379,7 @@ angular.module('FieldDoc')
           var counter = 0,
               _sitesLists = _thisProject.properties.sites;
 
-          var _timer = setInterval(function() {
+          _timer = setInterval(function() {
             if (counter <= _sitesLists.length) {
               _self.practices(_sitesLists[counter], _sitesLists[counter].properties.practices);
               console.log('Processing', counter);
