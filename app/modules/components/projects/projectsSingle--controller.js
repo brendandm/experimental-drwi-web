@@ -380,9 +380,10 @@ angular.module('FieldDoc')
               _sitesLists = _thisProject.properties.sites;
 
           _timer = setInterval(function() {
-            if (counter <= _sitesLists.length) {
+            
+            console.log('counter', counter, '_sitesLists.length', _sitesLists.length);
+            if (counter < _sitesLists.length) {
               _self.practices(_sitesLists[counter], _sitesLists[counter].properties.practices);
-              console.log('Processing', counter);
               counter++;
             }
             else {
