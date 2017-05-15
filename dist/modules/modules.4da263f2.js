@@ -42,17 +42,18 @@ angular.module('FieldDoc')
     $locationProvider.hashPrefix('!');
 
   });
-  "use strict";
 
-   angular.module('config', [])
+"use strict";
 
-  .constant('environment', {            name: 'production',
-              apiUrl: 'https://api.fielddoc.org',
-              siteUrl: 'https://www.fielddoc.org',
-              clientId: 'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'
-  })
+ angular.module('config', [])
 
-  ;
+.constant('environment', {            name: 'production',
+            apiUrl: 'https://api.fielddoc.org',
+            siteUrl: 'https://www.fielddoc.org',
+            clientId: 'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'
+})
+
+;
 
 /**
  * angular-save2pdf - angular jsPDF wrapper
@@ -612,7 +613,7 @@ angular.module('FieldDoc')
           responseError: function (response) {
             $log.info('AuthorizationInterceptor::ResponseError', response || $q.when(response));
 
-            if (response.config.url.indexOf('data/user') > -1) {
+            if (response.config.url.indexOf('data/user') > -1 || response.status === 403) {
               $location.path('/user/logout');
             }
 
@@ -988,6 +989,9 @@ angular.module('FieldDoc')
             };
         });
     }
+    else {
+        $location.path('/user/logout');
+    }
 
   });
 
@@ -1359,7 +1363,7 @@ angular.module('FieldDoc')
     ];
 
 
-
+    var _timer;
 
     //
     // Process rollup statistics for the entire `project`.
@@ -1372,10 +1376,11 @@ angular.module('FieldDoc')
           var counter = 0,
               _sitesLists = _thisProject.properties.sites;
 
-          var _timer = setInterval(function() {
-            if (counter <= _sitesLists.length) {
+          _timer = setInterval(function() {
+            
+            console.log('counter', counter, '_sitesLists.length', _sitesLists.length);
+            if (counter < _sitesLists.length) {
               _self.practices(_sitesLists[counter], _sitesLists[counter].properties.practices);
-              console.log('Processing', counter);
               counter++;
             }
             else {
@@ -12255,7 +12260,7 @@ angular.module('FieldDoc')
           if (!data.hasOwnProperty('properties')) {
             return [];
           }
-
+          
           var multipler_1 = data.properties.installation_length_of_living_shoreline_restored,
               multipler_2 = data.properties.installation_existing_average_bank_height,
               multipler_3 = data.properties.installation_existing_shoreline_recession_rate,
@@ -12274,7 +12279,7 @@ angular.module('FieldDoc')
           if (!data.hasOwnProperty('properties')) {
             return [];
           }
-
+          
           if (data.properties.protocol_2_tn_reduction_rate) {
             this.efficiency.protocol_2_tn_reduction_rate = data.properties.protocol_2_tn_reduction_rate;
           }
@@ -12296,7 +12301,7 @@ angular.module('FieldDoc')
           if (data.properties.protocol_3_tp_reduction_rate) {
             this.efficiency.protocol_3_tp_reduction_rate = data.properties.protocol_3_tp_reduction_rate;
           }
-
+          
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
               multipler_2 = this.efficiency.protocol_3_tp_reduction_rate,
               returnValue = 0;
@@ -12314,7 +12319,7 @@ angular.module('FieldDoc')
           if (data.properties.protocol_3_tss_reduction_rate) {
             this.efficiency.protocol_3_tss_reduction_rate = data.properties.protocol_3_tss_reduction_rate;
           }
-
+          
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
               multipler_2 = this.efficiency.protocol_3_tss_reduction_rate,
               returnValue = 0;
@@ -12350,7 +12355,7 @@ angular.module('FieldDoc')
           if (data.properties.protocol_4_tp_reduction_rate) {
             this.efficiency.protocol_4_tp_reduction_rate = data.properties.protocol_4_tp_reduction_rate;
           }
-
+          
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
               multipler_2 = this.efficiency.protocol_4_tp_reduction_rate,
               returnValue = 0;
@@ -13963,7 +13968,7 @@ angular.module('FieldDoc')
  * @ngdoc service
  * @name FieldDoc.GeometryService
  * @description
- *
+ *   
  */
 angular.module('FieldDoc')
   .service('commonsGeometry', ['$http', 'commonscloud', 'leafletData', function Navigation($http, commonscloud, leafletData) {
@@ -14140,7 +14145,7 @@ angular.module('FieldDoc')
         }
       },
       center: {
-        lng: -76.534,
+        lng: -76.534, 
         lat: 39.134,
         zoom: 11
       },
@@ -14185,7 +14190,7 @@ angular.module('FieldDoc')
       },
       geojson: {}
     };
-
+    
     return Map;
   }]);
 'use strict';
@@ -16719,13 +16724,13 @@ angular.module('FieldDoc')
     // with structured objects.
     //
     return  function(object) {
-
+      
       var result = [];
 
       angular.forEach(object, function(value) {
         result.push(value);
       });
-
+      
       return result;
     };
 
