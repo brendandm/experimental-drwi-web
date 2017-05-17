@@ -3120,18 +3120,26 @@ angular.module('FieldDoc')
 
                                 // Agriculture Generic: LOAD REDUCTIONS
                                 //
-                                _tempReadings.nitrogen.total += (_reading.properties.custom_model_nitrogen === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["nitrogen"]*(_reading.properties.generic_agriculture_efficiency.properties.n_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["nitrogen"]*(_reading.properties.custom_model_nitrogen/100)
-                                _tempReadings.phosphorus.total += (_reading.properties.custom_model_phosphorus === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["phosphorus"]*(_reading.properties.generic_agriculture_efficiency.properties.p_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["phosphorus"]*(_reading.properties.custom_model_phosphorus/100)
-                                _tempReadings.sediment.total += (_reading.properties.custom_model_sediment === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["sediment"]*(_reading.properties.generic_agriculture_efficiency.properties.s_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["sediment"]*(_reading.properties.custom_model_sediment/100)
+                                _tempReadings_nitrogen_total += (_reading.properties.custom_model_nitrogen === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["nitrogen"]*(_reading.properties.generic_agriculture_efficiency.properties.n_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["nitrogen"]*(_reading.properties.custom_model_nitrogen/100)
+                                _tempReadings_phosphorus_total += (_reading.properties.custom_model_phosphorus === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["phosphorus"]*(_reading.properties.generic_agriculture_efficiency.properties.p_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["phosphorus"]*(_reading.properties.custom_model_phosphorus/100)
+                                _tempReadings_sediment_total += (_reading.properties.custom_model_sediment === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["sediment"]*(_reading.properties.generic_agriculture_efficiency.properties.s_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["sediment"]*(_reading.properties.custom_model_sediment/100)
+
+                                _tempReadings.nitrogen.total += (_tempReadings_nitrogen_total) ? _tempReadings_nitrogen_total : 0;
+                                _tempReadings.phosphorus.total += (_tempReadings_phosphorus_total) ? _tempReadings_phosphorus_total : 0;
+                                _tempReadings.sediment.total += (_tempReadings_sediment_total) ? _tempReadings_sediment_total : 0;
 
                             } else if (_reading.properties.measurement_period === 'Installation') {
                                 self.rollups.metrics.metric_23.installed += _reading.properties.custom_practice_extent_acres
 
                                 // Agriculture Generic: LOAD REDUCTIONS
                                 //
-                                _tempReadings.nitrogen.installed += (_reading.properties.custom_model_nitrogen === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["nitrogen"]*(_reading.properties.generic_agriculture_efficiency.properties.n_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["nitrogen"]*(_reading.properties.custom_model_nitrogen/100)
-                                _tempReadings.phosphorus.installed += (_reading.properties.custom_model_phosphorus === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["phosphorus"]*(_reading.properties.generic_agriculture_efficiency.properties.p_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["phosphorus"]*(_reading.properties.custom_model_phosphorus/100)
-                                _tempReadings.sediment.installed += (_reading.properties.custom_model_sediment === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["sediment"]*(_reading.properties.generic_agriculture_efficiency.properties.s_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["sediment"]*(_reading.properties.custom_model_sediment/100)
+                                _tempReadings_nitrogen_installed += (_reading.properties.custom_model_nitrogen === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["nitrogen"]*(_reading.properties.generic_agriculture_efficiency.properties.n_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["nitrogen"]*(_reading.properties.custom_model_nitrogen/100)
+                                _tempReadings_phosphorus_installed += (_reading.properties.custom_model_phosphorus === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["phosphorus"]*(_reading.properties.generic_agriculture_efficiency.properties.p_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["phosphorus"]*(_reading.properties.custom_model_phosphorus/100)
+                                _tempReadings_sediment_installed += (_reading.properties.custom_model_sediment === null) ? _reading.properties.custom_practice_extent_acres*_calculate.ual["sediment"]*(_reading.properties.generic_agriculture_efficiency.properties.s_efficiency/100) : _reading.properties.custom_practice_extent_acres*_calculate.ual["sediment"]*(_reading.properties.custom_model_sediment/100)
+
+                                _tempReadings.nitrogen.installed += (_tempReadings_nitrogen_installed) ? _tempReadings_nitrogen_installed : 0;
+                                _tempReadings.phosphorus.installed += (_tempReadings_phosphorus_installed) ? _tempReadings_phosphorus_installed : 0;
+                                _tempReadings.sediment.installed += (_tempReadings_sediment_installed) ? _tempReadings_sediment_installed : 0;
                             }
                         });
 
