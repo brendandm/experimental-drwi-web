@@ -478,7 +478,7 @@ angular.module('FieldDoc')
                         // 1. Miles of Streambank Restored
                         //
                         angular.forEach(_readings, function(_reading, _readingIndex){
-                            if (_reading.properties.measurement_period === 'Planning' && _calculate.ual.nitrogen) {
+                            if (_reading.properties.measurement_period === 'Planning' && _calculate.ual && _calculate.ual.nitrogen) {
                                 self.rollups.metrics.metric_23.total += _reading.properties.custom_practice_extent_acres
 
                                 // Agriculture Generic: LOAD REDUCTIONS
@@ -491,7 +491,7 @@ angular.module('FieldDoc')
                                 _tempReadings.phosphorus.total += (_tempReadings_phosphorus_total) ? _tempReadings_phosphorus_total : 0;
                                 _tempReadings.sediment.total += (_tempReadings_sediment_total) ? _tempReadings_sediment_total : 0;
 
-                            } else if (_reading.properties.measurement_period === 'Installation' && _calculate.ual.nitrogen) {
+                            } else if (_reading.properties.measurement_period === 'Installation' && _calculate.ual && _calculate.ual.nitrogen) {
                                 self.rollups.metrics.metric_23.installed += _reading.properties.custom_practice_extent_acres
 
                                 // Agriculture Generic: LOAD REDUCTIONS
