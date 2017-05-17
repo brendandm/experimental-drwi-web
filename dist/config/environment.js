@@ -1,7 +1,8 @@
+
 "use strict";
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+.constant('environment', {name:'staging',apiUrl:'http://stg.api.fielddoc.org',siteUrl:'http://stg.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
