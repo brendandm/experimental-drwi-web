@@ -7,7 +7,7 @@
       <h1 class="large">Edit Practice</h1>
 
       <form role="form" class="form" id="form--PracticeEdit" name="form--PracticeEdit"
-            data-ng-submit="page.savePractice()">
+            data-ng-submit="page.savePractice();page.isSavingChanges =! page.isSavingChanges;">
         <!-- Practice Type -->
         <div class="form-row">
           <div class="form-field">
@@ -64,9 +64,8 @@
 
         <div class="form-actions">
           <div class="form-actions-buttons">
-            <button type="submit"class="button button-submit"
-                    data-ng-if="!page.isSavingChanges"
-                    data-ng-click="page.isSavingChanges =! page.isSavingChanges">
+            <button type="submit" class="button button-submit"
+                    data-ng-if="!page.isSavingChanges">
               Save Changes
             </button>
             <span data-ng-if="page.isSavingChanges">
