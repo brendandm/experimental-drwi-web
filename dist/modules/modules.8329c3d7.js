@@ -50,6 +50,7 @@ angular.module('FieldDoc')
 .constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
+
 /**
  * angular-save2pdf - angular jsPDF wrapper
  * Copyright (c) 2015 John Daily Jr.,
@@ -6040,45 +6041,62 @@ angular.module('FieldDoc')
                 }
               }).$promise.then(function(efficiencyResponse) {
 
-                self.practice_efficiency = efficiencyResponse.features[0].properties;
+                if (efficiencyResponse.features.length !== 0) {
+                    self.practice_efficiency = efficiencyResponse.features[0].properties;
+                }
 
-                //
-                // EXISTING CONDITION — LOAD VALUES
-                //
-                // console.log('uplandPlannedInstallationLoad', self.results.totalPreInstallationLoad.uplandLanduse.nitrogen, self.practice_efficiency.n_efficiency)
-                var uplandPlannedInstallationLoad = {
-                  sediment: self.results.totalPreInstallationLoad.uplandLanduse.sediment*(self.practice_efficiency.s_efficiency),
-                  nitrogen: self.results.totalPreInstallationLoad.uplandLanduse.nitrogen*(self.practice_efficiency.n_efficiency),
-                  phosphorus: self.results.totalPreInstallationLoad.uplandLanduse.phosphorus*(self.practice_efficiency.p_efficiency)
-                };
+               
+               if (typeof self.practice_efficiency !== "undefined") {
 
-                // console.log('PLANNED uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
 
-                var existingPlannedInstallationLoad = {
-                  sediment: ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000),
-                  nitrogen: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres))),
-                  phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
-                };
+                    //
+                    // EXISTING CONDITION — LOAD VALUES
+                    //
+                    // console.log('uplandPlannedInstallationLoad', self.results.totalPreInstallationLoad.uplandLanduse.nitrogen, self.practice_efficiency.n_efficiency)
+                    var uplandPlannedInstallationLoad = {
+                        sediment: self.results.totalPreInstallationLoad.uplandLanduse.sediment*(self.practice_efficiency.s_efficiency),
+                        nitrogen: self.results.totalPreInstallationLoad.uplandLanduse.nitrogen*(self.practice_efficiency.n_efficiency),
+                        phosphorus: self.results.totalPreInstallationLoad.uplandLanduse.phosphorus*(self.practice_efficiency.p_efficiency)
+                    };
 
-                // console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
+                    var existingPlannedInstallationLoad = {
+                        sediment: ((existingLoaddata.area*((existingLoaddata.efficieny.eos_tss/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_tss/newLoaddata.efficieny.eos_acres)))/2000),
+                        nitrogen: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totn/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totn/newLoaddata.efficieny.eos_acres))),
+                        phosphorus: (existingLoaddata.area*((existingLoaddata.efficieny.eos_totp/existingLoaddata.efficieny.eos_acres)-(newLoaddata.efficieny.eos_totp/newLoaddata.efficieny.eos_acres)))
+                    };
 
-                //
-                // PLANNED CONDITIONS — LANDUSE VALUES
-                //
-                var totals = {
-                  efficiency: {
-                    new: newLoaddata,
-                    existing: existingLoaddata
-                  },
-                  nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen,
-                  phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus,
-                  sediment: uplandPlannedInstallationLoad.sediment + existingPlannedInstallationLoad.sediment
-                };
+                    // console.log('PLANNED existingPlannedInstallationLoad', existingPlannedInstallationLoad);
 
-                self.results.totalPlannedLoad = totals;
+                    //
+                    // PLANNED CONDITIONS — LANDUSE VALUES
+                    //
+                    var totals = {
+                        efficiency: {
+                            new: newLoaddata,
+                            existing: existingLoaddata
+                        },
+                        nitrogen: uplandPlannedInstallationLoad.nitrogen + existingPlannedInstallationLoad.nitrogen,
+                        phosphorus: uplandPlannedInstallationLoad.phosphorus + existingPlannedInstallationLoad.phosphorus,
+                        sediment: uplandPlannedInstallationLoad.sediment + existingPlannedInstallationLoad.sediment
+                    };
+
+                    self.results.totalPlannedLoad = totals;
+                }
+                else {
+
+                    self.results.totalPlannedLoad = {
+                        efficiency: {
+                            new: null,
+                            existing: null
+                        },
+                        nitrogen: 0,
+                        phophorus: 0,
+                        sediment: 0
+                    }
+                }
 
                 if (callback) {
-                  callback(self.results.totalPlannedLoad)
+                    callback(self.results.totalPlannedLoad)
                 }
 
               });
@@ -6177,7 +6195,7 @@ angular.module('FieldDoc')
             };
           }
 
-          if (landuseEfficiency) {
+          if (landuseEfficiency && landuseEfficiency.existing !== null && landuseEfficiency.new !== null) {
             existingPreInstallationLoad = {
               sediment: ((bufferArea*((landuseEfficiency.existing.efficieny.eos_tss/landuseEfficiency.existing.efficieny.eos_acres)-(landuseEfficiency.new.efficieny.eos_tss/landuseEfficiency.new.efficieny.eos_acres)))/2000),
               nitrogen: (bufferArea*((landuseEfficiency.existing.efficieny.eos_totn/landuseEfficiency.existing.efficieny.eos_acres)-(landuseEfficiency.new.efficieny.eos_totn/landuseEfficiency.new.efficieny.eos_acres))),
