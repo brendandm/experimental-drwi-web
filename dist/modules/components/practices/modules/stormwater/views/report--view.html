@@ -158,7 +158,7 @@
                     {{ report.properties.impervious_area | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateStormwater.quantityInstalled(page.readings.features, 'impervious_area') }} acres
+                    {{ page.calculateStormwater.quantityInstalled(page.readings.features, 'impervious_area') }} sq. ft. 
                   </td>
                   <td>
                     {{ page.calculateStormwater.quantityInstalled(page.readings.features, 'impervious_area', '%') || 0 | number:2 }}%
@@ -174,7 +174,7 @@
                     {{ report.properties.total_drainage_area | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateStormwater.quantityInstalled(page.readings.features, 'total_drainage_area') }} acres
+                    {{ page.calculateStormwater.quantityInstalled(page.readings.features, 'total_drainage_area') }} sq. ft.
                   </td>
                   <td>
                     {{ page.calculateStormwater.quantityInstalled(page.readings.features, 'total_drainage_area', '%') || 0 | number:2 }}%
