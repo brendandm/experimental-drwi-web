@@ -64,9 +64,14 @@
 
         <div class="form-actions">
           <div class="form-actions-buttons">
-            <button type="submit"class="button button-submit">
+            <button type="submit"class="button button-submit"
+                    data-ng-if="!page.isSavingChanges"
+                    data-ng-click="page.isSavingChanges =! page.isSavingChanges">
               Save Changes
             </button>
+            <span data-ng-if="page.isSavingChanges">
+                Saving changes...
+            </span>
             <button type="button" class="button button-link button-outline pull-right"
                     data-ng-click="page.confirmDelete =! page.confirmDelete"
                     data-ng-if="!page.confirmDelete && !page.confirmDeleteReallySure">
