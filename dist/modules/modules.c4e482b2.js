@@ -47,7 +47,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'staging',apiUrl:'http://stg.api.fielddoc.org',siteUrl:'http://stg.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
 /**
@@ -9762,6 +9762,8 @@ angular.module('FieldDoc')
     return {
       quantityInstalled: function(values, field, format) {
 
+          console.log('values', values, 'field', field, 'format', format);
+
         var planned_total = 0,
             installed_total = 0,
             percentage = 0;
@@ -9769,10 +9771,10 @@ angular.module('FieldDoc')
         // Get readings organized by their Type
         angular.forEach(values, function(reading, $index) {
 
-          if (reading.measurement_period === 'Planning') {
-            planned_total += reading[field];
-          } else if (reading.measurement_period === 'Installation') {
-            installed_total += reading[field];
+          if (reading.properties.measurement_period === 'Planning') {
+            planned_total += reading.properties[field];
+          } else if (reading.properties.measurement_period === 'Installation') {
+            installed_total += reading.properties[field];
           }
 
         });

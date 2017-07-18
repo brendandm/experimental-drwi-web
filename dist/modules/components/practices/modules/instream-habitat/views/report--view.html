@@ -106,10 +106,10 @@
 
                 <!-- Installation Summary -->
                 <tr>
-                  <td class="align-center" data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td class="align-center" data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
                     {{ report.properties.installation_structure_type_1 }}
                   </td>
-                  <td class="align-center" data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td class="align-center" data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
                     {{ report.properties.installation_structure_units_1 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
@@ -117,21 +117,21 @@
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'installation_structure_extent_1') || 0 | number:2 }}
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'installation_structure_extent_1') || 0 | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'installation_structure_extent_1', '%') || 0 | number:2 }}%
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'installation_structure_extent_1', '%') || 0 | number:2 }}%
                     </strong>
                   </td>
                 </tr>
 
                 <tr>
-                  <td class="align-center" data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td class="align-center" data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
                     {{ report.properties.installation_structure_type_2 }}
                   </td>
-                  <td class="align-center" data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td class="align-center" data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
                     {{ report.properties.installation_structure_units_2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
@@ -139,21 +139,21 @@
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'installation_structure_extent_2') || 0 | number:2 }}
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'installation_structure_extent_2') || 0 | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'installation_structure_extent_2', '%') || 0 | number:2 }}%
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'installation_structure_extent_2', '%') || 0 | number:2 }}%
                     </strong>
                   </td>
                 </tr>
 
                 <tr>
-                  <td class="align-center" data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td class="align-center" data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
                     {{ report.properties.installation_structure_type_3 }}
                   </td>
-                  <td class="align-center" data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td class="align-center" data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
                     {{ report.properties.installation_structure_units_3 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
@@ -161,21 +161,21 @@
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'installation_structure_extent_3') || 0 | number:2 }}
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'installation_structure_extent_3') || 0 | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'installation_structure_extent_3', '%') || 0 | number:2 }}%
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'installation_structure_extent_3', '%') || 0 | number:2 }}%
                     </strong>
                   </td>
                 </tr>
 
                 <tr>
-                  <td class="align-center" data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td class="align-center" data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
                     {{ report.properties.installation_structure_type_4 }}
                   </td>
-                  <td class="align-center" data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td class="align-center" data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
                     {{ report.properties.installation_structure_units_4 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
@@ -183,12 +183,12 @@
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'installation_structure_extent_4') || 0 | number:2 }}
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'installation_structure_extent_4') || 0 | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'installation_structure_extent_4', '%') || 0 | number:2 }}%
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'installation_structure_extent_4', '%') || 0 | number:2 }}%
                     </strong>
                   </td>
                 </tr>
@@ -224,12 +224,12 @@
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_areas_protected') || 0 | number:2 }}
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_areas_protected') || 0 | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_areas_protected', '%') || 0 | number:2 }}%
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_areas_protected', '%') || 0 | number:2 }}%
                     </strong>
                   </td>
                 </tr>
@@ -281,12 +281,12 @@
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_areas_of_habitat_restored') || 0 | number:2 }}
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_areas_of_habitat_restored') || 0 | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_areas_of_habitat_restored', '%') || 0 | number:2 }}%
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_areas_of_habitat_restored', '%') || 0 | number:2 }}%
                     </strong>
                   </td>
                 </tr>
@@ -300,12 +300,12 @@
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_acres_of_wetlands_restored') || 0 | number:2 }}
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_acres_of_wetlands_restored') || 0 | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_acres_of_wetlands_restored', '%') || 0 | number:2 }}%
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_acres_of_wetlands_restored', '%') || 0 | number:2 }}%
                     </strong>
                   </td>
                 </tr>
@@ -319,12 +319,12 @@
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_miles_of_living_shoreline_restored') || 0 | number:2 }}
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_miles_of_living_shoreline_restored') || 0 | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_miles_of_living_shoreline_restored', '%') || 0 | number:2 }}%
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_miles_of_living_shoreline_restored', '%') || 0 | number:2 }}%
                     </strong>
                   </td>
                 </tr>
@@ -338,12 +338,12 @@
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_miles_of_stream_opened') || 0 | number:2 }}
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_miles_of_stream_opened') || 0 | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_miles_of_stream_opened', '%') || 0 | number:2 }}%
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_miles_of_stream_opened', '%') || 0 | number:2 }}%
                     </strong>
                   </td>
                 </tr>
@@ -357,12 +357,12 @@
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_acres_of_oyster_habitat_restored') || 0 | number:2 }}
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_acres_of_oyster_habitat_restored') || 0 | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_acres_of_oyster_habitat_restored', '%') || 0 | number:2 }}%
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_acres_of_oyster_habitat_restored', '%') || 0 | number:2 }}%
                     </strong>
                   </td>
                 </tr>
@@ -375,12 +375,12 @@
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_fish_passage_improvements_number_of_passage_barriers_re') || 0 | number:2 }}
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_fish_passage_improvements_number_of_passage_barriers_re') || 0 | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_fish_passage_improvements_number_of_passage_barriers_re', '%') || 0 | number:2 }}%
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_fish_passage_improvements_number_of_passage_barriers_re', '%') || 0 | number:2 }}%
                     </strong>
                   </td>
                 </tr>
@@ -394,12 +394,12 @@
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_fish_passage_improvements_number_of_fish_crossing_barri') || 0 | number:2 }}
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_fish_passage_improvements_number_of_fish_crossing_barri') || 0 | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_fish_passage_improvements_number_of_fish_crossing_barri', '%') || 0 | number:2 }}%
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_fish_passage_improvements_number_of_fish_crossing_barri', '%') || 0 | number:2 }}%
                     </strong>
                   </td>
                 </tr>
@@ -413,12 +413,12 @@
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_number_of_reintroduced_subwatersheds_eastern_brook_trou') || 0 | number:2 }}
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_number_of_reintroduced_subwatersheds_eastern_brook_trou') || 0 | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_number_of_reintroduced_subwatersheds_eastern_brook_trou', '%') || 0 | number:2 }}%
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_number_of_reintroduced_subwatersheds_eastern_brook_trou', '%') || 0 | number:2 }}%
                     </strong>
                   </td>
                 </tr>
@@ -432,12 +432,12 @@
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_number_of_habitat_units_improved_eastern_brook_trout') || 0 | number:2 }}
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_number_of_habitat_units_improved_eastern_brook_trout') || 0 | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'metrics_number_of_habitat_units_improved_eastern_brook_trout', '%') || 0 | number:2 }}%
+                      {{ page.calculateInstreamHabitat.quantityInstalled(page.readings.features, 'metrics_number_of_habitat_units_improved_eastern_brook_trout', '%') || 0 | number:2 }}%
                     </strong>
                   </td>
                 </tr>
