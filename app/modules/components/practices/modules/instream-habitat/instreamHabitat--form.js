@@ -24,7 +24,10 @@ angular.module('FieldDoc')
       structureTypes: [
         'Drop Structure',
         'Vanes',
+        'Mudsills',
+        'Deflectors',
         'Porous Weirs',
+        'Other',
         'Roughened Channels/Constructed Riffles',
         'Boulder Placement',
         'Rootwad Revetment'
