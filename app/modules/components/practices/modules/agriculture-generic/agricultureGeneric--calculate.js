@@ -7,7 +7,7 @@
  * Service in the FieldDoc.
  */
 angular.module('FieldDoc')
-  .service('CalculateAgricultureGeneric', function(Calculate, EfficiencyAgricultureGeneric, $q) {
+  .service('CalculateAgricultureGeneric', function(Calculate, EfficiencyAgricultureGeneric, LoadData, $q) {
 
     return {
       readings: null,
