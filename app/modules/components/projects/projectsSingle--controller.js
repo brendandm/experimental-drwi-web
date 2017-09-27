@@ -380,7 +380,7 @@ angular.module('FieldDoc')
               _sitesLists = _thisProject.properties.sites;
 
           _timer = setInterval(function() {
-            
+
             console.log('counter', counter, '_sitesLists.length', _sitesLists.length);
             if (counter < _sitesLists.length) {
               _self.practices(_sitesLists[counter], _sitesLists[counter].properties.practices);
@@ -389,7 +389,7 @@ angular.module('FieldDoc')
             else {
               clearInterval(_timer);
             }
-          }, 2000);
+          }, 5000);
 
           // angular.forEach(_thisProject.properties.sites, function(_site, _siteIndex) {
           //
