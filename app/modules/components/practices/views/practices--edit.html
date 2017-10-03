@@ -37,6 +37,28 @@
           </div>
         </div>
 
+        <div class="form-element">
+          <div class="autocomplete">
+            <label data-ng-if="!page.showGeocoder" class="control-label pull-right">
+              <a href="javascript:void(0);"
+                 data-ng-click="page.showGeocoder =! page.showGeocoder">
+                 Search for an address or city
+              </a>
+            </label>
+            <div data-ng-if="page.showGeocoder" class="mapboxGeocoder">
+              <input type="text" id="address" name="address"
+                     data-ng-model="page.geocode.query" class="form-control"
+                     placeholder="Type in an address..." mapbox-geocoder
+                     mapbox-geocoder-direction="forward"
+                     mapbox-geocoder-query="page.geocode.query"
+                     mapbox-geocoder-response="page.geocode.response"
+                     autofocus="autofocus" />
+            </div><br />
+          </div>
+
+          <leaflet data-ng-if="page.map" class="map" markers="page.map.markers" defaults="page.map.defaults" layers="page.map.layers" center="page.map.center"></leaflet>
+        </div>
+
         <!-- 7. Images -->
         <div class="form-row">
           <div class="form-field">
