@@ -10,17 +10,7 @@ angular.module('FieldDoc')
 
     var self = this;
 
-    $rootScope.page = {};
-
-    summary.$promise.then(
-      function(successResponse) {
-        $log.log('[SUCCESS] BankStabilizationSummaryController Summary', successResponse);
-        self.summary = summary;
-      },
-      function(errorResponse) {
-        $log.log('[ERROR] BankStabilizationSummaryController Summary', errorResponse);
-      }
-    );
+    self.summary = summary;
 
     //
     // Verify Account information for proper UI element display
