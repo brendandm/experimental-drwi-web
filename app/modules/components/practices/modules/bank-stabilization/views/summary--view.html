@@ -2,7 +2,8 @@
 
 <main class="container" save2pdf>
   <section class="row feature summary">
-    <article class="feature-detail">
+    <article class="feature-detail"
+             data-ng-if="!page.status.loading">
       <div class="column-11 feature-detail-content">
 
         <h1>Summary for {{ page.summary.practice.properties.practice_type }}</h1>
@@ -37,10 +38,15 @@
   </section>
   <section class="row feature summary">
     <article class="feature-detail">
-      <div class="column-16 feature-detail-content">
+
+      <div class="throbber throbber-small"
+           data-ng-if="page.status.loading"></div>
+
+      <div class="column-16 feature-detail-content"
+           data-ng-if="!page.status.loading">
         <div class="table-responsive">
 
-          <div data-ng-if="!page.total.planning">
+          <div data-ng-if="!page.summary.practice.properties.has_planning_data">
             <h2><strong>Empty</strong> Summary</h2>
 
             <p>
@@ -54,7 +60,7 @@
 
           <!-- INSTALLATION SUMMARY -->
 
-          <div>
+          <div data-ng-if="page.summary.practice.properties.has_planning_data">
             <table class="table">
               <tbody>
                 <!-- Section Heading -->
@@ -72,7 +78,7 @@
                   </td>
                   <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.summary.practiceType }}/{{ report.properties.id }}/edit">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
                       <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
                       <br />
@@ -243,7 +249,7 @@
                   <th>&nbsp;</th>
                   <td>Pre-BMP Loads</td>
                   <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.summary.practiceType }}/{{ report.properties.id }}/edit">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
                       <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
                       <br />
@@ -344,7 +350,7 @@
                     &nbsp;
                   </td>
                   <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.summary.practiceType }}/{{ report.properties.id }}/edit">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
                       <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
                       <br />
@@ -386,7 +392,7 @@
 
           <!-- MONITORING -->
 
-          <div data-ng-if="page.total.monitoring">
+          <div data-ng-if="page.summary.practice.properties.has_monitoring_data">
             <div class="table-responsive"><table class="table">
 
                 <tr class="no-rule">
@@ -398,7 +404,7 @@
                 <tr>
                   <th>&nbsp;</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.summary.practiceType }}/{{ report.properties.id }}/edit">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       Monitored on<br />
                       {{ report.properties.report_date }}
                     </a>
@@ -457,7 +463,7 @@
                 <tr>
                   <th>&nbsp;</th>
                   <th data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.summary.practiceType }}/{{ report.properties.id }}/edit">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       Monitored on<br />
                       {{ report.properties.report_date }}
                     </a>
@@ -516,7 +522,7 @@
             </table></div>
           </div>
 
-          <div data-ng-if="page.total.planning || page.total.installation || page.total.monitoring">
+          <div data-ng-if="page.summary.practice.properties.has_planning_data || page.summary.practice.properties.has_installation_data || page.summary.practice.properties.has_monitoring_data">
             <h2><strong>Notes</strong></h2>
             <table class="table">
               <thead>
@@ -528,7 +534,7 @@
               <tbody>
                 <tr data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'report_date':false">
                   <td class="align-left">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.summary.practiceType }}/{{ report.properties.id }}/edit">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       {{ report.properties.report_date }}
                     </a>
                   </td>
