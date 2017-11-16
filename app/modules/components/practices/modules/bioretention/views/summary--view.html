@@ -2,10 +2,11 @@
 
 <main class="container" save2pdf>
   <section class="row feature summary">
-    <article class="feature-detail">
+    <article class="feature-detail"
+             data-ng-if="!page.status.loading">
       <div class="column-11 feature-detail-content">
 
-        <h1>Summary for {{ page.practice.properties.practice_type }}</h1>
+        <h1>Summary for {{ page.summary.practice.properties.practice_type }}</h1>
         <p data-ng-if="page.practice.properties.description" data-ng-bind-html="page.practice.properties.description"></p>
 
         <p><small>
