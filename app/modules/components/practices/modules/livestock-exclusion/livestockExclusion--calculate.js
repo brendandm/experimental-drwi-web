@@ -428,8 +428,6 @@ angular.module('FieldDoc')
           phosphorus: (auDaysYr*animal.properties.manure)*animal.properties.total_phosphorus,
         };
 
-        // console.log('preDirectDeposit', preDirectDeposit)
-
          var preInstallationeBMPLoadTotals = {
              nitrogen: preUplandPreInstallationLoad.nitrogen + preExistingPreInstallationLoad.nitrogen + preDirectDeposit.nitrogen,
              phosphorus: preUplandPreInstallationLoad.phosphorus + preExistingPreInstallationLoad.phosphorus + preDirectDeposit.phosphorus,
@@ -447,22 +445,16 @@ angular.module('FieldDoc')
            phosphorus: preUplandPreInstallationLoad.phosphorus/100*bmpEfficiency.p_efficiency
          };
 
-        //  console.log('postInstallationeBMPLoadTotals uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
-
          var existingPlannedInstallationLoad = {
            sediment: ((bufferArea*((existingLoaddata.eos_tss/existingLoaddata.eos_acres)-(newLanduseLoadData.eos_tss/newLanduseLoadData.eos_acres)))/2000),
            nitrogen: (bufferArea*((existingLoaddata.eos_totn/existingLoaddata.eos_acres)-(newLanduseLoadData.eos_totn/newLanduseLoadData.eos_acres))),
            phosphorus: (bufferArea*((existingLoaddata.eos_totp/existingLoaddata.eos_acres)-(newLanduseLoadData.eos_totp/newLanduseLoadData.eos_acres)))
          };
 
-        //  console.log('postInstallationeBMPLoadTotals existingPlannedInstallationLoad', existingPlannedInstallationLoad);
-
          var directDeposit = {
            nitrogen: preDirectDeposit.nitrogen*value.properties.length_of_fencing/planningValue.length_of_fencing,
            phosphorus: preDirectDeposit.phosphorus*value.properties.length_of_fencing/planningValue.length_of_fencing,
          };
-
-        //  console.log('postInstallationeBMPLoadTotals directDeposit', preDirectDeposit.nitrogen, value.properties.length_of_fencing, planningValue.length_of_fencing);
 
         if (uplandPlannedInstallationLoad && existingPlannedInstallationLoad && directDeposit) {
           return {

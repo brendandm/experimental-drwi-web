@@ -169,7 +169,7 @@
                     self.practice_efficiency = efficiencyResponse.features[0].properties;
                 }
 
-               
+
                if (typeof self.practice_efficiency !== "undefined") {
 
 
