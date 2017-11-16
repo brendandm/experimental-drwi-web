@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('ForestBufferSummaryController', function (Account, Calculate, CalculateForestBuffer, Efficiency, LoadData, $location, $log, practice, PracticeForestBuffer, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
+    .controller('ForestBufferSummaryController', function (Account, $location, $log, practice, PracticeForestBuffer, $q, $rootScope, $route, site, $scope, summary, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -18,11 +18,10 @@
       $rootScope.page = {};
 
       self.practiceType = null;
+
       self.project = {
         'id': projectId
       };
-
-      self.calculate = Calculate;
 
       practice.$promise.then(function(successResponse) {
 
@@ -89,30 +88,6 @@
               text: 'Add Measurement Data'
             }
           ];
-
-          readings.$promise.then(function(successResponse) {
-
-            self.readings = successResponse;
-
-            self.total = {
-              planning: self.calculate.getTotalReadingsByCategory('Planning', self.readings.features),
-              installation: self.calculate.getTotalReadingsByCategory('Installation', self.readings.features),
-              monitoring: self.calculate.getTotalReadingsByCategory('Monitoring', self.readings.features)
-            };
-
-            //
-            //
-            //
-            self.calculateForestBuffer = CalculateForestBuffer;
-
-            self.calculateForestBuffer.site = self.site;
-            self.calculateForestBuffer.readings = self.readings;
-
-            self.calculateForestBuffer.return = self.calculateForestBuffer.results();
-
-          }, function(errorResponse) {
-
-          });
 
         }, function(errorResponse) {
           //

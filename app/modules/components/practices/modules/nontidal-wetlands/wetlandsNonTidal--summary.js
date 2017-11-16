@@ -4,11 +4,11 @@
 
   /**
    * @ngdoc function
-   * @name FieldDoc.controller:WetlandsNonTidalReportController
+   * @name
    * @description
    */
   angular.module('FieldDoc')
-    .controller('WetlandsNonTidalSummaryController', function (Account, Calculate, CalculateWetlandsNonTidal, Efficiency, LoadData, $location, $log, practice, PracticeWetlandsNonTidal, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
+    .controller('WetlandsNonTidalSummaryController', function (Account, $location, $log, practice, PracticeWetlandsNonTidal, $q, $rootScope, $route, site, $scope, summary, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -18,12 +18,10 @@
       $rootScope.page = {};
 
       self.practiceType = null;
+
       self.project = {
         'id': projectId
       };
-
-      self.calculate = Calculate;
-      self.calculateWetlandsNonTidal = CalculateWetlandsNonTidal;
 
       practice.$promise.then(function(successResponse) {
 
@@ -112,22 +110,6 @@
                 };
             });
         }
-      });
-
-      readings.$promise.then(function(successResponse) {
-
-        self.readings = successResponse;
-
-        self.total = {
-          planning: self.calculate.getTotalReadingsByCategory('Planning', self.readings.features),
-          installation: self.calculate.getTotalReadingsByCategory('Installation', self.readings.features),
-          monitoring: self.calculate.getTotalReadingsByCategory('Monitoring', self.readings.features)
-        };
-
-        self.results = self.calculateWetlandsNonTidal.loads(self.readings.features, self.segment)
-
-      }, function(errorResponse) {
-
       });
 
       self.addReading = function(measurementPeriod) {

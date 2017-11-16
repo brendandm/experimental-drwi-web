@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('GrassBufferSummaryController', function (Account, Calculate, CalculateGrassBuffer, Efficiency, LoadData, $location, $log, practice, PracticeGrassBuffer, $q, readings, $rootScope, $route, site, $scope, user, Utility, $window) {
+    .controller('GrassBufferSummaryController', function (Account, $location, $log, practice, PracticeGrassBuffer, $q, $rootScope, $route, site, $scope, summary, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -18,12 +18,11 @@
       $rootScope.page = {};
 
       self.practiceType = null;
+
       self.project = {
         'id': projectId
       };
       self.newLanduse = 'hyo';
-
-      self.calculate = Calculate;
 
       practice.$promise.then(function(successResponse) {
 
@@ -90,30 +89,6 @@
               text: 'Add Measurement Data'
             }
           ];
-
-          readings.$promise.then(function(successResponse) {
-
-            self.readings = successResponse;
-
-            self.total = {
-              planning: self.calculate.getTotalReadingsByCategory('Planning', self.readings.features),
-              installation: self.calculate.getTotalReadingsByCategory('Installation', self.readings.features),
-              monitoring: self.calculate.getTotalReadingsByCategory('Monitoring', self.readings.features)
-            };
-
-            //
-            //
-            //
-            self.calculateGrassBuffer = CalculateGrassBuffer;
-
-            self.calculateGrassBuffer.site = self.site;
-            self.calculateGrassBuffer.readings = self.readings;
-
-            self.calculateGrassBuffer.return = self.calculateGrassBuffer.results();
-
-          }, function(errorResponse) {
-
-          });
 
         }, function(errorResponse) {
           //
