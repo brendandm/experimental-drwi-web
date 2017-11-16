@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('EnhancedStreamRestorationSummaryController', function (Account, $location, practice, Practice, PracticeEnhancedStreamRestoration, $rootScope, $route, site, $scope, summary, UALStateLoad, user, Utility, $window) {
+    .controller('EnhancedStreamRestorationSummaryController', function (Account, $location, Practice, PracticeEnhancedStreamRestoration, $rootScope, $route, $scope, summary, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,

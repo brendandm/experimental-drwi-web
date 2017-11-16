@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('InstreamHabitatSummaryController', function (Account, $location, practice, PracticeInstreamHabitat, $rootScope, $route, site, $scope, summary, user, Utility, $window) {
+    .controller('InstreamHabitatSummaryController', function (Account, $location, PracticeInstreamHabitat, $rootScope, $route, $scope, summary, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,

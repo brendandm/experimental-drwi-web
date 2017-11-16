@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('WetlandsNonTidalSummaryController', function (Account, $location, $log, practice, PracticeWetlandsNonTidal, $q, $rootScope, $route, site, $scope, summary, user, Utility, $window) {
+    .controller('WetlandsNonTidalSummaryController', function (Account, $location, $log, PracticeWetlandsNonTidal, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,

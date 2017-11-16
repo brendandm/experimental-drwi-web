@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('LivestockExclusionSummaryController', function (Account, $location, practice, PracticeLivestockExclusion, $q, $rootScope, $route, site, $scope, summary, user, Utility, $window) {
+    .controller('LivestockExclusionSummaryController', function (Account, $location, PracticeLivestockExclusion, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
