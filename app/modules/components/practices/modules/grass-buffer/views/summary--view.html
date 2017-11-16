@@ -1,40 +1,9 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
 <main class="container" save2pdf pdfName="GrassBuffer">
-  <section class="row feature summary">
-    <article class="feature-detail">
-      <div class="column-11 feature-detail-content">
 
-        <h1>Summary for {{ page.practice.properties.practice_type }}</h1>
-        <p data-ng-if="page.practice.properties.description" data-ng-bind-html="page.practice.properties.description"></p>
+  <div data-ng-include="'/modules/components/practices/views/practiceSummaryHeader--view.html'"></div>
 
-        <p><small>
-          <strong>Project Title:</strong> {{ page.site.properties.project.properties.name }}
-          <strong>Site Number:</strong> {{ page.site.properties.name }}<br />
-          <strong>Stream Name: </strong> {{ page.site.properties.segment.properties.river_name }}
-          <strong>HGMR: </strong> {{ page.site.properties.segment.properties.hgmr_name }}
-        </small></p>
-      </div>
-
-      <nav class="column-5 contextual-navigation-wrapper">
-        <h6><strong>Tools</strong></h6>
-        <ul class="contextual-navigation">
-          <!-- Practice Manangement Navigation -->
-          <li class="active">
-            <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}">
-              Practice Overview
-            </a>
-          </li>
-          <li data-ng-if="page.permissions.can_edit">
-            <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/edit">
-              Edit
-            </a>
-          </li>
-        </ul>
-      </nav>
-
-    </article>
-  </section>
   <section class="row feature summary">
     <article class="feature-detail">
       <div class="column-16 feature-detail-content">
