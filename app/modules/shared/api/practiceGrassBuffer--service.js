@@ -15,6 +15,11 @@
         'query': {
           isArray: false
         },
+        'summary': {
+          isArray: false,
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/summary/grass-buffer/:id')
+        },
         'update': {
           method: 'PATCH',
           transformRequest: function(data) {
