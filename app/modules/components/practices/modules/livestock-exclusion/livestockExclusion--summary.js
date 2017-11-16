@@ -23,92 +23,82 @@
         'id': projectId
       };
 
-      practice.$promise.then(function(successResponse) {
+      self.status = {
+        loading: true
+      };
 
-        self.practice = successResponse;
+      summary.$promise.then(function(successResponse) {
 
-        self.practiceType = Utility.machineName(self.practice.properties.practice_type);
+        self.summary = successResponse;
 
-        //
-        //
-        //
-        self.template = {
-          path: '/modules/components/practices/modules/' + self.practiceType + '/views/report--view.html'
-        };
+        $rootScope.page.title = self.summary.practice.properties.practice_type;
 
-        //
-        //
-        //
-        site.$promise.then(function(successResponse) {
-          self.site = successResponse;
+        self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);
 
-          $rootScope.page.title = self.practice.properties.practice_type;
-          $rootScope.page.links = [
-              {
-                  text: 'Projects',
-                  url: '/projects'
-              },
-              {
-                  text: self.site.properties.project.properties.name,
-                  url: '/projects/' + projectId
-              },
-              {
-                text: self.site.properties.name,
-                url: '/projects/' + projectId + '/sites/' + siteId
-              },
-              {
-                text: self.practice.properties.practice_type,
-                url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
-                type: 'active'
-              }
-          ];
-
-          $rootScope.page.actions = [
+        $rootScope.page.links = [
             {
-              type: 'button-link',
-              action: function() {
-                $window.print();
-              },
-              hideIcon: true,
-              text: 'Print'
+                text: 'Projects',
+                url: '/projects'
             },
             {
-              type: 'button-link',
-              action: function() {
-                $scope.$emit('saveToPdf');
-              },
-              hideIcon: true,
-              text: 'Save as PDF'
+                text: self.summary.site.properties.project.properties.name,
+                url: '/projects/' + projectId
             },
             {
-              type: 'button-link new',
-              action: function() {
-                self.addReading();
-              },
-              text: 'Add Measurement Data'
+              text: self.summary.site.properties.name,
+              url: '/projects/' + projectId + '/sites/' + siteId
+            },
+            {
+              text: self.summary.practice.properties.practice_type,
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId,
+              type: 'active'
             }
-          ];
+        ];
 
-        }, function(errorResponse) {
-          //
-        });
+        $rootScope.page.actions = [
+          {
+            type: 'button-link',
+            action: function() {
+              $window.print();
+            },
+            hideIcon: true,
+            text: 'Print'
+          },
+          {
+            type: 'button-link',
+            action: function() {
+              $scope.$emit('saveToPdf');
+            },
+            hideIcon: true,
+            text: 'Save as PDF'
+          },
+          {
+            type: 'button-link new',
+            action: function() {
+              self.addReading();
+            },
+            text: 'Add Measurement Data'
+          }
+        ];
 
-        //
-        // Verify Account information for proper UI element display
-        //
-        if (Account.userObject && user) {
-            user.$promise.then(function(userResponse) {
-                $rootScope.user = Account.userObject = userResponse;
+        self.status.loading = false;
+      }, function() {});
 
-                self.permissions = {
-                    isLoggedIn: Account.hasToken(),
-                    role: $rootScope.user.properties.roles[0].properties.name,
-                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                    can_edit: true
-                };
-            });
-        }
-      });
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
+
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: true
+              };
+          });
+      }
 
       self.addReading = function(measurementPeriod) {
 

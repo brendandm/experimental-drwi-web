@@ -10,18 +10,18 @@
   angular.module('FieldDoc')
     .controller('BankStabilizationSummaryController', function (Account, $location, $log, PracticeBankStabilization, $rootScope, $route, $scope, summary, Utility, user, $window) {
 
-        var self = this,
-            projectId = $route.current.params.projectId,
-            siteId = $route.current.params.siteId,
-            practiceId = $route.current.params.practiceId;
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
 
-        $rootScope.page = {};
+      $rootScope.page = {};
 
-        self.practiceType = null;
+      self.practiceType = null;
 
-        self.project = {
-          'id': projectId
-        };
+      self.project = {
+        'id': projectId
+      };
 
       self.status = {
         loading: true
