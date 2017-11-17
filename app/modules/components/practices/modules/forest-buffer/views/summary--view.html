@@ -83,7 +83,7 @@
                   </td>
                 </tr>
 
-                <tr data-ng-if="!page.calculateForestBuffer.results.totalPreInstallationLoad">
+                <tr data-ng-if="!page.summary.practice.properties.has_planning_data">
                   <th colspan="5" class="align-center notify-warning">
                     <br />
                     <em>Unable to calculate your nutrient load or reductions due to missing landuse data</em>
@@ -91,11 +91,11 @@
                     <br />
                   </th>
                 </tr>
-                <tr data-ng-if="!page.calculateForestBuffer.results.totalPreInstallationLoad">
+                <tr data-ng-if="!page.summary.practice.properties.has_planning_data">
                   <td colspan="5"></td>
                 </tr>
 
-                <tr data-ng-if="page.calculateForestBuffer.results.totalPreInstallationLoad">
+                <tr data-ng-if="page.summary.practice.properties.has_planning_data">
                   <th>&nbsp;</th>
                   <th>Pre-BMP Load</th>
                   <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
@@ -108,55 +108,79 @@
                   <th>% of Planned</th>
                 </tr>
 
-                <tr data-ng-if="page.calculateForestBuffer.results.totalPreInstallationLoad">
+                <tr data-ng-if="page.summary.practice.properties.has_planning_data">
                   <th>Nitrogen (lbs/yr)</th>
-                  <td>{{ page.calculateForestBuffer.results.totalPreInstallationLoad.nitrogen || 0 | number:2 }}</td>
-                  <td>{{ page.calculateForestBuffer.results.totalPlannedLoad.nitrogen || 0 | number:2 }}</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation' && (report.properties.existing_riparian_landuse && report.properties.upland_landuse)" data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
-                    {{ page.calculateForestBuffer.GetSingleInstalledLoad(report).nitrogen || 0 | number:2 }}
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
+                      {{ report.properties.preinstallation.nitrogen | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
+                      {{ report.properties.planning.nitrogen | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
+                      {{ report.properties.installation.nitrogen | number:2 }}
                   </td>
                   <td>
                     <strong>
-                      {{ page.calculateForestBuffer.quantityInstalled(page.readings.features, 'nitrogen') || 0 | number:2 }}
-                    </strong> lbs/yr</td>
+                      {{ page.summary.practice.properties.quantity_installed.nitrogen | number:2 }}
+                    </strong>
+                  </td>
                   <td>
                     <strong>
-                      {{ page.calculateForestBuffer.quantityInstalled(page.readings.features, 'nitrogen', '%') || 0 | number:2 }}
-                    </strong> %</td>
+                      {{ page.summary.practice.properties.percentage_installed.nitrogen | number:2 }}%
+                    </strong>
                   </td>
                 </tr>
-                <tr data-ng-if="page.calculateForestBuffer.results.totalPreInstallationLoad">
+                <tr data-ng-if="page.summary.practice.properties.has_planning_data">
                   <th>Phosphorus (lbs/yr)</th>
-                  <td>{{ page.calculateForestBuffer.results.totalPreInstallationLoad.phosphorus || 0 | number:2 }}</td>
-                  <td>{{ page.calculateForestBuffer.results.totalPlannedLoad.phosphorus || 0 | number:2 }}</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
-                    {{ page.calculateForestBuffer.GetSingleInstalledLoad(report).phosphorus || 0 | number:2 }}
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
+                      {{ report.properties.preinstallation.phosphorus | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
+                      {{ report.properties.planning.phosphorus | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
+                      {{ report.properties.installation.phosphorus | number:2 }}
                   </td>
                   <td>
                     <strong>
-                      {{ page.calculateForestBuffer.quantityInstalled(page.readings.features, 'phosphorus') || 0 | number:2 }}
-                    </strong> lbs/yr</td>
+                      {{ page.summary.practice.properties.quantity_installed.phosphorus | number:2 }}
+                    </strong>
+                  </td>
                   <td>
                     <strong>
-                      {{ page.calculateForestBuffer.quantityInstalled(page.readings.features, 'phosphorus', '%') || 0 | number:2 }}
-                    </strong> %</td>
+                      {{ page.summary.practice.properties.percentage_installed.phosphorus | number:2 }}%
+                    </strong>
                   </td>
                 </tr>
-                <tr data-ng-if="page.calculateForestBuffer.results.totalPreInstallationLoad">
+                <tr data-ng-if="page.summary.practice.properties.has_planning_data">
                   <th>Sediment (tons/yr)</th>
-                  <td>{{ page.calculateForestBuffer.results.totalPreInstallationLoad.sediment || 0 | number:2 }}</td>
-                  <td>{{ page.calculateForestBuffer.results.totalPlannedLoad.sediment || 0 | number:2 }}</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
-                    {{ page.calculateForestBuffer.GetSingleInstalledLoad(report).sediment || 0 | number:2 }}
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
+                      {{ report.properties.preinstallation.sediment | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
+                      {{ report.properties.planning.sediment | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
+                      {{ report.properties.installation.sediment | number:2 }}
                   </td>
                   <td>
                     <strong>
-                      {{ page.calculateForestBuffer.quantityInstalled(page.readings.features, 'sediment') || 0 | number:2 }}
-                    </strong> lbs/yr</td>
+                      {{ page.summary.practice.properties.quantity_installed.sediment | number:2 }}
+                    </strong>
+                  </td>
                   <td>
                     <strong>
-                      {{ page.calculateForestBuffer.quantityInstalled(page.readings.features, 'sediment', '%') || 0 | number:2 }}
-                    </strong> %</td>
+                      {{ page.summary.practice.properties.percentage_installed.sediment | number:2 }}%
+                    </strong>
                   </td>
                 </tr>
 
@@ -184,27 +208,68 @@
                 <tr>
                   <th>Acres of Riparian Restoration</th>
                   <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
-                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
-                    <span data-ng-bind="page.calculateForestBuffer.GetConversionWithArea(report.properties.length_of_buffer, report.properties.average_width_of_buffer, 43560) | number:2"></span>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
+                      {{ report.properties.metrics.acres_of_riparian_restoration | number:2 }}
                   </td>
-                  <td><strong>{{ page.calculateForestBuffer.return.totalAcresRestored | number:2 }}</strong> acres</td>
-                  <td><strong>{{ page.calculateForestBuffer.return.percentageAcresRestored | number:0 }}%</strong></td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
+                      {{ report.properties.metrics.acres_of_riparian_restoration | number:2 }}
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.acres_of_riparian_restoration | number:2 }}
+                    </strong>acres
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.acres_of_riparian_restoration | number:2 }}%
+                    </strong>
+                  </td>
                 </tr>
                 <tr>
                   <th>Miles of Riparian Restoration</th>
                   <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
-                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
-                    <span data-ng-bind="page.calculateForestBuffer.GetConversion(report.properties.length_of_buffer, 5280) | number:2"></span>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
+                      {{ report.properties.metrics.miles_of_riparian_restoration | number:2 }}
                   </td>
-                  <td><strong>{{ page.calculateForestBuffer.return.totalMilesRestored | number:2 }}</strong> miles</td>
-                  <td><strong>{{ page.calculateForestBuffer.return.percentageMilesRestored | number:0 }}%</strong></td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
+                      {{ report.properties.metrics.miles_of_riparian_restoration | number:2 }}
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.miles_of_riparian_restoration | number:2 }}
+                    </strong>miles
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.miles_of_riparian_restoration | number:2 }}%
+                    </strong>
+                  </td>
                 </tr>
                 <tr>
                   <th>Number of Trees Planted</th>
                   <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
-                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">{{ report.properties.number_of_trees_planted }}</td>
-                  <td><strong data-ng-if="page.calculateForestBuffer.return.percentageTreesPlanted">{{ page.calculateForestBuffer.return.percentageTreesPlanted.total || 0 | number:0 }}</strong> trees</td>
-                  <td><strong data-ng-if="page.calculateForestBuffer.return.percentageTreesPlanted">{{ page.calculateForestBuffer.return.percentageTreesPlanted.percentage || 0 | number:0 }}%</strong></td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
+                      {{ report.properties.metrics.number_of_trees_planted | number:0 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
+                      {{ report.properties.metrics.number_of_trees_planted | number:0 }}
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.number_of_trees_planted | number:0 }}
+                    </strong>trees
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.number_of_trees_planted | number:0 }}%
+                    </strong>
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -353,7 +418,7 @@
             </table>
           </div>
 
-          <div data-ng-if="page.total.planning || page.total.installation || page.total.monitoring">
+          <div data-ng-if="page.summary.practice.properties.has_planning_data">
             <h2><strong>Notes</strong></h2>
             <table class="table">
               <thead>

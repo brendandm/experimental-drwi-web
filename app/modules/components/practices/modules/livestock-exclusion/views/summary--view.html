@@ -289,9 +289,9 @@
                 </tr>
 
 
-                <tr data-ng-if="page.calculateLivestockExclusion.results.totalPreInstallationLoad">
+                <tr data-ng-if="page.summary.practice.properties.has_planning_data">
                   <th>Nitrogen (lbs/yr)</th>
-                  <td>{{ page.calculateLivestockExclusion.results.totalPreInstallationLoad.nitrogen || 0 | number:2 }}</td>
+                  <td>{{ page.summary.practice.properties.has_planning_data.nitrogen || 0 | number:2 }}</td>
                   <td>{{ page.calculateLivestockExclusion.results.totalPlannedLoad.nitrogen || 0 | number:2 }}</td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
                     {{ page.calculateLivestockExclusion.GetSingleInstalledLoad(report).nitrogen || 0 | number:2 }}
@@ -306,9 +306,9 @@
                     </strong> %</td>
                   </td>
                 </tr>
-                <tr data-ng-if="page.calculateLivestockExclusion.results.totalPreInstallationLoad">
+                <tr data-ng-if="page.summary.practice.properties.has_planning_data">
                   <th>Phosphorus (lbs/yr)</th>
-                  <td>{{ page.calculateLivestockExclusion.results.totalPreInstallationLoad.phosphorus || 0 | number:2 }}</td>
+                  <td>{{ page.summary.practice.properties.has_planning_data.phosphorus || 0 | number:2 }}</td>
                   <td>{{ page.calculateLivestockExclusion.results.totalPlannedLoad.phosphorus || 0 | number:2 }}</td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
                     {{ page.calculateLivestockExclusion.GetSingleInstalledLoad(report).phosphorus || 0 | number:2 }}
@@ -323,9 +323,9 @@
                     </strong> %</td>
                   </td>
                 </tr>
-                <tr data-ng-if="page.calculateLivestockExclusion.results.totalPreInstallationLoad">
+                <tr data-ng-if="page.summary.practice.properties.has_planning_data">
                   <th>Sediment (tons/yr)</th>
-                  <td>{{ page.calculateLivestockExclusion.results.totalPreInstallationLoad.sediment || 0 | number:2 }}</td>
+                  <td>{{ page.summary.practice.properties.has_planning_data.sediment || 0 | number:2 }}</td>
                   <td>{{ page.calculateLivestockExclusion.results.totalPlannedLoad.sediment || 0 | number:2 }}</td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
                     {{ page.calculateLivestockExclusion.GetSingleInstalledLoad(report).sediment || 0 | number:2 }}
