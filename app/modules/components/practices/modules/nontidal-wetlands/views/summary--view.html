@@ -28,7 +28,7 @@
               <tbody>
                 <!-- Section Heading -->
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_nontidal_wetlands + 5 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_wetlands_nontidal + 5 }}">
                     <h2><strong>Installation</strong> Summary</h2>
                   </td>
                 </tr>
@@ -39,7 +39,8 @@
                   <td>
                     &nbsp;
                   </td>
-                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                     <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
                       <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
@@ -57,10 +58,10 @@
                   <td>
                     &nbsp;
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                     {{ report.properties.installation_surface_area | number:2 }}
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                     -
                   </td>
                   <td>
@@ -77,7 +78,7 @@
 
                 <!-- Section Heading -->
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_nontidal_wetlands + 5 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_wetlands_nontidal + 5 }}">
                     <h2><strong>Load</strong> Reductions</h2>
                   </td>
                 </tr>
@@ -85,7 +86,7 @@
                 <tr>
                   <th>&nbsp;</th>
                   <td>Pre-BMP Loads</td>
-                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                     <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
                       <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
@@ -97,67 +98,85 @@
                   <th>% of Planned</th>
                 </tr>
 
-                <tr>
+                <tr data-ng-if="page.summary.practice.properties.has_planning_data">
                   <th>Nitrogen (lbs/yr)</th>
-                  <td>
-                    {{ page.results.preinstallation.nitrogen | number:2 }}
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
+                      {{ report.properties.preinstallation.nitrogen | number:2 }}
                   </td>
-                  <td>
-                    {{ page.results.planned.nitrogen | number:2 }}
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
+                      {{ report.properties.planning.nitrogen | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
-                    {{ page.calculateWetlandsNonTidal.plannedLoad(report, 'nitrogen') | number:2 }}
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
+                      {{ report.properties.installation.nitrogen | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateWetlandsNonTidal.installed(page.readings.features, 'nitrogen') | number:2 }}
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.nitrogen | number:2 }}
+                    </strong>
                   </td>
                   <td>
-                    {{ page.calculateWetlandsNonTidal.installed(page.readings.features, 'nitrogen', '%') | number:2 }}%
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.nitrogen | number:2 }}%
+                    </strong>
                   </td>
                 </tr>
-                <tr>
+                <tr data-ng-if="page.summary.practice.properties.has_planning_data">
                   <th>Phosphorus (lbs/yr)</th>
-                  <td>
-                    {{ page.results.preinstallation.phosphorus | number:2 }}
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
+                      {{ report.properties.preinstallation.phosphorus | number:2 }}
                   </td>
-                  <td>
-                    {{ page.results.planned.phosphorus | number:2 }}
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
+                      {{ report.properties.planning.phosphorus | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
-                    {{ page.calculateWetlandsNonTidal.plannedLoad(report, 'phosphorus') | number:2 }}
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
+                      {{ report.properties.installation.phosphorus | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateWetlandsNonTidal.installed(page.readings.features, 'phosphorus') | number:2 }}
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.phosphorus | number:2 }}
+                    </strong>
                   </td>
                   <td>
-                    {{ page.calculateWetlandsNonTidal.installed(page.readings.features, 'phosphorus', '%') | number:2 }}%
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.phosphorus | number:2 }}%
+                    </strong>
                   </td>
                 </tr>
-                <tr>
+                <tr data-ng-if="page.summary.practice.properties.has_planning_data">
                   <th>Sediment (tons/yr)</th>
-                  <td>
-                      {{ page.results.preinstallation.sediment | number:2 }}
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
+                      {{ report.properties.preinstallation.sediment | number:2 }}
                   </td>
-                  <td>
-                    {{ page.results.planned.sediment | number:2 }}
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
+                      {{ report.properties.planning.sediment | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
-                    {{ page.calculateWetlandsNonTidal.plannedLoad(report, 'sediment') | number:2 }}
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
+                      {{ report.properties.installation.sediment | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateWetlandsNonTidal.installed(page.readings.features, 'sediment') | number:2 }}
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.sediment | number:2 }}
+                    </strong>
                   </td>
                   <td>
-                    {{ page.calculateWetlandsNonTidal.installed(page.readings.features, 'sediment', '%') | number:2 }}%
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.sediment | number:2 }}%
+                    </strong>
                   </td>
                 </tr>
 
                 <!-- Section Heading -->
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_nontidal_wetlands + 5 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_wetlands_nontidal + 5 }}">
                     <h2><strong>Chesapeake Bay</strong> Metrics</h2>
                   </td>
                 </tr>
@@ -167,18 +186,23 @@
                   <td>
                       -
                   </td>
-                  <td>
-                    {{ page.calculateWetlandsNonTidal.milesRestored(page.readings.features, 'Planning') | number:2 }}
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
+                      {{ report.properties.metrics.acres_of_wetlands_restored | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
-                      {{ page.calculateWetlandsNonTidal.milesRestored([report], 'Installation') | number:2 }}
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
+                      {{ report.properties.metrics.acres_of_wetlands_restored | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateWetlandsNonTidal.milesRestored(page.readings.features, 'Installation') | number:2 }}
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.acres_of_wetlands_restored | number:2 }}
+                    </strong>acres
                   </td>
                   <td>
-                    {{ page.calculateWetlandsNonTidal.milesRestored(page.readings.features, 'Installation', '%') | number:2 }}%
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.acres_of_wetlands_restored | number:2 }}%
+                    </strong>
                   </td>
                 </tr>
               </tbody>
@@ -191,14 +215,14 @@
             <div class="table-responsive"><table class="table">
 
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_nontidal_wetlands + 4 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_wetlands_nontidal + 4 }}">
                     <h2><strong>Interim</strong> BMP Metrics Data</h2>
                   </td>
                 </tr>
 
                 <tr>
                   <th>&nbsp;</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                     <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       Monitored on<br />
                       {{ report.properties.report_date }}
@@ -215,56 +239,56 @@
                 <tr>
                   <th class="align-left">Wetland Surface Area (acres)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_hydrology_wetland_surface_area }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Water Depth, monthly or seasonal (feet)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_hydrology_water_depth }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Inflow (cfs)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_hydrology_inflow }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Outflow (cfs)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_hydrology_outflow }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Days/Month of Continuous Surface Water (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_hydrology_days_per_month_continuous_surface_water }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Monthly Precipitation (inches)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_hydrology_monthly_percipitation }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Saturation in Upper 30cm of Soil (%)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_hydrology_saturation_in_upper_30cm_soil }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Median Depth to Water Table (feet)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_hydrology_media_depth_to_water_table }}
                   </td>
                 </tr>
@@ -278,77 +302,77 @@
                 <tr>
                   <th class="align-left">Native Plant Cover (%)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_biota_native_plant_cover }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Non-native Plant Cover (%)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_biota_non_native_plant_cover }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Plant Diversity Index (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_biota_plant_diversity_index }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Mammal Diversity Index (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_biota_mammal_diversity_index }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Bird Diversity Index (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_biota_bird_diversity_index }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">No. of Bird Nests, Breeding Pairs, or Offspring (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_biota_no_bird_nests_breeding_pairs_offspring }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">No. of Rare or Threatened Birds (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_biota_no_rare_threatened_birds }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Amphibian and Reptile Diversity Index (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_biota_amphibian_reptile_diversity_index }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Fish Bioassessment Index (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_biota_fish_bioassessment_index }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Macroinvertebrate Bioassessment Index (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_biota_macroinvertebrate_bioassessment_index }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Diatom Diversity Index (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_biota_diatom_diversity_index }}
                   </td>
                 </tr>
@@ -361,125 +385,125 @@
                 <tr>
                   <th class="align-left">Dissolved Oxygen (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_physicochemical_dissolved_oxygen }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Turbidity (NTU)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_physicochemical_turbidity }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Temperature (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_physicochemical_temperature }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Chlorophyll α (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_physicochemical_chlorophyll_a }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Nitrate-N (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_physicochemical_nitrate_n }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Total N (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_physicochemical_total_n }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Orthophosphate-P (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_physicochemical_orthophosphate_p }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Total P (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_physicochemical_total_p }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Porewater Conductivity (μS/cm)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_physicochemical_porewater_conductivity }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Porewater N (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_physicochemical_porewater_n }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Porewater P (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_physicochemical_porewater_p }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Porewater DO (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_physicochemical_porewater_do }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Soil Organic Matter (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_physicochemical_soil_organic_matter }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Soil Bulk Density (gm/cm<sup>3</sup>)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_physicochemical_soil_bulk_density }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Denitrification Potential (gm/m<sup>3</sup>/day)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_physicochemical_denitrification_potential }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Sediment Accretion (m<sup>3</sup>/yr)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                       {{ report.properties.monitoring_physicochemical_sediment_accretion }}
                   </td>
                 </tr>
 
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_nontidal_wetlands + 4 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_wetlands_nontidal + 4 }}">
                     <h2><strong>Adaptive</strong> Management Checks Performed</h2>
                   </td>
                 </tr>
 
                 <tr>
                   <th>&nbsp;</th>
-                  <th data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                  <th data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                     <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       Monitored on<br />
                       {{ report.properties.report_date }}
@@ -495,19 +519,19 @@
 
                 <tr>
                   <th class="align-left wrap" width="50%">Has the designed hydrologic regime established itself? If not, revisit design to improve inflow/outflow.	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                     <div data-ng-if="report.properties.monitoring_checklist_hydrology_1" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left wrap" width="50%">Do built features and natural structural elements continue to meet design specifications?	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                     <div data-ng-if="report.properties.monitoring_checklist_hydrology_2" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left wrap" width="50%">Has LWD maintained its planned density? If not, see Sellner et al., 2012, p.104.	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                     <div data-ng-if="report.properties.monitoring_checklist_hydrology_3" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
@@ -520,25 +544,25 @@
 
                 <tr>
                   <th class="align-left wrap" width="50%">Has planned vegetation established itself, as expected?	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                     <div data-ng-if="report.properties.monitoring_checklist_biota_1" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left wrap" width="50%">Have invasive species become prevelant? If so remove periodically.	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                     <div data-ng-if="report.properties.monitoring_checklist_biota_2" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left wrap" width="50%">Have muskrats, nutria, or other mammals altered planned development of the wetland? If so, develop a mangement strategy to control them.	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                     <div data-ng-if="report.properties.monitoring_checklist_biota_3" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left wrap" width="50%">Have targeted rare or threatened species increased, as planned? If not, revise management strategy.	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                     <div data-ng-if="report.properties.monitoring_checklist_biota_4" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
@@ -551,7 +575,7 @@
 
                 <tr>
                   <th class="align-left wrap" width="50%">Perform any additional management, maintenance, or repair indicated by the interim metrics.	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                     <div data-ng-if="report.properties.monitoring_checklist_physicochemical_1" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
@@ -570,7 +594,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr data-ng-repeat="report in page.summary.practice.properties.readings_nontidal_wetlands | orderBy:'id'">
+                <tr data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
                   <td class="align-left">
                     <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       {{ report.properties.report_date }}
