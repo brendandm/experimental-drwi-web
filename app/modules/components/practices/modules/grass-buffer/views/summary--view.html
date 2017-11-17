@@ -48,9 +48,12 @@
                 <tr>
                   <th>Length of Buffer Installed (ft)</th>
                   <td>&nbsp;</td> <!-- Empty because of Pre-BMP Load -->
-                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_grass_buffer | orderBy:'id'">{{ report.properties.length_of_buffer }}</td>
-                  <td><strong data-ng-if="page.calculateGrassBuffer.results.percentageLengthOfBuffer">{{ page.calculateGrassBuffer.results.percentageLengthOfBuffer.total | number:2 }}</strong></td>
-                  <td><strong data-ng-if="page.calculateGrassBuffer.results.percentageLengthOfBuffer">{{ page.calculateGrassBuffer.results.percentageLengthOfBuffer.percentage | number:0 }}%</strong></td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_grass_buffer | orderBy:'id'">
+                      {{ report.properties.length_of_buffer }}
+                  </td>
+                  <td><strong>{{ page.summary.practice.properties.quantity_installed.length_of_buffer | number:2 }}</strong></td>
+                  <td><strong>{{ page.summary.practice.properties.percentage_installed.length_of_buffer | number:2 }}%</strong></td>
                 </tr>
                 <tr>
                   <th>Average Buffer Width (ft)</th>
@@ -244,15 +247,17 @@
                 </tr>
 
                 <tr>
-                  <th class="align-left" colspan="{{ page.readings.features.length + 1 }}" style="background: #efefef;">Vegetative Cover</th>
+                  <th class="align-left" colspan="{{ page.summary.practice.properties.readings_grass_buffer.length + 1 }}" style="background: #efefef;">Vegetative Cover</th>
                 </tr>
                 <tr>
                   <th class="align-left">Cover (%) <a href="#">?</a></th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_grass_buffer | orderBy:'id'">{{ report.properties.native_vegetation_intact }}</td>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_grass_buffer | orderBy:'id'">
+                    {{ report.properties.native_vegetation }}
+                  </td>
                 </tr>
 
                 <tr>
-                  <th class="align-left" colspan="{{ page.readings.features.length + 1 }}" style="background: #efefef;">Buffer Composition</th>
+                  <th class="align-left" colspan="{{ page.summary.practice.properties.readings_grass_buffer.length + 1 }}" style="background: #efefef;">Buffer Composition</th>
                 </tr>
                 <tr>
                   <th class="align-left">Woody (%)</th>
@@ -286,7 +291,7 @@
                 </tr>
 
                 <tr>
-                  <th class="align-left" colspan="{{ page.readings.features.length + 1 }}" style="background: #efefef;">Riparian Vegetation</th>
+                  <th class="align-left" colspan="{{ page.summary.practice.properties.readings_grass_buffer.length + 1 }}" style="background: #efefef;">Riparian Vegetation</th>
                 </tr>
                 <tr>
                   <th class="align-left">Vegetative Protection - Left Bank</th>
