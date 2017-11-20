@@ -107,8 +107,8 @@ angular.module('FieldDoc')
 
     self.removeImage = function(image) {
 
-      var _files_index = self.files.image.indexOf(image);
-      var _image_index = self.files.image.indexOf(image);
+      var _files_index = self.files.images.indexOf(image);
+      var _image_index = self.practice.properties.images.indexOf(image);
 
       self.files.images.splice(_files_index, 1);
       self.practice.properties.images.splice(_image_index, 1);
