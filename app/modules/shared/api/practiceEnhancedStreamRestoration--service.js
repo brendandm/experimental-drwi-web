@@ -15,6 +15,11 @@
         'query': {
           isArray: false
         },
+        'summary': {
+          isArray: false,
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/summary/enhanced-stream-restoration/:id')
+        },
         'update': {
           method: 'PATCH',
           transformRequest: function(data) {

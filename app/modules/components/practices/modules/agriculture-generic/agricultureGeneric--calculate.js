@@ -7,12 +7,46 @@
  * Service in the FieldDoc.
  */
 angular.module('FieldDoc')
-  .service('CalculateAgricultureGeneric', function(Calculate, EfficiencyAgricultureGeneric, $q) {
+  .service('CalculateAgricultureGeneric', function(Calculate, EfficiencyAgricultureGeneric, LoadData, $q) {
 
     return {
       readings: null,
       loadData: null,
       ual: null,
+      GetLoadVariables: function(landRiverSegmentCode, existingLanduseType, callback) {
+
+        var self = this;
+
+        var deferred = $q.defer();
+
+        var promise = LoadData.query({
+            q: {
+              filters: [
+                {
+                  name: 'land_river_segment',
+                  op: 'eq',
+                  val: planned.segment
+                },
+                {
+                  name: 'landuse',
+                  op: 'eq',
+                  val: planned.landuse
+                }
+              ]
+            }
+          }).$promise.then(function(successResponse) {
+
+            if (callback) {
+              callback(successResponse)
+            }
+
+            deferred.resolve(planned);
+          }, function(errorResponse) {
+
+          });
+
+        return deferred.promise;
+      },
       getUAL: function(_planning_data) {
         /**
          * Calculate nitrogen, phosphorus, and sediment UALs.

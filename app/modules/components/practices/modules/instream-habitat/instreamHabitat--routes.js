@@ -39,6 +39,24 @@
             }
           }
         })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/instream-habitat/summary', {
+          templateUrl: '/modules/components/practices/modules/instream-habitat/views/summary--view.html',
+          controller: 'InstreamHabitatSummaryController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            summary: function(PracticeInstreamHabitat, $route) {
+              return PracticeInstreamHabitat.summary({
+                id: $route.current.params.practiceId
+              });
+            }
+          }
+        })
         .when('/projects/:projectId/sites/:siteId/practices/:practiceId/instream-habitat/:reportId/edit', {
           templateUrl: '/modules/components/practices/modules/instream-habitat/views/form--view.html',
           controller: 'InstreamHabitatFormController',

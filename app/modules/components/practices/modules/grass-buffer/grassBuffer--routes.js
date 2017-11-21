@@ -40,6 +40,24 @@ angular.module('FieldDoc')
           }
         }
       })
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/grass-buffer/summary', {
+        templateUrl: '/modules/components/practices/modules/grass-buffer/views/summary--view.html',
+        controller: 'GrassBufferSummaryController',
+        controllerAs: 'page',
+        resolve: {
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          summary: function(PracticeGrassBuffer, $route) {
+            return PracticeGrassBuffer.summary({
+              id: $route.current.params.practiceId
+            });
+          }
+        }
+      })
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/grass-buffer/:reportId/edit', {
         templateUrl: '/modules/components/practices/modules/grass-buffer/views/form--view.html',
         controller: 'GrassBufferFormController',

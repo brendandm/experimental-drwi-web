@@ -37,6 +37,24 @@ angular.module('FieldDoc')
           }
         }
       })
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/bank-stabilization/summary', {
+        templateUrl: '/modules/components/practices/modules/bank-stabilization/views/summary--view.html',
+        controller: 'BankStabilizationSummaryController',
+        controllerAs: 'page',
+        resolve: {
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          summary: function(PracticeBankStabilization, $route) {
+            return PracticeBankStabilization.summary({
+              id: $route.current.params.practiceId
+            });
+          }
+        }
+      })
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/bank-stabilization/:reportId/edit', {
         templateUrl: '/modules/components/practices/modules/bank-stabilization/views/form--view.html',
         controller: 'BankStabilizationFormController',

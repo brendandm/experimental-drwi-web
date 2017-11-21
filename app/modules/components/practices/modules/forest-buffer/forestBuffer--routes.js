@@ -40,6 +40,24 @@ angular.module('FieldDoc')
           }
         }
       })
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/forest-buffer/summary', {
+        templateUrl: '/modules/components/practices/modules/forest-buffer/views/summary--view.html',
+        controller: 'ForestBufferSummaryController',
+        controllerAs: 'page',
+        resolve: {
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          summary: function(PracticeForestBuffer, $route) {
+            return PracticeForestBuffer.summary({
+              id: $route.current.params.practiceId
+            });
+          }
+        }
+      })
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/forest-buffer/:reportId/edit', {
         templateUrl: '/modules/components/practices/modules/forest-buffer/views/form--view.html',
         controller: 'ForestBufferFormController',

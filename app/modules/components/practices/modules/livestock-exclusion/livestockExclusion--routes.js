@@ -42,6 +42,24 @@
             }
           }
         })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/livestock-exclusion/summary', {
+          templateUrl: '/modules/components/practices/modules/livestock-exclusion/views/summary--view.html',
+          controller: 'LivestockExclusionSummaryController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            summary: function(PracticeLivestockExclusion, $route) {
+              return PracticeLivestockExclusion.summary({
+                id: $route.current.params.practiceId
+              });
+            }
+          }
+        })
         .when('/projects/:projectId/sites/:siteId/practices/:practiceId/livestock-exclusion/:reportId/edit', {
           templateUrl: '/modules/components/practices/modules/livestock-exclusion/views/form--view.html',
           controller: 'LivestockExclusionFormController',

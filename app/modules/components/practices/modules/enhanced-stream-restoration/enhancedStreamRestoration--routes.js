@@ -39,6 +39,24 @@
             }
           }
         })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/enhanced-stream-restoration/summary', {
+          templateUrl: '/modules/components/practices/modules/enhanced-stream-restoration/views/summary--view.html',
+          controller: 'EnhancedStreamRestorationSummaryController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            summary: function(PracticeEnhancedStreamRestoration, $route) {
+              return PracticeEnhancedStreamRestoration.summary({
+                id: $route.current.params.practiceId
+              });
+            }
+          }
+        })
         .when('/projects/:projectId/sites/:siteId/practices/:practiceId/enhanced-stream-restoration/:reportId/edit', {
           templateUrl: '/modules/components/practices/modules/enhanced-stream-restoration/views/form--view.html',
           controller: 'EnhancedStreamRestorationFormController',

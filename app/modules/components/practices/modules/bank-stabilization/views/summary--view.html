@@ -1,0 +1,532 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="container" save2pdf>
+
+  <div data-ng-include="'/modules/components/practices/views/practiceSummaryHeader--view.html'"></div>
+
+  <section class="row feature summary">
+    <article class="feature-detail">
+
+      <div class="throbber throbber-small"
+           data-ng-if="page.status.loading"></div>
+
+      <div class="column-16 feature-detail-content"
+           data-ng-if="!page.status.loading">
+        <div class="table-responsive">
+
+          <div data-ng-if="!page.summary.practice.properties.has_planning_data">
+            <h2><strong>Empty</strong> Summary</h2>
+
+            <p>
+              Please add a new Planning measurement period to this Practice to begin.
+            </p>
+
+            <p>
+              <a class="button" data-ng-click="page.addReading('Planning')">Add Planning Data</a>
+            </p>
+          </div>
+
+          <!-- INSTALLATION SUMMARY -->
+
+          <div data-ng-if="page.summary.practice.properties.has_planning_data">
+            <table class="table">
+              <tbody>
+                <!-- Section Heading -->
+                <tr class="no-rule">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_bank_stabilization + 5 }}">
+                    <h2><strong>Installation</strong> Summary</h2>
+                  </td>
+                </tr>
+
+                <!-- Measurement Period Headings -->
+                <tr>
+                  <th>&nbsp;</th>
+                  <td>
+                    &nbsp;
+                  </td>
+                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
+                      <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
+                      <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
+                      <br />
+                      {{ report.properties.report_date }}
+                    </a>
+                  </th>
+                  <th>Installed To-Date</th>
+                  <th>% of Planned</th>
+                </tr>
+
+                <!-- Installation Summary -->
+                <tr>
+                  <th>Length of Streambank (ft)</th>
+                  <td>
+                    &nbsp;
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    {{ report.properties.installation_length_of_streambank | number:2 }}
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.length_of_streambank | number:2 }}
+                    </strong>
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.length_of_streambank | number:2 }}%
+                    </strong>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Eroding Bank Height (ft)</th>
+                  <td>
+                    &nbsp;
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    {{ report.properties.installation_eroding_bank_height | number:2 }}
+                  </td>
+                  <td>
+                    --
+                  </td>
+                  <td>
+                    --
+                  </td>
+                </tr>
+                <tr>
+                  <th>Eroding Bank Horizontal Width (ft)</th>
+                  <td>
+                    &nbsp;
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    {{ report.properties.installation_eroding_bank_horizontal_width | number:2 }}
+                  </td>
+                  <td>
+                    --
+                  </td>
+                  <td>
+                    --
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>LER Evaluation Basis</th>
+                  <td>
+                    &nbsp;
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    {{ report.properties.installation_ler_evaluation_basis }}
+                  </td>
+                  <td>
+                    --
+                  </td>
+                  <td>
+                    --
+                  </td>
+                  <td>
+                    --
+                  </td>
+                </tr>
+                <tr>
+                  <th>Lateral Erosion Rate (LER; ft/yr)</th>
+                  <td>
+                    &nbsp;
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    {{ report.properties.installation_lateral_erosion_rate }}
+                  </td>
+                  <td>
+                    --
+                  </td>
+                  <td>
+                    --
+                  </td>
+                  <td>
+                    --
+                  </td>
+                </tr>
+                <tr>
+                  <th>Soil Bulk Density (lbs/cu ft)</th>
+                  <td>
+                    &nbsp;
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    {{ report.properties.installation_soil_bulk_density }}
+                  </td>
+                  <td>
+                    --
+                  </td>
+                  <td>
+                    --
+                  </td>
+                  <td>
+                    --
+                  </td>
+                </tr>
+                <tr>
+                  <th>Soil N Content Density (lbs N/ton soil)</th>
+                  <td>
+                    &nbsp;
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    {{ report.properties.installation_soil_n_content }}
+                  </td>
+                  <td>
+                    --
+                  </td>
+                  <td>
+                    --
+                  </td>
+                  <td>
+                    --
+                  </td>
+                </tr>
+                <tr>
+                  <th>Soil P Content Density (lbs P/ton soil)</th>
+                  <td>
+                    &nbsp;
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    {{ report.properties.installation_soil_p_content }}
+                  </td>
+                  <td>
+                    --
+                  </td>
+                  <td>
+                    --
+                  </td>
+                  <td>
+                    --
+                  </td>
+                </tr>
+
+                <!-- Section Heading -->
+                <tr class="no-rule">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_bank_stabilization + 5 }}">
+                    <h2><strong>Load</strong> Reductions</h2>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>&nbsp;</th>
+                  <td>Pre-BMP Loads</td>
+                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
+                      <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
+                      <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
+                      <br />
+                      {{ report.properties.report_date }}
+                    </a>
+                  </th>
+                  <th>Installed To-date</th>
+                  <th>% of Planned</th>
+                </tr>
+
+                <tr>
+                  <th>Bank Erosion Sediment Reduction (tons/yr)</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.preinstallation.sediment | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.planning.sediment | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.installation.sediment | number:2 }}
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.sediment | number:2 }} tons/yr
+                    </strong>
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.sediment | number:2 }}%
+                    </strong>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>Bank Erosion Nitrogen Reduction (lbs/yr)</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.preinstallation.nitrogen | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.planning.nitrogen | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.installation.nitrogen | number:2 }}
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.nitrogen | number:2 }} lbs/yr
+                    </strong>
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.nitrogen | number:2 }}%
+                    </strong>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>Bank Erosion Phosphorus Reduction (lbs/yr)</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.preinstallation.phosphorus | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.planning.phosphorus | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.installation.phosphorus | number:2 }}
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.phosphorus | number:2 }} lbs/yr
+                    </strong>
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.phosphorus | number:2 }}%
+                    </strong>
+                  </td>
+                </tr>
+
+                <tr class="no-rule">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_bank_stabilization + 5 }}">
+                    <h2><strong>Chesapeake Bay</strong> Metrics</h2>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>&nbsp;</th>
+                  <td>
+                    &nbsp;
+                  </td>
+                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
+                      <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
+                      <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
+                      <br />
+                      {{ report.properties.report_date }}
+                    </a>
+                  </th>
+                  <th>Installed To-date</th>
+                  <th>% of Planned</th>
+                </tr>
+
+                <tr>
+                  <th>Miles of Streambank Restored</th>
+                  <td>
+                    &nbsp;
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.metrics.miles_of_streambank_restored | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.metrics.miles_of_streambank_restored | number:2 }}
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.miles_of_streambank_restored | number:2 }}
+                    </strong>
+                  </td>
+                  <td>
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.miles_of_streambank_restored | number:2 }}%
+                    </strong>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+          <!-- MONITORING -->
+
+          <div data-ng-if="page.summary.practice.properties.has_monitoring_data">
+            <div class="table-responsive"><table class="table">
+
+                <tr class="no-rule">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_bank_stabilization + 4 }}">
+                    <h2><strong>Interim</strong> BMP Metrics Data</h2>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>&nbsp;</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
+                      Monitored on<br />
+                      {{ report.properties.report_date }}
+                    </a>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th class="align-left">Bank Erosion Hazard Index (BEHI) Rating</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.metrics_bank_erosion_hazard_index_rating }}
+                  </td>
+                </tr>
+                <tr>
+                  <th class="align-left">Near Bank Stress (NBS) Rating</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.metrics_near_bank_stress_rating }}
+                  </td>
+                </tr>
+                <tr>
+                  <th class="align-left">Riffle Stability Index</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.metrics_riffle_stability_index }}
+                  </td>
+                </tr>
+                <tr>
+                  <th class="align-left">Logarithm of Relative Bed Stability (LRBS)</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.metrics_logarithm_of_relative_bed_stability }}
+                  </td>
+                </tr>
+                <tr>
+                  <th class="align-left">Substrate Mean Particle Size (D50)</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.metrics_substrate_mean_particle_size }}
+                  </td>
+                </tr>
+                <tr>
+                  <th class="align-left">Streambed Percent Fines</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                      {{ report.properties.metrics_streambed_percent_fines }}
+                  </td>
+                </tr>
+
+                <tr class="no-rule">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_bank_stabilization + 4 }}">
+                    <h2><strong>Adaptive</strong> Management Checks Performed</h2>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>&nbsp;</th>
+                  <th data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
+                      Monitored on<br />
+                      {{ report.properties.report_date }}
+                    </a>
+                  </th>
+                </tr>
+
+                <tr>
+                  <th class="align-left wrap" width="50%">Step pools, floodplain re-connection, or other built elements should have photos or site inspections to document that design elements were followed by contractors and disturbance to the riparian zone was minimized. No trees should be removed unless absolutely essential. Banks with riparian vegetation should not be re-graded, but the channel invert raised instead.</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    <div data-ng-if="report.properties.monitoring_design_criteria_1" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="align-left wrap" width="50%">Built elements match design in extent, placement, and type of material - should be reassessed after a 10-yr or greater event. </th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    <div data-ng-if="report.properties.monitoring_design_criteria_2" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="align-left wrap" width="50%">Coir logs, woody debris additions, or other natural structural elements meet all design specifications.</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    <div data-ng-if="report.properties.monitoring_design_criteria_3" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="align-left wrap" width="50%">Have any rills or gullies developed along the restored bank?</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    <div data-ng-if="report.properties.monitoring_hydraulic" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="align-left wrap" width="50%">Have livestock been kept off of restored areas?</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    <div data-ng-if="report.properties.monitoring_geomorphic_1" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="align-left wrap" width="50%">Have plantings been protected from destructive fire and destructive grazing?</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    <div data-ng-if="report.properties.monitoring_geomorphic_2" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="align-left wrap" width="50%">Have bare and/or eroded areas appeared in the buffer?</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    <div data-ng-if="report.properties.monitoring_geomorphic_3" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="align-left wrap" width="50%">Have noxious weeds and invasive species appeared which have changed the desired species mix? If so, see Sellner et al., 2012, p.106.</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    <div data-ng-if="report.properties.monitoring_geomorphic_4" class="icon retinaicon-essentials-071"></div>
+                  </td>
+                </tr>
+              </tbody>
+            </table></div>
+          </div>
+
+          <div data-ng-if="page.summary.practice.properties.has_planning_data || page.summary.practice.properties.has_installation_data || page.summary.practice.properties.has_monitoring_data">
+            <h2><strong>Notes</strong></h2>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th class="align-left" width="10%">Date</th>
+                  <th class="align-left" width="90%">Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                  <td class="align-left">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
+                      {{ report.properties.report_date }}
+                    </a>
+                  </td>
+                  <td class="align-left" data-ng-if="report.properties.notes">{{ report.properties.notes }}</td>
+                  <td class="align-left" data-ng-if="!report.properties.notes"><em>No notes recorded for this date</em></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </article>
+  </section>
+</main>
+
+<div data-ng-include="'/modules/components/practices/modules/bank-stabilization/views/citations--view.html'"></div>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>
+
+<div data-ng-show="page.showData">
+  <code>
+    <pre>
+      {{ page.summary | json }}
+    </pre>
+  </code>
+</div>
