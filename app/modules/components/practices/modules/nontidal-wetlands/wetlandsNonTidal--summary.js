@@ -106,7 +106,7 @@
             'measurement_period': measurementPeriod,
             'report_date': new Date(),
             'practice_id': practiceId,
-            'account_id': self.site.properties.project.properties.account_id
+            'account_id': self.summary.site.properties.project.properties.account_id
           });
 
         newReading.$save().then(function(successResponse) {

@@ -7033,7 +7033,7 @@ angular.module('FieldDoc')
             'measurement_period': measurementPeriod,
             'report_date': new Date(),
             'practice_id': practiceId,
-            'account_id': self.site.properties.project.properties.account_id
+            'account_id': self.summary.site.properties.project.properties.account_id
           });
 
         newReading.$save().then(function(successResponse) {
@@ -8025,7 +8025,7 @@ angular.module('FieldDoc')
             'measurement_period': measurementPeriod,
             'report_date': new Date(),
             'practice_id': practiceId,
-            'account_id': self.site.properties.project.properties.account_id
+            'account_id': self.summary.site.properties.project.properties.account_id
           });
 
         newReading.$save().then(function(successResponse) {
@@ -9108,7 +9108,7 @@ angular.module('FieldDoc')
             'measurement_period': measurementPeriod,
             'report_date': new Date(),
             'practice_id': practiceId,
-            'account_id': self.site.properties.project.properties.account_id
+            'account_id': self.summary.site.properties.project.properties.account_id
           });
 
         newReading.$save().then(function(successResponse) {
@@ -10425,7 +10425,7 @@ angular.module('FieldDoc')
             'measurement_period': measurementPeriod,
             'report_date': moment().format('YYYY-MM-DD'),
             'practice_id': practiceId,
-            'account_id': self.site.properties.project.properties.account_id
+            'account_id': self.summary.site.properties.project.properties.account_id
           });
 
         newReading.$save().then(function(successResponse) {
@@ -10994,7 +10994,7 @@ angular.module('FieldDoc')
             'measurement_period': measurementPeriod,
             'report_date': new Date(),
             'practice_id': practiceId,
-            'account_id': self.site.properties.project.properties.account_id
+            'account_id': self.summary.site.properties.project.properties.account_id
           });
 
         newReading.$save().then(function(successResponse) {
@@ -11717,7 +11717,7 @@ angular.module('FieldDoc')
             'measurement_period': measurementPeriod,
             'report_date': moment().format('YYYY-MM-DD'),
             'practice_id': practiceId,
-            'account_id': self.site.properties.project.properties.account_id
+            'account_id': self.summary.site.properties.project.properties.account_id
           });
 
         newReading.$save().then(function(successResponse) {
@@ -12642,7 +12642,7 @@ angular.module('FieldDoc')
           self.practice = new Practice({
               'practice_type': 'Bank Stabilization',
               'site_id': self.site.id,
-              'account_id': self.site.properties.project.properties.account_id
+              'account_id': self.summary.site.properties.project.properties.account_id
           });
 
           self.practice.$save(function(successResponse) {
@@ -13513,7 +13513,7 @@ angular.module('FieldDoc')
             'measurement_period': measurementPeriod,
             'report_date': new Date(),
             'practice_id': practiceId,
-            'account_id': self.site.properties.project.properties.account_id
+            'account_id': self.summary.site.properties.project.properties.account_id
           });
 
         newReading.$save().then(function(successResponse) {

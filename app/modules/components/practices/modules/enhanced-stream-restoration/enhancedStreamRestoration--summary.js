@@ -120,7 +120,7 @@
           self.practice = new Practice({
               'practice_type': 'Bank Stabilization',
               'site_id': self.site.id,
-              'account_id': self.site.properties.project.properties.account_id
+              'account_id': self.summary.site.properties.project.properties.account_id
           });
 
           self.practice.$save(function(successResponse) {
