@@ -389,9 +389,20 @@
 
                 <tr>
                   <th>Fraction of Annual Runoff Treated by Floodplain</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Pre-Project' || report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_enhanced_stream_restoration | orderBy:'id'">
-                    {{ page.calculateEnhancedStreamRestoration.fractionRunoffTreatedByFloodplain(report.properties.rainfall_depth_where_connection_occurs, report.properties.floodplain_connection_volume) || 0 | number:2 }}
+
+                  <td data-ng-if="report.properties.measurement_period === 'Pre-Project'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_enhanced_stream_restoration | orderBy:'id'">
+                      {{ report.properties.preproject.fraction_of_runoff_treated_by_floodplain | number:2 }}
                   </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_enhanced_stream_restoration | orderBy:'id'">
+                      {{ report.properties.planning.fraction_of_runoff_treated_by_floodplain | number:2 }}
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_enhanced_stream_restoration | orderBy:'id'">
+                      {{ report.properties.installation.fraction_of_runoff_treated_by_floodplain | number:2 }}
+                  </td>
+
                   <td>
                     &nbsp;
                   </td>
