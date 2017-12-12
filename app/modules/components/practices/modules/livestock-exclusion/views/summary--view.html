@@ -75,7 +75,7 @@
                 <tr>
                   <th>Type of Livestock</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
-                    {{ report.properties.animal_type.properties.animal_type }}
+                    {{ report.properties.planning.animal_type }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
                     &nbsp;
