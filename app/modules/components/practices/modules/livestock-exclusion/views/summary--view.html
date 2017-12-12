@@ -26,7 +26,7 @@
               <tbody>
                 <!-- Section Heading -->
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_livestock_exclusion + 4 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_livestock_exclusion.length + 4 }}">
                     <h2><strong>Pre-project</strong> Summary</h2>
                     <p>LIVESTOCK INVENTORY</p>
                   </td>
@@ -114,7 +114,7 @@
               <tbody>
                 <!-- Section Heading -->
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_livestock_exclusion + 4 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_livestock_exclusion.length + 4 }}">
                     <p>CURRENT ANIMAL IN-STREAM ACTIVITY</p>
                   </td>
                 </tr>
@@ -195,7 +195,7 @@
               <tbody>
                 <!-- Section Heading -->
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_livestock_exclusion + 4 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_livestock_exclusion.length + 4 }}">
                     <h2><strong>Installation</strong> Summary</h2>
                   </td>
                 </tr>
@@ -220,15 +220,18 @@
                 <tr>
                   <th>Length of Stream Fencing Installed (ft)</th>
                   <td>&nbsp;</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">{{ report.properties.length_of_fencing | number:2 }}</td>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
+                    {{ report.properties.length_of_fencing | number:2 }}
+                  </td>
                   <td>
                     <strong>
-                      {{ page.calculateLivestockExclusion.quantityInstalled(page.readings.features, 'length_of_fencing') | number:2 }}
+                      {{ page.summary.practice.properties.quantity_installed.length_of_fencing | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ page.calculateLivestockExclusion.quantityInstalled(page.readings.features, 'length_of_fencing', '%') | number:2 }}%
+                      {{ page.summary.practice.properties.percentage_installed.length_of_fencing | number:2 }}%
                     </strong>
                   </td>
                 </tr>
@@ -253,7 +256,7 @@
                 <tr>
                   <th>Extent of Exclusion (if not 100%)</th>
                   <td>&nbsp;</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
+                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
                     {{ report.properties.extent_of_exclusion | number:2 }}
                   </td>
                   <td>&nbsp;</td>
@@ -262,7 +265,7 @@
                 <tr>
                   <th>Pasture Area Managed with Rotational Grazing (acres)</th>
                   <td>&nbsp;</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
+                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
                     {{ report.properties.length_of_fencing*200/43560 | number:2 }}
                   </td>
                   <td>&nbsp;</td>
@@ -270,7 +273,7 @@
                 </tr>
 
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_livestock_exclusion + 4 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_livestock_exclusion.length + 4 }}">
                     <h2><strong>Load</strong> &amp; Reductions</h2>
                   </td>
                 </tr>
@@ -305,7 +308,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.quantity_installed.nitrogen | number:2 }}
+                      {{ page.summary.practice.properties.quantity_installed.nitrogen | number:2 }} lbs/yr
                     </strong>
                   </td>
                   <td>
@@ -330,7 +333,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.quantity_installed.phosphorus | number:2 }}
+                      {{ page.summary.practice.properties.quantity_installed.phosphorus | number:2 }} lbs/yr
                     </strong>
                   </td>
                   <td>
@@ -355,7 +358,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.quantity_installed.sediment | number:2 }}
+                      {{ page.summary.practice.properties.quantity_installed.sediment | number:2 }} tons/yr
                     </strong>
                   </td>
                   <td>
@@ -366,7 +369,7 @@
                 </tr>
 
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_livestock_exclusion + 4 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_livestock_exclusion.length + 4 }}">
                     <h2><strong>Chesapeake</strong> Bay Metrics</h2>
                   </td>
                 </tr>
@@ -416,14 +419,16 @@
             <table class="table">
 
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_livestock_exclusion + 4 }}">
+                  <td class="align-left"
+                      colspan="{{ page.summary.practice.properties.readings_livestock_exclusion.length + 1 }}">
                     <h2><strong>Interim</strong> BMP Metrics Data</h2>
                   </td>
                 </tr>
 
                 <tr>
                   <th>&nbsp;</th>
-                  <th data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
+                  <th data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
                     <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       Monitored on<br />
                       {{ report.properties.report_date }}
@@ -432,7 +437,7 @@
                 </tr>
 
                 <tr>
-                  <th class="align-left" colspan="{{ page.readings.features.length + 1 }}" style="background: #efefef;">Vegetation</th>
+                  <th class="align-left" colspan="{{ page.summary.practice.properties.readings_livestock_exclusion.length + 1 }}" style="background: #efefef;">Vegetation</th>
                 </tr>
                 <tr>
                   <th class="align-left">Cover (%)</th>
@@ -440,7 +445,7 @@
                 </tr>
 
                 <tr>
-                  <th class="align-left" colspan="{{ page.readings.features.length + 1 }}" style="background: #efefef;">Geomorphic</th>
+                  <th class="align-left" colspan="{{ page.summary.practice.properties.readings_livestock_exclusion.length + 1 }}" style="background: #efefef;">Geomorphic</th>
                 </tr>
                 <tr>
                   <th class="align-left">Bank Erosion Hazard Index (BEHI)</th>
@@ -480,7 +485,7 @@
                 </tr>
 
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_livestock_exclusion + 4 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_livestock_exclusion.length + 4 }}">
                     <h2><strong>Adaptive</strong> Management Checks Performed</h2>
                   </td>
                 </tr>
