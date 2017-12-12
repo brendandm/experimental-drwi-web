@@ -97,7 +97,7 @@
                 <tr>
                   <th>Number of Animal Units (AU)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
-                    {{ page.calculateLivestockExclusion.animalUnits(report.properties.number_of_livestock, report.properties.average_weight) }}
+                    {{ report.properties.planning.animal_unit_days_per_year | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
                     &nbsp;
@@ -172,17 +172,21 @@
                 </tr>
                 <tr>
                   <th>Avg. Number of Days/Year In-stream</th>
-                  <td colspan="12" data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
+                  <td colspan="12"
+                      data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
                     <strong>
-                      {{ page.calculateLivestockExclusion.averageDaysPerYearInStream(report.properties) | number:1 }}
+                      {{ report.properties.planning.average_days_per_year_in_stream | number:1 }}
                     </strong>
                   </td>
                 </tr>
                 <tr>
                   <th>Extent of Livestock In-stream (AU-days/yr)</th>
-                  <td colspan="12" data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
+                  <td colspan="12"
+                      data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_livestock_exclusion | orderBy:'id'">
                   <strong>
-                    {{ (page.calculateLivestockExclusion.averageDaysPerYearInStream(report.properties)*page.calculateLivestockExclusion.animalUnits(report.properties.number_of_livestock, report.properties.average_weight)) | number:1 }}
+                    {{ (report.properties.planning.animal_unit_days_per_year*report.properties.planning.average_days_per_year_in_stream) | number:1 }}
                   </strong>
                   </td>
                 </tr>
