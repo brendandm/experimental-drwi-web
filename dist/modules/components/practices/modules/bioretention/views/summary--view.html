@@ -82,12 +82,12 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.calculateBioretention.quantityInstalled(page.readings.features, 'installation_bioretention_total_drainage_area') || 0 | number:2 }}
+                      {{ page.summary.practice.properties.quantity_installed.installation_bioretention_total_drainage_area | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ page.calculateBioretention.quantityInstalled(page.readings.features, 'installation_bioretention_total_drainage_area', '%') || 0 | number:2 }}%
+                      {{ page.summary.practice.properties.percentage_installed.installation_bioretention_total_drainage_area | number:2 }}%
                     </strong>
                   </td>
                 </tr>
@@ -182,12 +182,12 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.calculateBioretention.quantityInstalled(page.readings.features, 'installation_bioretention_practice_area') || 0 | number:2 }}
+                      {{ page.summary.practice.properties.quantity_installed.installation_bioretention_practice_area | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ page.calculateBioretention.quantityInstalled(page.readings.features, 'installation_bioretention_practice_area', '%') || 0 | number:2 }}%
+                      {{ page.summary.practice.properties.percentage_installed.installation_bioretention_practice_area | number:2 }}%
                     </strong>
                   </td>
                 </tr>
