@@ -131,9 +131,13 @@
                 <tr>
                   <th rowspan="3">Adjustor Curve % Reductions</th>
                   <td>TN</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_bioretention | orderBy:'id'">
-                    {{ page.calculateBioretention.adjustorCurveNitrogen(report, '%') | number:1 }}%
+                    {{ report.properties.planning.nitrogen.adjustor*100 | number:1 }}%
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bioretention | orderBy:'id'">
+                    {{ report.properties.installation.nitrogen.adjustor*100 | number:1 }}%
                   </td>
                   <td>
                     &nbsp;
@@ -146,9 +150,13 @@
                 <tr>
                   <!-- Blank TH because of rowspan above -->
                   <td>TP</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_bioretention | orderBy:'id'">
-                    {{ page.calculateBioretention.adjustorCurvePhosphorus(report, '%') | number:1 }}%
+                    {{ report.properties.planning.phosphorus.adjustor*100 | number:1 }}%
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bioretention | orderBy:'id'">
+                    {{ report.properties.installation.phosphorus.adjustor*100 | number:1 }}%
                   </td>
                   <td>
                     &nbsp;
@@ -161,9 +169,13 @@
                 <tr>
                   <!-- Blank TH because of rowspan above -->
                   <td>TSS</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_bioretention | orderBy:'id'">
-                    {{ page.calculateBioretention.adjustorCurveSediment(report, '%') | number:1 }}%
+                    {{ report.properties.planning.sediment.adjustor*100 | number:1 }}%
+                  </td>
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bioretention | orderBy:'id'">
+                    {{ report.properties.installation.sediment.adjustor*100 | number:1 }}%
                   </td>
                   <td>
                     &nbsp;
@@ -216,15 +228,15 @@
                   <th>Nitrogen (lbs/yr)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_bioretention | orderBy:'id'">
-                    {{ report.properties.preinstallation.nitrogen | number:2 }}
+                    {{ report.properties.preinstallation.nitrogen.value | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_bioretention | orderBy:'id'">
-                      {{ report.properties.planning.nitrogen | number:2 }}
+                      {{ report.properties.planning.nitrogen.value | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_bioretention | orderBy:'id'">
-                      {{ report.properties.installation.nitrogen | number:2 }}
+                      {{ report.properties.installation.nitrogen.value | number:2 }}
                   </td>
                   <td>
                     <strong>
@@ -241,15 +253,15 @@
                   <th>Phosphorus (lbs/yr)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_bioretention | orderBy:'id'">
-                      {{ report.properties.preinstallation.phosphorus | number:2 }}
+                      {{ report.properties.preinstallation.phosphorus.value | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_bioretention | orderBy:'id'">
-                      {{ report.properties.planning.phosphorus | number:2 }}
+                      {{ report.properties.planning.phosphorus.value | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_bioretention | orderBy:'id'">
-                      {{ report.properties.installation.phosphorus | number:2 }}
+                      {{ report.properties.installation.phosphorus.value | number:2 }}
                   </td>
                   <td>
                     <strong>
