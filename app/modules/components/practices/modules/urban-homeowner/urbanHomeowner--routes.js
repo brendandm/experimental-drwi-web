@@ -40,6 +40,24 @@ angular.module('FieldDoc')
           }
         }
       })
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/urban-homeowner/summary', {
+        templateUrl: '/modules/components/practices/modules/urban-homeowner/views/summary--view.html',
+        controller: 'UrbanHomeownerSummaryController',
+        controllerAs: 'page',
+        resolve: {
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          summary: function(PracticeUrbanHomeowner, $route) {
+            return PracticeUrbanHomeowner.summary({
+              id: $route.current.params.practiceId
+            });
+          }
+        }
+      })
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/urban-homeowner/:reportId/edit', {
         templateUrl: '/modules/components/practices/modules/urban-homeowner/views/form--view.html',
         controller: 'UrbanHomeownerFormController',

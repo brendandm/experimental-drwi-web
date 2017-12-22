@@ -40,6 +40,24 @@ angular.module('FieldDoc')
           }
         }
       })
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/agriculture-generic/summary', {
+        templateUrl: '/modules/components/practices/modules/agriculture-generic/views/summary--view.html',
+        controller: 'AgricultureGenericSummaryController',
+        controllerAs: 'page',
+        resolve: {
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          summary: function(PracticeAgricultureGeneric, $route) {
+            return PracticeAgricultureGeneric.summary({
+              id: $route.current.params.practiceId
+            });
+          }
+        }
+      })
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/agriculture-generic/:reportId/edit', {
         templateUrl: '/modules/components/practices/modules/agriculture-generic/views/form--view.html',
         controller: 'AgricultureGenericFormController',

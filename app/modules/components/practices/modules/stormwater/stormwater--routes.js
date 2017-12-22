@@ -40,6 +40,24 @@ angular.module('FieldDoc')
           }
         }
       })
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/stormwater/summary', {
+        templateUrl: '/modules/components/practices/modules/stormwater/views/summary--view.html',
+        controller: 'StormwaterSummaryController',
+        controllerAs: 'page',
+        resolve: {
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          summary: function(PracticeStormwater, $route) {
+            return PracticeStormwater.summary({
+              id: $route.current.params.practiceId
+            });
+          }
+        }
+      })
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/stormwater/:reportId/edit', {
         templateUrl: '/modules/components/practices/modules/stormwater/views/form--view.html',
         controller: 'StormwaterFormController',

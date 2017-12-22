@@ -39,6 +39,24 @@
             }
           }
         })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/shoreline-management/summary', {
+          templateUrl: '/modules/components/practices/modules/shoreline-management/views/summary--view.html',
+          controller: 'ShorelineManagementSummaryController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            summary: function(PracticeShorelineManagement, $route) {
+              return PracticeShorelineManagement.summary({
+                id: $route.current.params.practiceId
+              });
+            }
+          }
+        })
         .when('/projects/:projectId/sites/:siteId/practices/:practiceId/shoreline-management/:reportId/edit', {
           templateUrl: '/modules/components/practices/modules/shoreline-management/views/form--view.html',
           controller: 'ShorelineManagementFormController',
