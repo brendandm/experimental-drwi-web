@@ -31,7 +31,7 @@
 
         self.summary = successResponse;
 
-        $rootScope.page.title = self.summary.practice.properties.practice_type;
+        $rootScope.page.title = "Other Agricultural Practices";
 
         self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);
 
@@ -49,7 +49,7 @@
               url: '/projects/' + projectId + '/sites/' + siteId
             },
             {
-              text: self.summary.practice.properties.practice_type,
+              text: "Other Agricultural Practices",
               url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId,
               type: 'active'
             }
