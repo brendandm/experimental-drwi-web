@@ -1,46 +1,20 @@
-<div data-ng-include="'/templates/header--view.html'"></div>
+page.summary.practice.properties.readings_shoreline_management<div data-ng-include="'/templates/header--view.html'"></div>
 
 <main class="container" save2pdf>
+
+  <div data-ng-include="'/modules/components/practices/views/practiceSummaryHeader--view.html'"></div>
+
   <section class="row feature summary">
     <article class="feature-detail">
-      <div class="column-11 feature-detail-content">
 
-        <h1>Summary for {{ page.practice.properties.practice_type }}</h1>
-        <p data-ng-if="page.practice.properties.description" data-ng-bind-html="page.practice.properties.description"></p>
+      <div class="throbber throbber-small"
+           data-ng-if="page.status.loading"></div>
 
-        <p><small>
-          <strong>Project Title:</strong> {{ page.site.properties.project.properties.name }}
-          <strong>Site Number:</strong> {{ page.site.properties.name }}<br />
-          <strong>Stream Name: </strong> {{ page.site.properties.segment.properties.river_name }}
-          <strong>HGMR: </strong> {{ page.site.properties.segment.properties.hgmr_name }}
-        </small></p>
-      </div>
-
-      <nav class="column-5 contextual-navigation-wrapper">
-        <h6><strong>Tools</strong></h6>
-        <ul class="contextual-navigation">
-          <!-- Practice Manangement Navigation -->
-          <li class="active">
-            <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}">
-              Practice Overview
-            </a>
-          </li>
-          <li data-ng-if="page.permissions.can_edit">
-            <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/edit">
-              Edit
-            </a>
-          </li>
-        </ul>
-      </nav>
-
-    </article>
-  </section>
-  <section class="row feature summary">
-    <article class="feature-detail">
-      <div class="column-16 feature-detail-content">
+      <div class="column-16 feature-detail-content"
+           data-ng-if="!page.status.loading">
         <div class="table-responsive">
 
-          <div data-ng-if="!page.total.planning">
+          <div data-ng-if="!page.summary.practice.properties.has_planning_data">
             <h2><strong>Empty</strong> Summary</h2>
 
             <p>
@@ -54,12 +28,12 @@
 
           <!-- INSTALLATION SUMMARY -->
 
-          <div data-ng-if="page.total.planning || page.total.installation">
+          <div data-ng-if="page.summary.practice.properties.has_planning_data">
             <table class="table">
               <tbody>
                 <!-- Section Heading -->
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 5 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_shoreline_management + 5 }}">
                     <h2><strong>Installation</strong> Summary</h2>
                   </td>
                 </tr>
@@ -70,8 +44,8 @@
                   <td>
                     &nbsp;
                   </td>
-                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
+                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
                       <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
                       <br />
@@ -88,20 +62,20 @@
                   <td>
                     &nbsp;
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_length_of_living_shoreline_restored | number:2 }}
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_length_of_living_shoreline_restored | number:2 }}
                   </td>
                   <td>
                     <strong>
-                    {{ page.calculateShorelineManagement.quantityInstalled(page.readings.features, 'installation_length_of_living_shoreline_restored') | number:2 }}
+                      {{ page.summary.practice.properties.quantity_installed.feet_of_living_shoreline_restored | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                    {{ page.calculateShorelineManagement.quantityInstalled(page.readings.features, 'installation_length_of_living_shoreline_restored', '%') | number:2 }}%
+                      {{ page.summary.practice.properties.percentage_installed.feet_of_living_shoreline_restored | number:2 }}%
                     </strong>
                   </td>
                 </tr>
@@ -111,10 +85,10 @@
                   <td>
                     &nbsp;
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_existing_average_bank_height | number:2 }}
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_existing_average_bank_height | number:2 }}
                   </td>
                   <td>
@@ -134,10 +108,10 @@
                   <td>
                     &nbsp;
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_existing_shoreline_recession_rate | number:2 }}
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_existing_shoreline_recession_rate | number:2 }}
                   </td>
                   <td>
@@ -158,10 +132,10 @@
                   <td>
                     &nbsp;
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_soil_bulk_density | number:2 }}
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_soil_bulk_density | number:2 }}
                   </td>
                   <td>
@@ -181,10 +155,10 @@
                   <td>
                     &nbsp;
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_sand_reduction_factor | number:2 }}
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_sand_reduction_factor | number:2 }}
                   </td>
                   <td>
@@ -204,10 +178,10 @@
                   <td>
                     &nbsp;
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_bank_instability_reduction_factor | number:2 }}
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_bank_instability_reduction_factor | number:2 }}
                   </td>
                   <td>
@@ -227,10 +201,10 @@
                   <td>
                     &nbsp;
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_existing_area_of_tidal_wetlands | number:2 }}
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_existing_area_of_tidal_wetlands | number:2 }}
                   </td>
                   <td>
@@ -250,20 +224,20 @@
                   <td>
                     &nbsp;
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_area_of_planted_or_replanted_tidal_wetlands | number:2 }}
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_area_of_planted_or_replanted_tidal_wetlands | number:2 }}
                   </td>
                   <td>
                     <strong>
-                    {{ page.calculateShorelineManagement.quantityInstalled(page.readings.features, 'installation_area_of_planted_or_replanted_tidal_wetlands') | number:2 }}
+                      {{ page.summary.practice.properties.quantity_installed.acres_of_wetlands_restored | number:2 }}
                     </strong>
                   </td>
                   <td>
                     <strong>
-                    {{ page.calculateShorelineManagement.quantityInstalled(page.readings.features, 'installation_area_of_planted_or_replanted_tidal_wetlands', '%') | number:2 }}%
+                      {{ page.summary.practice.properties.percentage_installed.acres_of_wetlands_restored | number:2 }}%
                     </strong>
                   </td>
                 </tr>
@@ -273,10 +247,10 @@
                   <td>
                     &nbsp;
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_type_of_tidal_wetlands_project }}
                   </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     {{ report.properties.installation_type_of_tidal_wetlands_project }}
                   </td>
                   <td>
@@ -293,13 +267,13 @@
 
                 <!-- Section Heading -->
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 5 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_shoreline_management + 5 }}">
                     <h2><strong>"As Built"</strong> Plan Checklist</h2>
                   </td>
                 </tr>
 
                 <tr>
-                  <td class="align-left wrap" colspan="{{ page.total.planning + page.total.installation + 4 }}">
+                  <td class="align-left wrap" colspan="{{ page.summary.practice.properties.readings_shoreline_management + 4 }}">
                     <em>Structural</em>
                   </td>
                 </tr>
@@ -307,7 +281,7 @@
                 <tr>
                   <th class="align-left wrap" width="50%" colspan="2">During construction, do built elements, such as sills, groins, and breakwaters, match design in extent, placement, and type of material? 	</th>
                   <td>&nbsp;</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.installation_structural_1" class="icon retinaicon-essentials-071"></div>
                   </td>
                   <td>-</td>
@@ -316,7 +290,7 @@
                 <tr>
                   <th class="align-left wrap" width="50%" colspan="2">Does site slope and depth profile match design?	</th>
                   <td>&nbsp;</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.installation_structural_2" class="icon retinaicon-essentials-071"></div>
                   </td>
                   <td>-</td>
@@ -325,7 +299,7 @@
                 <tr>
                   <th class="align-left wrap" width="50%" colspan="2">Was the project graded and vegetated so that the bank is stable?	</th>
                   <td>&nbsp;</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.installation_structural_3" class="icon retinaicon-essentials-071"></div>
                   </td>
                   <td>-</td>
@@ -334,7 +308,7 @@
                 <tr>
                   <th class="align-left wrap" width="50%" colspan="2">Was excess sediment removed offsite so that the sediment does not enter nearshore waters?	</th>
                   <td>&nbsp;</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.installation_structural_4" class="icon retinaicon-essentials-071"></div>
                   </td>
                   <td>-</td>
@@ -343,7 +317,7 @@
                 <tr>
                   <th class="align-left wrap" width="50%" colspan="2">Do natural structural elements, such as live staking or coir logs, meet design specifications?		</th>
                   <td>&nbsp;</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.installation_structural_5" class="icon retinaicon-essentials-071"></div>
                   </td>
                   <td>-</td>
@@ -351,7 +325,7 @@
                 </tr>
 
                 <tr>
-                  <td class="align-left wrap" colspan="{{ page.total.planning + page.total.installation + 4 }}">
+                  <td class="align-left wrap" colspan="{{ page.summary.practice.properties.readings_shoreline_management + 4 }}">
                     <em>Non-Structural</em>
                   </td>
                 </tr>
@@ -359,7 +333,7 @@
                 <tr>
                   <th class="align-left wrap" width="50%" colspan="2">Were the specified number and types of vegetation planted?	</th>
                   <td>&nbsp;</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.installation_nonstructural_1" class="icon retinaicon-essentials-071"></div>
                   </td>
                   <td>-</td>
@@ -368,7 +342,7 @@
                 <tr>
                   <th class="align-left wrap" width="50%" colspan="2">Were the specified extents of vegetated and non-vegetated areas achieved?	</th>
                   <td>&nbsp;</td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.installation_nonstructural_2" class="icon retinaicon-essentials-071"></div>
                   </td>
                   <td>-</td>
@@ -379,7 +353,7 @@
 
                 <!-- Section Heading -->
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 5 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_shoreline_management + 5 }}">
                     <h2><strong>Load</strong> Reductions</h2>
                   </td>
                 </tr>
@@ -387,8 +361,8 @@
                 <tr>
                   <th>&nbsp;</th>
                   <th>&nbsp;</th>
-                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
+                  <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
                       <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
                       <br />
@@ -402,109 +376,139 @@
                 <tr>
                   <td>Protocol 1: Prevented Sediment</td>
                   <th>TSS load reduction (tons/yr)	</th>
-                  <td>
-                    {{ page.results.planned.protocol_1_tss || 0 | number:2 }}
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                      {{ report.properties.planning.sediment.protocol_1 | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ page.calculateShorelineManagement.loadProtocol1TSS(report) | number:2 }}
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                      {{ report.properties.installation.sediment.protocol_1 | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateShorelineManagement.installed(page.readings.features, 'nitrogen') | number:2 }}
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.sediment.protocol_1 | number:2 }}
+                    </strong>
                   </td>
                   <td>
-                    {{ page.calculateShorelineManagement.installed(page.readings.features, 'nitrogen', '%') | number:2 }}%
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.sediment.protocol_1 | number:2 }}%
+                    </strong>
                   </td>
                 </tr>
                 <tr>
                   <td>Protocol 2: Denitrification*</tdth>
                   <th>TN load reduction (lbs/yr)</th>
-                  <td>
-                    {{ page.results.planned.protocol_2_tn | number:2 }}
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                      {{ report.properties.planning.nitrogen.protocol_2 | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ page.calculateShorelineManagement.loadProtocol2TN(report) | number:2 }}
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                      {{ report.properties.installation.nitrogen.protocol_2 | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateShorelineManagement.installed(page.readings.features, 'phosphorus') | number:2 }}
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.nitrogen.protocol_2 | number:2 }}
+                    </strong>
                   </td>
                   <td>
-                    {{ page.calculateShorelineManagement.installed(page.readings.features, 'phosphorus', '%') | number:2 }}%
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.nitrogen.protocol_2 | number:2 }}%
+                    </strong>
                   </td>
                 </tr>
                 <tr>
                   <td>Protocol 3: Sedimentation*</td>
                   <th>TP load reduction (lbs/yr)</th>
-                  <td>
-                      {{ page.results.planned.protocol_3_tp | number:2 }}
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                      {{ report.properties.planning.phosphorus.protocol_3 | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ page.calculateShorelineManagement.loadProtocol3TP(report) | number:2 }}
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                      {{ report.properties.installation.phosphorus.protocol_3 | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateShorelineManagement.installed(page.readings.features, 'sediment') | number:2 }}
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.phosphorus.protocol_3 | number:2 }}
+                    </strong>
                   </td>
                   <td>
-                    {{ page.calculateShorelineManagement.installed(page.readings.features, 'sediment', '%') | number:2 }}%
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.phosphorus.protocol_3 | number:2 }}%
+                    </strong>
                   </td>
                 </tr>
                 <tr>
                   <td>&nbsp;</td>
                   <th>TSS load reduction (tons/yr)</th>
-                  <td>
-                      {{ page.results.planned.protocol_3_tss | number:2 }}
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                      {{ report.properties.planning.sediment.protocol_3 | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ page.calculateShorelineManagement.loadProtocol3TSS(report) | number:2 }}
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                      {{ report.properties.installation.sediment.protocol_3 | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateShorelineManagement.installed(page.readings.features, 'sediment') | number:2 }}
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.sediment.protocol_3 | number:2 }}
+                    </strong>
                   </td>
                   <td>
-                    {{ page.calculateShorelineManagement.installed(page.readings.features, 'sediment', '%') | number:2 }}%
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.sediment.protocol_3 | number:2 }}%
+                    </strong>
                   </td>
                 </tr>
                 <tr>
                   <td>Protocol 4: Marsh Redfield Ratio*</td>
                   <th>TN load reduction (lbs/yr)</th>
-                  <td>
-                      {{ page.results.planned.protocol_4_tn | number:2 }}
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                      {{ report.properties.planning.nitrogen.protocol_4 | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ page.calculateShorelineManagement.loadProtocol4TN(report) | number:2 }}
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                      {{ report.properties.installation.nitrogen.protocol_4 | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateShorelineManagement.installed(page.readings.features, 'sediment') | number:2 }}
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.nitrogen.protocol_4 | number:2 }}
+                    </strong>
                   </td>
                   <td>
-                    {{ page.calculateShorelineManagement.installed(page.readings.features, 'sediment', '%') | number:2 }}%
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.nitrogen.protocol_4 | number:2 }}%
+                    </strong>
                   </td>
                 </tr>
                 <tr>
                   <td>&nbsp;</td>
                   <th>TP load reduction (lbs/yr)</th>
-                  <td>
-                      {{ page.results.planned.protocol_4_tp | number:2 }}
+                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                      {{ report.properties.planning.phosphorus.protocol_4 | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ page.calculateShorelineManagement.loadProtocol4TP(report) | number:2 }}
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                      {{ report.properties.installation.phosphorus.protocol_4 | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateShorelineManagement.installed(page.readings.features, 'sediment') | number:2 }}
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.phosphorus.protocol_4 | number:2 }}
+                    </strong>
                   </td>
                   <td>
-                    {{ page.calculateShorelineManagement.installed(page.readings.features, 'sediment', '%') | number:2 }}%
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.phosphorus.protocol_4 | number:2 }}%
+                    </strong>
                   </td>
                 </tr>
 
                 <!-- Section Heading -->
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 5 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_shoreline_management + 5 }}">
                     <h2><strong>Chesapeake Bay</strong> Metrics</h2>
                   </td>
                 </tr>
@@ -515,18 +519,22 @@
                       &nbsp;
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ report.properties.installation_area_of_planted_or_replanted_tidal_wetlands || 0 | number:2 }}
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                      {{ report.properties.metrics.acres_of_wetlands_restored | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ report.properties.installation_area_of_planted_or_replanted_tidal_wetlands || 0 | number:2 }}
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                      {{ report.properties.metrics.acres_of_wetlands_restored | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateShorelineManagement.acresRestored(page.readings.features, 'Installation') || 0 | number:2 }}
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.acres_of_wetlands_restored | number:2 }}
+                    </strong>
                   </td>
                   <td>
-                    {{ page.calculateShorelineManagement.acresRestored(page.readings.features, 'Installation', '%') || 0 | number:2 }}%
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.acres_of_wetlands_restored | number:2 }}%
+                    </strong>
                   </td>
                 </tr>
 
@@ -536,18 +544,22 @@
                       &nbsp;
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ (report.properties.installation_length_of_living_shoreline_restored/5280) || 0 | number:2 }}
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                      {{ report.properties.metrics.miles_of_living_shoreline_restored | number:2 }}
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    {{ (report.properties.installation_length_of_living_shoreline_restored/5280) || 0 | number:2 }}
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                      {{ report.properties.metrics.miles_of_living_shoreline_restored | number:2 }}
                   </td>
                   <td>
-                    {{ page.calculateShorelineManagement.milesRestored(page.readings.features, 'Installation') || 0 | number:2 }}
+                    <strong>
+                      {{ page.summary.practice.properties.quantity_installed.miles_of_living_shoreline_restored | number:2 }}
+                    </strong>
                   </td>
                   <td>
-                    {{ page.calculateShorelineManagement.milesRestored(page.readings.features, 'Installation', '%') || 0 | number:2 }}%
+                    <strong>
+                      {{ page.summary.practice.properties.percentage_installed.miles_of_living_shoreline_restored | number:2 }}%
+                    </strong>
                   </td>
                 </tr>
               </tbody>
@@ -556,19 +568,19 @@
 
           <!-- MONITORING -->
 
-          <div data-ng-if="page.total.monitoring">
+          <div data-ng-if="page.summary.practice.properties.has_monitoring_data">
             <div class="table-responsive"><table class="table">
 
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_shoreline_management + 4 }}">
                     <h2><strong>Interim</strong> BMP Metrics Data</h2>
                   </td>
                 </tr>
 
                 <tr>
                   <th>&nbsp;</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       Monitored on<br />
                       {{ report.properties.report_date }}
                     </a>
@@ -576,7 +588,7 @@
                 </tr>
 
                 <tr>
-                  <td class="align-left wrap" colspan="{{ page.total.monitoring + 1 }}">
+                  <td class="align-left wrap" colspan="{{ page.summary.practice.properties.readings_shoreline_management + 1 }}">
                     <em>Hydrology/Geomorphology</em>
                   </td>
                 </tr>
@@ -584,89 +596,89 @@
                 <tr>
                   <th class="align-left">Inundation coverage at low tide (%)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_hydrology_inundation_coverage_at_low_tide }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Average water depth at low tide (feet)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_hydrology_average_water_depth_at_low_tid }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Inundation coverage at high tide (%)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_hydrology_inundation_cover_at_high_tide }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Average water depth at high tide (feet)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_hydrology_average_water_depth_at_high_tide }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Total width of channels connecting wetland to open water at low tide (feet)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_hydrology_total_width_of_channels_connecting_wetland }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Inflow (cfs)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_hydrology_inflow }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Outflow (cfs)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_hydrology_outflow }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Slope (depth profile) perpendicular to shoreline (%)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_hydrology_slope }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Topographic complexity</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_hydrology_topographic_complexity }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Area of mudflats (acres)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_hydrology_area_of_mudflats }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Area of beaches (acres)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_hydrology_area_of_beaches }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Area of vegetated marshes (acres)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_hydrology_area_of_vegetated_marshes }}
                   </td>
                 </tr>
                 <tr>
-                  <td class="align-left wrap" colspan="{{ page.total.monitoring + 1 }}">
+                  <td class="align-left wrap" colspan="{{ page.summary.practice.properties.readings_shoreline_management + 1 }}">
                     <em>Biota</em>
                   </td>
                 </tr>
@@ -674,42 +686,42 @@
                 <tr>
                   <th class="align-left">Plant stem density (no/sqft)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_biota_plant_stem_density }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Vegetated marsh width (feet)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_biota_vegetated_marsh_width }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Relative structural complexity score</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_biota_relative_structural_complexity_score }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Non-native plant cover (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_biota_nonnative_plant_cover }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Plant diversity index (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_biota_plant_diversity_index }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Mammal diversity index (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_biota_mammal_diversity_index }}
                   </td>
                 </tr>
@@ -717,7 +729,7 @@
                 <tr>
                   <th class="align-left">Bird diversity index (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_biota_bird_diversity_index }}
                   </td>
                 </tr>
@@ -725,181 +737,181 @@
                 <tr>
                   <th class="align-left">No. of Bird Nests, Breeding Pairs, or Offspring (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_biota_no_birds_nested_breeding_offspring }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">No. of Rare or Threatened Birds (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_biota_no_rare_threatened_birds }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Amphibian and Reptile Diversity Index (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_biota_amphibian_reptile_diversity_index }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Fish Bioassessment Index (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_biota_fish_bioassessment_index }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Macroinvertebrate Bioassessment Index (number)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_biota_macroinvertebrate_bioassessment_index }}
                   </td>
                 </tr>
 
                 <tr>
-                  <td class="align-left wrap" colspan="{{ page.total.monitoring + 1 }}">
+                  <td class="align-left wrap" colspan="{{ page.summary.practice.properties.readings_shoreline_management + 1 }}">
                     <em>Physico-chemical</em>
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Dissolved Oxygen (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_dissolved_oxygen }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Surface Water Salinity (ppt)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_surface_water_salinity }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Surface Water pH</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_surface_water_ph }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Turbidity (NTU)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_turbidity }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Temperature (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_temperature }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Chlorophyll α (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_chlorophyll_a }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Nitrate-N (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_nitrate_n }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Total N (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_total_n }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Orthophosphate-P (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_orthophosphate_p }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Total P (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_total_p }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Porewater Salinity (ppt)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_porewater_salinity }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Porewater pH</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_porewater_ph }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">N in Accreted Sediment (mg/kg sediment)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_n_in_accreted_sediment }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">P in Accreted Sediment (mg/kg sediment)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_p_in_accreted_sediment }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Soil Organic Matter (mg/L)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_soil_organic_matter }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Soil Bulk Density (gm/cm<sup>3</sup>)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_soil_bulk_density }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Denitrification Potential (gm/m<sup>3</sup>/day)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_denitrifictation_potential }}
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left">Sediment Accretion (m<sup>3</sup>/yr)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
-                      data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                      data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                       {{ report.properties.monitoring_physicochemical_sediment_accretion }}
                   </td>
                 </tr>
 
                 <tr class="no-rule">
-                  <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_shoreline_management + 4 }}">
                     <h2><strong>Adaptive</strong> Management Checks Performed</h2>
                   </td>
                 </tr>
 
                 <tr>
                   <th>&nbsp;</th>
-                  <th data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
+                  <th data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       Monitored on<br />
                       {{ report.properties.report_date }}
                     </a>
@@ -907,87 +919,87 @@
                 </tr>
 
                 <tr>
-                  <td class="align-left wrap" colspan="{{ page.total.monitoring + 1 }}">
+                  <td class="align-left wrap" colspan="{{ page.summary.practice.properties.readings_shoreline_management + 1 }}">
                     <em>Hydrology/Geomorphology</em>
                   </td>
                 </tr>
 
                 <tr>
                   <th class="align-left wrap" width="50%">Has the designed hydrologic regime established itself? If not, revisit design to improve inflow/outflow.	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.monitoring_hydrology_1" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left wrap" width="50%">Do built features and natural structural elements continue to meet design specifications?	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.monitoring_hydrology_2" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left wrap" width="50%">Is the wetland elevation stable or increasing or positive sediment accretion noted? If not, several options should be considered including adding/redesigning/re-locating structures (groins, sand fences) to promote sediment deposition or increasing vegetation in the marsh.	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.monitoring_hydrology_3" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left wrap" width="50%">Are the various interim wetlands metric values continuing to approach those at reference sites?	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.monitoring_hydrology_4" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
 
                 <tr>
-                  <td class="align-left wrap" colspan="{{ page.total.monitoring + 1 }}">
+                  <td class="align-left wrap" colspan="{{ page.summary.practice.properties.readings_shoreline_management + 1 }}">
                     <em>Biota</em>
                   </td>
                 </tr>
 
                 <tr>
                   <th class="align-left wrap" width="50%">Has planned vegetation established itself, as expected? If growth of initial plant species is sub-optimal due to excessive wave energy, consider other taxa with more appropriate growth requirements.	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.monitoring_biota_1" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left wrap" width="50%">Have invasive species become prevelant? If so consider herbicide use or periodic manual removal.	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.monitoring_biota_2" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left wrap" width="50%">Have muskrats, nutria, or other mammals altered planned development of the wetland? If so, consider fencing, trapping, or hunting to manage populations.	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.monitoring_biota_3" class="icon retinaicon-essentials-071"></div>
                 </tr>
                 <tr>
                   <th class="align-left wrap" width="50%">Is fauna ‘success’ as high as anticipated? If not, evaluate whether fish use limitations might indicate low connectivity, and whether low numbers of young birds or mammals might suggest high predation.	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.monitoring_biota_4" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
 
                 <tr>
-                  <td class="align-left wrap" colspan="{{ page.total.monitoring + 1 }}">
+                  <td class="align-left wrap" colspan="{{ page.summary.practice.properties.readings_shoreline_management + 1 }}">
                     <em>Physico-chemical</em>
                   </td>
                 </tr>
 
                 <tr>
                   <th class="align-left wrap" width="50%">Do pore or surface salinities or grain size and %OM match reference wetlands values? If not, examine connectivity to surrounding waters.	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.monitoring_physicochemical_1" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left wrap" width="50%">Do pH values match reference wetlands values? If not, adjust pH with lime.	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.monitoring_physicochemical_2" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
                 <tr>
                   <th class="align-left wrap" width="50%">Do denitrification rates and plant growth match reference wetlands values? If not, increase OM.	</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                  <td data-ng-if="report.properties.measurement_period === 'Monitoring'" data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                     <div data-ng-if="report.properties.monitoring_physicochemical_3" class="icon retinaicon-essentials-071"></div>
                   </td>
                 </tr>
@@ -996,7 +1008,7 @@
             </table></div>
           </div>
 
-          <div data-ng-if="page.total.planning || page.total.installation || page.total.monitoring">
+          <div data-ng-if="page.summary.practice.properties.has_planning_data">
             <h2><strong>Notes</strong></h2>
             <table class="table">
               <thead>
@@ -1006,9 +1018,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr data-ng-repeat="report in page.readings.features | orderBy:'report_date':false">
+                <tr data-ng-repeat="report in page.summary.practice.properties.readings_shoreline_management | orderBy:'report_date':false">
                   <td class="align-left">
-                    <a href="/projects/{{ page.project.id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
                       {{ report.properties.report_date }}
                     </a>
                   </td>
