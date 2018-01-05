@@ -3,7 +3,8 @@
            data-ng-if="!page.status.loading">
     <div class="column-11 feature-detail-content">
 
-      <h1>Summary for {{ page.summary.practice.properties.practice_type }}</h1>
+      <h1 data-ng-if="page.summary.practice.properties.practice_type !== 'Agriculture Generic'">Summary for {{ page.summary.practice.properties.practice_type }}</h1>
+      <h1 data-ng-if="page.summary.practice.properties.practice_type === 'Agriculture Generic'">Summary for Other Agricultural Practices</h1>
       <p data-ng-if="page.summary.practice.properties.description" data-ng-bind-html="page.summary.practice.properties.description"></p>
 
       <p><small>
