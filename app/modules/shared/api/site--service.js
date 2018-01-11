@@ -12,17 +12,22 @@
       return $resource(environment.apiUrl.concat('/v1/data/site/:id'), {
         id: '@id'
       }, {
-        query: {
+        'query': {
           isArray: false
         },
-        update: {
+        'summary': {
+          isArray: false,
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/summary/site/:id')
+        },
+        'update': {
           method: 'PATCH',
           transformRequest: function(data) {
             var feature = Preprocessors.geojson(data);
             return angular.toJson(feature);
           }
         },
-        practices: {
+        'practices': {
           method: 'GET',
           isArray: false,
           url: environment.apiUrl.concat('/v1/data/site/:id/practices')

@@ -43,6 +43,24 @@ angular.module('FieldDoc')
           }
         }
       })
+      .when('/projects/:projectId/sites/:siteId/summary', {
+        templateUrl: '/modules/components/sites/views/sites--summary.html',
+        controller: 'SiteSummaryCtrl',
+        controllerAs: 'page',
+        resolve: {
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          summary: function(Site, $route) {
+            return Site.summary({
+              id: $route.current.params.siteId
+            });
+          }
+        }
+      })
       .when('/projects/:projectId/sites/:siteId/edit', {
         templateUrl: '/modules/components/sites/views/sites--edit.html',
         controller: 'SiteEditCtrl',
