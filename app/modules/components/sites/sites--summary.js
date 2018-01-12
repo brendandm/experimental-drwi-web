@@ -16,10 +16,26 @@
 
       self.mapbox = mapbox;
 
+      self.status = {
+        "loading": true
+      }
+
       summary.$promise.then(function(successResponse) {
 
         self.site = successResponse.site;
         self.practices = successResponse.practices;
+
+        //
+        // Add rollups to the page scope
+        //
+        self.rollups = successResponse.rollups;
+
+        //
+        // Set the default tab to "All"
+        //
+        self.rollups.active = "all";
+
+        self.status.loading = false;
 
         //
         // Verify Account information for proper UI element display
@@ -37,18 +53,18 @@
                     can_edit: Account.canEdit(self.project)
                 };
 
-                $rootScope.page.title = self.site.name;
+                $rootScope.page.title = self.site.properties.name;
                 $rootScope.page.links = [
                     {
                         text: 'Projects',
                         url: '/projects'
                     },
                     {
-                        text: self.project.name,
+                        text: self.project.properties.name,
                         url: '/projects/' + $route.current.params.projectId
                     },
                     {
-                      text: self.site.name,
+                      text: self.site.properties.name,
                       url: '/projects/' + $route.current.params.projectId + '/sites/' + self.site.id,
                       type: 'active'
                     }
