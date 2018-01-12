@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('SiteSummaryCtrl', function (Account, $location, mapbox, $rootScope, $route, summary, user) {
+    .controller('SiteSummaryCtrl', function (Account, $location, mapbox, Practice, $rootScope, $route, summary, user) {
 
       var self = this;
 
