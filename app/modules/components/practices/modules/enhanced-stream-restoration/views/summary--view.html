@@ -63,7 +63,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.stream_width_at_bankfull | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.stream_width_at_bankfull | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -80,7 +80,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.stream_width_at_mean_base_flow | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.stream_width_at_mean_base_flow | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -100,7 +100,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.length_of_left_bank_with_improved_connectivity | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.length_of_left_bank_with_improved_connectivity | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -117,7 +117,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.project_left_bank_height | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.project_left_bank_height | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -134,7 +134,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.left_bank_bankfull_height | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.left_bank_bankfull_height | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -154,7 +154,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.length_of_right_bank_with_improved_connectivity | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.length_of_right_bank_with_improved_connectivity | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -171,7 +171,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.project_right_bank_height | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.project_right_bank_height | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -188,7 +188,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.right_bank_bankfull_height | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.right_bank_bankfull_height | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -199,16 +199,10 @@
                     {{ report.properties.bulk_density_of_soil_in_hyporheic_zone | number:2 }}
                   </td>
                   <td>
-                    &nbsp;
-                    <!-- <strong>
-                      {{ page.calculateEnhancedStreamRestoration.quantityInstalled(page.readings.features, 'bulk_density_of_soil_in_hyporheic_zone') || 0 | number:2 }}
-                    </strong> -->
+                    --
                   </td>
                   <td>
-                    &nbsp;
-                    <!-- <strong>
-                      {{ page.calculateEnhancedStreamRestoration.quantityInstalled(page.readings.features, 'bulk_density_of_soil_in_hyporheic_zone', '%') || 0 | number:0 }}%
-                    </strong> -->
+                    --
                   </td>
                 </tr>
 
@@ -218,10 +212,10 @@
                     {{ page.calculateEnhancedStreamRestoration.bankHeightRatio(report.project_left_bank_height, report.left_bank_bankfull_height) || 0 | number:2 }}
                   </td>
                   <td>
-                    &nbsp;
+                    --
                   </td>
                   <td>
-                    &nbsp;
+                    --
                   </td>
                 </tr>
 
@@ -231,10 +225,10 @@
                     {{ page.calculateEnhancedStreamRestoration.bankHeightRatio(report.project_right_bank_height, report.right_bank_bankfull_height) || 0 | number:2 }}
                   </td>
                   <td>
-                    &nbsp;
+                    --
                   </td>
                   <td>
-                    &nbsp;
+                    --
                   </td>
                 </tr>
 
@@ -266,7 +260,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.stream_length_reconnected_at_floodplain | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.stream_length_reconnected_at_floodplain | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -286,7 +280,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.connected_floodplain_surface_area | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.connected_floodplain_surface_area | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -308,7 +302,7 @@
                   <td>
                     &nbsp;
                     <!-- <strong>
-                      {{ calculate.quantityInstalled(page.readings.features, 'watershed_contributing_area', '%') || 0 | number:0 }}%
+                      {{ calculate.quantityInstalled(page.readings.features, 'watershed_contributing_area', '%') || 0 | number:0 }}.00%
                     </strong> -->
                   </td>
                 </tr>
@@ -328,7 +322,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.watershed_impervious_area | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.watershed_impervious_area | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -348,7 +342,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.watershed_pervious_area | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.watershed_pervious_area | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -365,7 +359,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.rainfall_depth_where_connection_occurs | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.rainfall_depth_where_connection_occurs | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -382,7 +376,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.floodplain_connection_volume | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.floodplain_connection_volume | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -447,7 +441,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.nitrogen.protocol_2 | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.nitrogen.protocol_2 | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -469,7 +463,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.nitrogen.protocol_3 | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.nitrogen.protocol_3 | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -490,7 +484,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.phosphorus.protocol_3 | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.phosphorus.protocol_3 | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -511,7 +505,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.sediment | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.sediment | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -552,7 +546,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.miles_of_streambank_restored | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.miles_of_streambank_restored | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -570,7 +564,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.acres_of_streambank_restored | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.acres_of_streambank_restored | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
@@ -588,7 +582,7 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.acres_of_floodplain_reconnected | number:0 }}%
+                      {{ page.summary.practice.properties.percentage_installed.acres_of_floodplain_reconnected | number:0 }}.00%
                     </strong>
                   </td>
                 </tr>
