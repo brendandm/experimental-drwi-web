@@ -47,7 +47,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
- .constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+.constant('environment', {name:'staging',apiUrl:'http://stg.api.fielddoc.org',siteUrl:'http://stg.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
 /**
@@ -2655,6 +2655,24 @@ angular.module('FieldDoc')
           }
         }
       })
+      .when('/projects/:projectId/sites/:siteId/summary', {
+        templateUrl: '/modules/components/sites/views/sites--summary.html',
+        controller: 'SiteSummaryCtrl',
+        controllerAs: 'page',
+        resolve: {
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          summary: function(Site, $route) {
+            return Site.summary({
+              id: $route.current.params.siteId
+            });
+          }
+        }
+      })
       .when('/projects/:projectId/sites/:siteId/edit', {
         templateUrl: '/modules/components/sites/views/sites--edit.html',
         controller: 'SiteEditCtrl',
@@ -4315,6 +4333,119 @@ angular.module('FieldDoc')
 
   /**
    * @ngdoc function
+   * @name FieldDoc.controller:SiteSummaryCtrl
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('SiteSummaryCtrl', function (Account, $location, mapbox, Practice, $rootScope, $route, summary, user) {
+
+      var self = this;
+
+      $rootScope.page = {};
+
+      self.mapbox = mapbox;
+
+      self.status = {
+        "loading": true
+      }
+
+      summary.$promise.then(function(successResponse) {
+
+        self.site = successResponse.site;
+        self.practices = successResponse.practices;
+
+        //
+        // Add rollups to the page scope
+        //
+        self.rollups = successResponse.rollups;
+
+        //
+        // Set the default tab to "All"
+        //
+        self.rollups.active = "all";
+
+        self.status.loading = false;
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+            user.$promise.then(function(userResponse) {
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.project = successResponse.project;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0].properties.name,
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: Account.canEdit(self.project)
+                };
+
+                $rootScope.page.title = self.site.properties.name;
+                $rootScope.page.links = [
+                    {
+                        text: 'Projects',
+                        url: '/projects'
+                    },
+                    {
+                        text: self.project.properties.name,
+                        url: '/projects/' + $route.current.params.projectId
+                    },
+                    {
+                      text: self.site.properties.name,
+                      url: '/projects/' + $route.current.params.projectId + '/sites/' + self.site.id,
+                      type: 'active'
+                    }
+                ];
+
+            });
+        }
+
+      }, function(errorResponse) {
+
+      });
+
+      self.createPractice = function() {
+
+          self.practice = new Practice({
+              'practice_type': 'Grass Buffer',
+              'site_id': self.site.id,
+              'account_id': self.site.properties.project.properties.account_id
+          });
+
+          self.practice.$save(function(successResponse) {
+              $location.path('/projects/' + self.site.properties.project.id + '/sites/' + self.site.id + '/practices/' + successResponse.id + '/edit');
+            }, function(errorResponse) {
+              console.error('Unable to create your site, please try again later');
+            });
+
+      };
+
+      //
+      // Setup basic page variables
+      //
+      $rootScope.page.actions = [
+        {
+          type: 'button-link new',
+          action: function() {
+            self.createPractice();
+          },
+          text: 'Create practice'
+        }
+      ];
+
+
+    });
+
+})();
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc function
    * @name FieldDoc.controller:SiteEditCtrl
    * @description
    * # SiteEditCtrl
@@ -5353,6 +5484,24 @@ angular.module('FieldDoc')
           }
         }
       })
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/agriculture-generic/summary', {
+        templateUrl: '/modules/components/practices/modules/agriculture-generic/views/summary--view.html',
+        controller: 'AgricultureGenericSummaryController',
+        controllerAs: 'page',
+        resolve: {
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          summary: function(PracticeAgricultureGeneric, $route) {
+            return PracticeAgricultureGeneric.summary({
+              id: $route.current.params.practiceId
+            });
+          }
+        }
+      })
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/agriculture-generic/:reportId/edit', {
         templateUrl: '/modules/components/practices/modules/agriculture-generic/views/form--view.html',
         controller: 'AgricultureGenericFormController',
@@ -6007,6 +6156,129 @@ angular.module('FieldDoc')
 
 }());
 
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc function
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('AgricultureGenericSummaryController', function (Account, $location, $log, PracticeAgricultureGeneric, $rootScope, $route, $scope, summary, Utility, user, $window) {
+
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
+
+      $rootScope.page = {};
+
+      self.practiceType = null;
+
+      self.project = {
+        'id': projectId
+      };
+
+      self.status = {
+        loading: true
+      };
+
+      summary.$promise.then(function(successResponse) {
+
+        self.summary = successResponse;
+
+        $rootScope.page.title = "Other Agricultural Practices";
+
+        self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);
+
+        $rootScope.page.links = [
+            {
+                text: 'Projects',
+                url: '/projects'
+            },
+            {
+                text: self.summary.site.properties.project.properties.name,
+                url: '/projects/' + projectId
+            },
+            {
+              text: self.summary.site.properties.name,
+              url: '/projects/' + projectId + '/sites/' + siteId
+            },
+            {
+              text: "Other Agricultural Practices",
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId,
+              type: 'active'
+            }
+        ];
+
+        $rootScope.page.actions = [
+          {
+            type: 'button-link',
+            action: function() {
+              $window.print();
+            },
+            hideIcon: true,
+            text: 'Print'
+          },
+          {
+            type: 'button-link',
+            action: function() {
+              $scope.$emit('saveToPdf');
+            },
+            hideIcon: true,
+            text: 'Save as PDF'
+          },
+          {
+            type: 'button-link new',
+            action: function() {
+              self.addReading();
+            },
+            text: 'Add Measurement Data'
+          }
+        ];
+
+        self.status.loading = false;
+      }, function() {});
+
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
+
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: true
+              };
+          });
+      }
+
+      self.addReading = function(measurementPeriod) {
+
+        var newReading = new PracticeAgricultureGeneric({
+            'measurement_period': measurementPeriod,
+            'report_date': moment().format('YYYY-MM-DD'),
+            'practice_id': practiceId,
+            'account_id': self.summary.site.properties.project.properties.account_id
+          });
+
+        newReading.$save().then(function(successResponse) {
+            $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
+          });
+      };
+
+
+    });
+
+}());
+
 'use strict';
 
 /**
@@ -6044,6 +6316,24 @@ angular.module('FieldDoc')
           },
           readings: function(Practice, $route) {
             return Practice.forestBuffer({
+              id: $route.current.params.practiceId
+            });
+          }
+        }
+      })
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/forest-buffer/summary', {
+        templateUrl: '/modules/components/practices/modules/forest-buffer/views/summary--view.html',
+        controller: 'ForestBufferSummaryController',
+        controllerAs: 'page',
+        resolve: {
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          summary: function(PracticeForestBuffer, $route) {
+            return PracticeForestBuffer.summary({
               id: $route.current.params.practiceId
             });
           }
@@ -6907,6 +7197,128 @@ angular.module('FieldDoc')
 
 }());
 
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc function
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('ForestBufferSummaryController', function (Account, $location, $log, PracticeForestBuffer, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
+
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
+
+      $rootScope.page = {};
+
+      self.practiceType = null;
+
+      self.project = {
+        'id': projectId
+      };
+
+      self.status = {
+        loading: true
+      };
+
+      summary.$promise.then(function(successResponse) {
+
+        self.summary = successResponse;
+
+        $rootScope.page.title = self.summary.practice.properties.practice_type;
+
+        self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);
+
+        $rootScope.page.links = [
+            {
+                text: 'Projects',
+                url: '/projects'
+            },
+            {
+                text: self.summary.site.properties.project.properties.name,
+                url: '/projects/' + projectId
+            },
+            {
+              text: self.summary.site.properties.name,
+              url: '/projects/' + projectId + '/sites/' + siteId
+            },
+            {
+              text: self.summary.practice.properties.practice_type,
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId,
+              type: 'active'
+            }
+        ];
+
+        $rootScope.page.actions = [
+          {
+            type: 'button-link',
+            action: function() {
+              $window.print();
+            },
+            hideIcon: true,
+            text: 'Print'
+          },
+          {
+            type: 'button-link',
+            action: function() {
+              $scope.$emit('saveToPdf');
+            },
+            hideIcon: true,
+            text: 'Save as PDF'
+          },
+          {
+            type: 'button-link new',
+            action: function() {
+              self.addReading();
+            },
+            text: 'Add Measurement Data'
+          }
+        ];
+
+        self.status.loading = false;
+      }, function() {});
+
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
+
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: true
+              };
+          });
+      }
+
+      self.addReading = function(measurementPeriod) {
+
+        var newReading = new PracticeForestBuffer({
+            'measurement_period': measurementPeriod,
+            'report_date': new Date(),
+            'practice_id': practiceId,
+            'account_id': self.summary.site.properties.project.properties.account_id
+          });
+
+        newReading.$save().then(function(successResponse) {
+            $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
+          });
+      };
+
+    });
+
+}());
+
 'use strict';
 
 /**
@@ -6944,6 +7356,24 @@ angular.module('FieldDoc')
           },
           readings: function(Practice, $route) {
             return Practice.grassBuffer({
+              id: $route.current.params.practiceId
+            });
+          }
+        }
+      })
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/grass-buffer/summary', {
+        templateUrl: '/modules/components/practices/modules/grass-buffer/views/summary--view.html',
+        controller: 'GrassBufferSummaryController',
+        controllerAs: 'page',
+        resolve: {
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          summary: function(PracticeGrassBuffer, $route) {
+            return PracticeGrassBuffer.summary({
               id: $route.current.params.practiceId
             });
           }
@@ -7764,6 +8194,128 @@ angular.module('FieldDoc')
   'use strict';
 
   /**
+   * @ngdoc function
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('GrassBufferSummaryController', function (Account, $location, $log, PracticeGrassBuffer, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
+
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
+
+      $rootScope.page = {};
+
+      self.practiceType = null;
+
+      self.project = {
+        'id': projectId
+      };
+
+      self.status = {
+        loading: true
+      };
+
+      summary.$promise.then(function(successResponse) {
+
+        self.summary = successResponse;
+
+        $rootScope.page.title = self.summary.practice.properties.practice_type;
+
+        self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);
+
+        $rootScope.page.links = [
+            {
+                text: 'Projects',
+                url: '/projects'
+            },
+            {
+                text: self.summary.site.properties.project.properties.name,
+                url: '/projects/' + projectId
+            },
+            {
+              text: self.summary.site.properties.name,
+              url: '/projects/' + projectId + '/sites/' + siteId
+            },
+            {
+              text: self.summary.practice.properties.practice_type,
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId,
+              type: 'active'
+            }
+        ];
+
+        $rootScope.page.actions = [
+          {
+            type: 'button-link',
+            action: function() {
+              $window.print();
+            },
+            hideIcon: true,
+            text: 'Print'
+          },
+          {
+            type: 'button-link',
+            action: function() {
+              $scope.$emit('saveToPdf');
+            },
+            hideIcon: true,
+            text: 'Save as PDF'
+          },
+          {
+            type: 'button-link new',
+            action: function() {
+              self.addReading();
+            },
+            text: 'Add Measurement Data'
+          }
+        ];
+
+        self.status.loading = false;
+      }, function() {});
+
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
+
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: true
+              };
+          });
+      }
+
+      self.addReading = function(measurementPeriod) {
+
+        var newReading = new PracticeGrassBuffer({
+            'measurement_period': measurementPeriod,
+            'report_date': new Date(),
+            'practice_id': practiceId,
+            'account_id': self.summary.site.properties.project.properties.account_id
+          });
+
+        newReading.$save().then(function(successResponse) {
+            $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
+          });
+      };
+
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
    * @ngdoc overview
    * @name
    * @description
@@ -7798,6 +8350,24 @@ angular.module('FieldDoc')
             },
             readings: function(Practice, $route) {
               return Practice.livestockExclusion({
+                id: $route.current.params.practiceId
+              });
+            }
+          }
+        })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/livestock-exclusion/summary', {
+          templateUrl: '/modules/components/practices/modules/livestock-exclusion/views/summary--view.html',
+          controller: 'LivestockExclusionSummaryController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            summary: function(PracticeLivestockExclusion, $route) {
+              return PracticeLivestockExclusion.summary({
                 id: $route.current.params.practiceId
               });
             }
@@ -8275,8 +8845,6 @@ angular.module('FieldDoc')
           phosphorus: (auDaysYr*animal.properties.manure)*animal.properties.total_phosphorus,
         };
 
-        // console.log('preDirectDeposit', preDirectDeposit)
-
          var preInstallationeBMPLoadTotals = {
              nitrogen: preUplandPreInstallationLoad.nitrogen + preExistingPreInstallationLoad.nitrogen + preDirectDeposit.nitrogen,
              phosphorus: preUplandPreInstallationLoad.phosphorus + preExistingPreInstallationLoad.phosphorus + preDirectDeposit.phosphorus,
@@ -8294,22 +8862,16 @@ angular.module('FieldDoc')
            phosphorus: preUplandPreInstallationLoad.phosphorus/100*bmpEfficiency.p_efficiency
          };
 
-        //  console.log('postInstallationeBMPLoadTotals uplandPlannedInstallationLoad', uplandPlannedInstallationLoad);
-
          var existingPlannedInstallationLoad = {
            sediment: ((bufferArea*((existingLoaddata.eos_tss/existingLoaddata.eos_acres)-(newLanduseLoadData.eos_tss/newLanduseLoadData.eos_acres)))/2000),
            nitrogen: (bufferArea*((existingLoaddata.eos_totn/existingLoaddata.eos_acres)-(newLanduseLoadData.eos_totn/newLanduseLoadData.eos_acres))),
            phosphorus: (bufferArea*((existingLoaddata.eos_totp/existingLoaddata.eos_acres)-(newLanduseLoadData.eos_totp/newLanduseLoadData.eos_acres)))
          };
 
-        //  console.log('postInstallationeBMPLoadTotals existingPlannedInstallationLoad', existingPlannedInstallationLoad);
-
          var directDeposit = {
            nitrogen: preDirectDeposit.nitrogen*value.properties.length_of_fencing/planningValue.length_of_fencing,
            phosphorus: preDirectDeposit.phosphorus*value.properties.length_of_fencing/planningValue.length_of_fencing,
          };
-
-        //  console.log('postInstallationeBMPLoadTotals directDeposit', preDirectDeposit.nitrogen, value.properties.length_of_fencing, planningValue.length_of_fencing);
 
         if (uplandPlannedInstallationLoad && existingPlannedInstallationLoad && directDeposit) {
           return {
@@ -8710,6 +9272,127 @@ angular.module('FieldDoc')
 
   });
 
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('LivestockExclusionSummaryController', function (Account, $location, PracticeLivestockExclusion, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
+
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
+
+      $rootScope.page = {};
+
+      self.practiceType = null;
+
+      self.project = {
+        'id': projectId
+      };
+
+      self.status = {
+        loading: true
+      };
+
+      summary.$promise.then(function(successResponse) {
+
+        self.summary = successResponse;
+
+        $rootScope.page.title = self.summary.practice.properties.practice_type;
+
+        self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);
+
+        $rootScope.page.links = [
+            {
+                text: 'Projects',
+                url: '/projects'
+            },
+            {
+                text: self.summary.site.properties.project.properties.name,
+                url: '/projects/' + projectId
+            },
+            {
+              text: self.summary.site.properties.name,
+              url: '/projects/' + projectId + '/sites/' + siteId
+            },
+            {
+              text: self.summary.practice.properties.practice_type,
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId,
+              type: 'active'
+            }
+        ];
+
+        $rootScope.page.actions = [
+          {
+            type: 'button-link',
+            action: function() {
+              $window.print();
+            },
+            hideIcon: true,
+            text: 'Print'
+          },
+          {
+            type: 'button-link',
+            action: function() {
+              $scope.$emit('saveToPdf');
+            },
+            hideIcon: true,
+            text: 'Save as PDF'
+          },
+          {
+            type: 'button-link new',
+            action: function() {
+              self.addReading();
+            },
+            text: 'Add Measurement Data'
+          }
+        ];
+
+        self.status.loading = false;
+      }, function() {});
+
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
+
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: true
+              };
+          });
+      }
+
+      self.addReading = function(measurementPeriod) {
+
+        var newReading = new PracticeLivestockExclusion({
+            'measurement_period': measurementPeriod,
+            'report_date': new Date(),
+            'practice_id': practiceId,
+            'account_id': self.summary.site.properties.project.properties.account_id
+          });
+
+        newReading.$save().then(function(successResponse) {
+            $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
+          });
+      };
+    });
+
+}());
+
 'use strict';
 
 /**
@@ -8747,6 +9430,24 @@ angular.module('FieldDoc')
           },
           readings: function(Practice, $route) {
             return Practice.urbanHomeowner({
+              id: $route.current.params.practiceId
+            });
+          }
+        }
+      })
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/urban-homeowner/summary', {
+        templateUrl: '/modules/components/practices/modules/urban-homeowner/views/summary--view.html',
+        controller: 'UrbanHomeownerSummaryController',
+        controllerAs: 'page',
+        resolve: {
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          summary: function(PracticeUrbanHomeowner, $route) {
+            return PracticeUrbanHomeowner.summary({
               id: $route.current.params.practiceId
             });
           }
@@ -9300,6 +10001,129 @@ angular.module('FieldDoc')
 
   });
 
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc function
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('UrbanHomeownerSummaryController', function (Account, $location, $log, PracticeUrbanHomeowner, $rootScope, $route, $scope, summary, Utility, user, $window) {
+
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
+
+      $rootScope.page = {};
+
+      self.practiceType = null;
+
+      self.project = {
+        'id': projectId
+      };
+
+      self.status = {
+        loading: true
+      };
+
+      summary.$promise.then(function(successResponse) {
+
+        self.summary = successResponse;
+
+        $rootScope.page.title = self.summary.practice.properties.practice_type;
+
+        self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);
+
+        $rootScope.page.links = [
+            {
+                text: 'Projects',
+                url: '/projects'
+            },
+            {
+                text: self.summary.site.properties.project.properties.name,
+                url: '/projects/' + projectId
+            },
+            {
+              text: self.summary.site.properties.name,
+              url: '/projects/' + projectId + '/sites/' + siteId
+            },
+            {
+              text: self.summary.practice.properties.practice_type,
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId,
+              type: 'active'
+            }
+        ];
+
+        $rootScope.page.actions = [
+          {
+            type: 'button-link',
+            action: function() {
+              $window.print();
+            },
+            hideIcon: true,
+            text: 'Print'
+          },
+          {
+            type: 'button-link',
+            action: function() {
+              $scope.$emit('saveToPdf');
+            },
+            hideIcon: true,
+            text: 'Save as PDF'
+          },
+          {
+            type: 'button-link new',
+            action: function() {
+              self.addReading();
+            },
+            text: 'Add Measurement Data'
+          }
+        ];
+
+        self.status.loading = false;
+      }, function() {});
+
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
+
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: true
+              };
+          });
+      }
+
+      self.addReading = function(measurementPeriod) {
+
+        var newReading = new PracticeUrbanHomeowner({
+            'measurement_period': measurementPeriod,
+            'report_date': moment().format('YYYY-MM-DD'),
+            'practice_id': practiceId,
+            'account_id': self.summary.site.properties.project.properties.account_id
+          });
+
+        newReading.$save().then(function(successResponse) {
+            $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
+          });
+      };
+
+
+    });
+
+}());
+
 'use strict';
 
 /**
@@ -9337,6 +10161,24 @@ angular.module('FieldDoc')
           },
           readings: function(Practice, $route) {
             return Practice.bioretention({
+              id: $route.current.params.practiceId
+            });
+          }
+        }
+      })
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/bioretention/summary', {
+        templateUrl: '/modules/components/practices/modules/bioretention/views/summary--view.html',
+        controller: 'BioretentionSummaryController',
+        controllerAs: 'page',
+        resolve: {
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          summary: function(PracticeBioretention, $route) {
+            return PracticeBioretention.summary({
               id: $route.current.params.practiceId
             });
           }
@@ -9892,6 +10734,130 @@ angular.module('FieldDoc')
   'use strict';
 
   /**
+   * @ngdoc function
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('BioretentionSummaryController', function (Account, $location, $log, PracticeBioretention, $rootScope, $route, $scope, summary, Utility, user, $window) {
+
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
+
+      $rootScope.page = {};
+
+      self.practiceType = null;
+
+      self.project = {
+        'id': projectId
+      };
+
+      self.status = {
+        loading: true
+      };
+
+      summary.$promise.then(function(successResponse) {
+
+        self.summary = successResponse;
+
+        $rootScope.page.title = self.summary.practice.properties.practice_type;
+
+        self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);
+
+        $rootScope.page.links = [
+            {
+                text: 'Projects',
+                url: '/projects'
+            },
+            {
+                text: self.summary.site.properties.project.properties.name,
+                url: '/projects/' + projectId
+            },
+            {
+              text: self.summary.site.properties.name,
+              url: '/projects/' + projectId + '/sites/' + siteId
+            },
+            {
+              text: self.summary.practice.properties.practice_type,
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId,
+              type: 'active'
+            }
+        ];
+
+        $rootScope.page.actions = [
+          {
+            type: 'button-link',
+            action: function() {
+              $window.print();
+            },
+            hideIcon: true,
+            text: 'Print'
+          },
+          {
+            type: 'button-link',
+            action: function() {
+              $scope.$emit('saveToPdf');
+            },
+            hideIcon: true,
+            text: 'Save as PDF'
+          },
+          {
+            type: 'button-link new',
+            action: function() {
+              self.addReading();
+            },
+            text: 'Add Measurement Data'
+          }
+        ];
+
+        self.status.loading = false;
+
+      }, function() {});
+
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
+
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: true
+              };
+          });
+      }
+
+      self.addReading = function(measurementPeriod) {
+
+        var newReading = new PracticeBioretention({
+            'measurement_period': measurementPeriod,
+            'report_date': moment().format('YYYY-MM-DD'),
+            'practice_id': practiceId,
+            'account_id': self.summary.site.properties.project.properties.account_id
+          });
+
+        newReading.$save().then(function(successResponse) {
+            $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
+          });
+      };
+
+
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
    * @ngdoc overview
    * @name
    * @description
@@ -9923,6 +10889,24 @@ angular.module('FieldDoc')
             },
             readings: function(Practice, $route) {
               return Practice.instreamHabitat({
+                id: $route.current.params.practiceId
+              });
+            }
+          }
+        })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/instream-habitat/summary', {
+          templateUrl: '/modules/components/practices/modules/instream-habitat/views/summary--view.html',
+          controller: 'InstreamHabitatSummaryController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            summary: function(PracticeInstreamHabitat, $route) {
+              return PracticeInstreamHabitat.summary({
                 id: $route.current.params.practiceId
               });
             }
@@ -10315,6 +11299,127 @@ angular.module('FieldDoc')
 
   });
 
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('InstreamHabitatSummaryController', function (Account, $location, PracticeInstreamHabitat, $rootScope, $route, $scope, summary, user, Utility, $window) {
+
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
+
+      $rootScope.page = {};
+
+      self.practiceType = null;
+
+      self.project = {
+        'id': projectId
+      };
+
+      self.status = {
+        loading: true
+      };
+
+      summary.$promise.then(function(successResponse) {
+
+        self.summary = successResponse;
+
+        $rootScope.page.title = self.summary.practice.properties.practice_type;
+
+        self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);
+
+        $rootScope.page.links = [
+            {
+                text: 'Projects',
+                url: '/projects'
+            },
+            {
+                text: self.summary.site.properties.project.properties.name,
+                url: '/projects/' + projectId
+            },
+            {
+              text: self.summary.site.properties.name,
+              url: '/projects/' + projectId + '/sites/' + siteId
+            },
+            {
+              text: self.summary.practice.properties.practice_type,
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId,
+              type: 'active'
+            }
+        ];
+
+        $rootScope.page.actions = [
+          {
+            type: 'button-link',
+            action: function() {
+              $window.print();
+            },
+            hideIcon: true,
+            text: 'Print'
+          },
+          {
+            type: 'button-link',
+            action: function() {
+              $scope.$emit('saveToPdf');
+            },
+            hideIcon: true,
+            text: 'Save as PDF'
+          },
+          {
+            type: 'button-link new',
+            action: function() {
+              self.addReading();
+            },
+            text: 'Add Measurement Data'
+          }
+        ];
+
+        self.status.loading = false;
+      }, function() {});
+
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
+
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: true
+              };
+          });
+      }
+
+      self.addReading = function(measurementPeriod) {
+
+        var newReading = new PracticeInstreamHabitat({
+            'measurement_period': measurementPeriod,
+            'report_date': new Date(),
+            'practice_id': practiceId,
+            'account_id': self.summary.site.properties.project.properties.account_id
+          });
+
+        newReading.$save().then(function(successResponse) {
+            $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
+          });
+      };
+    });
+
+}());
+
 'use strict';
 
 /**
@@ -10349,6 +11454,24 @@ angular.module('FieldDoc')
           },
           readings: function(Practice, $route) {
             return Practice.bankStabilization({
+              id: $route.current.params.practiceId
+            });
+          }
+        }
+      })
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/bank-stabilization/summary', {
+        templateUrl: '/modules/components/practices/modules/bank-stabilization/views/summary--view.html',
+        controller: 'BankStabilizationSummaryController',
+        controllerAs: 'page',
+        resolve: {
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          summary: function(PracticeBankStabilization, $route) {
+            return PracticeBankStabilization.summary({
               id: $route.current.params.practiceId
             });
           }
@@ -10904,6 +12027,129 @@ angular.module('FieldDoc')
   'use strict';
 
   /**
+   * @ngdoc function
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('BankStabilizationSummaryController', function (Account, $location, $log, PracticeBankStabilization, $rootScope, $route, $scope, summary, Utility, user, $window) {
+
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
+
+      $rootScope.page = {};
+
+      self.practiceType = null;
+
+      self.project = {
+        'id': projectId
+      };
+
+      self.status = {
+        loading: true
+      };
+
+      summary.$promise.then(function(successResponse) {
+
+        self.summary = successResponse;
+
+        $rootScope.page.title = self.summary.practice.properties.practice_type;
+
+        self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);
+
+        $rootScope.page.links = [
+            {
+                text: 'Projects',
+                url: '/projects'
+            },
+            {
+                text: self.summary.site.properties.project.properties.name,
+                url: '/projects/' + projectId
+            },
+            {
+              text: self.summary.site.properties.name,
+              url: '/projects/' + projectId + '/sites/' + siteId
+            },
+            {
+              text: self.summary.practice.properties.practice_type,
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId,
+              type: 'active'
+            }
+        ];
+
+        $rootScope.page.actions = [
+          {
+            type: 'button-link',
+            action: function() {
+              $window.print();
+            },
+            hideIcon: true,
+            text: 'Print'
+          },
+          {
+            type: 'button-link',
+            action: function() {
+              $scope.$emit('saveToPdf');
+            },
+            hideIcon: true,
+            text: 'Save as PDF'
+          },
+          {
+            type: 'button-link new',
+            action: function() {
+              self.addReading();
+            },
+            text: 'Add Measurement Data'
+          }
+        ];
+
+        self.status.loading = false;
+      }, function() {});
+
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
+
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: true
+              };
+          });
+      }
+
+      self.addReading = function(measurementPeriod) {
+
+        var newReading = new PracticeBankStabilization({
+            'measurement_period': measurementPeriod,
+            'report_date': moment().format('YYYY-MM-DD'),
+            'practice_id': practiceId,
+            'account_id': self.summary.site.properties.project.properties.account_id
+          });
+
+        newReading.$save().then(function(successResponse) {
+            $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
+          });
+      };
+
+
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
    * @ngdoc overview
    * @name
    * @description
@@ -10935,6 +12181,24 @@ angular.module('FieldDoc')
             },
             readings: function(Practice, $route) {
               return Practice.enhancedStreamRestoration({
+                id: $route.current.params.practiceId
+              });
+            }
+          }
+        })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/enhanced-stream-restoration/summary', {
+          templateUrl: '/modules/components/practices/modules/enhanced-stream-restoration/views/summary--view.html',
+          controller: 'EnhancedStreamRestorationSummaryController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            summary: function(PracticeEnhancedStreamRestoration, $route) {
+              return PracticeEnhancedStreamRestoration.summary({
                 id: $route.current.params.practiceId
               });
             }
@@ -11674,6 +12938,143 @@ angular.module('FieldDoc')
   'use strict';
 
   /**
+   * @ngdoc function
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('EnhancedStreamRestorationSummaryController', function (Account, $location, Practice, PracticeEnhancedStreamRestoration, $rootScope, $route, $scope, summary, user, Utility, $window) {
+
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
+
+      $rootScope.page = {};
+
+      self.practiceType = null;
+
+      self.project = {
+        'id': projectId
+      };
+
+      self.status = {
+        loading: true
+      };
+
+      summary.$promise.then(function(successResponse) {
+
+        self.summary = successResponse;
+
+        $rootScope.page.title = self.summary.practice.properties.practice_type;
+
+        self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);
+
+        $rootScope.page.links = [
+            {
+                text: 'Projects',
+                url: '/projects'
+            },
+            {
+                text: self.summary.site.properties.project.properties.name,
+                url: '/projects/' + projectId
+            },
+            {
+              text: self.summary.site.properties.name,
+              url: '/projects/' + projectId + '/sites/' + siteId
+            },
+            {
+              text: self.summary.practice.properties.practice_type,
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId,
+              type: 'active'
+            }
+        ];
+
+        $rootScope.page.actions = [
+          {
+            type: 'button-link',
+            action: function() {
+              $window.print();
+            },
+            hideIcon: true,
+            text: 'Print'
+          },
+          {
+            type: 'button-link',
+            action: function() {
+              $scope.$emit('saveToPdf');
+            },
+            hideIcon: true,
+            text: 'Save as PDF'
+          },
+          {
+            type: 'button-link new',
+            action: function() {
+              self.addReading();
+            },
+            text: 'Add Measurement Data'
+          }
+        ];
+
+        self.status.loading = false;
+      }, function() {});
+
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
+
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: true
+              };
+          });
+      }
+
+      self.addReading = function(measurementPeriod) {
+
+        var newReading = new PracticeEnhancedStreamRestoration({
+            'measurement_period': measurementPeriod,
+            'report_date': moment().format('YYYY-MM-DD'),
+            'practice_id': practiceId,
+            'account_id': self.summary.site.properties.project.properties.account_id
+          });
+
+        newReading.$save().then(function(successResponse) {
+            $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
+          });
+      };
+
+      self.createBankStabilizationPractice = function() {
+          self.practice = new Practice({
+              'practice_type': 'Bank Stabilization',
+              'site_id': self.site.id,
+              'account_id': self.summary.site.properties.project.properties.account_id
+          });
+
+          self.practice.$save(function(successResponse) {
+              $location.path('/projects/' + self.site.properties.project.id + '/sites/' + self.site.id + '/practices/' + successResponse.id + '/edit');
+            }, function(errorResponse) {
+              console.error('Unable to create your site, please try again later');
+            });
+      };
+
+
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
    * @ngdoc overview
    * @name FieldDoc
    * @description
@@ -11705,6 +13106,24 @@ angular.module('FieldDoc')
             },
             readings: function(Practice, $route) {
               return Practice.wetlandsNontidal({
+                id: $route.current.params.practiceId
+              });
+            }
+          }
+        })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/nontidal-wetlands/summary', {
+          templateUrl: '/modules/components/practices/modules/nontidal-wetlands/views/summary--view.html',
+          controller: 'WetlandsNonTidalSummaryController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            summary: function(PracticeWetlandsNonTidal, $route) {
+              return PracticeWetlandsNonTidal.summary({
                 id: $route.current.params.practiceId
               });
             }
@@ -12404,6 +13823,129 @@ angular.module('FieldDoc')
   'use strict';
 
   /**
+   * @ngdoc function
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('WetlandsNonTidalSummaryController', function (Account, $location, $log, PracticeWetlandsNonTidal, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
+
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
+
+      $rootScope.page = {};
+
+      self.practiceType = null;
+
+      self.project = {
+        'id': projectId
+      };
+
+      self.status = {
+        loading: true
+      };
+
+      summary.$promise.then(function(successResponse) {
+
+        self.summary = successResponse;
+
+        $rootScope.page.title = self.summary.practice.properties.practice_type;
+
+        self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);
+
+        $rootScope.page.links = [
+            {
+                text: 'Projects',
+                url: '/projects'
+            },
+            {
+                text: self.summary.site.properties.project.properties.name,
+                url: '/projects/' + projectId
+            },
+            {
+              text: self.summary.site.properties.name,
+              url: '/projects/' + projectId + '/sites/' + siteId
+            },
+            {
+              text: self.summary.practice.properties.practice_type,
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId,
+              type: 'active'
+            }
+        ];
+
+        $rootScope.page.actions = [
+          {
+            type: 'button-link',
+            action: function() {
+              $window.print();
+            },
+            hideIcon: true,
+            text: 'Print'
+          },
+          {
+            type: 'button-link',
+            action: function() {
+              $scope.$emit('saveToPdf');
+            },
+            hideIcon: true,
+            text: 'Save as PDF'
+          },
+          {
+            type: 'button-link new',
+            action: function() {
+              self.addReading();
+            },
+            text: 'Add Measurement Data'
+          }
+        ];
+
+        self.status.loading = false;
+      }, function() {});
+
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
+
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: true
+              };
+          });
+      }
+
+      self.addReading = function(measurementPeriod) {
+
+        var newReading = new PracticeWetlandsNonTidal({
+            'measurement_period': measurementPeriod,
+            'report_date': new Date(),
+            'practice_id': practiceId,
+            'account_id': self.summary.site.properties.project.properties.account_id
+          });
+
+        newReading.$save().then(function(successResponse) {
+            $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
+          });
+      };
+
+
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
    * @ngdoc overview
    * @name FieldDoc
    * @description
@@ -12435,6 +13977,24 @@ angular.module('FieldDoc')
             },
             readings: function(Practice, $route) {
               return Practice.shorelineManagement({
+                id: $route.current.params.practiceId
+              });
+            }
+          }
+        })
+        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/shoreline-management/summary', {
+          templateUrl: '/modules/components/practices/modules/shoreline-management/views/summary--view.html',
+          controller: 'ShorelineManagementSummaryController',
+          controllerAs: 'page',
+          resolve: {
+            user: function(Account) {
+              if (Account.userObject && !Account.userObject.id) {
+                  return Account.getUser();
+              }
+              return Account.userObject;
+            },
+            summary: function(PracticeShorelineManagement, $route) {
+              return PracticeShorelineManagement.summary({
                 id: $route.current.params.practiceId
               });
             }
@@ -12505,7 +14065,7 @@ angular.module('FieldDoc')
           if (!data.hasOwnProperty('properties')) {
             return [];
           }
-
+          
           var multipler_1 = data.properties.installation_length_of_living_shoreline_restored,
               multipler_2 = data.properties.installation_existing_average_bank_height,
               multipler_3 = data.properties.installation_existing_shoreline_recession_rate,
@@ -12524,7 +14084,7 @@ angular.module('FieldDoc')
           if (!data.hasOwnProperty('properties')) {
             return [];
           }
-
+          
           if (data.properties.protocol_2_tn_reduction_rate) {
             this.efficiency.protocol_2_tn_reduction_rate = data.properties.protocol_2_tn_reduction_rate;
           }
@@ -12546,7 +14106,7 @@ angular.module('FieldDoc')
           if (data.properties.protocol_3_tp_reduction_rate) {
             this.efficiency.protocol_3_tp_reduction_rate = data.properties.protocol_3_tp_reduction_rate;
           }
-
+          
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
               multipler_2 = this.efficiency.protocol_3_tp_reduction_rate,
               returnValue = 0;
@@ -12564,7 +14124,7 @@ angular.module('FieldDoc')
           if (data.properties.protocol_3_tss_reduction_rate) {
             this.efficiency.protocol_3_tss_reduction_rate = data.properties.protocol_3_tss_reduction_rate;
           }
-
+          
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
               multipler_2 = this.efficiency.protocol_3_tss_reduction_rate,
               returnValue = 0;
@@ -12600,7 +14160,7 @@ angular.module('FieldDoc')
           if (data.properties.protocol_4_tp_reduction_rate) {
             this.efficiency.protocol_4_tp_reduction_rate = data.properties.protocol_4_tp_reduction_rate;
           }
-
+          
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
               multipler_2 = this.efficiency.protocol_4_tp_reduction_rate,
               returnValue = 0;
@@ -13214,6 +14774,129 @@ angular.module('FieldDoc')
 
 }());
 
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc function
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('ShorelineManagementSummaryController', function (Account, $location, $log, PracticeShorelineManagement, $rootScope, $route, $scope, summary, Utility, user, $window) {
+
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
+
+      $rootScope.page = {};
+
+      self.practiceType = null;
+
+      self.project = {
+        'id': projectId
+      };
+
+      self.status = {
+        loading: true
+      };
+
+      summary.$promise.then(function(successResponse) {
+
+        self.summary = successResponse;
+
+        $rootScope.page.title = self.summary.practice.properties.practice_type;
+
+        self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);
+
+        $rootScope.page.links = [
+            {
+                text: 'Projects',
+                url: '/projects'
+            },
+            {
+                text: self.summary.site.properties.project.properties.name,
+                url: '/projects/' + projectId
+            },
+            {
+              text: self.summary.site.properties.name,
+              url: '/projects/' + projectId + '/sites/' + siteId
+            },
+            {
+              text: self.summary.practice.properties.practice_type,
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId,
+              type: 'active'
+            }
+        ];
+
+        $rootScope.page.actions = [
+          {
+            type: 'button-link',
+            action: function() {
+              $window.print();
+            },
+            hideIcon: true,
+            text: 'Print'
+          },
+          {
+            type: 'button-link',
+            action: function() {
+              $scope.$emit('saveToPdf');
+            },
+            hideIcon: true,
+            text: 'Save as PDF'
+          },
+          {
+            type: 'button-link new',
+            action: function() {
+              self.addReading();
+            },
+            text: 'Add Measurement Data'
+          }
+        ];
+
+        self.status.loading = false;
+      }, function() {});
+
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
+
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: true
+              };
+          });
+      }
+
+      self.addReading = function(measurementPeriod) {
+
+        var newReading = new PracticeShorelineManagement({
+            'measurement_period': measurementPeriod,
+            'report_date': moment().format('YYYY-MM-DD'),
+            'practice_id': practiceId,
+            'account_id': self.summary.site.properties.project.properties.account_id
+          });
+
+        newReading.$save().then(function(successResponse) {
+            $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
+          });
+      };
+
+
+    });
+
+}());
+
 'use strict';
 
 /**
@@ -13251,6 +14934,24 @@ angular.module('FieldDoc')
           },
           readings: function(Practice, $route) {
             return Practice.stormwater({
+              id: $route.current.params.practiceId
+            });
+          }
+        }
+      })
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/stormwater/summary', {
+        templateUrl: '/modules/components/practices/modules/stormwater/views/summary--view.html',
+        controller: 'StormwaterSummaryController',
+        controllerAs: 'page',
+        resolve: {
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          summary: function(PracticeStormwater, $route) {
+            return PracticeStormwater.summary({
               id: $route.current.params.practiceId
             });
           }
@@ -14167,6 +15868,129 @@ angular.module('FieldDoc')
 
 }());
 
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc function
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .controller('StormwaterSummaryController', function (Account, $location, $log, PracticeStormwater, $rootScope, $route, $scope, summary, Utility, user, $window) {
+
+      var self = this,
+          projectId = $route.current.params.projectId,
+          siteId = $route.current.params.siteId,
+          practiceId = $route.current.params.practiceId;
+
+      $rootScope.page = {};
+
+      self.practiceType = null;
+
+      self.project = {
+        'id': projectId
+      };
+
+      self.status = {
+        loading: true
+      };
+
+      summary.$promise.then(function(successResponse) {
+
+        self.summary = successResponse;
+
+        $rootScope.page.title = self.summary.practice.properties.practice_type;
+
+        self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);
+
+        $rootScope.page.links = [
+            {
+                text: 'Projects',
+                url: '/projects'
+            },
+            {
+                text: self.summary.site.properties.project.properties.name,
+                url: '/projects/' + projectId
+            },
+            {
+              text: self.summary.site.properties.name,
+              url: '/projects/' + projectId + '/sites/' + siteId
+            },
+            {
+              text: self.summary.practice.properties.practice_type,
+              url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId,
+              type: 'active'
+            }
+        ];
+
+        $rootScope.page.actions = [
+          {
+            type: 'button-link',
+            action: function() {
+              $window.print();
+            },
+            hideIcon: true,
+            text: 'Print'
+          },
+          {
+            type: 'button-link',
+            action: function() {
+              $scope.$emit('saveToPdf');
+            },
+            hideIcon: true,
+            text: 'Save as PDF'
+          },
+          {
+            type: 'button-link new',
+            action: function() {
+              self.addReading();
+            },
+            text: 'Add Measurement Data'
+          }
+        ];
+
+        self.status.loading = false;
+      }, function() {});
+
+      //
+      // Verify Account information for proper UI element display
+      //
+      if (Account.userObject && user) {
+          user.$promise.then(function(userResponse) {
+              $rootScope.user = Account.userObject = userResponse;
+
+              self.permissions = {
+                  isLoggedIn: Account.hasToken(),
+                  role: $rootScope.user.properties.roles[0].properties.name,
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                  can_edit: true
+              };
+          });
+      }
+
+      self.addReading = function(measurementPeriod) {
+
+        var newReading = new PracticeStormwater({
+            'measurement_period': measurementPeriod,
+            'report_date': moment().format('YYYY-MM-DD'),
+            'practice_id': practiceId,
+            'account_id': self.summary.site.properties.project.properties.account_id
+          });
+
+        newReading.$save().then(function(successResponse) {
+            $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+          }, function(errorResponse) {
+            console.error('ERROR: ', errorResponse);
+          });
+      };
+
+
+    });
+
+}());
+
 'use strict';
 
 /**
@@ -14213,7 +16037,7 @@ angular.module('FieldDoc')
  * @ngdoc service
  * @name FieldDoc.GeometryService
  * @description
- *
+ *   
  */
 angular.module('FieldDoc')
   .service('commonsGeometry', ['$http', 'commonscloud', 'leafletData', function Navigation($http, commonscloud, leafletData) {
@@ -14390,7 +16214,7 @@ angular.module('FieldDoc')
         }
       },
       center: {
-        lng: -76.534,
+        lng: -76.534, 
         lat: 39.134,
         zoom: 11
       },
@@ -14435,7 +16259,7 @@ angular.module('FieldDoc')
       },
       geojson: {}
     };
-
+    
     return Map;
   }]);
 'use strict';
@@ -16023,6 +17847,11 @@ angular
         'query': {
           isArray: false
         },
+        'summary': {
+          isArray: false,
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/summary/agriculture-generic/:id')
+        },
         'update': {
           method: 'PATCH',
           transformRequest: function(data) {
@@ -16051,6 +17880,11 @@ angular
       }, {
         'query': {
           isArray: false
+        },
+        'summary': {
+          isArray: false,
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/summary/urban-homeowner/:id')
         },
         'update': {
           method: 'PATCH',
@@ -16081,6 +17915,11 @@ angular
         'query': {
           isArray: false
         },
+        'summary': {
+          isArray: false,
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/summary/bioretention/:id')
+        },
         'update': {
           method: 'PATCH',
           transformRequest: function(data) {
@@ -16109,6 +17948,11 @@ angular
       }, {
         'query': {
           isArray: false
+        },
+        'summary': {
+          isArray: false,
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/summary/bank-stabilization/:id')
         },
         'update': {
           method: 'PATCH',
@@ -16139,6 +17983,11 @@ angular
         'query': {
           isArray: false
         },
+        'summary': {
+          isArray: false,
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/summary/enhanced-stream-restoration/:id')
+        },
         'update': {
           method: 'PATCH',
           transformRequest: function(data) {
@@ -16167,6 +18016,11 @@ angular
       }, {
         'query': {
           isArray: false
+        },
+        'summary': {
+          isArray: false,
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/summary/forest-buffer/:id')
         },
         'update': {
           method: 'PATCH',
@@ -16197,6 +18051,11 @@ angular
         'query': {
           isArray: false
         },
+        'summary': {
+          isArray: false,
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/summary/grass-buffer/:id')
+        },
         'update': {
           method: 'PATCH',
           transformRequest: function(data) {
@@ -16225,6 +18084,11 @@ angular
       }, {
         'query': {
           isArray: false
+        },
+        'summary': {
+          isArray: false,
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/summary/instream-habitat/:id')
         },
         'update': {
           method: 'PATCH',
@@ -16255,6 +18119,11 @@ angular
         'query': {
           isArray: false
         },
+        'summary': {
+          isArray: false,
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/summary/livestock-exclusion/:id')
+        },
         'update': {
           method: 'PATCH',
           transformRequest: function(data) {
@@ -16283,6 +18152,11 @@ angular
       }, {
         'query': {
           isArray: false
+        },
+        'summary': {
+          isArray: false,
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/summary/wetlands-nontidal/:id')
         },
         'update': {
           method: 'PATCH',
@@ -16313,6 +18187,11 @@ angular
         'query': {
           isArray: false
         },
+        'summary': {
+          isArray: false,
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/summary/shoreline-management/:id')
+        },
         'update': {
           method: 'PATCH',
           transformRequest: function(data) {
@@ -16341,6 +18220,11 @@ angular
       }, {
         'query': {
           isArray: false
+        },
+        'summary': {
+          isArray: false,
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/summary/stormwater/:id')
         },
         'update': {
           method: 'PATCH',
@@ -16450,17 +18334,22 @@ angular
       return $resource(environment.apiUrl.concat('/v1/data/site/:id'), {
         id: '@id'
       }, {
-        query: {
+        'query': {
           isArray: false
         },
-        update: {
+        'summary': {
+          isArray: false,
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/summary/site/:id')
+        },
+        'update': {
           method: 'PATCH',
           transformRequest: function(data) {
             var feature = Preprocessors.geojson(data);
             return angular.toJson(feature);
           }
         },
-        practices: {
+        'practices': {
           method: 'GET',
           isArray: false,
           url: environment.apiUrl.concat('/v1/data/site/:id/practices')
@@ -16969,13 +18858,13 @@ angular.module('FieldDoc')
     // with structured objects.
     //
     return  function(object) {
-
+      
       var result = [];
 
       angular.forEach(object, function(value) {
         result.push(value);
       });
-
+      
       return result;
     };
 
