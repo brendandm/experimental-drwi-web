@@ -355,6 +355,11 @@
               Site Overview
             </a>
           </li>
+          <li>
+            <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/summary">
+              Summary
+            </a>
+          </li>
           <li data-ng-if="page.permissions.can_edit">
             <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/edit">
               Edit
