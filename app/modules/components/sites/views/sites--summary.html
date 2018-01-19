@@ -298,9 +298,9 @@
           </section>
 
           <!-- SITE CHESAPEAKE BAY METRICS BREAKDOWN -->
-          <section class="row metrics statistics"
-                  data-ng-if="page.practices">
-            <article class="row ">
+          <section class="row metrics statistics">
+            {{ page.rollups.metrics }}
+            <!-- <article class="row ">
              <div class="column-8 metrics--metric"
                   data-ng-if="metric.total"
                   data-ng-repeat="metric in page.rollups.metrics track by $index">
@@ -315,7 +315,7 @@
                  {{ metric.installed | number:2 }} of {{ metric.total | number:2 }} {{ metric.units }}
                </p>
              </div>
-            </article>
+            </article> -->
           </section>
 
         <section class="list action-list">
