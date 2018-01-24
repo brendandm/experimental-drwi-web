@@ -73,6 +73,24 @@ angular.module('FieldDoc')
           }
         }
       })
+      .when('/projects/:projectId/summary', {
+        templateUrl: '/modules/components/projects/views/projectsSummary--view.html',
+        controller: 'ProjectSummaryCtrl',
+        controllerAs: 'page',
+        resolve: {
+          user: function(Account) {
+            if (Account.userObject && !Account.userObject.id) {
+                return Account.getUser();
+            }
+            return Account.userObject;
+          },
+          summary: function(Project, $route) {
+            return Project.summary({
+              'id': $route.current.params.projectId
+            });
+          }
+        }
+      })
       .when('/projects/:projectId/edit', {
         templateUrl: '/modules/components/projects/views/projectsEdit--view.html',
         controller: 'ProjectEditCtrl',
