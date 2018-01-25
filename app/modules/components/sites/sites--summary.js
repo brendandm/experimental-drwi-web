@@ -22,6 +22,8 @@
 
       summary.$promise.then(function(successResponse) {
 
+        self.data = successResponse;
+        
         self.site = successResponse.site;
         self.practices = successResponse.practices;
 

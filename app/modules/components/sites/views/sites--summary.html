@@ -299,23 +299,21 @@
 
           <!-- SITE CHESAPEAKE BAY METRICS BREAKDOWN -->
           <section class="row metrics statistics">
-            {{ page.rollups.metrics }}
-            <!-- <article class="row ">
+            <article class="row ">
              <div class="column-8 metrics--metric"
-                  data-ng-if="metric.total"
                   data-ng-repeat="metric in page.rollups.metrics track by $index">
                <p class="metric--title">
                  {{ metric.label }}
                </p>
                <div class="metric--chart">
                  <div class="metric--chart--value"
-                      data-ng-style="{'width': '{{ metric.percentage.whole }}%' }"></div>
+                      data-ng-style="{'width': '{{ (metric.installed/metric.total)*100 }}%' }"></div>
                </div>
                <p class="metric--help--text">
                  {{ metric.installed | number:2 }} of {{ metric.total | number:2 }} {{ metric.units }}
                </p>
              </div>
-            </article> -->
+            </article>
           </section>
 
         <section class="list action-list">
@@ -370,3 +368,11 @@
 </main>
 
 <div data-ng-include="'/templates/footer--view.html'"></div>
+
+<div data-ng-show="page.showData">
+  <code>
+    <pre>
+      {{ page.data | json }}
+    </pre>
+  </code>
+</div>
