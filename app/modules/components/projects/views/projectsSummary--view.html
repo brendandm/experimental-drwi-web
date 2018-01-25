@@ -1,8 +1,13 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main class="container" save2pdf>
-  <form class="row feature">
-    <article class="feature-detail">
+<main class="container">
+  <div class="row feature">
+
+    <div class="throbber throbber-small"
+         data-ng-if="page.status.loading"></div>
+
+    <article class="feature-detail"
+             data-ng-if="!page.status.loading">
       <div class="column-11 feature-detail-content" save2pdf>
         <h4>
           <span data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">{{ page.project.properties.program_type }}</span>
@@ -194,7 +199,7 @@
         </ul>
       </nav>
     </article>
-  </form>
+  </div>
 </main>
 
 <div data-ng-include="'/templates/footer--view.html'"></div>
