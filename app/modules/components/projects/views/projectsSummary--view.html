@@ -101,31 +101,31 @@
               <div class="column-16 list-item-content">
                 <div class="row">
                   <div class="column-2">
-                    <img data-ng-if="site.geometry"
-                         data-ng-src="https://api.tiles.mapbox.com/v4/{{ page.mapbox.map_id }}/pin-s+b1c11d({{ site.geometry.geometries[0].coordinates[0] }},{{ site.geometry.geometries[0].coordinates[1] }},17)/{{ site.geometry.geometries[0].coordinates[0] }},{{ site.geometry.geometries[0].coordinates[1] }},17/80x80@2x.png?access_token={{ page.mapbox.access_token }}"
-                         alt="{{ site.site_description }} location preview" width="80" height="80" />
+                    <img data-ng-if="site.site.geometry"
+                         data-ng-src="https://api.tiles.mapbox.com/v4/{{ page.mapbox.map_id }}/pin-s+b1c11d({{ site.site.geometry.geometries[0].coordinates[0] }},{{ site.site.geometry.geometries[0].coordinates[1] }},17)/{{ site.site.geometry.geometries[0].coordinates[0] }},{{ site.site.geometry.geometries[0].coordinates[1] }},17/80x80@2x.png?access_token={{ page.mapbox.access_token }}"
+                         alt="{{ site.site.site_description }} location preview" width="80" height="80" />
                   </div>
                   <div class="column-14">
                     <h1 class="project-site-number">
-                        <a href="/projects/{{ page.project.id }}/sites/{{ site.id }}" title="{{ site.properties.name }} project details">
-                            {{ site.properties.name }}
+                        <a href="/projects/{{ page.project.id }}/sites/{{ site.site.id }}" title="{{ site.site.properties.name }} project details">
+                            {{ site.site.properties.name }}
                         </a>
                     </h1>
-                    <p data-ng-if="site.properties.description">
-                      {{ site.properties.description | limitTo:140 }}<span data-ng-if="site.properties.description.length >= 140">...</span>
+                    <p data-ng-if="site.site.properties.description">
+                      {{ site.site.properties.description | limitTo:140 }}<span data-ng-if="site.site.properties.description.length >= 140">...</span>
                     </p>
                     <h4 class="project-site-city">
-                      <span data-ng-if="site.properties.city">{{ site.properties.city }}</span><span data-ng-if="site.properties.city && site.properties.county.properties.county_name">,</span>
-                      <span data-ng-if="site.properties.county.properties.county_name">{{ site.properties.county.properties.county_name }} County</span><span data-ng-if="site.properties.state && site.properties.county.properties.county_name">,</span> {{ site.properties.state }}
+                      <span data-ng-if="site.site.properties.city">{{ site.site.properties.city }}</span><span data-ng-if="site.site.properties.city && site.site.properties.county.properties.county_name">,</span>
+                      <span data-ng-if="site.site.properties.county.properties.county_name">{{ site.site.properties.county.properties.county_name }} County</span><span data-ng-if="site.site.properties.state && site.site.properties.county.properties.county_name">,</span> {{ site.site.properties.state }}
                     </h4>
                     <h4 class="project-site-city">
-                      <span data-ng-if="site.id && site.properties.last_modified_by.properties.first_name && site.properties.last_modified_by.properties.last_name">Last Modified by: {{ site.properties.last_modified_by.properties.first_name }} {{ site.properties.last_modified_by.properties.last_name }}</span>
-                      <span data-ng-if="site.id && site.properties.modified_on">Modified on: {{ site.properties.modified_on | date }}</span>
+                      <span data-ng-if="site.site.id && site.site.properties.last_modified_by.properties.first_name && site.site.properties.last_modified_by.properties.last_name">Last Modified by: {{ site.site.properties.last_modified_by.properties.first_name }} {{ site.site.properties.last_modified_by.properties.last_name }}</span>
+                      <span data-ng-if="site.site.id && site.site.properties.modified_on">Modified on: {{ site.site.properties.modified_on | date }}</span>
                     </h4>
                     <h4 class="project-site-city">
-                      <span data-ng-if="site.properties.segment.properties.hgmr_code">{{ site.properties.segment.properties.hgmr_code }}</span>,
-                      <span data-ng-if="site.properties.segment.properties.hgmr_name">{{ site.properties.segment.properties.hgmr_name }}</span>,
-                      <span data-ng-if="site.properties.segment.properties.river_name">{{ site.properties.segment.properties.river_name }}</span>
+                      <span data-ng-if="site.site.properties.segment.properties.hgmr_code">{{ site.site.properties.segment.properties.hgmr_code }}</span>,
+                      <span data-ng-if="site.site.properties.segment.properties.hgmr_name">{{ site.site.properties.segment.properties.hgmr_name }}</span>,
+                      <span data-ng-if="site.site.properties.segment.properties.river_name">{{ site.site.properties.segment.properties.river_name }}</span>
                     </h4>
                   </div>
                 </div>
