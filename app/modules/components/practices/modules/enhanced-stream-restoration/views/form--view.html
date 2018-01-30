@@ -64,10 +64,11 @@
               </p>
 
               <div class="form-group column-8">
+
                 <label for="has_majority_design_completion_false"
                        class="control-label control-label-radios">
                   <input data-ng-model="page.report.properties.has_majority_design_completion"
-                         type="radio" value="false"
+                         type="radio" data-ng-value="false"
                          class="form-control"
                          id="has_majority_design_completion_false"
                          name="has_majority_design_completion_false" />Less than 90% designed
@@ -77,7 +78,7 @@
                 <label for="has_majority_design_completion_true"
                        class="control-label control-label-radios">
                   <input data-ng-model="page.report.properties.has_majority_design_completion"
-                         type="radio" value="true"
+                         type="radio" data-ng-value="true"
                          class="form-control"
                          id="has_majority_design_completion_true"
                          name="has_majority_design_completion_true" />Greater than 90% designed
@@ -91,35 +92,56 @@
           </div>
         </fieldset>
 
-        <div data-ng-if="page.report.properties.has_majority_design_completion === 'false'">
-          NEW FIELDS HERE
-          <!-- <h2><strong>Installation</strong> Summary</h2>
+        <div data-ng-if="page.report.properties.has_majority_design_completion === false">
+          <h2><strong>Installation</strong> Summary</h2>
 
-          <p>
-            Protocol 2: In-Stream and Riparian Nutrient Processing Credit within the Hyporheic Zone during Base Flow
-          </p>
-
-          <div class="form-group column-8">
-            <label for="stream_width_at_bankfull" class="control-label">
-              Stream Width at Bankfull
+          <div class="form-group column-5">
+            <label for="override_linear_feet_in_coastal_plain"
+                   class="control-label">
+              Linear Feet in Coastal Plain
             </label>
 
-            <input data-ng-model="page.report.properties.stream_width_at_bankfull" class="form-control" class="form-control" type="number" id="stream_width_at_bankfull" name="stream_width_at_bankfull" step="0.0001" />
+            <input data-ng-model="page.report.properties.override_linear_feet_in_coastal_plain"
+                   type="number" id="override_linear_feet_in_coastal_plain"
+                   name="override_linear_feet_in_coastal_plain"
+                   class="form-control" step="0.001"
+                   data-ng-change="page.change.updateTotal()" />
 
-            <p class="help-text">feet</p>
+            <p class="help-text">linear feet</p>
           </div>
-          <div class="form-group column-8">
-            <label for="stream_width_at_mean_base_flow" class="control-label">
-              Stream Width at Mean Base flow
+
+          <div class="form-group column-5">
+            <label for="override_linear_feet_in_noncoastal_plain"
+                   class="control-label">
+              Linear Feet in Non-Coastal Plain
             </label>
 
-            <input data-ng-model="page.report.properties.stream_width_at_mean_base_flow" class="form-control" class="form-control" type="number" id="stream_width_at_mean_base_flow" name="stream_width_at_mean_base_flow" step="0.0001" />
+            <input data-ng-model="page.report.properties.override_linear_feet_in_noncoastal_plain"
+                   type="number" id="override_linear_feet_in_noncoastal_plain"
+                   name="override_linear_feet_in_noncoastal_plain"
+                   class="form-control" step="0.001"
+                   data-ng-change="page.change.updateTotal()" />
 
-            <p class="help-text">feet</p>
-          </div> -->
+            <p class="help-text">linear feet</p>
+          </div>
+
+          <div class="form-group column-6">
+            <label for="override_linear_feet_in_total"
+                   class="control-label">
+              Total Linear Feet
+            </label>
+
+            <input data-ng-model="page.report.properties.override_linear_feet_in_total"
+                   type="number" id="override_linear_feet_in_total"
+                   name="override_linear_feet_in_total"
+                   class="form-control" step="0.001"
+                   data-ng-disabled="true" />
+
+            <p class="help-text">linear feet</p>
+          </div>
         </div>
 
-        <div data-ng-if="page.report.properties.has_majority_design_completion === 'true'">
+        <div data-ng-if="page.report.properties.has_majority_design_completion === true">
           <!-- Installation Summary -->
           <fieldset data-ng-if="page.report.properties.measurement_period === 'Pre-Project' || page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
             <h2><strong>Installation</strong> Summary</h2>

@@ -89,8 +89,7 @@ angular.module('FieldDoc')
               self.permissions = {
                   isLoggedIn: Account.hasToken(),
                   role: $rootScope.user.properties.roles[0].properties.name,
-                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                  can_edit: Account.canEdit(self.site.properties.project)
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
               };
           });
       }
@@ -111,5 +110,17 @@ angular.module('FieldDoc')
         console.error('ERROR: ', errorResponse);
       });
     };
+
+    self.change = {
+      "updateTotal": function() {
+
+        var total_ = 0;
+
+        total_ += self.report.properties.override_linear_feet_in_coastal_plain;
+        total_ += self.report.properties.override_linear_feet_in_noncoastal_plain;
+
+        self.report.properties.override_linear_feet_in_total = total_; 
+      }
+    }
 
   });
