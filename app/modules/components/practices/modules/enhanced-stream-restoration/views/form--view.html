@@ -64,23 +64,23 @@
               </p>
 
               <div class="form-group column-8">
-                <label for="has_90_percent_project_completion_false"
+                <label for="has_majority_design_completion_false"
                        class="control-label control-label-radios">
-                  <input data-ng-model="page.report.properties.has_90_percent_project_completion"
+                  <input data-ng-model="page.report.properties.has_majority_design_completion"
                          type="radio" value="false"
                          class="form-control"
-                         id="has_90_percent_project_completion_false"
-                         name="has_90_percent_project_completion_false" />Less than 90% designed
+                         id="has_majority_design_completion_false"
+                         name="has_majority_design_completion_false" />Less than 90% designed
                 </label>
 
 
-                <label for="has_90_percent_project_completion_true"
+                <label for="has_majority_design_completion_true"
                        class="control-label control-label-radios">
-                  <input data-ng-model="page.report.properties.has_90_percent_project_completion"
+                  <input data-ng-model="page.report.properties.has_majority_design_completion"
                          type="radio" value="true"
                          class="form-control"
-                         id="has_90_percent_project_completion_true"
-                         name="has_90_percent_project_completion_true" />Greater than 90% designed
+                         id="has_majority_design_completion_true"
+                         name="has_majority_design_completion_true" />Greater than 90% designed
                 </label>
 
                 <p class="help-text"
@@ -91,7 +91,7 @@
           </div>
         </fieldset>
 
-        <div data-ng-if="page.report.properties.has_90_percent_project_completion === 'false'">
+        <div data-ng-if="page.report.properties.has_majority_design_completion === 'false'">
           NEW FIELDS HERE
           <!-- <h2><strong>Installation</strong> Summary</h2>
 
@@ -119,7 +119,7 @@
           </div> -->
         </div>
 
-        <div data-ng-if="page.report.properties.has_90_percent_project_completion === 'true'">
+        <div data-ng-if="page.report.properties.has_majority_design_completion === 'true'">
           <!-- Installation Summary -->
           <fieldset data-ng-if="page.report.properties.measurement_period === 'Pre-Project' || page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
             <h2><strong>Installation</strong> Summary</h2>
