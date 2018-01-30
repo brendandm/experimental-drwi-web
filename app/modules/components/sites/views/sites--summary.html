@@ -301,6 +301,7 @@
           <section class="row metrics statistics">
             <article class="row ">
              <div class="column-8 metrics--metric"
+                  data-ng-if="metric.total"
                   data-ng-repeat="metric in page.rollups.metrics track by $index">
                <p class="metric--title">
                  {{ metric.label }}

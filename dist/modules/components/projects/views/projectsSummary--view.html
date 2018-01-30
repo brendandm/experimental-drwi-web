@@ -79,8 +79,9 @@
               </div>
             </article>
             <section class="row metrics">
-            <article class="row ">
+            <article class="row">
               <div class="column-8 metrics--metric"
+                   data-ng-if="metric.total"
                    data-ng-repeat="metric in page.rollups.metrics track by $index">
                 <p class="metric--title">
                   {{ metric.label }}
@@ -95,9 +96,7 @@
               </div>
             </article>
             </section>
-            <!-- {{
-              page.rollups.nitrogen.total
-            }} -->
+
             <h6 class="rule-above"><strong>Project</strong> Sites</h6>
             <article class="row list-item list-item-thin"
                      data-ng-if="page.sites.length"
