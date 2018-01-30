@@ -59,32 +59,28 @@
           <div class="form-group column-8"
                data-ng-if="page.report.properties.measurement_period === 'Pre-Project'">
 
-              <h2><strong>Installation</strong> Summary</h2>
-
               <p>
                 Project Design Completion Percentage (%)
               </p>
 
               <div class="form-group column-8">
                 <label for="has_90_percent_project_completion_false"
-                       class="control-label">
+                       class="control-label control-label-radios">
                   <input data-ng-model="page.report.properties.has_90_percent_project_completion"
                          type="radio" value="false"
                          class="form-control"
                          id="has_90_percent_project_completion_false"
-                         name="has_90_percent_project_completion_false" />
-                  Less than 90% designed
+                         name="has_90_percent_project_completion_false" />Less than 90% designed
                 </label>
 
 
                 <label for="has_90_percent_project_completion_true"
-                       class="control-label">
+                       class="control-label control-label-radios">
                   <input data-ng-model="page.report.properties.has_90_percent_project_completion"
                          type="radio" value="true"
                          class="form-control"
                          id="has_90_percent_project_completion_true"
-                         name="has_90_percent_project_completion_true" />
-                  Greater than 90% designed
+                         name="has_90_percent_project_completion_true" />Greater than 90% designed
                 </label>
 
                 <p class="help-text"
