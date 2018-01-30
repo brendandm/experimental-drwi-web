@@ -55,6 +55,32 @@
 
         </fieldset>
 
+        <fieldset>
+          <div class="form-group column-8"
+               data-ng-if="page.report.properties.measurement_period === 'Pre-Project'">
+
+              <h2><strong>Installation</strong> Summary</h2>
+
+              <p>
+                Project Completion Percentage (%)
+              </p>
+
+              <div class="form-group column-8">
+                <label for="stream_width_at_bankfull" class="control-label">
+                  Stream Width at Bankfull
+                </label>
+
+                <input data-ng-model="page.report.properties.has_90_percent_project_completion" 
+                       type="number" value=""
+                       class="form-control"
+                       id="stream_width_at_bankfull" name="stream_width_at_bankfull" />
+
+                <p class="help-text">feet</p>
+              </div>
+
+          </div>
+        </fieldset>
+
         <!-- Installation Summary -->
         <fieldset data-ng-if="page.report.properties.measurement_period === 'Pre-Project' || page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
           <h2><strong>Installation</strong> Summary</h2>
