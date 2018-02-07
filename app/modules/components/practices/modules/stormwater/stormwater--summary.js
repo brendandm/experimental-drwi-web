@@ -115,13 +115,13 @@
                 'measurement_period': measurementPeriod,
                 'report_date': new Date(),
                 'practice_id': practiceId,
-                'account_id': self.site.properties.project.properties.account_id
-                // 'practice_1_name': practicePlanningData.properties.practice_1_name,
-                // 'practice_2_name': practicePlanningData.properties.practice_2_name,
-                // 'practice_3_name': practicePlanningData.properties.practice_3_name,
-                // 'practice_4_name': practicePlanningData.properties.practice_4_name,
-                // 'project_type': practicePlanningData.properties.project_type,
-                // 'site_reduction_classification': practicePlanningData.properties.site_reduction_classification
+                'account_id': self.site.properties.project.properties.account_id,
+                'practice_1_name': self.summary.practice.properties.defaults.properties.practice_1_name,
+                'practice_2_name': self.summary.practice.properties.defaults.properties.practice_2_name,
+                'practice_3_name': self.summary.practice.properties.defaults.properties.practice_3_name,
+                'practice_4_name': self.summary.practice.properties.defaults.properties.practice_4_name,
+                'project_type': self.summary.practice.properties.defaults.properties.project_type,
+                'site_reduction_classification': self.summary.practice.properties.defaults.properties.site_reduction_classification
               });
 
           }
