@@ -47,11 +47,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {            name: 'staging',
-            apiUrl: 'http://stg.api.fielddoc.org',
-            siteUrl: 'http://stg.fielddoc.org',
-            clientId: 'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'
-})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
 /**
@@ -724,24 +720,6 @@ angular.module('FieldDoc')
         }
       })
       .when('/projects/:projectId', {
-        templateUrl: '/modules/components/projects/views/projectsSingle--view.html',
-        controller: 'ProjectViewCtrl',
-        controllerAs: 'page',
-        resolve: {
-          user: function(Account) {
-            if (Account.userObject && !Account.userObject.id) {
-                return Account.getUser();
-            }
-            return Account.userObject;
-          },
-          project: function(Project, $route) {
-            return Project.get({
-                'id': $route.current.params.projectId
-            });
-          }
-        }
-      })
-      .when('/projects/:projectId/summary', {
         templateUrl: '/modules/components/projects/views/projectsSummary--view.html',
         controller: 'ProjectSummaryCtrl',
         controllerAs: 'page',
@@ -2305,7 +2283,7 @@ angular.module('FieldDoc')
                     isLoggedIn: Account.hasToken(),
                     role: $rootScope.user.properties.roles[0].properties.name,
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                    can_edit: Account.canEdit(project),
+                    can_edit: Account.canEdit(self.project),
                     is_manager: (Account.hasRole('manager') || Account.inGroup(self.project.properties.account_id, Account.userObject.properties.account)),
                     is_admin: Account.hasRole('admin')
                 };
@@ -2847,34 +2825,6 @@ angular.module('FieldDoc')
         redirectTo: '/projects/:projectId'
       })
       .when('/projects/:projectId/sites/:siteId', {
-        templateUrl: '/modules/components/sites/views/sites--view.html',
-        controller: 'SiteViewCtrl',
-        controllerAs: 'page',
-        resolve: {
-          user: function(Account) {
-            if (Account.userObject && !Account.userObject.id) {
-                return Account.getUser();
-            }
-            return Account.userObject;
-          },
-          project: function(Project, $route) {
-            return Project.get({
-              id: $route.current.params.projectId
-            });
-          },
-          site: function(Site, $route) {
-            return Site.get({
-              id: $route.current.params.siteId
-            });
-          },
-          practices: function(Site, $route) {
-            return Site.practices({
-              id: $route.current.params.siteId
-            });
-          }
-        }
-      })
-      .when('/projects/:projectId/sites/:siteId/summary', {
         templateUrl: '/modules/components/sites/views/sites--summary.html',
         controller: 'SiteSummaryCtrl',
         controllerAs: 'page',
@@ -4571,7 +4521,7 @@ angular.module('FieldDoc')
       summary.$promise.then(function(successResponse) {
 
         self.data = successResponse;
-
+        
         self.site = successResponse.site;
         self.practices = successResponse.practices;
 
@@ -5678,34 +5628,6 @@ angular.module('FieldDoc')
 
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/agriculture-generic', {
-        templateUrl: '/modules/components/practices/modules/agriculture-generic/views/report--view.html',
-        controller: 'AgricultureGenericReportController',
-        controllerAs: 'page',
-        resolve: {
-          user: function(Account) {
-            if (Account.userObject && !Account.userObject.id) {
-                return Account.getUser();
-            }
-            return Account.userObject;
-          },
-          site: function(Site, $route) {
-            return Site.get({
-              id: $route.current.params.siteId
-            });
-          },
-          practice: function(Practice, $route) {
-            return Practice.get({
-              id: $route.current.params.practiceId
-            });
-          },
-          readings: function(Practice, $route) {
-            return Practice.agricultureGeneric({
-              id: $route.current.params.practiceId
-            });
-          }
-        }
-      })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/agriculture-generic/summary', {
         templateUrl: '/modules/components/practices/modules/agriculture-generic/views/summary--view.html',
         controller: 'AgricultureGenericSummaryController',
         controllerAs: 'page',
@@ -6515,34 +6437,6 @@ angular.module('FieldDoc')
 
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/forest-buffer', {
-        templateUrl: '/modules/components/practices/modules/forest-buffer/views/report--view.html',
-        controller: 'ForestBufferReportController',
-        controllerAs: 'page',
-        resolve: {
-          user: function(Account) {
-            if (Account.userObject && !Account.userObject.id) {
-                return Account.getUser();
-            }
-            return Account.userObject;
-          },
-          site: function(Site, $route) {
-            return Site.get({
-              id: $route.current.params.siteId
-            });
-          },
-          practice: function(Practice, $route) {
-            return Practice.get({
-              id: $route.current.params.practiceId
-            });
-          },
-          readings: function(Practice, $route) {
-            return Practice.forestBuffer({
-              id: $route.current.params.practiceId
-            });
-          }
-        }
-      })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/forest-buffer/summary', {
         templateUrl: '/modules/components/practices/modules/forest-buffer/views/summary--view.html',
         controller: 'ForestBufferSummaryController',
         controllerAs: 'page',
@@ -7555,34 +7449,6 @@ angular.module('FieldDoc')
 
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/grass-buffer', {
-        templateUrl: '/modules/components/practices/modules/grass-buffer/views/report--view.html',
-        controller: 'GrassBufferReportController',
-        controllerAs: 'page',
-        resolve: {
-          user: function(Account) {
-            if (Account.userObject && !Account.userObject.id) {
-                return Account.getUser();
-            }
-            return Account.userObject;
-          },
-          site: function(Site, $route) {
-            return Site.get({
-              id: $route.current.params.siteId
-            });
-          },
-          practice: function(Practice, $route) {
-            return Practice.get({
-              id: $route.current.params.practiceId
-            });
-          },
-          readings: function(Practice, $route) {
-            return Practice.grassBuffer({
-              id: $route.current.params.practiceId
-            });
-          }
-        }
-      })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/grass-buffer/summary', {
         templateUrl: '/modules/components/practices/modules/grass-buffer/views/summary--view.html',
         controller: 'GrassBufferSummaryController',
         controllerAs: 'page',
@@ -8546,37 +8412,6 @@ angular.module('FieldDoc')
 
       $routeProvider
         .when('/projects/:projectId/sites/:siteId/practices/:practiceId/livestock-exclusion', {
-          templateUrl: '/modules/components/practices/modules/livestock-exclusion/views/report--view.html',
-          controller: 'LivestockExclusionReportController',
-          controllerAs: 'page',
-          resolve: {
-            user: function(Account) {
-              if (Account.userObject && !Account.userObject.id) {
-                  return Account.getUser();
-              }
-              return Account.userObject;
-            },
-            site: function(Site, $route) {
-              return Site.get({
-                id: $route.current.params.siteId
-              });
-            },
-            practice: function(Practice, $route) {
-              return Practice.get({
-                id: $route.current.params.practiceId
-              });
-            },
-            animals: function(AnimalManure) {
-              return AnimalManure.query();
-            },
-            readings: function(Practice, $route) {
-              return Practice.livestockExclusion({
-                id: $route.current.params.practiceId
-              });
-            }
-          }
-        })
-        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/livestock-exclusion/summary', {
           templateUrl: '/modules/components/practices/modules/livestock-exclusion/views/summary--view.html',
           controller: 'LivestockExclusionSummaryController',
           controllerAs: 'page',
@@ -9629,34 +9464,6 @@ angular.module('FieldDoc')
 
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/urban-homeowner', {
-        templateUrl: '/modules/components/practices/modules/urban-homeowner/views/report--view.html',
-        controller: 'UrbanHomeownerReportController',
-        controllerAs: 'page',
-        resolve: {
-          user: function(Account) {
-            if (Account.userObject && !Account.userObject.id) {
-                return Account.getUser();
-            }
-            return Account.userObject;
-          },
-          site: function(Site, $route) {
-            return Site.get({
-              id: $route.current.params.siteId
-            });
-          },
-          practice: function(Practice, $route) {
-            return Practice.get({
-              id: $route.current.params.practiceId
-            });
-          },
-          readings: function(Practice, $route) {
-            return Practice.urbanHomeowner({
-              id: $route.current.params.practiceId
-            });
-          }
-        }
-      })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/urban-homeowner/summary', {
         templateUrl: '/modules/components/practices/modules/urban-homeowner/views/summary--view.html',
         controller: 'UrbanHomeownerSummaryController',
         controllerAs: 'page',
@@ -10360,34 +10167,6 @@ angular.module('FieldDoc')
 
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/bioretention', {
-        templateUrl: '/modules/components/practices/modules/bioretention/views/report--view.html',
-        controller: 'BioretentionReportController',
-        controllerAs: 'page',
-        resolve: {
-          user: function(Account) {
-            if (Account.userObject && !Account.userObject.id) {
-                return Account.getUser();
-            }
-            return Account.userObject;
-          },
-          site: function(Site, $route) {
-            return Site.get({
-              id: $route.current.params.siteId
-            });
-          },
-          practice: function(Practice, $route) {
-            return Practice.get({
-              id: $route.current.params.practiceId
-            });
-          },
-          readings: function(Practice, $route) {
-            return Practice.bioretention({
-              id: $route.current.params.practiceId
-            });
-          }
-        }
-      })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/bioretention/summary', {
         templateUrl: '/modules/components/practices/modules/bioretention/views/summary--view.html',
         controller: 'BioretentionSummaryController',
         controllerAs: 'page',
@@ -11088,34 +10867,6 @@ angular.module('FieldDoc')
 
       $routeProvider
         .when('/projects/:projectId/sites/:siteId/practices/:practiceId/instream-habitat', {
-          templateUrl: '/modules/components/practices/modules/instream-habitat/views/report--view.html',
-          controller: 'InstreamHabitatReportController',
-          controllerAs: 'page',
-          resolve: {
-            user: function(Account) {
-              if (Account.userObject && !Account.userObject.id) {
-                  return Account.getUser();
-              }
-              return Account.userObject;
-            },
-            site: function(Site, $route) {
-              return Site.get({
-                id: $route.current.params.siteId
-              });
-            },
-            practice: function(Practice, $route) {
-              return Practice.get({
-                id: $route.current.params.practiceId
-              });
-            },
-            readings: function(Practice, $route) {
-              return Practice.instreamHabitat({
-                id: $route.current.params.practiceId
-              });
-            }
-          }
-        })
-        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/instream-habitat/summary', {
           templateUrl: '/modules/components/practices/modules/instream-habitat/views/summary--view.html',
           controller: 'InstreamHabitatSummaryController',
           controllerAs: 'page',
@@ -11653,34 +11404,6 @@ angular.module('FieldDoc')
 
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/bank-stabilization', {
-        templateUrl: '/modules/components/practices/modules/bank-stabilization/views/report--view.html',
-        controller: 'BankStabilizationReportController',
-        controllerAs: 'page',
-        resolve: {
-          user: function(Account) {
-            if (Account.userObject && !Account.userObject.id) {
-                return Account.getUser();
-            }
-            return Account.userObject;
-          },
-          site: function(Site, $route) {
-            return Site.get({
-              id: $route.current.params.siteId
-            });
-          },
-          practice: function(Practice, $route) {
-            return Practice.get({
-              id: $route.current.params.practiceId
-            });
-          },
-          readings: function(Practice, $route) {
-            return Practice.bankStabilization({
-              id: $route.current.params.practiceId
-            });
-          }
-        }
-      })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/bank-stabilization/summary', {
         templateUrl: '/modules/components/practices/modules/bank-stabilization/views/summary--view.html',
         controller: 'BankStabilizationSummaryController',
         controllerAs: 'page',
@@ -12380,34 +12103,6 @@ angular.module('FieldDoc')
 
       $routeProvider
         .when('/projects/:projectId/sites/:siteId/practices/:practiceId/enhanced-stream-restoration', {
-          templateUrl: '/modules/components/practices/modules/enhanced-stream-restoration/views/report--view.html',
-          controller: 'EnhancedStreamRestorationReportController',
-          controllerAs: 'page',
-          resolve: {
-            user: function(Account) {
-              if (Account.userObject && !Account.userObject.id) {
-                  return Account.getUser();
-              }
-              return Account.userObject;
-            },
-            site: function(Site, $route) {
-              return Site.get({
-                id: $route.current.params.siteId
-              });
-            },
-            practice: function(Practice, $route) {
-              return Practice.get({
-                id: $route.current.params.practiceId
-              });
-            },
-            readings: function(Practice, $route) {
-              return Practice.enhancedStreamRestoration({
-                id: $route.current.params.practiceId
-              });
-            }
-          }
-        })
-        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/enhanced-stream-restoration/summary', {
           templateUrl: '/modules/components/practices/modules/enhanced-stream-restoration/views/summary--view.html',
           controller: 'EnhancedStreamRestorationSummaryController',
           controllerAs: 'page',
@@ -13305,34 +13000,6 @@ angular.module('FieldDoc')
 
       $routeProvider
         .when('/projects/:projectId/sites/:siteId/practices/:practiceId/nontidal-wetlands', {
-          templateUrl: '/modules/components/practices/modules/nontidal-wetlands/views/report--view.html',
-          controller: 'WetlandsNonTidalReportController',
-          controllerAs: 'page',
-          resolve: {
-            user: function(Account) {
-              if (Account.userObject && !Account.userObject.id) {
-                  return Account.getUser();
-              }
-              return Account.userObject;
-            },
-            site: function(Site, $route) {
-              return Site.get({
-                id: $route.current.params.siteId
-              });
-            },
-            practice: function(Practice, $route) {
-              return Practice.get({
-                id: $route.current.params.practiceId
-              });
-            },
-            readings: function(Practice, $route) {
-              return Practice.wetlandsNontidal({
-                id: $route.current.params.practiceId
-              });
-            }
-          }
-        })
-        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/nontidal-wetlands/summary', {
           templateUrl: '/modules/components/practices/modules/nontidal-wetlands/views/summary--view.html',
           controller: 'WetlandsNonTidalSummaryController',
           controllerAs: 'page',
@@ -14176,34 +13843,6 @@ angular.module('FieldDoc')
 
       $routeProvider
         .when('/projects/:projectId/sites/:siteId/practices/:practiceId/shoreline-management', {
-          templateUrl: '/modules/components/practices/modules/shoreline-management/views/report--view.html',
-          controller: 'ShorelineManagementReportController',
-          controllerAs: 'page',
-          resolve: {
-            user: function(Account) {
-              if (Account.userObject && !Account.userObject.id) {
-                  return Account.getUser();
-              }
-              return Account.userObject;
-            },
-            site: function(Site, $route) {
-              return Site.get({
-                id: $route.current.params.siteId
-              });
-            },
-            practice: function(Practice, $route) {
-              return Practice.get({
-                id: $route.current.params.practiceId
-              });
-            },
-            readings: function(Practice, $route) {
-              return Practice.shorelineManagement({
-                id: $route.current.params.practiceId
-              });
-            }
-          }
-        })
-        .when('/projects/:projectId/sites/:siteId/practices/:practiceId/shoreline-management/summary', {
           templateUrl: '/modules/components/practices/modules/shoreline-management/views/summary--view.html',
           controller: 'ShorelineManagementSummaryController',
           controllerAs: 'page',
@@ -14286,7 +13925,7 @@ angular.module('FieldDoc')
           if (!data.hasOwnProperty('properties')) {
             return [];
           }
-
+          
           var multipler_1 = data.properties.installation_length_of_living_shoreline_restored,
               multipler_2 = data.properties.installation_existing_average_bank_height,
               multipler_3 = data.properties.installation_existing_shoreline_recession_rate,
@@ -14305,7 +13944,7 @@ angular.module('FieldDoc')
           if (!data.hasOwnProperty('properties')) {
             return [];
           }
-
+          
           if (data.properties.protocol_2_tn_reduction_rate) {
             this.efficiency.protocol_2_tn_reduction_rate = data.properties.protocol_2_tn_reduction_rate;
           }
@@ -14327,7 +13966,7 @@ angular.module('FieldDoc')
           if (data.properties.protocol_3_tp_reduction_rate) {
             this.efficiency.protocol_3_tp_reduction_rate = data.properties.protocol_3_tp_reduction_rate;
           }
-
+          
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
               multipler_2 = this.efficiency.protocol_3_tp_reduction_rate,
               returnValue = 0;
@@ -14345,7 +13984,7 @@ angular.module('FieldDoc')
           if (data.properties.protocol_3_tss_reduction_rate) {
             this.efficiency.protocol_3_tss_reduction_rate = data.properties.protocol_3_tss_reduction_rate;
           }
-
+          
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
               multipler_2 = this.efficiency.protocol_3_tss_reduction_rate,
               returnValue = 0;
@@ -14381,7 +14020,7 @@ angular.module('FieldDoc')
           if (data.properties.protocol_4_tp_reduction_rate) {
             this.efficiency.protocol_4_tp_reduction_rate = data.properties.protocol_4_tp_reduction_rate;
           }
-
+          
           var multipler_1 = data.properties.installation_area_of_planted_or_replanted_tidal_wetlands,
               multipler_2 = this.efficiency.protocol_4_tp_reduction_rate,
               returnValue = 0;
@@ -15133,34 +14772,6 @@ angular.module('FieldDoc')
 
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/stormwater', {
-        templateUrl: '/modules/components/practices/modules/stormwater/views/report--view.html',
-        controller: 'StormwaterReportController',
-        controllerAs: 'page',
-        resolve: {
-          user: function(Account) {
-            if (Account.userObject && !Account.userObject.id) {
-                return Account.getUser();
-            }
-            return Account.userObject;
-          },
-          site: function(Site, $route) {
-            return Site.get({
-              id: $route.current.params.siteId
-            });
-          },
-          practice: function(Practice, $route) {
-            return Practice.get({
-              id: $route.current.params.practiceId
-            });
-          },
-          readings: function(Practice, $route) {
-            return Practice.stormwater({
-              id: $route.current.params.practiceId
-            });
-          }
-        }
-      })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/stormwater/summary', {
         templateUrl: '/modules/components/practices/modules/stormwater/views/summary--view.html',
         controller: 'StormwaterSummaryController',
         controllerAs: 'page',
@@ -16258,7 +15869,7 @@ angular.module('FieldDoc')
  * @ngdoc service
  * @name FieldDoc.GeometryService
  * @description
- *
+ *   
  */
 angular.module('FieldDoc')
   .service('commonsGeometry', ['$http', 'commonscloud', 'leafletData', function Navigation($http, commonscloud, leafletData) {
@@ -16435,7 +16046,7 @@ angular.module('FieldDoc')
         }
       },
       center: {
-        lng: -76.534,
+        lng: -76.534, 
         lat: 39.134,
         zoom: 11
       },
@@ -16480,7 +16091,7 @@ angular.module('FieldDoc')
       },
       geojson: {}
     };
-
+    
     return Map;
   }]);
 'use strict';
@@ -19084,13 +18695,13 @@ angular.module('FieldDoc')
     // with structured objects.
     //
     return  function(object) {
-
+      
       var result = [];
 
       angular.forEach(object, function(value) {
         result.push(value);
       });
-
+      
       return result;
     };
 

@@ -84,7 +84,7 @@ module.exports = function (grunt) {
       },
       production: {
         options: {
-          dest: '<%= yeoman.dist %>/config/environment.js'
+          dest: '<%= yeoman.app %>/config/environment.js'
         },
         constants: {
           environment: {
@@ -389,6 +389,7 @@ module.exports = function (grunt) {
             '.htaccess',
             '*.html',
             '**/*.html',
+            'config/{,*/}*.*',
             'images/{,*/}*.*',
             'styles/{,*/}*.css',
             'fonts/{,*/}*.*'
