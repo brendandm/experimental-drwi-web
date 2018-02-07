@@ -15828,7 +15828,7 @@ angular.module('FieldDoc')
                 'measurement_period': measurementPeriod,
                 'report_date': new Date(),
                 'practice_id': practiceId,
-                'account_id': self.site.properties.project.properties.account_id
+                'account_id': self.summary.site.properties.project.properties.account_id,
               });
           }
           else {
@@ -15836,7 +15836,7 @@ angular.module('FieldDoc')
                 'measurement_period': measurementPeriod,
                 'report_date': new Date(),
                 'practice_id': practiceId,
-                'account_id': self.site.properties.project.properties.account_id,
+                'account_id': self.summary.site.properties.project.properties.account_id,
                 'practice_1_name': self.summary.practice.properties.defaults.properties.practice_1_name,
                 'practice_2_name': self.summary.practice.properties.defaults.properties.practice_2_name,
                 'practice_3_name': self.summary.practice.properties.defaults.properties.practice_3_name,
