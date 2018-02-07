@@ -117,14 +117,14 @@
                 'report_date': new Date(),
                 'practice_id': practiceId,
                 'account_id': self.summary.site.properties.project.properties.account_id
-                // 'generic_agriculture_efficiency_id': practicePlanningData.properties.generic_agriculture_efficiency_id,
-                // 'model_type': practicePlanningData.properties.model_type,
-                // 'existing_riparian_landuse': practicePlanningData.properties.existing_riparian_landuse,
-                // 'custom_model_name': practicePlanningData.properties.custom_model_name,
-                // 'custom_model_source': practicePlanningData.properties.custom_model_source,
-                // 'custom_model_nitrogen': practicePlanningData.properties.custom_model_nitrogen,
-                // 'custom_model_phosphorus': practicePlanningData.properties.custom_model_phosphorus,
-                // 'custom_model_sediment': practicePlanningData.properties.custom_model_sediment
+                'generic_agriculture_efficiency_id': self.summary.practice.properties.defaults.properties.generic_agriculture_efficiency_id,
+                'model_type': self.summary.practice.properties.defaults.properties.model_type,
+                'existing_riparian_landuse': self.summary.practice.properties.defaults.properties.existing_riparian_landuse,
+                'custom_model_name': self.summary.practice.properties.defaults.properties.custom_model_name,
+                'custom_model_source': self.summary.practice.properties.defaults.properties.custom_model_source,
+                'custom_model_nitrogen': self.summary.practice.properties.defaults.properties.custom_model_nitrogen,
+                'custom_model_phosphorus': self.summary.practice.properties.defaults.properties.custom_model_phosphorus,
+                'custom_model_sediment': self.summary.practice.properties.defaults.properties.custom_model_sediment
               });
 
           }
