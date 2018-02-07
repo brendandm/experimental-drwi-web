@@ -13,34 +13,6 @@ angular.module('FieldDoc')
 
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/bioretention', {
-        templateUrl: '/modules/components/practices/modules/bioretention/views/report--view.html',
-        controller: 'BioretentionReportController',
-        controllerAs: 'page',
-        resolve: {
-          user: function(Account) {
-            if (Account.userObject && !Account.userObject.id) {
-                return Account.getUser();
-            }
-            return Account.userObject;
-          },
-          site: function(Site, $route) {
-            return Site.get({
-              id: $route.current.params.siteId
-            });
-          },
-          practice: function(Practice, $route) {
-            return Practice.get({
-              id: $route.current.params.practiceId
-            });
-          },
-          readings: function(Practice, $route) {
-            return Practice.bioretention({
-              id: $route.current.params.practiceId
-            });
-          }
-        }
-      })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/bioretention/summary', {
         templateUrl: '/modules/components/practices/modules/bioretention/views/summary--view.html',
         controller: 'BioretentionSummaryController',
         controllerAs: 'page',

@@ -56,24 +56,6 @@ angular.module('FieldDoc')
         }
       })
       .when('/projects/:projectId', {
-        templateUrl: '/modules/components/projects/views/projectsSingle--view.html',
-        controller: 'ProjectViewCtrl',
-        controllerAs: 'page',
-        resolve: {
-          user: function(Account) {
-            if (Account.userObject && !Account.userObject.id) {
-                return Account.getUser();
-            }
-            return Account.userObject;
-          },
-          project: function(Project, $route) {
-            return Project.get({
-                'id': $route.current.params.projectId
-            });
-          }
-        }
-      })
-      .when('/projects/:projectId/summary', {
         templateUrl: '/modules/components/projects/views/projectsSummary--view.html',
         controller: 'ProjectSummaryCtrl',
         controllerAs: 'page',

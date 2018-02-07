@@ -63,7 +63,7 @@ angular.module('FieldDoc')
                     isLoggedIn: Account.hasToken(),
                     role: $rootScope.user.properties.roles[0].properties.name,
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                    can_edit: Account.canEdit(project),
+                    can_edit: Account.canEdit(self.project),
                     is_manager: (Account.hasRole('manager') || Account.inGroup(self.project.properties.account_id, Account.userObject.properties.account)),
                     is_admin: Account.hasRole('admin')
                 };
