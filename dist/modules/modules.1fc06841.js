@@ -6417,7 +6417,7 @@ angular.module('FieldDoc')
                 'measurement_period': measurementPeriod,
                 'report_date': new Date(),
                 'practice_id': practiceId,
-                'account_id': self.summary.site.properties.project.properties.account_id
+                'account_id': self.summary.site.properties.project.properties.account_id,
                 'generic_agriculture_efficiency_id': self.summary.practice.properties.defaults.properties.generic_agriculture_efficiency_id,
                 'model_type': self.summary.practice.properties.defaults.properties.model_type,
                 'existing_riparian_landuse': self.summary.practice.properties.defaults.properties.existing_riparian_landuse,
