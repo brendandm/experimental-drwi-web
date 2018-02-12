@@ -102,12 +102,26 @@
 
       self.addReading = function(measurementPeriod) {
 
-        var newReading = new PracticeEnhancedStreamRestoration({
-            'measurement_period': measurementPeriod,
-            'report_date': moment().format('YYYY-MM-DD'),
-            'practice_id': practiceId,
-            'account_id': self.summary.site.properties.project.properties.account_id
-          });
+          if (measurementPeriod === "Pre-Project") {
+            var newReading = new PracticeEnhancedStreamRestoration({
+                'measurement_period': measurementPeriod,
+                'report_date': moment().format('YYYY-MM-DD'),
+                'practice_id': practiceId,
+                'account_id': self.summary.site.properties.project.properties.account_id
+              });
+          }
+          else {
+            var newReading = new PracticeEnhancedStreamRestoration({
+                'measurement_period': measurementPeriod,
+                'report_date': moment().format('YYYY-MM-DD'),
+                'practice_id': practiceId,
+                'account_id': self.summary.site.properties.project.properties.account_id,
+                'has_majority_design_completion': self.summary.practice.properties.defaults.properties.has_majority_design_completion,
+                'override_linear_feet_in_coastal_plain': self.summary.practice.properties.defaults.properties.override_linear_feet_in_coastal_plain,
+                'override_linear_feet_in_noncoastal_plain': self.summary.practice.properties.defaults.properties.override_linear_feet_in_noncoastal_plain,
+                'override_linear_feet_in_total': self.summary.practice.properties.defaults.properties.override_linear_feet_in_total
+              });
+          }
 
         newReading.$save().then(function(successResponse) {
             $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');

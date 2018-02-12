@@ -57,7 +57,7 @@
 
         <fieldset>
           <div class="form-group column-8"
-               data-ng-if="page.report.properties.measurement_period === 'Pre-Project' || page.report.properties.measurement_period === 'Planning'">
+               data-ng-if="page.report.properties.measurement_period === 'Pre-Project' || page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
 
               <p>
                 Project Design Completion Percentage (%)
@@ -71,8 +71,7 @@
                          type="radio" data-ng-value="false"
                          class="form-control"
                          id="has_majority_design_completion_false"
-                         name="has_majority_design_completion_false"
-                         data-ng-disabled="page.report.properties.has_majority_design_completion === false || page.report.properties.has_majority_design_completion === true" />Less than 90% designed
+                         name="has_majority_design_completion_false" />Less than 90% designed
                 </label>
 
 
@@ -82,8 +81,7 @@
                          type="radio" data-ng-value="true"
                          class="form-control"
                          id="has_majority_design_completion_true"
-                         name="has_majority_design_completion_true"
-                         data-ng-disabled="page.report.properties.has_majority_design_completion === false || page.report.properties.has_majority_design_completion === true" />Greater than 90% designed
+                         name="has_majority_design_completion_true" />Greater than 90% designed
                 </label>
 
                 <p class="help-text"
@@ -94,7 +92,7 @@
           </div>
         </fieldset>
 
-        <div data-ng-if="page.report.properties.has_majority_design_completion === false">
+        <div data-ng-if="page.report.properties.has_majority_design_completion === false && page.report.properties.measurement_period">
           <h2><strong>Installation</strong> Summary</h2>
 
           <div class="form-group column-5">
