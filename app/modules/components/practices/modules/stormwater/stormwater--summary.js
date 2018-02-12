@@ -102,19 +102,36 @@
 
       self.addReading = function(measurementPeriod) {
 
-        var newReading = new PracticeStormwater({
-            'measurement_period': measurementPeriod,
-            'report_date': moment().format('YYYY-MM-DD'),
-            'practice_id': practiceId,
-            'account_id': self.summary.site.properties.project.properties.account_id
-          });
+          if (measurementPeriod === "Planning") {
+            var newReading = new PracticeStormwater({
+                'measurement_period': measurementPeriod,
+                'report_date': new Date(),
+                'practice_id': practiceId,
+                'account_id': self.summary.site.properties.project.properties.account_id,
+              });
+          }
+          else {
+            var newReading = new PracticeStormwater({
+                'measurement_period': measurementPeriod,
+                'report_date': new Date(),
+                'practice_id': practiceId,
+                'account_id': self.summary.site.properties.project.properties.account_id,
+                'practice_1_name': self.summary.practice.properties.defaults.properties.practice_1_name,
+                'practice_2_name': self.summary.practice.properties.defaults.properties.practice_2_name,
+                'practice_3_name': self.summary.practice.properties.defaults.properties.practice_3_name,
+                'practice_4_name': self.summary.practice.properties.defaults.properties.practice_4_name,
+                'project_type': self.summary.practice.properties.defaults.properties.project_type,
+                'site_reduction_classification': self.summary.practice.properties.defaults.properties.site_reduction_classification
+              });
 
-        newReading.$save().then(function(successResponse) {
-            $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
-          }, function(errorResponse) {
-            console.error('ERROR: ', errorResponse);
-          });
-      };
+          }
+
+          newReading.$save().then(function(successResponse) {
+              $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+            }, function(errorResponse) {
+              console.error('ERROR: ', errorResponse);
+            });
+        };
 
 
     });

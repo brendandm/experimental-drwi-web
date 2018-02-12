@@ -29,6 +29,7 @@
 
       summary.$promise.then(function(successResponse) {
 
+        self.data = successResponse;
         self.summary = successResponse;
 
         $rootScope.page.title = "Other Agricultural Practices";
@@ -102,20 +103,38 @@
 
       self.addReading = function(measurementPeriod) {
 
-        var newReading = new PracticeAgricultureGeneric({
-            'measurement_period': measurementPeriod,
-            'report_date': moment().format('YYYY-MM-DD'),
-            'practice_id': practiceId,
-            'account_id': self.summary.site.properties.project.properties.account_id
-          });
+          if (measurementPeriod === "Planning") {
+            var newReading = new PracticeAgricultureGeneric({
+                'measurement_period': measurementPeriod,
+                'report_date': new Date(),
+                'practice_id': practiceId,
+                'account_id': self.summary.site.properties.project.properties.account_id
+              });
+          }
+          else {
+            var newReading = new PracticeAgricultureGeneric({
+                'measurement_period': measurementPeriod,
+                'report_date': new Date(),
+                'practice_id': practiceId,
+                'account_id': self.summary.site.properties.project.properties.account_id,
+                'generic_agriculture_efficiency_id': self.summary.practice.properties.defaults.properties.generic_agriculture_efficiency_id,
+                'model_type': self.summary.practice.properties.defaults.properties.model_type,
+                'existing_riparian_landuse': self.summary.practice.properties.defaults.properties.existing_riparian_landuse,
+                'custom_model_name': self.summary.practice.properties.defaults.properties.custom_model_name,
+                'custom_model_source': self.summary.practice.properties.defaults.properties.custom_model_source,
+                'custom_model_nitrogen': self.summary.practice.properties.defaults.properties.custom_model_nitrogen,
+                'custom_model_phosphorus': self.summary.practice.properties.defaults.properties.custom_model_phosphorus,
+                'custom_model_sediment': self.summary.practice.properties.defaults.properties.custom_model_sediment
+              });
 
-        newReading.$save().then(function(successResponse) {
-            $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
-          }, function(errorResponse) {
-            console.error('ERROR: ', errorResponse);
-          });
-      };
+          }
 
+          newReading.$save().then(function(successResponse) {
+              $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
+            }, function(errorResponse) {
+              console.error('ERROR: ', errorResponse);
+            });
+        };
 
     });
 

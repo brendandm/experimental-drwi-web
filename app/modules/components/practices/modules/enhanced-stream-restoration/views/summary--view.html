@@ -16,7 +16,7 @@
 
           <h1>{{ page.summary.practice.properties.has_majority_design_completion }}</h1>
 
-          <div data-ng-if="!page.summary.practice.properties.has_preproject_data">
+          <div data-ng-if="!page.summary.practice.properties.readings_enhanced_stream_restoration.length">
             <h2><strong>Empty</strong> Summary</h2>
 
             <p>
@@ -29,7 +29,7 @@
           </div>
 
 
-          <div data-ng-if="page.summary.practice.properties.has_preproject_data">
+          <div data-ng-if="page.summary.practice.properties.readings_enhanced_stream_restoration.length">
             <table class="table">
               <tbody>
                 <!-- Section Heading -->
@@ -889,7 +889,7 @@
             </table>
           </div>
 
-          <div data-ng-if="page.summary.practice.properties.has_preproject_data">
+          <div data-ng-if="page.summary.practice.properties.readings_enhanced_stream_restoration.length">
             <h2><strong>Notes</strong></h2>
             <table class="table">
               <thead>
