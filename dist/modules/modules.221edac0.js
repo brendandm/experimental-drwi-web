@@ -13019,7 +13019,7 @@ angular.module('FieldDoc')
           });
 
           self.practice.$save(function(successResponse) {
-              $location.path('/projects/' + self.site.properties.project.id + '/sites/' + self.site.id + '/practices/' + successResponse.id + '/edit');
+              $location.path('/projects/' + self.summary.site.properties.project.id + '/sites/' + self.summary.site.id + '/practices/' + successResponse.id + '/edit');
             }, function(errorResponse) {
               console.error('Unable to create your site, please try again later');
             });
