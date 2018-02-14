@@ -42,15 +42,6 @@
           <span data-ng-if="page.site.properties.segment.properties.river_name">{{ page.site.properties.segment.properties.river_name }}</span>
         </h4>
 
-        <br />
-        <p class="pull-left"
-           style="color: #CC0000"
-           data-ng-if="page.data.has_majority_design_completion === false">
-          <em>
-            Nutrient reductions expressed on this summary contain<br />
-            values from practices that <strong>are less than 90% designed</strong>.
-          </em>
-        </p>
         <p data-ng-if="page.practices"
            class="pull-right">
           <strong>
@@ -118,7 +109,7 @@
             <div class="column-3"></div>
              <div class="column-10 metrics--metric">
                <p class="metric--title">
-                 {{ practice.name }}
+                 {{ practice.name }} <span data-ng-if="practice.has_majority_design_completion === false"><90%</span>
 
                  <span class="metric--help--text pull-right"
                        data-ng-if="!practice.inactive">
@@ -164,7 +155,7 @@
               <div class="column-10 metrics--metric">
                 <p class="metric--title">
                   <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}/{{ page.site.practices.cleanName(practice.name) }}">
-                    {{ practice.name }} #{{ $index+1 }}
+                    {{ practice.name }} <span data-ng-if="practice.has_majority_design_completion === false"><90%</span> #{{ $index+1 }}
                   </a>
 
                   <span class="metric--help--text pull-right"
@@ -212,7 +203,7 @@
                <div class="column-10 metrics--metric">
                  <p class="metric--title">
                    <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}/{{ page.site.practices.cleanName(practice.name) }}">
-                     {{ practice.name }} #{{ $index+1 }}
+                     {{ practice.name }} <span data-ng-if="practice.has_majority_design_completion === false"><90%</span> #{{ $index+1 }}
                    </a>
 
                    <span class="metric--help--text pull-right"
@@ -260,7 +251,7 @@
                <div class="column-10 metrics--metric">
                  <p class="metric--title">
                    <a href="{{ practice.url }}">
-                     {{ practice.name }} #{{ $index+1 }}
+                     {{ practice.name }} <span data-ng-if="practice.has_majority_design_completion === false"><90%</span> #{{ $index+1 }}
                    </a>
 
                    <span class="metric--help--text pull-right"

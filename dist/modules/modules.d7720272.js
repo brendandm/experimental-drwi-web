@@ -47,7 +47,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+.constant('environment', {name:'staging',apiUrl:'http://stg.api.fielddoc.org',siteUrl:'http://stg.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
 /**
@@ -12843,8 +12843,7 @@ angular.module('FieldDoc')
               self.permissions = {
                   isLoggedIn: Account.hasToken(),
                   role: $rootScope.user.properties.roles[0].properties.name,
-                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                  can_edit: Account.canEdit(self.site.properties.project)
+                  account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
               };
           });
       }
@@ -12865,6 +12864,18 @@ angular.module('FieldDoc')
         console.error('ERROR: ', errorResponse);
       });
     };
+
+    self.change = {
+      "updateTotal": function() {
+
+        var total_ = 0;
+
+        total_ += self.report.properties.override_linear_feet_in_coastal_plain;
+        total_ += self.report.properties.override_linear_feet_in_noncoastal_plain;
+
+        self.report.properties.override_linear_feet_in_total = total_; 
+      }
+    }
 
   });
 
@@ -12972,12 +12983,26 @@ angular.module('FieldDoc')
 
       self.addReading = function(measurementPeriod) {
 
-        var newReading = new PracticeEnhancedStreamRestoration({
-            'measurement_period': measurementPeriod,
-            'report_date': moment().format('YYYY-MM-DD'),
-            'practice_id': practiceId,
-            'account_id': self.summary.site.properties.project.properties.account_id
-          });
+          if (measurementPeriod === "Pre-Project") {
+            var newReading = new PracticeEnhancedStreamRestoration({
+                'measurement_period': measurementPeriod,
+                'report_date': moment().format('YYYY-MM-DD'),
+                'practice_id': practiceId,
+                'account_id': self.summary.site.properties.project.properties.account_id
+              });
+          }
+          else {
+            var newReading = new PracticeEnhancedStreamRestoration({
+                'measurement_period': measurementPeriod,
+                'report_date': moment().format('YYYY-MM-DD'),
+                'practice_id': practiceId,
+                'account_id': self.summary.site.properties.project.properties.account_id,
+                'has_majority_design_completion': self.summary.practice.properties.defaults.properties.has_majority_design_completion,
+                'override_linear_feet_in_coastal_plain': self.summary.practice.properties.defaults.properties.override_linear_feet_in_coastal_plain,
+                'override_linear_feet_in_noncoastal_plain': self.summary.practice.properties.defaults.properties.override_linear_feet_in_noncoastal_plain,
+                'override_linear_feet_in_total': self.summary.practice.properties.defaults.properties.override_linear_feet_in_total
+              });
+          }
 
         newReading.$save().then(function(successResponse) {
             $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + successResponse.id + '/edit');
