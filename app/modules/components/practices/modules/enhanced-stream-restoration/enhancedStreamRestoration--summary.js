@@ -133,7 +133,7 @@
       self.createBankStabilizationPractice = function() {
           self.practice = new Practice({
               'practice_type': 'Bank Stabilization',
-              'site_id': self.site.id,
+              'site_id': self.summary.site.id,
               'account_id': self.summary.site.properties.project.properties.account_id
           });
 
