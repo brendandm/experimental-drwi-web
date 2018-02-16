@@ -12,9 +12,9 @@ angular.module('FieldDoc')
   .config(function($routeProvider) {
 
     $routeProvider
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/generic', {
-        templateUrl: '/modules/components/practices/modules/generic/views/summary--view.html',
-        controller: 'GenericSummaryController',
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/custom', {
+        templateUrl: '/modules/components/practices/modules/custom/views/summary--view.html',
+        controller: 'CustomSummaryController',
         controllerAs: 'page',
         resolve: {
           user: function(Account) {
@@ -23,16 +23,16 @@ angular.module('FieldDoc')
             }
             return Account.userObject;
           },
-          summary: function(PracticeAgricultureGeneric, $route) {
-            return PracticeAgricultureGeneric.summary({
+          summary: function(PracticeAgricultureCustom, $route) {
+            return PracticeAgricultureCustom.summary({
               id: $route.current.params.practiceId
             });
           }
         }
       })
-      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/generic/:reportId/edit', {
-        templateUrl: '/modules/components/practices/modules/generic/views/form--view.html',
-        controller: 'GenericFormController',
+      .when('/projects/:projectId/sites/:siteId/practices/:practiceId/custom/:reportId/edit', {
+        templateUrl: '/modules/components/practices/modules/custom/views/form--view.html',
+        controller: 'CustomFormController',
         controllerAs: 'page',
         resolve: {
           user: function(Account) {
@@ -51,8 +51,8 @@ angular.module('FieldDoc')
               id: $route.current.params.practiceId
             });
           },
-          report: function(PracticeGeneric, $route) {
-            return PracticeGeneric.get({
+          report: function(PracticeCustom, $route) {
+            return PracticeCustom.get({
               id: $route.current.params.reportId
             });
           }
