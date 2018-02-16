@@ -23,8 +23,8 @@ angular.module('FieldDoc')
             }
             return Account.userObject;
           },
-          summary: function(PracticeAgricultureCustom, $route) {
-            return PracticeAgricultureCustom.summary({
+          summary: function(PracticeCustom, $route) {
+            return PracticeCustom.summary({
               id: $route.current.params.practiceId
             });
           }

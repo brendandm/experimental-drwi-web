@@ -22,6 +22,11 @@
             return angular.toJson(feature);
           }
         },
+        'custom': {
+          'method': 'GET',
+          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_custom'),
+          'isArray': false
+        },
         'agricultureGeneric': {
           'method': 'GET',
           'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_agriculture_generic'),

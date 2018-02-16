@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('AgricultureGenericSummaryController', function (Account, $location, $log, PracticeAgricultureGeneric, $rootScope, $route, $scope, summary, Utility, user, $window) {
+    .controller('CustomSummaryController', function (Account, $location, $log, PracticeCustom, $rootScope, $route, $scope, summary, Utility, user, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -104,7 +104,7 @@
       self.addReading = function(measurementPeriod) {
 
           if (measurementPeriod === "Planning") {
-            var newReading = new PracticeAgricultureGeneric({
+            var newReading = new PracticeCustom({
                 'measurement_period': measurementPeriod,
                 'report_date': new Date(),
                 'practice_id': practiceId,
@@ -112,7 +112,7 @@
               });
           }
           else {
-            var newReading = new PracticeAgricultureGeneric({
+            var newReading = new PracticeCustom({
                 'measurement_period': measurementPeriod,
                 'report_date': new Date(),
                 'practice_id': practiceId,

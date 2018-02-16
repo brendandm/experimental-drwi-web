@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('AgricultureGenericFormController', function (Account, efficiency_agriculture_generic, landuse, $location, practice, PracticeAgricultureGeneric, report, $rootScope, $route, site, $scope, user, Utility) {
+    .controller('CustomFormController', function (Account, $location, practice, PracticeCustom, report, $rootScope, $route, site, $scope, user, Utility) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -21,10 +21,6 @@
       self.project = {
         'id': projectId
       };
-
-      self.landuse = landuse;
-
-      self.efficiency_agriculture_generic = efficiency_agriculture_generic;
 
       //
       // Setup all of our basic date information so that we can use it
