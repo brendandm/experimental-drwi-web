@@ -9,11 +9,10 @@
     <article class="feature-detail"
              data-ng-if="!page.status.loading">
       <div class="column-11 feature-detail-content" save2pdf>
-        <div style="display:none;">{{ page.account }}</div>
         <h4>
           <span data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">{{ page.project.properties.program_type }}</span>
-          <span data-ng-if="page.project.id && page.account.properties.name" class="label">{{ page.account.properties.name }}</span>
-          <span data-ng-if="page.project.id && !page.account.properties.name && page.project.properties.program_type !== 'Pre-Project Plan'" class="label label-danger">No Funder</span>
+          <span data-ng-if="page.project.id && page.project.properties.account.properties.name" class="label">{{ page.project.properties.account.properties.name }}</span>
+          <span data-ng-if="page.project.id && !page.project.properties.account.properties.name && page.project.properties.program_type !== 'Pre-Project Plan'" class="label label-danger">No Funder</span>
 
           <span data-ng-if="page.project.id && page.project.properties.last_modified_by.properties.first_name && page.project.properties.last_modified_by.properties.last_name" class="label">Last Modified by: {{ page.project.properties.last_modified_by.properties.first_name }} {{ page.project.properties.last_modified_by.properties.last_name }}</span>
           <span data-ng-if="page.project.id && page.project.properties.modified_on" class="label">Modified on: {{ page.project.properties.modified_on | date }}</span>
