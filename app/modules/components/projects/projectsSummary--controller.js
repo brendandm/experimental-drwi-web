@@ -26,6 +26,7 @@ angular.module('FieldDoc')
     summary.$promise.then(function(successResponse) {
 
         self.data = successResponse;
+        self.account = successResponse.account;
         self.project = successResponse.project;
 
         self.sites = successResponse.sites;
