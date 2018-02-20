@@ -104,7 +104,11 @@ angular.module('FieldDoc')
     };
 
     self.deleteReport = function() {
-      self.report.$delete().then(function(successResponse) {
+
+      var _tmp = new PracticeEnhancedStreamRestoration({
+        id: self.report.id
+      });
+      _tmp.$delete().then(function(successResponse) {
         $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
       }, function(errorResponse) {
         console.error('ERROR: ', errorResponse);
@@ -119,7 +123,7 @@ angular.module('FieldDoc')
         total_ += self.report.properties.override_linear_feet_in_coastal_plain;
         total_ += self.report.properties.override_linear_feet_in_noncoastal_plain;
 
-        self.report.properties.override_linear_feet_in_total = total_; 
+        self.report.properties.override_linear_feet_in_total = total_;
       }
     }
 
