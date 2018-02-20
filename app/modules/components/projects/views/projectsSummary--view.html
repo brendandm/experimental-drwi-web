@@ -9,6 +9,7 @@
     <article class="feature-detail"
              data-ng-if="!page.status.loading">
       <div class="column-11 feature-detail-content" save2pdf>
+        <div style="display:none;">{{ page.account }}</div>
         <h4>
           <span data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">{{ page.project.properties.program_type }}</span>
           <span data-ng-if="page.project.id && page.account.properties.name" class="label">{{ page.account.properties.name }}</span>
