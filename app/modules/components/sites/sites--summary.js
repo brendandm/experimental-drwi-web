@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('SiteSummaryCtrl', function (Account, $location, mapbox, Practice, $rootScope, $route, summary, user) {
+    .controller('SiteSummaryCtrl', function (Account, $location, mapbox, Practice, project, $rootScope, $route, summary, user) {
 
       var self = this;
 
@@ -23,7 +23,7 @@
       summary.$promise.then(function(successResponse) {
 
         self.data = successResponse;
-        
+
         self.site = successResponse.site;
         self.practices = successResponse.practices;
 
@@ -46,7 +46,7 @@
             user.$promise.then(function(userResponse) {
                 $rootScope.user = Account.userObject = userResponse;
 
-                self.project = successResponse.project;
+                self.project = project;
 
                 self.permissions = {
                     isLoggedIn: Account.hasToken(),
