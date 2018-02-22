@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('CustomFormController', function (Account, $location, practice, PracticeCustom, report, $rootScope, $route, site, $scope, user, Utility) {
+    .controller('CustomFormController', function (Account, $location, practice, PracticeCustom, practice_types, report, $rootScope, $route, site, $scope, unit_types, user, Utility) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -18,6 +18,8 @@
       $rootScope.page = {};
 
       self.practiceType = null;
+      self.practiceTypes = practice_types;
+      self.unitTypes = unit_types;
       self.project = {
         'id': projectId
       };
@@ -97,7 +99,7 @@
                 year: self.today.getFullYear()
             };
 
-            $rootScope.page.title = "Other Generic Practices";
+            $rootScope.page.title = "Custom Practices";
             $rootScope.page.links = [
                 {
                     text: 'Projects',
@@ -112,7 +114,7 @@
                   url: '/projects/' + projectId + '/sites/' + siteId
                 },
                 {
-                  text: "Other Agricultural Practices",
+                  text: "Custom Practice",
                   url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
                 },
                 {
@@ -139,8 +141,7 @@
                 self.permissions = {
                     isLoggedIn: Account.hasToken(),
                     role: $rootScope.user.properties.roles[0].properties.name,
-                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                    can_edit: Account.canEdit(self.site.properties.project)
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                 };
             });
         }
@@ -157,6 +158,12 @@
       }, true);
 
       self.saveReport = function() {
+
+        self.report.properties.readings = [
+          {
+            "practice_extent": 12
+          }
+        ];
 
         self.report.properties.report_date = self.date.month + ' ' + self.date.date + ' ' + self.date.year;
 

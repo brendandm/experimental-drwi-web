@@ -55,7 +55,16 @@ angular.module('FieldDoc')
             return PracticeCustom.get({
               id: $route.current.params.reportId
             });
+          },
+          practice_types: function(PracticeType, $route) {
+            return PracticeType.query();
+          },
+          unit_types: function(UnitType, $route) {
+            return UnitType.query({
+              results_per_page: 500
+            });
           }
+
         }
       });
 

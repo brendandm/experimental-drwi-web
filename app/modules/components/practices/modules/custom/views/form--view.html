@@ -129,39 +129,12 @@
              data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
           <div class="form-label">
             <label for="wip_reporting_agency" class="control-label">
-              Landuse
+              Unit Area Load Model
             </label>
           </div>
           <div class="form-field">
 
-            <!-- Existing Landuse -->
             <div class="form-element form-element">
-              <label for="existing_riparian_landuse" class="control-label">
-                Original Landuse
-              </label>
-
-              <select class="form-control"
-                      data-ng-model="page.report.properties.model_type"
-                      id="model_type" name="model_type"
-                      data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
-                <option value="">-- Select a Unit Area Loads model --</option>
-                <option value="default">Phase 5.3.2 Unit Area Loads Model</option>
-                <option value="custom">Custom Unit Area Loads</option>
-              </select>
-            </div>
-
-            <div class="form-element form-element"
-                 data-ng-if="page.report.properties.model_type === 'default'">
-              <select class="form-control"
-                      data-ng-model="page.report.properties.existing_riparian_landuse"
-                      id="existing_riparian_landuse" name="existing_riparian_landuse"
-                      data-ng-options="value.properties.landuse_code as value.properties.landuse_name for value in page.landuse.features | filter:value.properties.landuse_type='agriculture' | orderBy:'properties.landuse_name'"
-                      data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
-              </select>
-            </div>
-
-            <div class="form-element form-element"
-                 data-ng-if="page.report.properties.model_type === 'custom'">
 
                <div class="form-element form-element">
                  <label for="custom_model_name" class="control-label">
@@ -171,8 +144,18 @@
                  <input data-ng-model="page.report.properties.custom_model_name"
                         class="form-control" class="form-control" type="text"
                         id="custom_model_name" name="custom_model_name"
-                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
-                        data-ng-required="page.report.properties.model_type === 'custom'" />
+                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'" />
+               </div>
+
+               <div class="form-element form-element">
+                 <label for="custom_model_description" class="control-label">
+                   Description of Custom Unit Area Loads Model
+                 </label>
+
+                 <input data-ng-model="page.report.properties.custom_model_description"
+                        class="form-control" class="form-control" type="text"
+                        id="custom_model_description" name="custom_model_description"
+                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'" />
                </div>
 
                <div class="form-element form-element">
@@ -189,44 +172,38 @@
 
               <!-- Custom Nitrogen Unit Area Loads -->
               <div class="form-element form-element-thirds">
-                <label for="custom_model_nitrogen" class="control-label">
-                  % Nitrogen Reduction
+                <label for="custom_model_nitrogen_total" class="control-label">
+                  Nitrogen Reduction
                 </label>
 
-                <input data-ng-model="page.report.properties.custom_model_nitrogen"
-                       class="form-control" class="form-control" type="number" max="1.0" min="0.0"
-                       step="0.00001" id="custom_model_nitrogen" name="custom_model_nitrogen"
-                       data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
-                       data-ng-required="page.report.properties.model_type === 'custom'" />
-                       <p class="help-text">Percentages must be in decimal format from 0.0-1.0</p>
+                <input data-ng-model="page.report.properties.custom_model_nitrogen_total"
+                       class="form-control" class="form-control" type="number"
+                       id="custom_model_nitrogen_total" name="custom_model_nitrogen_total"
+                       disabled />
               </div>
 
               <!-- Custom Phosphorus Unit Area Loads -->
               <div class="form-element form-element-thirds">
-                <label for="custom_model_phosphorus" class="control-label">
-                  % Phosphorus Reduction
+                <label for="custom_model_phosphorus_total" class="control-label">
+                  Phosphorus Reduction
                 </label>
 
-                <input data-ng-model="page.report.properties.custom_model_phosphorus"
-                       class="form-control" class="form-control" type="number" max="1.0" min="0.0"
-                       step="0.00001" id="custom_model_phosphorus" name="custom_model_phosphorus"
-                       data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
-                       data-ng-required="page.report.properties.model_type === 'custom'" />
-                       <p class="help-text">Percentages must be in decimal format from 0.0-1.0</p>
+                <input data-ng-model="page.report.properties.custom_model_phosphorus_total"
+                       class="form-control" class="form-control" type="number"
+                       id="custom_model_phosphorus_total" name="custom_model_phosphorus_total"
+                       disabled />
               </div>
 
               <!-- Custom Sediment Unit Area Loads -->
               <div class="form-element form-element-thirds">
-                <label for="custom_model_sediment" class="control-label">
-                  % Sediment Reduction
+                <label for="custom_model_sediment_total" class="control-label">
+                  Sediment Reduction
                 </label>
 
-                <input data-ng-model="page.report.properties.custom_model_sediment"
-                       class="form-control" class="form-control" type="number" max="1.0" min="0.0"
-                       step="0.00001" id="custom_model_sediment" name="custom_model_sediment"
-                       data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
-                       data-ng-required="page.report.properties.model_type === 'custom'" />
-               <p class="help-text">Percentages must be in decimal format from 0.0-1.0</p>
+                <input data-ng-model="page.report.properties.custom_model_sediment_total"
+                       class="form-control" class="form-control" type="number"
+                       id="custom_model_sediment_total" name="custom_model_sediment_total"
+                       disabled />
               </div>
 
             </div>
@@ -241,54 +218,108 @@
               Practices and Efficiencies
             </label>
           </div>
-          <div class="form-field">
+          <div class="form-row"
+               data-ng-repeat="reading_ in page.report.properties.readings">
 
-            <!-- Buffer Width -->
-            <div class="form-element form-element-half">
-              <label for="efficiency_agriculture_generic" class="control-label">
-                Agricultural Practices and Efficiencies
-              </label>
+            <div class="form-field">
 
-              <select class="form-control"
-                      data-ng-model="page.report.properties.generic_agriculture_efficiency_id"
-                      id="generic_agriculture_efficiency_id" name="generic_agriculture_efficiency_id"
-                      data-ng-options="value.properties.id as value.properties.best_management_practice for value in page.efficiency_agriculture_generic.features | orderBy:'properties.best_management_practice'"
-                      data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
-              </select>
+              <!-- Buffer Width -->
+              <div class="form-element">
+                <label for="efficiency_agriculture_generic" class="control-label">
+                  Agricultural Practices and Efficiencies
+                </label>
 
-              <p class="help-text">
-                For full BMP definitions, efficiencies, and input guidance please <a href="http://help.fielddoc.org/#otheragbmps" target="_blank">visit the our help documentation article for the Other Agricultural Practices BMP</a>.
-              </p>
+                <select class="form-control"
+                        data-ng-model="reading_.practice_type_id"
+                        id="practice_type_id" name="practice_type_id"
+                        data-ng-options="value.properties.id as value.properties.name for value in page.practiceTypes.features | orderBy:'properties.best_management_practice'"
+                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
+                    <option value="">-- Select a practice --</option>
+                </select>
+
+                <p class="help-text">
+                  For full BMP definitions, efficiencies, and input guidance please <a href="http://help.fielddoc.org/#otheragbmps" target="_blank">visit the our help documentation article for the Other Agricultural Practices BMP</a>.
+                </p>
+
+              </div>
+
+              <div class="form-element">
+                <label for="practice_extent" class="control-label">
+                  Practice Extent
+                </label>
+
+                <input class="form-control" data-ng-model="reading_.practice_extent"
+                       id="reading_.practice_extent" name="reading_.practice_extent"
+                       type="number"  />
+
+              </div>
+
+              <div class="form-element">
+                <label for="practice_unit_id" class="control-label">
+                  Units
+                </label>
+
+                <select class="form-control"
+                        data-ng-model="reading_.practice_unit_id"
+                        id="practice_unit_id" name="practice_unit_id"
+                        data-ng-options="value.properties.id as value.properties.plural for value in page.unitTypes.features | orderBy:'properties.name'"
+                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
+                    <option value="">-- Select a unit --</option>
+                </select>
+
+              </div>
+
+              <div class="form-element">
+                <label for="nitrogen_reduction" class="control-label">
+                  Nitrogen Reduction
+                </label>
+
+                <input class="form-control" data-ng-model="nutrient[0].nitrogen"
+                       id="nitrogen_reduction" name="nitrogen_reduction"
+                       type="number"  />
+
+                <p class="help--text">Percentages must be in decimal format from 0.0-1.0</p>
+
+              </div>
+
+              <div class="form-element">
+                <label for="phosphorus_reduction" class="control-label">
+                  Phosphorus Reduction
+                </label>
+
+                <input class="form-control" data-ng-model="nutrient[0].phosphorus"
+                       id="phosphorus_reduction" name="phosphorus_reduction"
+                       type="number"  />
+
+                <p class="help--text">Percentages must be in decimal format from 0.0-1.0</p>
+
+              </div>
+
+              <div class="form-element">
+                <label for="sediment_reduction" class="control-label">
+                  Sediment Reduction
+                </label>
+
+                <input class="form-control" data-ng-model="nutrient[0].sediment"
+                       id="sediment_reduction" name="sediment_reduction"
+                       type="number"  />
+
+                <p class="help--text">Percentages must be in decimal format from 0.0-1.0</p>
+
+              </div>
 
             </div>
-
           </div>
+          <div class="form-row">
+            <div class="form-field">
+              <a href="javascript:void(0)"
+                 data-ng-click="page.report.properties.readings.push({})">
+                 + add a practice
+               </a>
+             </div>
+           </div>
         </div>
 
-        <div class="form-row"
-             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
-          <div class="form-label">
-            <label for="custom_practice_extent_acres" class="control-label">
-              Installation Summary
-            </label>
-          </div>
-          <div class="form-field">
-
-            <!-- Buffer Width -->
-            <div class="form-element form-element-half">
-              <label for="custom_practice_extent_acres" class="control-label">
-                Extent of Practice
-              </label>
-
-              <input data-ng-model="page.report.properties.custom_practice_extent_acres"
-                     class="form-control" class="form-control" type="number" id="custom_practice_extent_acres"
-                     name="custom_practice_extent_acres" step="0.01" />
-
-              <p class="help-text">acres</p>
-            </div>
-
-          </div>
-        </div>
 
         <div class="form-row"
              data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation' || page.report.properties.measurement_period === 'Monitoring'">
