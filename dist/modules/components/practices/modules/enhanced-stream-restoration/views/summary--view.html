@@ -34,6 +34,7 @@
                 <tr class="no-rule">
                   <td class="align-left" colspan="{{ page.summary.practice.properties.readings_enhanced_stream_restoration + 4 }}">
                     <h2><strong>Installation</strong> Summary</h2>
+                    <p>Does your practice report contain information on being less than and greater than 90% design?  If so, note that FieldDoc will solely track progress for practices greater than 90% design.</p>
                   </td>
                 </tr>
 
@@ -309,7 +310,7 @@
 
                 <tr>
                   <th>Watershed Contributing Area</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Pre-Project' || report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'"
+                  <td data-ng-if="report.properties.measurement_period === 'Pre-Project' || report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_enhanced_stream_restoration | orderBy:'id'"
                       data-ng-class="{'disabled-value': !report.properties.has_majority_design_completion}">
                       <span data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'">
@@ -497,6 +498,7 @@
                 <tr class="no-rule">
                   <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
                     <h2><strong>Load</strong> &amp; Reductions</h2>
+                    <p>Does your practice report contain information on being less than and greater than 90% design?  If so, note that FieldDoc will solely track progress for practices greater than 90% design.</p>
                     <p>Looking for Protocol 1? Protocol 1 is part of the Bank Stabilization practice. <a href="javascript:void(0);" data-ng-click="page.createBankStabilizationPractice()">Create a Bank Stabilization practice here.</a></p>
                   </td>
                 </tr>
@@ -519,30 +521,38 @@
                 <tr>
                   <th>Nitrogen (lbs/yr) <em>Protocol 2</em></th>
                   <th>&nbsp;</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_enhanced_stream_restoration | orderBy:'id'">
-                    <span data-ng-if="report.properties.has_majority_design_completion">
+                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_enhanced_stream_restoration | orderBy:'id'">
+                    <span data-ng-if="report.properties.measurement_period === 'Planning' && report.properties.has_majority_design_completion">
                       {{ report.properties.planning.nitrogen.protocol_2 | number:2 }}
                     </span>
-                    <span data-ng-if="!report.properties.has_majority_design_completion">
+                    <span data-ng-if="report.properties.measurement_period === 'Planning' && !report.properties.has_majority_design_completion">
                       {{ report.properties.planning.overrides.nitrogen.protocol_2 | number:2 }}
                     </span>
-                  </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_enhanced_stream_restoration | orderBy:'id'">
-                    <span data-ng-if="report.properties.has_majority_design_completion">
+                    <span data-ng-if="report.properties.measurement_period === 'Installation' && report.properties.has_majority_design_completion">
                       {{ report.properties.installation.nitrogen.protocol_2 | number:2 }}
                     </span>
-                    <span data-ng-if="!report.properties.has_majority_design_completion">
+                    <span data-ng-if="report.properties.measurement_period === 'Installation' && !report.properties.has_majority_design_completion">
                       {{ report.properties.installation.overrides.nitrogen.protocol_2 | number:2 }}
                     </span>
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.quantity_installed.nitrogen.protocol_2 | number:2 }} lbs/yr
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion === true">
+                        {{ page.summary.practice.properties.quantity_installed.nitrogen.protocol_2 | number:2 }} lbs/yr
+                      </span>
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion !== true">
+                        {{ page.summary.practice.properties.quantity_installed.overrides.nitrogen.protocol_2 | number:2 }} lbs/yr
+                      </span>
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.nitrogen.protocol_2 | number:0 }}.00%
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion === true">
+                        {{ page.summary.practice.properties.percentage_installed.nitrogen.protocol_2 | number:0 }}.00%
+                      </span>
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion !== true">
+                        {{ page.summary.practice.properties.percentage_installed.overrides.nitrogen.protocol_2 | number:0 }}.00%
+                      </span>
                     </strong>
                   </td>
                 </tr>
@@ -551,34 +561,40 @@
                 <tr>
                   <th>Nitrogen (lbs/yr) <em>Protocol 3</em></th>
                   <th>&nbsp;</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_enhanced_stream_restoration | orderBy:'id'"
                       data-ng-class="{'disabled-value': !report.properties.has_majority_design_completion}">
-                      <span data-ng-if="report.properties.has_majority_design_completion">
+                      <span data-ng-if="report.properties.measurement_period === 'Planning' && report.properties.has_majority_design_completion">
                         {{ report.properties.planning.nitrogen.protocol_3 | number:2 }}
                       </span>
-                      <span data-ng-if="!report.properties.has_majority_design_completion">
+                      <span data-ng-if="report.properties.measurement_period === 'Planning' && !report.properties.has_majority_design_completion">
                         {{ report.properties.planning.overrides.nitrogen.protocol_3 | number:2 }}
                       </span>
-                  </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'"
-                      data-ng-repeat="report in page.summary.practice.properties.readings_enhanced_stream_restoration | orderBy:'id'"
-                      data-ng-class="{'disabled-value': !report.properties.has_majority_design_completion}">
-                      <span data-ng-if="report.properties.has_majority_design_completion">
+                      <span data-ng-if="report.properties.measurement_period === 'Installation' && report.properties.has_majority_design_completion">
                         {{ report.properties.installation.nitrogen.protocol_3 | number:2 }}
                       </span>
-                      <span data-ng-if="!report.properties.has_majority_design_completion">
+                      <span data-ng-if="report.properties.measurement_period === 'Installation' && !report.properties.has_majority_design_completion">
                         {{ report.properties.installation.overrides.nitrogen.protocol_3 | number:2 }}
                       </span>
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.quantity_installed.nitrogen.protocol_3 | number:2 }} lbs/yr
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion === true">
+                        {{ page.summary.practice.properties.quantity_installed.nitrogen.protocol_3 | number:2 }} lbs/yr
+                      </span>
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion !== true">
+                        {{ page.summary.practice.properties.quantity_installed.overrides.nitrogen.protocol_3 | number:2 }} lbs/yr
+                      </span>
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.nitrogen.protocol_3 | number:0 }}.00%
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion === true">
+                        {{ page.summary.practice.properties.percentage_installed.nitrogen.protocol_3 | number:0 }}.00%
+                      </span>
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion !== true">
+                        {{ page.summary.practice.properties.percentage_installed.overrides.nitrogen.protocol_3 | number:0 }}.00%
+                      </span>
                     </strong>
                   </td>
                 </tr>
@@ -586,30 +602,38 @@
                 <tr>
                   <th>Phosphorus (lbs/yr) <em>Protocol 3</em></th>
                   <th>&nbsp;</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_enhanced_stream_restoration | orderBy:'id'">
-                    <span data-ng-if="report.properties.has_majority_design_completion">
+                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_enhanced_stream_restoration | orderBy:'id'">
+                    <span data-ng-if="report.properties.measurement_period === 'Planning' && report.properties.has_majority_design_completion">
                       {{ report.properties.planning.phosphorus.protocol_3 | number:2 }}
                     </span>
-                    <span data-ng-if="!report.properties.has_majority_design_completion">
+                    <span data-ng-if="report.properties.measurement_period === 'Planning' && !report.properties.has_majority_design_completion">
                       {{ report.properties.planning.overrides.phosphorus.protocol_3 | number:2 }}
                     </span>
-                  </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_enhanced_stream_restoration | orderBy:'id'">
-                    <span data-ng-if="report.properties.has_majority_design_completion">
+                    <span data-ng-if="report.properties.measurement_period === 'Installation' && report.properties.has_majority_design_completion">
                       {{ report.properties.installation.phosphorus.protocol_3 | number:2 }}
                     </span>
-                    <span data-ng-if="!report.properties.has_majority_design_completion">
+                    <span data-ng-if="report.properties.measurement_period === 'Installation' && !report.properties.has_majority_design_completion">
                       {{ report.properties.installation.overrides.phosphorus.protocol_3 | number:2 }}
                     </span>
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.quantity_installed.phosphorus.protocol_3 | number:2 }} lbs/yr
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion === true">
+                        {{ page.summary.practice.properties.quantity_installed.phosphorus.protocol_3 | number:2 }} lbs/yr
+                      </span>
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion !== true">
+                        {{ page.summary.practice.properties.quantity_installed.overrides.phosphorus.protocol_3 | number:2 }} lbs/yr
+                      </span>
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.phosphorus.protocol_3 | number:0 }}.00%
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion === true">
+                        {{ page.summary.practice.properties.percentage_installed.phosphorus.protocol_3 | number:0 }}.00%
+                      </span>
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion !== true">
+                        {{ page.summary.practice.properties.percentage_installed.overrides.phosphorus.protocol_3 | number:0 }}.00%
+                      </span>
                     </strong>
                   </td>
                 </tr>
@@ -617,30 +641,38 @@
                 <tr>
                   <th>Sediment (tons/yr)</th>
                   <th>&nbsp;</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_enhanced_stream_restoration | orderBy:'id'">
-                    <span data-ng-if="report.properties.has_majority_design_completion">
+                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_enhanced_stream_restoration | orderBy:'id'">
+                    <span data-ng-if="report.properties.measurement_period === 'Planning' && report.properties.has_majority_design_completion">
                       {{ report.properties.planning.sediment | number:3 }}
                     </span>
-                    <span data-ng-if="!report.properties.has_majority_design_completion">
+                    <span data-ng-if="report.properties.measurement_period === 'Planning' && !report.properties.has_majority_design_completion">
                       {{ report.properties.planning.overrides.sediment | number:2 }}
                     </span>
-                  </td>
-                  <td data-ng-if="report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_enhanced_stream_restoration | orderBy:'id'">
-                    <span data-ng-if="report.properties.has_majority_design_completion">
+                    <span data-ng-if="report.properties.measurement_period === 'Installation' && report.properties.has_majority_design_completion">
                       {{ report.properties.installation.sediment | number:3 }}
                     </span>
-                    <span data-ng-if="!report.properties.has_majority_design_completion">
+                    <span data-ng-if="report.properties.measurement_period === 'Installation' && !report.properties.has_majority_design_completion">
                       {{ report.properties.installation.overrides.sediment | number:2 }}
                     </span>
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.quantity_installed.sediment | number:2 }} tons/yr
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion === true">
+                        {{ page.summary.practice.properties.quantity_installed.sediment | number:2 }} tons/yr
+                      </span>
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion !== true">
+                        {{ page.summary.practice.properties.quantity_installed.overrides.sediment | number:2 }} tons/yr
+                      </span>
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.sediment | number:0 }}.00%
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion === true">
+                        {{ page.summary.practice.properties.percentage_installed.sediment | number:0 }}.00%
+                      </span>
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion !== true">
+                        {{ page.summary.practice.properties.percentage_installed.overrides.sediment | number:0 }}.00%
+                      </span>
                     </strong>
                   </td>
                 </tr>
@@ -648,6 +680,7 @@
                 <tr class="no-rule">
                   <td class="align-left" colspan="{{ page.total.planning + page.total.installation + 4 }}">
                     <h2><strong>Chesapeake</strong> Bay Metrics</h2>
+                    <p>Does your practice report contain information on being less than and greater than 90% design?  If so, note that FieldDoc will solely track progress for practices greater than 90% design.</p>
                   </td>
                 </tr>
 
@@ -683,12 +716,22 @@
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.quantity_installed.miles_of_streambank_restored | number:2 }}
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion === true">
+                        {{ page.summary.practice.properties.quantity_installed.miles_of_streambank_restored | number:2 }}
+                      </span>
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion !== true">
+                        {{ page.summary.practice.properties.quantity_installed.override_miles_of_streambank_restored | number:2 }}
+                      </span>
                     </strong>
                   </td>
                   <td>
                     <strong>
-                      {{ page.summary.practice.properties.percentage_installed.miles_of_streambank_restored | number:0 }}.00%
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion === true">
+                        {{ page.summary.practice.properties.percentage_installed.miles_of_streambank_restored | number:0 }}.00%
+                      </span>
+                      <span data-ng-if="page.summary.practice.properties.has_majority_design_completion !== true">
+                        {{ page.summary.practice.properties.percentage_installed.override_miles_of_streambank_restored | number:0 }}.00%
+                      </span>
                     </strong>
                   </td>
                 </tr>
