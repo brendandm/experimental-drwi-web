@@ -62,7 +62,7 @@
                         url: '/projects'
                     },
                     {
-                        text: self.project.properties.name,
+                        text: self.site.properties.project.properties.name,
                         url: '/projects/' + $route.current.params.projectId
                     },
                     {
