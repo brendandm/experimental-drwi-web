@@ -250,7 +250,7 @@
                <div class="column-3"></div>
                <div class="column-10 metrics--metric">
                  <p class="metric--title">
-                   <a href="{{ practice.url }}">
+                   <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}/{{ page.site.practices.cleanName(practice.name) }}">
                      {{ practice.name }} <span data-ng-if="practice.has_majority_design_completion === false"><90%</span> #{{ $index+1 }}
                    </a>
 

@@ -2835,6 +2835,11 @@ angular.module('FieldDoc')
             }
             return Account.userObject;
           },
+          project: function(Project, $route) {
+            return Project.get({
+                'id': $route.current.params.projectId
+            });
+          },
           summary: function(Site, $route) {
             return Site.summary({
               id: $route.current.params.siteId
@@ -4506,7 +4511,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('SiteSummaryCtrl', function (Account, $location, mapbox, Practice, $rootScope, $route, summary, user) {
+    .controller('SiteSummaryCtrl', function (Account, $location, mapbox, Practice, project, $rootScope, $route, summary, user) {
 
       var self = this;
 
@@ -4521,7 +4526,7 @@ angular.module('FieldDoc')
       summary.$promise.then(function(successResponse) {
 
         self.data = successResponse;
-        
+
         self.site = successResponse.site;
         self.practices = successResponse.practices;
 
@@ -4544,7 +4549,7 @@ angular.module('FieldDoc')
             user.$promise.then(function(userResponse) {
                 $rootScope.user = Account.userObject = userResponse;
 
-                self.project = successResponse.project;
+                self.project = project;
 
                 self.permissions = {
                     isLoggedIn: Account.hasToken(),
@@ -4560,7 +4565,7 @@ angular.module('FieldDoc')
                         url: '/projects'
                     },
                     {
-                        text: self.project.properties.name,
+                        text: self.site.properties.project.properties.name,
                         url: '/projects/' + $route.current.params.projectId
                     },
                     {
