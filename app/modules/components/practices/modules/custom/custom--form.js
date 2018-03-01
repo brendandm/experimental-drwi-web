@@ -159,12 +159,6 @@
 
       self.saveReport = function() {
 
-        self.report.properties.readings = [
-          {
-            "practice_extent": 12
-          }
-        ];
-
         self.report.properties.report_date = self.date.month + ' ' + self.date.date + ' ' + self.date.year;
 
         self.report.$update().then(function(successResponse) {
@@ -181,6 +175,27 @@
           console.error('ERROR: ', errorResponse);
         });
       };
+
+      self.addReading = function() {
+        self.report.properties.readings.push({
+          "geometry": null,
+          "properties": {
+            "bmp_custom_id": null,
+            "practice_type_id": null,
+            "practice_extent": 0,
+            "practice_unit_id": null,
+            "practice_description": "",
+            "practice_nutrient_reductions": {
+              "properties": {
+                "nitrogen": 0,
+                "phosphorus": 0,
+                "sediment": 0,
+                "protocol": ""
+              }
+            }
+          }
+        })
+      }
 
     });
 

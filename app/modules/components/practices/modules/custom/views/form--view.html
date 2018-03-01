@@ -232,7 +232,7 @@
                 <select class="form-control"
                         data-ng-model="reading_.practice_type_id"
                         id="practice_type_id" name="practice_type_id"
-                        data-ng-options="value.properties.id as value.properties.name for value in page.practiceTypes.features | orderBy:'properties.best_management_practice'"
+                        data-ng-options="value.properties.id as value.properties.name group by value.properties.group for value in page.practiceTypes.features | orderBy:'properties.best_management_practice'"
                         data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
                     <option value="">-- Select a practice --</option>
                 </select>
@@ -248,8 +248,8 @@
                   Practice Extent
                 </label>
 
-                <input class="form-control" data-ng-model="reading_.practice_extent"
-                       id="reading_.practice_extent" name="reading_.practice_extent"
+                <input class="form-control" data-ng-model="reading_.properties.practice_extent"
+                       id="practice_extent" name="practice_extent"
                        type="number"  />
 
               </div>
@@ -260,9 +260,9 @@
                 </label>
 
                 <select class="form-control"
-                        data-ng-model="reading_.practice_unit_id"
+                        data-ng-model="reading_.properties.practice_unit_id"
                         id="practice_unit_id" name="practice_unit_id"
-                        data-ng-options="value.properties.id as value.properties.plural for value in page.unitTypes.features | orderBy:'properties.name'"
+                        data-ng-options="value.properties.id as (value.properties.plural) group by value.properties.group for value in page.unitTypes.features | orderBy:'properties.plural'"
                         data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
                     <option value="">-- Select a unit --</option>
                 </select>
@@ -274,11 +274,9 @@
                   Nitrogen Reduction
                 </label>
 
-                <input class="form-control" data-ng-model="nutrient[0].nitrogen"
+                <input class="form-control" data-ng-model="reading_.properties.practice_nutrient_reductions.properties.nitrogen"
                        id="nitrogen_reduction" name="nitrogen_reduction"
                        type="number"  />
-
-                <p class="help--text">Percentages must be in decimal format from 0.0-1.0</p>
 
               </div>
 
@@ -287,11 +285,9 @@
                   Phosphorus Reduction
                 </label>
 
-                <input class="form-control" data-ng-model="nutrient[0].phosphorus"
+                <input class="form-control" data-ng-model="reading_.properties.practice_nutrient_reductions.properties.phosphorus"
                        id="phosphorus_reduction" name="phosphorus_reduction"
                        type="number"  />
-
-                <p class="help--text">Percentages must be in decimal format from 0.0-1.0</p>
 
               </div>
 
@@ -300,11 +296,9 @@
                   Sediment Reduction
                 </label>
 
-                <input class="form-control" data-ng-model="nutrient[0].sediment"
+                <input class="form-control" data-ng-model="reading_.properties.practice_nutrient_reductions.properties.sediment"
                        id="sediment_reduction" name="sediment_reduction"
                        type="number"  />
-
-                <p class="help--text">Percentages must be in decimal format from 0.0-1.0</p>
 
               </div>
 
@@ -313,7 +307,7 @@
           <div class="form-row">
             <div class="form-field">
               <a href="javascript:void(0)"
-                 data-ng-click="page.report.properties.readings.push({})">
+                 data-ng-click="page.addReading()">
                  + add a practice
                </a>
              </div>
