@@ -120,8 +120,18 @@
 
             angular.forEach(defaults.readings, function(reading, index) {
               delete reading.properties.id;
-              reading.properties.geometry = reading.geometry;
-              readings.push(reading.properties);
+
+              var r_ = reading.properties;
+
+              //
+              // TODO Need to make sure that we are copying nutrients
+              // and not linking them ...
+              //
+              // TODO Need to copy over geometry
+              //
+
+              // r_['geometry'] = reading.geometry;
+              readings.push(r_);
             });
 
             delete defaults.id;
