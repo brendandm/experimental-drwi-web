@@ -19,6 +19,8 @@
 
       self.practiceType = null;
 
+      self.showData = true;
+
       self.project = {
         'id': projectId
       };
@@ -112,13 +114,29 @@
               });
           }
           else {
-            var newReading = new PracticeCustom({
-                'measurement_period': measurementPeriod,
-                'report_date': new Date(),
-                'practice_id': practiceId,
-                'account_id': self.summary.site.properties.project.properties.account_id
-              });
 
+            var defaults = angular.copy(self.summary.practice.properties.defaults.properties),
+                readings = [];
+
+            angular.forEach(defaults.readings, function(reading, index) {
+              delete reading.properties.id;
+              reading.properties.geometry = reading.geometry;
+              readings.push(reading.properties);
+            });
+
+            delete defaults.id;
+            delete defaults.account;
+            delete defaults.practice;
+
+            delete defaults.metrics;
+            delete defaults.monitoring;
+            delete defaults.created_by;
+            delete defaults.last_modified_by;
+
+            defaults.measurement_period = "Installation";
+            defaults.readings = readings;
+
+            var newReading = new PracticeCustom(defaults);
           }
 
           newReading.$save().then(function(successResponse) {

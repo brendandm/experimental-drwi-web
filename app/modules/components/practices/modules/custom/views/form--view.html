@@ -212,106 +212,173 @@
         </div>
 
         <div class="form-row"
+             data-ng-repeat="reading_ in page.report.properties.readings | orderBy:'id':false track by reading_.id"
              data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
           <div class="form-label">
-            <label for="efficiency_agriculture_generic" class="control-label">
-              Practices and Efficiencies
+            <label for="" class="control-label">
+              Custom Practice #{{ $index+1 }}
             </label>
           </div>
-          <div class="form-row"
-               data-ng-repeat="reading_ in page.report.properties.readings">
+          <div class="form-field">
 
-            <div class="form-field">
+             <!-- Column 1 of 2: Form Fields Column -->
+             <div class="form-element form-element-half">
 
-              <!-- Buffer Width -->
-              <div class="form-element">
-                <label for="efficiency_agriculture_generic" class="control-label">
-                  Agricultural Practices and Efficiencies
+               <!-- Practice -->
+               <label for="practice_type_id" class="control-label">
+                 Practice Type
+               </label>
+
+               <select data-ng-if="!page.custom_practice_type[reading_.id]"
+                       class="form-control"
+                       data-ng-model="reading_.properties.practice_type_id"
+                       id="practice_type_id" name="practice_type_id"
+                       data-ng-options="value.properties.id as value.properties.name group by value.properties.group for value in page.practiceTypes.features | orderBy:'properties.best_management_practice'"
+                       data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
+                   <option value="">-- Select a practice --</option>
+               </select>
+
+               <div data-ng-if="page.custom_practice_type[reading_.id]">
+                 <input class="form-control"
+                        data-ng-model="reading_.properties.practice_type.properties.name"
+                        id="custom_practice_type_name"
+                        name="custom_practice_type_name"
+                        type="text"
+                        autofocus  />
+
+                 <a href="javascript:void(0);"
+                    data-ng-click="page.actions.cancelAddNewPracticeType(reading_)">
+                   Cancel
+                 </a>
+               </div>
+
+               <p class="help-text">
+                 Don't see your practice?
+                 <a href="javascript:void(0);"
+                    data-ng-click="page.actions.addNewPracticeType(reading_)">Add a new practice</a>
+               </p>
+
+
+               <div class="form-element form-element-half">
+                 <!-- Practice Extent -->
+                 <label for="practice_extent" class="control-label">
+                   Practice Extent
+                 </label>
+
+                 <input class="form-control" data-ng-model="reading_.properties.practice_extent"
+                        id="practice_extent" name="practice_extent"
+                        step="0.0001" type="number"  />
+
+               </div>
+               <div class="form-element form-element-half">
+                 <!-- Units -->
+                 <label for="practice_unit_id" class="control-label">
+                   Units
+                 </label>
+
+                 <select class="form-control"
+                         data-ng-model="reading_.properties.practice_unit_id"
+                         id="practice_unit_id" name="practice_unit_id"
+                         data-ng-options="value.properties.id as (value.properties.plural) group by value.properties.group for value in page.unitTypes.features | orderBy:'properties.plural'"
+                         data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
+                     <option value="">-- Select a unit --</option>
+                 </select>
+
+               </div>
+
+               <div class="form-element form-element-half">
+                 <!-- Nitrogen -->
+                 <label for="nitrogen_reduction" class="control-label">
+                   Nitrogen Reduction
+                 </label>
+
+                 <input class="form-control" data-ng-model="reading_.properties.practice_nutrient_reductions.properties.nitrogen"
+                        id="nitrogen_reduction" name="nitrogen_reduction" step="0.0001"
+                        type="number"  />
+
+               </div>
+               <div class="form-element form-element-half">
+                 <label for="" class="control-label">
+                   &nbsp;
+                 </label>
+                 <p>
+                   <strong>lbs/yr</strong>
+                 </p>
+               </div>
+
+               <div class="form-element form-element-half">
+                 <!-- Phosphorus -->
+                 <label for="phosphorus_reduction" class="control-label">
+                   Phosphorus Reduction
+                 </label>
+
+                 <input class="form-control" data-ng-model="reading_.properties.practice_nutrient_reductions.properties.phosphorus"
+                        id="phosphorus_reduction" name="phosphorus_reduction" step="0.0001"
+                        type="number"  />
+
+               </div>
+               <div class="form-element form-element-half">
+                 <label for="" class="control-label">
+                   &nbsp;
+                 </label>
+                 <p>
+                   <strong>lbs/yr</strong>
+                 </p>
+               </div>
+
+               <div class="form-element form-element-half">
+                 <!-- Sediment -->
+                 <label for="sediment_reduction" class="control-label">
+                   Sediment Reduction
+                 </label>
+
+                 <input class="form-control" data-ng-model="reading_.properties.practice_nutrient_reductions.properties.sediment"
+                         id="sediment_reduction" name="sediment_reduction" step="0.0001"
+                        type="number"  />
+
+              </div>
+              <div class="form-element form-element-half">
+                <label for="" class="control-label">
+                  &nbsp;
                 </label>
-
-                <select class="form-control"
-                        data-ng-model="reading_.practice_type_id"
-                        id="practice_type_id" name="practice_type_id"
-                        data-ng-options="value.properties.id as value.properties.name group by value.properties.group for value in page.practiceTypes.features | orderBy:'properties.best_management_practice'"
-                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
-                    <option value="">-- Select a practice --</option>
-                </select>
-
-                <p class="help-text">
-                  For full BMP definitions, efficiencies, and input guidance please <a href="http://help.fielddoc.org/#otheragbmps" target="_blank">visit the our help documentation article for the Other Agricultural Practices BMP</a>.
+                <p>
+                  <strong>tons/yr</strong>
                 </p>
-
               </div>
 
-              <div class="form-element">
-                <label for="practice_extent" class="control-label">
-                  Practice Extent
-                </label>
-
-                <input class="form-control" data-ng-model="reading_.properties.practice_extent"
-                       id="practice_extent" name="practice_extent"
-                       type="number"  />
-
-              </div>
-
-              <div class="form-element">
-                <label for="practice_unit_id" class="control-label">
-                  Units
-                </label>
-
-                <select class="form-control"
-                        data-ng-model="reading_.properties.practice_unit_id"
-                        id="practice_unit_id" name="practice_unit_id"
-                        data-ng-options="value.properties.id as (value.properties.plural) group by value.properties.group for value in page.unitTypes.features | orderBy:'properties.plural'"
-                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
-                    <option value="">-- Select a unit --</option>
-                </select>
-
-              </div>
-
-              <div class="form-element">
-                <label for="nitrogen_reduction" class="control-label">
-                  Nitrogen Reduction
-                </label>
-
-                <input class="form-control" data-ng-model="reading_.properties.practice_nutrient_reductions.properties.nitrogen"
-                       id="nitrogen_reduction" name="nitrogen_reduction"
-                       type="number"  />
-
-              </div>
-
-              <div class="form-element">
-                <label for="phosphorus_reduction" class="control-label">
-                  Phosphorus Reduction
-                </label>
-
-                <input class="form-control" data-ng-model="reading_.properties.practice_nutrient_reductions.properties.phosphorus"
-                       id="phosphorus_reduction" name="phosphorus_reduction"
-                       type="number"  />
-
-              </div>
-
-              <div class="form-element">
-                <label for="sediment_reduction" class="control-label">
-                  Sediment Reduction
-                </label>
-
-                <input class="form-control" data-ng-model="reading_.properties.practice_nutrient_reductions.properties.sediment"
-                       id="sediment_reduction" name="sediment_reduction"
-                       type="number"  />
-
-              </div>
-
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-field">
-              <a href="javascript:void(0)"
-                 data-ng-click="page.addReading()">
-                 + add a practice
-               </a>
              </div>
-           </div>
+
+             <!-- Column 2 of 2: Geography Selection Column -->
+             <div class="form-element form-element-half">
+               <label for="" class="control-label">
+                 Practice Location
+               </label>
+
+               <!-- <mapboxgl id="map" class="mapboxgl-map" options="page.options" /> -->
+
+               <leaflet class="map"
+                        markers="page.map[reading_.id].markers"
+                        defaults="page.map[reading_.id].defaults"
+                        layers="page.map[reading_.id].layers"
+                        center="page.map[reading_.id].center"></leaflet>
+             </div>
+
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label">
+            <label class="control-label">
+              New Custom Practice
+            </label>
+          </div>
+          <div class="form-field">
+            <button type="button"
+                    data-ng-click="page.addReading()"
+                    class="button button-link button-outline">
+              + Add Another Practice
+            </button>
+
+          </div>
         </div>
 
 

@@ -113,10 +113,12 @@ pre.form-value {
 //
 //
 //
-.help-text {
+.form p,
+.form p.help-text {
   font-family: $font-sans;
   font-size: 0.75em;
   font-style: italic;
+  margin-top: 0.25em;
   max-width: 100%;
 
   &.help-text-top {
@@ -201,10 +203,6 @@ label.control-label {
   font-size: 0.75em;
   font-weight: 300;
   text-transform: uppercase;
-}
-
-.form p {
-  margin: 0;
 }
 
 .form-element {

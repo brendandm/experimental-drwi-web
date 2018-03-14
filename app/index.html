@@ -16,6 +16,7 @@
     <title>{{ $root.page.title }}{{ $root.site.title }}</title>
 
     <link rel="stylesheet" type="text/css" href='//api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' />
+    <!-- <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' /> -->
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) /styles/vendor.css -->
@@ -54,6 +55,8 @@
       ga('send', 'pageview');
 
     </script>
+
+    <!-- <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script> -->
 
     <!-- build:js(.) /scripts/oldieshim.js -->
     <!--[if lt IE 9]>
@@ -204,6 +207,15 @@
             <script src="modules/shared/mapbox/mapbox--constant.js"></script>
             <script src="modules/shared/mapbox/states--constant.js"></script>
             <script src="modules/shared/mapbox/template--service.js"></script>
+
+            <!-- Viable Modules -->
+            <script src="modules/shared/mapboxgl/mapboxgl--module.js"></script>
+            <script src="modules/shared/mapboxgl/mapboxgl--constant.js"></script>
+            <script src="modules/shared/mapboxgl/mapboxgl--directive.js"></script>
+
+            <script src="modules/shared/mapboxgl-geocoding/mapboxglGeocoding--module.js"></script>
+            <script src="modules/shared/mapboxgl-geocoding/mapboxglGeocoding--service.js"></script>
+            <script src="modules/shared/mapboxgl-geocoding/mapboxglGeocoding--directive.js"></script>
 
             <script src="modules/shared/collaborator/collaborator--module.js"></script>
             <script src="modules/shared/collaborator/collaborator--service.js"></script>

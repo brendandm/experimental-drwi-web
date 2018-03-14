@@ -5,6 +5,10 @@
 // specifications.
 //
 
+.map,
+.leaflet-container.map {
+  height: 30em;
+}
 
 //
 // Geocoder Dropdown
@@ -153,4 +157,24 @@
       }
     }
   }
+}
+
+
+//
+// mapboxgl-map
+//
+.mapboxgl-map {
+  bottom: 0;
+  // height: 87% !important;
+  // height: 87vh !important;
+  height: 100%;
+  position: absolute;
+  // top: 83px;
+  //   @include breakpoint($body--width--md) {
+  //     top: 168px;
+  //     height: 70% !important;
+  //     height: 70vh !important;
+  //   }
+  width: 100%;
+  z-index: 0;
 }
