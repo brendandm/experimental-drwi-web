@@ -302,6 +302,7 @@
         }, function(errorResponse) {
           console.error('ERROR: ', errorResponse);
         });
+
       };
 
       self.deleteReport = function() {
@@ -553,7 +554,7 @@
           if (self.report && self.report.properties) {
             angular.forEach(self.report.properties.readings, function(reading_, index_) {
 
-              var coordinates = self.map[reading_.id].markers.projectLocation;
+              var coordinates = response[reading_.id].markers.projectLocation;
 
               reading_.geometry = {
                 type: 'GeometryCollection',

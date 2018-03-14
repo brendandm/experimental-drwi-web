@@ -23,10 +23,9 @@
         'update': {
           method: 'PATCH',
           transformRequest: function(data) {
-            var feature = Preprocessors.geojson(data);
-
-            console.log('feature', feature)
-            return angular.toJson(feature);
+            var feature = Preprocessors.geojson(data),
+                json_ = angular.toJson(feature);
+            return json_;
           }
         }
       });
