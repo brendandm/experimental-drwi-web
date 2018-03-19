@@ -34,7 +34,7 @@
                 </tr>
 
                 <tr>
-                  <th>&nbsp;</th>
+                  <th colspan="2">&nbsp;</th>
                   <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
                     <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/custom/{{ report.properties.id }}/edit">
@@ -48,15 +48,22 @@
                   <th>% of Planned</th>
                 </tr>
 
-                <tr>
-                  <th>Extent (acres)</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
-                    {{ report.properties.custom_practice_extent_acres | number:2 }} acres
+                <tr data-ng-repeat="reading_ in page.summary.readings | orderBy:'properties.report_date':false">
+                  <th>
+                    <span data-ng-if="$first">
+                      Extent (acres)
+                    </span>
+                  </th>
+                  <th>
+                    {{ reading_.properties.practice_type.properties.name }}
+                  </th>
+                  <td>
+                    {{ reading_.properties.practice_extent }} {{ reading_.properties.practice_unit.properties.plural }}
                   </td>
                   <td>
                     <strong>
                       {{ page.summary.practice.properties.quantity_installed.acres_of_practice_installed || 0 | number:2 }}
-                    </strong> acres
+                    </strong> {{ reading_.properties.practice_unit.properties.plural }}
                   </td>
                   <td>
                     <strong>
@@ -72,7 +79,7 @@
                 </tr>
 
                 <tr>
-                  <th>&nbsp;</th>
+                  <th colspan="2">&nbsp;</th>
                   <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
                     <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/custom/{{ report.properties.id }}/edit">
                       <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned Reduction</span><span data-ng-if="report.properties.measurement_period === 'Installation'">Installed Reduction</span><br />
@@ -84,7 +91,7 @@
                 </tr>
 
                 <tr>
-                  <th>Nitrogen (lbs/yr)</th>
+                  <th colspan="2">Nitrogen (lbs/yr)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
                       {{ report.properties.planning.nitrogen || 0 | number:2 }}
@@ -106,7 +113,7 @@
                 </tr>
 
                 <tr>
-                  <th>Phosphorus (lbs/yr)</th>
+                  <th colspan="2">Phosphorus (lbs/yr)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
                       {{ report.properties.planning.phosphorus || 0 | number:2 }}
@@ -127,7 +134,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <th>Sediment (tons/yr)</th>
+                  <th colspan="2">Sediment (tons/yr)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
                       {{ report.properties.planning.sediment || 0 | number:2 }}
@@ -155,7 +162,7 @@
                 </tr>
 
                 <tr>
-                  <th>&nbsp;</th>
+                  <th colspan="2">&nbsp;</th>
                   <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
                     <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/custom/{{ report.properties.id }}/edit">
                       <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
@@ -169,7 +176,7 @@
                 </tr>
 
                 <tr>
-                  <th>Acres of Practice Installed</th>
+                  <th colspan="2">Acres of Practice Installed</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
                     {{ report.properties.metrics.acres_of_practice_installed | number:2 }} acres
                   </td>
