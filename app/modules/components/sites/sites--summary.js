@@ -100,6 +100,13 @@
       //
       $rootScope.page.actions = [
         {
+          type: 'button-link',
+          action: function() {
+            $location.path('/projects/' + $route.current.params.projectId + '/sites/' + $route.current.params.siteId + '/edit');
+          },
+          text: 'Edit Site'
+        },
+        {
           type: 'button-link new',
           action: function() {
             self.createPractice();
