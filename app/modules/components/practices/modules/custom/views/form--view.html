@@ -381,6 +381,11 @@
           </div>
         </div>
 
+        <div data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'"
+             data-ng-include="'/modules/components/practices/modules/custom/views/formMetrics--view.html'"></div>
+
+        <!-- <div data-ng-if="page.report.properties.measurement_period === 'Monitoring'"
+             data-ng-include="'/modules/components/practices/modules/custom/views/formMonitoring--view.html'"></div> -->
 
         <div class="form-row"
              data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation' || page.report.properties.measurement_period === 'Monitoring'">

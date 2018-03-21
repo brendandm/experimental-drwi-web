@@ -59,6 +59,9 @@ angular.module('FieldDoc')
           practice_types: function(PracticeType, $route) {
             return PracticeType.query();
           },
+          metric_types: function(MetricType, $route) {
+            return MetricType.query();
+          },
           unit_types: function(UnitType, $route) {
             return UnitType.query({
               results_per_page: 500

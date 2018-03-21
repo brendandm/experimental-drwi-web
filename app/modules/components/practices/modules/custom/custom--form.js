@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('CustomFormController', function (Account, leafletData, $location, Map, mapbox, practice, PracticeCustom, practice_types, report, $rootScope, $route, site, $scope, unit_types, user, Utility) {
+    .controller('CustomFormController', function (Account, leafletData, $location, Map, mapbox, metric_types, practice, PracticeCustom, practice_types, report, $rootScope, $route, site, $scope, unit_types, user, Utility) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -27,122 +27,80 @@
 
       self.practiceType = null;
       self.practiceTypes = practice_types;
+
       self.unitTypes = unit_types;
+
+      self.metricType = null;
+      self.metricTypes = metric_types;
+
       self.project = {
         'id': projectId
       };
 
       self.custom_practice_type = [];
 
+      self.custom_metric_type = [];
+
       self.actions = {
-          addNewPracticeType: function(existingReading) {
+        addNewPracticeType: function(existingReading) {
 
-            angular.forEach(self.report.properties.readings, function(reading, index) {
-              if (existingReading.id === reading.id) {
-                self.report.properties.readings[index].properties.practice_type = {
-                  "properties": {
-                    "name": "",
-                    "group": "Other",
-                    "source": "Add by user_id " + $rootScope.user.id
-                  }
-                }
-              }
-            })
-
-            // Mark the field as visible.
-            self.custom_practice_type[existingReading.id] = true;
-          },
-          cancelAddNewPracticeType: function(reading_) {
-            self.custom_practice_type[reading_.id] = false;
-          }
-      }
-
-      class VIMap {
-        constructor(height, width) {
-
-          this.defaults = {
-            scrollWheelZoom: false,
-            maxZoom: 19
-          };
-
-          this.layers = {
-            baselayers: {
-              basemap: {
-                name: 'Streets',
-                url: 'https://{s}.tiles.mapbox.com/v3/{mapid}/{z}/{x}/{y}.png',
-                type: 'xyz',
-                layerOptions: {
-                  mapid: mapbox.street
-                }
-              },
-              satellite: {
-                name: 'Satellite',
-                url: 'https://{s}.tiles.mapbox.com/v3/{mapid}/{z}/{x}/{y}.png',
-                type: 'xyz',
-                layerOptions: {
-                  mapid: mapbox.map_id
+          angular.forEach(self.report.properties.readings, function(reading, index) {
+            if (existingReading.id === reading.id) {
+              self.report.properties.readings[index].properties.practice_type = {
+                "properties": {
+                  "name": "",
+                  "group": "Other",
+                  "source": "Add by user_id " + $rootScope.user.id
                 }
               }
             }
-          };
+          })
 
-          this.center = {
-            lng: -77.534,
-            lat: 40.834,
-            zoom: 7
-          };
+          // Mark the field as visible.
+          self.custom_practice_type[existingReading.id] = true;
+        },
+        cancelAddNewPracticeType: function(reading_) {
+          self.custom_practice_type[reading_.id] = false;
+        },
+        addNewMetricType: function(existingMetric) {
 
-          this.markers = {
-               projectLoaction: {
-                 lng: -77.534,
-                 lat: 40.834,
-                 message: 'Drag me to your project location',
-                 focus: true,
-                 draggable: true
-               }
-           };
+          angular.forEach(self.report.properties.metrics, function(metric, index) {
+            if (existingMetric.id === metric.id) {
+              self.report.properties.metrics[index].properties.metric_type = {
+                "properties": {
+                  "name": "",
+                  "group": "Other",
+                  "source": "Add by user_id " + $rootScope.user.id
+                }
+              }
+            }
+          })
 
-           this.styles = {
-             icon: {
-               parcel: {
-                 iconUrl: 'https://api.tiles.mapbox.com/v4/marker/pin-l-cc0000.png?access_token=' + mapbox.access_token,
-                 iconRetinaUrl: 'https://api.tiles.mapbox.com/v4/marker/pin-l-cc0000@2x.png?access_token=' + mapbox.access_token,
-                 iconSize: [35, 90],
-                 iconAnchor: [18, 44],
-                 popupAnchor: [0, 0]
-               }
-             },
-             polygon: {
-               parcel: {
-                 stroke: true,
-                 fill: false,
-                 weight: 3,
-                 opacity: 1,
-                 color: 'rgb(255,255,255)',
-                 lineCap: 'square'
-               },
-               canopy: {
-                 stroke: false,
-                 fill: true,
-                 weight: 3,
-                 opacity: 1,
-                 color: 'rgb(0,204,34)',
-                 lineCap: 'square',
-                 fillOpacity: 0.6
-               },
-               impervious: {
-                 stroke: false,
-                 fill: true,
-                 weight: 3,
-                 opacity: 1,
-                 color: 'rgb(204,0,0)',
-                 lineCap: 'square',
-                 fillOpacity: 0.6
-               }
-             }
-           };
+          // Mark the field as visible.
+          self.custom_metric_type[existingMetric.id] = true;
+        },
+        cancelAddNewMetricType: function(metric_) {
+          self.custom_metric_type[metric_.id] = false;
+        },
+        addNewMonitoringType: function(existingMonitoring) {
 
-           this.geojson = {};
+          angular.forEach(self.report.properties.monitoring, function(monitoring, index) {
+            if (existingMonitoring.id === monitoring.id) {
+              self.report.properties.metrics[index].properties.metric_type = {
+                "properties": {
+                  "name": "",
+                  "group": "Other",
+                  "source": "Add by user_id " + $rootScope.user.id
+                }
+              }
+            }
+          })
+
+          // Mark the field as visible.
+          self.custom_monitoring_type[existingMonitoring.id] = true;
+        },
+        cancelAddNewMonitoringType: function(monitoring_) {
+          self.custom_monitoring_type[metric_.id] = false;
         }
       }
 
@@ -336,6 +294,108 @@
         self.report.properties.readings.push(reading);
 
         self.report.properties.report_date = self.date.month + ' ' + self.date.date + ' ' + self.date.year;
+
+        self.report.$update().then(function(successResponse) {
+          console.log('New reading created successfully');
+
+          self.report = successResponse;
+
+          if (self.report.properties.report_date) {
+              self.today = parseISOLike(self.report.properties.report_date);
+          }
+
+          //
+          // Preprocess the individual Practice Readings before display
+          //
+          if (self.report.properties.readings.length) {
+
+            angular.forEach(self.report.properties.readings, function(reading_, index_) {
+              self.map[reading_.id] = angular.copy(Map);
+              self.map[reading_.id] = self.buildSingleMap(reading_);
+            });
+
+          }
+
+
+          //
+          // Check to see if there is a valid date
+          //
+          self.date = {
+              month: self.months[self.today.getMonth()],
+              date: self.today.getDate(),
+              day: self.days[self.today.getDay()],
+              year: self.today.getFullYear()
+          };
+
+        }, function(errorResponse) {
+          console.log('New reading created successfully');
+        });
+
+      }
+
+      self.addMetric = function() {
+        var metric = {
+          "geometry": null,
+          "properties": {
+            "metric_type_id": null,
+            "metric_value": 0,
+            "metric_unit_id": null,
+            "metric_description": ""
+          }
+        };
+
+        self.report.properties.metrics.push(metric);
+
+        self.report.$update().then(function(successResponse) {
+          console.log('New reading created successfully');
+
+          self.report = successResponse;
+
+          if (self.report.properties.report_date) {
+              self.today = parseISOLike(self.report.properties.report_date);
+          }
+
+          //
+          // Preprocess the individual Practice Readings before display
+          //
+          if (self.report.properties.readings.length) {
+
+            angular.forEach(self.report.properties.readings, function(reading_, index_) {
+              self.map[reading_.id] = angular.copy(Map);
+              self.map[reading_.id] = self.buildSingleMap(reading_);
+            });
+
+          }
+
+
+          //
+          // Check to see if there is a valid date
+          //
+          self.date = {
+              month: self.months[self.today.getMonth()],
+              date: self.today.getDate(),
+              day: self.days[self.today.getDay()],
+              year: self.today.getFullYear()
+          };
+
+        }, function(errorResponse) {
+          console.log('New reading created successfully');
+        });
+
+      }
+
+      self.addMetric = function() {
+        var monitoring = {
+          "geometry": null,
+          "properties": {
+            "monitoring_type_id": null,
+            "monitoring_value": 0,
+            "was_verified": false,
+            "monitoring_description": ""
+          }
+        };
+
+        self.report.properties.monitoring.push(monitoring);
 
         self.report.$update().then(function(successResponse) {
           console.log('New reading created successfully');
