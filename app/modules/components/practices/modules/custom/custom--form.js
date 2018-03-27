@@ -22,6 +22,7 @@
       // Setup Map Requirements
       //
       self.map = {};
+      self.mapActiveGeocoder = null;
 
       self.showData = true;
 
@@ -435,6 +436,19 @@
 
       }
 
+      self.deleteSubPractice = function(reading_id) {
+
+        var readings_ = []
+
+        angular.forEach(self.report.properties.readings, function(reading_, index_) {
+          if (reading_id !== reading_.id) {
+            readings_.push(reading_);
+          }
+        })
+
+        self.report.properties.readings = readings_;
+      };
+
 
       //
       // MAPS
@@ -444,90 +458,66 @@
       // We use this function for handle any type of geographic change, whether
       // through the map or through the fields
       //
-      // self.processPin = function(coordinates, zoom, map_, reading_) {
-      //
-      //   if (coordinates.lat === null || coordinates.lat === undefined || coordinates.lng === null || coordinates.lng === undefined) {
-      //     return;
-      //   }
-      //
-      //   //
-      //   // Move the map pin/marker and recenter the map on the new location
-      //   //
-      //   map_.markers = {
-      //     reportGeometry: {
-      //       lng: coordinates.lng,
-      //       lat: coordinates.lat,
-      //       focus: false,
-      //       draggable: true
-      //     }
-      //   };
-      //
-      //   // //
-      //   // // Update the coordinates for the Report
-      //   // //
-      //   reading_.geometry = {
-      //     type: 'GeometryCollection',
-      //     geometries: []
-      //   };
-      //   reading_.geometry.geometries.push({
-      //     type: 'Point',
-      //     coordinates: [
-      //       coordinates.lng,
-      //       coordinates.lat
-      //     ]
-      //   });
-      //
-      //   //
-      //   // Update the visible pin on the map
-      //   //
-      //
-      //   map_.center = {
-      //     lat: coordinates.lat,
-      //     lng: coordinates.lng,
-      //     zoom: (zoom < 10) ? 10 : zoom
-      //   };
-      //
-      //   self.showGeocoder = false;
-      // };
+      self.processPin = function(coordinates, zoom, map_) {
 
-      //
-      // When the user has selected a response, we need to perform a few extra
-      // tasks so that our scope is updated properly.
-      //
-      // $scope.$watch(angular.bind(this, function() {
-      //   return this.geocode.response;
-      // }), function (response) {
-      //
-      //   //
-      //   // Only execute the following block of code if the user has geocoded an
-      //   // address. This block of code expects this to be a single feature from a
-      //   // Carmen GeoJSON object.
-      //   //
-      //   // @see https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
-      //   //
-      //   if (response) {
-      //
-      //     self.processPin({
-      //       lat: response.geometry.coordinates[1],
-      //       lng: response.geometry.coordinates[0]
-      //     }, 16);
-      //
-      //     self.map[reading_.id].geocode = {
-      //       query: null,
-      //       response: null
-      //     };
-      //   }
-      //
-      // });
+        if (coordinates.lat === null || coordinates.lat === undefined || coordinates.lng === null || coordinates.lng === undefined) {
+          return;
+        }
+
+        //
+        // Move the map pin/marker and recenter the map on the new location
+        //
+        map_.markers = {
+          projectLocation: {
+            lng: coordinates.lng,
+            lat: coordinates.lat,
+            focus: false,
+            draggable: true
+          }
+        };
+
+        //
+        // Update the visible pin on the map
+        //
+        map_.center = {
+          lat: coordinates.lat,
+          lng: coordinates.lng,
+          zoom: (zoom < 10) ? 10 : zoom
+        };
+      };
+
+      self.activateGeocoderForReading = function(reading_id) {
+
+        //
+        // RESET ALL GEOCODERS TO HIDDEN AND EMPTY
+        //
+        angular.forEach(self.map, function(map_, index) {
+
+          var is_matching = reading_id === parseInt(index);
+          console.log('is_matching', is_matching);
+          if (is_matching) {
+            self.map[reading_id].showGeocoder = true;
+          }
+          else {
+            self.map[index].showGeocoder = false;
+            self.map[index].geocode = {};
+          }
+        });
+
+        console.log('self.map', self.map)
+
+        return;
+      };
 
 
       self.buildSingleMap = function(reading_) {
 
         return {
+          showGeocoder: null,
           geocode : {},
           defaults: {
             scrollWheelZoom: false,
-            zoomControl: false,
+            zoomControl: true,
             maxZoom: 19
           },
           layers: {
@@ -616,23 +606,53 @@
 
               var coordinates = response[reading_.id].markers.projectLocation;
 
-              reading_.geometry = {
-                type: 'GeometryCollection',
-                geometries: []
-              };
+              self.processPin({
+                lat: coordinates.lat,
+                lng: coordinates.lng
+              }, 16, response[reading_.id]);
 
-              reading_.geometry.geometries.push({
-                type: 'Point',
-                coordinates: [
-                  coordinates.lng,
-                  coordinates.lat
-                ]
-              });
+              // reading_.geometry = {
+              //   type: 'GeometryCollection',
+              //   geometries: []
+              // };
+              //
+              // reading_.geometry.geometries.push({
+              //   type: 'Point',
+              //   coordinates: [
+              //     coordinates.lng,
+              //     coordinates.lat
+              //   ]
+              // });
 
             });
-          }
 
-          return;
+            angular.forEach(response, function(response_, index) {
+              console.log('response_', index, response_);
+
+              //
+              // Only execute the following block of code if the user has geocoded an
+              // address. This block of code expects this to be a single feature from a
+              // Carmen GeoJSON object.
+              //
+              // @see https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+              //
+              if (response_ && response_.geocode && response_.geocode.response) {
+
+                var r_ = response_.geocode.response;
+
+                self.processPin({
+                  lat: r_.geometry.coordinates[1],
+                  lng: r_.geometry.coordinates[0]
+                }, 16, self.map[index]);
+
+                self.map[index].geocode = {
+                  query: null,
+                  response: null
+                };
+              }
+            });
+
+          }
         }
       }, true);
 
