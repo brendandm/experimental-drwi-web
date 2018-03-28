@@ -385,7 +385,7 @@
 
       }
 
-      self.addMetric = function() {
+      self.addMonitoring = function() {
         var monitoring = {
           "geometry": null,
           "properties": {

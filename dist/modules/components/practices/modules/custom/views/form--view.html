@@ -423,8 +423,99 @@
           </div>
         </div>
 
-        <div data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'"
-             data-ng-include="'/modules/components/practices/modules/custom/views/formMetrics--view.html'"></div>
+        <div class="form-row"
+             data-ng-repeat="reading_ in page.report.properties.metrics | orderBy:'id':false track by reading_.id">
+          <div class="form-label">
+            <label for="" class="control-label">
+              Custom Metric #{{ $index+1 }}
+            </label>
+          </div>
+          <div class="form-field">
+
+             <!-- Column 1 of 2: Form Fields Column -->
+             <div class="form-element">
+
+               <!-- Practice -->
+               <label for="metric_type_id" class="control-label">
+                 Metric
+               </label>
+
+               <select data-ng-if="!page.custom_metric_type[reading_.id]"
+                       class="form-control"
+                       data-ng-model="reading_.properties.metric_type_id"
+                       id="metric_type_id" name="metric_type_id"
+                       data-ng-options="value.id as value.properties.name group by value.properties.group for value in page.metricTypes.features | orderBy:'properties.name'">
+                   <option value="">-- Select a metric --</option>
+               </select>
+
+               <div data-ng-if="page.custom_metric_type[reading_.id]">
+                 <input class="form-control"
+                        data-ng-model="reading_.properties.metric_type.properties.name"
+                        id="custom_metric_type_name"
+                        name="custom_metric_type_name"
+                        type="text"
+                        autofocus  />
+
+                 <a href="javascript:void(0);"
+                    data-ng-click="page.actions.cancelAddNewMetricType(reading_)">
+                   Cancel
+                 </a>
+               </div>
+
+               <p class="help-text">
+                 Don't see your metric?
+                 <a href="javascript:void(0);"
+                    data-ng-click="page.actions.addNewMetricType(reading_)">Add a new metric</a>
+               </p>
+
+
+               <div class="form-element form-element-half">
+                 <!-- Practice Extent -->
+                 <label for="metric_value" class="control-label">
+                   Metric Value
+                 </label>
+
+                 <input class="form-control" data-ng-model="reading_.properties.metric_value"
+                        id="metric_value" name="metric_value"
+                        step="0.0001" type="number"  />
+
+               </div>
+               <div class="form-element form-element-half">
+                 <!-- Units -->
+                 <label for="metric_unit_id" class="control-label">
+                   Units
+                 </label>
+
+                 <select class="form-control"
+                         data-ng-model="reading_.properties.metric_unit_id"
+                         id="metric_unit_id" name="metric_unit_id"
+                         data-ng-options="value.properties.id as (value.properties.plural) group by value.properties.group for value in page.unitTypes.features | orderBy:'properties.plural'"
+                         data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
+                     <option value="">-- Select a unit --</option>
+                 </select>
+
+               </div>
+
+             </div>
+
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-label">
+            <label class="control-label">
+              New Custom Metric
+            </label>
+          </div>
+          <div class="form-field">
+            <button type="button"
+                    data-ng-click="page.addMetric()"
+                    class="button button-link button-outline">
+              + Add Another Metric
+            </button>
+
+          </div>
+        </div>
 
         <!-- <div data-ng-if="page.report.properties.measurement_period === 'Monitoring'"
              data-ng-include="'/modules/components/practices/modules/custom/views/formMonitoring--view.html'"></div> -->
