@@ -69,7 +69,7 @@
                 of {{ page.rollups.sediment.total | number:2 }}</span>
               </td>
             </tr>
-            <tr class="table-row-short">
+            <!-- <tr class="table-row-short">
               <td class="table-column-wide">&nbsp;</td>
               <td class="table-column-even">
                 <span class="metrics--metric--secondary">Phase 5.3.2</span>
@@ -80,7 +80,7 @@
               <td class="table-column-even">
                 <span class="metrics--metric--secondary">Phase 5.3.2</span>
               </td>
-            </tr>
+            </tr> -->
           </thead>
 
           <tbody class="metrics">
@@ -112,7 +112,7 @@
                 </div>
                 <div data-ng-if="practice.show_custom_practices"
                      class="subpractices">
-                  <div data-ng-repeat="subpractice_ in practice.practices track by $iindex">
+                  <div data-ng-repeat="subpractice_ in practice.practices track by $index">
                     <p class="metric--title">
                       {{ subpractice_.name }}
                     </p>
