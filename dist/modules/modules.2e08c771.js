@@ -7204,6 +7204,9 @@ angular.module('FieldDoc')
           practice_types: function(PracticeType, $route) {
             return PracticeType.query();
           },
+          metric_types: function(MetricType, $route) {
+            return MetricType.query();
+          },
           unit_types: function(UnitType, $route) {
             return UnitType.query({
               results_per_page: 500
@@ -7225,7 +7228,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('CustomFormController', function (Account, leafletData, $location, Map, mapbox, practice, PracticeCustom, practice_types, report, $rootScope, $route, site, $scope, unit_types, user, Utility) {
+    .controller('CustomFormController', function (Account, leafletData, $location, Map, mapbox, metric_types, practice, PracticeCustom, practice_types, report, $rootScope, $route, site, $scope, unit_types, user, Utility) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -7239,127 +7242,86 @@ angular.module('FieldDoc')
       // Setup Map Requirements
       //
       self.map = {};
+      self.mapActiveGeocoder = null;
 
       self.showData = true;
 
       self.practiceType = null;
       self.practiceTypes = practice_types;
+
       self.unitTypes = unit_types;
+
+      self.metricType = null;
+      self.metricTypes = metric_types;
+
       self.project = {
         'id': projectId
       };
 
       self.custom_practice_type = [];
 
+      self.custom_metric_type = [];
+
       self.actions = {
-          addNewPracticeType: function(existingReading) {
+        addNewPracticeType: function(existingReading) {
 
-            angular.forEach(self.report.properties.readings, function(reading, index) {
-              if (existingReading.id === reading.id) {
-                self.report.properties.readings[index].properties.practice_type = {
-                  "properties": {
-                    "name": "",
-                    "group": "Other",
-                    "source": "Add by user_id " + $rootScope.user.id
-                  }
-                }
-              }
-            })
-
-            // Mark the field as visible.
-            self.custom_practice_type[existingReading.id] = true;
-          },
-          cancelAddNewPracticeType: function(reading_) {
-            self.custom_practice_type[reading_.id] = false;
-          }
-      }
-
-      class VIMap {
-        constructor(height, width) {
-
-          this.defaults = {
-            scrollWheelZoom: false,
-            maxZoom: 19
-          };
-
-          this.layers = {
-            baselayers: {
-              basemap: {
-                name: 'Streets',
-                url: 'https://{s}.tiles.mapbox.com/v3/{mapid}/{z}/{x}/{y}.png',
-                type: 'xyz',
-                layerOptions: {
-                  mapid: mapbox.street
-                }
-              },
-              satellite: {
-                name: 'Satellite',
-                url: 'https://{s}.tiles.mapbox.com/v3/{mapid}/{z}/{x}/{y}.png',
-                type: 'xyz',
-                layerOptions: {
-                  mapid: mapbox.map_id
+          angular.forEach(self.report.properties.readings, function(reading, index) {
+            if (existingReading.id === reading.id) {
+              self.report.properties.readings[index].properties.practice_type = {
+                "properties": {
+                  "name": "",
+                  "group": "Other",
+                  "source": "Add by user_id " + $rootScope.user.id
                 }
               }
             }
-          };
+          })
 
-          this.center = {
-            lng: -77.534,
-            lat: 40.834,
-            zoom: 7
-          };
+          // Mark the field as visible.
+          self.custom_practice_type[existingReading.id] = true;
+        },
+        cancelAddNewPracticeType: function(reading_) {
+          self.custom_practice_type[reading_.id] = false;
+        },
+        addNewMetricType: function(existingMetric) {
 
-          this.markers = {
-               projectLoaction: {
-                 lng: -77.534,
-                 lat: 40.834,
-                 message: 'Drag me to your project location',
-                 focus: true,
-                 draggable: true
-               }
-           };
+          angular.forEach(self.report.properties.metrics, function(metric, index) {
+            if (existingMetric.id === metric.id) {
+              self.report.properties.metrics[index].properties.metric_type = {
+                "properties": {
+                  "name": "",
+                  "group": "Other",
+                  "source": "Add by user_id " + $rootScope.user.id
+                }
+              }
+            }
+          })
 
-           this.styles = {
-             icon: {
-               parcel: {
-                 iconUrl: 'https://api.tiles.mapbox.com/v4/marker/pin-l-cc0000.png?access_token=' + mapbox.access_token,
-                 iconRetinaUrl: 'https://api.tiles.mapbox.com/v4/marker/pin-l-cc0000@2x.png?access_token=' + mapbox.access_token,
-                 iconSize: [35, 90],
-                 iconAnchor: [18, 44],
-                 popupAnchor: [0, 0]
-               }
-             },
-             polygon: {
-               parcel: {
-                 stroke: true,
-                 fill: false,
-                 weight: 3,
-                 opacity: 1,
-                 color: 'rgb(255,255,255)',
-                 lineCap: 'square'
-               },
-               canopy: {
-                 stroke: false,
-                 fill: true,
-                 weight: 3,
-                 opacity: 1,
-                 color: 'rgb(0,204,34)',
-                 lineCap: 'square',
-                 fillOpacity: 0.6
-               },
-               impervious: {
-                 stroke: false,
-                 fill: true,
-                 weight: 3,
-                 opacity: 1,
-                 color: 'rgb(204,0,0)',
-                 lineCap: 'square',
-                 fillOpacity: 0.6
-               }
-             }
-           };
+          // Mark the field as visible.
+          self.custom_metric_type[existingMetric.id] = true;
+        },
+        cancelAddNewMetricType: function(metric_) {
+          self.custom_metric_type[metric_.id] = false;
+        },
+        addNewMonitoringType: function(existingMonitoring) {
 
-           this.geojson = {};
+          angular.forEach(self.report.properties.monitoring, function(monitoring, index) {
+            if (existingMonitoring.id === monitoring.id) {
+              self.report.properties.metrics[index].properties.metric_type = {
+                "properties": {
+                  "name": "",
+                  "group": "Other",
+                  "source": "Add by user_id " + $rootScope.user.id
+                }
+              }
+            }
+          })
+
+          // Mark the field as visible.
+          self.custom_monitoring_type[existingMonitoring.id] = true;
+        },
+        cancelAddNewMonitoringType: function(monitoring_) {
+          self.custom_monitoring_type[metric_.id] = false;
         }
       }
 
@@ -7592,6 +7554,121 @@ angular.module('FieldDoc')
 
       }
 
+      self.addMetric = function() {
+        var metric = {
+          "geometry": null,
+          "properties": {
+            "metric_type_id": null,
+            "metric_value": 0,
+            "metric_unit_id": null,
+            "metric_description": ""
+          }
+        };
+
+        self.report.properties.metrics.push(metric);
+
+        self.report.$update().then(function(successResponse) {
+          console.log('New reading created successfully');
+
+          self.report = successResponse;
+
+          if (self.report.properties.report_date) {
+              self.today = parseISOLike(self.report.properties.report_date);
+          }
+
+          //
+          // Preprocess the individual Practice Readings before display
+          //
+          if (self.report.properties.readings.length) {
+
+            angular.forEach(self.report.properties.readings, function(reading_, index_) {
+              self.map[reading_.id] = angular.copy(Map);
+              self.map[reading_.id] = self.buildSingleMap(reading_);
+            });
+
+          }
+
+
+          //
+          // Check to see if there is a valid date
+          //
+          self.date = {
+              month: self.months[self.today.getMonth()],
+              date: self.today.getDate(),
+              day: self.days[self.today.getDay()],
+              year: self.today.getFullYear()
+          };
+
+        }, function(errorResponse) {
+          console.log('New reading created successfully');
+        });
+
+      }
+
+      self.addMetric = function() {
+        var monitoring = {
+          "geometry": null,
+          "properties": {
+            "monitoring_type_id": null,
+            "monitoring_value": 0,
+            "was_verified": false,
+            "monitoring_description": ""
+          }
+        };
+
+        self.report.properties.monitoring.push(monitoring);
+
+        self.report.$update().then(function(successResponse) {
+          console.log('New reading created successfully');
+
+          self.report = successResponse;
+
+          if (self.report.properties.report_date) {
+              self.today = parseISOLike(self.report.properties.report_date);
+          }
+
+          //
+          // Preprocess the individual Practice Readings before display
+          //
+          if (self.report.properties.readings.length) {
+
+            angular.forEach(self.report.properties.readings, function(reading_, index_) {
+              self.map[reading_.id] = angular.copy(Map);
+              self.map[reading_.id] = self.buildSingleMap(reading_);
+            });
+
+          }
+
+
+          //
+          // Check to see if there is a valid date
+          //
+          self.date = {
+              month: self.months[self.today.getMonth()],
+              date: self.today.getDate(),
+              day: self.days[self.today.getDay()],
+              year: self.today.getFullYear()
+          };
+
+        }, function(errorResponse) {
+          console.log('New reading created successfully');
+        });
+
+      }
+
+      self.deleteSubPractice = function(reading_id) {
+
+        var readings_ = []
+
+        angular.forEach(self.report.properties.readings, function(reading_, index_) {
+          if (reading_id !== reading_.id) {
+            readings_.push(reading_);
+          }
+        })
+
+        self.report.properties.readings = readings_;
+      };
+
 
       //
       // MAPS
@@ -7601,90 +7678,66 @@ angular.module('FieldDoc')
       // We use this function for handle any type of geographic change, whether
       // through the map or through the fields
       //
-      // self.processPin = function(coordinates, zoom, map_, reading_) {
-      //
-      //   if (coordinates.lat === null || coordinates.lat === undefined || coordinates.lng === null || coordinates.lng === undefined) {
-      //     return;
-      //   }
-      //
-      //   //
-      //   // Move the map pin/marker and recenter the map on the new location
-      //   //
-      //   map_.markers = {
-      //     reportGeometry: {
-      //       lng: coordinates.lng,
-      //       lat: coordinates.lat,
-      //       focus: false,
-      //       draggable: true
-      //     }
-      //   };
-      //
-      //   // //
-      //   // // Update the coordinates for the Report
-      //   // //
-      //   reading_.geometry = {
-      //     type: 'GeometryCollection',
-      //     geometries: []
-      //   };
-      //   reading_.geometry.geometries.push({
-      //     type: 'Point',
-      //     coordinates: [
-      //       coordinates.lng,
-      //       coordinates.lat
-      //     ]
-      //   });
-      //
-      //   //
-      //   // Update the visible pin on the map
-      //   //
-      //
-      //   map_.center = {
-      //     lat: coordinates.lat,
-      //     lng: coordinates.lng,
-      //     zoom: (zoom < 10) ? 10 : zoom
-      //   };
-      //
-      //   self.showGeocoder = false;
-      // };
+      self.processPin = function(coordinates, zoom, map_) {
 
-      //
-      // When the user has selected a response, we need to perform a few extra
-      // tasks so that our scope is updated properly.
-      //
-      // $scope.$watch(angular.bind(this, function() {
-      //   return this.geocode.response;
-      // }), function (response) {
-      //
-      //   //
-      //   // Only execute the following block of code if the user has geocoded an
-      //   // address. This block of code expects this to be a single feature from a
-      //   // Carmen GeoJSON object.
-      //   //
-      //   // @see https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
-      //   //
-      //   if (response) {
-      //
-      //     self.processPin({
-      //       lat: response.geometry.coordinates[1],
-      //       lng: response.geometry.coordinates[0]
-      //     }, 16);
-      //
-      //     self.map[reading_.id].geocode = {
-      //       query: null,
-      //       response: null
-      //     };
-      //   }
-      //
-      // });
+        if (coordinates.lat === null || coordinates.lat === undefined || coordinates.lng === null || coordinates.lng === undefined) {
+          return;
+        }
+
+        //
+        // Move the map pin/marker and recenter the map on the new location
+        //
+        map_.markers = {
+          projectLocation: {
+            lng: coordinates.lng,
+            lat: coordinates.lat,
+            focus: false,
+            draggable: true
+          }
+        };
+
+        //
+        // Update the visible pin on the map
+        //
+        map_.center = {
+          lat: coordinates.lat,
+          lng: coordinates.lng,
+          zoom: (zoom < 10) ? 10 : zoom
+        };
+      };
+
+      self.activateGeocoderForReading = function(reading_id) {
+
+        //
+        // RESET ALL GEOCODERS TO HIDDEN AND EMPTY
+        //
+        angular.forEach(self.map, function(map_, index) {
+
+          var is_matching = reading_id === parseInt(index);
+          console.log('is_matching', is_matching);
+          if (is_matching) {
+            self.map[reading_id].showGeocoder = true;
+          }
+          else {
+            self.map[index].showGeocoder = false;
+            self.map[index].geocode = {};
+          }
+        });
+
+        console.log('self.map', self.map)
+
+        return;
+      };
 
 
       self.buildSingleMap = function(reading_) {
 
         return {
+          showGeocoder: null,
           geocode : {},
           defaults: {
             scrollWheelZoom: false,
-            zoomControl: false,
+            zoomControl: true,
             maxZoom: 19
           },
           layers: {
@@ -7773,23 +7826,53 @@ angular.module('FieldDoc')
 
               var coordinates = response[reading_.id].markers.projectLocation;
 
-              reading_.geometry = {
-                type: 'GeometryCollection',
-                geometries: []
-              };
+              self.processPin({
+                lat: coordinates.lat,
+                lng: coordinates.lng
+              }, 16, response[reading_.id]);
 
-              reading_.geometry.geometries.push({
-                type: 'Point',
-                coordinates: [
-                  coordinates.lng,
-                  coordinates.lat
-                ]
-              });
+              // reading_.geometry = {
+              //   type: 'GeometryCollection',
+              //   geometries: []
+              // };
+              //
+              // reading_.geometry.geometries.push({
+              //   type: 'Point',
+              //   coordinates: [
+              //     coordinates.lng,
+              //     coordinates.lat
+              //   ]
+              // });
 
             });
-          }
 
-          return;
+            angular.forEach(response, function(response_, index) {
+              console.log('response_', index, response_);
+
+              //
+              // Only execute the following block of code if the user has geocoded an
+              // address. This block of code expects this to be a single feature from a
+              // Carmen GeoJSON object.
+              //
+              // @see https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+              //
+              if (response_ && response_.geocode && response_.geocode.response) {
+
+                var r_ = response_.geocode.response;
+
+                self.processPin({
+                  lat: r_.geometry.coordinates[1],
+                  lng: r_.geometry.coordinates[0]
+                }, 16, self.map[index]);
+
+                self.map[index].geocode = {
+                  query: null,
+                  response: null
+                };
+              }
+            });
+
+          }
         }
       }, true);
 
@@ -10036,6 +10119,35 @@ angular
   angular.module('FieldDoc')
     .service('LoadData', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/load-data/:id'), {
+        'id': '@id'
+      }, {
+        'query': {
+          'isArray': false
+        },
+        'update': {
+          'method': 'PATCH',
+          transformRequest: function(data) {
+            var feature = Preprocessors.geojson(data);
+            return angular.toJson(feature);
+          }
+        }
+      });
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .service('MetricType', function (environment, Preprocessors, $resource) {
+      return $resource(environment.apiUrl.concat('/v1/data/metric-type/:id'), {
         'id': '@id'
       }, {
         'query': {
