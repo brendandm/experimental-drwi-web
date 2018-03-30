@@ -7207,6 +7207,9 @@ angular.module('FieldDoc')
           metric_types: function(MetricType, $route) {
             return MetricType.query();
           },
+          monitoring_types: function(MonitoringType, $route) {
+            return MonitoringType.query();
+          },
           unit_types: function(UnitType, $route) {
             return UnitType.query({
               results_per_page: 500
@@ -7228,7 +7231,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('CustomFormController', function (Account, leafletData, $location, Map, mapbox, metric_types, practice, PracticeCustom, practice_types, report, $rootScope, $route, site, $scope, unit_types, user, Utility) {
+    .controller('CustomFormController', function (Account, leafletData, $location, Map, mapbox, metric_types, monitoring_types, practice, PracticeCustom, practice_types, report, $rootScope, $route, site, $scope, unit_types, user, Utility) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -7254,6 +7257,9 @@ angular.module('FieldDoc')
       self.metricType = null;
       self.metricTypes = metric_types;
 
+      self.monitoringType = null;
+      self.monitoringTypes = monitoring_types;
+
       self.project = {
         'id': projectId
       };
@@ -7261,6 +7267,8 @@ angular.module('FieldDoc')
       self.custom_practice_type = [];
 
       self.custom_metric_type = [];
+
+      self.custom_monitoring_type = [];
 
       self.actions = {
         addNewPracticeType: function(existingReading) {
@@ -7303,11 +7311,11 @@ angular.module('FieldDoc')
         cancelAddNewMetricType: function(metric_) {
           self.custom_metric_type[metric_.id] = false;
         },
-        addNewMonitoringType: function(existingMonitoring) {
+        addNewMonitoringCheckType: function(existingMonitoring) {
 
           angular.forEach(self.report.properties.monitoring, function(monitoring, index) {
             if (existingMonitoring.id === monitoring.id) {
-              self.report.properties.metrics[index].properties.metric_type = {
+              self.report.properties.monitoring[index].properties.monitoring_type = {
                 "properties": {
                   "name": "",
                   "group": "Other",
@@ -7320,8 +7328,8 @@ angular.module('FieldDoc')
           // Mark the field as visible.
           self.custom_monitoring_type[existingMonitoring.id] = true;
         },
-        cancelAddNewMonitoringType: function(monitoring_) {
-          self.custom_monitoring_type[metric_.id] = false;
+        cancelAddMonitoringCheckType: function(monitoring_) {
+          self.custom_monitoring_type[monitoring_.id] = false;
         }
       }
 
@@ -7568,44 +7576,14 @@ angular.module('FieldDoc')
         self.report.properties.metrics.push(metric);
 
         self.report.$update().then(function(successResponse) {
-          console.log('New reading created successfully');
-
-          self.report = successResponse;
-
-          if (self.report.properties.report_date) {
-              self.today = parseISOLike(self.report.properties.report_date);
-          }
-
-          //
-          // Preprocess the individual Practice Readings before display
-          //
-          if (self.report.properties.readings.length) {
-
-            angular.forEach(self.report.properties.readings, function(reading_, index_) {
-              self.map[reading_.id] = angular.copy(Map);
-              self.map[reading_.id] = self.buildSingleMap(reading_);
-            });
-
-          }
-
-
-          //
-          // Check to see if there is a valid date
-          //
-          self.date = {
-              month: self.months[self.today.getMonth()],
-              date: self.today.getDate(),
-              day: self.days[self.today.getDay()],
-              year: self.today.getFullYear()
-          };
-
+          console.log('New metric created successfully');
         }, function(errorResponse) {
-          console.log('New reading created successfully');
+          console.log('New metric created successfully');
         });
 
       }
 
-      self.addMonitoring = function() {
+      self.addMonitoringCheck = function() {
         var monitoring = {
           "geometry": null,
           "properties": {
@@ -7619,39 +7597,9 @@ angular.module('FieldDoc')
         self.report.properties.monitoring.push(monitoring);
 
         self.report.$update().then(function(successResponse) {
-          console.log('New reading created successfully');
-
-          self.report = successResponse;
-
-          if (self.report.properties.report_date) {
-              self.today = parseISOLike(self.report.properties.report_date);
-          }
-
-          //
-          // Preprocess the individual Practice Readings before display
-          //
-          if (self.report.properties.readings.length) {
-
-            angular.forEach(self.report.properties.readings, function(reading_, index_) {
-              self.map[reading_.id] = angular.copy(Map);
-              self.map[reading_.id] = self.buildSingleMap(reading_);
-            });
-
-          }
-
-
-          //
-          // Check to see if there is a valid date
-          //
-          self.date = {
-              month: self.months[self.today.getMonth()],
-              date: self.today.getDate(),
-              day: self.days[self.today.getDay()],
-              year: self.today.getFullYear()
-          };
-
+          console.log('New monitoring created successfully');
         }, function(errorResponse) {
-          console.log('New reading created successfully');
+          console.log('New monitoring created successfully');
         });
 
       }
@@ -7667,6 +7615,32 @@ angular.module('FieldDoc')
         })
 
         self.report.properties.readings = readings_;
+      };
+
+      self.deleteMetric = function(metric_id) {
+
+        var metrics_ = []
+
+        angular.forEach(self.report.properties.metrics, function(metric_, index_) {
+          if (metric_id !== metric_.id) {
+            metrics_.push(metric_);
+          }
+        })
+
+        self.report.properties.metrics = metrics_;
+      };
+
+      self.deleteMonitoringCheck = function(monitoring_id) {
+
+        var monitorings_ = []
+
+        angular.forEach(self.report.properties.monitoring, function(monitoring_, index_) {
+          if (monitoring_id !== monitoring_.id) {
+            monitorings_.push(monitoring_);
+          }
+        })
+
+        self.report.properties.monitoring = monitorings_;
       };
 
 
@@ -7998,38 +7972,13 @@ angular.module('FieldDoc')
           }
           else {
 
-            var defaults = angular.copy(self.summary.practice.properties.defaults.properties),
-                readings = [];
-
-            angular.forEach(defaults.readings, function(reading, index) {
-              delete reading.properties.id;
-
-              var r_ = reading.properties;
-
-              //
-              // TODO Need to make sure that we are copying nutrients
-              // and not linking them ...
-              //
-              // TODO Need to copy over geometry
-              //
-
-              // r_['geometry'] = reading.geometry;
-              readings.push(r_);
-            });
-
-            delete defaults.id;
-            delete defaults.account;
-            delete defaults.practice;
-
-            delete defaults.metrics;
-            delete defaults.monitoring;
-            delete defaults.created_by;
-            delete defaults.last_modified_by;
+            var defaults = angular.copy(self.summary.practice.properties.defaults.properties);
 
             defaults.measurement_period = "Installation";
-            defaults.readings = readings;
 
             var newReading = new PracticeCustom(defaults);
+
+            console.log('newReading', newReading);
           }
 
           newReading.$save().then(function(successResponse) {
@@ -10148,6 +10097,35 @@ angular
   angular.module('FieldDoc')
     .service('MetricType', function (environment, Preprocessors, $resource) {
       return $resource(environment.apiUrl.concat('/v1/data/metric-type/:id'), {
+        'id': '@id'
+      }, {
+        'query': {
+          'isArray': false
+        },
+        'update': {
+          'method': 'PATCH',
+          transformRequest: function(data) {
+            var feature = Preprocessors.geojson(data);
+            return angular.toJson(feature);
+          }
+        }
+      });
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .service('MonitoringType', function (environment, Preprocessors, $resource) {
+      return $resource(environment.apiUrl.concat('/v1/data/monitoring-type/:id'), {
         'id': '@id'
       }, {
         'query': {
