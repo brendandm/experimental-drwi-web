@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('CustomFormController', function (Account, leafletData, $location, Map, mapbox, metric_types, practice, PracticeCustom, practice_types, report, $rootScope, $route, site, $scope, unit_types, user, Utility) {
+    .controller('CustomFormController', function (Account, leafletData, $location, Map, mapbox, metric_types, monitoring_types, practice, PracticeCustom, practice_types, report, $rootScope, $route, site, $scope, unit_types, user, Utility) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -34,6 +34,9 @@
       self.metricType = null;
       self.metricTypes = metric_types;
 
+      self.monitoringType = null;
+      self.monitoringTypes = monitoring_types;
+
       self.project = {
         'id': projectId
       };
@@ -41,6 +44,8 @@
       self.custom_practice_type = [];
 
       self.custom_metric_type = [];
+
+      self.custom_monitoring_type = [];
 
       self.actions = {
         addNewPracticeType: function(existingReading) {
@@ -83,11 +88,11 @@
         cancelAddNewMetricType: function(metric_) {
           self.custom_metric_type[metric_.id] = false;
         },
-        addNewMonitoringType: function(existingMonitoring) {
+        addNewMonitoringCheckType: function(existingMonitoring) {
 
           angular.forEach(self.report.properties.monitoring, function(monitoring, index) {
             if (existingMonitoring.id === monitoring.id) {
-              self.report.properties.metrics[index].properties.metric_type = {
+              self.report.properties.monitoring[index].properties.monitoring_type = {
                 "properties": {
                   "name": "",
                   "group": "Other",
@@ -100,8 +105,8 @@
           // Mark the field as visible.
           self.custom_monitoring_type[existingMonitoring.id] = true;
         },
-        cancelAddNewMonitoringType: function(monitoring_) {
-          self.custom_monitoring_type[metric_.id] = false;
+        cancelAddMonitoringCheckType: function(monitoring_) {
+          self.custom_monitoring_type[monitoring_.id] = false;
         }
       }
 
@@ -348,44 +353,14 @@
         self.report.properties.metrics.push(metric);
 
         self.report.$update().then(function(successResponse) {
-          console.log('New reading created successfully');
-
-          self.report = successResponse;
-
-          if (self.report.properties.report_date) {
-              self.today = parseISOLike(self.report.properties.report_date);
-          }
-
-          //
-          // Preprocess the individual Practice Readings before display
-          //
-          if (self.report.properties.readings.length) {
-
-            angular.forEach(self.report.properties.readings, function(reading_, index_) {
-              self.map[reading_.id] = angular.copy(Map);
-              self.map[reading_.id] = self.buildSingleMap(reading_);
-            });
-
-          }
-
-
-          //
-          // Check to see if there is a valid date
-          //
-          self.date = {
-              month: self.months[self.today.getMonth()],
-              date: self.today.getDate(),
-              day: self.days[self.today.getDay()],
-              year: self.today.getFullYear()
-          };
-
+          console.log('New metric created successfully');
         }, function(errorResponse) {
-          console.log('New reading created successfully');
+          console.log('New metric created successfully');
         });
 
       }
 
-      self.addMonitoring = function() {
+      self.addMonitoringCheck = function() {
         var monitoring = {
           "geometry": null,
           "properties": {
@@ -399,39 +374,9 @@
         self.report.properties.monitoring.push(monitoring);
 
         self.report.$update().then(function(successResponse) {
-          console.log('New reading created successfully');
-
-          self.report = successResponse;
-
-          if (self.report.properties.report_date) {
-              self.today = parseISOLike(self.report.properties.report_date);
-          }
-
-          //
-          // Preprocess the individual Practice Readings before display
-          //
-          if (self.report.properties.readings.length) {
-
-            angular.forEach(self.report.properties.readings, function(reading_, index_) {
-              self.map[reading_.id] = angular.copy(Map);
-              self.map[reading_.id] = self.buildSingleMap(reading_);
-            });
-
-          }
-
-
-          //
-          // Check to see if there is a valid date
-          //
-          self.date = {
-              month: self.months[self.today.getMonth()],
-              date: self.today.getDate(),
-              day: self.days[self.today.getDay()],
-              year: self.today.getFullYear()
-          };
-
+          console.log('New monitoring created successfully');
         }, function(errorResponse) {
-          console.log('New reading created successfully');
+          console.log('New monitoring created successfully');
         });
 
       }
@@ -447,6 +392,32 @@
         })
 
         self.report.properties.readings = readings_;
+      };
+
+      self.deleteMetric = function(metric_id) {
+
+        var metrics_ = []
+
+        angular.forEach(self.report.properties.metrics, function(metric_, index_) {
+          if (metric_id !== metric_.id) {
+            metrics_.push(metric_);
+          }
+        })
+
+        self.report.properties.metrics = metrics_;
+      };
+
+      self.deleteMonitoringCheck = function(monitoring_id) {
+
+        var monitorings_ = []
+
+        angular.forEach(self.report.properties.monitoring, function(monitoring_, index_) {
+          if (monitoring_id !== monitoring_.id) {
+            monitorings_.push(monitoring_);
+          }
+        })
+
+        self.report.properties.monitoring = monitorings_;
       };
 
 

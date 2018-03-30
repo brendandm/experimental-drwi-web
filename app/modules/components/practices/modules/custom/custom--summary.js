@@ -115,38 +115,13 @@
           }
           else {
 
-            var defaults = angular.copy(self.summary.practice.properties.defaults.properties),
-                readings = [];
-
-            angular.forEach(defaults.readings, function(reading, index) {
-              delete reading.properties.id;
-
-              var r_ = reading.properties;
-
-              //
-              // TODO Need to make sure that we are copying nutrients
-              // and not linking them ...
-              //
-              // TODO Need to copy over geometry
-              //
-
-              // r_['geometry'] = reading.geometry;
-              readings.push(r_);
-            });
-
-            delete defaults.id;
-            delete defaults.account;
-            delete defaults.practice;
-
-            delete defaults.metrics;
-            delete defaults.monitoring;
-            delete defaults.created_by;
-            delete defaults.last_modified_by;
+            var defaults = angular.copy(self.summary.practice.properties.defaults.properties);
 
             defaults.measurement_period = "Installation";
-            defaults.readings = readings;
 
             var newReading = new PracticeCustom(defaults);
+
+            console.log('newReading', newReading);
           }
 
           newReading.$save().then(function(successResponse) {

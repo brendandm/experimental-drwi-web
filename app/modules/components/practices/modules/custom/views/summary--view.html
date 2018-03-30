@@ -48,17 +48,28 @@
                   <th>% of Planned</th>
                 </tr>
 
-                <tr data-ng-repeat="reading_ in page.summary.readings | orderBy:'properties.report_date':false">
+                <tr>
                   <th>
                     <span data-ng-if="$first">
                       Extent
                     </span>
                   </th>
-                  <th>
-                    {{ reading_.properties.practice_type.properties.name }}
-                  </th>
                   <td>
-                    {{ reading_.properties.practice_extent }} {{ reading_.properties.practice_unit.properties.plural }}
+                    <table>
+                      <tr>
+                        <th data-ng-repeat="reading_ in page.summary.readings | orderBy:'properties.report_date':false">
+                          {{ reading_.properties.practice_type.properties.name }}
+                        </th>
+                        <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                            data-ng-repeat="reading_ in page.summary.readings | orderBy:'properties.report_date':false">
+                          {{ reading_.properties.practice_extent }} {{ reading_.properties.practice_unit.properties.plural }}
+                        </td>
+                        <td data-ng-if="report.properties.measurement_period === 'Installation'"
+                            data-ng-repeat="reading_ in page.summary.readings | orderBy:'properties.report_date':false">
+                          {{ reading_.properties.practice_extent }} {{ reading_.properties.practice_unit.properties.plural }}
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                   <td>
                     <strong>
@@ -176,21 +187,45 @@
                 </tr>
 
                 <tr>
-                  <th colspan="2">Acres of Practice Installed</th>
-                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
-                    {{ report.properties.metrics.acres_of_practice_installed | number:2 }} acres
+                  <th colspan="2">&nbsp;</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="reading_ in page.summary.readings | orderBy:'properties.report_date':false">
+                    {{ report.properties.metrics }}
                   </td>
                   <td>
-                    <strong>
-                      {{ page.summary.practice.properties.quantity_installed.acres_of_practice_installed || 0 | number:2 }}
-                    </strong> acres
+                    <strong>0.00</strong>
                   </td>
                   <td>
-                    <strong>
-                      {{ page.summary.practice.properties.percentage_installed.acres_of_practice_installed || 0 | number:2 }}%
-                    </strong>
+                    <strong>0%</strong>
                   </td>
                 </tr>
+
+                <tr class="no-rule">
+                  <td class="align-left" colspan="{{ page.summary.practice.properties.readings_bank_stabilization + 4 }}">
+                    <h2><strong>Adaptive</strong> Management Checks Performed</h2>
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>&nbsp;</th>
+                  <th data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                      data-ng-repeat="report in page.summary.practice.properties.readings_bank_stabilization | orderBy:'id'">
+                    <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/{{ page.practiceType }}/{{ report.properties.id }}/edit">
+                      Monitored on<br />
+                      {{ report.properties.report_date }}
+                    </a>
+                  </th>
+                </tr>
+
+                <tr data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
+                    data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
+                  <th colspan="2">&nbsp;</th>
+                  <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
+                      data-ng-repeat="reading_ in page.summary.readings | orderBy:'properties.report_date':false">
+                    {{ reading_ }}
+                  </td>
+                </tr>
+
               </tbody>
             </table>
           </div>

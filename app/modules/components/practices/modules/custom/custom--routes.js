@@ -62,6 +62,9 @@ angular.module('FieldDoc')
           metric_types: function(MetricType, $route) {
             return MetricType.query();
           },
+          monitoring_types: function(MonitoringType, $route) {
+            return MonitoringType.query();
+          },
           unit_types: function(UnitType, $route) {
             return UnitType.query({
               results_per_page: 500

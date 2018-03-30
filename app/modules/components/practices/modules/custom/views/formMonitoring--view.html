@@ -1,8 +1,8 @@
 <div class="form-row"
-     data-ng-repeat="reading_ in page.report.properties.monitoring | orderBy:'id':false track by reading_.id">
+     data-ng-repeat="monitoring_ in page.report.properties.monitoring | orderBy:'id':false track by monitoring_.id">
   <div class="form-label">
     <label for="" class="control-label">
-      Custom Metric #{{ $index+1 }}
+      Custom Monitoring Check #{{ $index+1 }}
     </label>
   </div>
   <div class="form-field">
@@ -12,58 +12,87 @@
 
        <!-- Practice -->
        <label for="monitoring_type_id" class="control-label">
-         Metric
+         Monitoring Check
        </label>
 
-       <select data-ng-if="!page.custom_monitoring_type[reading_.id]"
+       <select data-ng-if="!page.custom_monitoring_type[monitoring_.id]"
                class="form-control"
-               data-ng-model="reading_.properties.monitoring_type_id"
+               data-ng-model="monitoring_.properties.monitoring_type_id"
                id="monitoring_type_id" name="monitoring_type_id"
                data-ng-options="value.id as value.properties.name group by value.properties.group for value in page.monitoringTypes.features | orderBy:'properties.name'">
-           <option value="">-- Select a management check --</option>
+           <option value="">-- Select an adaptive management check --</option>
        </select>
 
-       <div data-ng-if="page.custom_monitoring_type[reading_.id]">
+       <div data-ng-if="page.custom_monitoring_type[monitoring_.id]">
          <input class="form-control"
-                data-ng-model="reading_.properties.monitoring_type.properties.name"
+                data-ng-model="monitoring_.properties.monitoring_type.properties.name"
                 id="custom_monitoring_type_name"
                 name="custom_monitoring_type_name"
                 type="text"
                 autofocus  />
 
          <a href="javascript:void(0);"
-            data-ng-click="page.actions.cancelAddNewMetricType(reading_)">
+            data-ng-click="page.actions.cancelAddNewMonitoringCheckType(monitoring_)">
            Cancel
          </a>
        </div>
 
        <p class="help-text">
-         Don't see your management check?
+         Don't see your adaptive management check?
          <a href="javascript:void(0);"
-            data-ng-click="page.actions.addNewMetricType(reading_)">Add a new management check</a>
+            data-ng-click="page.actions.addNewMonitoringCheckType(monitoring_)">Add a new adaptive management check</a>
        </p>
 
 
        <div class="form-element form-element-half">
          <!-- Practice Extent -->
-         <label for="monitoring_value" class="control-label">
-           Monitoring Value
+         <label for="metric_value" class="control-label">
+           Check Performed?
          </label>
 
-         <input class="form-control" data-ng-model="reading_.properties.monitoring_value"
-                id="monitoring_value" name="monitoring_value"
+         <input class="form-control" data-ng-model="monitoring_.properties.was_verified"
+                id="was_verified" name="was_verified"
+                type="checkbox"  />
+
+       </div>
+       <div class="form-element form-element-half">
+         <!-- Practice Extent -->
+         <label for="metric_value" class="control-label">
+           Monitoring Check Value
+         </label>
+
+         <input class="form-control" data-ng-model="monitoring_.properties.metric_value"
+                id="metric_value" name="metric_value"
                 step="0.0001" type="number"  />
 
        </div>
        <div class="form-element form-element-half">
-         <!-- Units -->
-         <label for="was_verified" class="control-label">
-           Verified?
+         <!-- Practice Extent -->
+         <label for="metric_value" class="control-label">
+           Description
          </label>
 
-         <input class="form-control" data-ng-model="reading_.properties.was_verified"
-                id="was_verified" name="was_verified"
-                type="boolean"  />
+         <input class="form-control" data-ng-model="monitoring_.properties.monitoring_description"
+                id="monitoring_description" name="monitoring_description"
+                type="text"  />
+
+       </div>
+
+       <div class="form-element form-element-half">
+         <label for="" class="control-label">
+           &nbsp;
+         </label>
+
+         <button type="button" class="button button-link button-outline pull-right"
+                 data-ng-click="page.confirmMonitoringCheckDelete[monitoring_.id] =! page.confirmMonitoringCheckDelete[monitoring_.id]"
+                 data-ng-if="!page.confirmMonitoringCheckDelete[monitoring_.id]">
+           Remove this metric
+         </button>
+         <span data-ng-if="page.confirmMonitoringCheckDelete[monitoring_.id]" class="action pull-right">
+           <a data-ng-click="page.deleteMonitoringCheck(monitoring_.id)"
+                 class="remove">
+             Yes, I'm sure, delete this metric</a> or <a class="cancel" data-ng-click="page.confirmMonitoringCheckDelete[monitoring_.id] = false;">nevermind</a>
+         </span>
 
        </div>
 
@@ -75,14 +104,14 @@
 <div class="form-row">
   <div class="form-label">
     <label class="control-label">
-      New Custom Management Check
+      New Custom Monitoring Check
     </label>
   </div>
   <div class="form-field">
     <button type="button"
-            data-ng-click="page.addMonitoring()"
+            data-ng-click="page.addMonitoringCheck()"
             class="button button-link button-outline">
-      + Add Another Management Check
+      + Add Another Monitoring Check
     </button>
 
   </div>
