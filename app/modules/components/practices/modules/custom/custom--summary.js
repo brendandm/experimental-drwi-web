@@ -19,7 +19,7 @@
 
       self.practiceType = null;
 
-      self.showData = false;
+      self.showData = true;
 
       self.project = {
         'id': projectId
@@ -35,7 +35,8 @@
         self.summary = successResponse;
 
         //
-        //
+        // Determine if the actions should be shown or hidden depending on
+        // whether of not this practice has planning data
         //
         if (self.summary.practice.properties.has_planning_data) {
           $rootScope.page.hideActions = false;
