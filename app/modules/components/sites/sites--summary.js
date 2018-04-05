@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('SiteSummaryCtrl', function (Account, $location, mapbox, Practice, project, $rootScope, $route, summary, user) {
+    .controller('SiteSummaryCtrl', function (Account, $location, mapbox, Practice, project, $rootScope, $route, summary, user, Utility) {
 
       var self = this;
 
@@ -19,6 +19,10 @@
       self.status = {
         "loading": true
       }
+
+      self.cleanName = function(string_) {
+        return Utility.machineName(string_);
+      };
 
       summary.$promise.then(function(successResponse) {
 

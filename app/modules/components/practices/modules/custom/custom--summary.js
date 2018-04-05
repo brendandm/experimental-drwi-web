@@ -34,7 +34,7 @@
         self.data = successResponse;
         self.summary = successResponse;
 
-        $rootScope.page.title = "Custom Practice";
+        $rootScope.page.title = "Other Conservation Practice";
 
         self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);
 
@@ -52,7 +52,7 @@
               url: '/projects/' + projectId + '/sites/' + siteId
             },
             {
-              text: "Custom Practice",
+              text: "Other Conservation Practice",
               url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId,
               type: 'active'
             }

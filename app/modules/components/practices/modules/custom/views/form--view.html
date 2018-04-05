@@ -129,7 +129,7 @@
              data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
           <div class="form-label">
             <label for="wip_reporting_agency" class="control-label">
-              Unit Area Load Model
+              Methods for calculating nutrient and sediment reductions
             </label>
           </div>
           <div class="form-field">
@@ -138,36 +138,39 @@
 
                <div class="form-element form-element">
                  <label for="custom_model_name" class="control-label">
-                   Name of Custom Unit Area Loads Model
+                   Name of model used to calculate nutrient and sediment reductions
                  </label>
 
                  <input data-ng-model="page.report.properties.custom_model_name"
                         class="form-control" class="form-control" type="text"
                         id="custom_model_name" name="custom_model_name"
-                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'" />
+                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                        placeholder="CAST" />
                </div>
 
                <div class="form-element form-element">
                  <label for="custom_model_description" class="control-label">
-                   Description of Custom Unit Area Loads Model
+                   Description of model used to calculate nutrient and sediment reductions
                  </label>
 
                  <input data-ng-model="page.report.properties.custom_model_description"
                         class="form-control" class="form-control" type="text"
                         id="custom_model_description" name="custom_model_description"
-                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'" />
+                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                        placeholder="Chesapeake Assessment Scenario Tool (CAST) is a web-based nitrogen, phosphorus and sediment load estimator tool that streamlines environmental planning." />
                </div>
 
                <div class="form-element form-element">
                  <label for="custom_model_source" class="control-label">
-                   Source of Custom Unit Area Loads Model
+                   Source of model used to calculate nutrient and sediment reductions
                  </label>
 
                  <input data-ng-model="page.report.properties.custom_model_source"
                         class="form-control" class="form-control" type="text"
                         id="custom_model_source" name="custom_model_source"
                         data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
-                        data-ng-required="page.report.properties.model_type === 'custom'" />
+                        data-ng-required="page.report.properties.model_type === 'custom'"
+                        placeholder="https://cast.chesapeakebay.net" />
 
                  <p class="help-text">
                    If possible, please provide a link to the custom unit area
@@ -221,7 +224,7 @@
              data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
           <div class="form-label">
             <label for="" class="control-label">
-              Custom Practice #{{ $index+1 }}
+              Other Conservation Practice #{{ $index+1 }}
             </label>
           </div>
           <div class="form-field">
@@ -410,7 +413,7 @@
         <div class="form-row">
           <div class="form-label">
             <label class="control-label">
-              New Custom Practice
+              New Other Conservation Practice
             </label>
           </div>
           <div class="form-field">

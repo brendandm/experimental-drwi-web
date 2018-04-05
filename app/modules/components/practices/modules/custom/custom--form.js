@@ -110,7 +110,6 @@
         }
       }
 
-
       //
       // Setup all of our basic date information so that we can use it
       // throughout the page
@@ -199,7 +198,7 @@
                 year: self.today.getFullYear()
             };
 
-            $rootScope.page.title = "Custom Practices";
+            $rootScope.page.title = "Other Conservation Practice";
             $rootScope.page.links = [
                 {
                     text: 'Projects',
@@ -214,7 +213,7 @@
                   url: '/projects/' + projectId + '/sites/' + siteId
                 },
                 {
-                  text: "Custom Practice",
+                  text: "Other Conservation Practice",
                   url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
                 },
                 {
@@ -529,8 +528,6 @@
           return this.report;
         }), function (response) {
           if (response) {
-            console.log('Custom Practice: Nutrients updated in sub-practice.');
-
             var totals = {
               "nitrogen": 0,
               "phosphorus": 0,
@@ -570,8 +567,6 @@
         return this.map;
       }), function (response) {
         if (response) {
-          console.log('Custom Practice: Map updated.');
-
           if (self.report && self.report.properties) {
             angular.forEach(self.report.properties.readings, function(reading_, index_) {
 
@@ -581,19 +576,6 @@
                 lat: coordinates.lat,
                 lng: coordinates.lng
               }, 16, response[reading_.id]);
-
-              // reading_.geometry = {
-              //   type: 'GeometryCollection',
-              //   geometries: []
-              // };
-              //
-              // reading_.geometry.geometries.push({
-              //   type: 'Point',
-              //   coordinates: [
-              //     coordinates.lng,
-              //     coordinates.lat
-              //   ]
-              // });
 
             });
 

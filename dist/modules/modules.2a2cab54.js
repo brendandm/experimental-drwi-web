@@ -7422,7 +7422,7 @@ angular.module('FieldDoc')
                 year: self.today.getFullYear()
             };
 
-            $rootScope.page.title = "Custom Practices";
+            $rootScope.page.title = "Other Conservation Practice";
             $rootScope.page.links = [
                 {
                     text: 'Projects',
@@ -7437,7 +7437,7 @@ angular.module('FieldDoc')
                   url: '/projects/' + projectId + '/sites/' + siteId
                 },
                 {
-                  text: "Custom Practice",
+                  text: "Other Conservation Practice",
                   url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
                 },
                 {
@@ -7752,7 +7752,7 @@ angular.module('FieldDoc')
           return this.report;
         }), function (response) {
           if (response) {
-            console.log('Custom Practice: Nutrients updated in sub-practice.');
+            console.log('Other Conservation Practice: Nutrients updated in sub-practice.');
 
             var totals = {
               "nitrogen": 0,
@@ -7793,7 +7793,7 @@ angular.module('FieldDoc')
         return this.map;
       }), function (response) {
         if (response) {
-          console.log('Custom Practice: Map updated.');
+          console.log('Other Conservation Practice: Map updated.');
 
           if (self.report && self.report.properties) {
             angular.forEach(self.report.properties.readings, function(reading_, index_) {
@@ -7891,7 +7891,7 @@ angular.module('FieldDoc')
         self.data = successResponse;
         self.summary = successResponse;
 
-        $rootScope.page.title = "Custom Practice";
+        $rootScope.page.title = "Other Conservation Practice";
 
         self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);
 
@@ -7909,7 +7909,7 @@ angular.module('FieldDoc')
               url: '/projects/' + projectId + '/sites/' + siteId
             },
             {
-              text: "Custom Practice",
+              text: "Other Conservation Practice",
               url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId,
               type: 'active'
             }
@@ -8038,7 +8038,7 @@ angular.module('FieldDoc')
  * @ngdoc service
  * @name FieldDoc.GeometryService
  * @description
- *   
+ *
  */
 angular.module('FieldDoc')
   .service('commonsGeometry', ['$http', 'commonscloud', 'leafletData', function Navigation($http, commonscloud, leafletData) {
@@ -8215,7 +8215,7 @@ angular.module('FieldDoc')
         }
       },
       center: {
-        lng: -76.534, 
+        lng: -76.534,
         lat: 39.134,
         zoom: 11
       },
@@ -8260,7 +8260,7 @@ angular.module('FieldDoc')
       },
       geojson: {}
     };
-    
+
     return Map;
   }]);
 'use strict';
@@ -11363,13 +11363,13 @@ angular.module('FieldDoc')
     // with structured objects.
     //
     return  function(object) {
-      
+
       var result = [];
 
       angular.forEach(object, function(value) {
         result.push(value);
       });
-      
+
       return result;
     };
 
