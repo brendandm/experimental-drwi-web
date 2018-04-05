@@ -88,7 +88,6 @@
                 data-ng-repeat="practice in page.rollups.nitrogen.practices track by $index">
               <td class="table-column-wide">
                 <p class="metric--title">
-                  Clean Name [{{ page.cleanName(practice.name) }}]
                   <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}/{{ page.cleanName(practice.name) }}">
                     <span data-ng-if="practice.name === 'Custom'">Other Conservation Practice</span>
                     <span data-ng-if="practice.name !== 'Custom'">{{ practice.name }}</span> <span data-ng-if="practice.has_majority_design_completion === false"><90%</span> #{{ $index+1 }}
