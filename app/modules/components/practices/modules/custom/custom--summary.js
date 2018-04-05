@@ -34,6 +34,16 @@
         self.data = successResponse;
         self.summary = successResponse;
 
+        //
+        //
+        //
+        if (self.summary.practice.properties.has_planning_data) {
+          $rootScope.page.hideActions = false;
+        }
+        else {
+          $rootScope.page.hideActions = true;
+        }
+
         $rootScope.page.title = "Other Conservation Practice";
 
         self.practiceType = Utility.machineName(self.summary.practice.properties.practice_type);

@@ -13,7 +13,7 @@ angular.module('FieldDoc')
 
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/custom', {
-        templateUrl: '/modules/components/practices/modules/custom/views/summary--view.html',
+        templateUrl: '/modules/components/practices/modules/custom/views/advancedSummary--view.html',
         controller: 'CustomSummaryController',
         controllerAs: 'page',
         resolve: {
