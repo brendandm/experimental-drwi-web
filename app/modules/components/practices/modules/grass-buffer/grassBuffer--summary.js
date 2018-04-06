@@ -116,6 +116,21 @@
           });
       };
 
+
+      self.addCustomNutrients = function() {
+        self.showNutrientForm = true;
+      }
+
+      self.cancelCustomNutrients = function() {
+        self.showNutrientForm = false;
+      }
+
+      self.saveCustomNutrients = function() {
+        self.showNutrientForm = false;
+        console.log('Save Custom Nutrients');
+        self.showNutrientFormSaved = true;
+      }
+
     });
 
 }());
