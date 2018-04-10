@@ -19,6 +19,10 @@
 
       self.practiceType = null;
 
+      self.showNutrientForm = [];
+      self.showNutrientFormSaved = [];
+
+
       self.project = {
         'id': projectId
       };
@@ -117,18 +121,17 @@
       };
 
 
-      self.addCustomNutrients = function() {
-        self.showNutrientForm = true;
+      self.addCustomNutrients = function(report_id) {
+        self.showNutrientForm[report_id] = true;
       }
 
-      self.cancelCustomNutrients = function() {
-        self.showNutrientForm = false;
+      self.cancelCustomNutrients = function(report_id) {
+        self.showNutrientForm[report_id] = false;
       }
 
-      self.saveCustomNutrients = function() {
-        self.showNutrientForm = false;
-        console.log('Save Custom Nutrients');
-        self.showNutrientFormSaved = true;
+      self.saveCustomNutrients = function(report_id) {
+        self.showNutrientForm[report_id] = false;
+        self.showNutrientFormSaved[report_id] = true;
       }
 
     });
