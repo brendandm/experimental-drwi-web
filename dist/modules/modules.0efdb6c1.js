@@ -1652,7 +1652,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('SiteSummaryCtrl', function (Account, $location, mapbox, Practice, project, $rootScope, $route, summary, user) {
+    .controller('SiteSummaryCtrl', function (Account, $location, mapbox, Practice, project, $rootScope, $route, summary, user, Utility) {
 
       var self = this;
 
@@ -1663,6 +1663,10 @@ angular.module('FieldDoc')
       self.status = {
         "loading": true
       }
+
+      self.cleanName = function(string_) {
+        return Utility.machineName(string_);
+      };
 
       summary.$promise.then(function(successResponse) {
 
@@ -3751,6 +3755,10 @@ angular.module('FieldDoc')
 
       self.practiceType = null;
 
+      self.showNutrientForm = [];
+      self.showNutrientFormSaved = [];
+
+
       self.project = {
         'id': projectId
       };
@@ -3847,6 +3855,20 @@ angular.module('FieldDoc')
             console.error('ERROR: ', errorResponse);
           });
       };
+
+
+      self.addCustomNutrients = function(report_id) {
+        self.showNutrientForm[report_id] = true;
+      }
+
+      self.cancelCustomNutrients = function(report_id) {
+        self.showNutrientForm[report_id] = false;
+      }
+
+      self.saveCustomNutrients = function(report_id) {
+        self.showNutrientForm[report_id] = false;
+        self.showNutrientFormSaved[report_id] = true;
+      }
 
     });
 
@@ -7158,7 +7180,7 @@ angular.module('FieldDoc')
 
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/custom', {
-        templateUrl: '/modules/components/practices/modules/custom/views/summary--view.html',
+        templateUrl: '/modules/components/practices/modules/custom/views/advancedSummary--view.html',
         controller: 'CustomSummaryController',
         controllerAs: 'page',
         resolve: {
@@ -7332,7 +7354,6 @@ angular.module('FieldDoc')
           self.custom_monitoring_type[monitoring_.id] = false;
         }
       }
-
 
       //
       // Setup all of our basic date information so that we can use it
@@ -7752,8 +7773,6 @@ angular.module('FieldDoc')
           return this.report;
         }), function (response) {
           if (response) {
-            console.log('Other Conservation Practice: Nutrients updated in sub-practice.');
-
             var totals = {
               "nitrogen": 0,
               "phosphorus": 0,
@@ -7793,8 +7812,6 @@ angular.module('FieldDoc')
         return this.map;
       }), function (response) {
         if (response) {
-          console.log('Other Conservation Practice: Map updated.');
-
           if (self.report && self.report.properties) {
             angular.forEach(self.report.properties.readings, function(reading_, index_) {
 
@@ -7804,19 +7821,6 @@ angular.module('FieldDoc')
                 lat: coordinates.lat,
                 lng: coordinates.lng
               }, 16, response[reading_.id]);
-
-              // reading_.geometry = {
-              //   type: 'GeometryCollection',
-              //   geometries: []
-              // };
-              //
-              // reading_.geometry.geometries.push({
-              //   type: 'Point',
-              //   coordinates: [
-              //     coordinates.lng,
-              //     coordinates.lat
-              //   ]
-              // });
 
             });
 
@@ -7876,7 +7880,7 @@ angular.module('FieldDoc')
 
       self.practiceType = null;
 
-      self.showData = false;
+      self.showData = true;
 
       self.project = {
         'id': projectId
@@ -7890,6 +7894,17 @@ angular.module('FieldDoc')
 
         self.data = successResponse;
         self.summary = successResponse;
+
+        //
+        // Determine if the actions should be shown or hidden depending on
+        // whether of not this practice has planning data
+        //
+        if (self.summary.practice.properties.has_planning_data) {
+          $rootScope.page.hideActions = false;
+        }
+        else {
+          $rootScope.page.hideActions = true;
+        }
 
         $rootScope.page.title = "Other Conservation Practice";
 
@@ -8038,7 +8053,7 @@ angular.module('FieldDoc')
  * @ngdoc service
  * @name FieldDoc.GeometryService
  * @description
- *
+ *   
  */
 angular.module('FieldDoc')
   .service('commonsGeometry', ['$http', 'commonscloud', 'leafletData', function Navigation($http, commonscloud, leafletData) {
@@ -8215,7 +8230,7 @@ angular.module('FieldDoc')
         }
       },
       center: {
-        lng: -76.534,
+        lng: -76.534, 
         lat: 39.134,
         zoom: 11
       },
@@ -8260,7 +8275,7 @@ angular.module('FieldDoc')
       },
       geojson: {}
     };
-
+    
     return Map;
   }]);
 'use strict';
@@ -11363,13 +11378,13 @@ angular.module('FieldDoc')
     // with structured objects.
     //
     return  function(object) {
-
+      
       var result = [];
 
       angular.forEach(object, function(value) {
         result.push(value);
       });
-
+      
       return result;
     };
 

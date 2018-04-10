@@ -88,8 +88,9 @@
                 data-ng-repeat="practice in page.rollups.nitrogen.practices track by $index">
               <td class="table-column-wide">
                 <p class="metric--title">
-                  <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}/{{ page.site.practices.cleanName(practice.name) }}">
-                    {{ practice.name }} <span data-ng-if="practice.has_majority_design_completion === false"><90%</span> #{{ $index+1 }}
+                  <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}/{{ page.cleanName(practice.name) }}">
+                    <span data-ng-if="practice.name === 'Custom'">Other Conservation Practice</span>
+                    <span data-ng-if="practice.name !== 'Custom'">{{ practice.name }}</span> <span data-ng-if="practice.has_majority_design_completion === false"><90%</span> #{{ $index+1 }}
                   </a>
                 </p>
                 <div class="metric--chart">
@@ -244,7 +245,7 @@
                    data-ng-repeat="practice in page.rollups.nitrogen.practices | orderBy:'name' track by $index">
              <div class="column-16 list-item-content">
               <h1>
-                <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}/{{ page.site.practices.cleanName(practice.name) }}">
+                <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}/{{ page.cleanName(practice.name) }}">
                   {{ practice.name }}
                 </a>
                 <span class="creation-date">
