@@ -752,8 +752,13 @@ a.button-nutrient:visited {
 
 .nutrient--option {
   display: inline-block;
-  width: 48%;
+  margin-right: 8px;
+  width: auto;
   vertical-align: text-top;
+
+  &:last-child {
+    margin-right: 0;
+  }
 }
 
 .nutrient--label {
