@@ -22,10 +22,24 @@
 
       nutrients.addCustomNutrients = function(report_id) {
         nutrients.showNutrientForm[report_id] = true;
+
+        //
+        // RESET ALL MESSAGES TO HIDDEN
+        //
+        nutrients.showNutrientFormSaved[report_id] = false;
+        nutrients.showNutrientFormUpdated[report_id] = false;
+        nutrients.showNutrientFormDeleted[report_id] = false;
       }
 
       nutrients.cancelCustomNutrients = function(report_id) {
         nutrients.showNutrientForm[report_id] = false;
+
+        //
+        // RESET ALL MESSAGES TO HIDDEN
+        //
+        nutrients.showNutrientFormSaved[report_id] = false;
+        nutrients.showNutrientFormUpdated[report_id] = false;
+        nutrients.showNutrientFormDeleted[report_id] = false;
       }
 
       nutrients.saveCustomNutrients = function(report_) {

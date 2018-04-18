@@ -710,3 +710,58 @@
 @include donut-chart('.chart98', 98);
 @include donut-chart('.chart99', 99);
 @include donut-chart('.chart100', 100);
+
+
+//
+//
+//
+.button-nutrient,
+a.button-nutrient,
+a.button-nutrient:active,
+a.button-nutrient:focus,
+a.button-nutrient:hover,
+a.button-nutrient:link,
+a.button-nutrient:visited {
+
+  border: 1px solid $color-blue-bright;
+  color: $color-blue-bright;
+  position: relative;
+
+  &:hover {
+    border: 1px solid darken($color-blue-bright, 3%);
+    background-color: darken($color-blue-bright, 3%);
+    color: $color-white-base;
+    text-decoration: none;
+  }
+
+  &:active {
+    top: 1px;
+  }
+
+  border-radius: 12px;
+  -moz-border-radius: 12px;
+  -webkit-border-radius: 12px;
+
+  padding: 2px 14px;
+}
+
+.nutrient {
+  display: block;
+  width: 100%;
+}
+
+.nutrient--option {
+  display: inline-block;
+  width: 48%;
+  vertical-align: text-top;
+}
+
+.nutrient--label {
+  color: rgb(164,164,164);
+  font-size: 11px;
+}
+
+.nutrient--value {
+  color: rgb(0,0,0);
+  font-size: 12px;
+}
