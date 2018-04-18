@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('GrassBufferSummaryController', function (Account, $location, $log, PracticeGrassBuffer, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
+    .controller('GrassBufferSummaryController', function (Account, $location, $log, Nutrient, PracticeGrassBuffer, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -21,6 +21,8 @@
 
       self.showNutrientForm = [];
       self.showNutrientFormSaved = [];
+      self.showNutrientFormUpdated = [];
+      self.showNutrientFormDeleted = [];
 
 
       self.project = {
@@ -129,10 +131,76 @@
         self.showNutrientForm[report_id] = false;
       }
 
-      self.saveCustomNutrients = function(report_id) {
-        self.showNutrientForm[report_id] = false;
-        self.showNutrientFormSaved[report_id] = true;
-      }
+      self.saveCustomNutrients = function(report_) {
+        self.showNutrientForm[report_.id] = false;
+
+        var newNutrient = new Nutrient({
+          "practice": [
+            {
+              "id": report_.id
+            }
+          ],
+          "nitrogen": report_.properties.custom_nutrient_reductions.nitrogen,
+          "phosphorus": report_.properties.custom_nutrient_reductions.phosphorus,
+          "sediment": report_.properties.custom_nutrient_reductions.sediment
+        });
+
+        newNutrient.$save().then(
+          function(successResponse) {
+            console.log('successResponse', successResponse)
+          },
+          function(errorResponse) {
+            console.log('errorResponse', errorResponse)
+          }
+        );
+
+        self.showNutrientFormSaved[report_.id] = true;
+      };
+
+      self.updateCustomNutrients = function(report_) {
+        self.showNutrientForm[report_.id] = false;
+
+        var existingNutrient = new Nutrient({
+          "nitrogen": report_.properties.custom_nutrient_reductions.nitrogen,
+          "phosphorus": report_.properties.custom_nutrient_reductions.phosphorus,
+          "sediment": report_.properties.custom_nutrient_reductions.sediment
+        });
+
+        existingNutrient.$update({
+          "id": report_.properties.custom_nutrient_reductions.id
+        }).then(
+          function(successResponse) {
+            console.log('successResponse', successResponse)
+          },
+          function(errorResponse) {
+            console.log('errorResponse', errorResponse)
+          }
+        );
+
+        self.showNutrientFormUpdated[report_.id] = true;
+      };
+
+      self.deleteCustomNutrients = function(report_) {
+        self.showNutrientForm[report_.id] = false;
+
+        var nutrient_ = new Nutrient({
+          "id": report_.properties.custom_nutrient_reductions.id
+        });
+
+        nutrient_.$delete({
+          "id": report_.properties.custom_nutrient_reductions.id
+        }).then(
+          function(successResponse) {
+            console.log('successResponse', successResponse);
+            report_.properties.custom_nutrient_reductions = null;
+          },
+          function(errorResponse) {
+            console.log('errorResponse', errorResponse)
+          }
+        );
+
+        self.showNutrientFormDeleted[report_.id] = true;
+      };
 
     });
 

@@ -231,23 +231,38 @@
                   <td>&nbsp;</td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_grass_buffer | orderBy:'id'">
-                      <a data-ng-if="page.showNutrientForm[report.id]" href="javascript:void(0);" class="button-nutrient" data-ng-click="page.saveCustomNutrients(report.id)">
+                      <a data-ng-if="page.showNutrientForm[report.id]" href="javascript:void(0);" class="button-nutrient" data-ng-click="page.saveCustomNutrients(report)">
                         Save
+                      </a>
+                      <a data-ng-if="page.showNutrientForm[report.id]" href="javascript:void(0);" class="button-nutrient" data-ng-click="page.updateCustomNutrients(report)">
+                        Update
+                      </a>
+                      <a data-ng-if="page.showNutrientForm[report.id]" href="javascript:void(0);" class="button-nutrient" data-ng-click="page.deleteCustomNutrients(report)">
+                        Delete
                       </a>
                       <a data-ng-if="page.showNutrientForm[report.id]" href="javascript:void(0);" class="button-nutrient" data-ng-click="page.cancelCustomNutrients(report.id)">
                         Cancel
                       </a>
                       <span data-ng-if="page.showNutrientFormSaved[report.id]">Nutrient Saved!</span>
+                      <span data-ng-if="page.showNutrientFormUpdated[report.id]">Nutrient Updated!</span>
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_grass_buffer | orderBy:'id'">
-                      <a data-ng-if="page.showNutrientForm[report.id]" href="javascript:void(0);" class="button-nutrient" data-ng-click="page.saveCustomNutrients(report.id)">
+                      <a data-ng-if="page.showNutrientForm[report.id]" href="javascript:void(0);" class="button-nutrient" data-ng-click="page.saveCustomNutrients(report)">
                         Save
+                      </a>
+                      <a data-ng-if="page.showNutrientForm[report.id]" href="javascript:void(0);" class="button-nutrient" data-ng-click="page.updateCustomNutrients(report)">
+                        Update
+                      </a>
+                      <a data-ng-if="page.showNutrientForm[report.id]" href="javascript:void(0);" class="button-nutrient" data-ng-click="page.deleteCustomNutrients(report)">
+                        Delete
                       </a>
                       <a data-ng-if="page.showNutrientForm[report.id]" href="javascript:void(0);" class="button-nutrient" data-ng-click="page.cancelCustomNutrients(report.id)">
                         Cancel
                       </a>
                       <span data-ng-if="page.showNutrientFormSaved[report.id]">Nutrient Saved!</span>
+                      <span data-ng-if="page.showNutrientFormUpdated[report.id]">Nutrient Updated!</span>
+                      <span data-ng-if="page.showNutrientFormDeleted[report.id]">Nutrient Deleted!</span>
                   </td>
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
