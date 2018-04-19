@@ -610,7 +610,7 @@ angular.module('FieldDoc')
           responseError: function (response) {
             $log.info('AuthorizationInterceptor::ResponseError', response || $q.when(response));
 
-            if (response.config.url.indexOf('data/user') > -1 || response.status === 403) {
+            if (response.status === 401 || response.status === 403) {
               $location.path('/user/logout');
             }
 
@@ -2633,6 +2633,133 @@ angular.module('FieldDoc')
 
   });
 
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc function
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .service('Nutrients', function ($log, Nutrient) {
+
+      var nutrients = {};
+
+      //
+      // Custom Nutrient Interactions
+      //
+      nutrients.showNutrientForm = [];
+      nutrients.showNutrientFormSaved = [];
+      nutrients.showNutrientFormUpdated = [];
+      nutrients.showNutrientFormDeleted = [];
+
+      nutrients.addCustomNutrients = function(report_id) {
+        nutrients.showNutrientForm[report_id] = true;
+
+        //
+        // RESET ALL MESSAGES TO HIDDEN
+        //
+        nutrients.showNutrientFormSaved[report_id] = false;
+        nutrients.showNutrientFormUpdated[report_id] = false;
+        nutrients.showNutrientFormDeleted[report_id] = false;
+      }
+
+      nutrients.cancelCustomNutrients = function(report_id) {
+        nutrients.showNutrientForm[report_id] = false;
+
+        //
+        // RESET ALL MESSAGES TO HIDDEN
+        //
+        nutrients.showNutrientFormSaved[report_id] = false;
+        nutrients.showNutrientFormUpdated[report_id] = false;
+        nutrients.showNutrientFormDeleted[report_id] = false;
+      }
+
+      nutrients.saveCustomNutrients = function(report_, practice_type) {
+        nutrients.showNutrientForm[report_.id] = false;
+
+        var newNutrient = new Nutrient({
+          "nitrogen": report_.properties.custom_nutrient_reductions.nitrogen,
+          "nitrogen_2": report_.properties.custom_nutrient_reductions.nitrogen_2,
+          "phosphorus": report_.properties.custom_nutrient_reductions.phosphorus,
+          "phosphorus_2": report_.properties.custom_nutrient_reductions.phosphorus_2,
+          "sediment": report_.properties.custom_nutrient_reductions.sediment,
+          "sediment_2": report_.properties.custom_nutrient_reductions.sediment_2
+        });
+
+        newNutrient[practice_type] = [
+          {
+            "id": report_.id
+          }
+        ]
+
+        newNutrient.$save().then(
+          function(successResponse) {
+            $log.log('saveCustomNutrients::successResponse', successResponse)
+            report_.properties.custom_nutrient_reductions.id = successResponse.id;
+          },
+          function(errorResponse) {
+            $log.log('saveCustomNutrients::errorResponse', errorResponse)
+          }
+        );
+
+        nutrients.showNutrientFormSaved[report_.id] = true;
+      };
+
+      nutrients.updateCustomNutrients = function(report_) {
+        nutrients.showNutrientForm[report_.id] = false;
+
+        var existingNutrient = new Nutrient({
+          "nitrogen": report_.properties.custom_nutrient_reductions.nitrogen,
+          "nitrogen_2": report_.properties.custom_nutrient_reductions.nitrogen_2,
+          "phosphorus": report_.properties.custom_nutrient_reductions.phosphorus,
+          "phosphorus_2": report_.properties.custom_nutrient_reductions.phosphorus_2,
+          "sediment": report_.properties.custom_nutrient_reductions.sediment,
+          "sediment_2": report_.properties.custom_nutrient_reductions.sediment_2
+        });
+
+        existingNutrient.$update({
+          "id": report_.properties.custom_nutrient_reductions.id
+        }).then(
+          function(successResponse) {
+            $log.log('updateCustomNutrients::successResponse', successResponse)
+          },
+          function(errorResponse) {
+            $log.log('updateCustomNutrients::errorResponse', errorResponse)
+          }
+        );
+
+        nutrients.showNutrientFormUpdated[report_.id] = true;
+      };
+
+      nutrients.deleteCustomNutrients = function(report_) {
+        nutrients.showNutrientForm[report_.id] = false;
+
+        var tmp = new Nutrient({
+          "id": report_.properties.custom_nutrient_reductions.id
+        });
+
+        tmp.$delete().then(
+          function(successResponse) {
+            $log.log('deleteCustomNutrients::successResponse', successResponse);
+            report_.properties.custom_nutrient_reductions = null;
+          },
+          function(errorResponse) {
+            $log.log('deleteCustomNutrients::errorResponse', errorResponse)
+          }
+        );
+
+        nutrients.showNutrientFormDeleted[report_.id] = true;
+      };
+
+      return nutrients;
+
+    });
+
+}());
+
 'use strict';
 
 /**
@@ -2901,7 +3028,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('AgricultureGenericSummaryController', function (Account, $location, $log, PracticeAgricultureGeneric, $rootScope, $route, $scope, summary, Utility, user, $window) {
+    .controller('AgricultureGenericSummaryController', function (Account, $location, $log, Nutrients, PracticeAgricultureGeneric, $rootScope, $route, $scope, summary, Utility, user, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -2909,6 +3036,8 @@ angular.module('FieldDoc')
           practiceId = $route.current.params.practiceId;
 
       $rootScope.page = {};
+
+      self.nutrients = Nutrients;
 
       self.practiceType = null;
 
@@ -3335,7 +3464,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('ForestBufferSummaryController', function (Account, $location, $log, PracticeForestBuffer, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
+    .controller('ForestBufferSummaryController', function (Account, $location, $log, Nutrients, PracticeForestBuffer, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -3343,6 +3472,8 @@ angular.module('FieldDoc')
           practiceId = $route.current.params.practiceId;
 
       $rootScope.page = {};
+
+      self.nutrients = Nutrients;
 
       self.practiceType = null;
 
@@ -3744,7 +3875,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('GrassBufferSummaryController', function (Account, $location, $log, PracticeGrassBuffer, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
+    .controller('GrassBufferSummaryController', function (Account, $location, $log, Nutrients, PracticeGrassBuffer, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -3753,11 +3884,9 @@ angular.module('FieldDoc')
 
       $rootScope.page = {};
 
+      self.nutrients = Nutrients;
+
       self.practiceType = null;
-
-      self.showNutrientForm = [];
-      self.showNutrientFormSaved = [];
-
 
       self.project = {
         'id': projectId
@@ -3855,20 +3984,6 @@ angular.module('FieldDoc')
             console.error('ERROR: ', errorResponse);
           });
       };
-
-
-      self.addCustomNutrients = function(report_id) {
-        self.showNutrientForm[report_id] = true;
-      }
-
-      self.cancelCustomNutrients = function(report_id) {
-        self.showNutrientForm[report_id] = false;
-      }
-
-      self.saveCustomNutrients = function(report_id) {
-        self.showNutrientForm[report_id] = false;
-        self.showNutrientFormSaved[report_id] = true;
-      }
 
     });
 
@@ -4074,7 +4189,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('LivestockExclusionSummaryController', function (Account, $location, PracticeLivestockExclusion, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
+    .controller('LivestockExclusionSummaryController', function (Account, $location, Nutrients, PracticeLivestockExclusion, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -4082,6 +4197,8 @@ angular.module('FieldDoc')
           practiceId = $route.current.params.practiceId;
 
       $rootScope.page = {};
+
+      self.nutrients = Nutrients;
 
       self.practiceType = null;
 
@@ -4374,7 +4491,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('UrbanHomeownerSummaryController', function (Account, $location, $log, PracticeUrbanHomeowner, $rootScope, $route, $scope, summary, Utility, user, $window) {
+    .controller('UrbanHomeownerSummaryController', function (Account, $location, $log, Nutrients, PracticeUrbanHomeowner, $rootScope, $route, $scope, summary, Utility, user, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -4382,6 +4499,8 @@ angular.module('FieldDoc')
           practiceId = $route.current.params.practiceId;
 
       $rootScope.page = {};
+
+      self.nutrients = Nutrients;
 
       self.practiceType = null;
 
@@ -4676,7 +4795,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('BioretentionSummaryController', function (Account, $location, $log, PracticeBioretention, $rootScope, $route, $scope, summary, Utility, user, $window) {
+    .controller('BioretentionSummaryController', function (Account, $location, $log, Nutrients, PracticeBioretention, $rootScope, $route, $scope, summary, Utility, user, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -4684,6 +4803,8 @@ angular.module('FieldDoc')
           practiceId = $route.current.params.practiceId;
 
       $rootScope.page = {};
+
+      self.nutrients = Nutrients;
 
       self.practiceType = null;
 
@@ -5296,7 +5417,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('BankStabilizationSummaryController', function (Account, $location, $log, PracticeBankStabilization, $rootScope, $route, $scope, summary, Utility, user, $window) {
+    .controller('BankStabilizationSummaryController', function (Account, $location, $log, Nutrients, PracticeBankStabilization, $rootScope, $route, $scope, summary, Utility, user, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -5304,6 +5425,8 @@ angular.module('FieldDoc')
           practiceId = $route.current.params.practiceId;
 
       $rootScope.page = {};
+
+      self.nutrients = Nutrients;
 
       self.practiceType = null;
 
@@ -5615,7 +5738,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('EnhancedStreamRestorationSummaryController', function (Account, $location, Practice, PracticeEnhancedStreamRestoration, $rootScope, $route, $scope, summary, user, Utility, $window) {
+    .controller('EnhancedStreamRestorationSummaryController', function (Account, $location, Nutrients, Practice, PracticeEnhancedStreamRestoration, $rootScope, $route, $scope, summary, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -5623,6 +5746,8 @@ angular.module('FieldDoc')
           practiceId = $route.current.params.practiceId;
 
       $rootScope.page = {};
+
+      self.nutrients = Nutrients;
 
       self.practiceType = null;
 
@@ -6123,7 +6248,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('WetlandsNonTidalSummaryController', function (Account, $location, $log, PracticeWetlandsNonTidal, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
+    .controller('WetlandsNonTidalSummaryController', function (Account, $location, $log, Nutrients, PracticeWetlandsNonTidal, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -6131,6 +6256,8 @@ angular.module('FieldDoc')
           practiceId = $route.current.params.practiceId;
 
       $rootScope.page = {};
+
+      self.nutrients = Nutrients;
 
       self.practiceType = null;
 
@@ -6630,7 +6757,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('ShorelineManagementSummaryController', function (Account, $location, $log, PracticeShorelineManagement, $rootScope, $route, $scope, summary, Utility, user, $window) {
+    .controller('ShorelineManagementSummaryController', function (Account, $location, $log, Nutrients, PracticeShorelineManagement, $rootScope, $route, $scope, summary, Utility, user, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -6638,6 +6765,8 @@ angular.module('FieldDoc')
           practiceId = $route.current.params.practiceId;
 
       $rootScope.page = {};
+
+      self.nutrients = Nutrients;
 
       self.practiceType = null;
 
@@ -7035,7 +7164,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('StormwaterSummaryController', function (Account, $location, $log, PracticeStormwater, $rootScope, $route, $scope, summary, Utility, user, $window) {
+    .controller('StormwaterSummaryController', function (Account, $location, $log, Nutrients, PracticeStormwater, $rootScope, $route, $scope, summary, Utility, user, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -7043,6 +7172,8 @@ angular.module('FieldDoc')
           practiceId = $route.current.params.practiceId;
 
       $rootScope.page = {};
+
+      self.nutrients = Nutrients;
 
       self.practiceType = null;
 
@@ -10152,6 +10283,31 @@ angular
             var feature = Preprocessors.geojson(data);
             return angular.toJson(feature);
           }
+        }
+      });
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .service('Nutrient', function (environment, Preprocessors, $resource) {
+      return $resource(environment.apiUrl.concat('/v1/data/nutrient/:id'), {
+        'id': '@id'
+      }, {
+        'query': {
+          'isArray': false
+        },
+        'update': {
+          'method': 'PATCH'
         }
       });
     });
