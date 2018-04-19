@@ -47,8 +47,11 @@
 
         var newNutrient = new Nutrient({
           "nitrogen": report_.properties.custom_nutrient_reductions.nitrogen,
+          "nitrogen_2": report_.properties.custom_nutrient_reductions.nitrogen_2,
           "phosphorus": report_.properties.custom_nutrient_reductions.phosphorus,
-          "sediment": report_.properties.custom_nutrient_reductions.sediment
+          "phosphorus_2": report_.properties.custom_nutrient_reductions.phosphorus_2,
+          "sediment": report_.properties.custom_nutrient_reductions.sediment,
+          "sediment_2": report_.properties.custom_nutrient_reductions.sediment_2
         });
 
         newNutrient[practice_type] = [
@@ -75,8 +78,11 @@
 
         var existingNutrient = new Nutrient({
           "nitrogen": report_.properties.custom_nutrient_reductions.nitrogen,
+          "nitrogen_2": report_.properties.custom_nutrient_reductions.nitrogen_2,
           "phosphorus": report_.properties.custom_nutrient_reductions.phosphorus,
-          "sediment": report_.properties.custom_nutrient_reductions.sediment
+          "phosphorus_2": report_.properties.custom_nutrient_reductions.phosphorus_2,
+          "sediment": report_.properties.custom_nutrient_reductions.sediment,
+          "sediment_2": report_.properties.custom_nutrient_reductions.sediment_2
         });
 
         existingNutrient.$update({
