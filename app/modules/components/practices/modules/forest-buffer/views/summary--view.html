@@ -119,7 +119,14 @@
                   <th>Nitrogen (lbs/yr)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
-                      {{ report.properties.preinstallation.nitrogen | number:2 }}
+                      <div class="nutrient">
+                        <div class="nutrient--option">
+                          <span class="nutrient--label">Phase 5.3.2</span><br />
+                          <span class="nutrient--value">
+                            {{ report.properties.preinstallation.nitrogen | number:2 }}
+                          </span>
+                        </div>
+                      </div>
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
@@ -182,7 +189,14 @@
                   <th>Phosphorus (lbs/yr)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
-                      {{ report.properties.preinstallation.phosphorus | number:2 }}
+                      <div class="nutrient">
+                        <div class="nutrient--option">
+                          <span class="nutrient--label">Phase 5.3.2</span><br />
+                          <span class="nutrient--value">
+                            {{ report.properties.preinstallation.phosphorus | number:2 }}
+                          </span>
+                        </div>
+                      </div>
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
@@ -249,15 +263,60 @@
                   <th>Sediment (tons/yr)</th>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
-                      {{ report.properties.preinstallation.sediment | number:2 }}
+                      <div class="nutrient">
+                        <div class="nutrient--option">
+                          <span class="nutrient--label">Phase 5.3.2</span><br />
+                          <span class="nutrient--value">
+                            {{ report.properties.preinstallation.sediment | number:2 }}
+                          </span>
+                        </div>
+                      </div>
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
-                      {{ report.properties.planning.sediment | number:2 }}
+                      <div class="nutrient">
+                        <div class="nutrient--option">
+                          <span class="nutrient--label">Phase 5.3.2</span><br />
+                          <span class="nutrient--value">{{ report.properties.planning.sediment | number:2 }}</span>
+                        </div>
+                        <div class="nutrient--option"
+                             data-ng-if="report.properties.custom_nutrient_reductions && !page.nutrients.showNutrientForm[report.id]">
+                           <span class="nutrient--label">Custom</span><br />
+                           <span class="nutrient--value"
+                                 data-ng-if="!page.nutrients.showNutrientForm[report.id]">
+                              {{ report.properties.custom_nutrient_reductions.nitrogen | number:2 }}
+                           </span>
+                        </div>
+                        <div class="nutrient--option"
+                            data-ng-if="page.nutrients.showNutrientForm[report.id]">
+                            <span class="nutrient--label">Custom</span><br />
+                           <input class="form-control nutrient--input"
+                                  type="number" data-ng-model="report.properties.custom_nutrient_reductions.nitrogen" />
+                        </div>
+                      </div>
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_forest_buffer | orderBy:'id'">
-                      {{ report.properties.installation.sediment | number:2 }}
+                      <div class="nutrient">
+                        <div class="nutrient--option">
+                          <span class="nutrient--label">Phase 5.3.2</span><br />
+                          <span class="nutrient--value">{{ report.properties.installation.sediment | number:2 }}</span>
+                        </div>
+                        <div class="nutrient--option"
+                             data-ng-if="report.properties.custom_nutrient_reductions && !page.nutrients.showNutrientForm[report.id]">
+                           <span class="nutrient--label">Custom</span><br />
+                           <span class="nutrient--value"
+                                 data-ng-if="!page.nutrients.showNutrientForm[report.id]">
+                              {{ report.properties.custom_nutrient_reductions.nitrogen | number:2 }}
+                           </span>
+                        </div>
+                        <div class="nutrient--option"
+                            data-ng-if="page.nutrients.showNutrientForm[report.id]">
+                            <span class="nutrient--label">Custom</span><br />
+                           <input class="form-control nutrient--input"
+                                  type="number" data-ng-model="report.properties.custom_nutrient_reductions.nitrogen" />
+                        </div>
+                      </div>
                   </td>
                   <td>
                     <strong>

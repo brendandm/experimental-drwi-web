@@ -243,7 +243,14 @@
                 <th>Nitrogen (lbs/yr)</th>
                 <td data-ng-if="report.properties.measurement_period === 'Planning'"
                     data-ng-repeat="report in page.summary.practice.properties.readings_urban_homeowner | orderBy:'id'">
-                  {{ report.properties.preinstallation.nitrogen | number:2 }}
+                    <div class="nutrient">
+                      <div class="nutrient--option">
+                        <span class="nutrient--label">Phase 5.3.2</span><br />
+                        <span class="nutrient--value">
+                          {{ report.properties.preinstallation.nitrogen | number:2 }}
+                        </span>
+                      </div>
+                    </div>
                 </td>
                 <td data-ng-if="report.properties.measurement_period === 'Planning'"
                     data-ng-repeat="report in page.summary.practice.properties.readings_urban_homeowner | orderBy:'id'">
@@ -306,7 +313,14 @@
                 <th>Phosphorus (lbs/yr)</th>
                 <td data-ng-if="report.properties.measurement_period === 'Planning'"
                     data-ng-repeat="report in page.summary.practice.properties.readings_urban_homeowner | orderBy:'id'">
-                    {{ report.properties.preinstallation.phosphorus | number:2 }}
+                    <div class="nutrient">
+                      <div class="nutrient--option">
+                        <span class="nutrient--label">Phase 5.3.2</span><br />
+                        <span class="nutrient--value">
+                          {{ report.properties.preinstallation.phosphorus | number:2 }}
+                        </span>
+                      </div>
+                    </div>
                 </td>
                 <td data-ng-if="report.properties.measurement_period === 'Planning'"
                     data-ng-repeat="report in page.summary.practice.properties.readings_urban_homeowner | orderBy:'id'">
