@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('StormwaterSummaryController', function (Account, $location, $log, PracticeStormwater, $rootScope, $route, $scope, summary, Utility, user, $window) {
+    .controller('StormwaterSummaryController', function (Account, $location, $log, Nutrients, PracticeStormwater, $rootScope, $route, $scope, summary, Utility, user, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -16,6 +16,8 @@
           practiceId = $route.current.params.practiceId;
 
       $rootScope.page = {};
+
+      self.nutrients = Nutrients;
 
       self.practiceType = null;
 
