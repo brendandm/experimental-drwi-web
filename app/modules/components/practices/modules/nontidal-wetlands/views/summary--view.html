@@ -111,11 +111,49 @@
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
-                      {{ report.properties.planning.nitrogen | number:2 }}
+                      <div class="nutrient">
+                        <div class="nutrient--option">
+                          <span class="nutrient--label">Phase 5.3.2</span><br />
+                          <span class="nutrient--value">{{ report.properties.planning.nitrogen | number:2 }}</span>
+                        </div>
+                        <div class="nutrient--option"
+                             data-ng-if="report.properties.custom_nutrient_reductions && !page.nutrients.showNutrientForm[report.id]">
+                           <span class="nutrient--label">Custom</span><br />
+                           <span class="nutrient--value"
+                                 data-ng-if="!page.nutrients.showNutrientForm[report.id]">
+                              {{ report.properties.custom_nutrient_reductions.nitrogen | number:2 }}
+                           </span>
+                        </div>
+                        <div class="nutrient--option"
+                            data-ng-if="page.nutrients.showNutrientForm[report.id]">
+                            <span class="nutrient--label">Custom</span><br />
+                           <input class="form-control nutrient--input"
+                                  type="number" data-ng-model="report.properties.custom_nutrient_reductions.nitrogen" />
+                        </div>
+                      </div>
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
-                      {{ report.properties.installation.nitrogen | number:2 }}
+                      <div class="nutrient">
+                        <div class="nutrient--option">
+                          <span class="nutrient--label">Phase 5.3.2</span><br />
+                          <span class="nutrient--value">{{ report.properties.installation.nitrogen | number:2 }}</span>
+                        </div>
+                        <div class="nutrient--option"
+                             data-ng-if="report.properties.custom_nutrient_reductions && !page.nutrients.showNutrientForm[report.id]">
+                           <span class="nutrient--label">Custom</span><br />
+                           <span class="nutrient--value"
+                                 data-ng-if="!page.nutrients.showNutrientForm[report.id]">
+                              {{ report.properties.custom_nutrient_reductions.nitrogen | number:2 }}
+                           </span>
+                        </div>
+                        <div class="nutrient--option"
+                            data-ng-if="page.nutrients.showNutrientForm[report.id]">
+                            <span class="nutrient--label">Custom</span><br />
+                           <input class="form-control nutrient--input"
+                                  type="number" data-ng-model="report.properties.custom_nutrient_reductions.nitrogen" />
+                        </div>
+                      </div>
                   </td>
                   <td>
                     <strong>
@@ -136,11 +174,53 @@
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
-                      {{ report.properties.planning.phosphorus | number:2 }}
+                      <div class="nutrient">
+                        <div class="nutrient--option">
+                          <span class="nutrient--label">Phase 5.3.2</span><br />
+                          <span class="nutrient--value">
+                            {{ report.properties.planning.phosphorus | number:2 }}
+                          </span>
+                        </div>
+                        <div class="nutrient--option"
+                             data-ng-if="report.properties.custom_nutrient_reductions && !page.nutrients.showNutrientForm[report.id]">
+                           <span class="nutrient--label">Custom</span><br />
+                           <span class="nutrient--value"
+                                 data-ng-if="!page.nutrients.showNutrientForm[report.id]">
+                              {{ report.properties.custom_nutrient_reductions.phosphorus | number:2 }}
+                           </span>
+                        </div>
+                        <div class="nutrient--option"
+                            data-ng-if="page.nutrients.showNutrientForm[report.id]">
+                            <span class="nutrient--label">Custom</span><br />
+                           <input class="form-control nutrient--input"
+                                  type="number" data-ng-model="report.properties.custom_nutrient_reductions.phosphorus" />
+                        </div>
+                      </div>
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
-                      {{ report.properties.installation.phosphorus | number:2 }}
+                      <div class="nutrient">
+                        <div class="nutrient--option">
+                          <span class="nutrient--label">Phase 5.3.2</span><br />
+                          <span class="nutrient--value">
+                            {{ report.properties.installation.phosphorus | number:2 }}
+                          </span>
+                        </div>
+                        <div class="nutrient--option"
+                             data-ng-if="report.properties.custom_nutrient_reductions && !page.nutrients.showNutrientForm[report.id]">
+                           <span class="nutrient--label">Custom</span><br />
+                           <span class="nutrient--value"
+                                 data-ng-if="!page.nutrients.showNutrientForm[report.id]">
+                              {{ report.properties.custom_nutrient_reductions.phosphorus | number:2 }}
+                           </span>
+                        </div>
+                        <div class="nutrient--option"
+                            data-ng-if="page.nutrients.showNutrientForm[report.id]">
+                            <span class="nutrient--label">Custom</span><br />
+                           <input class="form-control nutrient--input"
+                                  type="number" data-ng-model="report.properties.custom_nutrient_reductions.phosphorus" />
+                        </div>
+                      </div>
                   </td>
                   <td>
                     <strong>
@@ -161,11 +241,53 @@
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Planning'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
-                      {{ report.properties.planning.sediment | number:2 }}
+                      <div class="nutrient">
+                        <div class="nutrient--option">
+                          <span class="nutrient--label">Phase 5.3.2</span><br />
+                          <span class="nutrient--value">
+                            {{ report.properties.planning.sediment | number:2 }}
+                          </span>
+                        </div>
+                        <div class="nutrient--option"
+                             data-ng-if="report.properties.custom_nutrient_reductions && !page.nutrients.showNutrientForm[report.id]">
+                           <span class="nutrient--label">Custom</span><br />
+                           <span class="nutrient--value"
+                                 data-ng-if="!page.nutrients.showNutrientForm[report.id]">
+                              {{ report.properties.custom_nutrient_reductions.sediment | number:2 }}
+                           </span>
+                        </div>
+                        <div class="nutrient--option"
+                            data-ng-if="page.nutrients.showNutrientForm[report.id]">
+                            <span class="nutrient--label">Custom</span><br />
+                           <input class="form-control nutrient--input"
+                                  type="number" data-ng-model="report.properties.custom_nutrient_reductions.sediment" />
+                        </div>
+                      </div>
                   </td>
                   <td data-ng-if="report.properties.measurement_period === 'Installation'"
                       data-ng-repeat="report in page.summary.practice.properties.readings_wetlands_nontidal | orderBy:'id'">
-                      {{ report.properties.installation.sediment | number:2 }}
+                      <div class="nutrient">
+                        <div class="nutrient--option">
+                          <span class="nutrient--label">Phase 5.3.2</span><br />
+                          <span class="nutrient--value">
+                            {{ report.properties.installation.sediment | number:2 }}
+                          </span>
+                        </div>
+                        <div class="nutrient--option"
+                             data-ng-if="report.properties.custom_nutrient_reductions && !page.nutrients.showNutrientForm[report.id]">
+                           <span class="nutrient--label">Custom</span><br />
+                           <span class="nutrient--value"
+                                 data-ng-if="!page.nutrients.showNutrientForm[report.id]">
+                              {{ report.properties.custom_nutrient_reductions.sediment | number:2 }}
+                           </span>
+                        </div>
+                        <div class="nutrient--option"
+                            data-ng-if="page.nutrients.showNutrientForm[report.id]">
+                            <span class="nutrient--label">Custom</span><br />
+                           <input class="form-control nutrient--input"
+                                  type="number" data-ng-model="report.properties.custom_nutrient_reductions.sediment" />
+                        </div>
+                      </div>
                   </td>
                   <td>
                     <strong>
@@ -202,7 +324,7 @@
                           Discard</a>
                         <a data-ng-if="!report.properties.custom_nutrient_reductions.id"
                            class="button-nutrient-save"
-                           href="javascript:void(0);" data-ng-click="page.nutrients.saveCustomNutrients(report)">
+                           href="javascript:void(0);" data-ng-click="page.nutrients.saveCustomNutrients(report, 'nutrients_wetlands_nontidal')">
                           Save
                         </a>
                         <a data-ng-if="report.properties.custom_nutrient_reductions.id"
@@ -235,7 +357,7 @@
                           Discard</a>
                         <a data-ng-if="!report.properties.custom_nutrient_reductions.id"
                            class="button-nutrient-save"
-                           href="javascript:void(0);" data-ng-click="page.nutrients.saveCustomNutrients(report)">
+                           href="javascript:void(0);" data-ng-click="page.nutrients.saveCustomNutrients(report, 'nutrients_wetlands_nontidal')">
                           Save
                         </a>
                         <a data-ng-if="report.properties.custom_nutrient_reductions.id"

@@ -42,19 +42,20 @@
         nutrients.showNutrientFormDeleted[report_id] = false;
       }
 
-      nutrients.saveCustomNutrients = function(report_) {
+      nutrients.saveCustomNutrients = function(report_, practice_type) {
         nutrients.showNutrientForm[report_.id] = false;
 
         var newNutrient = new Nutrient({
-          "practice": [
-            {
-              "id": report_.id
-            }
-          ],
           "nitrogen": report_.properties.custom_nutrient_reductions.nitrogen,
           "phosphorus": report_.properties.custom_nutrient_reductions.phosphorus,
           "sediment": report_.properties.custom_nutrient_reductions.sediment
         });
+
+        newNutrient[practice_type] = [
+          {
+            "id": report_.id
+          }
+        ]
 
         newNutrient.$save().then(
           function(successResponse) {
@@ -95,13 +96,11 @@
       nutrients.deleteCustomNutrients = function(report_) {
         nutrients.showNutrientForm[report_.id] = false;
 
-        var nutrient_ = new Nutrient({
+        var tmp = new Nutrient({
           "id": report_.properties.custom_nutrient_reductions.id
         });
 
-        nutrient_.$delete({
-          "id": report_.properties.custom_nutrient_reductions.id
-        }).then(
+        tmp.$delete().then(
           function(successResponse) {
             $log.log('deleteCustomNutrients::successResponse', successResponse);
             report_.properties.custom_nutrient_reductions = null;
