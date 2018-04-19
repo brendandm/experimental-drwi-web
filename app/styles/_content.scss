@@ -745,6 +745,86 @@ a.button-nutrient:visited {
   padding: 2px 14px;
 }
 
+.button-nutrient-save,
+a.button-nutrient-save,
+a.button-nutrient-save:active,
+a.button-nutrient-save:focus,
+a.button-nutrient-save:hover,
+a.button-nutrient-save:link,
+a.button-nutrient-save:visited {
+
+  background-color: darken($color-green-base, 3%);
+  color: $color-white-base;
+  position: relative;
+
+  &:hover {
+    background-color: darken($color-green-base, 15%);
+    color: $color-white-base;
+    text-decoration: none;
+  }
+
+  &:active {
+    top: 1px;
+  }
+
+  border-radius: 12px;
+  -moz-border-radius: 12px;
+  -webkit-border-radius: 12px;
+
+  padding: 2px 14px;
+}
+
+.button-nutrient-cancel,
+a.button-nutrient-cancel,
+a.button-nutrient-cancel:active,
+a.button-nutrient-cancel:focus,
+a.button-nutrient-cancel:hover,
+a.button-nutrient-cancel:link,
+a.button-nutrient-cancel:visited {
+  border: none;
+  color: rgb(64,64,64);
+  font-size: 10px;
+  text-decoration: none;
+  text-transform: uppercase;
+  position: relative;
+
+  &:hover {
+    color: rgb(0,0,0);
+    text-decoration: underline;
+  }
+
+  &:active {
+    top: 1px;
+  }
+
+  padding: 2px 4px;
+}
+
+.button-nutrient-delete,
+a.button-nutrient-delete,
+a.button-nutrient-delete:active,
+a.button-nutrient-delete:focus,
+a.button-nutrient-delete:hover,
+a.button-nutrient-delete:link,
+a.button-nutrient-delete:visited {
+  border: none;
+  color: $color-red-base;
+  font-size: 10px;
+  text-decoration: none;
+  text-transform: uppercase;
+  position: relative;
+
+  &:hover {
+    color: darken($color-red-base, 15%);
+    text-decoration: underline;
+  }
+
+  &:active {
+    top: 1px;
+  }
+
+  padding: 2px 4px;
+}
 .nutrient {
   display: block;
   width: 100%;
@@ -769,4 +849,10 @@ a.button-nutrient:visited {
 .nutrient--value {
   color: rgb(0,0,0);
   font-size: 12px;
+}
+
+.nutrient--input,
+.form-control.nutrient--input,
+input.form-control.nutrient--input {
+  width: 64px;
 }
