@@ -551,12 +551,11 @@
             <div class="form-element form-element-half">
               <!-- Practice Extent -->
               <label for="monitoring_value" class="control-label">
-                Check Performed?
+                Check Performed? {{ monitoring_.properties.was_verified }}
               </label>
 
-              <input class="form-control" data-ng-model="monitoring_.properties.was_verified"
-                     id="was_verified" name="was_verified"
-                     type="checkbox"  />
+              <input type="checkbox" class="form-control"
+                     data-ng-model="monitoring_.properties.was_verified" />
 
             </div>
 

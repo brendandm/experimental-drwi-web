@@ -393,6 +393,144 @@
                     </table>
                 </td>
               </tr>
+
+              <tr class="no-rule">
+                <td class="align-left"
+                    colspan="{{ page.summary.practice.properties.readings_custom.length + 5 }}">
+                  <h2><strong>Metric</strong> Summary</h2>
+                </td>
+              </tr>
+
+              <tr>
+                <th colspan="2">&nbsp;</th>
+                <th data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
+                    data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false track by $index">
+                  <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/custom/{{ report.properties.id }}/edit">
+                    <span data-ng-if="report.properties.measurement_period === 'Planning'">Planned</span>
+                    <span data-ng-if="report.properties.measurement_period === 'Installation'">Installed</span>
+                    <br />
+                    {{ report.properties.report_date }}
+                  </a>
+                </th>
+                <th>Installed To-Date</th>
+                <th>% of Planned</th>
+              </tr>
+
+              <tr>
+                <td>
+                  &nbsp;
+                </td>
+                <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                    data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false"
+                    class="collapse">
+                    <table>
+                      <tr data-ng-repeat="metric_ in report.properties.metrics | orderBy:'id':false">
+                        <td style="white-space:nowrap;">
+                          <strong>{{ metric_.name }}</strong>
+                        </td>
+                      </tr>
+                    </table>
+                </td>
+                <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
+                    data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false"
+                    class="collapse">
+                    <table>
+                      <tr data-ng-repeat="metric_ in report.properties.metrics | orderBy:'id':false">
+                        <td style="white-space:nowrap;">
+                          {{ metric_.value || 0 | number:2 }} {{ metric_.unit }}
+                        </td>
+                      </tr>
+                    </table>
+                </td>
+                <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                    data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false"
+                    class="collapse">
+                    <table>
+                      <tr data-ng-repeat="reading_ in report.properties.readings | orderBy:'id':false">
+                        <td style="white-space:nowrap;">
+                          <span class="missing">-.--</span>
+                        </td>
+                      </tr>
+                    </table>
+                </td>
+                <td data-ng-if="report.properties.measurement_period === 'Planning'"
+                    data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false"
+                    class="collapse">
+                    <table>
+                      <tr data-ng-repeat="reading_ in report.properties.readings | orderBy:'id':false">
+                        <td style="white-space:nowrap;">
+                          <span class="missing">---.--%</span>
+                        </td>
+                      </tr>
+                    </table>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+
+          <table class="table"
+                 data-ng-if="page.summary.practice.properties.has_monitoring_data">
+
+            <tbody>
+              <tr class="no-rule">
+                <td class="align-left"
+                    colspan="{{ page.summary.practice.properties.readings_custom.length + 5 }}">
+                  <h2><strong>Monitoring</strong> Summary</h2>
+                </td>
+              </tr>
+
+              <tr>
+                <th colspan="2">&nbsp;</th>
+                <th data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                    data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false track by $index">
+                  <a href="/projects/{{ page.project.id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/custom/{{ report.properties.id }}/edit">
+                    Monitoring
+                    <br />
+                    {{ report.properties.report_date }}
+                  </a>
+                </th>
+                <th>Verified?</th>
+              </tr>
+
+              <tr>
+                <td>
+                  &nbsp;
+                </td>
+                <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                    data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false"
+                    class="collapse">
+                    <table>
+                      <tr data-ng-repeat="monitoring_ in report.properties.monitoring | orderBy:'id':false">
+                        <td style="white-space:nowrap;">
+                          <strong>{{ monitoring_.name }}</strong>
+                        </td>
+                      </tr>
+                    </table>
+                </td>
+                <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                    data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false"
+                    class="collapse">
+                    <table>
+                      <tr data-ng-repeat="monitoring_ in report.properties.monitoring | orderBy:'id':false">
+                        <td style="white-space:nowrap;">
+                          {{ monitoring_.value || 0 | number:2 }} {{ monitoring_.unit }}
+                        </td>
+                      </tr>
+                    </table>
+                </td>
+                <td data-ng-if="report.properties.measurement_period === 'Monitoring'"
+                    data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false"
+                    class="collapse">
+                    <table>
+                      <tr data-ng-repeat="monitoring_ in report.properties.monitoring | orderBy:'id':false">
+                        <td style="white-space:nowrap;">
+                          <div data-ng-if="monitoring_.was_verified" class="icon retinaicon-essentials-071"></div>
+                        </td>
+                      </tr>
+                    </table>
+                </td>
+              </tr>
             </tbody>
 
           </table>
