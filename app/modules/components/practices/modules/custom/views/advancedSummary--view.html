@@ -131,6 +131,7 @@
                     <table>
                       <tr data-ng-repeat="reading_ in report.properties.readings | orderBy:'id':false">
                         <td style="white-space:nowrap;">
+                          {{ reading_.properties }}
                           <span class="missing">-.--</span>
                         </td>
                       </tr>
