@@ -131,8 +131,6 @@
             defaults.measurement_period = "Installation";
 
             var newReading = new PracticeCustom(defaults);
-
-            console.log('newReading', newReading);
           }
 
           newReading.$save().then(function(successResponse) {

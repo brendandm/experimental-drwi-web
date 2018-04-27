@@ -256,9 +256,55 @@
           }
       }, true);
 
+
+      self.addGeometryToSubpractice = function(reading_id, geometry) {
+
+        var _subpractices = self.report.properties.readings,
+            _tmp = [];
+
+        angular.forEach(_subpractices, function(_practice, _index) {
+
+          if (parseInt(_practice.id) === parseInt(reading_id)) {
+
+            //
+            // Update the coordinates for the Report
+            //
+            _practice.geometry = {
+              type: 'GeometryCollection',
+              geometries: [
+                {
+                  type: 'Point',
+                  coordinates: geometry
+                }
+              ]
+            }
+          }
+
+          _tmp.push(_practice)
+        });
+
+        self.report.properties.readings = _tmp
+      };
+
+
+      self.processMapPositions = function() {
+
+        angular.forEach(self.map, function(_map, _index) {
+
+          self.addGeometryToSubpractice(_index, [
+            _map.markers.projectLocation.lng,
+            _map.markers.projectLocation.lat
+          ]);
+
+        });
+
+      }
+
       self.saveReport = function() {
 
         self.report.properties.report_date = self.date.month + ' ' + self.date.date + ' ' + self.date.year;
+
+        self.processMapPositions();
 
         self.report.$update().then(function(successResponse) {
           $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
@@ -482,7 +528,9 @@
 
       self.buildSingleMap = function(reading_) {
 
-        return {
+        console.log('Loading the page, make sure to process the center point of this map', reading_)
+
+        var map = {
           showGeocoder: null,
           geocode : {},
           defaults: {
@@ -516,6 +564,11 @@
             }
           }
         }
+
+        // console.log('map', map)
+        // debugger
+        //
+        return map;
       }
 
 
@@ -568,16 +621,6 @@
       }), function (response) {
         if (response) {
           if (self.report && self.report.properties) {
-            angular.forEach(self.report.properties.readings, function(reading_, index_) {
-
-              var coordinates = response[reading_.id].markers.projectLocation;
-
-              self.processPin({
-                lat: coordinates.lat,
-                lng: coordinates.lng
-              }, 16, response[reading_.id]);
-
-            });
 
             angular.forEach(response, function(response_, index) {
               console.log('response_', index, response_);
@@ -596,7 +639,7 @@
                 self.processPin({
                   lat: r_.geometry.coordinates[1],
                   lng: r_.geometry.coordinates[0]
-                }, 16, self.map[index]);
+                }, response_.center.zoom, self.map[index]);
 
                 self.map[index].geocode = {
                   query: null,
