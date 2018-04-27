@@ -133,7 +133,7 @@
                 </span>
                 <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices"
                      class="show_custom_practices">
-                  <div data-ng-repeat="subpractice_ in practice.practices track by $iindex">
+                  <div data-ng-repeat="subpractice_ in practice.practices track by $index">
                     <p class="metric--title">
                       {{ subpractice_.nutrients.nitrogen | number:2 }}
                     </p>
@@ -149,7 +149,7 @@
                 </span>
                 <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices"
                      class="show_custom_practices">
-                  <div data-ng-repeat="subpractice_ in practice.practices track by $iindex">
+                  <div data-ng-repeat="subpractice_ in practice.practices track by $index">
                     <p class="metric--title">
                       {{ subpractice_.nutrients.phosphorus | number:2 }}
                     </p>
@@ -165,7 +165,7 @@
                 </span>
                 <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices"
                      class="show_custom_practices">
-                  <div data-ng-repeat="subpractice_ in practice.practices track by $iindex">
+                  <div data-ng-repeat="subpractice_ in practice.practices track by $index">
                     <p class="metric--title">
                       {{ subpractice_.nutrients.sediment | number:2 }}
                     </p>
@@ -198,11 +198,11 @@
 
         <h2><strong>Practice</strong> Metrics</h2>
 
-        <table class="table table-practices with-metrics" data-ng-if="page.practices">
+        <table class="table table-practices with-metrics" data-ng-if="page.rollups.metrics">
           <thead>
             <tr>
               <th class="table-column-wide table-metrics-header">Metric</th>
-              <th class="table-metrics-header">Installted To-Date</th>
+              <th class="table-metrics-header">Installed To-Date</th>
               <th class="table-metrics-header">% Installed</th>
               <th>&nbsp;</th>
             </tr>
