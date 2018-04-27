@@ -57,13 +57,19 @@ angular.module('FieldDoc')
             });
           },
           practice_types: function(PracticeType, $route) {
-            return PracticeType.query();
+            return PracticeType.query({
+              results_per_page: 500
+            });
           },
           metric_types: function(MetricType, $route) {
-            return MetricType.query();
+            return MetricType.query({
+              results_per_page: 500
+            });
           },
           monitoring_types: function(MonitoringType, $route) {
-            return MonitoringType.query();
+            return MonitoringType.query({
+              results_per_page: 500
+            });
           },
           unit_types: function(UnitType, $route) {
             return UnitType.query({
