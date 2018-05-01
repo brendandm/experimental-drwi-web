@@ -24,8 +24,6 @@
       self.map = {};
       self.mapActiveGeocoder = null;
 
-      self.showData = true;
-
       self.practiceType = null;
       self.practiceTypes = practice_types;
 
