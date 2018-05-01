@@ -7399,6 +7399,13 @@ angular.module('FieldDoc')
 
       $rootScope.page = {};
 
+      self.status = {
+        loading: true,
+        reading: {
+          loading: false
+        }
+      };
+
 
       //
       // Setup Map Requirements
@@ -7729,34 +7736,39 @@ angular.module('FieldDoc')
         self.report.$update().then(function(successResponse) {
           console.log('New reading created successfully');
 
-          // self.report = successResponse;
+          PracticeCustom.get({
+            id: $route.current.params.reportId
+          }).$promise.then(function(ssuccessResponse) {
+            self.report = ssuccessResponse;
 
-          if (self.report.properties.report_date) {
-              self.today = parseISOLike(self.report.properties.report_date);
-          }
+            if (self.report.properties.report_date) {
+                self.today = parseISOLike(self.report.properties.report_date);
+            }
 
-          //
-          // Preprocess the individual Practice Readings before display
-          //
-          if (self.report.properties.readings.length) {
+            //
+            // Preprocess the individual Practice Readings before display
+            //
+            if (self.report.properties.readings.length) {
 
-            angular.forEach(self.report.properties.readings, function(reading_, index_) {
-              self.map[reading_.id] = angular.copy(Map);
-              self.map[reading_.id] = self.buildSingleMap(reading_);
-            });
+              angular.forEach(self.report.properties.readings, function(reading_, index_) {
+                self.map[reading_.id] = angular.copy(Map);
+                self.map[reading_.id] = self.buildSingleMap(reading_);
+              });
 
-          }
+            }
 
 
-          //
-          // Check to see if there is a valid date
-          //
-          self.date = {
-              month: self.months[self.today.getMonth()],
-              date: self.today.getDate(),
-              day: self.days[self.today.getDay()],
-              year: self.today.getFullYear()
-          };
+            //
+            // Check to see if there is a valid date
+            //
+            self.date = {
+                month: self.months[self.today.getMonth()],
+                date: self.today.getDate(),
+                day: self.days[self.today.getDay()],
+                year: self.today.getFullYear()
+            };
+
+          });
 
         }, function(errorResponse) {
           console.log('New reading created successfully');
