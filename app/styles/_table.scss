@@ -78,6 +78,17 @@ th {
 .table > tfoot > tr > td.collapse {
   padding-left: 0;
   padding-right: 0;
+
+  table > thead > tr > th,
+  table > tbody > tr > th,
+  table > tfoot > tr > th,
+  table > thead > tr > td,
+  table > tbody > tr > td,
+  table > tfoot > tr > td {
+    padding-bottom: 0;
+    padding-top: 0;
+  }
+
 }
 
 .table > thead > tr > th th,
