@@ -459,7 +459,7 @@
                 <td data-ng-if="report.properties.measurement_period === 'Planning'"
                     data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
                     <table>
-                      <tr>
+                      <tr data-ng-repeat="metric_ in report.properties.readings[$index].properties.metrics | orderBy:'id':false">
                         <td style="white-space:nowrap;">
                           <strong>
                             {{ page.summary.practice.properties.quantity_installed.metrics[$index].value || 0 | number:2 }}
@@ -471,7 +471,7 @@
                 <td data-ng-if="report.properties.measurement_period === 'Planning'"
                     data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
                     <table>
-                      <tr>
+                      <tr data-ng-repeat="metric_ in report.properties.readings[$index].properties.metrics | orderBy:'id':false">
                         <td style="white-space:nowrap;">
                           <strong>
                             {{ (page.summary.practice.properties.percentage_installed.metrics[$index].value*100) || 0 | number:1 }}%
@@ -798,11 +798,3 @@
 <div data-ng-include="'/modules/components/practices/modules/custom/views/citations--view.html'"></div>
 
 <div data-ng-include="'/templates/footer--view.html'"></div>
-
-<div>
-  <code>
-    <pre>
-      {{ page.summary | json }}
-    </pre>
-  </code>
-</div>

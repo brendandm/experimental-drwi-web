@@ -361,7 +361,7 @@
 
                 <button type="button" class="button button-link button-outline pull-right"
                         data-ng-click="page.confirmDelete[reading_.id] =! page.confirmDelete[reading_.id]"
-                        data-ng-if="!page.confirmDelete[reading_.id]">
+                        data-ng-if="!page.confirmDelete[reading_.id] && page.report.properties.measurement_period === 'Planning'">
                   Remove this practice
                 </button>
                 <span data-ng-if="page.confirmDelete[reading_.id]" class="action pull-right">
@@ -412,7 +412,7 @@
           </div>
         </div>
         <div class="form-row"
-             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+             data-ng-if="page.report.properties.measurement_period === 'Planning'">
           <div class="form-label">
             <label class="control-label">
               New Other Conservation Practice
@@ -509,7 +509,7 @@
 
                  <button type="button" class="button button-link button-outline pull-right"
                          data-ng-click="page.confirmMetricDelete[reading_.id] =! page.confirmMetricDelete[reading_.id]"
-                         data-ng-if="!page.confirmMetricDelete[reading_.id]">
+                         data-ng-if="!page.confirmMetricDelete[reading_.id] && page.report.properties.measurement_period === 'Planning'">
                    Remove this metric
                  </button>
                  <span data-ng-if="page.confirmMetricDelete[reading_.id]" class="action pull-right">
@@ -526,7 +526,7 @@
         </div>
 
         <div class="form-row"
-             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+             data-ng-if="page.report.properties.measurement_period === 'Planning'">
           <div class="form-label">
             <label class="control-label">
               New Custom Metric
@@ -698,11 +698,3 @@
 </main>
 
 <div data-ng-include="'/templates/footer--view.html'"></div>
-
-<div>
-  <code>
-    <pre>
-      {{ page.report | json }}
-    </pre>
-  </code>
-</div>
