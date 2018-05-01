@@ -19,8 +19,6 @@
 
       self.practiceType = null;
 
-      self.showData = true;
-
       self.project = {
         'id': projectId
       };

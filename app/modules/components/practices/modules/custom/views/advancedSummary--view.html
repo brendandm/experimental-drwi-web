@@ -466,7 +466,7 @@
           </table>
 
           <table class="table"
-                 data-ng-if="page.summary.practice.properties.has_monitoring_data">
+                 data-ng-if="page.summary.practice.properties.has_planning_data && page.summary.practice.properties.has_monitoring_data">
 
             <tbody>
               <tr class="no-rule">
@@ -778,11 +778,3 @@
 <div data-ng-include="'/modules/components/practices/modules/custom/views/citations--view.html'"></div>
 
 <div data-ng-include="'/templates/footer--view.html'"></div>
-
-<div data-ng-show="page.showData">
-  <code>
-    <pre>
-      {{ page.summary | json }}
-    </pre>
-  </code>
-</div>
