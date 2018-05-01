@@ -410,7 +410,8 @@
 
           </div>
         </div>
-        <div class="form-row">
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
           <div class="form-label">
             <label class="control-label">
               New Other Conservation Practice
@@ -427,6 +428,7 @@
         </div>
 
         <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'"
              data-ng-repeat="reading_ in page.report.properties.metrics | orderBy:'id':false track by reading_.id">
           <div class="form-label">
             <label for="" class="control-label">
@@ -522,7 +524,8 @@
           </div>
         </div>
 
-        <div class="form-row">
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
           <div class="form-label">
             <label class="control-label">
               New Custom Metric
@@ -642,7 +645,8 @@
           </div>
         </div>
 
-        <div class="form-row">
+        <div class="form-row"
+             page.report.properties.measurement_period === 'Monitoring'>
           <div class="form-label">
             <label class="control-label">
               New Custom Monitoring Check
