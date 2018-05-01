@@ -347,7 +347,7 @@
         self.report.$update().then(function(successResponse) {
           console.log('New reading created successfully');
 
-          self.report = successResponse;
+          // self.report = successResponse;
 
           if (self.report.properties.report_date) {
               self.today = parseISOLike(self.report.properties.report_date);
