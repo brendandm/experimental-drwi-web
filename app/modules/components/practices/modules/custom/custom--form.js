@@ -363,18 +363,10 @@
                 self.today = parseISOLike(self.report.properties.report_date);
             }
 
-            //
-            // Preprocess the individual Practice Readings before display
-            //
-            if (self.report.properties.readings.length) {
-
-              angular.forEach(self.report.properties.readings, function(reading_, index_) {
-                self.map[reading_.id] = angular.copy(Map);
-                self.map[reading_.id] = self.buildSingleMap(reading_);
-              });
-
-            }
-
+            angular.forEach(self.report.properties.readings, function(reading_, index_) {
+              self.map[reading_.id] = angular.copy(Map);
+              self.map[reading_.id] = self.buildSingleMap(reading_);
+            });
 
             //
             // Check to see if there is a valid date

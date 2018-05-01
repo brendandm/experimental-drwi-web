@@ -234,7 +234,7 @@
 
                <!-- Practice -->
                <label for="practice_type_id" class="control-label">
-                 Practice Type ({{ reading_.properties.practice_type_id }})
+                 Practice Type
                </label>
 
                <select data-ng-if="!page.custom_practice_type[reading_.id]"
@@ -377,7 +377,7 @@
              <!-- Column 2 of 2: Geography Selection Column -->
              <div class="form-element form-element-half">
                <label for="" class="control-label">
-                 Practice Location (Geocoder visible: {{ page.map[reading_.id].showGeocoder }})
+                 Practice Location
                </label>
 
                <div class="autocomplete">
@@ -400,8 +400,9 @@
                </div>
 
                <!-- <mapboxgl id="map" class="mapboxgl-map" options="page.options" /> -->
-
-               <leaflet class="map"
+               <!-- ({{ page.map[reading_.id] }}) -->
+               <leaflet data-ng-if="page.map[reading_.id] && page.map[reading_.id].center && page.map[reading_.id].layers && page.map[reading_.id].defaults"
+                        class="map"
                         markers="page.map[reading_.id].markers"
                         defaults="page.map[reading_.id].defaults"
                         layers="page.map[reading_.id].layers"
