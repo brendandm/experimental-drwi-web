@@ -401,6 +401,33 @@
 
         self.report.$update().then(function(successResponse) {
           console.log('New metric created successfully');
+
+          PracticeCustom.get({
+            id: $route.current.params.reportId
+          }).$promise.then(function(ssuccessResponse) {
+            self.report = ssuccessResponse;
+
+            if (self.report.properties.report_date) {
+                self.today = parseISOLike(self.report.properties.report_date);
+            }
+
+            angular.forEach(self.report.properties.readings, function(reading_, index_) {
+              self.map[reading_.id] = angular.copy(Map);
+              self.map[reading_.id] = self.buildSingleMap(reading_);
+            });
+
+            //
+            // Check to see if there is a valid date
+            //
+            self.date = {
+                month: self.months[self.today.getMonth()],
+                date: self.today.getDate(),
+                day: self.days[self.today.getDay()],
+                year: self.today.getFullYear()
+            };
+
+          });
+
         }, function(errorResponse) {
           console.log('New metric created successfully');
         });
@@ -422,6 +449,33 @@
 
         self.report.$update().then(function(successResponse) {
           console.log('New monitoring created successfully');
+
+          PracticeCustom.get({
+            id: $route.current.params.reportId
+          }).$promise.then(function(ssuccessResponse) {
+            self.report = ssuccessResponse;
+
+            if (self.report.properties.report_date) {
+                self.today = parseISOLike(self.report.properties.report_date);
+            }
+
+            angular.forEach(self.report.properties.readings, function(reading_, index_) {
+              self.map[reading_.id] = angular.copy(Map);
+              self.map[reading_.id] = self.buildSingleMap(reading_);
+            });
+
+            //
+            // Check to see if there is a valid date
+            //
+            self.date = {
+                month: self.months[self.today.getMonth()],
+                date: self.today.getDate(),
+                day: self.days[self.today.getDay()],
+                year: self.today.getFullYear()
+            };
+
+          });
+
         }, function(errorResponse) {
           console.log('New monitoring created successfully');
         });
