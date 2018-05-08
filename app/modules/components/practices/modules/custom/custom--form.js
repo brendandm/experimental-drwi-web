@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('CustomFormController', function (Account, leafletData, $location, Map, mapbox, metric_types, monitoring_types, practice, PracticeCustom, PracticeCustomReading, practice_types, report, $rootScope, $route, site, $scope, unit_types, user, Utility) {
+    .controller('CustomFormController', function (Account, leafletData, $location, Map, mapbox, metric_types, monitoring_types, practice, PracticeCustom, PracticeCustomReading, PracticeCustomMetric, PracticeCustomMonitoring, practice_types, report, $rootScope, $route, site, $scope, unit_types, user, Utility) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -20,6 +20,12 @@
       self.status = {
         loading: true,
         readings: {
+          loading: false
+        },
+        metrics: {
+          loading: false
+        },
+        monitoring: {
           loading: false
         }
       };
@@ -388,10 +394,19 @@
           }
         );
 
-      }
+      };
 
       self.addMetric = function() {
-        var metric = {
+
+        //
+        // Step 1: Show a new row with a "loading" indiciator
+        //
+        self.status.metrics.loading = true;
+
+        //
+        // Step 2: Create empty Reading to post to the system
+        //
+        var newMetric = new PracticeCustomMetric({
           "geometry": null,
           "properties": {
             "metric_type_id": null,
@@ -399,47 +414,46 @@
             "metric_unit_id": null,
             "metric_description": ""
           }
-        };
+        })
 
-        self.report.properties.metrics.push(metric);
+        //
+        // Step 3: POST this empty reading to the `/v1/data/bmp-custom-readings` endpoint
+        //
+        newMetric.$save().then(function(successResponse) {
 
-        self.report.$update().then(function(successResponse) {
-          console.log('New metric created successfully');
+          console.log('A new reading has been created for this report', successResponse);
 
-          PracticeCustom.get({
-            id: $route.current.params.reportId
-          }).$promise.then(function(ssuccessResponse) {
-            self.report = ssuccessResponse;
+          var metric_ = successResponse;
 
-            if (self.report.properties.report_date) {
-                self.today = parseISOLike(self.report.properties.report_date);
-            }
+          //
+          // Step 4: Add the new reading to the existing report
+          //
+          self.report.properties.metrics.push(metric_);
 
-            angular.forEach(self.report.properties.readings, function(reading_, index_) {
-              self.map[reading_.id] = angular.copy(Map);
-              self.map[reading_.id] = self.buildSingleMap(reading_);
-            });
+          //
+          // Step 5: Hide Loading Indicator and display the form to the user
+          //
+          self.status.metrics.loading = false;
 
-            //
-            // Check to see if there is a valid date
-            //
-            self.date = {
-                month: self.months[self.today.getMonth()],
-                date: self.today.getDate(),
-                day: self.days[self.today.getDay()],
-                year: self.today.getFullYear()
-            };
-
-          });
-
-        }, function(errorResponse) {
-          console.log('New metric created successfully');
-        });
+          }, function(errorResponse) {
+            console.log('An error occurred while trying to create a new metric', errorResponse);
+            self.status.metrics.loading = false;
+          }
+        );
 
       }
 
       self.addMonitoringCheck = function() {
-        var monitoring = {
+
+        //
+        // Step 1: Show a new row with a "loading" indiciator
+        //
+        self.status.monitoring.loading = true;
+
+        //
+        // Step 2: Create empty Reading to post to the system
+        //
+        var newMetric = new PracticeCustomMonitoring({
           "geometry": null,
           "properties": {
             "monitoring_type_id": null,
@@ -447,42 +461,32 @@
             "was_verified": false,
             "monitoring_description": ""
           }
-        };
+        })
 
-        self.report.properties.monitoring.push(monitoring);
+        //
+        // Step 3: POST this empty reading to the `/v1/data/bmp-custom-readings` endpoint
+        //
+        newMetric.$save().then(function(successResponse) {
 
-        self.report.$update().then(function(successResponse) {
-          console.log('New monitoring created successfully');
+          console.log('A new reading has been created for this report', successResponse);
 
-          PracticeCustom.get({
-            id: $route.current.params.reportId
-          }).$promise.then(function(ssuccessResponse) {
-            self.report = ssuccessResponse;
+          var monitoring_ = successResponse;
 
-            if (self.report.properties.report_date) {
-                self.today = parseISOLike(self.report.properties.report_date);
-            }
+          //
+          // Step 4: Add the new reading to the existing report
+          //
+          self.report.properties.monitoring.push(monitoring_);
 
-            angular.forEach(self.report.properties.readings, function(reading_, index_) {
-              self.map[reading_.id] = angular.copy(Map);
-              self.map[reading_.id] = self.buildSingleMap(reading_);
-            });
+          //
+          // Step 5: Hide Loading Indicator and display the form to the user
+          //
+          self.status.monitoring.loading = false;
 
-            //
-            // Check to see if there is a valid date
-            //
-            self.date = {
-                month: self.months[self.today.getMonth()],
-                date: self.today.getDate(),
-                day: self.days[self.today.getDay()],
-                year: self.today.getFullYear()
-            };
-
-          });
-
-        }, function(errorResponse) {
-          console.log('New monitoring created successfully');
-        });
+          }, function(errorResponse) {
+            console.log('An error occurred while trying to create a new metric', errorResponse);
+            self.status.monitoring.loading = false;
+          }
+        );
 
       }
 
