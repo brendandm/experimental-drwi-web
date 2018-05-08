@@ -7311,7 +7311,7 @@ angular.module('FieldDoc')
 
     $routeProvider
       .when('/projects/:projectId/sites/:siteId/practices/:practiceId/custom', {
-        templateUrl: '/modules/components/practices/modules/custom/views/advancedSummary--view.html',
+        templateUrl: '/modules/components/practices/modules/custom/views/summary--view.html',
         controller: 'CustomSummaryController',
         controllerAs: 'page',
         resolve: {
@@ -7390,7 +7390,7 @@ angular.module('FieldDoc')
    * @description
    */
   angular.module('FieldDoc')
-    .controller('CustomFormController', function (Account, leafletData, $location, Map, mapbox, metric_types, monitoring_types, practice, PracticeCustom, practice_types, report, $rootScope, $route, site, $scope, unit_types, user, Utility) {
+    .controller('CustomFormController', function (Account, leafletData, $location, Map, mapbox, metric_types, monitoring_types, practice, PracticeCustom, PracticeCustomReading, PracticeCustomMetric, PracticeCustomMonitoring, practice_types, report, $rootScope, $route, site, $scope, unit_types, user, Utility) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -7401,7 +7401,13 @@ angular.module('FieldDoc')
 
       self.status = {
         loading: true,
-        reading: {
+        readings: {
+          loading: false
+        },
+        metrics: {
+          loading: false
+        },
+        monitoring: {
           loading: false
         }
       };
@@ -7710,7 +7716,17 @@ angular.module('FieldDoc')
       };
 
       self.addReading = function(reading_) {
-        var reading = {
+
+        self.status.readings.loading = true;
+
+        //
+        // Step 1: Show a new row with a "loading" indiciator
+        //
+
+        //
+        // Step 2: Create empty Reading to post to the system
+        //
+        var newReading = new PracticeCustomReading({
           "geometry": null,
           "properties": {
             "bmp_custom_id": self.report.id,
@@ -7727,49 +7743,52 @@ angular.module('FieldDoc')
               }
             }
           }
-        };
+        })
 
-        self.report.properties.readings.push(reading);
+        //
+        // Step 3: POST this empty reading to the `/v1/data/bmp-custom-readings` endpoint
+        //
+        newReading.$save().then(function(successResponse) {
 
-        self.report.properties.report_date = self.date.month + ' ' + self.date.date + ' ' + self.date.year;
+          console.log('A new reading has been created for this report', successResponse);
 
-        self.report.$update().then(function(successResponse) {
-          console.log('New reading created successfully');
+          var reading_ = successResponse;
 
-          PracticeCustom.get({
-            id: $route.current.params.reportId
-          }).$promise.then(function(ssuccessResponse) {
-            self.report = ssuccessResponse;
+          //
+          // Step 4: Add the new reading to the existing report
+          //
+          self.report.properties.readings.push(reading_);
 
-            if (self.report.properties.report_date) {
-                self.today = parseISOLike(self.report.properties.report_date);
-            }
+          //
+          // Step 5: Make sure we add and activate a map for our new reading
+          //
+          self.map[reading_.id] = angular.copy(Map);
+          self.map[reading_.id] = self.buildSingleMap(reading_);
 
-            angular.forEach(self.report.properties.readings, function(reading_, index_) {
-              self.map[reading_.id] = angular.copy(Map);
-              self.map[reading_.id] = self.buildSingleMap(reading_);
-            });
+          //
+          // Step 6: Hide Loading Indicator and display the form to the user
+          //
+          self.status.readings.loading = false;
 
-            //
-            // Check to see if there is a valid date
-            //
-            self.date = {
-                month: self.months[self.today.getMonth()],
-                date: self.today.getDate(),
-                day: self.days[self.today.getDay()],
-                year: self.today.getFullYear()
-            };
+          }, function(errorResponse) {
+            console.log('An error occurred while trying to create a new reading', errorResponse);
+            self.status.readings.loading = false;
+          }
+        );
 
-          });
-
-        }, function(errorResponse) {
-          console.log('New reading created successfully');
-        });
-
-      }
+      };
 
       self.addMetric = function() {
-        var metric = {
+
+        //
+        // Step 1: Show a new row with a "loading" indiciator
+        //
+        self.status.metrics.loading = true;
+
+        //
+        // Step 2: Create empty Reading to post to the system
+        //
+        var newMetric = new PracticeCustomMetric({
           "geometry": null,
           "properties": {
             "metric_type_id": null,
@@ -7777,47 +7796,46 @@ angular.module('FieldDoc')
             "metric_unit_id": null,
             "metric_description": ""
           }
-        };
+        })
 
-        self.report.properties.metrics.push(metric);
+        //
+        // Step 3: POST this empty reading to the `/v1/data/bmp-custom-readings` endpoint
+        //
+        newMetric.$save().then(function(successResponse) {
 
-        self.report.$update().then(function(successResponse) {
-          console.log('New metric created successfully');
+          console.log('A new reading has been created for this report', successResponse);
 
-          PracticeCustom.get({
-            id: $route.current.params.reportId
-          }).$promise.then(function(ssuccessResponse) {
-            self.report = ssuccessResponse;
+          var metric_ = successResponse;
 
-            if (self.report.properties.report_date) {
-                self.today = parseISOLike(self.report.properties.report_date);
-            }
+          //
+          // Step 4: Add the new reading to the existing report
+          //
+          self.report.properties.metrics.push(metric_);
 
-            angular.forEach(self.report.properties.readings, function(reading_, index_) {
-              self.map[reading_.id] = angular.copy(Map);
-              self.map[reading_.id] = self.buildSingleMap(reading_);
-            });
+          //
+          // Step 5: Hide Loading Indicator and display the form to the user
+          //
+          self.status.metrics.loading = false;
 
-            //
-            // Check to see if there is a valid date
-            //
-            self.date = {
-                month: self.months[self.today.getMonth()],
-                date: self.today.getDate(),
-                day: self.days[self.today.getDay()],
-                year: self.today.getFullYear()
-            };
-
-          });
-
-        }, function(errorResponse) {
-          console.log('New metric created successfully');
-        });
+          }, function(errorResponse) {
+            console.log('An error occurred while trying to create a new metric', errorResponse);
+            self.status.metrics.loading = false;
+          }
+        );
 
       }
 
       self.addMonitoringCheck = function() {
-        var monitoring = {
+
+        //
+        // Step 1: Show a new row with a "loading" indiciator
+        //
+        self.status.monitoring.loading = true;
+
+        //
+        // Step 2: Create empty Reading to post to the system
+        //
+        var newMetric = new PracticeCustomMonitoring({
           "geometry": null,
           "properties": {
             "monitoring_type_id": null,
@@ -7825,42 +7843,32 @@ angular.module('FieldDoc')
             "was_verified": false,
             "monitoring_description": ""
           }
-        };
+        })
 
-        self.report.properties.monitoring.push(monitoring);
+        //
+        // Step 3: POST this empty reading to the `/v1/data/bmp-custom-readings` endpoint
+        //
+        newMetric.$save().then(function(successResponse) {
 
-        self.report.$update().then(function(successResponse) {
-          console.log('New monitoring created successfully');
+          console.log('A new reading has been created for this report', successResponse);
 
-          PracticeCustom.get({
-            id: $route.current.params.reportId
-          }).$promise.then(function(ssuccessResponse) {
-            self.report = ssuccessResponse;
+          var monitoring_ = successResponse;
 
-            if (self.report.properties.report_date) {
-                self.today = parseISOLike(self.report.properties.report_date);
-            }
+          //
+          // Step 4: Add the new reading to the existing report
+          //
+          self.report.properties.monitoring.push(monitoring_);
 
-            angular.forEach(self.report.properties.readings, function(reading_, index_) {
-              self.map[reading_.id] = angular.copy(Map);
-              self.map[reading_.id] = self.buildSingleMap(reading_);
-            });
+          //
+          // Step 5: Hide Loading Indicator and display the form to the user
+          //
+          self.status.monitoring.loading = false;
 
-            //
-            // Check to see if there is a valid date
-            //
-            self.date = {
-                month: self.months[self.today.getMonth()],
-                date: self.today.getDate(),
-                day: self.days[self.today.getDay()],
-                year: self.today.getFullYear()
-            };
-
-          });
-
-        }, function(errorResponse) {
-          console.log('New monitoring created successfully');
-        });
+          }, function(errorResponse) {
+            console.log('An error occurred while trying to create a new metric', errorResponse);
+            self.status.monitoring.loading = false;
+          }
+        );
 
       }
 
@@ -10530,6 +10538,120 @@ angular
           isArray: false,
           method: 'GET',
           url: environment.apiUrl.concat('/v1/data/summary/custom/:id')
+        },
+        'update': {
+          method: 'PATCH',
+          transformRequest: function(data) {
+            var feature = Preprocessors.geojson(data),
+                json_ = angular.toJson(feature);
+            return json_;
+          }
+        }
+      });
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .service('PracticeCustomReading', function (environment, Preprocessors, $resource) {
+      return $resource(environment.apiUrl.concat('/v1/data/bmp-custom-reading/:id'), {
+        'id': '@id'
+      }, {
+        'query': {
+          isArray: false
+        },
+        'save': {
+          method: 'POST',
+          transformRequest: function(data) {
+            var feature = Preprocessors.geojson(data),
+                json_ = angular.toJson(feature);
+            return json_;
+          }
+        },
+        'update': {
+          method: 'PATCH',
+          transformRequest: function(data) {
+            var feature = Preprocessors.geojson(data),
+                json_ = angular.toJson(feature);
+            return json_;
+          }
+        }
+      });
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .service('PracticeCustomMetric', function (environment, Preprocessors, $resource) {
+      return $resource(environment.apiUrl.concat('/v1/data/bmp-custom-metric/:id'), {
+        'id': '@id'
+      }, {
+        'query': {
+          isArray: false
+        },
+        'save': {
+          method: 'POST',
+          transformRequest: function(data) {
+            var feature = Preprocessors.geojson(data),
+                json_ = angular.toJson(feature);
+            return json_;
+          }
+        },
+        'update': {
+          method: 'PATCH',
+          transformRequest: function(data) {
+            var feature = Preprocessors.geojson(data),
+                json_ = angular.toJson(feature);
+            return json_;
+          }
+        }
+      });
+    });
+
+}());
+
+(function() {
+
+  'use strict';
+
+  /**
+   * @ngdoc service
+   * @name
+   * @description
+   */
+  angular.module('FieldDoc')
+    .service('PracticeCustomMonitoring', function (environment, Preprocessors, $resource) {
+      return $resource(environment.apiUrl.concat('/v1/data/bmp-custom-monitoring/:id'), {
+        'id': '@id'
+      }, {
+        'query': {
+          isArray: false
+        },
+        'save': {
+          method: 'POST',
+          transformRequest: function(data) {
+            var feature = Preprocessors.geojson(data),
+                json_ = angular.toJson(feature);
+            return json_;
+          }
         },
         'update': {
           method: 'PATCH',
