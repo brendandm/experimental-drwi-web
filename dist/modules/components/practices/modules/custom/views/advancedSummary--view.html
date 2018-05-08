@@ -110,7 +110,8 @@
                     <table>
                       <tr data-ng-repeat="reading_ in report.properties.readings | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          <strong>{{ reading_.properties.practice_type.properties.name }}</strong>
+                          <strong data-ng-if="reading_.properties.practice_type.properties.name">{{ reading_.properties.practice_type.properties.name }}</strong>
+                          <strong data-ng-if="!reading_.properties.practice_type.properties.name">Unknown</strong>
                         </td>
                       </tr>
                     </table>
@@ -210,7 +211,8 @@
                     <table>
                       <tr data-ng-repeat="reading_ in report.properties.readings | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          {{ reading_.properties.practice_type.properties.name }}
+                          <span data-ng-if="reading_.properties.practice_type.properties.name">{{ reading_.properties.practice_type.properties.name }}</span>
+                          <span data-ng-if="!reading_.properties.practice_type.properties.name">Unknown</span>
                         </td>
                       </tr>
                     </table>
@@ -284,7 +286,8 @@
                     <table>
                       <tr data-ng-repeat="reading_ in report.properties.readings | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          {{ reading_.properties.practice_type.properties.name }}
+                          <span data-ng-if="reading_.properties.practice_type.properties.name">{{ reading_.properties.practice_type.properties.name }}</span>
+                          <span data-ng-if="!reading_.properties.practice_type.properties.name">Unknown</span>
                         </td>
                       </tr>
                     </table>
@@ -358,7 +361,8 @@
                     <table>
                       <tr data-ng-repeat="reading_ in report.properties.readings | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          {{ reading_.properties.practice_type.properties.name }}
+                          <span data-ng-if="reading_.properties.practice_type.properties.name">{{ reading_.properties.practice_type.properties.name }}</span>
+                          <span data-ng-if="!reading_.properties.practice_type.properties.name">Unknown</span>
                         </td>
                       </tr>
                     </table>
