@@ -91,6 +91,16 @@ th {
 
 }
 
+.table > thead > tr > th.table-column-top,
+.table > tbody > tr > th.table-column-top,
+.table > tfoot > tr > th.table-column-top,
+.table > thead > tr > td.table-column-top,
+.table > tbody > tr > td.table-column-top,
+.table > tfoot > tr > td.table-column-top {
+  vertical-align: top;
+}
+
+
 .table > thead > tr > th th,
 .table > tbody > tr > th th,
 .table > tfoot > tr > th th,
@@ -382,4 +392,176 @@ table th[class*="col-"] {
 
 td.disabled-value {
     color: #BBBBBB !important;
+}
+
+
+
+
+//
+// Site Practices
+//
+.table.table-practices {
+  background-color: #262F3A;
+  color: #F2F2F2;
+  text-align: left;
+
+  td, th {
+    color: #F2F2F2;
+    text-align: left;
+  }
+}
+
+.table.table-practices > thead > tr,
+.table.table-practices > tbody > tr {
+  td.table-column-even,
+  th.table-column-even {
+    background-color: #373F4A;
+
+    &.table-column-top {
+      vertical-align: top;
+    }
+
+  }
+
+  td.table-column-odd,
+  th.table-column-odd {
+    background-color: #373F4A;
+
+    &.table-column-top {
+      vertical-align: top;
+    }
+
+  }
+}
+
+.table.table-practices > thead > tr,
+.table.table-practices > tbody > tr,
+.table.table-practices > tfoot > tr {
+  th.table-column-wide,
+  td.table-column-wide {
+    width: 60%;
+  }
+  th.table-column-label,
+  td.table-column-label {
+    font-size: 15px;
+    font-weight: 300;
+    text-align: right;
+    text-decoration: underline;
+    vertical-align: middle;
+  }
+}
+
+.table.table-practices > thead > tr,
+.table.table-practices > tbody > tr,
+.table.table-practices > tfoot > tr {
+  &> td,
+  &> th {
+    background-color: transparent;
+    border-top: none;
+    color: #F2F2F2;
+    font-size: 16px;
+    line-height: 1;
+    padding: 16px 24px;
+    text-align: left;
+    vertical-align: bottom;
+
+    .metrics--metric--rollup {
+      font-size: 21px;
+      font-weight: 500;
+    }
+
+    .metrics--metric--rollup--small {
+      font-size: 17px;
+      font-weight: 500;
+    }
+
+    .metrics--metric--percentage {
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .metrics--metric--rollup--label {
+      font-size: 12px;
+      font-weight: 300;
+    }
+
+    .metrics--metric--secondary {
+      color: #BFBFBF;
+      display: block;
+      font-size: 12px;
+    }
+  }
+}
+
+.table.table-practices.with-metrics {
+  border-collapse: separate;
+  padding: 12px 12px 48px;
+}
+
+.table.table-practices.with-metrics > thead > tr > th,
+.table.table-practices.with-metrics > thead > tr > td {
+  border-bottom: 4px solid #373F49;
+}
+
+.table.table-practices.with-metrics > tbody > tr > th,
+.table.table-practices.with-metrics > tbody > tr > td {
+  border-bottom: 1px solid #373F49;
+}
+
+.table.table-practices.with-metrics > thead > tr,
+.table.table-practices.with-metrics > tbody > tr,
+.table.table-practices.with-metrics > tfoot > tr {
+  &> td,
+  &> th {
+    vertical-align: middle;
+  }
+}
+
+.table.table-practices > thead > tr.table-row-short,
+.table.table-practices > tbody > tr.table-row-short,
+.table.table-practices > tfoot > tr.table-row-short {
+  &> td,
+  &> th {
+    padding-bottom: 0;
+    padding-top: 0;
+  }
+}
+
+.table.table-practices > thead > tr {
+  &> td.table-practices-centered,
+  &> th.table-practices-centered {
+    font-size: 15px;
+    font-weight: 300;
+    text-align: center;
+  }
+  &> th.table-metrics-header,
+  &> td.table-metrics-header {
+    font-size: 13px;
+    font-weight: 300;
+    text-align: left;
+  }
+}
+
+.table.table-practices > tbody.metrics {
+  background-color: transparent;
+}
+
+.table.table-practices > thead tr th {
+  border-bottom: 0;
+  font-size: 16px;
+  font-weight: normal;
+  vertical-align: bottom;
+}
+
+
+
+.table {
+  td {
+    em {
+      &.supplemental {
+        color: lighten($color-black-base, 50%);
+        font-size: 80%;
+      }
+    }
+  }
 }
