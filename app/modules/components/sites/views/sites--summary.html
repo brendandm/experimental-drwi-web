@@ -137,7 +137,7 @@
                      class="show_custom_practices">
                   <div data-ng-repeat="subpractice_ in practice.practices track by $index">
                     <p class="metric--title">
-                      {{ subpractice_.installed.nitrogen }}
+                      {{ subpractice_.installed.nitrogen || 0 | number:2 }}
                     </p>
                   </div>
                 </div>
@@ -153,7 +153,7 @@
                      class="show_custom_practices">
                   <div data-ng-repeat="subpractice_ in practice.practices track by $index">
                     <p class="metric--title">
-                      {{ subpractice_.installed.phosphorus }}
+                      {{ subpractice_.installed.phosphorus || 0 | number:2 }}
                     </p>
                   </div>
                 </div>
@@ -169,7 +169,7 @@
                      class="show_custom_practices">
                   <div data-ng-repeat="subpractice_ in practice.practices track by $index">
                     <p class="metric--title">
-                      {{ subpractice_.installed.sediment }}
+                      {{ subpractice_.installed.sediment || 0 | number:2 }}
                     </p>
                   </div>
                 </div>
