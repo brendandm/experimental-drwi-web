@@ -420,11 +420,14 @@
           </div>
           <div class="form-field">
             <button type="button"
+                    data-ng-if="!page.status.readings.loading"
                     data-ng-click="page.addReading()"
                     class="button button-link button-outline">
               + Add Another Practice
             </button>
-
+            <em data-ng-if="page.status.readings.loading">
+              Creating new practice for this measurement period...
+            </em>
           </div>
         </div>
 
