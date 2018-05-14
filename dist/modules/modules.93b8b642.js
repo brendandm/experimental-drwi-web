@@ -7966,8 +7966,6 @@ angular.module('FieldDoc')
           }
         });
 
-        console.log('self.map', self.map)
-
         return;
       };
 
@@ -7977,6 +7975,7 @@ angular.module('FieldDoc')
         console.log('Loading the page, make sure to process the center point of this map', reading_)
 
         var map = {
+          id: reading_.id,
           showGeocoder: null,
           geocode : {},
           defaults: {
@@ -8058,46 +8057,84 @@ angular.module('FieldDoc')
           }
         }, true);
 
-      //
-      // IF NUTRIENTS UPDATE FOR ANY PRACTICE, UPDATE THE NUTRIENT ROLLUP
-      // AT THE TOP OF THE PAGE.
-      //
-      $scope.$watch(angular.bind(this, function() {
-        return this.map;
-      }), function (response) {
-        if (response) {
-          if (self.report && self.report.properties) {
+      self.getActiveMapId = function(maps) {
 
-            angular.forEach(response, function(response_, index) {
-              console.log('response_', index, response_);
+        var active_index = null;
 
-              //
-              // Only execute the following block of code if the user has geocoded an
-              // address. This block of code expects this to be a single feature from a
-              // Carmen GeoJSON object.
-              //
-              // @see https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
-              //
-              if (response_ && response_.geocode && response_.geocode.response) {
-
-                var r_ = response_.geocode.response;
-
-                self.processPin({
-                  lat: r_.geometry.coordinates[1],
-                  lng: r_.geometry.coordinates[0]
-                }, response_.center.zoom, self.map[index]);
-
-                self.map[index].geocode = {
-                  query: null,
-                  response: null
-                };
-              }
-            });
-
+        //
+        // Find the active geocoder
+        //
+        angular.forEach(maps, function(map_, index_) {
+          if (map_.showGeocoder) {
+            active_index = map_.id
           }
-        }
-      }, true);
+        });
 
+        return active_index;
+      }
+
+      self.setGeocodeAsMarker = function(map_) {
+
+          if (map_ && map_.geocode && map_.geocode.response) {
+
+            var lng = map_.geocode.response.geometry.coordinates[0],
+                lat = map_.geocode.response.geometry.coordinates[1];
+
+            //
+            // Update the location of this map's draggable marker
+            //
+            self.map[map_.id].markers.projectLocation.lng = lng;
+            self.map[map_.id].markers.projectLocation.lat = lat;
+
+            //
+            // Update this map's center point
+            //
+            self.map[map_.id].center.lng = lng;
+            self.map[map_.id].center.lat = lat;
+
+            //
+            // Disable this map's geocoder and clear any query or response.
+            //
+            self.map[map_.id].showGeocoder = false;
+
+            self.map[map_.id].geocode.query = null;
+            self.map[map_.id].geocode.response = null;
+          }
+
+      }
+
+      $scope.$watch(
+        function watchForMapChange( scope ) {
+            return( self.map );
+        },
+        function handleMapChange(response, original) {
+
+          if (response && self.report && self.report.properties) {
+
+            var active_index = self.getActiveMapId(response);
+
+            if (active_index) {
+              self.setGeocodeAsMarker(self.map[active_index])
+            }
+
+            //
+            // Recenter all maps on their pins
+            //
+            angular.forEach(self.map, function(map_, index_) {
+
+              //
+              // If the map marker has been moved, recenter the map
+              //
+              if (response[index_].markers.projectLocation.lat !== original[index_].markers.projectLocation.lat && response[index_].markers.projectLocation.lng !== original[index_].markers.projectLocation.lng) {
+                self.map[index_].center.lat = map_.markers.projectLocation.lat;
+                self.map[index_].center.lng = map_.markers.projectLocation.lng;
+              }
+
+            });
+          }
+        },
+        true
+      );
 
     });
 
