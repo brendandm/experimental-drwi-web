@@ -288,7 +288,8 @@
                          data-ng-model="reading_.properties.practice_unit_id"
                          id="practice_unit_id" name="practice_unit_id"
                          data-ng-options="value.properties.id as (value.properties.plural) group by value.properties.group for value in page.unitTypes.features | orderBy:'properties.plural'"
-                         data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
+                         data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                         required="required">
                      <option value="">-- Select a unit --</option>
                  </select>
 
@@ -499,7 +500,8 @@
                          data-ng-model="reading_.properties.metric_unit_id"
                          id="metric_unit_id" name="metric_unit_id"
                          data-ng-options="value.properties.id as (value.properties.plural) group by value.properties.group for value in page.unitTypes.features | orderBy:'properties.plural'"
-                         data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
+                         data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                         required="required">
                      <option value="">-- Select a unit --</option>
                  </select>
 
