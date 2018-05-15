@@ -1,0 +1,10 @@
+<input type="text" id="address" name="address"
+       data-ng-model="geocode_query" class="form--control"
+       placeholder="Type in an address..."
+       autofocus="autofocus" />
+
+<ul class="mapboxGeocoder--results" data-ng-if="results.data.features.length >= 1">
+  <li class="mapboxGeocoder--results--result" data-ng-repeat="result in results.data.features" data-ng-click="address.select(result)">
+    {{ result.place_name }}
+  </li>
+</ul>

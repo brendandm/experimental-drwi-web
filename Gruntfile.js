@@ -369,13 +369,6 @@ module.exports = function (grunt) {
       }
     },
 
-    // Replace Google CDN references
-    cdnify: {
-      dist: {
-        html: ['<%= yeoman.dist %>/*.html']
-      }
-    },
-
     // Copies remaining files to places other tasks can use
     copy: {
       dist: {
@@ -420,13 +413,6 @@ module.exports = function (grunt) {
       ]
     }
 
-    // Test settings
-    // karma: {
-    //   unit: {
-    //     configFile: 'test/karma.conf.js',
-    //     singleRun: true,
-    //   }
-    // }
   });
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
@@ -466,7 +452,6 @@ module.exports = function (grunt) {
     'concat',
     'ngAnnotate',
     'copy:dist',
-    'cdnify',
     'cssmin',
     'filerev',
     'usemin'

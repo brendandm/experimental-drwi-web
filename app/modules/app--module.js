@@ -18,6 +18,8 @@ angular
     'monospaced.elastic',
     'angularMoment',
     'config',
+    'MapboxGL',
+    'MapboxGLGeocoding',
     'Mapbox',
     'save2pdf',
     'collaborator'

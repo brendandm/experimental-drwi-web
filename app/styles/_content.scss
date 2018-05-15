@@ -66,23 +66,6 @@
     }
   }
 
-
-  //
-  //
-  //
-  .table {
-
-    td {
-      em {
-        &.supplemental {
-          color: lighten($color-black-base, 50%);
-          font-size: 80%;
-        }
-      }
-    }
-  }
-
-
   //
   // List
   //
@@ -354,3 +337,383 @@
       padding: 0;
       width: 50%;
     }
+
+
+.show_custom_practices {
+
+  a,
+  a:active,
+  a:hover,
+  a:link,
+  a:visited {
+    color: #01DBB0;
+    display: inline-block;
+    float: right;
+    font-size: 12px;
+    padding: 4px 8px 4px 0;
+    text-decoration: underline;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+}
+
+
+// Donut Chart Mixin
+.donut-chart {
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+
+  .slice {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .chart-center {
+    position: absolute;
+    border-radius: 50%;
+
+    span {
+      display: block;
+      text-align: center;
+    }
+  }
+}
+
+.subpractices {
+  border-left: 4px solid #373F49;
+  margin: 32px 0 0 32px;
+  padding: 8px 0 16px 32px;
+
+  .subpractices--name {
+    // margin-top: 16px;
+  }
+}
+
+.subpractice--nutrients {
+  margin: 44px 0 0 0;
+  padding: 8px 0 16px 0;
+
+  .subpractice--nutrients--nutrient {
+    margin-top: 16px;
+  }
+
+  .metrics--metric p.metric--title,
+  p.metric--title,
+  p {
+      margin-bottom: 0;
+  }
+}
+
+@mixin donut-chart($name, $perc, $size: 32px, $width: 5px, $base: #1E5151, $center: #262F3A, $color: #01DBB0, $textColor: $color, $textSize: 40px) {
+
+  $color2: $color;
+  $base2: $base;
+	$deg: ($perc/100*360)+deg;
+	$deg1: 90deg;
+	$deg2: $deg;
+
+	// If percentage is less than 50%
+	@if $perc < 50 {
+		$base: $color;
+    $color: $base2;
+    $color2: $base2;
+    $deg1: ($perc/100*360+90)+deg;
+		$deg2: 0deg;
+	}
+
+  .donut-chart {
+    &#{$name} {
+      width: $size;
+      height: $size;
+      background: $base;
+
+      .slice {
+        &.one {
+          clip: rect(0 $size $size/2 0);
+          -webkit-transform: rotate($deg1);
+          transform: rotate($deg1);
+          background: $color;
+        }
+
+        &.two {
+          clip: rect(0 $size/2 $size 0);
+          -webkit-transform: rotate($deg2);
+          transform: rotate($deg2);
+          background: $color2;
+        }
+      }
+
+      .chart-center {
+        top: $width;
+        left: $width;
+        width: $size - ($width * 2);
+        height: $size - ($width * 2);
+        background: $center;
+
+        span {
+          font-size: $textSize;
+          line-height: $size - ($width * 2);
+          color: $textColor;
+
+          &:after {
+          content: '#{$perc}%';
+          }
+        }
+      }
+    }
+  }
+} // mixin
+
+@include donut-chart('.chart0', 0);
+@include donut-chart('.chart1', 1);
+@include donut-chart('.chart2', 2);
+@include donut-chart('.chart3', 3);
+@include donut-chart('.chart4', 4);
+@include donut-chart('.chart5', 5);
+@include donut-chart('.chart6', 6);
+@include donut-chart('.chart7', 7);
+@include donut-chart('.chart8', 8);
+@include donut-chart('.chart9', 9);
+@include donut-chart('.chart10', 10);
+@include donut-chart('.chart11', 11);
+@include donut-chart('.chart12', 12);
+@include donut-chart('.chart13', 13);
+@include donut-chart('.chart14', 14);
+@include donut-chart('.chart15', 15);
+@include donut-chart('.chart16', 16);
+@include donut-chart('.chart17', 17);
+@include donut-chart('.chart18', 18);
+@include donut-chart('.chart19', 19);
+@include donut-chart('.chart20', 20);
+@include donut-chart('.chart21', 21);
+@include donut-chart('.chart22', 22);
+@include donut-chart('.chart23', 23);
+@include donut-chart('.chart24', 24);
+@include donut-chart('.chart25', 25);
+@include donut-chart('.chart26', 26);
+@include donut-chart('.chart27', 27);
+@include donut-chart('.chart28', 28);
+@include donut-chart('.chart29', 29);
+@include donut-chart('.chart30', 30);
+@include donut-chart('.chart31', 31);
+@include donut-chart('.chart32', 32);
+@include donut-chart('.chart33', 33);
+@include donut-chart('.chart34', 34);
+@include donut-chart('.chart35', 35);
+@include donut-chart('.chart36', 36);
+@include donut-chart('.chart37', 37);
+@include donut-chart('.chart38', 38);
+@include donut-chart('.chart39', 39);
+@include donut-chart('.chart40', 40);
+@include donut-chart('.chart41', 41);
+@include donut-chart('.chart42', 42);
+@include donut-chart('.chart43', 43);
+@include donut-chart('.chart44', 44);
+@include donut-chart('.chart45', 45);
+@include donut-chart('.chart46', 46);
+@include donut-chart('.chart47', 47);
+@include donut-chart('.chart48', 48);
+@include donut-chart('.chart49', 49);
+@include donut-chart('.chart50', 50);
+@include donut-chart('.chart51', 51);
+@include donut-chart('.chart52', 52);
+@include donut-chart('.chart53', 53);
+@include donut-chart('.chart54', 54);
+@include donut-chart('.chart55', 55);
+@include donut-chart('.chart56', 56);
+@include donut-chart('.chart57', 57);
+@include donut-chart('.chart58', 58);
+@include donut-chart('.chart59', 59);
+@include donut-chart('.chart60', 60);
+@include donut-chart('.chart61', 61);
+@include donut-chart('.chart62', 62);
+@include donut-chart('.chart63', 63);
+@include donut-chart('.chart64', 64);
+@include donut-chart('.chart65', 65);
+@include donut-chart('.chart66', 66);
+@include donut-chart('.chart67', 67);
+@include donut-chart('.chart68', 68);
+@include donut-chart('.chart69', 69);
+@include donut-chart('.chart70', 70);
+@include donut-chart('.chart71', 71);
+@include donut-chart('.chart72', 72);
+@include donut-chart('.chart73', 73);
+@include donut-chart('.chart74', 74);
+@include donut-chart('.chart75', 75);
+@include donut-chart('.chart76', 76);
+@include donut-chart('.chart77', 77);
+@include donut-chart('.chart78', 78);
+@include donut-chart('.chart79', 79);
+@include donut-chart('.chart80', 80);
+@include donut-chart('.chart81', 81);
+@include donut-chart('.chart82', 82);
+@include donut-chart('.chart83', 83);
+@include donut-chart('.chart84', 84);
+@include donut-chart('.chart85', 85);
+@include donut-chart('.chart86', 86);
+@include donut-chart('.chart87', 87);
+@include donut-chart('.chart88', 88);
+@include donut-chart('.chart89', 89);
+@include donut-chart('.chart90', 90);
+@include donut-chart('.chart91', 91);
+@include donut-chart('.chart92', 92);
+@include donut-chart('.chart93', 93);
+@include donut-chart('.chart94', 94);
+@include donut-chart('.chart95', 95);
+@include donut-chart('.chart96', 96);
+@include donut-chart('.chart97', 97);
+@include donut-chart('.chart98', 98);
+@include donut-chart('.chart99', 99);
+@include donut-chart('.chart100', 100);
+
+
+//
+//
+//
+.button-nutrient,
+a.button-nutrient,
+a.button-nutrient:active,
+a.button-nutrient:focus,
+a.button-nutrient:hover,
+a.button-nutrient:link,
+a.button-nutrient:visited {
+
+  border: 1px solid $color-blue-bright;
+  color: $color-blue-bright;
+  position: relative;
+
+  &:hover {
+    border: 1px solid darken($color-blue-bright, 3%);
+    background-color: darken($color-blue-bright, 3%);
+    color: $color-white-base;
+    text-decoration: none;
+  }
+
+  &:active {
+    top: 1px;
+  }
+
+  border-radius: 12px;
+  -moz-border-radius: 12px;
+  -webkit-border-radius: 12px;
+
+  padding: 2px 14px;
+}
+
+.button-nutrient-save,
+a.button-nutrient-save,
+a.button-nutrient-save:active,
+a.button-nutrient-save:focus,
+a.button-nutrient-save:hover,
+a.button-nutrient-save:link,
+a.button-nutrient-save:visited {
+
+  background-color: darken($color-green-base, 3%);
+  color: $color-white-base;
+  position: relative;
+
+  &:hover {
+    background-color: darken($color-green-base, 15%);
+    color: $color-white-base;
+    text-decoration: none;
+  }
+
+  &:active {
+    top: 1px;
+  }
+
+  border-radius: 12px;
+  -moz-border-radius: 12px;
+  -webkit-border-radius: 12px;
+
+  padding: 2px 14px;
+}
+
+.button-nutrient-cancel,
+a.button-nutrient-cancel,
+a.button-nutrient-cancel:active,
+a.button-nutrient-cancel:focus,
+a.button-nutrient-cancel:hover,
+a.button-nutrient-cancel:link,
+a.button-nutrient-cancel:visited {
+  border: none;
+  color: rgb(64,64,64);
+  font-size: 10px;
+  text-decoration: none;
+  text-transform: uppercase;
+  position: relative;
+
+  &:hover {
+    color: rgb(0,0,0);
+    text-decoration: underline;
+  }
+
+  &:active {
+    top: 1px;
+  }
+
+  padding: 2px 4px;
+}
+
+.button-nutrient-delete,
+a.button-nutrient-delete,
+a.button-nutrient-delete:active,
+a.button-nutrient-delete:focus,
+a.button-nutrient-delete:hover,
+a.button-nutrient-delete:link,
+a.button-nutrient-delete:visited {
+  border: none;
+  color: $color-red-base;
+  font-size: 10px;
+  text-decoration: none;
+  text-transform: uppercase;
+  position: relative;
+
+  &:hover {
+    color: darken($color-red-base, 15%);
+    text-decoration: underline;
+  }
+
+  &:active {
+    top: 1px;
+  }
+
+  padding: 2px 4px;
+}
+.nutrient {
+  display: block;
+  width: 100%;
+}
+
+.nutrient--option {
+  display: inline-block;
+  margin-right: 8px;
+  width: auto;
+  vertical-align: text-top;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.nutrient--label {
+  color: rgb(164,164,164);
+  font-size: 11px;
+}
+
+.nutrient--value {
+  color: rgb(0,0,0);
+  font-size: 12px;
+}
+
+.nutrient--input,
+.form-control.nutrient--input,
+input.form-control.nutrient--input {
+  width: 64px;
+}

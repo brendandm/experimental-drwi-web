@@ -8,7 +8,7 @@
    * @description
    */
   angular.module('FieldDoc')
-    .controller('GrassBufferSummaryController', function (Account, $location, $log, PracticeGrassBuffer, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
+    .controller('GrassBufferSummaryController', function (Account, $location, $log, Nutrients, PracticeGrassBuffer, $q, $rootScope, $route, $scope, summary, user, Utility, $window) {
 
       var self = this,
           projectId = $route.current.params.projectId,
@@ -16,6 +16,8 @@
           practiceId = $route.current.params.practiceId;
 
       $rootScope.page = {};
+
+      self.nutrients = Nutrients;
 
       self.practiceType = null;
 

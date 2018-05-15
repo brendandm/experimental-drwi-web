@@ -16,6 +16,7 @@
     <title>{{ $root.page.title }}{{ $root.site.title }}</title>
 
     <link rel="stylesheet" type="text/css" href='//api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' />
+    <!-- <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' /> -->
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) /styles/vendor.css -->
@@ -54,6 +55,8 @@
       ga('send', 'pageview');
 
     </script>
+
+    <!-- <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script> -->
 
     <!-- build:js(.) /scripts/oldieshim.js -->
     <!--[if lt IE 9]>
@@ -106,7 +109,6 @@
             <!-- Projects Module -->
             <script src="modules/components/projects/projects--routes.js"></script>
             <script src="modules/components/projects/projectsList--controller.js"></script>
-            <script src="modules/components/projects/projectsSingle--controller.js"></script>
             <script src="modules/components/projects/projectsSummary--controller.js"></script>
             <script src="modules/components/projects/projectsEdit--controller.js"></script>
             <script src="modules/components/projects/projectsUsers--controller.js"></script>
@@ -117,100 +119,80 @@
 
            <!-- Sites Module -->
             <script src="modules/components/sites/sites--routes.js"></script>
-            <script src="modules/components/sites/sites--view.js"></script>
             <script src="modules/components/sites/sites--summary.js"></script>
             <script src="modules/components/sites/sites--edit.js"></script>
 
             <!-- Practices Module -->
             <script src="modules/components/practices/practices--routes.js"></script>
-            <script src="modules/components/practices/practices--storage.js"></script>
             <script src="modules/components/practices/practices--calculate.js"></script>
             <script src="modules/components/practices/practicesEdit--controller.js"></script>
             <script src="modules/components/practices/practicesView--controller.js"></script>
+            <script src="modules/components/practices/nutrient--service.js"></script>
 
                 <!-- Agriculture Generic -->
                 <script src="modules/components/practices/modules/agriculture-generic/agricultureGeneric--routes.js"></script>
-                <script src="modules/components/practices/modules/agriculture-generic/agricultureGeneric--calculate.js"></script>
-                <script src="modules/components/practices/modules/agriculture-generic/agricultureGeneric--report.js"></script>
                 <script src="modules/components/practices/modules/agriculture-generic/agricultureGeneric--form.js"></script>
                 <script src="modules/components/practices/modules/agriculture-generic/agricultureGeneric--summary.js"></script>
 
                 <!-- Forest Buffer -->
                 <script src="modules/components/practices/modules/forest-buffer/forestBuffer--routes.js"></script>
-                <script src="modules/components/practices/modules/forest-buffer/forestBuffer--calculate.js"></script>
-                <script src="modules/components/practices/modules/forest-buffer/forestBuffer--report.js"></script>
                 <script src="modules/components/practices/modules/forest-buffer/forestBuffer--form.js"></script>
                 <script src="modules/components/practices/modules/forest-buffer/forestBuffer--summary.js"></script>
 
                 <!-- Grass Buffer -->
                 <script src="modules/components/practices/modules/grass-buffer/grassBuffer--routes.js"></script>
-                <script src="modules/components/practices/modules/grass-buffer/grassBuffer--calculate.js"></script>
-                <script src="modules/components/practices/modules/grass-buffer/grassBuffer--report.js"></script>
                 <script src="modules/components/practices/modules/grass-buffer/grassBuffer--form.js"></script>
                 <script src="modules/components/practices/modules/grass-buffer/grassBuffer--summary.js"></script>
 
                 <!-- Livestock Exclusion -->
                 <script src="modules/components/practices/modules/livestock-exclusion/livestockExclusion--routes.js"></script>
-                <script src="modules/components/practices/modules/livestock-exclusion/livestockExclusion--calculate.js"></script>
-                <script src="modules/components/practices/modules/livestock-exclusion/livestockExclusion--report.js"></script>
                 <script src="modules/components/practices/modules/livestock-exclusion/livestockExclusion--form.js"></script>
                 <script src="modules/components/practices/modules/livestock-exclusion/livestockExclusion--summary.js"></script>
 
                 <!-- Urban Homeowner -->
                 <script src="modules/components/practices/modules/urban-homeowner/urbanHomeowner--routes.js"></script>
-                <script src="modules/components/practices/modules/urban-homeowner/urbanHomeowner--calculate.js"></script>
-                <script src="modules/components/practices/modules/urban-homeowner/urbanHomeowner--report.js"></script>
                 <script src="modules/components/practices/modules/urban-homeowner/urbanHomeowner--form.js"></script>
                 <script src="modules/components/practices/modules/urban-homeowner/urbanHomeowner--summary.js"></script>
 
                 <!-- Bioretention -->
                 <script src="modules/components/practices/modules/bioretention/bioretention--routes.js"></script>
-                <script src="modules/components/practices/modules/bioretention/bioretention--calculate.js"></script>
-                <script src="modules/components/practices/modules/bioretention/bioretention--report.js"></script>
                 <script src="modules/components/practices/modules/bioretention/bioretention--form.js"></script>
                 <script src="modules/components/practices/modules/bioretention/bioretention--summary.js"></script>
 
                 <!-- In-stream Habitat -->
                 <script src="modules/components/practices/modules/instream-habitat/instreamHabitat--routes.js"></script>
-                <script src="modules/components/practices/modules/instream-habitat/instreamHabitat--calculate.js"></script>
-                <script src="modules/components/practices/modules/instream-habitat/instreamHabitat--report.js"></script>
                 <script src="modules/components/practices/modules/instream-habitat/instreamHabitat--form.js"></script>
                 <script src="modules/components/practices/modules/instream-habitat/instreamHabitat--summary.js"></script>
 
                 <!-- Bank Stabilization -->
                 <script src="modules/components/practices/modules/bank-stabilization/bankStabilization--routes.js"></script>
-                <script src="modules/components/practices/modules/bank-stabilization/bankStabilization--calculate.js"></script>
-                <script src="modules/components/practices/modules/bank-stabilization/bankStabilization--report.js"></script>
                 <script src="modules/components/practices/modules/bank-stabilization/bankStabilization--form.js"></script>
                 <script src="modules/components/practices/modules/bank-stabilization/bankStabilization--summary.js"></script>
 
                 <!-- Enhanced Stream Restoration -->
                 <script src="modules/components/practices/modules/enhanced-stream-restoration/enhancedStreamRestoration--routes.js"></script>
-                <script src="modules/components/practices/modules/enhanced-stream-restoration/enhancedStreamRestoration--calculate.js"></script>
-                <script src="modules/components/practices/modules/enhanced-stream-restoration/enhancedStreamRestoration--report.js"></script>
                 <script src="modules/components/practices/modules/enhanced-stream-restoration/enhancedStreamRestoration--form.js"></script>
                 <script src="modules/components/practices/modules/enhanced-stream-restoration/enhancedStreamRestoration--summary.js"></script>
 
                 <!-- Non-tidal Wetlands -->
                 <script src="modules/components/practices/modules/nontidal-wetlands/wetlandsNonTidal--routes.js"></script>
-                <script src="modules/components/practices/modules/nontidal-wetlands/wetlandsNonTidal--calculate.js"></script>
-                <script src="modules/components/practices/modules/nontidal-wetlands/wetlandsNonTidal--report.js"></script>
                 <script src="modules/components/practices/modules/nontidal-wetlands/wetlandsNonTidal--form.js"></script>
                 <script src="modules/components/practices/modules/nontidal-wetlands/wetlandsNonTidal--summary.js"></script>
 
                 <!-- Non-tidal Wetlands -->
                 <script src="modules/components/practices/modules/shoreline-management/shorelineManagement--routes.js"></script>
-                <script src="modules/components/practices/modules/shoreline-management/shorelineManagement--calculate.js"></script>
-                <script src="modules/components/practices/modules/shoreline-management/shorelineManagement--report.js"></script>
                 <script src="modules/components/practices/modules/shoreline-management/shorelineManagement--form.js"></script>
                 <script src="modules/components/practices/modules/shoreline-management/shorelineManagement--summary.js"></script>
 
                 <!-- Stormwater Management -->
                 <script src="modules/components/practices/modules/stormwater/stormwater--routes.js"></script>
-                <script src="modules/components/practices/modules/stormwater/stormwater--calculate.js"></script>
-                <script src="modules/components/practices/modules/stormwater/stormwater--report.js"></script>
                 <script src="modules/components/practices/modules/stormwater/stormwater--form.js"></script>
                 <script src="modules/components/practices/modules/stormwater/stormwater--summary.js"></script>
+
+                <!-- Custom -->
+                <script src="modules/components/practices/modules/custom/custom--routes.js"></script>
+                <script src="modules/components/practices/modules/custom/custom--form.js"></script>
+                <script src="modules/components/practices/modules/custom/custom--summary.js"></script>
 
             <!-- CommonsCloud Module -->
             <script src="modules/shared/commons-cloud/configuration--constant.js"></script>
@@ -226,6 +208,15 @@
             <script src="modules/shared/mapbox/mapbox--constant.js"></script>
             <script src="modules/shared/mapbox/states--constant.js"></script>
             <script src="modules/shared/mapbox/template--service.js"></script>
+
+            <!-- Viable Modules -->
+            <script src="modules/shared/mapboxgl/mapboxgl--module.js"></script>
+            <script src="modules/shared/mapboxgl/mapboxgl--constant.js"></script>
+            <script src="modules/shared/mapboxgl/mapboxgl--directive.js"></script>
+
+            <script src="modules/shared/mapboxgl-geocoding/mapboxglGeocoding--module.js"></script>
+            <script src="modules/shared/mapboxgl-geocoding/mapboxglGeocoding--service.js"></script>
+            <script src="modules/shared/mapboxgl-geocoding/mapboxglGeocoding--directive.js"></script>
 
             <script src="modules/shared/collaborator/collaborator--module.js"></script>
             <script src="modules/shared/collaborator/collaborator--service.js"></script>
@@ -249,7 +240,14 @@
             <script src="modules/shared/api/landuse--service.js"></script>
             <script src="modules/shared/api/media--service.js"></script>
             <script src="modules/shared/api/loaddata--service.js"></script>
+            <script src="modules/shared/api/metricType--service.js"></script>
+            <script src="modules/shared/api/monitoringType--service.js"></script>
+            <script src="modules/shared/api/nutrient--service.js"></script>
             <script src="modules/shared/api/practice--service.js"></script>
+            <script src="modules/shared/api/practiceCustom--service.js"></script>
+            <script src="modules/shared/api/practiceCustomReading--service.js"></script>
+            <script src="modules/shared/api/practiceCustomMetric--service.js"></script>
+            <script src="modules/shared/api/practiceCustomMonitoring--service.js"></script>
             <script src="modules/shared/api/practiceAgricultureGeneric--service.js"></script>
             <script src="modules/shared/api/practiceUrbanHomeowner--service.js"></script>
             <script src="modules/shared/api/practiceBioretention--service.js"></script>
@@ -262,11 +260,13 @@
             <script src="modules/shared/api/practiceWetlandsNonTidal--service.js"></script>
             <script src="modules/shared/api/practiceShorelineManagement--service.js"></script>
             <script src="modules/shared/api/practiceStormwater--service.js"></script>
+            <script src="modules/shared/api/practiceType--service.js"></script>
             <script src="modules/shared/api/project--service.js"></script>
             <script src="modules/shared/api/security--service.js"></script>
             <script src="modules/shared/api/site--service.js"></script>
             <script src="modules/shared/api/segment--service.js"></script>
             <script src="modules/shared/api/stateLoad--service.js"></script>
+            <script src="modules/shared/api/unitType--service.js"></script>
             <script src="modules/shared/api/utility--service.js"></script>
 
 

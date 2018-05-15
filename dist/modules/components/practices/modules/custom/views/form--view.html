@@ -1,0 +1,702 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="container">
+  <article class="feature-detail">
+    <div class="column-16 feature-detail-content">
+      <form data-ng-submit="page.saveReport()" class="form" role="form">
+
+        <div class="form-row">
+          <div class="form-label">
+            <label for="report_date" class="control-label">
+              Report Date
+            </label>
+          </div>
+          <div class="form-field">
+              <label for="report_date" class="control-label">
+                Please set the date to the day you took the photos
+              </label>
+
+              <div class="form-element form-element-quarters">
+                <p class="form-control form-control-disabled">
+                  {{ page.date.day }}
+                </p>
+                <p class="help-text">
+                  Day
+                </p>
+              </div>
+
+              <div class="form-element form-element-quarters">
+                <select class="form-control"
+                        id="report_date_month" name="report_date_month"
+                        data-ng-model="page.date.month"
+                        data-ng-options="month for month in page.months">
+                </select>
+                <p class="help-text">
+                  Month
+                </p>
+              </div>
+
+              <div class="form-element form-element-quarters">
+                <input number type="number" min="1" max="31" step="1"
+                       class="form-control"
+                       id="report_date_date" name="report_date_date"
+                       data-ng-model="page.date.date"
+                       data-ng-if="page.date.month === 'Jan' ||
+                                   page.date.month === 'Mar' ||
+                                   page.date.month === 'May' ||
+                                   page.date.month === 'Jul' ||
+                                   page.date.month === 'Aug' ||
+                                   page.date.month === 'Oct' ||
+                                   page.date.month === 'Dec'" />
+               <input number type="number" min="1" max="30" step="1"
+                      class="form-control"
+                      id="report_date_date" name="report_date_date"
+                      data-ng-model="page.date.date"
+                      data-ng-if="page.date.month === 'Apr' ||
+                                  page.date.month === 'Jun' ||
+                                  page.date.month === 'Sep' ||
+                                  page.date.month === 'Nov'" />
+                <input number type="number" min="1" max="29" step="1"
+                       class="form-control"
+                       id="report_date_date" name="report_date_date"
+                       data-ng-model="page.date.date"
+                       data-ng-if="page.date.month === 'Feb'" />
+               <p class="help-text">
+                 Date
+               </p>
+             </div>
+
+             <div class="form-element form-element-quarters">
+               <input number type="number" min="1900" step="1"
+                      class="form-control"
+                      id="report_date_year" name="report_date_year"
+                      data-ng-model="page.date.year" />
+                <p class="help-text">
+                  Year
+                </p>
+              </div>
+          </div>
+        </div>
+
+        <!-- Measurement Period -->
+        <div class="form-row">
+          <div class="form-label">
+            <label for="measurement_period" class="control-label">
+              Measurement Period
+            </label>
+          </div>
+          <div class="form-field">
+
+            <div class="form-element">
+              <select class="form-control"
+                      data-ng-model="page.report.properties.measurement_period"
+                      id="measurement_period" name="measurement_period"
+                      required="required">
+                <option value="Planning">Planning</option>
+                <option value="Installation">Installation</option>
+                <option value="Monitoring">Monitoring</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- WIP Reporting Agency -->
+        <div class="form-row" data-ng-if="page.report.properties.measurement_period === 'Planning'">
+          <div class="form-label">
+            <label for="wip_reporting_agency" class="control-label">
+              WIP Reporting Agency
+            </label>
+          </div>
+          <div class="form-field">
+
+            <div class="form-element">
+              <select class="form-control" data-ng-model="page.report.properties.wip_reporting_agency" id="wip_reporting_agency" name="wip_reporting_agency">
+                <option value="DC District Department of the Environment">DC District Department of the Environment</option>
+                <option value="DE Department of Natural Resources and Environmental Control">DE Department of Natural Resources and Environmental Control</option>
+                <option value="MD Department of Natural Resources">MD Department of Natural Resources</option>
+                <option value="MD Department of the Environment">MD Department of the Environment</option>
+                <option value="MD Department of Agriculture">MD Department of Agriculture</option>
+                <option value="NY Department of Environmental Conservation">NY Department of Environmental Conservation</option>
+                <option value="PA Department of Environmental Protection">PA Department of Environmental Protection</option>
+                <option value="VA Department of Conservation and Recreation">VA Department of Conservation and Recreation</option>
+                <option value="WV Department of Environmental Protection">WV Department of Environmental Protection</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+          <div class="form-label">
+            <label for="wip_reporting_agency" class="control-label">
+              Methods for calculating nutrient and sediment reductions
+            </label>
+          </div>
+          <div class="form-field">
+
+            <div class="form-element form-element">
+
+               <div class="form-element form-element">
+                 <label for="custom_model_name" class="control-label">
+                   Name of model used to calculate nutrient and sediment reductions
+                 </label>
+
+                 <input data-ng-model="page.report.properties.custom_model_name"
+                        class="form-control" class="form-control" type="text"
+                        id="custom_model_name" name="custom_model_name"
+                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                        placeholder="CAST" />
+               </div>
+
+               <div class="form-element form-element">
+                 <label for="custom_model_description" class="control-label">
+                   Description of model used to calculate nutrient and sediment reductions
+                 </label>
+
+                 <input data-ng-model="page.report.properties.custom_model_description"
+                        class="form-control" class="form-control" type="text"
+                        id="custom_model_description" name="custom_model_description"
+                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                        placeholder="Chesapeake Assessment Scenario Tool (CAST) is a web-based nitrogen, phosphorus and sediment load estimator tool that streamlines environmental planning." />
+               </div>
+
+               <div class="form-element form-element">
+                 <label for="custom_model_source" class="control-label">
+                   Source of model used to calculate nutrient and sediment reductions
+                 </label>
+
+                 <input data-ng-model="page.report.properties.custom_model_source"
+                        class="form-control" class="form-control" type="text"
+                        id="custom_model_source" name="custom_model_source"
+                        data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
+                        data-ng-required="page.report.properties.model_type === 'custom'"
+                        placeholder="https://cast.chesapeakebay.net" />
+
+                 <p class="help-text">
+                   If possible, please provide a link to the custom unit area
+                   loads model.
+                 </p>
+               </div>
+
+              <!-- Custom Nitrogen Unit Area Loads -->
+              <div class="form-element form-element-thirds">
+                <label for="custom_model_nitrogen_total" class="control-label">
+                  Nitrogen Reduction
+                </label>
+
+                <input data-ng-model="page.report.properties.custom_model_nitrogen_total"
+                       class="form-control" class="form-control" type="number"
+                       id="custom_model_nitrogen_total" name="custom_model_nitrogen_total"
+                       disabled />
+              </div>
+
+              <!-- Custom Phosphorus Unit Area Loads -->
+              <div class="form-element form-element-thirds">
+                <label for="custom_model_phosphorus_total" class="control-label">
+                  Phosphorus Reduction
+                </label>
+
+                <input data-ng-model="page.report.properties.custom_model_phosphorus_total"
+                       class="form-control" class="form-control" type="number"
+                       id="custom_model_phosphorus_total" name="custom_model_phosphorus_total"
+                       disabled />
+              </div>
+
+              <!-- Custom Sediment Unit Area Loads -->
+              <div class="form-element form-element-thirds">
+                <label for="custom_model_sediment_total" class="control-label">
+                  Sediment Reduction
+                </label>
+
+                <input data-ng-model="page.report.properties.custom_model_sediment_total"
+                       class="form-control" class="form-control" type="number"
+                       id="custom_model_sediment_total" name="custom_model_sediment_total"
+                       disabled />
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <div class="form-row"
+             data-ng-repeat="reading_ in page.report.properties.readings | orderBy:'id':false track by reading_.id"
+             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+          <div class="form-label">
+            <label for="" class="control-label">
+              Other Conservation Practice #{{ $index+1 }}
+            </label>
+          </div>
+          <div class="form-field">
+
+             <!-- Column 1 of 2: Form Fields Column -->
+             <div class="form-element form-element-half">
+
+               <!-- Practice -->
+               <label for="practice_type_id" class="control-label">
+                 Practice Type
+               </label>
+
+               <select data-ng-if="!page.custom_practice_type[reading_.id]"
+                       class="form-control"
+                       data-ng-model="reading_.properties.practice_type_id"
+                       id="practice_type_id" name="practice_type_id"
+                       data-ng-options="value.properties.id as value.properties.name group by value.properties.group for value in page.practiceTypes.features | orderBy:'properties.best_management_practice'"
+                       data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
+                   <option value="">-- Select a practice --</option>
+               </select>
+
+               <div data-ng-if="page.custom_practice_type[reading_.id]">
+                 <input class="form-control"
+                        data-ng-model="reading_.properties.practice_type.properties.name"
+                        id="custom_practice_type_name"
+                        name="custom_practice_type_name"
+                        type="text"
+                        autofocus  />
+
+                 <a href="javascript:void(0);"
+                    data-ng-click="page.actions.cancelAddNewPracticeType(reading_)">
+                   Cancel
+                 </a>
+               </div>
+
+               <p class="help-text">
+                 Don't see your practice?
+                 <a href="javascript:void(0);"
+                    data-ng-click="page.actions.addNewPracticeType(reading_)">Add a new practice</a>
+               </p>
+
+
+               <div class="form-element form-element-half">
+                 <!-- Practice Extent -->
+                 <label for="practice_extent" class="control-label">
+                   Practice Extent
+                 </label>
+
+                 <input class="form-control" data-ng-model="reading_.properties.practice_extent"
+                        id="practice_extent" name="practice_extent"
+                        step="0.0001" type="number"  />
+
+               </div>
+               <div class="form-element form-element-half">
+                 <!-- Units -->
+                 <label for="practice_unit_id" class="control-label">
+                   Units
+                 </label>
+
+                 <select class="form-control"
+                         data-ng-model="reading_.properties.practice_unit_id"
+                         id="practice_unit_id" name="practice_unit_id"
+                         data-ng-options="value.properties.id as (value.properties.plural) group by value.properties.group for value in page.unitTypes.features | orderBy:'properties.plural'"
+                         data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
+                     <option value="">-- Select a unit --</option>
+                 </select>
+
+               </div>
+
+               <div class="form-element form-element-half">
+                 <!-- Nitrogen -->
+                 <label for="nitrogen_reduction" class="control-label">
+                   Nitrogen Reduction
+                 </label>
+
+                 <input class="form-control" data-ng-model="reading_.properties.practice_nutrient_reductions.properties.nitrogen"
+                        id="nitrogen_reduction" name="nitrogen_reduction" step="0.0001"
+                        type="number"  />
+
+               </div>
+               <div class="form-element form-element-half">
+                 <label for="" class="control-label">
+                   &nbsp;
+                 </label>
+                 <p>
+                   <strong>lbs/yr</strong>
+                 </p>
+               </div>
+
+               <div class="form-element form-element-half">
+                 <!-- Phosphorus -->
+                 <label for="phosphorus_reduction" class="control-label">
+                   Phosphorus Reduction
+                 </label>
+
+                 <input class="form-control" data-ng-model="reading_.properties.practice_nutrient_reductions.properties.phosphorus"
+                        id="phosphorus_reduction" name="phosphorus_reduction" step="0.0001"
+                        type="number"  />
+
+               </div>
+               <div class="form-element form-element-half">
+                 <label for="" class="control-label">
+                   &nbsp;
+                 </label>
+                 <p>
+                   <strong>lbs/yr</strong>
+                 </p>
+               </div>
+
+               <div class="form-element form-element-half">
+                 <!-- Sediment -->
+                 <label for="sediment_reduction" class="control-label">
+                   Sediment Reduction
+                 </label>
+
+                 <input class="form-control" data-ng-model="reading_.properties.practice_nutrient_reductions.properties.sediment"
+                         id="sediment_reduction" name="sediment_reduction" step="0.0001"
+                        type="number"  />
+
+              </div>
+              <div class="form-element form-element-half">
+                <label for="" class="control-label">
+                  &nbsp;
+                </label>
+                <p>
+                  <strong>tons/yr</strong>
+                </p>
+              </div>
+
+              <div class="form-element form-element-half">
+                <label for="" class="control-label">
+                  &nbsp;
+                </label>
+
+                <button type="button" class="button button-link button-outline pull-right"
+                        data-ng-click="page.confirmDelete[reading_.id] =! page.confirmDelete[reading_.id]"
+                        data-ng-if="!page.confirmDelete[reading_.id] && page.report.properties.measurement_period === 'Planning'">
+                  Remove this practice
+                </button>
+                <span data-ng-if="page.confirmDelete[reading_.id]" class="action pull-right">
+                  <a data-ng-click="page.deleteSubPractice(reading_.id)"
+                        class="remove">
+                    Yes, I'm sure, delete this practice</a> or <a class="cancel" data-ng-click="page.confirmDelete[reading_.id] = false;">nevermind</a>
+                </span>
+
+              </div>
+
+             </div>
+
+             <!-- Column 2 of 2: Geography Selection Column -->
+             <div class="form-element form-element-half">
+               <label for="" class="control-label">
+                 Practice Location
+               </label>
+
+               <div class="autocomplete">
+                 <label data-ng-if="page.map[reading_.id].showGeocoder !== true" class="control-label pull-right">
+                   <a href="javascript:void(0);"
+                      data-ng-click="page.activateGeocoderForReading(reading_.id)">
+                      <!-- data-ng-click="page.map[reading_.id].showGeocoder =! page.map[reading_.id].showGeocoder"> -->
+                      Search for an address or city
+                   </a>
+                 </label>
+                 <div data-ng-if="page.map[reading_.id].showGeocoder === true" class="mapboxGeocoder">
+                   <input type="text" id="address" name="address"
+                          data-ng-model="page.map[reading_.id].geocode.query" class="form-control"
+                          placeholder="Type in an address..." mapbox-geocoder
+                          mapbox-geocoder-direction="forward"
+                          mapbox-geocoder-query="page.map[reading_.id].geocode.query"
+                          mapbox-geocoder-response="page.map[reading_.id].geocode.response"
+                          autofocus="autofocus" />
+                 </div><br />
+               </div>
+
+               <!-- <mapboxgl id="map" class="mapboxgl-map" options="page.options" /> -->
+               <!-- ({{ page.map[reading_.id] }}) -->
+               <leaflet data-ng-if="page.map[reading_.id] && page.map[reading_.id].center && page.map[reading_.id].layers && page.map[reading_.id].defaults"
+                        class="map"
+                        markers="page.map[reading_.id].markers"
+                        defaults="page.map[reading_.id].defaults"
+                        layers="page.map[reading_.id].layers"
+                        center="page.map[reading_.id].center"></leaflet>
+             </div>
+
+          </div>
+        </div>
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning'">
+          <div class="form-label">
+            <label class="control-label">
+              New Other Conservation Practice
+            </label>
+          </div>
+          <div class="form-field">
+            <button type="button"
+                    data-ng-if="!page.status.readings.loading"
+                    data-ng-click="page.addReading()"
+                    class="button button-link button-outline">
+              + Add Another Practice
+            </button>
+            <em data-ng-if="page.status.readings.loading">
+              Creating new practice for this measurement period...
+            </em>
+          </div>
+        </div>
+
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'"
+             data-ng-repeat="reading_ in page.report.properties.metrics | orderBy:'id':false track by reading_.id">
+          <div class="form-label">
+            <label for="" class="control-label">
+              Custom Metric #{{ $index+1 }}
+            </label>
+          </div>
+          <div class="form-field">
+
+             <!-- Column 1 of 2: Form Fields Column -->
+             <div class="form-element">
+
+               <!-- Practice -->
+               <label for="metric_type_id" class="control-label">
+                 Metric
+               </label>
+
+               <select data-ng-if="!page.custom_metric_type[reading_.id]"
+                       class="form-control"
+                       data-ng-model="reading_.properties.metric_type_id"
+                       id="metric_type_id" name="metric_type_id"
+                       data-ng-options="value.id as value.properties.name group by value.properties.group for value in page.metricTypes.features | orderBy:'properties.name'">
+                   <option value="">-- Select a metric --</option>
+               </select>
+
+               <div data-ng-if="page.custom_metric_type[reading_.id]">
+                 <input class="form-control"
+                        data-ng-model="reading_.properties.metric_type.properties.name"
+                        id="custom_metric_type_name"
+                        name="custom_metric_type_name"
+                        type="text"
+                        autofocus  />
+
+                 <a href="javascript:void(0);"
+                    data-ng-click="page.actions.cancelAddNewMetricType(reading_)">
+                   Cancel
+                 </a>
+               </div>
+
+               <p class="help-text">
+                 Don't see your metric?
+                 <a href="javascript:void(0);"
+                    data-ng-click="page.actions.addNewMetricType(reading_)">Add a new metric</a>
+               </p>
+
+
+               <div class="form-element form-element-half">
+                 <!-- Practice Extent -->
+                 <label for="metric_value" class="control-label">
+                   Metric Value
+                 </label>
+
+                 <input class="form-control" data-ng-model="reading_.properties.metric_value"
+                        id="metric_value" name="metric_value"
+                        step="0.0001" type="number"  />
+
+               </div>
+               <div class="form-element form-element-half">
+                 <!-- Units -->
+                 <label for="metric_unit_id" class="control-label">
+                   Units
+                 </label>
+
+                 <select class="form-control"
+                         data-ng-model="reading_.properties.metric_unit_id"
+                         id="metric_unit_id" name="metric_unit_id"
+                         data-ng-options="value.properties.id as (value.properties.plural) group by value.properties.group for value in page.unitTypes.features | orderBy:'properties.plural'"
+                         data-ng-disabled="page.report.properties.measurement_period === 'Installation'">
+                     <option value="">-- Select a unit --</option>
+                 </select>
+
+               </div>
+
+               <div class="form-element form-element-half">
+                 <label for="" class="control-label">
+                   &nbsp;
+                 </label>
+
+                 <button type="button" class="button button-link button-outline pull-right"
+                         data-ng-click="page.confirmMetricDelete[reading_.id] =! page.confirmMetricDelete[reading_.id]"
+                         data-ng-if="!page.confirmMetricDelete[reading_.id] && page.report.properties.measurement_period === 'Planning'">
+                   Remove this metric
+                 </button>
+                 <span data-ng-if="page.confirmMetricDelete[reading_.id]" class="action pull-right">
+                   <a data-ng-click="page.deleteMetric(reading_.id)"
+                         class="remove">
+                     Yes, I'm sure, delete this metric</a> or <a class="cancel" data-ng-click="page.confirmMetricDelete[reading_.id] = false;">nevermind</a>
+                 </span>
+
+               </div>
+
+             </div>
+
+          </div>
+        </div>
+
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning'">
+          <div class="form-label">
+            <label class="control-label">
+              New Custom Metric
+            </label>
+          </div>
+          <div class="form-field">
+            <button type="button"
+                    data-ng-click="page.addMetric()"
+                    class="button button-link button-outline">
+              + Add Another Metric
+            </button>
+
+          </div>
+        </div>
+
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Monitoring'"
+             data-ng-repeat="monitoring_ in page.report.properties.monitoring | orderBy:'id':false track by monitoring_.id">
+          <div class="form-label">
+            <label for="" class="control-label">
+              Custom Monitoring Check #{{ $index+1 }}
+            </label>
+          </div>
+          <div class="form-field">
+
+            <div class="form-element">
+              <!-- Practice Extent -->
+              <label for="monitoring_value" class="control-label">
+                Check Performed?
+              </label>
+
+              <input type="checkbox" class="form-control"
+                     data-ng-model="monitoring_.properties.was_verified" />
+
+            </div>
+
+             <!-- Column 1 of 2: Form Fields Column -->
+             <div class="form-element">
+
+               <!-- Practice -->
+               <label for="monitoring_type_id" class="control-label">
+                 Monitoring Check
+               </label>
+
+               <select data-ng-if="!page.custom_monitoring_type[monitoring_.id]"
+                       class="form-control"
+                       data-ng-model="monitoring_.properties.monitoring_type_id"
+                       id="monitoring_type_id" name="monitoring_type_id"
+                       data-ng-options="value.id as value.properties.name group by value.properties.group for value in page.monitoringTypes.features | orderBy:'properties.name'">
+                   <option value="">-- Select an adaptive management check --</option>
+               </select>
+
+               <div data-ng-if="page.custom_monitoring_type[monitoring_.id]">
+                 <input class="form-control"
+                        data-ng-model="monitoring_.properties.monitoring_type.properties.name"
+                        id="custom_monitoring_type_name"
+                        name="custom_monitoring_type_name"
+                        type="text"
+                        autofocus  />
+
+                 <a href="javascript:void(0);"
+                    data-ng-click="page.actions.cancelAddMonitoringCheckType(monitoring_)">
+                   Cancel
+                 </a>
+               </div>
+               <p class="help-text">
+                 Don't see your adaptive management check?
+                 <a href="javascript:void(0);"
+                    data-ng-click="page.actions.addNewMonitoringCheckType(monitoring_)">Add a new adaptive management check</a>
+               </p>
+
+
+               <div class="form-element form-element-half">
+                 <!-- Practice Extent -->
+                 <label for="monitoring_value" class="control-label">
+                   Monitoring Check Value
+                 </label>
+
+                 <input class="form-control" data-ng-model="monitoring_.properties.monitoring_value"
+                        id="monitoring_value" name="monitoring_value"
+                        step="0.0001" type="number"  />
+
+               </div>
+               <div class="form-element form-element-half">
+                 <!-- Practice Extent -->
+                 <label for="monitoring_description" class="control-label">
+                   Description
+                 </label>
+
+                 <input class="form-control" data-ng-model="monitoring_.properties.monitoring_description"
+                        id="monitoring_description" name="monitoring_description"
+                        type="text"  />
+
+               </div>
+
+               <div class="form-element form-element-half">
+                 <label for="" class="control-label">
+                   &nbsp;
+                 </label>
+
+                 <button type="button" class="button button-link button-outline pull-right"
+                         data-ng-click="page.confirmMonitoringCheckDelete[monitoring_.id] =! page.confirmMonitoringCheckDelete[monitoring_.id]"
+                         data-ng-if="!page.confirmMonitoringCheckDelete[monitoring_.id]">
+                   Remove this check
+                 </button>
+                 <span data-ng-if="page.confirmMonitoringCheckDelete[monitoring_.id]" class="action pull-right">
+                   <a data-ng-click="page.deleteMonitoringCheck(monitoring_.id)"
+                         class="remove">
+                     Yes, I'm sure, delete this check</a> or <a class="cancel" data-ng-click="page.confirmMonitoringCheckDelete[monitoring_.id] = false;">nevermind</a>
+                 </span>
+
+               </div>
+
+             </div>
+
+          </div>
+        </div>
+
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
+          <div class="form-label">
+            <label class="control-label">
+              New Custom Monitoring Check
+            </label>
+          </div>
+          <div class="form-field">
+            <button type="button"
+                    data-ng-click="page.addMonitoringCheck()"
+                    class="button button-link button-outline">
+              + Add Another Monitoring Check
+            </button>
+
+          </div>
+        </div>
+
+        <div class="form-row"
+             data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation' || page.report.properties.measurement_period === 'Monitoring'">
+          <div class="form-label">
+            <label for="notes" class="control-label">
+              Notes
+            </label>
+          </div>
+          <div class="form-field">
+
+            <div class="form-element">
+              <textarea rows="8" data-ng-model="page.report.properties.notes"
+                        class="form-control animate"  msd-elastic id="notes"
+                        name="notes">{{ page.report.properties.notes }}</textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <div class="form-actions-buttons"></div>
+          <div class="form-actions-buttons">
+            <button type="submit"class="button button-submit">
+              Save Changes
+            </button>
+            <button type="button" data-ng-click="page.deleteReport()"
+                    class="button button-link button-outline pull-right">
+              Delete
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </article>
+</main>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>
