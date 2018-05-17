@@ -253,7 +253,10 @@
                    data-ng-repeat="practice in page.rollups.nitrogen.practices | orderBy:'name' track by $index">
              <div class="column-16 list-item-content">
               <h1>
-                <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}/{{ page.cleanName(practice.name) }}">
+                <a data-ng-if="practice.name === 'Other Agriculture Practice'" href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}/agriculture-generic">
+                  {{ practice.name }}
+                </a>
+                <a data-ng-if="practice.name !== 'Other Agriculture Practice'" href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}/{{ page.cleanName(practice.name) }}">
                   {{ practice.name }}
                 </a>
                 <span class="creation-date">
