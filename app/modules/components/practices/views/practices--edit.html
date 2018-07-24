@@ -16,7 +16,7 @@
               <optgroup label="Other">
                 <option value="Custom">Other Conservation Practice</option>
               </optgroup>
-              <optgroup label="Chesapeake Phase 5.3.2">
+              <!-- <optgroup label="Chesapeake Phase 5.3.2">
                 <option value="Bank Stabilization">Bank Stabilization</option>
                 <option value="Bioretention">Bioretention</option>
                 <option value="Enhanced Stream Restoration">Enhanced Stream Restoration</option>
@@ -29,7 +29,7 @@
                 <option value="Shoreline Management">Shoreline Management</option>
                 <option value="Stormwater">Stormwater Management</option>
                 <option value="Urban Homeowner">Urban Homeowner</option>
-              </optgroup>
+              </optgroup> -->
             </select>
           </div>
         </div>
@@ -61,7 +61,7 @@
             </div><br />
           </div>
 
-          <leaflet data-ng-if="page.map" class="map" markers="page.map.markers" defaults="page.map.defaults" layers="page.map.layers" center="page.map.center"></leaflet>
+          <leaflet data-ng-if="page.map" class="map" controls="page.controls" markers="page.map.markers" defaults="page.map.defaults" layers="page.map.layers" center="page.map.center"></leaflet>
         </div>
 
         <!-- 7. Images -->

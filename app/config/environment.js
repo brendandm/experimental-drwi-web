@@ -2,6 +2,6 @@
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+.constant('environment', {name:'development',apiUrl:'http://api.drwi.chesapeakecommons.org',siteUrl:'http://127.0.0.1:9000',clientId:'sL3yMmmnSNszktuQGVBCasZ6mCy7DahS'})
 
 ;
