@@ -113,14 +113,14 @@
                 </div>
                 <div data-ng-if="practice.show_custom_practices"
                      class="subpractices">
-                  <div data-ng-repeat="subpractice_ in practice.practices track by $index"
+                  <div data-ng-repeat="subpractice in practice.practices track by $index"
                        class="subpractices--name">
                     <p class="metric--title">
-                      {{ subpractice_.name }}
+                      {{ subpractice.name }}
                     </p>
                     <div class="metric--chart">
                       <div class="metric--chart--value"
-                           data-ng-style="{'width': subpractice_.percentage.whole + '%' }"></div>
+                           data-ng-style="{'width': subpractice.percentage.whole + '%' }"></div>
                     </div>
                   </div>
                 </div>
@@ -136,10 +136,10 @@
                 </span>
                 <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices === true"
                      class="subpractice--nutrients">
-                  <div data-ng-repeat="subpractice_ in practice.practices track by $index"
+                  <div data-ng-repeat="subpractice in practice.practices track by $index"
                        class="subpractice--nutrients--nutrient">
                     <p class="metric--title">
-                      {{ subpractice_.installed.nitrogen || 0 | number:2 }}
+                      {{ subpractice.installed.nitrogen || 0 | number:2 }}
                     </p>
                   </div>
                 </div>
@@ -154,10 +154,10 @@
                 </span>
                 <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices === true"
                      class="subpractice--nutrients">
-                  <div data-ng-repeat="subpractice_ in practice.practices track by $index"
+                  <div data-ng-repeat="subpractice in practice.practices track by $index"
                        class="subpractice--nutrients--nutrient">
                     <p class="metric--title">
-                      {{ subpractice_.installed.phosphorus || 0 | number:2 }}
+                      {{ subpractice.installed.phosphorus || 0 | number:2 }}
                     </p>
                   </div>
                 </div>
@@ -172,10 +172,10 @@
                 </span>
                 <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices === true"
                      class="subpractice--nutrients">
-                  <div data-ng-repeat="subpractice_ in practice.practices track by $index"
+                  <div data-ng-repeat="subpractice in practice.practices track by $index"
                        class="subpractice--nutrients--nutrient">
                     <p class="metric--title">
-                      {{ subpractice_.installed.sediment || 0 | number:2 }}
+                      {{ subpractice.installed.sediment || 0 | number:2 }}
                     </p>
                   </div>
                 </div>

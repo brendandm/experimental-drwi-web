@@ -21,27 +21,27 @@
 
             self.map = Map;
 
-            self.map.layers.overlays = {
-                draw: {
-                    name: 'draw',
-                    type: 'group',
-                    visible: true,
-                    layerParams: {
-                        showOnSelector: false
-                    }
-                }
-            };
+            var southWest = L.latLng(25.837377, -124.211606),
+                northEast = L.latLng(49.384359, -67.158958),
+                bounds = L.latLngBounds(southWest, northEast);
+
+            console.log('United States bounds', bounds);
 
             self.savedObjects = [];
 
+            self.map.bounds = bounds;
+
             self.editableLayers = new L.FeatureGroup();
 
-            // self.controls = {
-            //     draw: {},
-            //     edit: {
-            //         featureGroup: self.drawnObjects
-            //     }
-            // };
+            function addNonGroupLayers(sourceLayer, targetGroup) {
+                if (sourceLayer instanceof L.LayerGroup) {
+                    sourceLayer.eachLayer(function(layer) {
+                        addNonGroupLayers(layer, targetGroup);
+                    });
+                } else {
+                    targetGroup.addLayer(sourceLayer);
+                }
+            }
 
             //
             // We use this function for handle any type of geographic change, whether
@@ -187,6 +187,7 @@
                         zoomControl: false,
                         maxZoom: 19
                     },
+                    bounds: bounds,
                     layers: {
                         baselayers: {
                             basemap: {
@@ -198,21 +199,55 @@
                                 }
                             }
                         }
-                    },
-                    center: {
-                        lat: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[1] : 38.362,
-                        lng: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[0] : -81.119,
-                        zoom: (self.site.geometry !== null && self.site.geometry !== undefined) ? 16 : 6
-                    },
-                    markers: {
-                        LandRiverSegment: {
-                            lat: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[1] : 38.362,
-                            lng: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[0] : -81.119,
-                            focus: false,
-                            draggable: true
-                        }
                     }
+                    // center: {
+                    //     lat: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[1] : 38.362,
+                    //     lng: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[0] : -81.119,
+                    //     zoom: (self.site.geometry !== null && self.site.geometry !== undefined) ? 16 : 6
+                    // },
+                    // markers: {
+                    //     LandRiverSegment: {
+                    //         lat: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[1] : 38.362,
+                    //         lng: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[0] : -81.119,
+                    //         focus: false,
+                    //         draggable: true
+                    //     }
+                    // }
                 };
+
+                //
+                // If a valid site geometry is present, add it to the map
+                // and track the object in `self.savedObjects`.
+                //
+
+                if (self.site.geometry !== null &&
+                    typeof self.site.geometry !== 'undefined') {
+
+                    var siteGeometry = L.geoJson(self.site.geometry, {});
+
+                    // siteGeometry.editing.enable();
+
+                    addNonGroupLayers(siteGeometry, self.editableLayers);
+
+                    // self.editableLayers.addLayer(siteGeometry);
+
+                    // self.savedObjects = [{
+                    //     id: Date.now() + self.site.id,
+                    //     geoJson: self.site.geometry
+                    // }];
+
+                    self.savedObjects = [{
+                        id: siteGeometry._leaflet_id,
+                        geoJson: self.site.geometry
+                    }];
+
+                    console.log('self.savedObjects', self.savedObjects);
+
+                    self.map.bounds = self.editableLayers.getBounds();
+
+                    console.log('self.map.bounds', self.map.bounds);
+
+                }
 
             }, function(errorResponse) {
 
@@ -251,20 +286,40 @@
                 // Create `geometry` default if necessary
                 //
 
-                if (!self.site.geometry) {
+                // if (!self.site.geometry) {
+
+                //     self.site.geometry = {
+                //         type: 'GeometryCollection',
+                //         geometries: []
+                //     };
+
+                // }
+
+                // self.site.geometry = {
+                //     type: 'GeometryCollection',
+                //     geometries: []
+                // };
+
+                if (self.savedObjects.length) {
 
                     self.site.geometry = {
                         type: 'GeometryCollection',
                         geometries: []
                     };
 
+                    self.savedObjects.forEach(function(object) {
+
+                        console.log('Iterating self.savedObjects', object);
+
+                        self.site.geometry.geometries.push(object.geoJson.geometry);
+
+                    });
+
+                } else {
+
+                    self.site.geometry = null;
+
                 }
-
-                self.savedObjects.forEach(function(object) {
-
-                    self.site.geometry.geometries.push(object.geoJson);
-
-                });
 
                 self.site.$update().then(function(successResponse) {
                     $location.path('/projects/' + $route.current.params.projectId + '/sites/' + $route.current.params.siteId);
@@ -411,17 +466,29 @@
                         console.log('Existing layer', layer);
                     });
                 };
+
                 drawnItems.addTo(map);
                 printLayers();
+
                 map.on('draw:created', function(e) {
+
                     var layer = e.layer;
+
+                    //
+                    // Sites must only have one geometry feature
+                    //
+
+                    drawnItems.clearLayers();
                     drawnItems.addLayer(layer);
                     console.log('Layer added', JSON.stringify(layer.toGeoJSON()));
-                    self.savedObjects.push({
+
+                    self.savedObjects = [{
                         id: layer._leaflet_id,
                         geoJson: layer.toGeoJSON()
-                    });
+                    }];
+
                 });
+
                 map.on('draw:edited', function(e) {
                     var layers = e.layers;
                     layers.eachLayer(function(layer) {
