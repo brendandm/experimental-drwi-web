@@ -10,7 +10,7 @@
      * Controller of the FieldDoc
      */
     angular.module('FieldDoc')
-        .controller('SiteEditCtrl', function(Account, environment, $http, leafletData, $location,
+        .controller('SiteEditCtrl', function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
             Map, mapbox, Notifications, Site, site, $rootScope,
             $route, $scope, Segment, $timeout, user) {
 
@@ -185,9 +185,14 @@
                     defaults: {
                         scrollWheelZoom: false,
                         zoomControl: false,
-                        maxZoom: 19
+                        maxZoom: 18
                     },
                     bounds: bounds,
+                    center: {
+                        lat: 39.828175,
+                        lng: -98.5795,
+                        zoom: 4
+                    },
                     layers: {
                         baselayers: {
                             basemap: {
@@ -237,15 +242,66 @@
                     // }];
 
                     self.savedObjects = [{
-                        id: siteGeometry._leaflet_id,
+                        id: self.editableLayers._leaflet_id,
                         geoJson: self.site.geometry
                     }];
 
                     console.log('self.savedObjects', self.savedObjects);
 
-                    self.map.bounds = self.editableLayers.getBounds();
+                    var rawGeometry = self.site.geometry.geometries[0];
 
-                    console.log('self.map.bounds', self.map.bounds);
+                    console.log('rawGeometry', rawGeometry);
+
+                    // var reversedCoordinatePairs;
+
+            //         var latitudes = [];
+            //         var longitudes = [];
+
+            //         rawGeometry.coordinates.forEach(function(obj) {
+
+            //             if (Array.isArray(obj)) {
+
+            //                 latitudes.push(obj[1]);
+            //                 longitudes.push(obj[0]);
+
+            //             } else {
+
+
+
+            //             }
+
+            //             reversedCoordinatePairs.push(new L.latLng(pair[1], pair[0]));
+
+            //         });
+
+            //         }
+
+            //         console.log('singleCoordinates', singleCoordinates);
+
+            //         leafletData.getMap('site--map').then(function(map) {
+
+            //             // var bounds = leafletBoundsHelpers.createBoundsFromArray(reversedCoordinatePairs);
+
+            // //             var bounds = leafletBoundsHelpers.createBoundsFromArray([
+            // //     [ 51.508742458803326, -0.087890625 ],
+            // //     [ 51.508742458803326, -0.087890625 ]
+            // // ]);
+
+            //             var bounds = L.latLngBounds(reversedCoordinatePairs);
+
+            //             map.fitBounds(bounds);
+
+            //         });
+
+                    // var bounds = L.latLngBounds(reversedCoordinatePairs);
+
+                    // console.log('bounds', bounds);
+
+                    // // var bounds = leafletBoundsHelpers.createBoundsFromArray(reversedCoordinatePairs);
+
+                    // self.map.bounds = bounds;
+
+                    // console.log('self.map.bounds', self.map.bounds);
 
                 }
 
@@ -295,29 +351,37 @@
 
                 // }
 
-                // self.site.geometry = {
-                //     type: 'GeometryCollection',
-                //     geometries: []
-                // };
+                self.site.geometry = {
+                    type: 'GeometryCollection',
+                    geometries: []
+                };
 
                 if (self.savedObjects.length) {
-
-                    self.site.geometry = {
-                        type: 'GeometryCollection',
-                        geometries: []
-                    };
 
                     self.savedObjects.forEach(function(object) {
 
                         console.log('Iterating self.savedObjects', object);
 
-                        self.site.geometry.geometries.push(object.geoJson.geometry);
+                        if (object.geoJson.geometry) {
+
+                            self.site.geometry.geometries.push(object.geoJson.geometry);
+
+                        } else {
+
+                            self.site.geometry = object.geoJson;
+
+                        }
 
                     });
 
                 } else {
 
-                    self.site.geometry = null;
+                    self.site.geometry.geometries.push({
+                        type: 'Point',
+                        coordinates: [-98.5795,
+                            39.828175
+                        ]
+                    });
 
                 }
 
@@ -459,6 +523,15 @@
                 map.addControl(drawControls);
 
                 var drawnItems = drawControls.options.edit.featureGroup;
+
+                // map.fitBounds(self.editableLayers.getBounds());
+
+                // if (drawnItems.getLayers().length > 1) {
+
+                //     map.fitBounds(drawnItems.getBounds());
+
+                // }
+
                 // Init the map with the saved elements
                 var printLayers = function() {
                     // console.log("After: ");
@@ -487,32 +560,92 @@
                         geoJson: layer.toGeoJSON()
                     }];
 
+                    // map.fitBounds(drawnItems.getBounds(), {
+                    //     padding: [20, 20],
+                    //     maxZoom: 18
+                    // });
+
                 });
 
                 map.on('draw:edited', function(e) {
+
                     var layers = e.layers;
+
+                    console.log('map.draw:edited', layers);
+
+                    // self.savedObjects = [{
+                    //     id: layers[0]._leaflet_id,
+                    //     geoJson: layers[0].toGeoJSON()
+                    // }];
+
+                    // console.log('Layer changed', JSON.stringify(layers[0].toGeoJSON()));
+
                     layers.eachLayer(function(layer) {
 
-                        for (var i = 0; i < self.savedObjects.length; i++) {
-                            if (self.savedObjects[i].id == layer._leaflet_id) {
-                                self.savedObjects[i].geoJson = layer.toGeoJSON();
-                            }
-                        }
-                        console.log('Layer changed', JSON.stringify(layer.toGeoJSON()));
+                        self.savedObjects = [{
+                            id: layer._leaflet_id,
+                            geoJson: layer.toGeoJSON()
+                        }];
+
+                        // for (var i = 0; i < self.savedObjects.length; i++) {
+                        //     if (self.savedObjects[i].id == layer._leaflet_id) {
+                        //         console.log('draw:edited layer match', self.savedObjects[i].id, layer._leaflet_id);
+                        //         self.savedObjects[i].geoJson = layer.toGeoJSON();
+                        //     }
+                        // }
+
+                        console.log('Layer changed', layer._leaflet_id, JSON.stringify(layer.toGeoJSON()));
+
                     });
+
+                    // map.fitBounds(drawnItems.getBounds(), {
+                    //     padding: [20, 20],
+                    //     maxZoom: 18
+                    // });
+
                 });
 
                 map.on('draw:deleted', function(e) {
+
                     var layers = e.layers;
+
                     layers.eachLayer(function(layer) {
+
                         for (var i = 0; i < self.savedObjects.length; i++) {
                             if (self.savedObjects[i].id == layer._leaflet_id) {
                                 self.savedObjects.splice(i, 1);
                             }
                         }
+
                         console.log('Layer removed', JSON.stringify(layer.toGeoJSON()));
+
                     });
+
+                    self.savedObjects = [];
+
                     console.log('Saved objects', self.savedObjects);
+
+                });
+
+                map.on('layeradd', function(e) {
+
+                    console.log('map:layeradd', e);
+
+                    if (e.layer.getBounds) {
+
+                        map.fitBounds(e.layer.getBounds(), {
+                            padding: [20, 20],
+                            maxZoom: 18
+                        });
+
+                    }
+
+                });
+
+                map.on('zoomend', function(e) {
+
+                    console.log('map:zoomend', map.getZoom());
+
                 });
 
                 // leafletData.getLayers().then(function(baselayers) {
