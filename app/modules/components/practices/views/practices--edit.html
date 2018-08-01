@@ -45,8 +45,18 @@
             </div><br />
           </div>
 
-          <!-- <leaflet data-ng-if="page.map" class="map" controls="page.controls" markers="page.map.markers" defaults="page.map.defaults" layers="page.map.layers" center="page.map.center"></leaflet> -->
-          <leaflet id="practice--map" class="map" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
+          <div style="position:relative;">
+            <leaflet id="practice--map" class="map" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
+            <div class="progress--modal" data-ng-if="page.progressValue && page.progressValue > 0">
+              <div class="progress--container">
+                <p><strong>{{ page.progressMessage }}</strong></p>
+                <div class="progress--meter--bar--wrapper">
+                    <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <leaflet id="practice--map" class="map" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet> -->
         </div>
 
         <!-- Shapefile input -->
@@ -58,6 +68,15 @@
             <input type="file" class="form-control"
                    id="shapefile" name="shapefile" file-upload
                    file-model="page.shapefile" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+              <button type="button" id="shapefile--upload" name="shapefile--upload"
+              class="button button--submit button--outline" data-ng-click="page.uploadShapefile()">
+              Upload
+              </button>
           </div>
         </div>
 

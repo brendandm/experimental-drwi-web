@@ -7,7 +7,8 @@
  */
 angular.module('FieldDoc')
     .controller('PracticeEditController', function(Account, Image, leafletData, $location, $log, Map,
-        mapbox, Media, Practice, practice, $q, $rootScope, $route, $scope, site, user) {
+        mapbox, Media, Practice, practice, $q, $rootScope, $route,
+        $scope, $timeout, $interval, site, user, Shapefile) {
 
         var self = this,
             projectId = $route.current.params.projectId,
@@ -40,26 +41,28 @@ angular.module('FieldDoc')
             }
         }
 
-        // self.map = Map;
+        self.setGeoJsonLayer = function(data) {
 
-        // self.map.layers.overlays = {
-        //     draw: {
-        //         name: 'draw',
-        //         type: 'group',
-        //         visible: true,
-        //         layerParams: {
-        //             showOnSelector: false
-        //         }
-        //     }
-        // };
+            self.editableLayers.clearLayers();
 
-        // self.controls = {
-        //     draw: {}
-        // };
+            var siteGeometry = L.geoJson(data, {});
+
+            addNonGroupLayers(siteGeometry, self.editableLayers);
+
+            self.savedObjects = [{
+                id: self.editableLayers._leaflet_id,
+                geoJson: data
+            }];
+
+            console.log('self.savedObjects', self.savedObjects);
+
+        };
+
         //
         // We use this function for handle any type of geographic change, whether
         // through the map or through the fields
         //
+
         self.processPin = function(coordinates, zoom) {
 
             if (coordinates.lat === null || coordinates.lat === undefined || coordinates.lng === null || coordinates.lng === undefined) {
@@ -123,7 +126,7 @@ angular.module('FieldDoc')
             }
 
             return;
-        }
+        };
 
         $rootScope.page = {};
 
@@ -228,6 +231,120 @@ angular.module('FieldDoc')
                 });
             }
         });
+
+        self.uploadShapefile = function() {
+
+            if (!self.shapefile ||
+                !self.shapefile.length) {
+
+                $rootScope.notifications.warning('Uh-oh!', 'You forgot to add a file.');
+
+                $timeout(function() {
+                    $rootScope.notifications.objects = [];
+                }, 1200);
+
+                return false;
+
+            }
+
+            // self.status.saving.action = true;
+
+            if (self.shapefile) {
+
+                self.progressMessage = 'Uploading your file...';
+
+                var fileData = new FormData();
+
+                fileData.append('file', self.shapefile[0]);
+
+                console.log('fileData', fileData);
+
+                self.fillMeter = $interval(function() {
+
+                    var tempValue = (self.progressValue || 10) * 0.50;
+
+                    if (!self.progressValue) {
+
+                        self.progressValue = tempValue;
+
+                    } else if ((100 - tempValue) > self.progressValue) {
+
+                        self.progressValue += tempValue;
+
+                    }
+
+                    console.log('progressValue', self.progressValue);
+
+                    if (self.progressValue > 75) {
+
+                        self.progressMessage = 'Analyzing data...';
+
+                    }
+
+                }, 100);
+
+                console.log('Shapefile', Shapefile);
+
+                try {
+
+                    Shapefile.upload({}, fileData, function(shapefileResponse) {
+
+                        console.log('shapefileResponse', shapefileResponse);
+
+                        self.progressValue = 100;
+
+                        self.progressMessage = 'Upload successful, rendering shape...';
+
+                        $interval.cancel(self.fillMeter);
+
+                        $timeout(function() {
+
+                            self.progressValue = null;
+
+                            if (shapefileResponse.msg.length) {
+
+                                console.log('Shapefile --> GeoJSON', shapefileResponse.msg[0]);
+
+                                if (shapefileResponse.msg[0] !== null &&
+                                    typeof shapefileResponse.msg[0].geometry !== 'undefined') {
+
+                                    self.setGeoJsonLayer(shapefileResponse.msg[0]);
+
+                                }
+
+                            }
+
+                        }, 1600);
+
+                        self.error = null;
+
+                    }, function(errorResponse) {
+
+                        console.log(errorResponse);
+
+                        $interval.cancel(self.fillMeter);
+
+                        self.progressValue = null;
+
+                        $rootScope.notifications.error('', 'An error occurred and we couldn\'t process your file.');
+
+                        $timeout(function() {
+                            $rootScope.notifications.objects = [];
+                        }, 2000);
+
+                        return;
+
+                    });
+
+                } catch (error) {
+
+                    console.log('Shapefile upload error', error);
+
+                }
+
+            }
+
+        };
 
         self.savePractice = function() {
 
@@ -394,11 +511,6 @@ angular.module('FieldDoc')
                     geoJson: layer.toGeoJSON()
                 }];
 
-                // map.fitBounds(drawnItems.getBounds(), {
-                //     padding: [20, 20],
-                //     maxZoom: 18
-                // });
-
             });
 
             map.on('draw:edited', function(e) {
@@ -407,13 +519,6 @@ angular.module('FieldDoc')
 
                 console.log('map.draw:edited', layers);
 
-                // self.savedObjects = [{
-                //     id: layers[0]._leaflet_id,
-                //     geoJson: layers[0].toGeoJSON()
-                // }];
-
-                // console.log('Layer changed', JSON.stringify(layers[0].toGeoJSON()));
-
                 layers.eachLayer(function(layer) {
 
                     self.savedObjects = [{
@@ -421,21 +526,9 @@ angular.module('FieldDoc')
                         geoJson: layer.toGeoJSON()
                     }];
 
-                    // for (var i = 0; i < self.savedObjects.length; i++) {
-                    //     if (self.savedObjects[i].id == layer._leaflet_id) {
-                    //         console.log('draw:edited layer match', self.savedObjects[i].id, layer._leaflet_id);
-                    //         self.savedObjects[i].geoJson = layer.toGeoJSON();
-                    //     }
-                    // }
-
                     console.log('Layer changed', layer._leaflet_id, JSON.stringify(layer.toGeoJSON()));
 
                 });
-
-                // map.fitBounds(drawnItems.getBounds(), {
-                //     padding: [20, 20],
-                //     maxZoom: 18
-                // });
 
             });
 
@@ -481,15 +574,6 @@ angular.module('FieldDoc')
                 console.log('map:zoomend', map.getZoom());
 
             });
-
-            // leafletData.getLayers().then(function(baselayers) {
-            //     var drawnItems = baselayers.overlays.draw;
-            //     map.on('draw:created', function(e) {
-            //         var layer = e.layer;
-            //         drawnItems.addLayer(layer);
-            //         console.log(JSON.stringify(layer.toGeoJSON()));
-            //     });
-            // });
 
             //
             // Update the pin and segment information when the user clicks on the map

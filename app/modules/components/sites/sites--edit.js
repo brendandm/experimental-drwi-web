@@ -149,11 +149,7 @@
 
                 console.log('self.savedObjects', self.savedObjects);
 
-                // var rawGeometry = self.site.geometry.geometries[0];
-
-                // console.log('rawGeometry', rawGeometry);
-
-            }
+            };
 
             site.$promise.then(function(successResponse) {
 
