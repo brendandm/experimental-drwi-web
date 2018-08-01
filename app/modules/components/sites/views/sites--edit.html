@@ -2,7 +2,7 @@
 
 <main class="container feature">
   <article class="feature-detail">
-    <div class="column-11 feature-detail-content">
+    <div class="column-11 feature-detail-content" style="position:relative;">
 
       <h1 class="large">Edit Site</h1>
 
@@ -95,8 +95,39 @@
                 </div><br />
               </div>
 
-              <leaflet id="site--map" class="map" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
+              <div style="position:relative;">
+                <leaflet id="site--map" class="map" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
+                <div class="progress--modal" data-ng-if="page.progressValue && page.progressValue > 0">
+                  <div class="progress--container">
+                    <p><strong>{{ page.progressMessage }}</strong></p>
+                    <div class="progress--meter--bar--wrapper">
+                        <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
+
+        <!-- Shapefile input -->
+        <div class="form-row">
+          <div class="form-field">
+            <label for="shapefile" class="control-label">
+              Upload an ESRI Shapefile
+            </label>
+            <input type="file" class="form-control"
+                   id="shapefile" name="shapefile" file-upload
+                   file-model="page.shapefile" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+              <button type="button" id="shapefile--upload" name="shapefile--upload"
+              class="button button--submit button--outline" data-ng-click="page.uploadShapefile()">
+              Upload
+              </button>
           </div>
         </div>
 
@@ -123,6 +154,15 @@
           </div>
         </div>
       </form>
+
+      <!-- <div class="progress--modal" data-ng-if="page.progressValue && page.progressValue > 0">
+          <div class="progress--container">
+              <p><strong>{{ page.progressMessage }}</strong></p>
+              <div class="progress--meter--bar--wrapper">
+                  <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+              </div>
+          </div>
+      </div> -->
 
     </div>
 

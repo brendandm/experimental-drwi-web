@@ -90,11 +90,11 @@
               <!-- <tr data-ng-repeat="reading_ in page.summary.readings track by $index">
                 <td>Extent</td>
                 <td>
-                  {{ reading_.properties.practice_type.properties.name }}
+                  {{ reading.properties.practice_type.properties.name }}
                 </td>
                 <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'"
                     data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
-                    {{ reading_.properties.practice_extent }}
+                    {{ reading.properties.practice_extent }}
                 </td>
                 <td>(Installed To-Date)</td>
                 <td>(% of Planned)</td>
@@ -110,8 +110,8 @@
                     <table>
                       <tr data-ng-repeat="reading_ in report.properties.readings | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          <strong data-ng-if="reading_.properties.practice_type.properties.name">{{ reading_.properties.practice_type.properties.name }}</strong>
-                          <strong data-ng-if="!reading_.properties.practice_type.properties.name">Unknown</strong>
+                          <strong data-ng-if="reading.properties.practice_type.properties.name">{{ reading.properties.practice_type.properties.name }}</strong>
+                          <strong data-ng-if="!reading.properties.practice_type.properties.name">Unknown</strong>
                         </td>
                       </tr>
                     </table>
@@ -122,7 +122,7 @@
                     <table>
                       <tr data-ng-repeat="reading_ in report.properties.readings | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          {{ reading_.properties.practice_extent }} {{ reading_.properties.practice_unit.properties.plural }}
+                          {{ reading.properties.practice_extent }} {{ reading.properties.practice_unit.properties.plural }}
                         </td>
                       </tr>
                     </table>
@@ -211,8 +211,8 @@
                     <table>
                       <tr data-ng-repeat="reading_ in report.properties.readings | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          <span data-ng-if="reading_.properties.practice_type.properties.name">{{ reading_.properties.practice_type.properties.name }}</span>
-                          <span data-ng-if="!reading_.properties.practice_type.properties.name">Unknown</span>
+                          <span data-ng-if="reading.properties.practice_type.properties.name">{{ reading.properties.practice_type.properties.name }}</span>
+                          <span data-ng-if="!reading.properties.practice_type.properties.name">Unknown</span>
                         </td>
                       </tr>
                     </table>
@@ -223,7 +223,7 @@
                     <table>
                       <tr data-ng-repeat="reading_ in report.properties.readings | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          {{ reading_.properties.practice_nutrient_reductions.properties.nitrogen || 0 | number:2 }}
+                          {{ reading.properties.practice_nutrient_reductions.properties.nitrogen || 0 | number:2 }}
                         </td>
                       </tr>
                     </table>
@@ -286,8 +286,8 @@
                     <table>
                       <tr data-ng-repeat="reading_ in report.properties.readings | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          <span data-ng-if="reading_.properties.practice_type.properties.name">{{ reading_.properties.practice_type.properties.name }}</span>
-                          <span data-ng-if="!reading_.properties.practice_type.properties.name">Unknown</span>
+                          <span data-ng-if="reading.properties.practice_type.properties.name">{{ reading.properties.practice_type.properties.name }}</span>
+                          <span data-ng-if="!reading.properties.practice_type.properties.name">Unknown</span>
                         </td>
                       </tr>
                     </table>
@@ -298,7 +298,7 @@
                     <table>
                       <tr data-ng-repeat="reading_ in report.properties.readings | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          {{ reading_.properties.practice_nutrient_reductions.properties.phosphorus || 0 | number:2 }}
+                          {{ reading.properties.practice_nutrient_reductions.properties.phosphorus || 0 | number:2 }}
                         </td>
                       </tr>
                     </table>
@@ -361,8 +361,8 @@
                     <table>
                       <tr data-ng-repeat="reading_ in report.properties.readings | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          <span data-ng-if="reading_.properties.practice_type.properties.name">{{ reading_.properties.practice_type.properties.name }}</span>
-                          <span data-ng-if="!reading_.properties.practice_type.properties.name">Unknown</span>
+                          <span data-ng-if="reading.properties.practice_type.properties.name">{{ reading.properties.practice_type.properties.name }}</span>
+                          <span data-ng-if="!reading.properties.practice_type.properties.name">Unknown</span>
                         </td>
                       </tr>
                     </table>
@@ -373,7 +373,7 @@
                     <table>
                       <tr data-ng-repeat="reading_ in report.properties.readings | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          {{ reading_.properties.practice_nutrient_reductions.properties.sediment || 0 | number:2 }}
+                          {{ reading.properties.practice_nutrient_reductions.properties.sediment || 0 | number:2 }}
                         </td>
                       </tr>
                     </table>
@@ -433,7 +433,7 @@
                     <table>
                       <tr data-ng-repeat="metric_ in report.properties.readings[$index].properties.metrics | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          <strong>{{ metric_.name }}</strong>
+                          <strong>{{ metric.name }}</strong>
                         </td>
                       </tr>
                     </table>
@@ -443,7 +443,7 @@
                     <table>
                       <tr data-ng-repeat="metric_ in report.properties.readings[$index].properties.metrics | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          {{ metric_.value || 0 | number:2 }} {{ metric_.unit }}
+                          {{ metric.value || 0 | number:2 }} {{ metric.unit }}
                         </td>
                       </tr>
                     </table>
@@ -510,7 +510,7 @@
                     <table>
                       <tr data-ng-repeat="monitoring_ in report.properties.monitoring | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          <strong>{{ monitoring_.name }}</strong>
+                          <strong>{{ monitoring.name }}</strong>
                         </td>
                       </tr>
                     </table>
@@ -520,7 +520,7 @@
                     <table>
                       <tr data-ng-repeat="monitoring_ in report.properties.monitoring | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          {{ monitoring_.value || 0 | number:2 }} {{ monitoring_.unit }}
+                          {{ monitoring.value || 0 | number:2 }} {{ monitoring.unit }}
                         </td>
                       </tr>
                     </table>
@@ -530,7 +530,7 @@
                     <table>
                       <tr data-ng-repeat="monitoring_ in report.properties.monitoring | orderBy:'id':false">
                         <td style="white-space:nowrap;">
-                          <div data-ng-if="monitoring_.was_verified" class="icon retinaicon-essentials-071"></div>
+                          <div data-ng-if="monitoring.was_verified" class="icon retinaicon-essentials-071"></div>
                         </td>
                       </tr>
                     </table>
@@ -571,18 +571,18 @@
                     </span>
                   </th>
                   <th data-ng-repeat="reading_ in page.summary.readings | orderBy:'properties.report_date':false">
-                    {{ reading_.properties.practice_type.properties.name }}
+                    {{ reading.properties.practice_type.properties.name }}
                   </th>
                   <td data-ng-repeat="reading_ in page.summary.readings | orderBy:'properties.report_date':false">
-                    {{ reading_.properties.practice_extent }} {{ reading_.properties.practice_unit.properties.plural }}
+                    {{ reading.properties.practice_extent }} {{ reading.properties.practice_unit.properties.plural }}
                   </td>
                   <td data-ng-repeat="reading_ in page.summary.readings | orderBy:'properties.report_date':false">
-                    {{ reading_.properties.practice_extent }} {{ reading_.properties.practice_unit.properties.plural }}
+                    {{ reading.properties.practice_extent }} {{ reading.properties.practice_unit.properties.plural }}
                   </td>
                   <td>
                     <strong>
                       {{ page.summary.practice.properties.quantity_installed.acres_of_practice_installed || 0 | number:2 }}
-                    </strong> {{ reading_.properties.practice_unit.properties.plural }}
+                    </strong> {{ reading.properties.practice_unit.properties.plural }}
                   </td>
                   <td>
                     <strong>

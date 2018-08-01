@@ -12,7 +12,7 @@
     angular.module('FieldDoc')
         .controller('SiteEditCtrl', function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
             Map, mapbox, Notifications, Site, site, $rootScope,
-            $route, $scope, Segment, $timeout, user) {
+            $route, $scope, Segment, $timeout, $interval, user, Shapefile) {
 
             var self = this,
                 timeout;
@@ -134,6 +134,27 @@
 
             });
 
+            self.setGeoJsonLayer = function(data) {
+
+                self.editableLayers.clearLayers();
+
+                var siteGeometry = L.geoJson(data, {});
+
+                addNonGroupLayers(siteGeometry, self.editableLayers);
+
+                self.savedObjects = [{
+                    id: self.editableLayers._leaflet_id,
+                    geoJson: data
+                }];
+
+                console.log('self.savedObjects', self.savedObjects);
+
+                // var rawGeometry = self.site.geometry.geometries[0];
+
+                // console.log('rawGeometry', rawGeometry);
+
+            }
+
             site.$promise.then(function(successResponse) {
 
                 self.site = successResponse;
@@ -205,19 +226,6 @@
                             }
                         }
                     }
-                    // center: {
-                    //     lat: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[1] : 38.362,
-                    //     lng: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[0] : -81.119,
-                    //     zoom: (self.site.geometry !== null && self.site.geometry !== undefined) ? 16 : 6
-                    // },
-                    // markers: {
-                    //     LandRiverSegment: {
-                    //         lat: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[1] : 38.362,
-                    //         lng: (self.site.geometry !== null && self.site.geometry !== undefined) ? self.site.geometry.geometries[0].coordinates[0] : -81.119,
-                    //         focus: false,
-                    //         draggable: true
-                    //     }
-                    // }
                 };
 
                 //
@@ -228,80 +236,7 @@
                 if (self.site.geometry !== null &&
                     typeof self.site.geometry !== 'undefined') {
 
-                    var siteGeometry = L.geoJson(self.site.geometry, {});
-
-                    // siteGeometry.editing.enable();
-
-                    addNonGroupLayers(siteGeometry, self.editableLayers);
-
-                    // self.editableLayers.addLayer(siteGeometry);
-
-                    // self.savedObjects = [{
-                    //     id: Date.now() + self.site.id,
-                    //     geoJson: self.site.geometry
-                    // }];
-
-                    self.savedObjects = [{
-                        id: self.editableLayers._leaflet_id,
-                        geoJson: self.site.geometry
-                    }];
-
-                    console.log('self.savedObjects', self.savedObjects);
-
-                    var rawGeometry = self.site.geometry.geometries[0];
-
-                    console.log('rawGeometry', rawGeometry);
-
-                    // var reversedCoordinatePairs;
-
-            //         var latitudes = [];
-            //         var longitudes = [];
-
-            //         rawGeometry.coordinates.forEach(function(obj) {
-
-            //             if (Array.isArray(obj)) {
-
-            //                 latitudes.push(obj[1]);
-            //                 longitudes.push(obj[0]);
-
-            //             } else {
-
-
-
-            //             }
-
-            //             reversedCoordinatePairs.push(new L.latLng(pair[1], pair[0]));
-
-            //         });
-
-            //         }
-
-            //         console.log('singleCoordinates', singleCoordinates);
-
-            //         leafletData.getMap('site--map').then(function(map) {
-
-            //             // var bounds = leafletBoundsHelpers.createBoundsFromArray(reversedCoordinatePairs);
-
-            // //             var bounds = leafletBoundsHelpers.createBoundsFromArray([
-            // //     [ 51.508742458803326, -0.087890625 ],
-            // //     [ 51.508742458803326, -0.087890625 ]
-            // // ]);
-
-            //             var bounds = L.latLngBounds(reversedCoordinatePairs);
-
-            //             map.fitBounds(bounds);
-
-            //         });
-
-                    // var bounds = L.latLngBounds(reversedCoordinatePairs);
-
-                    // console.log('bounds', bounds);
-
-                    // // var bounds = leafletBoundsHelpers.createBoundsFromArray(reversedCoordinatePairs);
-
-                    // self.map.bounds = bounds;
-
-                    // console.log('self.map.bounds', self.map.bounds);
+                    self.setGeoJsonLayer(self.site.geometry);
 
                 }
 
@@ -309,47 +244,121 @@
 
             });
 
+            self.uploadShapefile = function() {
+
+                if (!self.shapefile ||
+                    !self.shapefile.length) {
+
+                    $rootScope.notifications.warning('Uh-oh!', 'You forgot to add a file.');
+
+                    $timeout(function() {
+                        $rootScope.notifications.objects = [];
+                    }, 1200);
+
+                    return false;
+
+                }
+
+                // self.status.saving.action = true;
+
+                if (self.shapefile) {
+
+                    self.progressMessage = 'Uploading your file...';
+
+                    var fileData = new FormData();
+
+                    fileData.append('file', self.shapefile[0]);
+
+                    console.log('fileData', fileData);
+
+                    self.fillMeter = $interval(function() {
+
+                        var tempValue = (self.progressValue || 10) * 0.50;
+
+                        if (!self.progressValue) {
+
+                            self.progressValue = tempValue;
+
+                        } else if ((100 - tempValue) > self.progressValue) {
+
+                            self.progressValue += tempValue;
+
+                        }
+
+                        console.log('progressValue', self.progressValue);
+
+                        if (self.progressValue > 75) {
+
+                            self.progressMessage = 'Analyzing data...';
+
+                        }
+
+                    }, 100);
+
+                    console.log('Shapefile', Shapefile);
+
+                    try {
+
+                        Shapefile.upload({}, fileData, function(shapefileResponse) {
+
+                            console.log('shapefileResponse', shapefileResponse);
+
+                            self.progressValue = 100;
+
+                            self.progressMessage = 'Upload successful, rendering shape...';
+
+                            $interval.cancel(self.fillMeter);
+
+                            $timeout(function() {
+
+                                self.progressValue = null;
+
+                                if (shapefileResponse.msg.length) {
+
+                                    console.log('Shapefile --> GeoJSON', shapefileResponse.msg[0]);
+
+                                    if (shapefileResponse.msg[0] !== null &&
+                                        typeof shapefileResponse.msg[0].geometry !== 'undefined') {
+
+                                        self.setGeoJsonLayer(shapefileResponse.msg[0]);
+
+                                    }
+
+                                }
+
+                            }, 1600);
+
+                            self.error = null;
+
+                        }, function(errorResponse) {
+
+                            console.log(errorResponse);
+
+                            $interval.cancel(self.fillMeter);
+
+                            self.progressValue = null;
+
+                            $rootScope.notifications.error('', 'An error occurred and we couldn\'t process your file.');
+
+                            $timeout(function() {
+                                $rootScope.notifications.objects = [];
+                            }, 2000);
+
+                            return;
+
+                        });
+
+                    } catch (error) {
+
+                        console.log('Shapefile upload error', error);
+
+                    }
+
+                }
+
+            };
+
             self.saveSite = function() {
-
-                //
-                // Prior to saving the Site we need to make sure the user has specified
-                // their county and state.
-                //
-                // if (self.site.properties.county) {
-                //     self.site.properties.county_id = self.site.properties.county.id;
-                //     self.site.properties.state = self.site.properties.county.properties.state_name;
-                // } else if (!self.site.properties.county && !self.site.properties.state) {
-                //     $rootScope.notifications.error('Missing County and State Information', 'Please add a county and state to continue saving your site');
-
-                //     $timeout(function() {
-                //         $rootScope.notifications.objects = [];
-                //     }, 3500);
-
-                //     return;
-                // }
-
-                // if (!self.site.properties.segment) {
-                //     $rootScope.notifications.error('Missing Land River Segment', 'Please add a land river segment to continue saving your site');
-
-                //     $timeout(function() {
-                //         $rootScope.notifications.objects = [];
-                //     }, 3500);
-
-                //     return;
-                // }
-
-                //
-                // Create `geometry` default if necessary
-                //
-
-                // if (!self.site.geometry) {
-
-                //     self.site.geometry = {
-                //         type: 'GeometryCollection',
-                //         geometries: []
-                //     };
-
-                // }
 
                 self.site.geometry = {
                     type: 'GeometryCollection',
