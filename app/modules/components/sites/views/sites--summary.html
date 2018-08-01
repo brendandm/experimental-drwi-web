@@ -18,9 +18,9 @@
           <span data-ng-if="page.project.id && page.project.properties.modified_on" class="label">Modified on: {{ page.project.properties.modified_on | date }}</span>
         </h4>
 
-        <img data-ng-if="page.site.geometry" class="pull-left" style="margin-right: 16px;"
+        <!-- <img data-ng-if="page.site.geometry" class="pull-left" style="margin-right: 16px;"
              data-ng-src="https://api.tiles.mapbox.com/v4/{{ page.mapbox.map_id }}/pin-s+b1c11d({{ page.site.geometry.geometries[0].coordinates[0] }},{{ page.site.geometry.geometries[0].coordinates[1] }},17)/{{ page.site.geometry.geometries[0].coordinates[0] }},{{ page.site.geometry.geometries[0].coordinates[1] }},17/80x80@2x.png?access_token={{ page.mapbox.access_token }}"
-             alt="{{ page.site.site_description }} location preview" width="80" height="80" />
+             alt="{{ page.site.site_description }} location preview" width="80" height="80" /> -->
 
         <h4 class="project-site-city">
           {{ page.project.properties.name }}
