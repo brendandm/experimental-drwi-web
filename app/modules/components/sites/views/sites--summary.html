@@ -42,6 +42,26 @@
           <span data-ng-if="page.site.properties.segment.properties.river_name">{{ page.site.properties.segment.properties.river_name }}</span>
         </h4>
 
+        <h4 class="project-site-city" data-ng-if="page.nodes.geographies.length">
+          <span data-ng-repeat="geography in page.nodes.geographies"><b>{{ geography.category }}:&nbsp;</b>{{ geography.name }}&nbsp;</span>
+        </h4>
+
+        <h4 class="project-site-city" data-ng-if="page.nodes.counties.length">
+          Counties
+        </h4>
+
+        <h4 class="project-site-city" data-ng-if="page.nodes.counties.length">
+          <span data-ng-repeat="county in page.nodes.counties">{{ county.name }}&nbsp;</span>
+        </h4>
+
+        <h4 class="project-site-city" data-ng-if="page.nodes.watersheds.length">
+          Watersheds
+        </h4>
+
+        <h4 class="project-site-city" data-ng-if="page.nodes.watersheds.length">
+          <span data-ng-repeat="watershed in page.nodes.watersheds">{{ watershed.name }}&nbsp;</span>
+        </h4>
+
         <h2><strong>Practice</strong> Reductions</h2>
 
         <table class="table table-practices" data-ng-if="page.practices">

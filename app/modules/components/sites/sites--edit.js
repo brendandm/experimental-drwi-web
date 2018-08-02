@@ -356,10 +356,10 @@
 
             self.saveSite = function() {
 
-                self.site.geometry = {
-                    type: 'GeometryCollection',
-                    geometries: []
-                };
+                // self.site.geometry = {
+                //     type: 'GeometryCollection',
+                //     geometries: []
+                // };
 
                 if (self.savedObjects.length) {
 
@@ -369,11 +369,11 @@
 
                         if (object.geoJson.geometry) {
 
-                            self.site.geometry.geometries.push(object.geoJson.geometry);
+                            self.site.geometry = object.geoJson.geometry;
 
                         } else {
 
-                            self.site.geometry = object.geoJson;
+                            self.site.geometry = object.geoJson.geometries[0];
 
                         }
 
@@ -381,12 +381,12 @@
 
                 } else {
 
-                    self.site.geometry.geometries.push({
+                    self.site.geometry = {
                         type: 'Point',
                         coordinates: [-98.5795,
                             39.828175
                         ]
-                    });
+                    };
 
                 }
 

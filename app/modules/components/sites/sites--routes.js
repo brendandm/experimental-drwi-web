@@ -35,6 +35,11 @@ angular.module('FieldDoc')
                         return Site.summary({
                             id: $route.current.params.siteId
                         });
+                    },
+                    nodes: function(Site, $route) {
+                        return Site.nodes({
+                            id: $route.current.params.siteId
+                        });
                     }
                 }
             })
