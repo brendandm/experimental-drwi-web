@@ -2,7 +2,7 @@
 
 <main class="container feature">
   <article class="feature-detail">
-    <div class="column-11 feature-detail-content">
+    <div class="column-11 feature-detail-content" style="position:relative;">
 
       <h1 class="large">Edit Site</h1>
 
@@ -24,14 +24,14 @@
           </div>
         </div>
 
-        <div class="form-row">
+        <!-- <div class="form-row">
           <div class="form-field">
             <label for="site_city" class="control-label">3. What is the nearest city?</label>
             <input type="text" class="form-control" id="address" name="address" data-ng-model="page.site.properties.city" placeholder="Enter the name of the nearest city" />
           </div>
-        </div>
+        </div> -->
 
-        <div class="form-row">
+        <!-- <div class="form-row">
           <div class="form-field">
             <label for="site_county" class="control-label">
               4. What county is this site in?
@@ -55,11 +55,12 @@
               </a>
             </span>
           </div>
-        </div>
+        </div> -->
 
         <div class="form-row">
           <div class="form-field">
-            <div class="form-element">
+
+            <!-- <div class="form-element">
               <label for="site_city" class="control-label">5. What Land River Segment is your project in?</label>
               <p class="form-value form-value-static" data-ng-if="!page.site.properties.segment">
                 Not Specified, use "Find a Location" to search for a nearby location or drag the pin
@@ -73,7 +74,7 @@
                   The Land River Segment will be set dynamically based on the location of the map pin. After relocating the pin, you'll notice a white outline appears on the map, helping you identify which Land River Segment your site is within.
                 </em>
               </p>
-            </div>
+            </div> -->
 
             <div class="form-element">
               <div class="autocomplete">
@@ -94,8 +95,39 @@
                 </div><br />
               </div>
 
-              <leaflet data-ng-if="page.map" class="map" markers="page.map.markers" defaults="page.map.defaults" layers="page.map.layers" center="page.map.center"></leaflet>
+              <div style="position:relative;">
+                <leaflet id="site--map" class="map" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
+                <div class="progress--modal" data-ng-if="page.progressValue && page.progressValue > 0">
+                  <div class="progress--container">
+                    <p><strong>{{ page.progressMessage }}</strong></p>
+                    <div class="progress--meter--bar--wrapper">
+                        <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
+
+        <!-- Shapefile input -->
+        <div class="form-row">
+          <div class="form-field">
+            <label for="shapefile" class="control-label">
+              Upload an ESRI Shapefile
+            </label>
+            <input type="file" class="form-control"
+                   id="shapefile" name="shapefile" file-upload
+                   file-model="page.shapefile" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+              <button type="button" id="shapefile--upload" name="shapefile--upload"
+              class="button button--submit button--outline" data-ng-click="page.uploadShapefile()">
+              Upload
+              </button>
           </div>
         </div>
 
@@ -122,6 +154,15 @@
           </div>
         </div>
       </form>
+
+      <!-- <div class="progress--modal" data-ng-if="page.progressValue && page.progressValue > 0">
+          <div class="progress--container">
+              <p><strong>{{ page.progressMessage }}</strong></p>
+              <div class="progress--meter--bar--wrapper">
+                  <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+              </div>
+          </div>
+      </div> -->
 
     </div>
 

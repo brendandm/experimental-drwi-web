@@ -18,9 +18,9 @@
           <span data-ng-if="page.project.id && page.project.properties.modified_on" class="label">Modified on: {{ page.project.properties.modified_on | date }}</span>
         </h4>
 
-        <img data-ng-if="page.site.geometry" class="pull-left" style="margin-right: 16px;"
+        <!-- <img data-ng-if="page.site.geometry" class="pull-left" style="margin-right: 16px;"
              data-ng-src="https://api.tiles.mapbox.com/v4/{{ page.mapbox.map_id }}/pin-s+b1c11d({{ page.site.geometry.geometries[0].coordinates[0] }},{{ page.site.geometry.geometries[0].coordinates[1] }},17)/{{ page.site.geometry.geometries[0].coordinates[0] }},{{ page.site.geometry.geometries[0].coordinates[1] }},17/80x80@2x.png?access_token={{ page.mapbox.access_token }}"
-             alt="{{ page.site.site_description }} location preview" width="80" height="80" />
+             alt="{{ page.site.site_description }} location preview" width="80" height="80" /> -->
 
         <h4 class="project-site-city">
           {{ page.project.properties.name }}
@@ -40,6 +40,26 @@
           <span data-ng-if="page.site.properties.segment.properties.hgmr_code">{{ page.site.properties.segment.properties.hgmr_code }}</span>,
           <span data-ng-if="page.site.properties.segment.properties.hgmr_name">{{ page.site.properties.segment.properties.hgmr_name }}</span>,
           <span data-ng-if="page.site.properties.segment.properties.river_name">{{ page.site.properties.segment.properties.river_name }}</span>
+        </h4>
+
+        <h4 class="project-site-city" data-ng-if="page.nodes.geographies.length">
+          <span data-ng-repeat="geography in page.nodes.geographies"><b>{{ geography.category }}:&nbsp;</b>{{ geography.name }}&nbsp;</span>
+        </h4>
+
+        <h4 class="project-site-city" data-ng-if="page.nodes.counties.length">
+          Counties
+        </h4>
+
+        <h4 class="project-site-city" data-ng-if="page.nodes.counties.length">
+          <span data-ng-repeat="county in page.nodes.counties">{{ county.name }}&nbsp;</span>
+        </h4>
+
+        <h4 class="project-site-city" data-ng-if="page.nodes.watersheds.length">
+          Watersheds
+        </h4>
+
+        <h4 class="project-site-city" data-ng-if="page.nodes.watersheds.length">
+          <span data-ng-repeat="watershed in page.nodes.watersheds">{{ watershed.name }}&nbsp;</span>
         </h4>
 
         <h2><strong>Practice</strong> Reductions</h2>
@@ -113,14 +133,14 @@
                 </div>
                 <div data-ng-if="practice.show_custom_practices"
                      class="subpractices">
-                  <div data-ng-repeat="subpractice_ in practice.practices track by $index"
+                  <div data-ng-repeat="subpractice in practice.practices track by $index"
                        class="subpractices--name">
                     <p class="metric--title">
-                      {{ subpractice_.name }}
+                      {{ subpractice.name }}
                     </p>
                     <div class="metric--chart">
                       <div class="metric--chart--value"
-                           data-ng-style="{'width': subpractice_.percentage.whole + '%' }"></div>
+                           data-ng-style="{'width': subpractice.percentage.whole + '%' }"></div>
                     </div>
                   </div>
                 </div>
@@ -136,10 +156,10 @@
                 </span>
                 <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices === true"
                      class="subpractice--nutrients">
-                  <div data-ng-repeat="subpractice_ in practice.practices track by $index"
+                  <div data-ng-repeat="subpractice in practice.practices track by $index"
                        class="subpractice--nutrients--nutrient">
                     <p class="metric--title">
-                      {{ subpractice_.installed.nitrogen || 0 | number:2 }}
+                      {{ subpractice.installed.nitrogen || 0 | number:2 }}
                     </p>
                   </div>
                 </div>
@@ -154,10 +174,10 @@
                 </span>
                 <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices === true"
                      class="subpractice--nutrients">
-                  <div data-ng-repeat="subpractice_ in practice.practices track by $index"
+                  <div data-ng-repeat="subpractice in practice.practices track by $index"
                        class="subpractice--nutrients--nutrient">
                     <p class="metric--title">
-                      {{ subpractice_.installed.phosphorus || 0 | number:2 }}
+                      {{ subpractice.installed.phosphorus || 0 | number:2 }}
                     </p>
                   </div>
                 </div>
@@ -172,10 +192,10 @@
                 </span>
                 <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices === true"
                      class="subpractice--nutrients">
-                  <div data-ng-repeat="subpractice_ in practice.practices track by $index"
+                  <div data-ng-repeat="subpractice in practice.practices track by $index"
                        class="subpractice--nutrients--nutrient">
                     <p class="metric--title">
-                      {{ subpractice_.installed.sediment || 0 | number:2 }}
+                      {{ subpractice.installed.sediment || 0 | number:2 }}
                     </p>
                   </div>
                 </div>

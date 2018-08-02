@@ -13,23 +13,7 @@
           <div class="form-field">
             <label for="practice_type" class="control-label">Practice Type</label>
             <select class="form-control" data-ng-model="page.practice.properties.practice_type" id="practice_type" name="practice_type">
-              <optgroup label="Other">
-                <option value="Custom">Other Conservation Practice</option>
-              </optgroup>
-              <optgroup label="Chesapeake Phase 5.3.2">
-                <option value="Bank Stabilization">Bank Stabilization</option>
-                <option value="Bioretention">Bioretention</option>
-                <option value="Enhanced Stream Restoration">Enhanced Stream Restoration</option>
-                <option value="Forest Buffer">Forest Buffer</option>
-                <option value="Grass Buffer">Grass Buffer</option>
-                <option value="In-stream Habitat">In-stream Habitat</option>
-                <option value="Livestock Exclusion">Livestock Exclusion</option>
-                <option value="Non-Tidal Wetlands">Non-Tidal Wetlands</option>
-                <option value="Agriculture Generic">Other Agricultural Practices</option>
-                <option value="Shoreline Management">Shoreline Management</option>
-                <option value="Stormwater">Stormwater Management</option>
-                <option value="Urban Homeowner">Urban Homeowner</option>
-              </optgroup>
+              <option value="Custom">Other Conservation Practice</option>
             </select>
           </div>
         </div>
@@ -61,7 +45,39 @@
             </div><br />
           </div>
 
-          <leaflet data-ng-if="page.map" class="map" markers="page.map.markers" defaults="page.map.defaults" layers="page.map.layers" center="page.map.center"></leaflet>
+          <div style="position:relative;">
+            <leaflet id="practice--map" class="map" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
+            <div class="progress--modal" data-ng-if="page.progressValue && page.progressValue > 0">
+              <div class="progress--container">
+                <p><strong>{{ page.progressMessage }}</strong></p>
+                <div class="progress--meter--bar--wrapper">
+                    <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <leaflet id="practice--map" class="map" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet> -->
+        </div>
+
+        <!-- Shapefile input -->
+        <div class="form-row">
+          <div class="form-field">
+            <label for="shapefile" class="control-label">
+              Upload an ESRI Shapefile
+            </label>
+            <input type="file" class="form-control"
+                   id="shapefile" name="shapefile" file-upload
+                   file-model="page.shapefile" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+              <button type="button" id="shapefile--upload" name="shapefile--upload"
+              class="button button--submit button--outline" data-ng-click="page.uploadShapefile()">
+              Upload
+              </button>
+          </div>
         </div>
 
         <!-- 7. Images -->
