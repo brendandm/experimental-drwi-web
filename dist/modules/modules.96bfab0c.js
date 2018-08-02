@@ -1816,6 +1816,12 @@ angular.module('FieldDoc')
 
             self.editableLayers = new L.FeatureGroup();
 
+            //
+            // Set default image path for Leaflet iconography
+            //
+
+            L.Icon.Default.imagePath = '/images/leaflet';
+
             function addNonGroupLayers(sourceLayer, targetGroup) {
                 if (sourceLayer instanceof L.LayerGroup) {
                     sourceLayer.eachLayer(function(layer) {
@@ -2655,6 +2661,12 @@ angular.module('FieldDoc')
         self.map.bounds = bounds;
 
         self.editableLayers = new L.FeatureGroup();
+
+        //
+        // Set default image path for Leaflet iconography
+        //
+
+        L.Icon.Default.imagePath = '/images/leaflet';
 
         function addNonGroupLayers(sourceLayer, targetGroup) {
             if (sourceLayer instanceof L.LayerGroup) {
