@@ -49,7 +49,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'staging',apiUrl:'http://api.drwi.chesapeakecommons.org',siteUrl:'http://drwi.chesapeakecommons.org',clientId:'sL3yMmmnSNszktuQGVBCasZ6mCy7DahS'})
+.constant('environment', {name:'staging',apiUrl:'http://api.drwi.chesapeakecommons.org',siteUrl:'http://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;
 /**
