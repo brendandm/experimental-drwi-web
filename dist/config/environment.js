@@ -2,6 +2,6 @@
 
  angular.module('config', [])
 
-.constant('environment', {name:'staging',apiUrl:'http://api.drwi.chesapeakecommons.org',siteUrl:'http://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
+.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'})
 
 ;

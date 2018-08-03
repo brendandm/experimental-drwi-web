@@ -76,8 +76,8 @@ module.exports = function(grunt) {
                 constants: {
                     environment: {
                         name: 'staging',
-                        apiUrl: 'http://api.drwi.chesapeakecommons.org',
-                        siteUrl: 'http://drwi.chesapeakecommons.org',
+                        apiUrl: 'https://api.drwi.chesapeakecommons.org',
+                        siteUrl: 'https://drwi.chesapeakecommons.org',
                         clientId: 'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'
                     }
                 }
