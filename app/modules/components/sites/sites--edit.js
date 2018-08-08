@@ -523,7 +523,11 @@
                 //
 
                 var drawControls = new L.Control.Draw({
-                    draw: {},
+                    draw: {
+                        circle: false,
+                        circlemarker: false,
+                        rectangle: false
+                    },
                     edit: {
                         featureGroup: self.editableLayers
                     }

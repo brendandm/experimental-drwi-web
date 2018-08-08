@@ -7,12 +7,14 @@
  */
 angular.module('FieldDoc')
     .controller('PracticeEditController', function(Account, Image, leafletData, $location, $log, Map,
-        mapbox, Media, Practice, practice, $q, $rootScope, $route,
+        mapbox, Media, Practice, practice, practice_types, $q, $rootScope, $route,
         $scope, $timeout, $interval, site, user, Shapefile) {
 
         var self = this,
             projectId = $route.current.params.projectId,
             siteId = $route.current.params.siteId;
+
+        self.practiceTypes = practice_types;
 
         self.files = Media;
         self.files.images = [];
@@ -469,7 +471,11 @@ angular.module('FieldDoc')
             //
 
             var drawControls = new L.Control.Draw({
-                draw: {},
+                draw: {
+                    circle: false,
+                    circlemarker: false,
+                    rectangle: false
+                },
                 edit: {
                     featureGroup: self.editableLayers
                 }

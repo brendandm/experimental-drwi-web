@@ -456,45 +456,6 @@
                 self.report.properties.monitoring = monitorings_;
             };
 
-            //
-            // IF NUTRIENTS UPDATE FOR ANY PRACTICE, UPDATE THE NUTRIENT ROLLUP
-            // AT THE TOP OF THE PAGE.
-            //
-            $scope.$watch(angular.bind(this, function() {
-                return this.report;
-            }), function(response) {
-                if (response) {
-                    var totals = {
-                        "nitrogen": 0,
-                        "phosphorus": 0,
-                        "sediment": 0
-                    }
-
-                    if (self.report && self.report.properties) {
-                        angular.forEach(self.report.properties.readings, function(reading_, index_) {
-
-                            var nutrients_ = reading_.properties.practice_nutrient_reductions;
-
-                            if (nutrients_ && nutrients_.properties) {
-                                totals.nitrogen += nutrients_.properties.nitrogen;
-                                totals.phosphorus += nutrients_.properties.phosphorus;
-                                totals.sediment += nutrients_.properties.sediment;
-                            }
-
-                            return;
-
-                        });
-
-                        self.report.properties.custom_model_nitrogen_total = totals.nitrogen;
-                        self.report.properties.custom_model_phosphorus_total = totals.phosphorus;
-                        self.report.properties.custom_model_sediment_total = totals.sediment;
-
-                        return;
-                    }
-
-                }
-            }, true);
-
         });
 
 }());

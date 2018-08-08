@@ -42,6 +42,11 @@
                                 id: $route.current.params.siteId
                             });
                         },
+                        practice_types: function(PracticeType, $route) {
+                            return PracticeType.query({
+                                results_per_page: 500
+                            });
+                        },
                         practice: function(Practice, $route) {
                             return Practice.get({
                                 id: $route.current.params.practiceId
