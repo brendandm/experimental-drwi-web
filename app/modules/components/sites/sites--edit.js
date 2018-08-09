@@ -539,14 +539,6 @@
 
                 var drawnItems = drawControls.options.edit.featureGroup;
 
-                // map.fitBounds(self.editableLayers.getBounds());
-
-                // if (drawnItems.getLayers().length > 1) {
-
-                //     map.fitBounds(drawnItems.getBounds());
-
-                // }
-
                 // Init the map with the saved elements
                 var printLayers = function() {
                     // console.log("After: ");
