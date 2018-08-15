@@ -1,71 +1,77 @@
 <div data-ng-include="'/modules/shared/notifications/notifications--view.html'"></div>
 
 <header role="banner" class="site-header">
-  <div class="container">
-    <div class="row">
-      <section class="site-brand column-8">
-        <a href="/">
-          <img src="/images/logo-FieldDoc.png" width="128" alt="" title="" />
-        </a>
-      </section>
+    <div class="container">
+        <div class="row">
+            <section class="site-brand column-8">
+                <a href="/">
+                    <img src="/images/logo-FieldDoc.png" width="128" alt="" title="" />
+                </a>
+            </section>
 
-      <nav class="site-navigation-utility column-8 align-right">
-        <ul class="utility-navigation">
-          <li data-ng-if="!$root.user.id">
-            <a class="button-link" href="/account/register">
-                Create Account
-            </a>
-          </li>
+            <nav class="site-navigation-utility column-8 align-right">
+                <ul class="utility-navigation">
+                    <li data-ng-if="!$root.user.id">
+                        <a class="button-link" href="/account/register">
+                            Create Account
+                        </a>
+                    </li>
 
-          <li data-ng-if="$root.user.id">
-            <a href="/account/{{ $root.user.id }}" class="user">
-                Account
-            </a>
-          </li>
-          <li data-ng-if="$root.user.id">
-            <a href="/logout" class="logout">
-                Logout
-            </a>
-          </li>
-          <li>
-            <a target="_blank" href="http://help.fielddoc.org/">
-                Need Help?
-            </a>
-          </li>
-       </ul>
-      </nav>
+                    <li data-ng-if="$root.user.id">
+                        <a href="/account/{{ $root.user.id }}" class="user">
+                            Account
+                        </a>
+                    </li>
+                    <li data-ng-if="$root.user.id">
+                        <a href="/logout" class="logout">
+                            Logout
+                        </a>
+                    </li>
+                    <li>
+                        <a target="_blank" href="http://help.fielddoc.org/">
+                            Need Help?
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
-  </div>
 </header>
 
 <section class="container meta" data-ng-if="!page.status.loading">
-  <article class="row">
-    <nav class="column-10">
-      <ul data-ng-if="$root.page.links" class="breadcrumb-navigation crumbs">
-        <li data-ng-repeat="link in $root.page.links">
-          <a href="{{ link.url }}" class="{{ link.type }}">
-            {{ link.text }}
-          </a>
-        </li>
-      </ul>
-    </nav>
-    <nav class="column-6">
-      <ul data-ng-if="$root.page.actions && $root.page.hideActions !== true" class="breadcrumb-navigation">
-        <li data-ng-repeat="action in $root.page.actions track by $index">
-          <button data-ng-if="!action.loading && action.button !== 'submit'" data-ng-click="action.action($index)" class="button {{ action.type }}">
-            <span class="add" data-ng-if="!action.hideIcon">+</span>
-            <span data-ng-if="(!action.visible && action.alt) || (!action.alt)">{{ action.text }}</span>
-            <span data-ng-if="action.alt && action.visible">{{ action.alt }}</span>
-          </button>
-          <button data-ng-if="!action.loading && action.button === 'submit'" data-ng-click="action.action($index)" class="button {{ action.type }}">
-            <span data-ng-if="(!action.visible && action.alt) || (!action.alt)">{{ action.text }}</span>
-            <span data-ng-if="action.alt && action.visible">{{ action.alt }}</span>
-          </button>
-          <a data-ng-if="action.loading" class="">
-            <span class="throbber"></span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </article>
+    <article class="row">
+        <nav class="column-10">
+            <ul data-ng-if="$root.page.links" class="breadcrumb-navigation crumbs">
+                <li data-ng-repeat="link in $root.page.links">
+                    <a href="{{ link.url }}" class="{{ link.type }}">
+                        {{ link.text }}
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <nav class="column-6">
+            <ul data-ng-if="$root.page.actions && $root.page.hideActions !== true" class="breadcrumb-navigation">
+                <li data-ng-repeat="action in $root.page.actions track by $index">
+                    <button data-ng-if="!action.loading && action.button !== 'submit'" data-ng-click="action.action($index)"
+                        class="button {{ action.type }}">
+                        <span class="add" data-ng-if="!action.hideIcon">+</span>
+                        <span data-ng-if="(!action.visible && action.alt) || (!action.alt)">{{
+                            action.text }}</span>
+                        <span data-ng-if="action.alt && action.visible">{{ action.alt
+                            }}</span>
+                    </button>
+                    <button data-ng-if="!action.loading && action.button === 'submit'" data-ng-click="action.action($index)"
+                        class="button {{ action.type }}">
+                        <span data-ng-if="(!action.visible && action.alt) || (!action.alt)">{{
+                            action.text }}</span>
+                        <span data-ng-if="action.alt && action.visible">{{ action.alt
+                            }}</span>
+                    </button>
+                    <a data-ng-if="action.loading" class="">
+                        <span class="throbber"></span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </article>
 </section>

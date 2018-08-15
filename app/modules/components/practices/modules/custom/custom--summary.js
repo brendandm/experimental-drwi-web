@@ -32,6 +32,9 @@
             summary.$promise.then(function(successResponse) {
 
                 self.data = successResponse;
+
+                console.log('self.summary', successResponse);
+
                 self.summary = successResponse;
 
                 //
