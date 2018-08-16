@@ -87,7 +87,7 @@
               1-10 of {{ page.projects.properties.num_results | number }}
           </span>
 
-          <!-- If the current page is no the first page -->
+          <!-- If the current page is not the first page -->
           <span data-ng-if="page.projects.properties.page && page.projects.properties.page > 1">
               {{ (page.projects.properties.page*10)-10 | number }}-{{ (page.projects.properties.page*10) | number }} of {{ page.projects.properties.num_results | number }}
           </span>

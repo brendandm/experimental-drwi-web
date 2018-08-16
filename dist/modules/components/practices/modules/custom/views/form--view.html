@@ -30,8 +30,7 @@
                         </div>
 
                         <div class="form-element form-element-quarters">
-                            <select class="form-control" id="report_date_month" name="report_date_month" data-ng-model="page.date.month"
-                                data-ng-options="month for month in page.months">
+                            <select class="form-control" id="report_date_month" name="report_date_month" data-ng-model="page.date.month" data-ng-options="month for month in page.months">
                             </select>
                             <p class="help-text">
                                 Month
@@ -39,33 +38,25 @@
                         </div>
 
                         <div class="form-element form-element-quarters">
-                            <input number type="number" min="1" max="31" step="1" class="form-control" id="report_date_date"
-                                name="report_date_date" data-ng-model="page.date.date"
-                                data-ng-if="page.date.month === 'Jan' ||
+                            <input number type="number" min="1" max="31" step="1" class="form-control" id="report_date_date" name="report_date_date" data-ng-model="page.date.date" data-ng-if="page.date.month === 'Jan' ||
                                    page.date.month === 'Mar' ||
                                    page.date.month === 'May' ||
                                    page.date.month === 'Jul' ||
                                    page.date.month === 'Aug' ||
                                    page.date.month === 'Oct' ||
                                    page.date.month === 'Dec'" />
-                            <input number type="number" min="1" max="30" step="1" class="form-control" id="report_date_date"
-                                name="report_date_date" data-ng-model="page.date.date"
-                                data-ng-if="page.date.month === 'Apr' ||
+                            <input number type="number" min="1" max="30" step="1" class="form-control" id="report_date_date" name="report_date_date" data-ng-model="page.date.date" data-ng-if="page.date.month === 'Apr' ||
                                   page.date.month === 'Jun' ||
                                   page.date.month === 'Sep' ||
                                   page.date.month === 'Nov'" />
-                            <input number type="number" min="1" max="29" step="1" class="form-control" id="report_date_date"
-                                name="report_date_date" data-ng-model="page.date.date"
-                                data-ng-if="page.date.month === 'Feb'" />
+                            <input number type="number" min="1" max="29" step="1" class="form-control" id="report_date_date" name="report_date_date" data-ng-model="page.date.date" data-ng-if="page.date.month === 'Feb'" />
                             <p class="help-text">
                                 Date
                             </p>
                         </div>
 
                         <div class="form-element form-element-quarters">
-                            <input number type="number" min="1900" step="1" class="form-control" id="report_date_year"
-                                name="report_date_year" data-ng-model="page.date.year"
-                            />
+                            <input number type="number" min="1900" step="1" class="form-control" id="report_date_year" name="report_date_year" data-ng-model="page.date.year" />
                             <p class="help-text">
                                 Year
                             </p>
@@ -83,9 +74,7 @@
                     <div class="form-field">
 
                         <div class="form-element">
-                            <select class="form-control" data-ng-model="page.report.properties.measurement_period"
-                                id="measurement_period" name="measurement_period"
-                                required="required">
+                            <select class="form-control" data-ng-model="page.report.properties.measurement_period" id="measurement_period" name="measurement_period" required="required">
                                 <option value="Planning">Planning</option>
                                 <option value="Installation">Installation</option>
                                 <option value="Monitoring">Monitoring</option>
@@ -106,12 +95,11 @@
                         <div class="form-element">
 
                             <!-- Practice -->
-                            <label for="practice_category" class="control-label">
+                            <!-- <label for="practice_category" class="control-label">
                                 Practice Type
                             </label>
 
-                            <input class="form-control" data-ng-model="page.practice.properties.category.properties.name" id="practice_category"
-                                name="practice_category" type="text" readonly/>
+                            <input class="form-control" data-ng-model="page.practice.properties.category.properties.name" id="practice_category" name="practice_category" type="text" readonly /> -->
 
                             <div class="form-element form-element-half">
                                 <!-- Practice Extent -->
@@ -119,9 +107,7 @@
                                     Practice Extent
                                 </label>
 
-                                <input class="form-control" data-ng-model="page.report.properties.practice_extent" id="practice_extent"
-                                    name="practice_extent" step="0.0001" type="number"
-                                />
+                                <input class="form-control" data-ng-model="page.report.properties.practice_extent" id="practice_extent" name="practice_extent" step="0.0001" type="number" />
 
                             </div>
                             <div class="form-element form-element-half">
@@ -130,11 +116,7 @@
                                     Units
                                 </label>
 
-                                <select class="form-control" data-ng-model="page.report.properties.practice_unit_id"
-                                    id="practice_unit_id" name="practice_unit_id"
-                                    data-ng-options="value.properties.id as (value.properties.plural) group by value.properties.group for value in page.unitTypes.features | orderBy:'properties.plural'"
-                                    data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
-                                    required="required">
+                                <select class="form-control" data-ng-model="page.report.properties.practice_unit_id" id="practice_unit_id" name="practice_unit_id" data-ng-options="value.properties.id as (value.properties.plural) group by value.properties.group for value in page.unitTypes.features | orderBy:'properties.plural'" required="required">
                                     <option value="">-- Select a unit --</option>
                                 </select>
 
@@ -146,9 +128,7 @@
                                     Nitrogen Reduction
                                 </label>
 
-                                <input class="form-control" data-ng-model="page.report.properties.custom_model_nitrogen_total"
-                                    id="nitrogen_reduction" name="nitrogen_reduction"
-                                    step="0.0001" type="number" />
+                                <input class="form-control" data-ng-model="page.report.properties.custom_model_nitrogen_total" id="nitrogen_reduction" name="nitrogen_reduction" step="0.0001" type="number" />
 
                             </div>
                             <div class="form-element form-element-half">
@@ -166,9 +146,7 @@
                                     Phosphorus Reduction
                                 </label>
 
-                                <input class="form-control" data-ng-model="page.report.properties.custom_model_phosphorus_total"
-                                    id="phosphorus_reduction" name="phosphorus_reduction"
-                                    step="0.0001" type="number" />
+                                <input class="form-control" data-ng-model="page.report.properties.custom_model_phosphorus_total" id="phosphorus_reduction" name="phosphorus_reduction" step="0.0001" type="number" />
 
                             </div>
                             <div class="form-element form-element-half">
@@ -186,9 +164,7 @@
                                     Sediment Reduction
                                 </label>
 
-                                <input class="form-control" data-ng-model="page.report.properties.custom_model_sediment_total"
-                                    id="sediment_reduction" name="sediment_reduction"
-                                    step="0.0001" type="number" />
+                                <input class="form-control" data-ng-model="page.report.properties.custom_model_sediment_total" id="sediment_reduction" name="sediment_reduction" step="0.0001" type="number" />
 
                             </div>
                             <div class="form-element form-element-half">
@@ -203,10 +179,10 @@
                     </div>
                 </div>
 
-                <div class="form-row" data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+                <div class="form-row" data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'" data-ng-repeat="reading_ in page.report.properties.metrics | orderBy:'id':false track by reading_.id">
                     <div class="form-label">
                         <label for="" class="control-label">
-                            Practice metric
+                            Custom Metric #{{ $index+1 }}
                         </label>
                     </div>
                     <div class="form-field">
@@ -219,10 +195,23 @@
                                 Metric
                             </label>
 
-                            <select class="form-control" data-ng-model="page.report.properties.metric.properties.metric_type_id"
-                                id="metric_type_id" name="metric_type_id" data-ng-options="value.id as value.properties.name group by value.properties.group for value in page.metricTypes.features | orderBy:'properties.name'">
+                            <select data-ng-if="!page.custom_metric_type[reading_.id]" class="form-control" data-ng-model="reading_.properties.metric_type_id" id="metric_type_id" name="metric_type_id" data-ng-options="value.id as value.properties.name group by value.properties.group for value in page.metricTypes.features | orderBy:'properties.name'">
                                 <option value="">-- Select a metric --</option>
                             </select>
+
+                            <div data-ng-if="page.custom_metric_type[reading_.id]">
+                                <input class="form-control" data-ng-model="reading_.properties.metric_type.properties.name" id="custom_metric_type_name" name="custom_metric_type_name" type="text" autofocus />
+
+                                <a href="javascript:void(0);" data-ng-click="page.actions.cancelAddNewMetricType(reading_)">
+                                    Cancel
+                                </a>
+                            </div>
+
+                            <p class="help-text">
+                                Don't see your metric?
+                                <a href="javascript:void(0);" data-ng-click="page.actions.addNewMetricType(reading_)">Add a new metric</a>
+                            </p>
+
 
                             <div class="form-element form-element-half">
                                 <!-- Practice Extent -->
@@ -230,9 +219,7 @@
                                     Metric Value
                                 </label>
 
-                                <input class="form-control" data-ng-model="page.report.properties.metric.properties.metric_value" id="metric_value"
-                                    name="metric_value" step="0.0001" type="number"
-                                />
+                                <input class="form-control" data-ng-model="reading_.properties.metric_value" id="metric_value" name="metric_value" step="0.0001" type="number" />
 
                             </div>
                             <div class="form-element form-element-half">
@@ -241,23 +228,47 @@
                                     Units
                                 </label>
 
-                                <select class="form-control" data-ng-model="page.report.properties.metric.properties.metric_unit_id" id="metric_unit_id"
-                                    name="metric_unit_id" data-ng-options="value.properties.id as (value.properties.plural) group by value.properties.group for value in page.unitTypes.features | orderBy:'properties.plural'"
-                                    data-ng-disabled="page.report.properties.measurement_period === 'Installation'"
-                                    required="required">
+                                <select class="form-control" data-ng-model="reading_.properties.metric_unit_id" id="metric_unit_id" name="metric_unit_id" data-ng-options="value.properties.id as (value.properties.plural) group by value.properties.group for value in page.unitTypes.features | orderBy:'properties.plural'" required="required">
                                     <option value="">-- Select a unit --</option>
                                 </select>
+
+                            </div>
+
+                            <div class="form-element form-element-half">
+                                <label for="" class="control-label">
+                                    &nbsp;
+                                </label>
+
+                                <button type="button" class="button button-link button-outline pull-right" data-ng-click="page.confirmMetricDelete[reading_.id] =! page.confirmMetricDelete[reading_.id]" data-ng-if="!page.confirmMetricDelete[reading_.id] && page.report.properties.measurement_period === 'Planning'">
+                                    Remove this metric
+                                </button>
+                                <span data-ng-if="page.confirmMetricDelete[reading_.id]" class="action pull-right">
+                                    <a data-ng-click="page.deleteMetric(reading_.id)" class="remove">
+                                        Yes, I'm sure, delete this metric</a> or <a class="cancel" data-ng-click="page.confirmMetricDelete[reading_.id] = false;">nevermind</a>
+                                </span>
 
                             </div>
 
                         </div>
 
                     </div>
-
                 </div>
 
-                <div class="form-row" data-ng-if="page.report.properties.measurement_period === 'Monitoring'"
-                    data-ng-repeat="monitoring_ in page.report.properties.monitoring | orderBy:'id':false track by monitoring_.id">
+                <div class="form-row" data-ng-if="page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation'">
+                    <div class="form-label">
+                        <label class="control-label">
+                            New Custom Metric
+                        </label>
+                    </div>
+                    <div class="form-field">
+                        <button type="button" data-ng-click="page.addMetric()" class="button button-link button-outline">
+                            + Add Another Metric
+                        </button>
+
+                    </div>
+                </div>
+
+                <div class="form-row" data-ng-if="page.report.properties.measurement_period === 'Monitoring'" data-ng-repeat="monitoring_ in page.report.properties.monitoring | orderBy:'id':false track by monitoring_.id">
                     <div class="form-label">
                         <label for="" class="control-label">
                             Custom Monitoring Check #{{ $index+1 }}
@@ -271,8 +282,7 @@
                                 Check Performed?
                             </label>
 
-                            <input type="checkbox" class="form-control" data-ng-model="monitoring_.properties.was_verified"
-                            />
+                            <input type="checkbox" class="form-control" data-ng-model="monitoring_.properties.was_verified" />
 
                         </div>
 
@@ -284,18 +294,13 @@
                                 Monitoring Check
                             </label>
 
-                            <select data-ng-if="!page.custom_monitoring_type[monitoring_.id]" class="form-control"
-                                data-ng-model="monitoring_.properties.monitoring_type_id"
-                                id="monitoring_type_id" name="monitoring_type_id"
-                                data-ng-options="value.id as value.properties.name group by value.properties.group for value in page.monitoringTypes.features | orderBy:'properties.name'">
+                            <select data-ng-if="!page.custom_monitoring_type[monitoring_.id]" class="form-control" data-ng-model="monitoring_.properties.monitoring_type_id" id="monitoring_type_id" name="monitoring_type_id" data-ng-options="value.id as value.properties.name group by value.properties.group for value in page.monitoringTypes.features | orderBy:'properties.name'">
                                 <option value="">-- Select an adaptive management
                                     check --</option>
                             </select>
 
                             <div data-ng-if="page.custom_monitoring_type[monitoring_.id]">
-                                <input class="form-control" data-ng-model="monitoring_.properties.monitoring_type.properties.name"
-                                    id="custom_monitoring_type_name" name="custom_monitoring_type_name"
-                                    type="text" autofocus />
+                                <input class="form-control" data-ng-model="monitoring_.properties.monitoring_type.properties.name" id="custom_monitoring_type_name" name="custom_monitoring_type_name" type="text" autofocus />
 
                                 <a href="javascript:void(0);" data-ng-click="page.actions.cancelAddMonitoringCheckType(monitoring_)">
                                     Cancel
@@ -314,9 +319,7 @@
                                     Monitoring Check Value
                                 </label>
 
-                                <input class="form-control" data-ng-model="monitoring_.properties.monitoring_value"
-                                    id="monitoring_value" name="monitoring_value"
-                                    step="0.0001" type="number" />
+                                <input class="form-control" data-ng-model="monitoring_.properties.monitoring_value" id="monitoring_value" name="monitoring_value" step="0.0001" type="number" />
 
                             </div>
                             <div class="form-element form-element-half">
@@ -325,9 +328,7 @@
                                     Description
                                 </label>
 
-                                <input class="form-control" data-ng-model="monitoring_.properties.monitoring_description"
-                                    id="monitoring_description" name="monitoring_description"
-                                    type="text" />
+                                <input class="form-control" data-ng-model="monitoring_.properties.monitoring_description" id="monitoring_description" name="monitoring_description" type="text" />
 
                             </div>
 
@@ -336,14 +337,12 @@
                                     &nbsp;
                                 </label>
 
-                                <button type="button" class="button button-link button-outline pull-right" data-ng-click="page.confirmMonitoringCheckDelete[monitoring_.id] =! page.confirmMonitoringCheckDelete[monitoring_.id]"
-                                    data-ng-if="!page.confirmMonitoringCheckDelete[monitoring_.id]">
+                                <button type="button" class="button button-link button-outline pull-right" data-ng-click="page.confirmMonitoringCheckDelete[monitoring_.id] =! page.confirmMonitoringCheckDelete[monitoring_.id]" data-ng-if="!page.confirmMonitoringCheckDelete[monitoring_.id]">
                                     Remove this check
                                 </button>
                                 <span data-ng-if="page.confirmMonitoringCheckDelete[monitoring_.id]" class="action pull-right">
                                     <a data-ng-click="page.deleteMonitoringCheck(monitoring_.id)" class="remove">
-                                        Yes, I'm sure, delete this check</a> or <a
-                                        class="cancel" data-ng-click="page.confirmMonitoringCheckDelete[monitoring_.id] = false;">nevermind</a>
+                                        Yes, I'm sure, delete this check</a> or <a class="cancel" data-ng-click="page.confirmMonitoringCheckDelete[monitoring_.id] = false;">nevermind</a>
                                 </span>
 
                             </div>
@@ -376,8 +375,7 @@
                     <div class="form-field">
 
                         <div class="form-element">
-                            <textarea rows="8" data-ng-model="page.report.properties.notes" class="form-control animate"
-                                msd-elastic id="notes" name="notes">{{ page.report.properties.notes }}</textarea>
+                            <textarea rows="8" data-ng-model="page.report.properties.notes" class="form-control animate" msd-elastic id="notes" name="notes">{{ page.report.properties.notes }}</textarea>
                         </div>
                     </div>
                 </div>

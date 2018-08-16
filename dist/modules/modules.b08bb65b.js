@@ -8696,23 +8696,31 @@ angular.module('FieldDoc')
 
             self.addReading = function(measurementPeriod) {
 
-                if (measurementPeriod === "Planning") {
-                    var newReading = new PracticeCustom({
-                        'measurement_period': measurementPeriod,
-                        'report_date': new Date(),
-                        'practice_id': practiceId,
-                        'account_id': self.summary.site.properties
-                            .project.properties.account_id
-                    });
-                } else {
+                var newReading = new PracticeCustom({
+                    'measurement_period': 'Planning',
+                    'report_date': new Date(),
+                    'practice_id': practiceId,
+                    'account_id': self.summary.site.properties
+                        .project.properties.account_id
+                });
 
-                    var defaults = angular.copy(self.summary.practice
-                        .properties.defaults.properties);
+                // if (measurementPeriod === "Planning") {
+                //     var newReading = new PracticeCustom({
+                //         'measurement_period': measurementPeriod,
+                //         'report_date': new Date(),
+                //         'practice_id': practiceId,
+                //         'account_id': self.summary.site.properties
+                //             .project.properties.account_id
+                //     });
+                // } else {
 
-                    defaults.measurement_period = "Installation";
+                //     var defaults = angular.copy(self.summary.practice
+                //         .properties.defaults.properties);
 
-                    var newReading = new PracticeCustom(defaults);
-                }
+                //     defaults.measurement_period = "Installation";
+
+                //     var newReading = new PracticeCustom(defaults);
+                // }
 
                 newReading.$save().then(function(successResponse) {
                     $location.path('/projects/' + projectId +
