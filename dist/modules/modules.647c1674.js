@@ -678,6 +678,165 @@ angular.module('FieldDoc')
     .config(function($routeProvider, commonscloud) {
 
         $routeProvider
+            .when('/dashboard', {
+                templateUrl: '/modules/components/dashboard/views/dashboard--view.html',
+                controller: 'DashboardCtrl',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    projects: function($location, Project) {
+
+                        //
+                        // Get all of our existing URL Parameters so that we can
+                        // modify them to meet our goals
+                        //
+                        var search_params = $location.search();
+
+                        //
+                        // Prepare any pre-filters to append to any of our user-defined
+                        // filters in the browser address bar
+                        //
+                        search_params.q = (search_params.q) ? angular.fromJson(search_params.q) : {};
+
+                        search_params.q.filters = (search_params.q.filters) ? search_params.q.filters : [];
+
+                        search_params.q.order_by = [{
+                            field: 'created_on',
+                            direction: 'desc'
+                        }];
+
+                        //
+                        // Execute our query so that we can get the Reports back
+                        //
+                        return Project.query(search_params);
+                    },
+                    user: function(Account) {
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+                        return Account.userObject;
+                    }
+                }
+            });
+
+    });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name FieldDoc.controller:DashboardCtrl
+ * @description
+ * # DashboardCtrl
+ * Controller of the FieldDoc
+ */
+angular.module('FieldDoc')
+    .controller('DashboardCtrl', function(Account, Notifications, $rootScope, Project,
+        $route, $scope, $location, mapbox, summary, Site, user, $window) {
+
+        var self = this;
+
+        $rootScope.page = {};
+
+        self.mapbox = mapbox;
+
+        self.status = {
+            "loading": true
+        }
+
+        //
+        // Assign project to a scoped variable
+        //
+        summary.$promise.then(function(successResponse) {
+
+            self.data = successResponse;
+            self.project = successResponse.project;
+
+            self.sites = successResponse.sites;
+
+            self.practices = successResponse.practices;
+
+            //
+            // Add rollups to the page scope
+            //
+            self.rollups = successResponse.rollups;
+
+            self.status.loading = false;
+
+            $rootScope.page.title = self.project.properties.name;
+            $rootScope.page.links = [{
+                    text: 'Projects',
+                    url: '/projects'
+                },
+                {
+                    text: self.project.properties.name,
+                    url: '/projects/' + $route.current.params.projectId,
+                    type: 'active'
+                }
+            ];
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+                user.$promise.then(function(userResponse) {
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0].properties.name,
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: Account.canEdit(self.project),
+                        is_manager: (Account.hasRole('manager') || Account.inGroup(self.project.properties.account_id, Account.userObject.properties.account)),
+                        is_admin: Account.hasRole('admin')
+                    };
+                });
+            }
+
+        });
+
+        //
+        // Setup basic page variables
+        //
+        $rootScope.page.actions = [{
+                type: 'button-link',
+                action: function() {
+                    $window.print();
+                },
+                hideIcon: true,
+                text: 'Print'
+            },
+            {
+                type: 'button-link',
+                action: function() {
+                    $scope.$emit('saveToPdf');
+                },
+                hideIcon: true,
+                text: 'Save as PDF'
+            },
+            {
+                type: 'button-link new',
+                action: function() {
+                    self.createSite();
+                },
+                text: 'Create site'
+            }
+        ];
+
+    });
+'use strict';
+
+/**
+ * @ngdoc overview
+ * @name FieldDoc
+ * @description
+ * # FieldDoc
+ *
+ * Main module of the application.
+ */
+angular.module('FieldDoc')
+    .config(function($routeProvider, commonscloud) {
+
+        $routeProvider
             .when('/projects', {
                 templateUrl: '/modules/components/projects/views/projectsList--view.html',
                 controller: 'ProjectsCtrl',
@@ -1745,7 +1904,7 @@ angular.module('FieldDoc')
             self.createPractice = function() {
 
                 self.practice = new Practice({
-                    'practice_type': 'Grass Buffer',
+                    'practice_type': 'Custom',
                     'site_id': self.site.id,
                     'account_id': self.site.properties.project.properties.account_id
                 });
@@ -1753,7 +1912,7 @@ angular.module('FieldDoc')
                 self.practice.$save(function(successResponse) {
                     $location.path('/projects/' + self.site.properties.project.id + '/sites/' + self.site.id + '/practices/' + successResponse.id + '/edit');
                 }, function(errorResponse) {
-                    console.error('Unable to create your site, please try again later');
+                    console.error('Unable to create your practice, please try again later');
                 });
 
             };

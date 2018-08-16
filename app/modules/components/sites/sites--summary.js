@@ -98,7 +98,7 @@
             self.createPractice = function() {
 
                 self.practice = new Practice({
-                    'practice_type': 'Grass Buffer',
+                    'practice_type': 'Custom',
                     'site_id': self.site.id,
                     'account_id': self.site.properties.project.properties.account_id
                 });
@@ -106,7 +106,7 @@
                 self.practice.$save(function(successResponse) {
                     $location.path('/projects/' + self.site.properties.project.id + '/sites/' + self.site.id + '/practices/' + successResponse.id + '/edit');
                 }, function(errorResponse) {
-                    console.error('Unable to create your site, please try again later');
+                    console.error('Unable to create your practice, please try again later');
                 });
 
             };

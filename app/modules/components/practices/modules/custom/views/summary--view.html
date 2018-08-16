@@ -331,7 +331,7 @@
                                 </td>
                                 <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false track by $index">
                                     <table>
-                                        <tr data-ng-repeat="metric_ in report.properties.metrics | orderBy:'id':false">
+                                        <tr data-ng-repeat="metric in report.properties.metrics | orderBy:'id':false">
                                             <td style="white-space:nowrap;">
                                                 <strong>{{ metric.name }}</strong>
                                             </td>
@@ -340,16 +340,16 @@
                                 </td>
                                 <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
                                     <table>
-                                        <tr data-ng-repeat="metric_ in report.properties.metrics | orderBy:'id':false">
+                                        <tr data-ng-repeat="metric in report.properties.metrics | orderBy:'id':false">
                                             <td style="white-space:nowrap;">
-                                                {{ metric.value || 0 | number:2 }} {{ metric.unit }}
+                                                {{ metric.value || 0 | number:2 }} {{ metric.units }}
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
                                 <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
                                     <table>
-                                        <tr data-ng-repeat="metric_ in report.properties.metrics | orderBy:'id':false">
+                                        <tr data-ng-repeat="metric in report.properties.metrics | orderBy:'id':false">
                                             <td style="white-space:nowrap;">
                                                 <strong>
                                                     {{ page.summary.practice.properties.quantity_installed.metrics[$index].value || 0 | number:2 }}
@@ -360,7 +360,7 @@
                                 </td>
                                 <td data-ng-if="report.properties.measurement_period === 'Planning'" data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
                                     <table>
-                                        <tr data-ng-repeat="metric_ in report.properties.metrics | orderBy:'id':false">
+                                        <tr data-ng-repeat="metric in report.properties.metrics | orderBy:'id':false">
                                             <td style="white-space:nowrap;">
                                                 <strong>
                                                     {{ (page.summary.practice.properties.percentage_installed.metrics[$index].value*100) || 0 | number:1 }}%
