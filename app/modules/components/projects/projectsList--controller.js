@@ -13,6 +13,16 @@ angular.module('FieldDoc')
 
         self.map = Map;
 
+        self.map.markers = {};
+
+        self.map.layers.overlays = {
+            projects: {
+                type: 'group',
+                name: 'projects',
+                visible: true
+            }
+        };
+
         console.log('self.map', self.map);
 
         // var southWest = L.latLng(25.837377, -124.211606),
@@ -102,6 +112,40 @@ angular.module('FieldDoc')
         //
         self.projects = projects;
 
+        console.log('self.projects', self.projects);
+
+        projects.$promise.then(function(successResponse) {
+
+            console.log("successResponse", successResponse);
+
+            self.projects = successResponse;
+
+            self.projects.features.forEach(function(feature) {
+
+                var centroid = feature.properties.centroid;
+
+                console.log('centroid', centroid);
+
+                if (centroid) {
+
+                    self.map.markers['project_' + feature.id] = {
+                        lat: centroid.coordinates[1],
+                        lng: centroid.coordinates[0],
+                        layer: 'projects'
+                    };
+
+                }
+
+            });
+
+            console.log('self.map.markers', self.map.markers);
+
+        }, function(errorResponse) {
+
+            console.log("errorResponse", errorResponse);
+
+        });
+
         self.search = {
             query: '',
             execute: function(page) {
@@ -151,10 +195,35 @@ angular.module('FieldDoc')
                     "q": q,
                     "page": (page ? page : 1)
                 }).$promise.then(function(successResponse) {
+
                     console.log("successResponse", successResponse);
+
                     self.projects = successResponse;
+
+                    // self.projects.features.forEach(function(feature) {
+
+                    //     var centroid = feature.properties.centroid;
+
+                    //     console.log('centroid', centroid);
+
+                    //     if (centroid) {
+
+                    //         self.map.markers['project_' + feature.id] = {
+                    //             lat: centroid.coordinates[1],
+                    //             lng: centroid.coordinates[0],
+                    //             layer: 'projects'
+                    //         };
+
+                    //     }
+
+                    // });
+
+                    // console.log('self.map.markers', self.map.markers);
+
                 }, function(errorResponse) {
+
                     console.log("errorResponse", errorResponse);
+
                 });
 
             },

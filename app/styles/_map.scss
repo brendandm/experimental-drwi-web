@@ -113,6 +113,13 @@
   display: none !important;
 }
 
+.leaflet-bar a,
+.leaflet-bar a:link,
+.leaflet-bar a:visited,
+.leaflet-bar a:hover,
+.leaflet-bar a:active {
+  color: transparent;
+}
 
 //
 // Legend
