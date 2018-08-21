@@ -35,19 +35,11 @@ angular.module('Mapbox')
                 }
             },
             center: {
-                lng: -77.534,
-                lat: 40.834,
-                zoom: 7
+                lat: 39.828175,
+                lng: -98.5795,
+                zoom: 4
             },
-            markers: {
-                projectLocation: {
-                    lng: -77.534,
-                    lat: 40.834,
-                    message: 'Drag me to your project location',
-                    focus: true,
-                    draggable: true
-                }
-            },
+            markers: {},
             styles: {
                 icon: {
                     parcel: {
@@ -61,6 +53,14 @@ angular.module('Mapbox')
             },
             geojson: {}
         };
+
+        var southWest = L.latLng(25.837377, -124.211606),
+            northEast = L.latLng(49.384359, -67.158958),
+            bounds = L.latLngBounds(southWest, northEast);
+
+        console.log('United States bounds', bounds);
+
+        Map.bounds = bounds;
 
         return Map;
     });
