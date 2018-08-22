@@ -59,8 +59,38 @@
 
         <!-- Map -->
 
-        <div style="position:relative;">
+        <div style="position:relative;" class="row">
+
+            <div class="dashboard--filter--group">
+
+                <div class="dashboard--filter">
+
+                    <label for="grantee--filter">Grantees</label>
+
+                    <input id="grantee--filter" class="form-control" type="text" value="" placeholder="Search grantees" data-ng-model="page.granteeQuery" uib-typeahead="grantee as grantee.name for grantee in page.dashboardFilters.grantees | filter:$viewValue | limitTo:5" typeahead-min-length="0">
+
+                </div>
+
+                <div class="dashboard--filter">
+
+                    <label for="practice--filter">Practices</label>
+
+                    <input id="practice--filter" class="form-control" type="text" value="" placeholder="Search practices" data-ng-model="page.practiceQuery" uib-typeahead="practice as practice.name for practice in page.dashboardFilters.practices | filter:$viewValue | limitTo:5" typeahead-min-length="0">
+
+                </div>
+
+                <div class="dashboard--filter">
+
+                    <label for="geography--filter">Geographies</label>
+
+                    <input id="geography--filter" class="form-control" type="text" value="" placeholder="Search geographies" data-ng-model="page.geographyQuery" uib-typeahead="geography as geography.name for geography in page.dashboardFilters.geographies | filter:$viewValue | limitTo:5" typeahead-min-length="0">
+
+                </div>
+
+            </div>
+
             <leaflet id="dashboard--map" class="map tall" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds" markers="page.map.markers"></leaflet>
+
         </div>
 
         <!-- Pagination Tools -->

@@ -22,5 +22,6 @@ angular
     'MapboxGLGeocoding',
     'Mapbox',
     'save2pdf',
-    'collaborator'
+    'collaborator',
+    'ui.bootstrap'
   ]);
