@@ -51,9 +51,13 @@ angular.module('FieldDoc')
 
         }
 
-        self.setGeoJsonLayer = function(data, layerGroup) {
+        self.setGeoJsonLayer = function(data, layerGroup, clearLayers) {
 
-            layerGroup.clearLayers();
+            if (clearLayers) {
+
+                layerGroup.clearLayers();
+
+            }
 
             var featureGeometry = L.geoJson(data, {});
 
@@ -65,6 +69,8 @@ angular.module('FieldDoc')
         // Assign project to a scoped variable
         //
         summary.$promise.then(function(successResponse) {
+
+            console.log('projectSummary', successResponse);
 
             self.data = successResponse;
             self.project = successResponse.project;
@@ -110,7 +116,7 @@ angular.module('FieldDoc')
                 });
             }
 
-            leafletData.getMap('dashboard--map').then(function(map) {
+            leafletData.getMap('project--map').then(function(map) {
 
                 var southWest = L.latLng(25.837377, -124.211606),
                     northEast = L.latLng(49.384359, -67.158958),
@@ -123,18 +129,37 @@ angular.module('FieldDoc')
                     self.setGeoJsonLayer(self.project.properties.extent, self.projectExtent);
 
                     map.fitBounds(self.projectExtent.getBounds(), {
-                        padding: [20, 20],
+                        // padding: [20, 20],
                         maxZoom: 18
                     });
 
                 } else {
 
                     map.fitBounds(bounds, {
-                        padding: [20, 20],
+                        // padding: [20, 20],
                         maxZoom: 18
                     });
 
                 }
+
+                self.projectExtent.clearLayers();
+
+                self.sites.forEach(function(feature) {
+
+                    if (feature.site.geometry) {
+
+                        self.setGeoJsonLayer(feature.site.geometry, self.projectExtent);
+
+                    }
+
+                });
+
+                map.fitBounds(self.projectExtent.getBounds(), {
+                    // padding: [20, 20],
+                    maxZoom: 18
+                });
+
+                self.projectExtent.addTo(map);
 
             });
 

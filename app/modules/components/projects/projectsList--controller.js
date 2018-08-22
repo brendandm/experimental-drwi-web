@@ -7,9 +7,16 @@
  */
 angular.module('FieldDoc')
     .controller('ProjectsCtrl', function(Account, $location, $log, Project, Map, mapbox,
-        projects, $rootScope, $scope, Site, user, years, leafletData, leafletBoundsHelpers) {
+        projects, $rootScope, $scope, Site, user, years, leafletData, leafletBoundsHelpers,
+        geographies, grantees, practices) {
 
         var self = this;
+
+        self.dashboardFilters = {
+            geographies: [],
+            grantees: [],
+            practices: []
+        };
 
         self.map = Map;
 
@@ -106,6 +113,63 @@ angular.module('FieldDoc')
             }
         };
 
+        //
+        // Load dashboard filters
+        //
+
+        geographies.$promise.then(function(successResponse) {
+
+            console.log('customGeographyResponse', successResponse);
+
+            successResponse.features.forEach(function(feature) {
+
+                self.dashboardFilters.geographies.push(feature);
+
+            });
+
+            console.log('self.dashboardFilters', self.dashboardFilters);
+
+        }, function(errorResponse) {
+
+            console.log("errorResponse", errorResponse);
+
+        });
+
+        grantees.$promise.then(function(successResponse) {
+
+            console.log('granteeResponse', successResponse);
+
+            successResponse.features.forEach(function(feature) {
+
+                self.dashboardFilters.grantees.push(feature);
+
+            });
+
+            console.log('self.dashboardFilters', self.dashboardFilters);
+
+        }, function(errorResponse) {
+
+            console.log("errorResponse", errorResponse);
+
+        });
+
+        practices.$promise.then(function(successResponse) {
+
+            console.log('practiceResponse', successResponse);
+
+            successResponse.features.forEach(function(feature) {
+
+                self.dashboardFilters.practices.push(feature);
+
+            });
+
+            console.log('self.dashboardFilters', self.dashboardFilters);
+
+        }, function(errorResponse) {
+
+            console.log("errorResponse", errorResponse);
+
+        });
 
         //
         // Project functionality

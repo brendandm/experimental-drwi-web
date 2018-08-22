@@ -52,6 +52,21 @@ angular.module('FieldDoc')
                     },
                     'years': function(Filters) {
                         return Filters.projectsByYear();
+                    },
+                    geographies: function(Filters) {
+                        return Filters.customGeographies({
+                            id: 3
+                        });
+                    },
+                    grantees: function(Filters) {
+                        return Filters.grantees({
+                            id: 3
+                        });
+                    },
+                    practices: function(Filters) {
+                        return Filters.practices({
+                            id: 3
+                        });
                     }
                 }
             })
