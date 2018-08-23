@@ -32,39 +32,78 @@ angular.module('FieldDoc')
 
         console.log('self.map', self.map);
 
-        // var southWest = L.latLng(25.837377, -124.211606),
-        //     northEast = L.latLng(49.384359, -67.158958),
-        //     bounds = L.latLngBounds(southWest, northEast);
+        self.processLocations = function(features) {
 
-        // console.log('United States bounds', bounds);
+            self.map.markers = {};
 
-        // self.map.bounds = bounds;
+            features.forEach(function(feature) {
 
-        // self.map = {
-        //     defaults: {
-        //         scrollWheelZoom: false,
-        //         zoomControl: false,
-        //         maxZoom: 18
-        //     },
-        //     bounds: bounds,
-        //     center: {
-        //         lat: 39.828175,
-        //         lng: -98.5795,
-        //         zoom: 4
-        //     },
-        //     layers: {
-        //         baselayers: {
-        //             basemap: {
-        //                 name: 'Satellite Imagery',
-        //                 url: 'https://{s}.tiles.mapbox.com/v3/' + mapbox.satellite + '/{z}/{x}/{y}.png',
-        //                 type: 'xyz',
-        //                 layerOptions: {
-        //                     attribution: '<a href="https://www.mapbox.com/about/maps/" target="_blank">&copy; Mapbox &copy; OpenStreetMap</a>'
-        //                 }
-        //             }
-        //         }
-        //     }
-        // };
+                var centroid = feature.centroid;
+
+                console.log('centroid', centroid);
+
+                if (centroid) {
+
+                    self.map.markers['project_' + feature.id] = {
+                        lat: centroid.coordinates[1],
+                        lng: centroid.coordinates[0],
+                        layer: 'projects'
+                    };
+
+                }
+
+            });
+
+            console.log('self.map.markers', self.map.markers);
+
+        };
+
+        self.filterProjects = function($item, $model, $label, collection) {
+
+            var matches;
+
+            switch (collection) {
+
+                case 'grantee':
+
+                    matches = self.filteredProjects.filter(function(datum) {
+
+                        return datum.organizations.indexOf($item.name) >= 0;
+
+                    });
+
+                    break;
+
+                case 'geography':
+
+                    matches = self.filteredProjects.filter(function(datum) {
+
+                        return datum.geographies.indexOf($item.name) >= 0;
+
+                    });
+
+                    break;
+
+                case 'practice':
+
+                    matches = self.filteredProjects.filter(function(datum) {
+
+                        return datum.practices.indexOf($item.name) >= 0;
+
+                    });
+
+                    break;
+
+                default:
+
+                    break;
+            }
+
+            self.filteredProjects = matches;
+
+            self.processLocations(self.filteredProjects);
+
+        };
 
         //
         // Setup basic page variables
@@ -182,27 +221,31 @@ angular.module('FieldDoc')
 
             console.log("successResponse", successResponse);
 
-            self.projects = successResponse;
+            self.projects = successResponse.features;
 
-            self.projects.features.forEach(function(feature) {
+            self.filteredProjects = successResponse.features;
 
-                var centroid = feature.properties.centroid;
+            self.processLocations(self.projects);
 
-                console.log('centroid', centroid);
+            // self.projects.features.forEach(function(feature) {
 
-                if (centroid) {
+            //     var centroid = feature.properties.centroid;
 
-                    self.map.markers['project_' + feature.id] = {
-                        lat: centroid.coordinates[1],
-                        lng: centroid.coordinates[0],
-                        layer: 'projects'
-                    };
+            //     console.log('centroid', centroid);
 
-                }
+            //     if (centroid) {
 
-            });
+            //         self.map.markers['project_' + feature.id] = {
+            //             lat: centroid.coordinates[1],
+            //             lng: centroid.coordinates[0],
+            //             layer: 'projects'
+            //         };
 
-            console.log('self.map.markers', self.map.markers);
+            //     }
+
+            // });
+
+            // console.log('self.map.markers', self.map.markers);
 
         }, function(errorResponse) {
 
@@ -300,7 +343,15 @@ angular.module('FieldDoc')
                 self.search.execute(pageNumber);
             },
             clear: function() {
-                $location.path('/projects/').search('');
+
+                // $location.path('/projects/').search('');
+
+                self.q = {};
+
+                self.filteredProjects = self.projects;
+
+                self.processLocations(self.filteredProjects);
+
             }
         };
 

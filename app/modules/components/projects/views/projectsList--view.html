@@ -67,7 +67,7 @@
 
                     <label for="grantee--filter">Grantees</label>
 
-                    <input id="grantee--filter" class="form-control" type="text" value="" placeholder="Search grantees" data-ng-model="page.granteeQuery" uib-typeahead="grantee as grantee.name for grantee in page.dashboardFilters.grantees | filter:$viewValue | limitTo:5" typeahead-min-length="0">
+                    <input id="grantee--filter" class="form-control" type="text" value="" placeholder="Search grantees" data-ng-model="page.q.grantee" uib-typeahead="grantee as grantee.name for grantee in page.dashboardFilters.grantees | filter:$viewValue | limitTo:5" typeahead-on-select="page.filterProjects($item, $model, $label, 'grantee')" typeahead-min-length="0">
 
                 </div>
 
@@ -75,7 +75,7 @@
 
                     <label for="practice--filter">Practices</label>
 
-                    <input id="practice--filter" class="form-control" type="text" value="" placeholder="Search practices" data-ng-model="page.practiceQuery" uib-typeahead="practice as practice.name for practice in page.dashboardFilters.practices | filter:$viewValue | limitTo:5" typeahead-min-length="0">
+                    <input id="practice--filter" class="form-control" type="text" value="" placeholder="Search practices" data-ng-model="page.q.practice" uib-typeahead="practice as practice.name for practice in page.dashboardFilters.practices | filter:$viewValue | limitTo:5" typeahead-on-select="page.filterProjects($item, $model, $label, 'practice')" typeahead-min-length="0">
 
                 </div>
 
@@ -83,7 +83,7 @@
 
                     <label for="geography--filter">Geographies</label>
 
-                    <input id="geography--filter" class="form-control" type="text" value="" placeholder="Search geographies" data-ng-model="page.geographyQuery" uib-typeahead="geography as geography.name for geography in page.dashboardFilters.geographies | filter:$viewValue | limitTo:5" typeahead-min-length="0">
+                    <input id="geography--filter" class="form-control" type="text" value="" placeholder="Search geographies" data-ng-model="page.q.geography" uib-typeahead="geography as geography.name for geography in page.dashboardFilters.geographies | filter:$viewValue | limitTo:5" typeahead-on-select="page.filterProjects($item, $model, $label, 'geography')" typeahead-min-length="0">
 
                 </div>
 
@@ -95,26 +95,23 @@
 
         <!-- Pagination Tools -->
 
-        <div class="row toolbox">
+        <!-- <div class="row toolbox">
             <div class="column-16">
                 <ul class="pager pull-right">
                     <li class="pull-left">
-                        <!-- No Project Results to Display -->
+
                         <span data-ng-if="page.projects.properties.num_results === 0">
                             No results
                         </span>
 
-                        <!-- If there are 25 or less projects to display -->
                         <span data-ng-if="page.projects.properties.num_results <= 10 && page.projects.properties.num_results !== 0">
                             1-{{ page.projects.properties.num_results }} of {{ page.projects.properties.num_results }}
                         </span>
 
-                        <!-- If user is on the first page and there are more than 25 results -->
                         <span data-ng-if="page.projects.properties.page === 1 && page.projects.properties.num_results > 10">
                             1-10 of {{ page.projects.properties.num_results | number }}
                         </span>
 
-                        <!-- If the current page is not the first page -->
                         <span data-ng-if="page.projects.properties.page && page.projects.properties.page > 1">
                             {{ (page.projects.properties.page*10)-10 | number }}-{{ (page.projects.properties.page*10) | number }} of {{ page.projects.properties.num_results | number }}
                         </span>
@@ -132,7 +129,7 @@
                 </ul>
             </div>
 
-        </div>
+        </div> -->
 
         <!-- Project List -->
         <div class="list">
@@ -154,7 +151,7 @@
 
             <div class="row list-item">
                 <div class="responsive-table">
-                    <table class="table" data-ng-if="page.projects.features && page.projects.features.length">
+                    <table class="table" data-ng-if="page.filteredProjects && page.filteredProjects.length">
                         <thead>
                             <tr>
                                 <td class="align-left column--vertialCenter">&nbsp;</td>
@@ -176,39 +173,39 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr data-ng-repeat="project in page.projects.features track by $index">
+                            <tr data-ng-repeat="project in page.filteredProjects track by $index">
                                 <td class="align-center column--state column--vertialCenter">
                                     <span class="project--state">
-                                        <span class="project--state--highlight" data-ng-class="{'project--state--draft': (project.properties.workflow_state === 'Draft'), 'project--state--submitted': (project.properties.workflow_state === 'Submitted'), 'project--state--funded': (project.properties.workflow_state === 'Funded'), 'project--state--completed': (project.properties.workflow_state === 'Completed')}"></span>
-                                        {{ project.properties.workflow_state }}
+                                        <span class="project--state--highlight" data-ng-class="{'project--state--draft': (project.workflow_state === 'Draft'), 'project--state--submitted': (project.workflow_state === 'Submitted'), 'project--state--funded': (project.workflow_state === 'Funded'), 'project--state--completed': (project.workflow_state === 'Completed')}"></span>
+                                        {{ project.workflow_state }}
                                     </span>
                                 </td>
                                 <td class="align-center column--programType column--vertialCenter">
                                     <p>
-                                        <span data-ng-if="project.id && project.properties.program_type" class="label" data-ng-class="{'label-info': (project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (project.properties.program_type === 'Pre-Project Plan')}">
-                                            {{ project.properties.program_type }}
+                                        <span data-ng-if="project.id && project.program_type" class="label" data-ng-class="{'label-info': (project.program_type !== 'Pre-Project Plan'), 'label-success': (project.program_type === 'Pre-Project Plan')}">
+                                            {{ project.program_type }}
                                         </span>
                                     </p>
                                 </td>
                                 <td class="column--titleDescription align-left">
-                                    <a class="project--title" href="/projects/{{ project.id }}#top" title="{{ project.properties.name }} project details">
-                                        {{ project.properties.name }}
+                                    <a class="project--title" href="/projects/{{ project.id }}#top" title="{{ project.name }} project details">
+                                        {{ project.name }}
                                     </a><br />
-                                    <span class="project--description" data-ng-bind-html="project.properties.description"></span>
+                                    <span class="project--description" data-ng-bind-html="project.description"></span>
                                 </td>
                                 <td class="align-left column--funder column--vertialCenter">
-                                    <span class="project--funder" data-ng-if="project.id && project.properties.account.properties.name">
-                                        {{ project.properties.account.properties.name }}
+                                    <span class="project--funder" data-ng-if="project.id && project.account.name">
+                                        {{ project.account.name }}
                                     </span>
                                 </td>
                                 <td class="align-left column--contact column--vertialCenter">
-                                    <a href="mailto:{{ project.properties.created_by.properties.email }}" data-ng-if="project.id && project.properties.created_by.properties.first_name && project.properties.created_by.properties.last_name">
-                                        {{ project.properties.created_by.properties.first_name }} {{ project.properties.created_by.properties.last_name }}
+                                    <a href="mailto:{{ project.creator.email }}" data-ng-if="project.id && project.creator.name">
+                                        {{ project.creator.name }}
                                     </a>
                                 </td>
                                 <td class="align-left column--lastUpdated column--vertialCenter">
-                                    <span data-ng-if="project.id && project.properties.modified_on">
-                                        {{ project.properties.modified_on | date }}
+                                    <span data-ng-if="project.id && project.modified_on">
+                                        {{ project.modified_on | date }}
                                     </span>
                                 </td>
                             </tr>
@@ -219,26 +216,23 @@
         </div>
 
         <!-- Pagination Tools -->
-        <div class="row toolbox">
+        <!-- <div class="row toolbox">
             <div class="column-16">
                 <ul class="pager pull-right">
                     <li class="pull-left">
-                        <!-- No Project Results to Display -->
+
                         <span data-ng-if="page.projects.properties.num_results === 0">
                             No results
                         </span>
 
-                        <!-- If there are 25 or less projects to display -->
                         <span data-ng-if="page.projects.properties.num_results <= 10 && page.projects.properties.num_results !== 0">
                             1-{{ page.projects.properties.num_results }} of {{ page.projects.properties.num_results }}
                         </span>
 
-                        <!-- If user is on the first page and there are more than 25 results -->
                         <span data-ng-if="page.projects.properties.page === 1 && page.projects.properties.num_results > 10">
                             1-10 of {{ page.projects.properties.num_results | number }}
                         </span>
 
-                        <!-- If the current page is no the first page -->
                         <span data-ng-if="page.projects.properties.page && page.projects.properties.page > 1">
                             {{ (page.projects.properties.page*10)-10 | number }}-{{ (page.projects.properties.page*10) | number }} of {{ page.projects.properties.num_results | number }}
                         </span>
@@ -256,7 +250,7 @@
                 </ul>
             </div>
 
-        </div>
+        </div> -->
 
     </div>
 </main>

@@ -42,7 +42,11 @@ angular.module('FieldDoc')
                         //
                         // Execute our query so that we can get the Reports back
                         //
-                        return Project.query(search_params);
+                        // return Project.query(search_params);
+
+                        return Project.minimal({
+                            id: 3
+                        });
                     },
                     user: function(Account) {
                         if (Account.userObject && !Account.userObject.id) {
