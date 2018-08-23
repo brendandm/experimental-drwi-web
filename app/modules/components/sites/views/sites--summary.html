@@ -28,7 +28,8 @@
         <h1>
           {{ page.site.properties.name }}
         </h1>
-        <h4 class="project-site-city">
+        
+        <!-- <h4 class="project-site-city">
           <span data-ng-if="page.site.properties.city">{{ page.site.properties.city }}</span><span data-ng-if="page.site.properties.city && page.site.properties.county.properties.county_name">,</span>
           <span data-ng-if="page.site.properties.county.properties.county_name">{{ page.site.properties.county.properties.county_name }} County</span><span data-ng-if="page.site.properties.state && page.site.properties.county.properties.county_name">,</span> {{ page.site.properties.state }}
         </h4>
@@ -40,7 +41,7 @@
           <span data-ng-if="page.site.properties.segment.properties.hgmr_code">{{ page.site.properties.segment.properties.hgmr_code }}</span>,
           <span data-ng-if="page.site.properties.segment.properties.hgmr_name">{{ page.site.properties.segment.properties.hgmr_name }}</span>,
           <span data-ng-if="page.site.properties.segment.properties.river_name">{{ page.site.properties.segment.properties.river_name }}</span>
-        </h4>
+        </h4> -->
 
         <h4 class="project-site-city" data-ng-if="page.nodes.geographies.length">
           <span data-ng-repeat="geography in page.nodes.geographies"><b>{{ geography.category }}:&nbsp;</b>{{ geography.name }}&nbsp;</span>
@@ -53,7 +54,7 @@
         <h4 class="project-site-city" data-ng-if="page.nodes.counties.length">
           <span data-ng-repeat="county in page.nodes.counties">{{ county.name }}&nbsp;</span>
         </h4>
-
+        
         <h2><strong>Practice</strong> Reductions</h2>
 
         <table class="table table-practices" data-ng-if="page.practices">
