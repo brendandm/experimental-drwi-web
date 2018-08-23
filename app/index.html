@@ -16,6 +16,7 @@
     <title>{{ $root.page.title }}{{ $root.site.title }}</title>
 
     <link rel="stylesheet" type="text/css" href='//api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!-- <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' /> -->
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -95,7 +96,7 @@
         <!-- build:js({.tmp,app}) /modules/modules.js -->
 
         <script src="modules/shared/typeahead/ui-bootstrap-typeahead-tpls-2.5.0.min.js"></script>
-        
+
         <script src="modules/app--module.js"></script>
         <script src="modules/app--routes.js"></script>
         <script src="config/environment.js"></script>
@@ -272,6 +273,7 @@
             <script src="modules/shared/api/practiceStormwater--service.js"></script>
             <script src="modules/shared/api/practiceType--service.js"></script>
             <script src="modules/shared/api/project--service.js"></script>
+            <script src="modules/shared/api/search--service.js"></script>
             <script src="modules/shared/api/security--service.js"></script>
             <script src="modules/shared/api/site--service.js"></script>
             <script src="modules/shared/api/segment--service.js"></script>
@@ -289,6 +291,8 @@
             <script src="modules/shared/directives/relationship/relationship.js"></script>
 
             <script src="modules/shared/directives/organization/organization.js"></script>
+
+            <script src="modules/shared/directives/search/search--directive.js"></script>
 
             <!-- Filters -->
             <script src="modules/shared/filters/toAcres--filter.js"></script>
