@@ -78,9 +78,20 @@ angular.module('FieldDoc')
 
         self.loadMetrics = function(arr) {
 
+            //
+            // A program (account) identifier
+            // is required by default.
+            //
+
             var params = {
                 id: 3
             };
+
+            //
+            // If the `arr` parameter is valid,
+            // constrain the query to the given
+            // set of numeric project identifiers.
+            //
 
             if (arr && arr.length) {
 
@@ -104,9 +115,20 @@ angular.module('FieldDoc')
 
         self.loadOutcomes = function(arr) {
 
+            //
+            // A program (account) identifier
+            // is required by default.
+            //
+
             var params = {
                 id: 3
             };
+
+            //
+            // If the `arr` parameter is valid,
+            // constrain the query to the given
+            // set of numeric project identifiers.
+            //
 
             if (arr && arr.length) {
 
