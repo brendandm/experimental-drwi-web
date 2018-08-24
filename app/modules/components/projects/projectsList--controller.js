@@ -132,9 +132,9 @@ angular.module('FieldDoc')
         // Setup basic page variables
         //
         $rootScope.page = {
-            title: 'Projects',
+            title: 'Program Summary',
             links: [{
-                text: 'Projects',
+                text: 'Program Summary',
                 url: '/projects',
                 type: 'active'
             }],
