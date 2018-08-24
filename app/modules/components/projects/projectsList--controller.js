@@ -161,13 +161,6 @@ angular.module('FieldDoc')
                 type: 'active'
             }],
             actions: [
-                // {
-                // type: 'button-link',
-                // action: function() {
-                // self.createPlan();
-                // },
-                // text: 'Create Pre-Project Plan'
-                // },
                 {
                     type: 'button-link new',
                     action: function() {
