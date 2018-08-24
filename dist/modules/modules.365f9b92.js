@@ -886,25 +886,25 @@ angular.module('FieldDoc')
                             return Account.getUser();
                         }
                         return Account.userObject;
-                    },
-                    'years': function(Filters) {
-                        return Filters.projectsByYear();
-                    },
-                    geographies: function(Filters) {
-                        return Filters.customGeographies({
-                            id: 3
-                        });
-                    },
-                    grantees: function(Filters) {
-                        return Filters.grantees({
-                            id: 3
-                        });
-                    },
-                    practices: function(Filters) {
-                        return Filters.practices({
-                            id: 3
-                        });
                     }
+                    // 'years': function(Filters) {
+                    //     return Filters.projectsByYear();
+                    // },
+                    // geographies: function(Filters) {
+                    //     return Filters.customGeographies({
+                    //         id: 3
+                    //     });
+                    // },
+                    // grantees: function(Filters) {
+                    //     return Filters.grantees({
+                    //         id: 3
+                    //     });
+                    // },
+                    // practices: function(Filters) {
+                    //     return Filters.practices({
+                    //         id: 3
+                    //     });
+                    // }
                 }
             })
             .when('/projects/:projectId', {
@@ -977,8 +977,12 @@ angular.module('FieldDoc')
  */
 angular.module('FieldDoc')
     .controller('ProjectsCtrl', function(Account, $location, $log, Project, Map, mapbox,
-        projects, $rootScope, $scope, Site, user, years, leafletData, leafletBoundsHelpers,
-        geographies, grantees, practices) {
+        projects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
+        MetricService, OutcomeService, ProjectStore, FilterStore) {
+
+        $scope.filterStore = FilterStore;
+
+        $scope.projectStore = ProjectStore;
 
         var self = this;
 
@@ -1028,50 +1032,69 @@ angular.module('FieldDoc')
 
         };
 
-        self.filterProjects = function($item, $model, $label, collection) {
+        self.extractIds = function(arr) {
 
-            var matches;
+            var projectIds = [];
 
-            switch (collection) {
+            arr.forEach(function(datum) {
 
-                case 'grantee':
+                projectIds.push(datum.id);
 
-                    matches = self.filteredProjects.filter(function(datum) {
+            });
 
-                        return datum.organizations.indexOf($item.name) >= 0;
+            return projectIds.join(',');
 
-                    });
+        };
 
-                    break;
+        self.loadMetrics = function(arr) {
 
-                case 'geography':
+            var params = {
+                id: 3
+            };
 
-                    matches = self.filteredProjects.filter(function(datum) {
+            if (arr && arr.length) {
 
-                        return datum.geographies.indexOf($item.name) >= 0;
+                params.projects = self.extractIds(arr);
 
-                    });
-
-                    break;
-
-                case 'practice':
-
-                    matches = self.filteredProjects.filter(function(datum) {
-
-                        return datum.practices.indexOf($item.name) >= 0;
-
-                    });
-
-                    break;
-
-                default:
-
-                    break;
             }
 
-            self.filteredProjects = matches;
+            MetricService.query(params).$promise.then(function(successResponse) {
 
-            self.processLocations(self.filteredProjects);
+                console.log('granteeResponse', successResponse);
+
+                self.metrics = successResponse.features;
+
+            }, function(errorResponse) {
+
+                console.log("errorResponse", errorResponse);
+
+            });
+
+        };
+
+        self.loadOutcomes = function(arr) {
+
+            var params = {
+                id: 3
+            };
+
+            if (arr && arr.length) {
+
+                params.projects = self.extractIds(arr);
+
+            }
+
+            OutcomeService.query(params).$promise.then(function(successResponse) {
+
+                console.log('granteeResponse', successResponse);
+
+                self.outcomes = successResponse;
+
+            }, function(errorResponse) {
+
+                console.log("errorResponse", errorResponse);
+
+            });
 
         };
 
@@ -1087,11 +1110,11 @@ angular.module('FieldDoc')
             }],
             actions: [
                 // {
-                //   type: 'button-link',
-                //   action: function() {
-                //     self.createPlan();
-                //   },
-                //   text: 'Create Pre-Project Plan'
+                // type: 'button-link',
+                // action: function() {
+                // self.createPlan();
+                // },
+                // text: 'Create Pre-Project Plan'
                 // },
                 {
                     type: 'button-link new',
@@ -1102,83 +1125,6 @@ angular.module('FieldDoc')
                 }
             ]
         };
-
-        self.filters = {
-            "active": {
-                "workflow_state": null,
-                "year": {
-                    "year": null
-                },
-                "sstring": null
-            },
-            "values": {
-                "workflow_states": [
-                    'Draft',
-                    'Submitted',
-                    'Funded',
-                    'Completed'
-                ],
-                "years": years
-            }
-        };
-
-        //
-        // Load dashboard filters
-        //
-
-        geographies.$promise.then(function(successResponse) {
-
-            console.log('customGeographyResponse', successResponse);
-
-            successResponse.features.forEach(function(feature) {
-
-                self.dashboardFilters.geographies.push(feature);
-
-            });
-
-            console.log('self.dashboardFilters', self.dashboardFilters);
-
-        }, function(errorResponse) {
-
-            console.log("errorResponse", errorResponse);
-
-        });
-
-        grantees.$promise.then(function(successResponse) {
-
-            console.log('granteeResponse', successResponse);
-
-            successResponse.features.forEach(function(feature) {
-
-                self.dashboardFilters.grantees.push(feature);
-
-            });
-
-            console.log('self.dashboardFilters', self.dashboardFilters);
-
-        }, function(errorResponse) {
-
-            console.log("errorResponse", errorResponse);
-
-        });
-
-        practices.$promise.then(function(successResponse) {
-
-            console.log('practiceResponse', successResponse);
-
-            successResponse.features.forEach(function(feature) {
-
-                self.dashboardFilters.practices.push(feature);
-
-            });
-
-            console.log('self.dashboardFilters', self.dashboardFilters);
-
-        }, function(errorResponse) {
-
-            console.log("errorResponse", errorResponse);
-
-        });
 
         //
         // Project functionality
@@ -1191,27 +1137,31 @@ angular.module('FieldDoc')
 
             console.log("successResponse", successResponse);
 
-            self.projects = successResponse.features;
+            // self.projects = successResponse.features;
 
-            self.filteredProjects = successResponse.features;
+            // self.filteredProjects = successResponse.features;
 
-            self.processLocations(self.projects);
+            $scope.projectStore.setProjects(successResponse.features);
+
+            self.filteredProjects = $scope.projectStore.filteredProjects;
+
+            self.processLocations(successResponse.features);
 
             // self.projects.features.forEach(function(feature) {
 
-            //     var centroid = feature.properties.centroid;
+            // var centroid = feature.properties.centroid;
 
-            //     console.log('centroid', centroid);
+            // console.log('centroid', centroid);
 
-            //     if (centroid) {
+            // if (centroid) {
 
-            //         self.map.markers['project_' + feature.id] = {
-            //             lat: centroid.coordinates[1],
-            //             lng: centroid.coordinates[0],
-            //             layer: 'projects'
-            //         };
+            // self.map.markers['project_' + feature.id] = {
+            // lat: centroid.coordinates[1],
+            // lng: centroid.coordinates[0],
+            // layer: 'projects'
+            // };
 
-            //     }
+            // }
 
             // });
 
@@ -1246,7 +1196,7 @@ angular.module('FieldDoc')
                 };
 
                 if (self.filters.active.workflow_state !== null) {
-                    console.log('add workflow state filter')
+                    console.log('add workflow state filter');
 
                     q.filters.push({
                         "name": "workflow_state",
@@ -1265,7 +1215,7 @@ angular.module('FieldDoc')
                         "name": "created_on",
                         "op": "lte",
                         "val": self.filters.active.year.year + "-12-31"
-                    })
+                    });
                 }
 
                 Project.query({
@@ -1279,19 +1229,19 @@ angular.module('FieldDoc')
 
                     // self.projects.features.forEach(function(feature) {
 
-                    //     var centroid = feature.properties.centroid;
+                    // var centroid = feature.properties.centroid;
 
-                    //     console.log('centroid', centroid);
+                    // console.log('centroid', centroid);
 
-                    //     if (centroid) {
+                    // if (centroid) {
 
-                    //         self.map.markers['project_' + feature.id] = {
-                    //             lat: centroid.coordinates[1],
-                    //             lng: centroid.coordinates[0],
-                    //             layer: 'projects'
-                    //         };
+                    // self.map.markers['project_' + feature.id] = {
+                    // lat: centroid.coordinates[1],
+                    // lng: centroid.coordinates[0],
+                    // layer: 'projects'
+                    // };
 
-                    //     }
+                    // }
 
                     // });
 
@@ -1336,11 +1286,11 @@ angular.module('FieldDoc')
             if (q && q.filters && q.filters.length) {
                 angular.forEach(q.filters[0].and, function(filter) {
                     if (filter.name === 'name') {
-                        self.search.query = filter.val.replace(/%/g, '');;
+                        self.search.query = filter.val.replace(/%/g, '');
                     }
                 });
             }
-        };
+        }
 
         self.createProject = function() {
             self.project = new Project({
@@ -1383,14 +1333,22 @@ angular.module('FieldDoc')
         // Verify Account information for proper UI element display
         //
         if (Account.userObject && user) {
+
             user.$promise.then(function(userResponse) {
                 $rootScope.user = Account.userObject = userResponse;
                 self.permissions = {
                     isLoggedIn: Account.hasToken()
                 };
             });
+
+            self.loadOutcomes();
+
+            self.loadMetrics();
+
         } else {
+
             $location.path('/user/logout');
+
         }
 
         //
@@ -1406,6 +1364,38 @@ angular.module('FieldDoc')
                 padding: [20, 20],
                 maxZoom: 18
             });
+
+        });
+
+        self.clearFilter = function(obj) {
+
+            // ProjectStore.reset();
+
+            FilterStore.clearItem(obj);
+
+        };
+
+        $scope.$watch('filterStore.index', function(newVal) {
+
+            console.log('Updated filterStore', newVal);
+
+            self.activeFilters = newVal;
+
+            ProjectStore.filterAll(newVal);
+
+        });
+
+        $scope.$watch('projectStore.filteredProjects', function(newVal) {
+
+            console.log('Updated projectStore', newVal);
+
+            self.filteredProjects = newVal;
+
+            self.processLocations(newVal);
+
+            self.loadMetrics(newVal);
+
+            self.loadOutcomes(newVal);
 
         });
 
@@ -6698,6 +6688,27 @@ angular
 
 (function() {
 
+    'use strict';
+
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('MetricService', function(environment, Preprocessors, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/data/program/:id/metrics'), {
+                id: '@id'
+            }, {
+                query: {
+                    isArray: false
+                }
+            });
+        });
+
+}());
+(function() {
+
   'use strict';
 
   /**
@@ -6779,6 +6790,27 @@ angular
 
 }());
 
+(function() {
+
+    'use strict';
+
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('OutcomeService', function(environment, Preprocessors, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/data/program/:id/outcomes'), {
+                id: '@id'
+            }, {
+                query: {
+                    isArray: false
+                }
+            });
+        });
+
+}());
 (function() {
 
   'use strict';
@@ -7507,6 +7539,34 @@ angular
 }());
 (function() {
 
+    'use strict';
+
+    /**
+     * @ngdoc service
+     * @name WaterReporter
+     * @description
+     * Provides access to the map endpoint of the WaterReporter API
+     * Service in the WaterReporter.
+     */
+    angular.module('FieldDoc')
+        .service('SearchService', function(environment, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/data/search'), {}, {
+                query: {
+                    isArray: false,
+                    cache: true
+                },
+                users: {
+                    method: 'GET',
+                    isArray: false,
+                    cache: true,
+                    url: environment.apiUrl.concat('/v1/data/search/user')
+                }
+            });
+        });
+
+}());
+(function() {
+
   'use strict';
 
   /**
@@ -7809,6 +7869,248 @@ angular.module('FieldDoc')
 
 (function() {
 
+    'use strict';
+
+    angular.module('FieldDoc')
+        .factory('FilterStore', function() {
+
+            return {
+                // index: {
+                //     'geography': null,
+                //     'practice': null,
+                //     'project': null,
+                //     'organization': null,
+                //     'status': null
+                // },
+                index: [],
+                addItem: function(obj) {
+                    // this.index[category] = obj;
+
+                    if (this.index.length < 2) {
+
+                        this.index.push(obj);
+
+                    } else {
+
+                        this.index[1] = obj;
+
+                    }
+
+                },
+                clearItem: function(obj) {
+
+                    var items = this.index.filter(function(item) {
+
+                        return (item.name !== obj.name &&
+                            item.category !== obj.category);
+
+                    });
+
+                    this.index = items;
+
+                },
+                clearAll: function(obj) {
+
+                    this.index = [];
+
+                }
+
+            };
+
+        });
+
+}());
+(function() {
+
+    'use strict';
+
+    angular.module('FieldDoc')
+        .service('ProjectStore', function() {
+
+            this.filteredProjects = [];
+
+            this.projects = [];
+
+            this.filterProjects = function($item) {
+
+                console.log('ProjectStore.filterProjects.$item', $item);
+
+                var matches;
+
+                var collection = $item.category;
+
+                switch (collection) {
+
+                    case 'organization':
+
+                        matches = this.projects.filter(function(datum) {
+
+                            return datum.organizations.indexOf($item.name) >= 0;
+
+                        });
+
+                        break;
+
+                    case 'geography':
+
+                        matches = this.projects.filter(function(datum) {
+
+                            return datum.geographies.indexOf($item.name) >= 0;
+
+                        });
+
+                        break;
+
+                    case 'practice':
+
+                        matches = this.projects.filter(function(datum) {
+
+                            return datum.practices.indexOf($item.name) >= 0;
+
+                        });
+
+                        break;
+
+                    case 'project':
+
+                        matches = this.projects.filter(function(datum) {
+
+                            return datum.name === $item.name;
+
+                        });
+
+                        break;
+
+                    case 'project status':
+
+                        matches = this.projects.filter(function(datum) {
+
+                            return datum.workflow_state === $item.name;
+
+                        });
+
+                        break;
+
+                    default:
+
+                        break;
+
+                }
+
+                this.filteredProjects = matches;
+
+                return matches;
+
+            };
+
+            this.createSet = function(a, b) {
+
+                var primaryIndex = [],
+                    secondaryIndex = [],
+                    mergedIndex = [],
+                    set = [];
+
+                //
+                // Create indices of numeric project identifiers
+                //
+
+                a.forEach(function(datum) {
+
+                    primaryIndex.push(datum.id);
+
+                });
+
+                console.log('ProjectStore.createSet.primaryIndex', primaryIndex);
+
+                b.forEach(function(datum) {
+
+                    secondaryIndex.push(datum.id);
+
+                });
+
+                console.log('ProjectStore.createSet.secondaryIndex', secondaryIndex);
+
+                //
+                // Merge the arrays
+                //
+
+                a.concat(b);
+
+                //
+                // Populate a new array with projects
+                // whose numeric identifiers appear in
+                // both indices.
+                //
+
+                a.forEach(function(datum) {
+
+                    if ((primaryIndex.indexOf(datum.id) >= 0 &&
+                        secondaryIndex.indexOf(datum.id) >= 0) &&
+                        mergedIndex.indexOf(datum.id) < 0) {
+
+                        mergedIndex.push(datum.id);
+
+                        set.push(datum);
+
+                    }
+
+                });
+
+                return set;
+
+            };
+
+            this.filterAll = function(list) {
+
+                var a,
+                    b;
+
+                if (!list || list.length < 1) {
+
+                    this.reset();
+
+                    return;
+
+                }
+
+                if (list.length === 1) {
+
+                    this.filterProjects(list[0]);
+
+                } else {
+
+                    a = this.filterProjects(list[0]);
+
+                    console.log('ProjectStore.filterAll.a', a);
+
+                    b = this.filterProjects(list[1]);
+
+                    console.log('ProjectStore.filterAll.b', b);
+
+                    this.filteredProjects = this.createSet(a, b);
+
+                }
+
+            };
+
+            this.setProjects = function(list) {
+
+                this.projects = list;
+
+                this.filteredProjects = list;
+
+            };
+
+            this.reset = function() {
+
+                this.filteredProjects = this.projects.slice(0);
+
+            };
+
+        });
+}());
+(function() {
+
   'use strict';
 
   angular.module('FieldDoc')
@@ -8071,6 +8373,79 @@ angular.module('FieldDoc')
 
 }());
 
+(function() {
+
+    'use strict';
+
+    angular.module('FieldDoc')
+        .directive('globalSearch', [
+            '$window',
+            '$location',
+            '$filter',
+            '$http',
+            'SearchService',
+            'ProjectStore',
+            'FilterStore',
+            function($window, $location, $filter, $http, SearchService,
+                ProjectStore, FilterStore) {
+                return {
+                    restrict: 'EA',
+                    // scope: {
+                    //     filterProjects: '&'
+                    // },
+                    link: function(scope, element, attrs) {
+
+                        scope.query = undefined;
+
+                        // The user triggered a selection action
+
+                        scope.routeTo = function(item, model, label) {
+
+                            // $window.location.href = item.permalink;
+
+                            console.log('searchItem', item);
+
+                            $location.path(item.permalink).search({});
+
+                        };
+
+                        // Populate a list of possible matches based on the search string
+
+                        scope.fetchSuggestions = function(a) {
+
+                            return SearchService.get({
+                                q: a
+                            }).$promise.then(function(response) {
+
+                                console.log(response);
+
+                                return response.results;
+
+                            });
+
+                        };
+
+                        scope.setFilter = function($item, $model, $label) {
+
+                            scope.query = undefined;
+
+                            // FilterStore.clearAll();
+
+                            FilterStore.addItem($item);
+
+                            // ProjectStore.filterProjects($item);
+
+                            ProjectStore.filterAll(FilterStore.index);
+
+                        };
+
+                    }
+
+                };
+            }
+        ]);
+
+}());
 'use strict';
 
 /**

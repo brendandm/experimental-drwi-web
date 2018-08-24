@@ -2,136 +2,139 @@
 
 <main role="main" class="container">
 
-    <div class="site-content">
+    <div class="site-content" style="padding-top: 0;">
         <!-- Toolbox -->
-        <form role="form" id="formFilterProjects" name="formFilterProjects" data-ng-submit="page.search.execute()" class="row toolbox">
+        <form role="form" id="formFilterProjects" name="formFilterProjects" data-ng-submit="page.search.execute()" class="row">
 
             <!-- Filter Tools -->
-            <div class="column-6">
-                <div class="form-element">
-                    <label class="control-label">
-                        &nbsp;
-                    </label>
-                    <ul class="form-element-tabs">
-                        <li>
-                            <a href="javascript:void(0);" data-ng-class="{'active': page.filters.active.workflow_state === null}" data-ng-click="page.filters.active.workflow_state = null;">
-                                <span class="form-element-tabsMarker"></span>
-                                All
-                            </a>
-                        </li>
-                        <li data-ng-repeat="filter in page.filters.values.workflow_states">
-                            <a href="javascript:void(0);" data-ng-class="{'active': page.filters.active.workflow_state === '{{ filter }}'}" data-ng-click="page.filters.active.workflow_state = filter;">
-                                <span class="form-element-tabsMarker" data-ng-class="{'form-element-tabsMarker-draft': (filter === 'Draft'), 'form-element-tabsMarker-submitted': (filter === 'Submitted'), 'form-element-tabsMarker-funded': (filter === 'Funded'), 'form-element-tabsMarker-completed': (filter === 'Completed')}"></span>
-                                {{ filter }}
-                            </a>
-                        </li>
-                    </ul>
+
+            <div class="filter--group" data-ng-if="page.activeFilters">
+                <div class="filter--pill" data-ng-repeat="filter in page.activeFilters" data-ng-click="page.clearFilter(filter)">
+                    <div>
+                        <span class="category {{ filter.category }}">{{ filter.category }}</span>
+                        <span>{{ filter.name }}</span>
+                    </div>
+                    <div>
+                        <i class="material-icons">
+                        clear
+                        </i>
+                    </div>
                 </div>
             </div>
-            <div class="column-4">
-                <div class="form-element">
-                    <label class="control-label">
-                        Search by Project Name
-                    </label>
-                    <input type="text" placeholder="Begin typing a project name..." id="search" name="search" class="form-control" data-ng-model="page.search.query" />
+
+            <div class="row search--group">
+                <div global-search class="global--search" filter-projects="page.filterProjects">
+                    <input type="search" class="search" value="" placeholder="Search" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue)" typeahead-on-select="setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
                 </div>
+                <button class="clear--search" data-ng-if="page.filterActive" data-ng-click="page.search.clear()">
+                    <i class="material-icons">
+                    clear
+                    </i>
+                </button>
+                <button class="trigger--search" type="submit">
+                    <i class="material-icons">
+                    search
+                    </i>
+                </button>
             </div>
-            <div class="column-4">
-                <div class="form-element">
-                    <label class="control-label">
-                        Search by Project Creation Date
-                    </label>
-                    <select data-ng-model="page.filters.active.year" data-ng-options="year as year.year for year in page.filters.values.years.years track by year.year" class="form-control">
-                        <option value="">All Years</value>
-                    </select>
-                </div>
-            </div>
-            <div class="column-2">
-                <div class="form-actions">
-                    <label class="control-label">
-                        &nbsp;
-                    </label>
-                    <button type="submit">Search</button>
-                    <button type="button" data-ng-click="page.search.clear()">Clear Search</button>
-                </div>
-            </div>
+
         </form>
 
         <!-- Map -->
 
         <div style="position:relative;" class="row">
 
-            <div class="dashboard--filter--group">
-
-                <div class="dashboard--filter">
-
-                    <label for="grantee--filter">Grantees</label>
-
-                    <input id="grantee--filter" class="form-control" type="text" value="" placeholder="Search grantees" data-ng-model="page.q.grantee" uib-typeahead="grantee as grantee.name for grantee in page.dashboardFilters.grantees | filter:$viewValue | limitTo:5" typeahead-on-select="page.filterProjects($item, $model, $label, 'grantee')" typeahead-min-length="0">
-
-                </div>
-
-                <div class="dashboard--filter">
-
-                    <label for="practice--filter">Practices</label>
-
-                    <input id="practice--filter" class="form-control" type="text" value="" placeholder="Search practices" data-ng-model="page.q.practice" uib-typeahead="practice as practice.name for practice in page.dashboardFilters.practices | filter:$viewValue | limitTo:5" typeahead-on-select="page.filterProjects($item, $model, $label, 'practice')" typeahead-min-length="0">
-
-                </div>
-
-                <div class="dashboard--filter">
-
-                    <label for="geography--filter">Geographies</label>
-
-                    <input id="geography--filter" class="form-control" type="text" value="" placeholder="Search geographies" data-ng-model="page.q.geography" uib-typeahead="geography as geography.name for geography in page.dashboardFilters.geographies | filter:$viewValue | limitTo:5" typeahead-on-select="page.filterProjects($item, $model, $label, 'geography')" typeahead-min-length="0">
-
-                </div>
-
-            </div>
-
             <leaflet id="dashboard--map" class="map tall" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds" markers="page.map.markers"></leaflet>
 
         </div>
 
-        <!-- Pagination Tools -->
+        <!-- Progress metrics -->
 
-        <!-- <div class="row toolbox">
-            <div class="column-16">
-                <ul class="pager pull-right">
-                    <li class="pull-left">
+        <div class="row" data-ng-if="page.filteredProjects && page.filteredProjects.length">
+            <section id="sites">
+                <div class="list">
 
-                        <span data-ng-if="page.projects.properties.num_results === 0">
-                            No results
-                        </span>
+                    <h6 class="rule-above statistics--header"><strong>Program</strong> Metrics</h6>
+                    <article class="row statistics project--summary">
+                        <div class="column-4 statistics--statistic">
+                            <p class="statistic--value">
+                                {{ page.outcomes.installation.nitrogen | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.nitrogen | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
+                                <span class="statistic--title">Nitrogen</span>
+                            </p>
+                            <div class="statistic--chart">
+                                <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.nitrogen/page.outcomes.planning.nitrogen)*100) + '%' }">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column-2"></div>
+                        <div class="column-4 statistics--statistic">
+                            <p class="statistic--value">
+                                {{ page.outcomes.installation.phosphorus | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.phosphorus | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
+                                <span class="statistic--title">Phosphorus</span>
+                            </p>
+                            <div class="statistic--chart">
+                                <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.phosphorus/page.outcomes.planning.phosphorus)*100) + '%' }">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column-2"></div>
+                        <div class="column-4 statistics--statistic">
+                            <p class="statistic--value">
+                                {{ page.outcomes.installation.sediment | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.sediment | number:2 }} <span class="statistic--valueLabel">tons/yr</span><br />
+                                <span class="statistic--title">Sediment</span>
+                            </p>
+                            <div class="statistic--chart">
+                                <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.sediment/page.outcomes.planning.sediment)*100) + '%' }">
+                                </div>
+                            </div>
+                        </div>
+                    </article>
 
-                        <span data-ng-if="page.projects.properties.num_results <= 10 && page.projects.properties.num_results !== 0">
-                            1-{{ page.projects.properties.num_results }} of {{ page.projects.properties.num_results }}
-                        </span>
+                    <!-- <h2><strong>Practice</strong> Metrics</h2> -->
 
-                        <span data-ng-if="page.projects.properties.page === 1 && page.projects.properties.num_results > 10">
-                            1-10 of {{ page.projects.properties.num_results | number }}
-                        </span>
+                    <table class="table table-practices with-metrics" data-ng-if="page.metrics">
+                        <thead>
+                            <tr>
+                                <th class="table-column-wide table-metrics-header">Metric</th>
+                                <th class="table-metrics-header">Installed To-Date</th>
+                                <th class="table-metrics-header">% Installed</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
 
-                        <span data-ng-if="page.projects.properties.page && page.projects.properties.page > 1">
-                            {{ (page.projects.properties.page*10)-10 | number }}-{{ (page.projects.properties.page*10) | number }} of {{ page.projects.properties.num_results | number }}
-                        </span>
-                    </li>
-                    <li data-ng-if="page.projects.properties.page !== page.projects.properties.total_pages && page.projects.properties.num_results !== 0" class="next pull-right">
-                        <a title="Older" data-ng-click="page.search.paginate(page.projects.properties.page+1)">
-                            <div class="icon retinaicon-retina-icons-v-1-5"></div>
-                        </a>
-                    </li>
-                    <li data-ng-if="page.projects.properties.page !== 1" class="previous pull-right">
-                        <a title="Newer" data-ng-click="page.search.paginate(page.projects.properties.page-1)">
-                            <div class="icon retinaicon-retina-icons-v-1-4"></div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+                        <tbody class="metrics">
+                            <tr class="metrics--metric" data-ng-repeat="metric in page.metrics track by $index">
+                                <td class="table-column-wide">
+                                    <p class="metric--title">
+                                        {{ metric.name }}
+                                    </p>
+                                </td>
+                                <td>
+                                    <strong class="metrics--metric--rollup--small">{{ metric.installation | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit }}<br />
+                                        of {{ metric.planning | number:2 }}</span>
+                                </td>
+                                <td>
+                                    <strong class="metrics--metric--percentage">
+                                        {{ (metric.installation/metric.planning)*100 | number:1 }}%
+                                    </strong>
+                                </td>
+                                <td>
+                                    <div class="donut-chart chart{{ (metric.installation/metric.planning)*100 | number:0 }}">
+                                        <div class="slice one"></div>
+                                        <div class="slice two"></div>
+                                        <div class="chart-center">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
 
-        </div> -->
+        <!-- Project list -->
 
-        <!-- Project List -->
         <div class="list">
 
             <article class="row list-item" data-ng-if="page.projects.features && !page.projects.features.length">
@@ -214,44 +217,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Pagination Tools -->
-        <!-- <div class="row toolbox">
-            <div class="column-16">
-                <ul class="pager pull-right">
-                    <li class="pull-left">
-
-                        <span data-ng-if="page.projects.properties.num_results === 0">
-                            No results
-                        </span>
-
-                        <span data-ng-if="page.projects.properties.num_results <= 10 && page.projects.properties.num_results !== 0">
-                            1-{{ page.projects.properties.num_results }} of {{ page.projects.properties.num_results }}
-                        </span>
-
-                        <span data-ng-if="page.projects.properties.page === 1 && page.projects.properties.num_results > 10">
-                            1-10 of {{ page.projects.properties.num_results | number }}
-                        </span>
-
-                        <span data-ng-if="page.projects.properties.page && page.projects.properties.page > 1">
-                            {{ (page.projects.properties.page*10)-10 | number }}-{{ (page.projects.properties.page*10) | number }} of {{ page.projects.properties.num_results | number }}
-                        </span>
-                    </li>
-                    <li data-ng-if="page.projects.properties.page !== page.projects.properties.total_pages && page.projects.properties.num_results !== 0" class="next pull-right">
-                        <a title="Older" data-ng-click="page.search.paginate(page.projects.properties.page+1)">
-                            <div class="icon retinaicon-retina-icons-v-1-5"></div>
-                        </a>
-                    </li>
-                    <li data-ng-if="page.projects.properties.page !== 1" class="previous pull-right">
-                        <a title="Newer" data-ng-click="page.search.paginate(page.projects.properties.page-1)">
-                            <div class="icon retinaicon-retina-icons-v-1-4"></div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-        </div> -->
-
     </div>
 </main>
 
