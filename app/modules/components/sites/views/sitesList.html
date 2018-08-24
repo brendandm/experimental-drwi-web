@@ -1,0 +1,223 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main role="main" class="container">
+
+    <div class="site-content" style="padding-top: 0;">
+        <!-- Toolbox -->
+        <form role="form" id="formFilterProjects" name="formFilterProjects" data-ng-submit="page.search.execute()" class="row">
+
+            <!-- Filter Tools -->
+
+            <div class="filter--group" data-ng-if="page.activeFilters">
+                <div class="filter--pill" data-ng-repeat="filter in page.activeFilters" data-ng-click="page.clearFilter(filter)">
+                    <div>
+                        <span class="category {{ filter.category }}">{{ filter.category }}</span>
+                        <span>{{ filter.name }}</span>
+                    </div>
+                    <div>
+                        <i class="material-icons">
+                        clear
+                        </i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row search--group">
+                <div global-search class="global--search" filter-projects="page.filterProjects">
+                    <input type="search" class="search" value="" placeholder="Search" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue)" typeahead-on-select="setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                </div>
+                <button class="clear--search" data-ng-if="page.filterActive" data-ng-click="page.search.clear()">
+                    <i class="material-icons">
+                    clear
+                    </i>
+                </button>
+                <button class="trigger--search" type="submit">
+                    <i class="material-icons">
+                    search
+                    </i>
+                </button>
+            </div>
+
+        </form>
+
+        <!-- Map -->
+
+        <div style="position:relative;" class="row">
+
+            <leaflet id="dashboard--map" class="map tall" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds" markers="page.map.markers"></leaflet>
+
+        </div>
+
+        <!-- Progress metrics -->
+
+        <div class="row" data-ng-if="page.filteredProjects && page.filteredProjects.length">
+            <section id="sites">
+                <div class="list">
+
+                    <h6 class="rule-above statistics--header"><strong>Program</strong> Metrics</h6>
+                    <article class="row statistics project--summary">
+                        <div class="column-4 statistics--statistic">
+                            <p class="statistic--value">
+                                {{ page.outcomes.installation.nitrogen | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.nitrogen | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
+                                <span class="statistic--title">Nitrogen</span>
+                            </p>
+                            <div class="statistic--chart">
+                                <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.nitrogen/page.outcomes.planning.nitrogen)*100) + '%' }">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column-2"></div>
+                        <div class="column-4 statistics--statistic">
+                            <p class="statistic--value">
+                                {{ page.outcomes.installation.phosphorus | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.phosphorus | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
+                                <span class="statistic--title">Phosphorus</span>
+                            </p>
+                            <div class="statistic--chart">
+                                <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.phosphorus/page.outcomes.planning.phosphorus)*100) + '%' }">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column-2"></div>
+                        <div class="column-4 statistics--statistic">
+                            <p class="statistic--value">
+                                {{ page.outcomes.installation.sediment | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.sediment | number:2 }} <span class="statistic--valueLabel">tons/yr</span><br />
+                                <span class="statistic--title">Sediment</span>
+                            </p>
+                            <div class="statistic--chart">
+                                <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.sediment/page.outcomes.planning.sediment)*100) + '%' }">
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- <h2><strong>Practice</strong> Metrics</h2> -->
+
+                    <table class="table table-practices with-metrics" data-ng-if="page.metrics">
+                        <thead>
+                            <tr>
+                                <th class="table-column-wide table-metrics-header">Metric</th>
+                                <th class="table-metrics-header">Installed To-Date</th>
+                                <th class="table-metrics-header">% Installed</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="metrics">
+                            <tr class="metrics--metric" data-ng-repeat="metric in page.metrics track by $index">
+                                <td class="table-column-wide">
+                                    <p class="metric--title">
+                                        {{ metric.name }}
+                                    </p>
+                                </td>
+                                <td>
+                                    <strong class="metrics--metric--rollup--small">{{ metric.installation | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit }}<br />
+                                        of {{ metric.planning | number:2 }}</span>
+                                </td>
+                                <td>
+                                    <strong class="metrics--metric--percentage">
+                                        {{ (metric.installation/metric.planning)*100 | number:1 }}%
+                                    </strong>
+                                </td>
+                                <td>
+                                    <div class="donut-chart chart{{ (metric.installation/metric.planning)*100 | number:0 }}">
+                                        <div class="slice one"></div>
+                                        <div class="slice two"></div>
+                                        <div class="chart-center">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- Project list -->
+
+        <div class="list">
+
+            <article class="row list-item" data-ng-if="page.projects.features && !page.projects.features.length">
+                <div class="column-16 list-item-content align-center empty-data">
+                    <div class="icon retinaicon-file-096"></div>
+                    <p>
+                        Projects will show up here,
+                        so you can easily view them later.
+                    </p>
+                    <p>
+                        <a href="javascript:void(0)" data-ng-click="page.createProject()">
+                            Create your first project now
+                        </a>
+                    </p>
+                </div>
+            </article>
+
+            <div class="row list-item">
+                <div class="responsive-table">
+                    <table class="table" data-ng-if="page.filteredProjects && page.filteredProjects.length">
+                        <thead>
+                            <tr>
+                                <td class="align-left column--vertialCenter">&nbsp;</td>
+                                <td class="align-left column--vertialCenter">
+                                    <strong>Program</strong>
+                                </td>
+                                <td class="align-left">
+                                    <strong>Project</strong>
+                                </td>
+                                <td class="align-left">
+                                    <strong>Funder</strong>
+                                </td>
+                                <td class="align-left">
+                                    <strong>Contact</strong>
+                                </td>
+                                <td class="align-left">
+                                    <strong>Last Updated</strong>
+                                </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-ng-repeat="project in page.filteredProjects track by $index">
+                                <td class="align-center column--state column--vertialCenter">
+                                    <span class="project--state">
+                                        <span class="project--state--highlight" data-ng-class="{'project--state--draft': (project.workflow_state === 'Draft'), 'project--state--submitted': (project.workflow_state === 'Submitted'), 'project--state--funded': (project.workflow_state === 'Funded'), 'project--state--completed': (project.workflow_state === 'Completed')}"></span>
+                                        {{ project.workflow_state }}
+                                    </span>
+                                </td>
+                                <td class="align-center column--programType column--vertialCenter">
+                                    <p>
+                                        <span data-ng-if="project.id && project.program_type" class="label" data-ng-class="{'label-info': (project.program_type !== 'Pre-Project Plan'), 'label-success': (project.program_type === 'Pre-Project Plan')}">
+                                            {{ project.program_type }}
+                                        </span>
+                                    </p>
+                                </td>
+                                <td class="column--titleDescription align-left">
+                                    <a class="project--title" href="/projects/{{ project.id }}#top" title="{{ project.name }} project details">
+                                        {{ project.name }}
+                                    </a><br />
+                                    <span class="project--description" data-ng-bind-html="project.description"></span>
+                                </td>
+                                <td class="align-left column--funder column--vertialCenter">
+                                    <span class="project--funder" data-ng-if="project.id && project.account.name">
+                                        {{ project.account.name }}
+                                    </span>
+                                </td>
+                                <td class="align-left column--contact column--vertialCenter">
+                                    <a href="mailto:{{ project.creator.email }}" data-ng-if="project.id && project.creator.name">
+                                        {{ project.creator.name }}
+                                    </a>
+                                </td>
+                                <td class="align-left column--lastUpdated column--vertialCenter">
+                                    <span data-ng-if="project.id && project.modified_on">
+                                        {{ project.modified_on | date }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>
