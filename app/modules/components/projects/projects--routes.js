@@ -53,25 +53,25 @@ angular.module('FieldDoc')
                             return Account.getUser();
                         }
                         return Account.userObject;
-                    },
-                    'years': function(Filters) {
-                        return Filters.projectsByYear();
-                    },
-                    geographies: function(Filters) {
-                        return Filters.customGeographies({
-                            id: 3
-                        });
-                    },
-                    grantees: function(Filters) {
-                        return Filters.grantees({
-                            id: 3
-                        });
-                    },
-                    practices: function(Filters) {
-                        return Filters.practices({
-                            id: 3
-                        });
                     }
+                    // 'years': function(Filters) {
+                    //     return Filters.projectsByYear();
+                    // },
+                    // geographies: function(Filters) {
+                    //     return Filters.customGeographies({
+                    //         id: 3
+                    //     });
+                    // },
+                    // grantees: function(Filters) {
+                    //     return Filters.grantees({
+                    //         id: 3
+                    //     });
+                    // },
+                    // practices: function(Filters) {
+                    //     return Filters.practices({
+                    //         id: 3
+                    //     });
+                    // }
                 }
             })
             .when('/projects/:projectId', {

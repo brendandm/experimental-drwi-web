@@ -16,7 +16,16 @@
                 index: [],
                 addItem: function(obj) {
                     // this.index[category] = obj;
-                    this.index.append(obj);
+
+                    if (this.index.length < 2) {
+
+                        this.index.push(obj);
+
+                    } else {
+
+                        this.index[1] = obj;
+
+                    }
 
                 },
                 clearItem: function(obj) {
@@ -29,6 +38,11 @@
                     });
 
                     this.index = items;
+
+                },
+                clearAll: function(obj) {
+
+                    this.index = [];
 
                 }
 

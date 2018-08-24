@@ -7,8 +7,12 @@
  */
 angular.module('FieldDoc')
     .controller('ProjectsCtrl', function(Account, $location, $log, Project, Map, mapbox,
-        projects, $rootScope, $scope, Site, user, years, leafletData, leafletBoundsHelpers,
-        geographies, grantees, practices) {
+        projects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
+        MetricService, OutcomeService, ProjectStore, FilterStore) {
+
+        $scope.filterStore = FilterStore;
+
+        $scope.projectStore = ProjectStore;
 
         var self = this;
 
@@ -58,50 +62,69 @@ angular.module('FieldDoc')
 
         };
 
-        self.filterProjects = function($item, $model, $label, collection) {
+        self.extractIds = function(arr) {
 
-            var matches;
+            var projectIds = [];
 
-            switch (collection) {
+            arr.forEach(function(datum) {
 
-                case 'grantee':
+                projectIds.push(datum.id);
 
-                    matches = self.filteredProjects.filter(function(datum) {
+            });
 
-                        return datum.organizations.indexOf($item.name) >= 0;
+            return projectIds.join(',');
 
-                    });
+        };
 
-                    break;
+        self.loadMetrics = function(arr) {
 
-                case 'geography':
+            var params = {
+                id: 3
+            };
 
-                    matches = self.filteredProjects.filter(function(datum) {
+            if (arr && arr.length) {
 
-                        return datum.geographies.indexOf($item.name) >= 0;
+                params.projects = self.extractIds(arr);
 
-                    });
-
-                    break;
-
-                case 'practice':
-
-                    matches = self.filteredProjects.filter(function(datum) {
-
-                        return datum.practices.indexOf($item.name) >= 0;
-
-                    });
-
-                    break;
-
-                default:
-
-                    break;
             }
 
-            self.filteredProjects = matches;
+            MetricService.query(params).$promise.then(function(successResponse) {
 
-            self.processLocations(self.filteredProjects);
+                console.log('granteeResponse', successResponse);
+
+                self.metrics = successResponse.features;
+
+            }, function(errorResponse) {
+
+                console.log("errorResponse", errorResponse);
+
+            });
+
+        };
+
+        self.loadOutcomes = function(arr) {
+
+            var params = {
+                id: 3
+            };
+
+            if (arr && arr.length) {
+
+                params.projects = self.extractIds(arr);
+
+            }
+
+            OutcomeService.query(params).$promise.then(function(successResponse) {
+
+                console.log('granteeResponse', successResponse);
+
+                self.outcomes = successResponse;
+
+            }, function(errorResponse) {
+
+                console.log("errorResponse", errorResponse);
+
+            });
 
         };
 
@@ -117,11 +140,11 @@ angular.module('FieldDoc')
             }],
             actions: [
                 // {
-                //   type: 'button-link',
-                //   action: function() {
-                //     self.createPlan();
-                //   },
-                //   text: 'Create Pre-Project Plan'
+                // type: 'button-link',
+                // action: function() {
+                // self.createPlan();
+                // },
+                // text: 'Create Pre-Project Plan'
                 // },
                 {
                     type: 'button-link new',
@@ -132,83 +155,6 @@ angular.module('FieldDoc')
                 }
             ]
         };
-
-        self.filters = {
-            "active": {
-                "workflow_state": null,
-                "year": {
-                    "year": null
-                },
-                "sstring": null
-            },
-            "values": {
-                "workflow_states": [
-                    'Draft',
-                    'Submitted',
-                    'Funded',
-                    'Completed'
-                ],
-                "years": years
-            }
-        };
-
-        //
-        // Load dashboard filters
-        //
-
-        geographies.$promise.then(function(successResponse) {
-
-            console.log('customGeographyResponse', successResponse);
-
-            successResponse.features.forEach(function(feature) {
-
-                self.dashboardFilters.geographies.push(feature);
-
-            });
-
-            console.log('self.dashboardFilters', self.dashboardFilters);
-
-        }, function(errorResponse) {
-
-            console.log("errorResponse", errorResponse);
-
-        });
-
-        grantees.$promise.then(function(successResponse) {
-
-            console.log('granteeResponse', successResponse);
-
-            successResponse.features.forEach(function(feature) {
-
-                self.dashboardFilters.grantees.push(feature);
-
-            });
-
-            console.log('self.dashboardFilters', self.dashboardFilters);
-
-        }, function(errorResponse) {
-
-            console.log("errorResponse", errorResponse);
-
-        });
-
-        practices.$promise.then(function(successResponse) {
-
-            console.log('practiceResponse', successResponse);
-
-            successResponse.features.forEach(function(feature) {
-
-                self.dashboardFilters.practices.push(feature);
-
-            });
-
-            console.log('self.dashboardFilters', self.dashboardFilters);
-
-        }, function(errorResponse) {
-
-            console.log("errorResponse", errorResponse);
-
-        });
 
         //
         // Project functionality
@@ -221,27 +167,31 @@ angular.module('FieldDoc')
 
             console.log("successResponse", successResponse);
 
-            self.projects = successResponse.features;
+            // self.projects = successResponse.features;
 
-            self.filteredProjects = successResponse.features;
+            // self.filteredProjects = successResponse.features;
 
-            self.processLocations(self.projects);
+            $scope.projectStore.setProjects(successResponse.features);
+
+            self.filteredProjects = $scope.projectStore.filteredProjects;
+
+            self.processLocations(successResponse.features);
 
             // self.projects.features.forEach(function(feature) {
 
-            //     var centroid = feature.properties.centroid;
+            // var centroid = feature.properties.centroid;
 
-            //     console.log('centroid', centroid);
+            // console.log('centroid', centroid);
 
-            //     if (centroid) {
+            // if (centroid) {
 
-            //         self.map.markers['project_' + feature.id] = {
-            //             lat: centroid.coordinates[1],
-            //             lng: centroid.coordinates[0],
-            //             layer: 'projects'
-            //         };
+            // self.map.markers['project_' + feature.id] = {
+            // lat: centroid.coordinates[1],
+            // lng: centroid.coordinates[0],
+            // layer: 'projects'
+            // };
 
-            //     }
+            // }
 
             // });
 
@@ -276,7 +226,7 @@ angular.module('FieldDoc')
                 };
 
                 if (self.filters.active.workflow_state !== null) {
-                    console.log('add workflow state filter')
+                    console.log('add workflow state filter');
 
                     q.filters.push({
                         "name": "workflow_state",
@@ -295,7 +245,7 @@ angular.module('FieldDoc')
                         "name": "created_on",
                         "op": "lte",
                         "val": self.filters.active.year.year + "-12-31"
-                    })
+                    });
                 }
 
                 Project.query({
@@ -309,19 +259,19 @@ angular.module('FieldDoc')
 
                     // self.projects.features.forEach(function(feature) {
 
-                    //     var centroid = feature.properties.centroid;
+                    // var centroid = feature.properties.centroid;
 
-                    //     console.log('centroid', centroid);
+                    // console.log('centroid', centroid);
 
-                    //     if (centroid) {
+                    // if (centroid) {
 
-                    //         self.map.markers['project_' + feature.id] = {
-                    //             lat: centroid.coordinates[1],
-                    //             lng: centroid.coordinates[0],
-                    //             layer: 'projects'
-                    //         };
+                    // self.map.markers['project_' + feature.id] = {
+                    // lat: centroid.coordinates[1],
+                    // lng: centroid.coordinates[0],
+                    // layer: 'projects'
+                    // };
 
-                    //     }
+                    // }
 
                     // });
 
@@ -366,11 +316,11 @@ angular.module('FieldDoc')
             if (q && q.filters && q.filters.length) {
                 angular.forEach(q.filters[0].and, function(filter) {
                     if (filter.name === 'name') {
-                        self.search.query = filter.val.replace(/%/g, '');;
+                        self.search.query = filter.val.replace(/%/g, '');
                     }
                 });
             }
-        };
+        }
 
         self.createProject = function() {
             self.project = new Project({
@@ -413,14 +363,22 @@ angular.module('FieldDoc')
         // Verify Account information for proper UI element display
         //
         if (Account.userObject && user) {
+
             user.$promise.then(function(userResponse) {
                 $rootScope.user = Account.userObject = userResponse;
                 self.permissions = {
                     isLoggedIn: Account.hasToken()
                 };
             });
+
+            self.loadOutcomes();
+
+            self.loadMetrics();
+
         } else {
+
             $location.path('/user/logout');
+
         }
 
         //
@@ -436,6 +394,38 @@ angular.module('FieldDoc')
                 padding: [20, 20],
                 maxZoom: 18
             });
+
+        });
+
+        self.clearFilter = function(obj) {
+
+            // ProjectStore.reset();
+
+            FilterStore.clearItem(obj);
+
+        };
+
+        $scope.$watch('filterStore.index', function(newVal) {
+
+            console.log('Updated filterStore', newVal);
+
+            self.activeFilters = newVal;
+
+            ProjectStore.filterAll(newVal);
+
+        });
+
+        $scope.$watch('projectStore.filteredProjects', function(newVal) {
+
+            console.log('Updated projectStore', newVal);
+
+            self.filteredProjects = newVal;
+
+            self.processLocations(newVal);
+
+            self.loadMetrics(newVal);
+
+            self.loadOutcomes(newVal);
 
         });
 

@@ -9,10 +9,15 @@
             '$filter',
             '$http',
             'SearchService',
-            function($window, $location, $filter, $http, SearchService) {
+            'ProjectStore',
+            'FilterStore',
+            function($window, $location, $filter, $http, SearchService,
+                ProjectStore, FilterStore) {
                 return {
                     restrict: 'EA',
-
+                    // scope: {
+                    //     filterProjects: '&'
+                    // },
                     link: function(scope, element, attrs) {
 
                         scope.query = undefined;
@@ -42,6 +47,20 @@
                                 return response.results;
 
                             });
+
+                        };
+
+                        scope.setFilter = function($item, $model, $label) {
+
+                            scope.query = undefined;
+
+                            // FilterStore.clearAll();
+
+                            FilterStore.addItem($item);
+
+                            // ProjectStore.filterProjects($item);
+
+                            ProjectStore.filterAll(FilterStore.index);
 
                         };
 

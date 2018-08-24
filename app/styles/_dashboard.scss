@@ -5,6 +5,69 @@
 // specifications.
 //
 
+.filter--group {
+    display: flex;
+    flex-flow: row wrap;
+    margin-bottom: 0.5em;
+
+    .filter--pill {
+        display: flex;
+        flex-flow: row nowrap;
+        border: 1px solid rgb(224,224,224);
+        border-radius: 8px;
+        background: #fff;
+        font-size: 1em;
+        padding: 0.5em 0.8em;
+        margin-right: 1em;
+        cursor: pointer;
+
+        .geography {
+            color: #3c9303;
+        }
+
+        .organization {
+            color: #740266;
+        }
+
+        .project {
+            color: #a73903;
+        }
+
+        .practice {
+            color: #027049;
+        }
+
+        .status {
+            color: #990329;
+        }
+
+        > div:last-child {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin-left: 1em;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 0 .4em;
+        }
+
+        span {
+            display: flex;
+        }
+
+        .category {
+            font-size: 0.7em;
+            text-transform: uppercase;
+            font-weight: bold;
+            //opacity: 0.6;
+            padding-bottom: 0.2em;
+        }
+
+    }
+
+}
+
 .dashboard--filter--group {
     display: flex;
     flex-flow: row nowrap;
