@@ -174,6 +174,7 @@ angular.module('FieldDoc')
         //
         // Project functionality
         //
+
         self.projects = projects;
 
         console.log('self.projects', self.projects);
@@ -182,35 +183,11 @@ angular.module('FieldDoc')
 
             console.log("successResponse", successResponse);
 
-            // self.projects = successResponse.features;
-
-            // self.filteredProjects = successResponse.features;
-
             $scope.projectStore.setProjects(successResponse.features);
 
             self.filteredProjects = $scope.projectStore.filteredProjects;
 
             self.processLocations(successResponse.features);
-
-            // self.projects.features.forEach(function(feature) {
-
-            // var centroid = feature.properties.centroid;
-
-            // console.log('centroid', centroid);
-
-            // if (centroid) {
-
-            // self.map.markers['project_' + feature.id] = {
-            // lat: centroid.coordinates[1],
-            // lng: centroid.coordinates[0],
-            // layer: 'projects'
-            // };
-
-            // }
-
-            // });
-
-            // console.log('self.map.markers', self.map.markers);
 
         }, function(errorResponse) {
 
@@ -226,6 +203,7 @@ angular.module('FieldDoc')
                 // Get all of our existing URL Parameters so that we can
                 // modify them to meet our goals
                 //
+                
                 var q = {
                     filters: [{
                         "and": [{
