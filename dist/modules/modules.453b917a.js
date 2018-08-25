@@ -698,12 +698,14 @@ angular.module('FieldDoc')
                         // Get all of our existing URL Parameters so that we can
                         // modify them to meet our goals
                         //
+
                         var search_params = $location.search();
 
                         //
                         // Prepare any pre-filters to append to any of our user-defined
                         // filters in the browser address bar
                         //
+
                         search_params.q = (search_params.q) ? angular.fromJson(search_params.q) : {};
 
                         search_params.q.filters = (search_params.q.filters) ? search_params.q.filters : [];
@@ -716,7 +718,10 @@ angular.module('FieldDoc')
                         //
                         // Execute our query so that we can get the Reports back
                         //
-                        return Project.query(search_params);
+
+                        return Project.minimal({
+                            id: 3
+                        });
                     },
                     user: function(Account) {
                         if (Account.userObject && !Account.userObject.id) {
@@ -732,103 +737,418 @@ angular.module('FieldDoc')
 
 /**
  * @ngdoc function
- * @name FieldDoc.controller:DashboardCtrl
+ * @name
  * @description
- * # DashboardCtrl
- * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-    .controller('DashboardCtrl', function(Account, Notifications, $rootScope, Project,
-        $route, $scope, $location, mapbox, summary, Site, user, $window) {
+    .controller('DashboardCtrl', function(Account, $location, $log, Project, Map,
+        projects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
+        MetricService, OutcomeService, ProjectStore, FilterStore) {
+
+        $scope.filterStore = FilterStore;
+
+        $scope.projectStore = ProjectStore;
 
         var self = this;
 
-        $rootScope.page = {};
+        self.dashboardFilters = {
+            geographies: [],
+            grantees: [],
+            practices: []
+        };
 
-        self.mapbox = mapbox;
+        self.map = Map;
 
-        self.status = {
-            "loading": true
-        }
+        self.map.markers = {};
 
-        //
-        // Assign project to a scoped variable
-        //
-        summary.$promise.then(function(successResponse) {
-
-            self.data = successResponse;
-            self.project = successResponse.project;
-
-            self.sites = successResponse.sites;
-
-            self.practices = successResponse.practices;
-
-            //
-            // Add rollups to the page scope
-            //
-            self.rollups = successResponse.rollups;
-
-            self.status.loading = false;
-
-            $rootScope.page.title = self.project.properties.name;
-            $rootScope.page.links = [{
-                    text: 'Projects',
-                    url: '/projects'
+        self.map.layers.overlays = {
+            projects: {
+                type: 'group',
+                name: 'projects',
+                visible: true,
+                layerOptions: {
+                    showOnSelector: false
                 },
-                {
-                    text: self.project.properties.name,
-                    url: '/projects/' + $route.current.params.projectId,
-                    type: 'active'
+                layerParams: {
+                    showOnSelector: false
                 }
-            ];
+            }
+        };
 
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
-                user.$promise.then(function(userResponse) {
-                    $rootScope.user = Account.userObject = userResponse;
+        console.log('self.map', self.map);
 
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0].properties.name,
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        can_edit: Account.canEdit(self.project),
-                        is_manager: (Account.hasRole('manager') || Account.inGroup(self.project.properties.account_id, Account.userObject.properties.account)),
-                        is_admin: Account.hasRole('admin')
+        self.processLocations = function(features) {
+
+            self.map.markers = {};
+
+            features.forEach(function(feature) {
+
+                var centroid = feature.centroid;
+
+                console.log('centroid', centroid);
+
+                if (centroid) {
+
+                    self.map.markers['project_' + feature.id] = {
+                        lat: centroid.coordinates[1],
+                        lng: centroid.coordinates[0],
+                        layer: 'projects'
                     };
-                });
+
+                }
+
+            });
+
+            console.log('self.map.markers', self.map.markers);
+
+        };
+
+        self.extractIds = function(arr) {
+
+            var projectIds = [];
+
+            arr.forEach(function(datum) {
+
+                projectIds.push(datum.id);
+
+            });
+
+            return projectIds.join(',');
+
+        };
+
+        self.loadMetrics = function(arr) {
+
+            //
+            // A program (account) identifier
+            // is required by default.
+            //
+
+            var params = {
+                id: 3
+            };
+
+            //
+            // If the `arr` parameter is valid,
+            // constrain the query to the given
+            // set of numeric project identifiers.
+            //
+
+            if (arr && arr.length) {
+
+                params.projects = self.extractIds(arr);
+
             }
 
-        });
+            MetricService.query(params).$promise.then(function(successResponse) {
+
+                console.log('granteeResponse', successResponse);
+
+                self.metrics = successResponse.features;
+
+            }, function(errorResponse) {
+
+                console.log('errorResponse', errorResponse);
+
+            });
+
+        };
+
+        self.loadOutcomes = function(arr) {
+
+            //
+            // A program (account) identifier
+            // is required by default.
+            //
+
+            var params = {
+                id: 3
+            };
+
+            //
+            // If the `arr` parameter is valid,
+            // constrain the query to the given
+            // set of numeric project identifiers.
+            //
+
+            if (arr && arr.length) {
+
+                params.projects = self.extractIds(arr);
+
+            }
+
+            OutcomeService.query(params).$promise.then(function(successResponse) {
+
+                console.log('granteeResponse', successResponse);
+
+                self.outcomes = successResponse;
+
+            }, function(errorResponse) {
+
+                console.log('errorResponse', errorResponse);
+
+            });
+
+        };
 
         //
         // Setup basic page variables
         //
-        $rootScope.page.actions = [{
-                type: 'button-link',
-                action: function() {
-                    $window.print();
-                },
-                hideIcon: true,
-                text: 'Print'
+        $rootScope.page = {
+            title: 'Dashboard'
+        };
+
+        //
+        // Project functionality
+        //
+
+        self.projects = projects;
+
+        console.log('self.projects', self.projects);
+
+        projects.$promise.then(function(successResponse) {
+
+            console.log('successResponse', successResponse);
+
+            $scope.projectStore.setProjects(successResponse.features);
+
+            self.filteredProjects = $scope.projectStore.filteredProjects;
+
+            self.processLocations(successResponse.features);
+
+        }, function(errorResponse) {
+
+            console.log('errorResponse', errorResponse);
+
+        });
+
+        self.search = {
+            query: '',
+            execute: function(page) {
+
+                //
+                // Get all of our existing URL Parameters so that we can
+                // modify them to meet our goals
+                //
+
+                var q = {
+                    filters: [{
+                        'and': [{
+                            name: 'name',
+                            op: 'ilike',
+                            val: '%' + self.search.query + '%'
+                        }]
+                    }],
+                    order_by: [{
+                        field: 'created_on',
+                        direction: 'desc'
+                    }]
+                };
+
+                if (self.filters.active.workflow_state !== null) {
+                    console.log('add workflow state filter');
+
+                    q.filters.push({
+                        'name': 'workflow_state',
+                        'op': 'like',
+                        'val': self.filters.active.workflow_state
+                    });
+                }
+
+                if (self.filters.active.year && self.filters.active.year.year) {
+                    q.filters.push({
+                        'name': 'created_on',
+                        'op': 'gte',
+                        'val': self.filters.active.year.year + '-01-01'
+                    });
+                    q.filters.push({
+                        'name': 'created_on',
+                        'op': 'lte',
+                        'val': self.filters.active.year.year + '-12-31'
+                    });
+                }
+
+                Project.query({
+                    'q': q,
+                    'page': (page ? page : 1)
+                }).$promise.then(function(successResponse) {
+
+                    console.log('successResponse', successResponse);
+
+                    self.projects = successResponse;
+
+                    // self.projects.features.forEach(function(feature) {
+
+                    // var centroid = feature.properties.centroid;
+
+                    // console.log('centroid', centroid);
+
+                    // if (centroid) {
+
+                    // self.map.markers['project_' + feature.id] = {
+                    // lat: centroid.coordinates[1],
+                    // lng: centroid.coordinates[0],
+                    // layer: 'projects'
+                    // };
+
+                    // }
+
+                    // });
+
+                    // console.log('self.map.markers', self.map.markers);
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
+
             },
-            {
-                type: 'button-link',
-                action: function() {
-                    $scope.$emit('saveToPdf');
-                },
-                hideIcon: true,
-                text: 'Save as PDF'
+            paginate: function(pageNumber) {
+
+                //
+                // Get all of our existing URL Parameters so that we can
+                // modify them to meet our goals
+                //
+                self.search.execute(pageNumber);
             },
-            {
-                type: 'button-link new',
-                action: function() {
-                    self.createSite();
-                },
-                text: 'Create site'
+            clear: function() {
+
+                // $location.path('/projects/').search('');
+
+                self.q = {};
+
+                self.filteredProjects = self.projects;
+
+                self.processLocations(self.filteredProjects);
+
             }
-        ];
+        };
+
+        //
+        // Set Default Search Filter value
+        //
+        if (self.search && self.search.query === '') {
+
+            var searchParams = $location.search(),
+                q = angular.fromJson(searchParams.q);
+
+            if (q && q.filters && q.filters.length) {
+                angular.forEach(q.filters[0].and, function(filter) {
+                    if (filter.name === 'name') {
+                        self.search.query = filter.val.replace(/%/g, '');
+                    }
+                });
+            }
+        }
+
+        self.createProject = function() {
+            self.project = new Project({
+                'name': 'Untitled Project'
+            });
+
+            self.project.$save(function(successResponse) {
+                $location.path('/projects/' + successResponse.id + '/edit');
+            }, function(errorResponse) {
+                $log.error('Unable to create Project object');
+            });
+        };
+
+        self.createPlan = function() {
+            self.project = new Project({
+                'name': 'Project Plan',
+                'program_type': 'Pre-Project Plan',
+                'description': 'This project plan was created to estimate the potential benefits of a project\'s site and best management practices.'
+            });
+
+            self.project.$save(function(successResponse) {
+
+                self.site = new Site({
+                    'name': 'Planned Site',
+                    'project_id': successResponse.id
+                });
+
+                self.site.$save(function(siteSuccessResponse) {
+                    $location.path('/projects/' + successResponse.id + '/sites/' + siteSuccessResponse.id + '/edit');
+                }, function(siteErrorResponse) {
+                    console.error('Could not save your new Project Plan');
+                });
+
+            }, function(errorResponse) {
+                $log.error('Unable to create Project object');
+            });
+        };
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+
+            user.$promise.then(function(userResponse) {
+                $rootScope.user = Account.userObject = userResponse;
+                self.permissions = {
+                    isLoggedIn: Account.hasToken()
+                };
+            });
+
+            self.loadOutcomes();
+
+            self.loadMetrics();
+
+        } else {
+
+            $location.path('/user/logout');
+
+        }
+
+        //
+        // Define our map interactions via the Angular Leaflet Directive
+        //
+
+        leafletData.getMap('dashboard--map').then(function(map) {
+
+            // var southWest = L.latLng(25.837377, -124.211606),
+            //     northEast = L.latLng(49.384359, -67.158958),
+            //     bounds = L.latLngBounds(southWest, northEast);
+
+            // map.fitBounds(bounds, {
+            //     padding: [20, 20],
+            //     maxZoom: 18
+            // });
+
+        });
+
+        self.clearFilter = function(obj) {
+
+            // ProjectStore.reset();
+
+            FilterStore.clearItem(obj);
+
+        };
+
+        $scope.$watch('filterStore.index', function(newVal) {
+
+            console.log('Updated filterStore', newVal);
+
+            self.activeFilters = newVal;
+
+            ProjectStore.filterAll(newVal);
+
+        });
+
+        $scope.$watch('projectStore.filteredProjects', function(newVal) {
+
+            console.log('Updated projectStore', newVal);
+
+            self.filteredProjects = newVal;
+
+            self.processLocations(newVal);
+
+            self.loadMetrics(newVal);
+
+            self.loadOutcomes(newVal);
+
+        });
 
     });
 'use strict';
@@ -976,7 +1296,7 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProjectsCtrl', function(Account, $location, $log, Project, Map, mapbox,
+    .controller('ProjectsCtrl', function(Account, $location, $log, Project, Map,
         projects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
         MetricService, OutcomeService, ProjectStore, FilterStore) {
 
@@ -1000,7 +1320,13 @@ angular.module('FieldDoc')
             projects: {
                 type: 'group',
                 name: 'projects',
-                visible: true
+                visible: true,
+                layerOptions: {
+                    showOnSelector: false
+                },
+                layerParams: {
+                    showOnSelector: false
+                }
             }
         };
 
@@ -1048,9 +1374,20 @@ angular.module('FieldDoc')
 
         self.loadMetrics = function(arr) {
 
+            //
+            // A program (account) identifier
+            // is required by default.
+            //
+
             var params = {
                 id: 3
             };
+
+            //
+            // If the `arr` parameter is valid,
+            // constrain the query to the given
+            // set of numeric project identifiers.
+            //
 
             if (arr && arr.length) {
 
@@ -1066,7 +1403,7 @@ angular.module('FieldDoc')
 
             }, function(errorResponse) {
 
-                console.log("errorResponse", errorResponse);
+                console.log('errorResponse', errorResponse);
 
             });
 
@@ -1074,9 +1411,20 @@ angular.module('FieldDoc')
 
         self.loadOutcomes = function(arr) {
 
+            //
+            // A program (account) identifier
+            // is required by default.
+            //
+
             var params = {
                 id: 3
             };
+
+            //
+            // If the `arr` parameter is valid,
+            // constrain the query to the given
+            // set of numeric project identifiers.
+            //
 
             if (arr && arr.length) {
 
@@ -1092,7 +1440,7 @@ angular.module('FieldDoc')
 
             }, function(errorResponse) {
 
-                console.log("errorResponse", errorResponse);
+                console.log('errorResponse', errorResponse);
 
             });
 
@@ -1102,44 +1450,32 @@ angular.module('FieldDoc')
         // Setup basic page variables
         //
         $rootScope.page = {
-            title: 'Projects',
+            title: 'Program Summary',
             links: [{
-                text: 'Projects',
+                text: 'Program Summary',
                 url: '/projects',
                 type: 'active'
             }],
-            actions: [
-                // {
-                // type: 'button-link',
-                // action: function() {
-                // self.createPlan();
-                // },
-                // text: 'Create Pre-Project Plan'
-                // },
-                {
-                    type: 'button-link new',
-                    action: function() {
-                        self.createProject();
-                    },
-                    text: 'Create project'
-                }
-            ]
+            actions: [{
+                type: 'button-link new',
+                action: function() {
+                    self.createProject();
+                },
+                text: 'Create project'
+            }]
         };
 
         //
         // Project functionality
         //
+
         self.projects = projects;
 
         console.log('self.projects', self.projects);
 
         projects.$promise.then(function(successResponse) {
 
-            console.log("successResponse", successResponse);
-
-            // self.projects = successResponse.features;
-
-            // self.filteredProjects = successResponse.features;
+            console.log('successResponse', successResponse);
 
             $scope.projectStore.setProjects(successResponse.features);
 
@@ -1147,29 +1483,9 @@ angular.module('FieldDoc')
 
             self.processLocations(successResponse.features);
 
-            // self.projects.features.forEach(function(feature) {
-
-            // var centroid = feature.properties.centroid;
-
-            // console.log('centroid', centroid);
-
-            // if (centroid) {
-
-            // self.map.markers['project_' + feature.id] = {
-            // lat: centroid.coordinates[1],
-            // lng: centroid.coordinates[0],
-            // layer: 'projects'
-            // };
-
-            // }
-
-            // });
-
-            // console.log('self.map.markers', self.map.markers);
-
         }, function(errorResponse) {
 
-            console.log("errorResponse", errorResponse);
+            console.log('errorResponse', errorResponse);
 
         });
 
@@ -1181,9 +1497,10 @@ angular.module('FieldDoc')
                 // Get all of our existing URL Parameters so that we can
                 // modify them to meet our goals
                 //
+
                 var q = {
                     filters: [{
-                        "and": [{
+                        'and': [{
                             name: 'name',
                             op: 'ilike',
                             val: '%' + self.search.query + '%'
@@ -1199,31 +1516,31 @@ angular.module('FieldDoc')
                     console.log('add workflow state filter');
 
                     q.filters.push({
-                        "name": "workflow_state",
-                        "op": "like",
-                        "val": self.filters.active.workflow_state
+                        'name': 'workflow_state',
+                        'op': 'like',
+                        'val': self.filters.active.workflow_state
                     });
                 }
 
                 if (self.filters.active.year && self.filters.active.year.year) {
                     q.filters.push({
-                        "name": "created_on",
-                        "op": "gte",
-                        "val": self.filters.active.year.year + "-01-01"
+                        'name': 'created_on',
+                        'op': 'gte',
+                        'val': self.filters.active.year.year + '-01-01'
                     });
                     q.filters.push({
-                        "name": "created_on",
-                        "op": "lte",
-                        "val": self.filters.active.year.year + "-12-31"
+                        'name': 'created_on',
+                        'op': 'lte',
+                        'val': self.filters.active.year.year + '-12-31'
                     });
                 }
 
                 Project.query({
-                    "q": q,
-                    "page": (page ? page : 1)
+                    'q': q,
+                    'page': (page ? page : 1)
                 }).$promise.then(function(successResponse) {
 
-                    console.log("successResponse", successResponse);
+                    console.log('successResponse', successResponse);
 
                     self.projects = successResponse;
 
@@ -1249,7 +1566,7 @@ angular.module('FieldDoc')
 
                 }, function(errorResponse) {
 
-                    console.log("errorResponse", errorResponse);
+                    console.log('errorResponse', errorResponse);
 
                 });
 
@@ -1354,16 +1671,17 @@ angular.module('FieldDoc')
         //
         // Define our map interactions via the Angular Leaflet Directive
         //
+
         leafletData.getMap('dashboard--map').then(function(map) {
 
-            var southWest = L.latLng(25.837377, -124.211606),
-                northEast = L.latLng(49.384359, -67.158958),
-                bounds = L.latLngBounds(southWest, northEast);
+            // var southWest = L.latLng(25.837377, -124.211606),
+            //     northEast = L.latLng(49.384359, -67.158958),
+            //     bounds = L.latLngBounds(southWest, northEast);
 
-            map.fitBounds(bounds, {
-                padding: [20, 20],
-                maxZoom: 18
-            });
+            // map.fitBounds(bounds, {
+            //     padding: [20, 20],
+            //     maxZoom: 18
+            // });
 
         });
 
@@ -1420,14 +1738,6 @@ angular.module('FieldDoc')
         self.map = Map;
 
         self.map.markers = {};
-
-        self.map.layers.overlays = {
-            projects: {
-                type: 'group',
-                name: 'projects',
-                visible: true
-            }
-        };
 
         console.log('self.map', self.map);
 
@@ -2317,15 +2627,7 @@ angular.module('FieldDoc')
 
             self.map = Map;
 
-            var southWest = L.latLng(25.837377, -124.211606),
-                northEast = L.latLng(49.384359, -67.158958),
-                bounds = L.latLngBounds(southWest, northEast);
-
-            console.log('United States bounds', bounds);
-
             self.savedObjects = [];
-
-            self.map.bounds = bounds;
 
             self.editableLayers = new L.FeatureGroup();
 
@@ -2499,32 +2801,6 @@ angular.module('FieldDoc')
                         };
                     });
                 }
-
-                self.map = {
-                    defaults: {
-                        scrollWheelZoom: false,
-                        zoomControl: false,
-                        maxZoom: 18
-                    },
-                    bounds: bounds,
-                    center: {
-                        lat: 39.828175,
-                        lng: -98.5795,
-                        zoom: 4
-                    },
-                    layers: {
-                        baselayers: {
-                            basemap: {
-                                name: 'Satellite Imagery',
-                                url: 'https://{s}.tiles.mapbox.com/v3/' + mapbox.satellite + '/{z}/{x}/{y}.png',
-                                type: 'xyz',
-                                layerOptions: {
-                                    attribution: '<a href="https://www.mapbox.com/about/maps/" target="_blank">&copy; Mapbox &copy; OpenStreetMap</a>'
-                                }
-                            }
-                        }
-                    }
-                };
 
                 //
                 // If a valid site geometry is present, add it to the map
@@ -4755,76 +5031,107 @@ angular.module('FieldDoc')
  *   Assist Directives in loading templates
  */
 angular.module('FieldDoc')
-  .service('Map', ['mapbox', function (mapbox) {
+    .service('Map', ['mapbox', function(mapbox) {
 
-    var self = this;
+        var self = this;
 
-    var Map = {
-      defaults: {
-        scrollWheelZoom: false,
-        maxZoom: 19
-      },
-      layers: {
-        baselayers: {
-          basemap: {
-            name: 'Satellite Imagery',
-            url: 'https://{s}.tiles.mapbox.com/v3/' + mapbox.map_id + '/{z}/{x}/{y}.png',
-            type: 'xyz',
-            layerOptions: {
-              attribution: '<a href="https://www.mapbox.com/about/maps/" target="_blank">&copy; Mapbox &copy; OpenStreetMap</a>'
-            }
-          }
-        }
-      },
-      center: {
-        lng: -76.534, 
-        lat: 39.134,
-        zoom: 11
-      },
-      styles: {
-        icon: {
-          parcel: {
-            iconUrl: '/images/pin-l+cc0000.png?access_token=' + mapbox.access_token,
-            iconRetinaUrl: '/images/pin-l+cc0000@2x.png?access_token=' + mapbox.access_token,
-            iconSize: [35, 90],
-            iconAnchor: [18, 44],
-            popupAnchor: [0, 0]
-          }
-        },
-        polygon: {
-          parcel: {
-            stroke: true,
-            fill: false,
-            weight: 3,
-            opacity: 1,
-            color: 'rgb(255,255,255)',
-            lineCap: 'square'
-          },
-          canopy: {
-            stroke: false,
-            fill: true,
-            weight: 3,
-            opacity: 1,
-            color: 'rgb(0,204,34)',
-            lineCap: 'square',
-            fillOpacity: 0.6
-          },
-          impervious: {
-            stroke: false,
-            fill: true,
-            weight: 3,
-            opacity: 1,
-            color: 'rgb(204,0,0)',
-            lineCap: 'square',
-            fillOpacity: 0.6
-          }
-        }
-      },
-      geojson: {}
-    };
-    
-    return Map;
-  }]);
+        var Map = {
+            defaults: {
+                scrollWheelZoom: false,
+                maxZoom: 19
+            },
+            layers: {
+                baselayers: {
+                    satellite: {
+                        name: 'Satellite',
+                        type: 'xyz',
+                        url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                        layerOptions: {
+                            apikey: mapbox.access_token,
+                            mapid: 'mapbox.streets-satellite',
+                            attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>'
+                        }
+                    },
+                    streets: {
+                        name: 'Streets',
+                        type: 'xyz',
+                        url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                        layerOptions: {
+                            apikey: mapbox.access_token,
+                            mapid: 'mapbox.streets',
+                            attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>'
+                        }
+                    },
+                    terrain: {
+                        name: 'Terrain',
+                        type: 'xyz',
+                        url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                        layerOptions: {
+                            apikey: mapbox.access_token,
+                            mapid: 'mapbox.run-bike-hike',
+                            attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>'
+                        }
+                    }
+                }
+            },
+            center: {
+                lat: 39.828175,
+                lng: -98.5795,
+                zoom: 4
+            },
+            styles: {
+                icon: {
+                    parcel: {
+                        iconUrl: '/images/pin-l+cc0000.png?access_token=' + mapbox.access_token,
+                        iconRetinaUrl: '/images/pin-l+cc0000@2x.png?access_token=' + mapbox.access_token,
+                        iconSize: [35, 90],
+                        iconAnchor: [18, 44],
+                        popupAnchor: [0, 0]
+                    }
+                },
+                polygon: {
+                    parcel: {
+                        stroke: true,
+                        fill: false,
+                        weight: 3,
+                        opacity: 1,
+                        color: 'rgb(255,255,255)',
+                        lineCap: 'square'
+                    },
+                    canopy: {
+                        stroke: false,
+                        fill: true,
+                        weight: 3,
+                        opacity: 1,
+                        color: 'rgb(0,204,34)',
+                        lineCap: 'square',
+                        fillOpacity: 0.6
+                    },
+                    impervious: {
+                        stroke: false,
+                        fill: true,
+                        weight: 3,
+                        opacity: 1,
+                        color: 'rgb(204,0,0)',
+                        lineCap: 'square',
+                        fillOpacity: 0.6
+                    }
+                }
+            },
+            geojson: {}
+        };
+
+        var southWest = L.latLng(25.837377, -124.211606),
+            northEast = L.latLng(49.384359, -67.158958),
+            bounds = L.latLngBounds(southWest, northEast);
+
+        console.log('United States bounds', bounds);
+
+        Map.bounds = bounds;
+
+        return Map;
+
+    }]);
 'use strict';
 
 /**
@@ -5278,20 +5585,28 @@ angular.module('Mapbox')
             },
             layers: {
                 baselayers: {
-                    basemap: {
+                    streets: {
                         name: 'Streets',
-                        url: 'https://{s}.tiles.mapbox.com/v3/{mapid}/{z}/{x}/{y}.png',
-                        type: 'xyz',
-                        layerOptions: {
-                            mapid: mapbox.street
+                        url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                        options: {
+                            apikey: mapbox.access_token,
+                            mapid: 'mapbox.streets'
+                        }
+                    },
+                    terrain: {
+                        name: 'Terrain',
+                        url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                        options: {
+                            apikey: mapbox.access_token,
+                            mapid: 'mapbox.run-bike-hike'
                         }
                     },
                     satellite: {
                         name: 'Satellite',
-                        url: 'https://{s}.tiles.mapbox.com/v3/{mapid}/{z}/{x}/{y}.png',
-                        type: 'xyz',
-                        layerOptions: {
-                            mapid: mapbox.map_id
+                        url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                        options: {
+                            apikey: mapbox.access_token,
+                            mapid: 'mapbox.satellite'
                         }
                     }
                 }
@@ -8438,6 +8753,37 @@ angular.module('FieldDoc')
                             ProjectStore.filterAll(FilterStore.index);
 
                         };
+
+                    }
+
+                };
+            }
+        ]);
+
+}());
+(function() {
+
+    'use strict';
+
+    angular.module('FieldDoc')
+        .directive('viewFrame', ['$window',
+            function($window) {
+                return {
+                    restrict: 'A',
+                    scope: {
+                        base: '='
+                    },
+                    link: function(scope, element, attrs) {
+
+                        var winHeight = $window.innerHeight,
+                            map = document.getElementById('map--wrapper'),
+                            contentHeight = (!map || typeof map === 'undefined') ? winHeight : (winHeight - map.clientHeight);
+
+                        console.log('winHeight', winHeight);
+                        console.log('map', map);
+                        console.log('contentHeight', contentHeight);
+
+                        element.css('min-height', contentHeight + 'px');
 
                     }
 
