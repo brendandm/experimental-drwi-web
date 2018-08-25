@@ -21,15 +21,7 @@
 
             self.map = Map;
 
-            var southWest = L.latLng(25.837377, -124.211606),
-                northEast = L.latLng(49.384359, -67.158958),
-                bounds = L.latLngBounds(southWest, northEast);
-
-            console.log('United States bounds', bounds);
-
             self.savedObjects = [];
-
-            self.map.bounds = bounds;
 
             self.editableLayers = new L.FeatureGroup();
 
@@ -203,32 +195,6 @@
                         };
                     });
                 }
-
-                self.map = {
-                    defaults: {
-                        scrollWheelZoom: false,
-                        zoomControl: false,
-                        maxZoom: 18
-                    },
-                    bounds: bounds,
-                    center: {
-                        lat: 39.828175,
-                        lng: -98.5795,
-                        zoom: 4
-                    },
-                    layers: {
-                        baselayers: {
-                            basemap: {
-                                name: 'Satellite Imagery',
-                                url: 'https://{s}.tiles.mapbox.com/v3/' + mapbox.satellite + '/{z}/{x}/{y}.png',
-                                type: 'xyz',
-                                layerOptions: {
-                                    attribution: '<a href="https://www.mapbox.com/about/maps/" target="_blank">&copy; Mapbox &copy; OpenStreetMap</a>'
-                                }
-                            }
-                        }
-                    }
-                };
 
                 //
                 // If a valid site geometry is present, add it to the map

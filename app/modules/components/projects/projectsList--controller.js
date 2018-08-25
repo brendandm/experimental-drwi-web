@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProjectsCtrl', function(Account, $location, $log, Project, Map, mapbox,
+    .controller('ProjectsCtrl', function(Account, $location, $log, Project, Map,
         projects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
         MetricService, OutcomeService, ProjectStore, FilterStore) {
 
@@ -30,7 +30,13 @@ angular.module('FieldDoc')
             projects: {
                 type: 'group',
                 name: 'projects',
-                visible: true
+                visible: true,
+                layerOptions: {
+                    showOnSelector: false
+                },
+                layerParams: {
+                    showOnSelector: false
+                }
             }
         };
 
@@ -107,7 +113,7 @@ angular.module('FieldDoc')
 
             }, function(errorResponse) {
 
-                console.log("errorResponse", errorResponse);
+                console.log('errorResponse', errorResponse);
 
             });
 
@@ -144,7 +150,7 @@ angular.module('FieldDoc')
 
             }, function(errorResponse) {
 
-                console.log("errorResponse", errorResponse);
+                console.log('errorResponse', errorResponse);
 
             });
 
@@ -160,15 +166,13 @@ angular.module('FieldDoc')
                 url: '/projects',
                 type: 'active'
             }],
-            actions: [
-                {
-                    type: 'button-link new',
-                    action: function() {
-                        self.createProject();
-                    },
-                    text: 'Create project'
-                }
-            ]
+            actions: [{
+                type: 'button-link new',
+                action: function() {
+                    self.createProject();
+                },
+                text: 'Create project'
+            }]
         };
 
         //
@@ -181,7 +185,7 @@ angular.module('FieldDoc')
 
         projects.$promise.then(function(successResponse) {
 
-            console.log("successResponse", successResponse);
+            console.log('successResponse', successResponse);
 
             $scope.projectStore.setProjects(successResponse.features);
 
@@ -191,7 +195,7 @@ angular.module('FieldDoc')
 
         }, function(errorResponse) {
 
-            console.log("errorResponse", errorResponse);
+            console.log('errorResponse', errorResponse);
 
         });
 
@@ -203,10 +207,10 @@ angular.module('FieldDoc')
                 // Get all of our existing URL Parameters so that we can
                 // modify them to meet our goals
                 //
-                
+
                 var q = {
                     filters: [{
-                        "and": [{
+                        'and': [{
                             name: 'name',
                             op: 'ilike',
                             val: '%' + self.search.query + '%'
@@ -222,31 +226,31 @@ angular.module('FieldDoc')
                     console.log('add workflow state filter');
 
                     q.filters.push({
-                        "name": "workflow_state",
-                        "op": "like",
-                        "val": self.filters.active.workflow_state
+                        'name': 'workflow_state',
+                        'op': 'like',
+                        'val': self.filters.active.workflow_state
                     });
                 }
 
                 if (self.filters.active.year && self.filters.active.year.year) {
                     q.filters.push({
-                        "name": "created_on",
-                        "op": "gte",
-                        "val": self.filters.active.year.year + "-01-01"
+                        'name': 'created_on',
+                        'op': 'gte',
+                        'val': self.filters.active.year.year + '-01-01'
                     });
                     q.filters.push({
-                        "name": "created_on",
-                        "op": "lte",
-                        "val": self.filters.active.year.year + "-12-31"
+                        'name': 'created_on',
+                        'op': 'lte',
+                        'val': self.filters.active.year.year + '-12-31'
                     });
                 }
 
                 Project.query({
-                    "q": q,
-                    "page": (page ? page : 1)
+                    'q': q,
+                    'page': (page ? page : 1)
                 }).$promise.then(function(successResponse) {
 
-                    console.log("successResponse", successResponse);
+                    console.log('successResponse', successResponse);
 
                     self.projects = successResponse;
 
@@ -272,7 +276,7 @@ angular.module('FieldDoc')
 
                 }, function(errorResponse) {
 
-                    console.log("errorResponse", errorResponse);
+                    console.log('errorResponse', errorResponse);
 
                 });
 
@@ -377,16 +381,17 @@ angular.module('FieldDoc')
         //
         // Define our map interactions via the Angular Leaflet Directive
         //
+
         leafletData.getMap('dashboard--map').then(function(map) {
 
-            var southWest = L.latLng(25.837377, -124.211606),
-                northEast = L.latLng(49.384359, -67.158958),
-                bounds = L.latLngBounds(southWest, northEast);
+            // var southWest = L.latLng(25.837377, -124.211606),
+            //     northEast = L.latLng(49.384359, -67.158958),
+            //     bounds = L.latLngBounds(southWest, northEast);
 
-            map.fitBounds(bounds, {
-                padding: [20, 20],
-                maxZoom: 18
-            });
+            // map.fitBounds(bounds, {
+            //     padding: [20, 20],
+            //     maxZoom: 18
+            // });
 
         });
 

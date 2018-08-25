@@ -5,6 +5,133 @@
 // specifications.
 //
 
+.dashboard {
+    position: relative;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    padding: 1% 2% 0 2%;
+    background: #252f3a;
+
+    .panel--container {
+        position: relative;
+        display: flex;
+        flex-flow: row nowrap;
+        flex: 1;
+        width: 100%;
+        height: 100%;
+        //margin: 1% 2% 0 2%;
+        box-shadow: 0 0 20px rgba(0,0,0,0.8);
+
+        .map--container {
+            flex: 1;
+            //position: relative;
+            width: 60%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+        }
+
+        .map {
+            height: 100%;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+        }
+
+        .sidebar {
+            flex: 1;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 40%;
+            height: 100%;
+            background: #252f3a;
+
+            .metadata--card {
+                padding: 2em;
+                color: #f9f9f9;
+
+                p {
+                    color: #f9f9f9;
+                    opacity: 0.8;
+
+                    a,
+                    a:link {
+                        color: #06dfde;
+                        text-decoration: none;
+                        opacity: 0.7;
+                        font-size: .7em;
+                        transition: all 250ms ease 0s;
+                        text-transform: uppercase;
+                        font-weight: normal;
+                        letter-spacing: 0.05em;
+                    }
+
+                    a:visited,
+                    a:active,
+                    a:hover {
+                        opacity: 1;
+                        text-decoration: none;
+                    }
+
+                }
+
+                h1 {
+                    font-size: 2em;
+                    border-bottom: 1px solid #49525b;
+                    padding-bottom: 0.5em;
+                    margin-bottom: 0.5em;
+                    color: #f9f9f9;
+                    opacity: 0.9;
+                    font-weight: 100;
+                }
+
+                .stat--group {
+                    display: flex;
+                    flex-flow: row nowrap;
+                    margin-bottom: 1em;
+                    padding-bottom: 1em;
+                    border-bottom: 1px solid #49525b;
+
+                    .stat--block {
+                        display: flex;
+                        flex-flow: column;
+                        font-size: 1em;
+                        margin-right: 2em;
+
+                        span {
+                            display: flex;
+                        }
+
+                        .label {
+                            font-size: 0.7em;
+                            text-transform: uppercase;
+                            //font-weight: bold;
+                            opacity: 0.6;
+                            letter-spacing: 0.05em;
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+}
+
 .filter--group {
     display: flex;
     flex-flow: row wrap;

@@ -110,7 +110,11 @@
 }
 
 .leaflet-top.leaflet-right {
-  display: none !important;
+  //display: none !important;
+}
+
+.leaflet-control-layers-toggle {
+    background-size: 80% 80%;
 }
 
 .leaflet-bar a,

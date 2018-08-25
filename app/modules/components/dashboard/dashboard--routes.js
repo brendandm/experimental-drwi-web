@@ -24,12 +24,14 @@ angular.module('FieldDoc')
                         // Get all of our existing URL Parameters so that we can
                         // modify them to meet our goals
                         //
+
                         var search_params = $location.search();
 
                         //
                         // Prepare any pre-filters to append to any of our user-defined
                         // filters in the browser address bar
                         //
+
                         search_params.q = (search_params.q) ? angular.fromJson(search_params.q) : {};
 
                         search_params.q.filters = (search_params.q.filters) ? search_params.q.filters : [];
@@ -42,7 +44,10 @@ angular.module('FieldDoc')
                         //
                         // Execute our query so that we can get the Reports back
                         //
-                        return Project.query(search_params);
+
+                        return Project.minimal({
+                            id: 3
+                        });
                     },
                     user: function(Account) {
                         if (Account.userObject && !Account.userObject.id) {

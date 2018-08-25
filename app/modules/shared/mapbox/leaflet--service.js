@@ -16,20 +16,28 @@ angular.module('Mapbox')
             },
             layers: {
                 baselayers: {
-                    basemap: {
+                    streets: {
                         name: 'Streets',
-                        url: 'https://{s}.tiles.mapbox.com/v3/{mapid}/{z}/{x}/{y}.png',
-                        type: 'xyz',
-                        layerOptions: {
-                            mapid: mapbox.street
+                        url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                        options: {
+                            apikey: mapbox.access_token,
+                            mapid: 'mapbox.streets'
+                        }
+                    },
+                    terrain: {
+                        name: 'Terrain',
+                        url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                        options: {
+                            apikey: mapbox.access_token,
+                            mapid: 'mapbox.run-bike-hike'
                         }
                     },
                     satellite: {
                         name: 'Satellite',
-                        url: 'https://{s}.tiles.mapbox.com/v3/{mapid}/{z}/{x}/{y}.png',
-                        type: 'xyz',
-                        layerOptions: {
-                            mapid: mapbox.map_id
+                        url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                        options: {
+                            apikey: mapbox.access_token,
+                            mapid: 'mapbox.satellite'
                         }
                     }
                 }

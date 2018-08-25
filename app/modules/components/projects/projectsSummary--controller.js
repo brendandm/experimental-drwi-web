@@ -19,14 +19,6 @@ angular.module('FieldDoc')
 
         self.map.markers = {};
 
-        self.map.layers.overlays = {
-            projects: {
-                type: 'group',
-                name: 'projects',
-                visible: true
-            }
-        };
-
         console.log('self.map', self.map);
 
         self.status = {
