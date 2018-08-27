@@ -44,32 +44,32 @@
 
         <div class="metadata--card">
 
-            <h1>Delaware River Watershed Initiative</h1>
+            <h1>{{ page.card.heading }}</h1>
 
             <div class="stat--group">
 
                 <div class="stat--block">
                     <span class="label">Total funding</span>
-                    <span class="total--funding">$2.65 million</span>
+                    <span class="total--funding">{{ page.card.funding }}</span>
                 </div>
                 <div class="stat--block">
                     <span class="label">Years active</span>
-                    <span class="total--projects">2013 - 2018</span>
+                    <span class="total--projects">{{ page.card.yearsActive }}</span>
                 </div>
-                <div class="stat--block">
+                <div class="stat--block" data-ng-if="!page.card.project">
                     <span class="label">Projects</span>
                     <span class="total--projects">{{ page.filteredProjects.length | number }}</span>
                 </div>
-                <div class="stat--block">
+                <div class="stat--block" data-ng-if="!page.card.project">
                     <span class="label">Grantees</span>
                     <span class="total--projects">{{ page.filteredProjects.length | number }}</span>
                 </div>
 
             </div>
 
-            <p>The Delaware River Watershed Initiative is a cross-cutting collaboration working to conserve and restore the streams that supply drinking water to 15 million people in New York, New Jersey, Pennsylvania and Delaware.</p>
+            <p>{{ page.card.description }}</p>
 
-            <p><a href="https://4states1source.org" target="_blank">Learn more &rarr;</a></p>
+            <p><a href="{{ page.card.url }}" target="{{ page.card.linkTarget }}">Learn more &rarr;</a></p>
 
         </div>
 
@@ -162,7 +162,7 @@
 
     <div class="map--container">
 
-        <leaflet id="dashboard--map" class="map" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds" markers="page.map.markers"></leaflet>
+        <leaflet id="dashboard--map" class="map" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds" markers="page.map.markers" geojson="page.map.geojson"></leaflet>
 
     </div>
 

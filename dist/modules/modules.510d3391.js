@@ -692,6 +692,13 @@ angular.module('FieldDoc')
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
+                    geographies: function($location, GeographyService) {
+
+                        return GeographyService.query({
+                            id: 3
+                        });
+
+                    },
                     projects: function($location, Project) {
 
                         //
@@ -722,12 +729,18 @@ angular.module('FieldDoc')
                         return Project.minimal({
                             id: 3
                         });
+
                     },
                     user: function(Account) {
+
                         if (Account.userObject && !Account.userObject.id) {
+
                             return Account.getUser();
+                            
                         }
+
                         return Account.userObject;
+
                     }
                 }
             });
@@ -743,13 +756,26 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('DashboardCtrl', function(Account, $location, $log, Project, Map,
         projects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
-        MetricService, OutcomeService, ProjectStore, FilterStore) {
+        MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox) {
 
         $scope.filterStore = FilterStore;
 
         $scope.projectStore = ProjectStore;
 
         var self = this;
+
+        self.cardTpl = {
+            project: null,
+            heading: 'Delaware River Watershed Initiative',
+            yearsActive: '2013 - 2018',
+            funding: '$2.65 million',
+            url: 'https://4states1source.org',
+            resourceUrl: null,
+            linkTarget: '_blank',
+            description: 'The Delaware River Watershed Initiative is a cross-cutting collaboration working to conserve and restore the streams that supply drinking water to 15 million people in New York, New Jersey, Pennsylvania and Delaware.',
+        };
+
+        self.card = self.cardTpl;
 
         self.dashboardFilters = {
             geographies: [],
@@ -758,6 +784,41 @@ angular.module('FieldDoc')
         };
 
         self.map = Map;
+
+        self.map.layers = {
+            baselayers: {
+                streets: {
+                    name: 'Streets',
+                    type: 'xyz',
+                    url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                    layerOptions: {
+                        apikey: mapbox.access_token,
+                        mapid: 'mapbox.streets',
+                        attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>'
+                    }
+                },
+                terrain: {
+                    name: 'Terrain',
+                    type: 'xyz',
+                    url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                    layerOptions: {
+                        apikey: mapbox.access_token,
+                        mapid: 'mapbox.run-bike-hike',
+                        attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>'
+                    }
+                },
+                satellite: {
+                    name: 'Satellite',
+                    type: 'xyz',
+                    url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                    layerOptions: {
+                        apikey: mapbox.access_token,
+                        mapid: 'mapbox.streets-satellite',
+                        attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>'
+                    }
+                }
+            }
+        };
 
         self.map.markers = {};
 
@@ -792,7 +853,14 @@ angular.module('FieldDoc')
                     self.map.markers['project_' + feature.id] = {
                         lat: centroid.coordinates[1],
                         lng: centroid.coordinates[0],
-                        layer: 'projects'
+                        layer: 'projects',
+                        icon: {
+                            type: 'div',
+                            className: 'project--marker',
+                            iconSize: [24, 24],
+                            popupAnchor: [0, 0],
+                            html: ''
+                        }
                     };
 
                 }
@@ -802,6 +870,71 @@ angular.module('FieldDoc')
             console.log('self.map.markers', self.map.markers);
 
         };
+
+        //
+        // Load custom geographies
+        //
+
+        function onEachFeature(feature, layer) {
+
+            layer.on({
+
+                click: function() {
+
+                    console.log(layer.feature.properties.name);
+
+                    var geoJsonLayer = L.geoJson(layer.feature, {});
+
+                    leafletData.getMap('dashboard--map').then(function(map) {
+
+                        map.fitBounds(geoJsonLayer.getBounds());
+
+                    });
+
+                    self.setGeoFilter(layer.feature.properties);
+
+                }
+
+            });
+        }
+
+        geographies.$promise.then(function(successResponse) {
+
+            console.log('geographies.successResponse', successResponse);
+
+            self.map.geojson = {
+                data: successResponse,
+                onEachFeature: onEachFeature,
+                style: {
+                    color: '#00D',
+                    fillColor: 'red',
+                    weight: 2.0,
+                    opacity: 0.6,
+                    fillOpacity: 0.2
+                }
+            };
+
+            //
+            // Fit map bounds to GeoJSON
+            //
+
+            leafletData.getMap('dashboard--map').then(function(map) {
+
+                leafletData.getGeoJSON('dashboard--map').then(function(geoJsonLayer) {
+
+                    console.log('geoJsonLayer', geoJsonLayer);
+
+                    map.fitBounds(geoJsonLayer.getBounds());
+
+                });
+
+            });
+
+        }, function(errorResponse) {
+
+            console.log('errorResponse', errorResponse);
+
+        });
 
         self.extractIds = function(arr) {
 
@@ -1042,43 +1175,6 @@ angular.module('FieldDoc')
             }
         }
 
-        self.createProject = function() {
-            self.project = new Project({
-                'name': 'Untitled Project'
-            });
-
-            self.project.$save(function(successResponse) {
-                $location.path('/projects/' + successResponse.id + '/edit');
-            }, function(errorResponse) {
-                $log.error('Unable to create Project object');
-            });
-        };
-
-        self.createPlan = function() {
-            self.project = new Project({
-                'name': 'Project Plan',
-                'program_type': 'Pre-Project Plan',
-                'description': 'This project plan was created to estimate the potential benefits of a project\'s site and best management practices.'
-            });
-
-            self.project.$save(function(successResponse) {
-
-                self.site = new Site({
-                    'name': 'Planned Site',
-                    'project_id': successResponse.id
-                });
-
-                self.site.$save(function(siteSuccessResponse) {
-                    $location.path('/projects/' + successResponse.id + '/sites/' + siteSuccessResponse.id + '/edit');
-                }, function(siteErrorResponse) {
-                    console.error('Could not save your new Project Plan');
-                });
-
-            }, function(errorResponse) {
-                $log.error('Unable to create Project object');
-            });
-        };
-
         //
         // Verify Account information for proper UI element display
         //
@@ -1101,26 +1197,47 @@ angular.module('FieldDoc')
 
         }
 
-        //
-        // Define our map interactions via the Angular Leaflet Directive
-        //
+        self.setProjectFilter = function(obj) {
 
-        leafletData.getMap('dashboard--map').then(function(map) {
+            FilterStore.clearAll();
 
-            // var southWest = L.latLng(25.837377, -124.211606),
-            //     northEast = L.latLng(49.384359, -67.158958),
-            //     bounds = L.latLngBounds(southWest, northEast);
+            var _filterObject = {
+                id: obj.id,
+                name: obj.name,
+                category: 'project'
+            };
 
-            // map.fitBounds(bounds, {
-            //     padding: [20, 20],
-            //     maxZoom: 18
-            // });
+            FilterStore.addItem(_filterObject);
 
-        });
+            ProjectStore.filterAll(FilterStore.index);
+
+            self.loadMetrics([
+                obj
+            ]);
+
+            self.loadOutcomes([
+                obj
+            ]);
+
+        };
+
+        self.setGeoFilter = function(obj) {
+
+            FilterStore.clearAll();
+
+            var _filterObject = {
+                id: obj.id,
+                name: obj.name,
+                category: 'geography'
+            };
+
+            FilterStore.addItem(_filterObject);
+
+            ProjectStore.filterAll(FilterStore.index);
+
+        };
 
         self.clearFilter = function(obj) {
-
-            // ProjectStore.reset();
 
             FilterStore.clearItem(obj);
 
@@ -1147,6 +1264,64 @@ angular.module('FieldDoc')
             self.loadMetrics(newVal);
 
             self.loadOutcomes(newVal);
+
+        });
+
+        $scope.$on('leafletDirectiveMarker.dashboard--map.click', function(event, args) {
+
+            console.log('leafletDirectiveMarker.dashboard--map.click', event, args);
+
+            var project = self.filteredProjects.filter(function(datum) {
+
+                var id = +(args.modelName.split('project_')[1]);
+
+                return datum.id === id;
+
+            })[0];
+
+            self.card = {
+                project: project,
+                heading: project.name,
+                yearsActive: '2018',
+                funding: '$100k',
+                url: 'projects/' + project.id,
+                description: project.description,
+                linkTarget: '_self'
+            };
+
+            self.setProjectFilter(project);
+
+        });
+
+        $scope.$on('leafletDirectiveMarker.dashboard--map.mouseover', function(event, args) {
+
+            console.log('leafletDirectiveMarker.dashboard--map.click', event, args);
+
+            var project = self.filteredProjects.filter(function(datum) {
+
+                var id = +(args.modelName.split('project_')[1]);
+
+                return datum.id === id;
+
+            })[0];
+
+            self.card = {
+                project: project,
+                heading: project.name,
+                yearsActive: '2018',
+                funding: '$100k',
+                url: 'projects/' + project.id,
+                description: project.description,
+                linkTarget: '_self'
+            };
+
+        });
+
+        $scope.$on('leafletDirectiveMarker.dashboard--map.mouseout', function(event, args) {
+
+            console.log('leafletDirectiveMarker.dashboard--map.click', event, args);
+
+            self.card = self.cardTpl;
 
         });
 
@@ -6807,6 +6982,28 @@ angular
     'use strict';
 
     /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('GeographyService', function(environment, Preprocessors, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/data/program/:id/geographies'), {
+                id: '@id'
+            }, {
+                query: {
+                    isArray: false,
+                    cache: true
+                }
+            });
+        });
+
+}());
+(function() {
+
+    'use strict';
+
+    /**
      * @ngdoc function
      * @name
      * @description
@@ -8313,6 +8510,8 @@ angular.module('FieldDoc')
                 }
 
                 this.filteredProjects = matches;
+
+                console.log('ProjectStore.filterProjects.organization.matches', matches);
 
                 return matches;
 
