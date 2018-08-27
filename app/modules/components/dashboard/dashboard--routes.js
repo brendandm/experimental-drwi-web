@@ -18,6 +18,13 @@ angular.module('FieldDoc')
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
+                    geographies: function($location, GeographyService) {
+
+                        return GeographyService.query({
+                            id: 3
+                        });
+
+                    },
                     projects: function($location, Project) {
 
                         //
@@ -48,12 +55,18 @@ angular.module('FieldDoc')
                         return Project.minimal({
                             id: 3
                         });
+
                     },
                     user: function(Account) {
+
                         if (Account.userObject && !Account.userObject.id) {
+
                             return Account.getUser();
+                            
                         }
+
                         return Account.userObject;
+
                     }
                 }
             });

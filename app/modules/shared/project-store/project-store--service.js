@@ -77,6 +77,8 @@
 
                 this.filteredProjects = matches;
 
+                console.log('ProjectStore.filterProjects.organization.matches', matches);
+
                 return matches;
 
             };

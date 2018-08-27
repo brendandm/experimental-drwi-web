@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('DashboardCtrl', function(Account, $location, $log, Project, Map,
         projects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
-        MetricService, OutcomeService, ProjectStore, FilterStore) {
+        MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox) {
 
         $scope.filterStore = FilterStore;
 
@@ -23,6 +23,41 @@ angular.module('FieldDoc')
         };
 
         self.map = Map;
+
+        self.map.layers = {
+            baselayers: {
+                streets: {
+                    name: 'Streets',
+                    type: 'xyz',
+                    url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                    layerOptions: {
+                        apikey: mapbox.access_token,
+                        mapid: 'mapbox.streets',
+                        attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>'
+                    }
+                },
+                terrain: {
+                    name: 'Terrain',
+                    type: 'xyz',
+                    url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                    layerOptions: {
+                        apikey: mapbox.access_token,
+                        mapid: 'mapbox.run-bike-hike',
+                        attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>'
+                    }
+                },
+                satellite: {
+                    name: 'Satellite',
+                    type: 'xyz',
+                    url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                    layerOptions: {
+                        apikey: mapbox.access_token,
+                        mapid: 'mapbox.streets-satellite',
+                        attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>'
+                    }
+                }
+            }
+        };
 
         self.map.markers = {};
 
@@ -67,6 +102,71 @@ angular.module('FieldDoc')
             console.log('self.map.markers', self.map.markers);
 
         };
+
+        //
+        // Load custom geographies
+        //
+
+        function onEachFeature(feature, layer) {
+
+            layer.on({
+
+                click: function() {
+
+                    console.log(layer.feature.properties.name);
+
+                    var geoJsonLayer = L.geoJson(layer.feature, {});
+
+                    leafletData.getMap('dashboard--map').then(function(map) {
+
+                        map.fitBounds(geoJsonLayer.getBounds());
+
+                    });
+
+                    self.setGeoFilter(layer.feature.properties);
+
+                }
+
+            });
+        }
+
+        geographies.$promise.then(function(successResponse) {
+
+            console.log('geographies.successResponse', successResponse);
+
+            self.map.geojson = {
+                data: successResponse,
+                onEachFeature: onEachFeature,
+                style: {
+                    color: '#00D',
+                    fillColor: 'red',
+                    weight: 2.0,
+                    opacity: 0.6,
+                    fillOpacity: 0.2
+                }
+            };
+
+            //
+            // Fit map bounds to GeoJSON
+            //
+
+            leafletData.getMap('dashboard--map').then(function(map) {
+
+                leafletData.getGeoJSON('dashboard--map').then(function(geoJsonLayer) {
+
+                    console.log('geoJsonLayer', geoJsonLayer);
+
+                    map.fitBounds(geoJsonLayer.getBounds());
+
+                });
+
+            });
+
+        }, function(errorResponse) {
+
+            console.log('errorResponse', errorResponse);
+
+        });
 
         self.extractIds = function(arr) {
 
@@ -307,43 +407,6 @@ angular.module('FieldDoc')
             }
         }
 
-        self.createProject = function() {
-            self.project = new Project({
-                'name': 'Untitled Project'
-            });
-
-            self.project.$save(function(successResponse) {
-                $location.path('/projects/' + successResponse.id + '/edit');
-            }, function(errorResponse) {
-                $log.error('Unable to create Project object');
-            });
-        };
-
-        self.createPlan = function() {
-            self.project = new Project({
-                'name': 'Project Plan',
-                'program_type': 'Pre-Project Plan',
-                'description': 'This project plan was created to estimate the potential benefits of a project\'s site and best management practices.'
-            });
-
-            self.project.$save(function(successResponse) {
-
-                self.site = new Site({
-                    'name': 'Planned Site',
-                    'project_id': successResponse.id
-                });
-
-                self.site.$save(function(siteSuccessResponse) {
-                    $location.path('/projects/' + successResponse.id + '/sites/' + siteSuccessResponse.id + '/edit');
-                }, function(siteErrorResponse) {
-                    console.error('Could not save your new Project Plan');
-                });
-
-            }, function(errorResponse) {
-                $log.error('Unable to create Project object');
-            });
-        };
-
         //
         // Verify Account information for proper UI element display
         //
@@ -366,26 +429,23 @@ angular.module('FieldDoc')
 
         }
 
-        //
-        // Define our map interactions via the Angular Leaflet Directive
-        //
+        self.setGeoFilter = function(obj) {
 
-        leafletData.getMap('dashboard--map').then(function(map) {
+            FilterStore.clearAll();
 
-            // var southWest = L.latLng(25.837377, -124.211606),
-            //     northEast = L.latLng(49.384359, -67.158958),
-            //     bounds = L.latLngBounds(southWest, northEast);
+            var _filterObject = {
+                id: obj.id,
+                name: obj.name,
+                category: 'geography'
+            };
 
-            // map.fitBounds(bounds, {
-            //     padding: [20, 20],
-            //     maxZoom: 18
-            // });
+            FilterStore.addItem(_filterObject);
 
-        });
+            ProjectStore.filterAll(FilterStore.index);
+
+        };
 
         self.clearFilter = function(obj) {
-
-            // ProjectStore.reset();
 
             FilterStore.clearItem(obj);
 
