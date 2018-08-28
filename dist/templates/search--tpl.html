@@ -1,7 +1,7 @@
 <a class="search--suggestion" tabindex="-1">
     <div>
         <!-- <img data-ng-src="{{ match.model.avatar }}" imageonload /> -->
-        <span data-ng-bind-html="match.model.name | uibTypeaheadHighlight:query"></span>
+        <span class="name" data-ng-bind-html="match.model.name | uibTypeaheadHighlight:query"></span>
         <div class="subcategory">
             <span data-ng-bind-html="match.model.category | uibTypeaheadHighlight:query"></span>
             <span data-ng-if="match.model.category === 'geography'">&middot;</span>

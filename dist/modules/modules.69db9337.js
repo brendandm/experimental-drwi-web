@@ -840,6 +840,17 @@ angular.module('FieldDoc')
 
         console.log('self.map', self.map);
 
+        self.popupTemplate = function(feature) {
+
+            return '<div class=\"project--popup\">' +
+                '<div class=\"marker--title\">' + feature.name + '</div>' +
+                '<a href=\"projects/' + feature.id + '\">' +
+                '<i class=\"material-icons\">keyboard_arrow_right</i>' +
+                '</a>' +
+                '</div>';
+
+        };
+
         self.processLocations = function(features) {
 
             self.map.markers = {};
@@ -856,14 +867,15 @@ angular.module('FieldDoc')
                         lat: centroid.coordinates[1],
                         lng: centroid.coordinates[0],
                         layer: 'projects',
+                        focus: false,
                         icon: {
                             type: 'div',
                             className: 'project--marker',
                             iconSize: [24, 24],
-                            popupAnchor: [0, 0],
+                            popupAnchor: [-2, -10],
                             html: ''
                         },
-                        iconAngle: 90
+                        message: self.popupTemplate(feature)
                     };
 
                 }
@@ -1215,6 +1227,36 @@ angular.module('FieldDoc')
             $location.path('/user/logout');
 
         }
+
+        self.setMarkerFocus = function(feature) {
+
+            var markerId = 'project_' + feature.id,
+                marker = self.map.markers[markerId];
+
+            if (marker) {
+
+                self.map.markers[markerId].focus = true;
+
+            }
+
+            console.log('setMarkerFocus', markerId, self.map.markers[markerId]);
+
+        };
+
+        self.clearMarkerFocus = function(feature) {
+
+            var markerId = 'project_' + feature.id,
+                marker = self.map.markers[markerId];
+
+            if (marker) {
+
+                self.map.markers[markerId].focus = false;
+
+            }
+
+            console.log('clearMarkerFocus', markerId, self.map.markers[markerId]);
+
+        };
 
         self.setProjectFilter = function(obj) {
 

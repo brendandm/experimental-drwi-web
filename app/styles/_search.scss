@@ -99,6 +99,14 @@
     color: #444;
     transition: all 200ms ease 0s;
 
+    .name {
+      display: block;
+      margin-right: 2em;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
     .subcategory {
       font-size: 0.7em;
       text-transform: uppercase;
