@@ -764,6 +764,8 @@ angular.module('FieldDoc')
 
         var self = this;
 
+        self.activeTab = 'metric';
+
         self.cardTpl = {
             project: null,
             heading: 'Delaware River Watershed Initiative',
@@ -1269,6 +1271,18 @@ angular.module('FieldDoc')
             FilterStore.addItem(_filterObject);
 
             ProjectStore.filterAll(FilterStore.index);
+
+            //
+            // Display filter controls
+            //
+
+            self.showFilters = true;
+
+        };
+
+        self.setTab = function(obj) {
+
+            self.activeTab = obj;
 
         };
 

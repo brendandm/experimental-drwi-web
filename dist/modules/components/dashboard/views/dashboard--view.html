@@ -37,57 +37,93 @@
 
         </div>
 
-        <div class="filter--header">
+        <!-- Filter Tools -->
 
-            <span class="filter--label">Filters</span>
+        <div class="filter--ui">
 
-            <button class="trigger--search" type="button" data-ng-click="page.showFilters = !page.showFilters">
+            <div class="filter--header">
+
+                <span class="filter--label">Filters</span>
+
+                <button class="trigger--search" type="button" data-ng-click="page.showFilters = !page.showFilters">
+                    <i class="material-icons">
+                    filter_list
+                    </i>
+                </button>
+
+            </div>
+
+            <div class="filter--controls" data-ng-if="page.showFilters">
+
+                <div class="filter--group" data-ng-if="page.activeFilters">
+                    <div class="filter--pill" data-ng-repeat="filter in page.activeFilters" data-ng-click="page.clearFilter(filter)">
+                        <div>
+                            <span class="category {{ filter.category }}">{{ filter.category }}</span>
+                            <span>{{ filter.name }}</span>
+                        </div>
+                        <div>
+                            <i class="material-icons">
+                            clear
+                            </i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="search--group">
+                    <div global-search class="global--search" filter-projects="page.filterProjects">
+                        <input type="search" class="search" value="" placeholder="Search" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue)" typeahead-on-select="setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="tab--controls">
+
+            <!-- <button class="trigger--search" type="button" data-ng-click="page.tabs.metrics = !page.tabs.metrics" title="Metrics">
                 <i class="material-icons">
                 filter_list
                 </i>
             </button>
 
-        </div>
+            <button class="trigger--search" type="button" data-ng-click="page.tabs.list = !page.tabs.list" title="Project list">
+                <i class="material-icons">
+                filter_list
+                </i>
+            </button> -->
 
-        <!-- Filter Tools -->
+            <button class="trigger--search" data-ng-class="{'active': page.activeTab === 'metric'}" type="button" data-ng-click="page.setTab('metric')" title="Metrics">
+                Metrics
+            </button>
 
-        <div class="filter--controls" data-ng-if="page.showFilters">
-
-            <div class="filter--group" data-ng-if="page.activeFilters">
-                <div class="filter--pill" data-ng-repeat="filter in page.activeFilters" data-ng-click="page.clearFilter(filter)">
-                    <div>
-                        <span class="category {{ filter.category }}">{{ filter.category }}</span>
-                        <span>{{ filter.name }}</span>
-                    </div>
-                    <div>
-                        <i class="material-icons">
-                        clear
-                        </i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="search--group">
-                <div global-search class="global--search" filter-projects="page.filterProjects">
-                    <input type="search" class="search" value="" placeholder="Search" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue)" typeahead-on-select="setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
-                </div>
-                <!-- <button class="clear--search" data-ng-if="page.filterActive" data-ng-click="page.search.clear()">
-                    <i class="material-icons">
-                    clear
-                    </i>
-                </button>
-                <button class="trigger--search" type="submit">
-                    <i class="material-icons">
-                    search
-                    </i>
-                </button> -->
-            </div>
+            <button class="trigger--search" data-ng-class="{'active': page.activeTab === 'list'}" type="button" data-ng-click="page.setTab('list')" title="Projects">
+                Projects
+            </button>
 
         </div>
+
+        <!-- Project list -->
+
+        <ul class="project--list" data-ng-if="page.filteredProjects && page.filteredProjects.length && page.activeTab === 'list'">
+
+            <li class="project--card" data-ng-repeat="project in page.filteredProjects">
+
+                <span class="title">{{ project.name }}</span>
+
+                <p>{{ project.description }}</p>
+
+                <p>
+                    <a href="projects/{{ project.id }}">Project detail &rarr;</a>
+                </p>
+
+            </li>
+
+        </ul>
 
         <!-- Progress metrics -->
 
-        <div data-ng-if="page.filteredProjects && page.filteredProjects.length">
+        <div data-ng-if="page.filteredProjects && page.filteredProjects.length && page.activeTab === 'metric'">
             <section id="sites">
                 <div class="list">
 
