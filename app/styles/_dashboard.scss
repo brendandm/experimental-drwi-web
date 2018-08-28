@@ -48,11 +48,28 @@
             left: 0;
 
             .project--marker {
-                height: 24px;
-                width: 24px;
-                border: 4px solid #fff;
-                border-radius: 50%;
-                background: #123b9d;
+                //position: absolute;
+                //height: 24px;
+                //width: 24px;
+                //border: 2px solid #fff;
+                //border-radius: 4px;
+                //background: #123b9d;
+                //transform: rotate(45deg);
+
+                &:after {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    height: 24px;
+                    width: 24px;
+                    border: 2px solid #fff;
+                    border-radius: 8px;
+                    background: #123b9d;
+                    transform: rotate(45deg);
+                }
+
             }
 
         }
@@ -67,6 +84,148 @@
             height: 100%;
             background: #252f3a;
             overflow-y: scroll;
+
+            .filter--header {
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
+
+                span {
+                    display: inline-flex;
+                    color: #f9f9f9;
+                    font-weight: normal;
+                    font-size: 0.9em;
+                    text-transform: uppercase;
+                    opacity: 0.6;
+                }
+
+            }
+
+            .filter--controls,
+            .filter--header {
+                padding: 0em 2em 1em;
+
+                button {
+                    display: flex;
+                    flex-flow: column;
+                    justify-content: center;
+                    align-items: center;
+                    appearance: none;
+                    cursor: pointer;
+                    border: 0 none;
+                    outline: none;
+                    box-shadow: none;
+                    color: #fff;
+                    font-size: 1em;
+                    background: transparent;
+                    //padding: 0 1em;
+                    //border-top-right-radius: 4px;
+                    //border-bottom-right-radius: 4px;
+                }
+
+                input {
+                    position: relative;
+                    appearance: none;
+                    outline: none;
+                    width: 100%;
+                    //max-width: 400px;
+                    margin: 0 auto;
+                    border: 1px solid #32393f;
+                    border-radius: 4px;
+                    //border-top: 1px solid #e0e0e0;
+                    //border-bottom: 1px solid #e0e0e0;
+                    //border-left: 1px solid #e0e0e0;
+                    //border-top-left-radius: 4px;
+                    //border-bottom-left-radius: 4px;
+                    background: rgba(0,0,0,0.1);
+                    color: #fff;
+                    padding: 1em;
+                    font-size: 1em;
+                }
+
+                .filter--pill {
+                    display: flex;
+                    flex-flow: row nowrap;
+                    align-items: center;
+                    border: 1px solid #32393f;
+                    border-radius: 4px;
+                    background: rgba(0,0,0,0.1);
+                    color: #fff;
+                    font-size: 1em;
+                    padding: 0.5em 0.8em;
+                    margin-right: 1em;
+                    cursor: pointer;
+                    transition: all 250ms ease 0s;
+
+                    i {
+                        color: #49525b;
+                        transition: all 250ms ease 0s;
+                    }
+
+                    &:hover {
+                        border: 1px solid #49525b;
+
+                        i {
+                            color: #fff;
+                        }
+
+                        > div:last-child {
+                            border: 1px solid #49525b;
+                        }
+
+                    }
+
+                    > div:last-child {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-weight: bold;
+                        margin-left: 1em;
+                        border: 1px solid #32393f;
+                        border-radius: 50%;
+                        padding: 0 0.4em;
+                        transition: all 250ms ease 0s;
+                        height: 2em;
+                        width: 2em;
+                        min-width: 2em;
+                    }
+
+                    span {
+                        display: flex;
+                    }
+
+                    .geography {
+                        color: #98c57e;
+                    }
+
+                    .organization {
+                        color: #b47db0;
+                    }
+
+                    .project {
+                        color: #ce987e;
+                    }
+
+                    .practice {
+                        color: #7bb4a1;
+                    }
+
+                    .status {
+                        color: #c77d91;
+                    }
+
+                    .category {
+                        font-size: 0.7em;
+                        text-transform: uppercase;
+                        font-weight: normal;
+                        //opacity: 0.6;
+                        padding-bottom: 0.2em;
+                        letter-spacing: 0.05em;
+                    }
+
+                }
+
+            }
 
             .metadata--card {
                 padding: 2em;

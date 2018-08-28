@@ -6,42 +6,6 @@
 
     <div class="sidebar">
 
-        <form role="form" id="formFilterProjects" name="formFilterProjects" data-ng-submit="page.search.execute()">
-
-            <!-- Filter Tools -->
-
-            <!--             <div class="filter--group" data-ng-if="page.activeFilters">
-                <div class="filter--pill" data-ng-repeat="filter in page.activeFilters" data-ng-click="page.clearFilter(filter)">
-                    <div>
-                        <span class="category {{ filter.category }}">{{ filter.category }}</span>
-                        <span>{{ filter.name }}</span>
-                    </div>
-                    <div>
-                        <i class="material-icons">
-                        clear
-                        </i>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row search--group">
-                <div global-search class="global--search" filter-projects="page.filterProjects">
-                    <input type="search" class="search" value="" placeholder="Search" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue)" typeahead-on-select="setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
-                </div>
-                <button class="clear--search" data-ng-if="page.filterActive" data-ng-click="page.search.clear()">
-                    <i class="material-icons">
-                    clear
-                    </i>
-                </button>
-                <button class="trigger--search" type="submit">
-                    <i class="material-icons">
-                    search
-                    </i>
-                </button>
-            </div> -->
-
-        </form>
-
         <div class="metadata--card">
 
             <h1>{{ page.card.heading }}</h1>
@@ -70,6 +34,54 @@
             <p>{{ page.card.description }}</p>
 
             <p><a href="{{ page.card.url }}" target="{{ page.card.linkTarget }}">Learn more &rarr;</a></p>
+
+        </div>
+
+        <div class="filter--header">
+
+            <span class="filter--label">Filters</span>
+
+            <button class="trigger--search" type="button" data-ng-click="page.showFilters = !page.showFilters">
+                <i class="material-icons">
+                filter_list
+                </i>
+            </button>
+
+        </div>
+
+        <!-- Filter Tools -->
+
+        <div class="filter--controls" data-ng-if="page.showFilters">
+
+            <div class="filter--group" data-ng-if="page.activeFilters">
+                <div class="filter--pill" data-ng-repeat="filter in page.activeFilters" data-ng-click="page.clearFilter(filter)">
+                    <div>
+                        <span class="category {{ filter.category }}">{{ filter.category }}</span>
+                        <span>{{ filter.name }}</span>
+                    </div>
+                    <div>
+                        <i class="material-icons">
+                        clear
+                        </i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search--group">
+                <div global-search class="global--search" filter-projects="page.filterProjects">
+                    <input type="search" class="search" value="" placeholder="Search" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue)" typeahead-on-select="setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                </div>
+                <!-- <button class="clear--search" data-ng-if="page.filterActive" data-ng-click="page.search.clear()">
+                    <i class="material-icons">
+                    clear
+                    </i>
+                </button>
+                <button class="trigger--search" type="submit">
+                    <i class="material-icons">
+                    search
+                    </i>
+                </button> -->
+            </div>
 
         </div>
 

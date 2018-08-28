@@ -112,7 +112,8 @@ angular.module('FieldDoc')
                             iconSize: [24, 24],
                             popupAnchor: [0, 0],
                             html: ''
-                        }
+                        },
+                        iconAngle: 90
                     };
 
                 }
@@ -120,6 +121,38 @@ angular.module('FieldDoc')
             });
 
             console.log('self.map.markers', self.map.markers);
+
+        };
+
+        self.resetMapExtent = function() {
+
+            leafletData.getMap('dashboard--map').then(function(map) {
+
+                leafletData.getGeoJSON('dashboard--map').then(function(geoJsonLayer) {
+
+                    console.log('geoJsonLayer', geoJsonLayer);
+
+                    map.fitBounds(geoJsonLayer.getBounds(), {
+                        maxZoom: 18
+                    });
+
+                });
+
+            });
+
+        };
+
+        self.setMapBoundsToFeature = function(feature) {
+
+            var geoJsonLayer = L.geoJson(feature, {});
+
+            leafletData.getMap('dashboard--map').then(function(map) {
+
+                map.fitBounds(geoJsonLayer.getBounds(), {
+                    maxZoom: 18
+                });
+
+            });
 
         };
 
@@ -135,13 +168,7 @@ angular.module('FieldDoc')
 
                     console.log(layer.feature.properties.name);
 
-                    var geoJsonLayer = L.geoJson(layer.feature, {});
-
-                    leafletData.getMap('dashboard--map').then(function(map) {
-
-                        map.fitBounds(geoJsonLayer.getBounds());
-
-                    });
+                    self.setMapBoundsToFeature(layer.feature);
 
                     self.setGeoFilter(layer.feature.properties);
 
@@ -170,17 +197,7 @@ angular.module('FieldDoc')
             // Fit map bounds to GeoJSON
             //
 
-            leafletData.getMap('dashboard--map').then(function(map) {
-
-                leafletData.getGeoJSON('dashboard--map').then(function(geoJsonLayer) {
-
-                    console.log('geoJsonLayer', geoJsonLayer);
-
-                    map.fitBounds(geoJsonLayer.getBounds());
-
-                });
-
-            });
+            self.resetMapExtent();
 
         }, function(errorResponse) {
 
@@ -451,6 +468,18 @@ angular.module('FieldDoc')
 
         self.setProjectFilter = function(obj) {
 
+            //
+            // Fit map bounds to GeoJSON
+            //
+
+            var feature = {
+                type: 'Feature',
+                properties: obj,
+                geometry: obj.extent
+            };
+
+            self.setMapBoundsToFeature(feature);
+
             FilterStore.clearAll();
 
             var _filterObject = {
@@ -470,6 +499,12 @@ angular.module('FieldDoc')
             self.loadOutcomes([
                 obj
             ]);
+
+            //
+            // Display filter controls
+            //
+
+            self.showFilters = true;
 
         };
 
@@ -492,6 +527,10 @@ angular.module('FieldDoc')
         self.clearFilter = function(obj) {
 
             FilterStore.clearItem(obj);
+
+            self.resetMapExtent();
+
+            self.card = self.cardTpl;
 
         };
 
@@ -545,36 +584,36 @@ angular.module('FieldDoc')
 
         });
 
-        $scope.$on('leafletDirectiveMarker.dashboard--map.mouseover', function(event, args) {
+        // $scope.$on('leafletDirectiveMarker.dashboard--map.mouseover', function(event, args) {
 
-            console.log('leafletDirectiveMarker.dashboard--map.click', event, args);
+        //     console.log('leafletDirectiveMarker.dashboard--map.click', event, args);
 
-            var project = self.filteredProjects.filter(function(datum) {
+        //     var project = self.filteredProjects.filter(function(datum) {
 
-                var id = +(args.modelName.split('project_')[1]);
+        //         var id = +(args.modelName.split('project_')[1]);
 
-                return datum.id === id;
+        //         return datum.id === id;
 
-            })[0];
+        //     })[0];
 
-            self.card = {
-                project: project,
-                heading: project.name,
-                yearsActive: '2018',
-                funding: '$100k',
-                url: 'projects/' + project.id,
-                description: project.description,
-                linkTarget: '_self'
-            };
+        //     self.card = {
+        //         project: project,
+        //         heading: project.name,
+        //         yearsActive: '2018',
+        //         funding: '$100k',
+        //         url: 'projects/' + project.id,
+        //         description: project.description,
+        //         linkTarget: '_self'
+        //     };
 
-        });
+        // });
 
-        $scope.$on('leafletDirectiveMarker.dashboard--map.mouseout', function(event, args) {
+        // $scope.$on('leafletDirectiveMarker.dashboard--map.mouseout', function(event, args) {
 
-            console.log('leafletDirectiveMarker.dashboard--map.click', event, args);
+        //     console.log('leafletDirectiveMarker.dashboard--map.click', event, args);
 
-            self.card = self.cardTpl;
+        //     self.card = self.cardTpl;
 
-        });
+        // });
 
     });
