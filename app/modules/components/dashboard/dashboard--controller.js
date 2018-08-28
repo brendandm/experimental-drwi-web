@@ -485,11 +485,17 @@ angular.module('FieldDoc')
             var markerId = 'project_' + feature.id,
                 marker = self.map.markers[markerId];
 
-            if (feature.id === self.focusedProjectId) return;
+            for (var key in self.map.markers) {
+
+                if (self.map.markers.hasOwnProperty(key)) {
+
+                    self.map.markers[key].focus = false;
+
+                }
+
+            }
 
             if (marker) {
-
-                self.focusedProjectId = feature.id;
 
                 self.map.markers[markerId].focus = true;
 
@@ -507,8 +513,6 @@ angular.module('FieldDoc')
             if (marker) {
 
                 self.map.markers[markerId].focus = false;
-
-                self.focusedProjectId = null;
 
             }
 
@@ -632,6 +636,8 @@ angular.module('FieldDoc')
 
             })[0];
 
+            self.setMarkerFocus(project);
+
             self.card = {
                 project: project,
                 heading: project.name,
@@ -646,29 +652,31 @@ angular.module('FieldDoc')
 
         });
 
-        // $scope.$on('leafletDirectiveMarker.dashboard--map.mouseover', function(event, args) {
+        $scope.$on('leafletDirectiveMarker.dashboard--map.mouseover', function(event, args) {
 
-        //     console.log('leafletDirectiveMarker.dashboard--map.click', event, args);
+            console.log('leafletDirectiveMarker.dashboard--map.mouseover', event, args);
 
-        //     var project = self.filteredProjects.filter(function(datum) {
+            var project = self.filteredProjects.filter(function(datum) {
 
-        //         var id = +(args.modelName.split('project_')[1]);
+                var id = +(args.modelName.split('project_')[1]);
 
-        //         return datum.id === id;
+                return datum.id === id;
 
-        //     })[0];
+            })[0];
 
-        //     self.card = {
-        //         project: project,
-        //         heading: project.name,
-        //         yearsActive: '2018',
-        //         funding: '$100k',
-        //         url: 'projects/' + project.id,
-        //         description: project.description,
-        //         linkTarget: '_self'
-        //     };
+            self.setMarkerFocus(project);
 
-        // });
+            // self.card = {
+            //     project: project,
+            //     heading: project.name,
+            //     yearsActive: '2018',
+            //     funding: '$100k',
+            //     url: 'projects/' + project.id,
+            //     description: project.description,
+            //     linkTarget: '_self'
+            // };
+
+        });
 
         // $scope.$on('leafletDirectiveMarker.dashboard--map.mouseout', function(event, args) {
 
