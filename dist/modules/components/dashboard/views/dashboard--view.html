@@ -107,7 +107,7 @@
 
         <ul class="project--list" data-ng-if="page.filteredProjects && page.filteredProjects.length && page.activeTab === 'list'">
 
-            <li class="project--card" data-ng-repeat="project in page.filteredProjects" data-ng-mouseover="page.setMarkerFocus(project)">
+            <li class="project--card" data-ng-repeat="project in page.filteredProjects" data-ng-mouseover="page.setMarkerFocus(project)" data-ng-mouseout="page.clearMarkerFocus(project)">
 
                 <span class="title">{{ project.name }}</span>
 

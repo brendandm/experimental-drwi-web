@@ -1233,7 +1233,11 @@ angular.module('FieldDoc')
             var markerId = 'project_' + feature.id,
                 marker = self.map.markers[markerId];
 
+            if (feature.id === self.focusedProjectId) return;
+
             if (marker) {
+
+                self.focusedProjectId = feature.id;
 
                 self.map.markers[markerId].focus = true;
 
@@ -1251,6 +1255,8 @@ angular.module('FieldDoc')
             if (marker) {
 
                 self.map.markers[markerId].focus = false;
+
+                self.focusedProjectId = null;
 
             }
 
