@@ -16,6 +16,19 @@ angular.module('FieldDoc')
 
         var self = this;
 
+        self.cardTpl = {
+            project: null,
+            heading: 'Delaware River Watershed Initiative',
+            yearsActive: '2013 - 2018',
+            funding: '$2.65 million',
+            url: 'https://4states1source.org',
+            resourceUrl: null,
+            linkTarget: '_blank',
+            description: 'The Delaware River Watershed Initiative is a cross-cutting collaboration working to conserve and restore the streams that supply drinking water to 15 million people in New York, New Jersey, Pennsylvania and Delaware.',
+        };
+
+        self.card = self.cardTpl;
+
         self.dashboardFilters = {
             geographies: [],
             grantees: [],
@@ -92,7 +105,14 @@ angular.module('FieldDoc')
                     self.map.markers['project_' + feature.id] = {
                         lat: centroid.coordinates[1],
                         lng: centroid.coordinates[0],
-                        layer: 'projects'
+                        layer: 'projects',
+                        icon: {
+                            type: 'div',
+                            className: 'project--marker',
+                            iconSize: [24, 24],
+                            popupAnchor: [0, 0],
+                            html: ''
+                        }
                     };
 
                 }
@@ -429,6 +449,30 @@ angular.module('FieldDoc')
 
         }
 
+        self.setProjectFilter = function(obj) {
+
+            FilterStore.clearAll();
+
+            var _filterObject = {
+                id: obj.id,
+                name: obj.name,
+                category: 'project'
+            };
+
+            FilterStore.addItem(_filterObject);
+
+            ProjectStore.filterAll(FilterStore.index);
+
+            self.loadMetrics([
+                obj
+            ]);
+
+            self.loadOutcomes([
+                obj
+            ]);
+
+        };
+
         self.setGeoFilter = function(obj) {
 
             FilterStore.clearAll();
@@ -472,6 +516,64 @@ angular.module('FieldDoc')
             self.loadMetrics(newVal);
 
             self.loadOutcomes(newVal);
+
+        });
+
+        $scope.$on('leafletDirectiveMarker.dashboard--map.click', function(event, args) {
+
+            console.log('leafletDirectiveMarker.dashboard--map.click', event, args);
+
+            var project = self.filteredProjects.filter(function(datum) {
+
+                var id = +(args.modelName.split('project_')[1]);
+
+                return datum.id === id;
+
+            })[0];
+
+            self.card = {
+                project: project,
+                heading: project.name,
+                yearsActive: '2018',
+                funding: '$100k',
+                url: 'projects/' + project.id,
+                description: project.description,
+                linkTarget: '_self'
+            };
+
+            self.setProjectFilter(project);
+
+        });
+
+        $scope.$on('leafletDirectiveMarker.dashboard--map.mouseover', function(event, args) {
+
+            console.log('leafletDirectiveMarker.dashboard--map.click', event, args);
+
+            var project = self.filteredProjects.filter(function(datum) {
+
+                var id = +(args.modelName.split('project_')[1]);
+
+                return datum.id === id;
+
+            })[0];
+
+            self.card = {
+                project: project,
+                heading: project.name,
+                yearsActive: '2018',
+                funding: '$100k',
+                url: 'projects/' + project.id,
+                description: project.description,
+                linkTarget: '_self'
+            };
+
+        });
+
+        $scope.$on('leafletDirectiveMarker.dashboard--map.mouseout', function(event, args) {
+
+            console.log('leafletDirectiveMarker.dashboard--map.click', event, args);
+
+            self.card = self.cardTpl;
 
         });
 
