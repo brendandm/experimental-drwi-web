@@ -54,6 +54,14 @@
         <h4 class="project-site-city" data-ng-if="page.nodes.counties.length">
           <span data-ng-repeat="county in page.nodes.counties">{{ county.name }}&nbsp;</span>
         </h4>
+
+          <!-- Map -->
+          
+          <div style="position:relative;">
+            <leaflet id="project--map" class="map tall" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers"
+              bounds="page.map.bounds" markers="page.map.markers"></leaflet>
+          </div>
+
         
         <h2><strong>Practice</strong> Reductions</h2>
 
