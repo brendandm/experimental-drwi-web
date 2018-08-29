@@ -8,18 +8,53 @@
      * @description
      */
     angular.module('FieldDoc')
-        .controller('SiteSummaryCtrl', function(Account, $location, mapbox, Practice, project,
-            $rootScope, $route, summary, nodes, user, Utility) {
+        .controller('SiteSummaryCtrl', function(Account, $location, Practice, project,
+            $rootScope, $route, summary, nodes, user, Utility, Map, mapbox, leafletData, leafletBoundsHelpers) {
 
             var self = this;
 
             $rootScope.page = {};
 
-            self.mapbox = mapbox;
+            self.map = Map;
+            //self.mapbox = mapbox;
 
             self.status = {
                 "loading": true
             }
+
+            //draw tools
+            function addNonGroupLayers(sourceLayer, targetGroup) {
+
+                if (sourceLayer instanceof L.LayerGroup) {
+
+                    sourceLayer.eachLayer(function (layer) {
+
+                        addNonGroupLayers(layer, targetGroup);
+
+                    });
+
+                } else {
+
+                    targetGroup.addLayer(sourceLayer);
+
+                }
+
+            }
+
+            self.setGeoJsonLayer = function (data, layerGroup, clearLayers) {
+
+                if (clearLayers) {
+
+                    layerGroup.clearLayers();
+
+                }
+
+                var featureGeometry = L.geoJson(data, {});
+
+                addNonGroupLayers(featureGeometry, layerGroup);
+
+            };
+
 
             self.cleanName = function(string_) {
                 return Utility.machineName(string_);
@@ -89,6 +124,29 @@
                         ];
 
                     });
+                    //
+                    // If a valid site geometry is present, add it to the map
+                    // and track the object in `self.savedObjects`.
+                    //
+
+                    if (self.site.geometry !== null &&
+                        typeof self.site.geometry !== 'undefined') {
+
+                        leafletData.getMap('site--map').then(function (map) {
+
+                        self.siteExtent = new L.FeatureGroup();
+
+                        self.setGeoJsonLayer(self.site.geometry, self.siteExtent);
+
+                        map.fitBounds(self.siteExtent.getBounds(), {
+                                // padding: [20, 20],
+                            maxZoom: 18
+                        });
+                    });
+                    self.map.geojson = {
+                        data:self.site.geometry
+                    };
+                    }
                 }
 
             }, function(errorResponse) {
