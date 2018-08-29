@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('PracticeEditController', function(Account, Image, leafletData, $location, $log, Map,
         mapbox, Media, Practice, practice, practice_types, $q, $rootScope, $route,
-        $scope, $timeout, $interval, site, user, Shapefile) {
+        $scope, $timeout, $interval, site, user, Shapefile, leafletBoundsHelpers) {
 
         var self = this,
             projectId = $route.current.params.projectId,
@@ -21,15 +21,7 @@ angular.module('FieldDoc')
 
         self.map = Map;
 
-        var southWest = L.latLng(25.837377, -124.211606),
-            northEast = L.latLng(49.384359, -67.158958),
-            bounds = L.latLngBounds(southWest, northEast);
-
-        console.log('United States bounds', bounds);
-
         self.savedObjects = [];
-
-        self.map.bounds = bounds;
 
         self.editableLayers = new L.FeatureGroup();
 
@@ -142,32 +134,6 @@ angular.module('FieldDoc')
 
             self.practice = successResponse;
 
-            self.map = {
-                defaults: {
-                    scrollWheelZoom: false,
-                    zoomControl: false,
-                    maxZoom: 18
-                },
-                bounds: bounds,
-                center: {
-                    lat: 39.828175,
-                    lng: -98.5795,
-                    zoom: 4
-                },
-                layers: {
-                    baselayers: {
-                        basemap: {
-                            name: 'Satellite Imagery',
-                            url: 'https://{s}.tiles.mapbox.com/v3/' + mapbox.satellite + '/{z}/{x}/{y}.png',
-                            type: 'xyz',
-                            layerOptions: {
-                                attribution: '<a href="https://www.mapbox.com/about/maps/" target="_blank">&copy; Mapbox &copy; OpenStreetMap</a>'
-                            }
-                        }
-                    }
-                }
-            };
-
             //
             // If a valid practice geometry is present, add it to the map
             // and track the object in `self.savedObjects`.
@@ -175,15 +141,32 @@ angular.module('FieldDoc')
 
             if (self.practice.geometry !== null &&
                 typeof self.practice.geometry !== 'undefined') {
+                
+                //Added by Lin 
+                leafletData.getMap('practice--map').then(function (map) {
 
-                var practiceGeometry = L.geoJson(self.practice.geometry, {});
+                    self.practiceExtent = new L.FeatureGroup();
 
-                addNonGroupLayers(practiceGeometry, self.editableLayers);
+                    self.setGeoJsonLayer(self.practice.geometry);
+
+                    map.fitBounds(self.editableLayers.getBounds(), {
+                        // padding: [20, 20],
+                        maxZoom: 18
+                    });
+                });
+                self.map.geojson = {
+                    data: self.practice.geometry
+                };
+                //existing
+                // var practiceGeometry = L.geoJson(self.practice.geometry, {});
+
+                // addNonGroupLayers(practiceGeometry, self.editableLayers);
 
                 self.savedObjects = [{
                     id: self.editableLayers._leaflet_id,
                     geoJson: self.practice.geometry
                 }];
+                console.log('self.practice.geometry', self.practice.geometry);
 
                 console.log('self.savedObjects', self.savedObjects);
 
@@ -191,8 +174,7 @@ angular.module('FieldDoc')
 
                 console.log('rawGeometry', rawGeometry);
 
-            }
-
+            };
             site.$promise.then(function(successResponse) {
                 self.site = successResponse;
 
