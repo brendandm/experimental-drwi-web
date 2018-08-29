@@ -95,7 +95,7 @@ angular.module('FieldDoc')
         self.popupTemplate = function(feature) {
 
             return '<div class=\"project--popup\">' +
-                '<div class=\"marker--title\">' + feature.name + '</div>' +
+                '<div class=\"marker--title border--right\">' + feature.name + '</div>' +
                 '<a href=\"projects/' + feature.id + '\">' +
                 '<i class=\"material-icons\">keyboard_arrow_right</i>' +
                 '</a>' +
@@ -142,6 +142,18 @@ angular.module('FieldDoc')
 
             leafletData.getMap('dashboard--map').then(function(map) {
 
+                leafletData.getLayers('dashboard--map').then(function(layers) {
+
+                    console.log('leafletData.getLayers', layers);
+
+                    map.removeLayer(layers.baselayers.satellite);
+
+                    map.removeLayer(layers.baselayers.terrain);
+
+                    map.addLayer(layers.baselayers.streets);
+
+                });
+
                 leafletData.getGeoJSON('dashboard--map').then(function(geoJsonLayer) {
 
                     console.log('geoJsonLayer', geoJsonLayer);
@@ -176,6 +188,10 @@ angular.module('FieldDoc')
 
         function onEachFeature(feature, layer) {
 
+            console.log('onEachFeature', feature, layer);
+
+            var popup;
+
             layer.on({
 
                 click: function() {
@@ -185,6 +201,46 @@ angular.module('FieldDoc')
                     self.setMapBoundsToFeature(layer.feature);
 
                     self.setGeoFilter(layer.feature.properties);
+
+                },
+                mouseover: function(event) {
+
+                    console.log('onEachFeature.mouseover', event);
+
+                    console.log(layer.feature.properties.name);
+
+                    self.removeMarkerPopups();
+
+                    leafletData.getMap('dashboard--map').then(function(map) {
+
+                        if (popup) {
+
+                            map.closePopup(popup);
+
+                        }
+
+                        popup = L.popup()
+                            .setLatLng(event.latlng)
+                            .setContent('<div class=\"marker--title\">' + feature.properties.name + '</div>');
+
+                        popup.openOn(map);
+
+                    });
+
+                },
+                mouseout: function() {
+
+                    console.log(layer.feature.properties.name);
+
+                    leafletData.getMap('dashboard--map').then(function(map) {
+
+                        if (popup) {
+
+                            map.closePopup(popup);
+
+                        }
+
+                    });
 
                 }
 
@@ -331,6 +387,40 @@ angular.module('FieldDoc')
             self.filteredProjects = $scope.projectStore.filteredProjects;
 
             self.processLocations(successResponse.features);
+
+            leafletData.getMap('dashboard--map').then(function(map) {
+
+                map.on('zoomend', function(event) {
+
+                    var zoomLevel = map.getZoom();
+
+                    leafletData.getLayers('dashboard--map').then(function(layers) {
+
+                        console.log('leafletData.getLayers', layers);
+
+                        if (zoomLevel > 15) {
+
+                            map.removeLayer(layers.baselayers.streets);
+
+                            map.removeLayer(layers.baselayers.terrain);
+
+                            map.addLayer(layers.baselayers.satellite);
+
+                        } else {
+
+                            map.removeLayer(layers.baselayers.satellite);
+
+                            map.removeLayer(layers.baselayers.terrain);
+
+                            map.addLayer(layers.baselayers.streets);
+
+                        }
+
+                    });
+
+                });
+
+            });
 
         }, function(errorResponse) {
 
@@ -480,10 +570,7 @@ angular.module('FieldDoc')
 
         }
 
-        self.setMarkerFocus = function(feature) {
-
-            var markerId = 'project_' + feature.id,
-                marker = self.map.markers[markerId];
+        self.removeMarkerPopups = function() {
 
             for (var key in self.map.markers) {
 
@@ -494,6 +581,15 @@ angular.module('FieldDoc')
                 }
 
             }
+
+        };
+
+        self.setMarkerFocus = function(feature) {
+
+            var markerId = 'project_' + feature.id,
+                marker = self.map.markers[markerId];
+
+            self.removeMarkerPopups();
 
             if (marker) {
 
@@ -533,6 +629,22 @@ angular.module('FieldDoc')
             };
 
             self.setMapBoundsToFeature(feature);
+
+            // leafletData.getMap('dashboard--map').then(function(map) {
+
+            //     leafletData.getLayers('dashboard--map').then(function(layers) {
+
+            //         console.log('leafletData.getLayers', layers);
+
+            //         map.removeLayer(layers.baselayers.streets);
+
+            //         map.removeLayer(layers.baselayers.terrain);
+
+            //         map.addLayer(layers.baselayers.satellite);
+
+            //     });
+
+            // });
 
             FilterStore.clearAll();
 
@@ -677,6 +789,14 @@ angular.module('FieldDoc')
             // };
 
         });
+
+        // $scope.$on('leafletDirectiveGeoJson.mouseover', function(event, args) {
+
+        //     console.log('leafletDirectiveGeoJson.mouseover', event, args);
+
+        //     // self.card = self.cardTpl;
+
+        // });
 
         // $scope.$on('leafletDirectiveMarker.dashboard--map.mouseout', function(event, args) {
 

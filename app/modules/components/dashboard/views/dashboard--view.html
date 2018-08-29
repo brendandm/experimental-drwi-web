@@ -210,6 +210,12 @@
 
     <div class="map--container">
 
+        <button class="reset--extent" type="button" data-ng-click="page.resetMapExtent()" title="Reset map extent">
+            <i class="material-icons">
+            refresh
+            </i>
+        </button>
+
         <leaflet id="dashboard--map" class="map" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds" markers="page.map.markers" geojson="page.map.geojson"></leaflet>
 
     </div>
