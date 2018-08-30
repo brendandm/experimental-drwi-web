@@ -37,6 +37,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/data/project/:id/members')
                 },
+                sites: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/data/project/:id/sites')
+                },
                 minimal: {
                     method: 'GET',
                     isArray: false,

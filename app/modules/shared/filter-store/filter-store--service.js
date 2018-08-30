@@ -17,23 +17,24 @@
                 addItem: function(obj) {
                     // this.index[category] = obj;
 
-                    if (this.index.length < 2) {
+                    this.index.push(obj);
 
-                        this.index.push(obj);
+                    // if (this.index.length < 2) {
 
-                    } else {
+                    //     this.index.push(obj);
 
-                        this.index[1] = obj;
+                    // } else {
 
-                    }
+                    //     this.index[1] = obj;
+
+                    // }
 
                 },
                 clearItem: function(obj) {
 
                     var items = this.index.filter(function(item) {
 
-                        return (item.name !== obj.name &&
-                            item.category !== obj.category);
+                        return (item.name !== obj.name);
 
                     });
 

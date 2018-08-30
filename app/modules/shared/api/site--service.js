@@ -32,6 +32,16 @@
                         return angular.toJson(feature);
                     }
                 },
+                'metrics': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/site/:id/metrics'),
+                    'isArray': false
+                },
+                'outcomes': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/site/:id/outcomes'),
+                    'isArray': false
+                },
                 'practices': {
                     method: 'GET',
                     isArray: false,
