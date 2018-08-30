@@ -9,11 +9,31 @@
 
       <p><small>
         <strong>Project Title:</strong> {{ page.summary.site.properties.project.properties.name }}
-        <strong>Site Number:</strong> {{ page.summary.site.properties.name }}<br />
+        <strong>Site Name:</strong> {{ page.summary.site.properties.name }}<br />
         <strong>Stream Name: </strong> {{ page.summary.site.properties.segment.properties.river_name }}
         <strong>HGMR: </strong> {{ page.summary.site.properties.segment.properties.hgmr_name }}
       </small></p>
+
+      <!-- Map - LP -->
+        <div style="position:relative;">
+          <leaflet id="practice--map" class="map" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
+          <div class="progress--modal" data-ng-if="page.progressValue && page.progressValue > 0">
+            <div class="progress--container">
+              <p>
+                <strong>{{ page.progressMessage }}
+                </strong>
+              </p>
+              <div class="progress--meter--bar--wrapper">
+                <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <leaflet id="practice--map" class="map" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet> -->
+      </div>
+      <!-- Map End -->
     </div>
+
 
     <nav class="column-5 contextual-navigation-wrapper">
       <h6><strong>Tools</strong></h6>

@@ -10,7 +10,7 @@
     angular.module('FieldDoc')
         .controller('CustomSummaryController', function(Account, $location,
             $log, PracticeCustom, $rootScope, $route, $scope, summary,
-            Utility, user, $window) {
+            Utility, user, $window, Map, mapbox, leafletData, leafletBoundsHelpers) {
 
             var self = this,
                 projectId = $route.current.params.projectId,
@@ -25,9 +25,37 @@
                 'id': projectId
             };
 
+            self.map = Map;
+
             self.status = {
                 loading: true
+            }
+
+            //draw tools
+            function addNonGroupLayers(sourceLayer, targetGroup) {
+                if (sourceLayer instanceof L.LayerGroup) {
+                    sourceLayer.eachLayer(function (layer) {
+                        addNonGroupLayers(layer, targetGroup);
+                    });
+                } else {
+                    targetGroup.addLayer(sourceLayer);
+                }
+            }
+
+            self.setGeoJsonLayer = function (data, layerGroup, clearLayers) {
+
+                if (clearLayers) {
+
+                    layerGroup.clearLayers();
+
+                }
+
+                var featureGeometry = L.geoJson(data, {});
+
+                addNonGroupLayers(featureGeometry, layerGroup);
+
             };
+            //Temp change loading to "loading"
 
             summary.$promise.then(function(successResponse) {
 
@@ -75,6 +103,25 @@
                         type: 'active'
                     }
                 ];
+
+                if (self.summary.practice.geometry !== null &&
+                    typeof self.summary.practice.geometry !== 'undefined') {
+
+                    leafletData.getMap('practice--map').then(function (map) {
+
+                        self.practiceExtent = new L.FeatureGroup();
+
+                        self.setGeoJsonLayer(self.summary.practice.geometry, self.practiceExtent);
+
+                        map.fitBounds(self.practiceExtent.getBounds(), {
+                            // padding: [20, 20],
+                            maxZoom: 18
+                        });
+                    });
+                    self.map.geojson = {
+                        data: self.summary.practice.geometry
+                    };
+                }
 
                 $rootScope.page.actions = [{
                         type: 'button-link',
