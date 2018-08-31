@@ -10,7 +10,7 @@
 
             <h1>{{ page.card.heading }}</h1>
 
-            <div class="stat--group">
+            <div class="stat--group" data-ng-if="page.card.featureType !== 'practice'">
 
                 <div class="stat--block" data-ng-if="page.card.featureType === 'program' || page.card.featureType === 'project' || page.card.featureType === 'geography'">
                     <span class="label">Total funding</span>
@@ -45,6 +45,19 @@
                 <a href="{{ page.card.url }}" target="{{ page.card.linkTarget }}">Learn more &rarr;</a>
             </p>
 
+        </div>
+
+        <!-- Back navigation -->
+
+        <div class="navigation--control" data-ng-if="page.historyItem.label">
+            <button class="navigate--up" type="button" data-ng-click="page.navigateBack()">
+                <i class="material-icons">
+                keyboard_arrow_left
+                </i>
+            </button>
+            <div class="navigate--label">
+                {{ page.historyItem.label }}
+            </div>
         </div>
 
         <!-- Filter Tools -->

@@ -43,11 +43,11 @@ angular.module('FieldDoc')
 
         self.card = self.cardTpl;
 
-        self.dashboardFilters = {
-            geographies: [],
-            grantees: [],
-            practices: []
-        };
+        self.historyItem = null;
+
+        self.historyIndex = [];
+
+        self.project = {};
 
         self.map = Map;
 
@@ -220,6 +220,8 @@ angular.module('FieldDoc')
 
                     if (layer.feature.properties.feature_type === 'site') {
 
+                        self.activeSite = feature;
+
                         self.card = {
                             featureType: 'site',
                             featureTabLabel: 'Practices',
@@ -243,6 +245,17 @@ angular.module('FieldDoc')
                             collection: 'site',
                             featureId: feature.properties.id
                         });
+
+                        //
+                        // Set value of `self.historyItem`
+                        //
+
+                        self.historyItem = {
+                            feature: self.activeProject,
+                            label: self.activeProject.properties.name,
+                            geoJson: self.activeProject,
+                            type: 'project'
+                        };
 
                     } else if (layer.feature.properties.feature_type === 'geography') {
 
@@ -271,6 +284,29 @@ angular.module('FieldDoc')
                             collection: 'practice',
                             featureId: feature.properties.id
                         });
+
+                        self.card = {
+                            featureType: 'practice',
+                            featureTabLabel: null,
+                            feature: feature.properties,
+                            heading: feature.properties.name,
+                            yearsActive: null,
+                            funding: null,
+                            url: 'practices/' + feature.properties.id,
+                            description: feature.properties.description,
+                            linkTarget: '_self'
+                        };
+
+                        //
+                        // Set value of `self.historyItem`
+                        //
+
+                        self.historyItem = {
+                            feature: self.activeSite,
+                            label: self.activeSite.properties.name,
+                            geoJson: self.activeSite,
+                            type: 'site'
+                        };
 
                     }
 
@@ -492,7 +528,7 @@ angular.module('FieldDoc')
 
                         console.log('siteOutcomesResponse', successResponse);
 
-                        self.outcomes = successResponse.features;
+                        self.outcomes = successResponse;
 
                     }, function(errorResponse) {
 
@@ -508,7 +544,7 @@ angular.module('FieldDoc')
 
                         console.log('practiceOutcomesResponse', successResponse);
 
-                        self.outcomes = successResponse.features;
+                        self.outcomes = successResponse;
 
                     }, function(errorResponse) {
 
@@ -690,6 +726,12 @@ angular.module('FieldDoc')
 
             } else {
 
+                if (collection === 'practice') {
+
+                    self.map.geojson.data = self.practices;
+
+                }
+
                 self.setMapBoundsToFeature(feature);
 
             }
@@ -743,12 +785,6 @@ angular.module('FieldDoc')
 
         self.loadSitePractices = function(obj) {
 
-            leafletData.getMap('dashboard--map').then(function(map) {
-
-                map.closePopup();
-
-            });
-
             Site.practices({
                 id: obj.id
             }).$promise.then(function(successResponse) {
@@ -756,6 +792,14 @@ angular.module('FieldDoc')
                 console.log('sitePracticeResponse', successResponse);
 
                 self.practices = successResponse;
+
+                leafletData.getMap('dashboard--map').then(function(map) {
+
+                    map.closePopup();
+
+                    self.setMapBoundsToFeature(successResponse);
+
+                });
 
                 self.map.geojson = {
                     data: successResponse,
@@ -774,6 +818,81 @@ angular.module('FieldDoc')
                 console.log('errorResponse', errorResponse);
 
             });
+
+        };
+
+        self.navigateBack = function() {
+
+            var historyType = self.historyItem.type;
+
+            switch(historyType) {
+
+                case 'program':
+
+                    self.resetMapExtent();
+
+                    self.clearAllFilters();
+
+                    break;
+
+                case 'project':
+
+                    // self.setMapBoundsToFeature(self.activeProject);
+
+                    self.setProjectFilter(self.activeProject.properties);
+
+                    self.card = {
+                        featureType: 'project',
+                        featureTabLabel: 'Sites',
+                        feature: self.activeProject.properties,
+                        heading: self.activeProject.properties.name,
+                        yearsActive: '2018',
+                        funding: '$100k',
+                        url: 'projects/' + self.activeProject.properties.id,
+                        description: self.activeProject.properties.description,
+                        linkTarget: '_self'
+                    };
+
+                    break;
+
+                case 'site':
+
+                    self.map.geojson.data = self.activeSite;
+
+                    self.setMapBoundsToFeature(self.activeSite);
+
+                    // self.practices = null;
+
+                    self.card = {
+                        featureType: 'site',
+                        featureTabLabel: 'Practices',
+                        feature: self.activeSite.properties,
+                        heading: self.activeSite.properties.name,
+                        yearsActive: '2018',
+                        funding: '$10k',
+                        url: 'sites/' + self.activeSite.properties.id,
+                        description: self.activeSite.properties.description,
+                        linkTarget: '_self'
+                    };
+
+                    //
+                    // Update history item
+                    //
+
+                    self.historyItem = {
+                        feature: self.activeProject,
+                        label: self.activeProject.properties.name,
+                        geoJson: self.activeProject,
+                        type: 'project'
+                    };
+
+                    break;
+
+                default:
+
+                    break;
+
+            }
 
         };
 
@@ -814,10 +933,21 @@ angular.module('FieldDoc')
             ]);
 
             //
-            // Display filter controls
+            // Set value of `self.historyItem`
             //
 
-            // self.showFilters = true;
+            self.historyItem = {
+                feature: null,
+                label: 'All projects',
+                geoJson: self.programGeographies,
+                type: 'program'
+            };
+
+            //
+            // Track project object
+            //
+
+            self.activeProject = feature;
 
         };
 
@@ -832,14 +962,6 @@ angular.module('FieldDoc')
             };
 
             FilterStore.addItem(_filterObject);
-
-            // ProjectStore.filterAll(FilterStore.index);
-
-            //
-            // Display filter controls
-            //
-
-            // self.showFilters = true;
 
             self.filterProjects();
 
@@ -904,6 +1026,24 @@ angular.module('FieldDoc')
             //
 
             self.card = self.cardTpl;
+
+            //
+            // Reset value of `self.historyItem`
+            //
+
+            self.historyItem = null;
+
+            //
+            // Reset value of `self.activeProject`
+            //
+
+            self.activeProject = null;
+
+            //
+            // Reset value of `self.activeSite`
+            //
+
+            self.activeSite = null;
 
         };
 
