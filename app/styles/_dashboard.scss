@@ -13,7 +13,7 @@
     align-items: center;
     height: 100%;
     width: 100%;
-    padding: 1% 2% 0 2%;
+    padding: 0 2%;
     background: #252f3a;
 
     .panel--container {
@@ -140,22 +140,102 @@
             background: #252f3a;
             overflow-y: scroll;
 
-            .filter--ui {
+            .navigation--control {
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: center;
                 margin: 0 2em 2em;
+                padding: 1em 0;
+                //border-top: 1px solid #32393f;
+                border-bottom: 1px solid #32393f;
+
+                .navigate--up {
+                    //position: absolute;
+                    //top: 2em;
+                    //right: 2em;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    appearance: none;
+                    cursor: pointer;
+                    border: 0 none;
+                    outline: none;
+                    box-shadow: none;
+                    padding: 1em;
+                    border-radius: 50%;
+                    text-align: center;
+                    background: rgba(0,0,0,0.1);
+                    color: #f9f9f9;
+                    opacity: 1;
+                }
+
+                > div:last-of-type {
+                    color: #f9f9f9;
+                    margin-left: 1em;
+                }
+
+            }
+
+            .filter--ui {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                padding: 2em;
+                background: #252f3a;
+                z-index: 9;
+                //margin: 0 2em 2em;
+
+                .close {
+                    position: absolute;
+                    top: 2em;
+                    right: 2em;
+                    display: flex;
+                    flex-flow: column;
+                    justify-content: center;
+                    align-items: center;
+                    appearance: none;
+                    cursor: pointer;
+                    border: 0 none;
+                    outline: none;
+                    box-shadow: none;
+                    color: #fff;
+                    font-size: 1em;
+                    padding: 0.5em;
+                    border-radius: 50%;
+                    //background: rgba(0,0,0,0.1);
+                    background: transparent;
+                }
+
+                .filter--group {
+                    margin-top: 1em;
+                }
 
                 .filter--header {
-                    display: flex;
-                    flex-flow: row nowrap;
-                    align-items: center;
+                    //display: flex;
+                    //flex-flow: column;
+                    //align-items: center;
                     margin-bottom: 1em;
+                    color: #f9f9f9;
+
+                    p {
+                        color: #f9f9f9;
+                        //font-weight: normal;
+                        font-size: 0.9em;
+                        //text-transform: uppercase;
+                        margin: 1em 0;
+                        opacity: 0.8;
+                    }
 
                     span {
-                        display: inline-flex;
+                        display: flex;
                         color: #f9f9f9;
                         font-weight: normal;
-                        font-size: 0.8em;
-                        text-transform: uppercase;
-                        opacity: 0.8;
+                        font-size: 1em;
+                        //font-size: 0.8em;
+                        //text-transform: uppercase;
+                        //opacity: 0.8;
                     }
 
                 }
@@ -188,7 +268,8 @@
                         width: 100%;
                         //max-width: 400px;
                         margin: 0 auto;
-                        border: 1px solid #32393f;
+                        //border: 1px solid #32393f;
+                        border: 0 none;
                         border-radius: 4px;
                         //border-top: 1px solid #e0e0e0;
                         //border-bottom: 1px solid #e0e0e0;
@@ -199,6 +280,7 @@
                         color: #fff;
                         padding: 1em;
                         font-size: 1em;
+                        box-shadow: inset 0 1px 10px rgba(0,0,0,0.3),0 1px 0 rgba(255,255,255,0.1),0 -1px 0 rgba(0,0,0,0.5);
                     }
 
                     .filter--pill {
@@ -212,6 +294,7 @@
                         font-size: 1em;
                         padding: 0.5em 0.8em;
                         margin-right: 1em;
+                        margin-bottom: 0.5em;
                         cursor: pointer;
                         transition: all 250ms ease 0s;
 
@@ -288,6 +371,7 @@
             }
 
             .metadata--card {
+                position: relative;
                 padding: 2em;
                 color: #f9f9f9;
 
@@ -297,7 +381,7 @@
 
                     a,
                     a:link {
-                        color: #06dfde;
+                        color: #07f8f7;
                         text-decoration: none;
                         opacity: 0.7;
                         font-size: .7em;
@@ -382,6 +466,9 @@
                     margin-right: 1em;
                     opacity: 0.6;
                     transition: all 250ms ease 0s;
+                }
+
+                .tab {
 
                     &:hover {
                         opacity: 1;
@@ -399,7 +486,6 @@
                         }
 
                     }
-
                 }
 
                 .active {
@@ -417,6 +503,45 @@
                         background: #fff;
                     }
 
+                }
+
+                .filter--toggle {
+                    display: flex;
+                    flex: 1;
+                    flex-flow: row nowrap;
+                    justify-content: flex-end;
+                    align-items: center;
+                    align-content: flex-end;
+                    text-align: right;
+
+                    button {
+                        margin-right: 0;
+
+                        &:hover {
+                            opacity: 1;
+                        }
+                    }
+
+                }
+
+                .filter--count {
+                    text-align: right;
+                    display: flex;
+                    justify-content: center;
+                    align-items: flex-end;
+                    flex-flow: column;
+                    margin-top: -0.5em;
+
+                    button {
+                        border-radius: 8px;
+                        background: rgba(0,0,0,0.1);
+                        padding: 0.5em;
+                        text-align: center;
+                        font-size: .8em;
+                        margin-right: 0;
+                        margin-left: 0.5em;
+                        opacity: 1;
+                    }
                 }
 
             }
@@ -466,7 +591,7 @@
 
                     a,
                     a:link {
-                        color: #06dfde;
+                        color: #07f8f7;
                         text-decoration: none;
                         opacity: 0.7;
                         font-size: .7em;
@@ -489,6 +614,41 @@
 
         }
 
+    }
+
+}
+
+.filter--actions {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: flex-end;
+    text-align: right;
+    margin: 1em 0;
+
+    button {
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        align-items: center;
+        appearance: none;
+        cursor: pointer;
+        border: 0 none;
+        outline: none;
+        box-shadow: none;
+        color: #fff;
+        text-transform: uppercase;
+        font-size: 0.7em;
+        padding: 0.5em 1em;
+        border-radius: 4px;
+        background: transparent;
+    }
+
+    button:last-of-type {
+        margin-left: 1em;
+        background: #06aadf;
+        padding: 1em 2em;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     }
 
 }

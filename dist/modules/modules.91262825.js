@@ -756,18 +756,30 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('DashboardCtrl', function(Account, $location, $log, Project, Map,
         projects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
-        MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox) {
+        MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox,
+        Practice) {
 
         $scope.filterStore = FilterStore;
 
-        $scope.projectStore = ProjectStore;
+        // $scope.projectStore = ProjectStore;
 
         var self = this;
 
-        self.activeTab = 'metric';
+        //
+        // Setup basic page variables
+        //
+        $rootScope.page = {
+            title: 'Dashboard'
+        };
+
+        self.activeTab = {
+            collection: 'metric'
+        };
 
         self.cardTpl = {
-            project: null,
+            featureType: 'program',
+            featureTabLabel: 'Projects',
+            feature: null,
             heading: 'Delaware River Watershed Initiative',
             yearsActive: '2013 - 2018',
             funding: '$2.65 million',
@@ -779,11 +791,11 @@ angular.module('FieldDoc')
 
         self.card = self.cardTpl;
 
-        self.dashboardFilters = {
-            geographies: [],
-            grantees: [],
-            practices: []
-        };
+        self.historyItem = null;
+
+        self.historyIndex = [];
+
+        self.project = {};
 
         self.map = Map;
 
@@ -843,7 +855,7 @@ angular.module('FieldDoc')
         self.popupTemplate = function(feature) {
 
             return '<div class=\"project--popup\">' +
-                '<div class=\"marker--title\">' + feature.name + '</div>' +
+                '<div class=\"marker--title border--right\">' + feature.name + '</div>' +
                 '<a href=\"projects/' + feature.id + '\">' +
                 '<i class=\"material-icons\">keyboard_arrow_right</i>' +
                 '</a>' +
@@ -888,7 +900,23 @@ angular.module('FieldDoc')
 
         self.resetMapExtent = function() {
 
+            self.map.geojson.data = self.programGeographies;
+
             leafletData.getMap('dashboard--map').then(function(map) {
+
+                map.closePopup();
+
+                leafletData.getLayers('dashboard--map').then(function(layers) {
+
+                    console.log('leafletData.getLayers', layers);
+
+                    map.removeLayer(layers.baselayers.satellite);
+
+                    map.removeLayer(layers.baselayers.terrain);
+
+                    map.addLayer(layers.baselayers.streets);
+
+                });
 
                 leafletData.getGeoJSON('dashboard--map').then(function(geoJsonLayer) {
 
@@ -905,6 +933,8 @@ angular.module('FieldDoc')
         };
 
         self.setMapBoundsToFeature = function(feature) {
+
+            console.log('setMapBoundsToFeature', feature);
 
             var geoJsonLayer = L.geoJson(feature, {});
 
@@ -924,6 +954,10 @@ angular.module('FieldDoc')
 
         function onEachFeature(feature, layer) {
 
+            console.log('onEachFeature', feature, layer);
+
+            var popup;
+
             layer.on({
 
                 click: function() {
@@ -932,7 +966,139 @@ angular.module('FieldDoc')
 
                     self.setMapBoundsToFeature(layer.feature);
 
-                    self.setGeoFilter(layer.feature.properties);
+                    if (layer.feature.properties.feature_type === 'site') {
+
+                        self.activeSite = feature;
+
+                        self.card = {
+                            featureType: 'site',
+                            featureTabLabel: 'Practices',
+                            feature: feature.properties,
+                            heading: feature.properties.name,
+                            yearsActive: '2018',
+                            funding: '$100k',
+                            url: 'sites/' + feature.properties.id,
+                            description: feature.properties.description,
+                            linkTarget: '_self'
+                        };
+
+                        self.loadSitePractices(layer.feature.properties);
+
+                        self.loadMetrics(null, {
+                            collection: 'site',
+                            featureId: feature.properties.id
+                        });
+
+                        self.loadOutcomes(null, {
+                            collection: 'site',
+                            featureId: feature.properties.id
+                        });
+
+                        //
+                        // Set value of `self.historyItem`
+                        //
+
+                        self.historyItem = {
+                            feature: self.activeProject,
+                            label: self.activeProject.properties.name,
+                            geoJson: self.activeProject,
+                            type: 'project'
+                        };
+
+                    } else if (layer.feature.properties.feature_type === 'geography') {
+
+                        self.setGeoFilter(layer.feature.properties);
+
+                        self.card = {
+                            featureType: 'geography',
+                            featureTabLabel: 'Projects',
+                            feature: feature.properties,
+                            heading: feature.properties.name,
+                            yearsActive: '2013-2018',
+                            funding: '$50k',
+                            url: 'geographies/' + feature.properties.id,
+                            description: feature.properties.description,
+                            linkTarget: '_self'
+                        };
+
+                    } else if (layer.feature.properties.feature_type === 'practice') {
+
+                        self.loadMetrics(null, {
+                            collection: 'practice',
+                            featureId: feature.properties.id
+                        });
+
+                        self.loadOutcomes(null, {
+                            collection: 'practice',
+                            featureId: feature.properties.id
+                        });
+
+                        self.card = {
+                            featureType: 'practice',
+                            featureTabLabel: null,
+                            feature: feature.properties,
+                            heading: feature.properties.name,
+                            yearsActive: null,
+                            funding: null,
+                            url: 'practices/' + feature.properties.id,
+                            description: feature.properties.description,
+                            linkTarget: '_self'
+                        };
+
+                        //
+                        // Set value of `self.historyItem`
+                        //
+
+                        self.historyItem = {
+                            feature: self.activeSite,
+                            label: self.activeSite.properties.name,
+                            geoJson: self.activeSite,
+                            type: 'site'
+                        };
+
+                    }
+
+                },
+                mouseover: function(event) {
+
+                    console.log('onEachFeature.mouseover', event);
+
+                    console.log(layer.feature.properties.name);
+
+                    self.removeMarkerPopups();
+
+                    leafletData.getMap('dashboard--map').then(function(map) {
+
+                        if (popup) {
+
+                            map.closePopup(popup);
+
+                        }
+
+                        popup = L.popup()
+                            .setLatLng(event.latlng)
+                            .setContent('<div class=\"marker--title\">' + feature.properties.name + '</div>');
+
+                        popup.openOn(map);
+
+                    });
+
+                },
+                mouseout: function(event) {
+
+                    console.log('onEachFeature.mouseout', event);
+
+                    console.log(layer.feature.properties.name);
+
+                    leafletData.getMap('dashboard--map').then(function(map) {
+
+                        if (popup) {
+
+                            map.closePopup(popup);
+
+                        }
+
+                    });
 
                 }
 
@@ -942,6 +1108,8 @@ angular.module('FieldDoc')
         geographies.$promise.then(function(successResponse) {
 
             console.log('geographies.successResponse', successResponse);
+
+            self.programGeographies = successResponse;
 
             self.map.geojson = {
                 data: successResponse,
@@ -960,6 +1128,44 @@ angular.module('FieldDoc')
             //
 
             self.resetMapExtent();
+
+            //
+            // Set up layer visibility logic
+            //
+
+            leafletData.getMap('dashboard--map').then(function(map) {
+
+                map.on('zoomend', function(event) {
+
+                    var zoomLevel = map.getZoom();
+
+                    leafletData.getLayers('dashboard--map').then(function(layers) {
+
+                        console.log('leafletData.getLayers', layers);
+
+                        if (zoomLevel > 15) {
+
+                            map.removeLayer(layers.baselayers.streets);
+
+                            map.removeLayer(layers.baselayers.terrain);
+
+                            map.addLayer(layers.baselayers.satellite);
+
+                        } else {
+
+                            map.removeLayer(layers.baselayers.satellite);
+
+                            map.removeLayer(layers.baselayers.terrain);
+
+                            map.addLayer(layers.baselayers.streets);
+
+                        }
+
+                    });
+
+                });
+
+            });
 
         }, function(errorResponse) {
 
@@ -981,110 +1187,159 @@ angular.module('FieldDoc')
 
         };
 
-        self.loadMetrics = function(arr) {
+        self.loadMetrics = function(arr, options) {
 
-            //
-            // A program (account) identifier
-            // is required by default.
-            //
+            if (options) {
 
-            var params = {
-                id: 3
-            };
+                if (options.collection === 'site') {
 
-            //
-            // If the `arr` parameter is valid,
-            // constrain the query to the given
-            // set of numeric project identifiers.
-            //
+                    Site.metrics({
+                        id: options.featureId
+                    }).$promise.then(function(successResponse) {
 
-            if (arr && arr.length) {
+                        console.log('granteeResponse', successResponse);
 
-                params.projects = self.extractIds(arr);
+                        self.metrics = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                } else {
+
+                    Practice.metrics({
+                        id: options.featureId
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('granteeResponse', successResponse);
+
+                        self.metrics = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                }
+
+            } else {
+
+                //
+                // A program (account) identifier
+                // is required by default.
+                //
+
+                var params = {
+                    id: 3
+                };
+
+                //
+                // If the `arr` parameter is valid,
+                // constrain the query to the given
+                // set of numeric project identifiers.
+                //
+
+                if (arr && arr.length) {
+
+                    params.projects = self.extractIds(arr);
+
+                }
+
+                MetricService.query(params).$promise.then(function(successResponse) {
+
+                    console.log('granteeResponse', successResponse);
+
+                    self.metrics = successResponse.features;
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
 
             }
 
-            MetricService.query(params).$promise.then(function(successResponse) {
-
-                console.log('granteeResponse', successResponse);
-
-                self.metrics = successResponse.features;
-
-            }, function(errorResponse) {
-
-                console.log('errorResponse', errorResponse);
-
-            });
-
         };
 
-        self.loadOutcomes = function(arr) {
+        self.loadOutcomes = function(arr, options) {
 
-            //
-            // A program (account) identifier
-            // is required by default.
-            //
+            if (options) {
 
-            var params = {
-                id: 3
-            };
+                if (options.collection === 'site') {
 
-            //
-            // If the `arr` parameter is valid,
-            // constrain the query to the given
-            // set of numeric project identifiers.
-            //
+                    Site.outcomes({
+                        id: options.featureId
+                    }).$promise.then(function(successResponse) {
 
-            if (arr && arr.length) {
+                        console.log('siteOutcomesResponse', successResponse);
 
-                params.projects = self.extractIds(arr);
+                        self.outcomes = successResponse;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                } else {
+
+                    Practice.outcomes({
+                        id: options.featureId
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('practiceOutcomesResponse', successResponse);
+
+                        self.outcomes = successResponse;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                }
+
+            } else {
+
+                //
+                // A program (account) identifier
+                // is required by default.
+                //
+
+                var params = {
+                    id: 3
+                };
+
+                //
+                // If the `arr` parameter is valid,
+                // constrain the query to the given
+                // set of numeric project identifiers.
+                //
+
+                if (arr && arr.length) {
+
+                    params.projects = self.extractIds(arr);
+
+                }
+
+                OutcomeService.query(params).$promise.then(function(successResponse) {
+
+                    console.log('granteeResponse', successResponse);
+
+                    self.outcomes = successResponse;
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
 
             }
 
-            OutcomeService.query(params).$promise.then(function(successResponse) {
-
-                console.log('granteeResponse', successResponse);
-
-                self.outcomes = successResponse;
-
-            }, function(errorResponse) {
-
-                console.log('errorResponse', errorResponse);
-
-            });
-
         };
-
-        //
-        // Setup basic page variables
-        //
-        $rootScope.page = {
-            title: 'Dashboard'
-        };
-
-        //
-        // Project functionality
-        //
-
-        self.projects = projects;
-
-        console.log('self.projects', self.projects);
-
-        projects.$promise.then(function(successResponse) {
-
-            console.log('successResponse', successResponse);
-
-            $scope.projectStore.setProjects(successResponse.features);
-
-            self.filteredProjects = $scope.projectStore.filteredProjects;
-
-            self.processLocations(successResponse.features);
-
-        }, function(errorResponse) {
-
-            console.log('errorResponse', errorResponse);
-
-        });
 
         self.search = {
             query: '',
@@ -1141,26 +1396,6 @@ angular.module('FieldDoc')
 
                     self.projects = successResponse;
 
-                    // self.projects.features.forEach(function(feature) {
-
-                    // var centroid = feature.properties.centroid;
-
-                    // console.log('centroid', centroid);
-
-                    // if (centroid) {
-
-                    // self.map.markers['project_' + feature.id] = {
-                    // lat: centroid.coordinates[1],
-                    // lng: centroid.coordinates[0],
-                    // layer: 'projects'
-                    // };
-
-                    // }
-
-                    // });
-
-                    // console.log('self.map.markers', self.map.markers);
-
                 }, function(errorResponse) {
 
                     console.log('errorResponse', errorResponse);
@@ -1206,32 +1441,7 @@ angular.module('FieldDoc')
             }
         }
 
-        //
-        // Verify Account information for proper UI element display
-        //
-        if (Account.userObject && user) {
-
-            user.$promise.then(function(userResponse) {
-                $rootScope.user = Account.userObject = userResponse;
-                self.permissions = {
-                    isLoggedIn: Account.hasToken()
-                };
-            });
-
-            self.loadOutcomes();
-
-            self.loadMetrics();
-
-        } else {
-
-            $location.path('/user/logout');
-
-        }
-
-        self.setMarkerFocus = function(feature) {
-
-            var markerId = 'project_' + feature.id,
-                marker = self.map.markers[markerId];
+        self.removeMarkerPopups = function() {
 
             for (var key in self.map.markers) {
 
@@ -1243,13 +1453,36 @@ angular.module('FieldDoc')
 
             }
 
-            if (marker) {
+        };
 
-                self.map.markers[markerId].focus = true;
+        self.setMarkerFocus = function(feature, collection) {
+
+            if (collection === 'project') {
+
+                var markerId = 'project_' + feature.id,
+                    marker = self.map.markers[markerId];
+
+                self.removeMarkerPopups();
+
+                if (marker) {
+
+                    self.map.markers[markerId].focus = true;
+
+                }
+
+                console.log('setMarkerFocus', markerId, self.map.markers[markerId]);
+
+            } else {
+
+                if (collection === 'practice') {
+
+                    self.map.geojson.data = self.practices;
+
+                }
+
+                self.setMapBoundsToFeature(feature);
 
             }
-
-            console.log('setMarkerFocus', markerId, self.map.markers[markerId]);
 
         };
 
@@ -1268,6 +1501,149 @@ angular.module('FieldDoc')
 
         };
 
+        self.loadProjectSites = function(obj) {
+
+            Project.sites({
+                id: obj.id
+            }).$promise.then(function(successResponse) {
+
+                console.log('projectSiteResponse', successResponse);
+
+                self.sites = successResponse;
+
+                self.map.geojson = {
+                    data: successResponse,
+                    onEachFeature: onEachFeature,
+                    style: {
+                        color: '#00D',
+                        fillColor: 'red',
+                        weight: 2.0,
+                        opacity: 0.6,
+                        fillOpacity: 0.2
+                    }
+                };
+
+            }, function(errorResponse) {
+
+                console.log('errorResponse', errorResponse);
+
+            });
+
+        };
+
+        self.loadSitePractices = function(obj) {
+
+            Site.practices({
+                id: obj.id
+            }).$promise.then(function(successResponse) {
+
+                console.log('sitePracticeResponse', successResponse);
+
+                self.practices = successResponse;
+
+                leafletData.getMap('dashboard--map').then(function(map) {
+
+                    map.closePopup();
+
+                    self.setMapBoundsToFeature(successResponse);
+
+                });
+
+                self.map.geojson = {
+                    data: successResponse,
+                    onEachFeature: onEachFeature,
+                    style: {
+                        color: '#00D',
+                        fillColor: 'red',
+                        weight: 2.0,
+                        opacity: 0.6,
+                        fillOpacity: 0.2
+                    }
+                };
+
+            }, function(errorResponse) {
+
+                console.log('errorResponse', errorResponse);
+
+            });
+
+        };
+
+        self.navigateBack = function() {
+
+            var historyType = self.historyItem.type;
+
+            switch(historyType) {
+
+                case 'program':
+
+                    self.resetMapExtent();
+
+                    self.clearAllFilters();
+
+                    break;
+
+                case 'project':
+
+                    // self.setMapBoundsToFeature(self.activeProject);
+
+                    self.setProjectFilter(self.activeProject.properties);
+
+                    self.card = {
+                        featureType: 'project',
+                        featureTabLabel: 'Sites',
+                        feature: self.activeProject.properties,
+                        heading: self.activeProject.properties.name,
+                        yearsActive: '2018',
+                        funding: '$100k',
+                        url: 'projects/' + self.activeProject.properties.id,
+                        description: self.activeProject.properties.description,
+                        linkTarget: '_self'
+                    };
+
+                    break;
+
+                case 'site':
+
+                    self.map.geojson.data = self.activeSite;
+
+                    self.setMapBoundsToFeature(self.activeSite);
+
+                    // self.practices = null;
+
+                    self.card = {
+                        featureType: 'site',
+                        featureTabLabel: 'Practices',
+                        feature: self.activeSite.properties,
+                        heading: self.activeSite.properties.name,
+                        yearsActive: '2018',
+                        funding: '$10k',
+                        url: 'sites/' + self.activeSite.properties.id,
+                        description: self.activeSite.properties.description,
+                        linkTarget: '_self'
+                    };
+
+                    //
+                    // Update history item
+                    //
+
+                    self.historyItem = {
+                        feature: self.activeProject,
+                        label: self.activeProject.properties.name,
+                        geoJson: self.activeProject,
+                        type: 'project'
+                    };
+
+                    break;
+
+                default:
+
+                    break;
+
+            }
+
+        };
+
         self.setProjectFilter = function(obj) {
 
             //
@@ -1282,6 +1658,8 @@ angular.module('FieldDoc')
 
             self.setMapBoundsToFeature(feature);
 
+            self.loadProjectSites(obj);
+
             FilterStore.clearAll();
 
             var _filterObject = {
@@ -1292,7 +1670,7 @@ angular.module('FieldDoc')
 
             FilterStore.addItem(_filterObject);
 
-            ProjectStore.filterAll(FilterStore.index);
+            // ProjectStore.filterAll(FilterStore.index);
 
             self.loadMetrics([
                 obj
@@ -1303,10 +1681,21 @@ angular.module('FieldDoc')
             ]);
 
             //
-            // Display filter controls
+            // Set value of `self.historyItem`
             //
 
-            self.showFilters = true;
+            self.historyItem = {
+                feature: null,
+                label: 'All projects',
+                geoJson: self.programGeographies,
+                type: 'program'
+            };
+
+            //
+            // Track project object
+            //
+
+            self.activeProject = feature;
 
         };
 
@@ -1322,19 +1711,27 @@ angular.module('FieldDoc')
 
             FilterStore.addItem(_filterObject);
 
-            ProjectStore.filterAll(FilterStore.index);
-
-            //
-            // Display filter controls
-            //
-
-            self.showFilters = true;
+            self.filterProjects();
 
         };
 
-        self.setTab = function(obj) {
+        self.setTab = function(collection) {
 
-            self.activeTab = obj;
+            self.activeTab = {
+                collection: collection
+            };
+
+        };
+
+        self.closeFilterModal = function() {
+
+            if (FilterStore.index.length < 1) {
+
+                self.clearAllFilters();
+
+            }
+
+            self.showFilters = false;
 
         };
 
@@ -1342,9 +1739,180 @@ angular.module('FieldDoc')
 
             FilterStore.clearItem(obj);
 
+        };
+
+        self.clearAllFilters = function(obj) {
+
+            //
+            // Remove all stored filter objects
+            //
+
+            FilterStore.clearAll();
+
+            //
+            // Refresh project list
+            //
+
+            self.loadProjects({
+                id: 3
+            }, false);
+
+            //
+            // Dismiss filter modal
+            //
+
+            self.showFilters = false;
+
+            //
+            // Reset map extent
+            //
+
             self.resetMapExtent();
 
+            //
+            // Reset metadata card values
+            //
+
             self.card = self.cardTpl;
+
+            //
+            // Reset value of `self.historyItem`
+            //
+
+            self.historyItem = null;
+
+            //
+            // Reset value of `self.activeProject`
+            //
+
+            self.activeProject = null;
+
+            //
+            // Reset value of `self.activeSite`
+            //
+
+            self.activeSite = null;
+
+        };
+
+        self.zoomToProjects = function() {
+
+            var featureCollection = {
+                type: 'FeatureCollection',
+                features: []
+            };
+
+            self.filteredProjects.forEach(function(feature) {
+
+                featureCollection.features.push({
+                    type: 'Feature',
+                    properties: {},
+                    geometry: feature.extent
+                });
+
+            });
+
+            self.setMapBoundsToFeature(featureCollection);
+
+        };
+
+        self.loadProjects = function(params, trackIds) {
+
+            Project.minimal(params).$promise.then(function(successResponse) {
+
+                console.log('self.filterProjects.successResponse', successResponse);
+
+                // $scope.projectStore.setProjects(successResponse.features);
+
+                self.filteredProjects = successResponse.features;
+
+                self.processLocations(successResponse.features);
+
+                if (!trackIds) {
+
+                    self.loadOutcomes();
+
+                    self.loadMetrics();
+
+                } else {
+
+                    self.loadOutcomes(self.filteredProjects);
+
+                    self.loadMetrics(self.filteredProjects);
+
+                    self.zoomToProjects();
+
+                }
+
+            }, function(errorResponse) {
+
+                console.log('self.filterProjects.errorResponse', errorResponse);
+
+            });
+
+        };
+
+        self.filterProjects = function() {
+
+            //
+            // Dismiss filter modal
+            //
+
+            self.showFilters = false;
+
+            //
+            // Extract feature identifiers from active filters
+            //
+
+            var params = {
+                id: 3
+            };
+
+            FilterStore.index.forEach(function(obj) {
+
+                if (params.hasOwnProperty(obj.category)) {
+
+                    params[obj.category].push(obj.id);
+
+                } else {
+
+                    params[obj.category] = [obj.id];
+
+                }
+
+            });
+
+            console.log('self.filterProjects.params', params);
+
+            //
+            // Convert arrays of feature identifiers to strings
+            //
+
+            for (var key in params) {
+
+                if (params.hasOwnProperty(key)) {
+
+                    //
+                    // If attribute value is an array, convert it to a string
+                    //
+
+                    if (Array.isArray(params[key])) {
+
+                        var parsedValue = params[key].join(',');
+
+                        params[key] = parsedValue;
+
+                    }
+
+                }
+
+            }
+
+            //
+            // Execute API request
+            //
+
+            self.loadProjects(params, true);
 
         };
 
@@ -1353,22 +1921,6 @@ angular.module('FieldDoc')
             console.log('Updated filterStore', newVal);
 
             self.activeFilters = newVal;
-
-            ProjectStore.filterAll(newVal);
-
-        });
-
-        $scope.$watch('projectStore.filteredProjects', function(newVal) {
-
-            console.log('Updated projectStore', newVal);
-
-            self.filteredProjects = newVal;
-
-            self.processLocations(newVal);
-
-            self.loadMetrics(newVal);
-
-            self.loadOutcomes(newVal);
 
         });
 
@@ -1384,10 +1936,12 @@ angular.module('FieldDoc')
 
             })[0];
 
-            self.setMarkerFocus(project);
+            self.setMarkerFocus(project, 'project');
 
             self.card = {
-                project: project,
+                featureType: 'project',
+                featureTabLabel: 'Sites',
+                feature: project,
                 heading: project.name,
                 yearsActive: '2018',
                 funding: '$100k',
@@ -1412,27 +1966,31 @@ angular.module('FieldDoc')
 
             })[0];
 
-            self.setMarkerFocus(project);
-
-            // self.card = {
-            //     project: project,
-            //     heading: project.name,
-            //     yearsActive: '2018',
-            //     funding: '$100k',
-            //     url: 'projects/' + project.id,
-            //     description: project.description,
-            //     linkTarget: '_self'
-            // };
+            self.setMarkerFocus(project, 'project');
 
         });
 
-        // $scope.$on('leafletDirectiveMarker.dashboard--map.mouseout', function(event, args) {
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
 
-        //     console.log('leafletDirectiveMarker.dashboard--map.click', event, args);
+            user.$promise.then(function(userResponse) {
+                $rootScope.user = Account.userObject = userResponse;
+                self.permissions = {
+                    isLoggedIn: Account.hasToken()
+                };
+            });
 
-        //     self.card = self.cardTpl;
+            self.loadProjects({
+                id: 3
+            }, false);
 
-        // });
+        } else {
+
+            $location.path('/user/logout');
+
+        }
 
     });
 'use strict';
@@ -2015,6 +2573,7 @@ angular.module('FieldDoc')
     .controller('ProjectSummaryCtrl', function(Account, Notifications, $rootScope, Project, $route,
         $scope, $location, Map, mapbox, summary, Site, user, $window, leafletData, leafletBoundsHelpers) {
 
+        //controller is set to self
         var self = this;
 
         $rootScope.page = {};
@@ -2029,6 +2588,7 @@ angular.module('FieldDoc')
             "loading": true
         }
 
+        //draw tools
         function addNonGroupLayers(sourceLayer, targetGroup) {
 
             if (sourceLayer instanceof L.LayerGroup) {
@@ -2762,18 +3322,45 @@ angular.module('FieldDoc')
      * @description
      */
     angular.module('FieldDoc')
-        .controller('SiteSummaryCtrl', function(Account, $location, mapbox, Practice, project,
-            $rootScope, $route, summary, nodes, user, Utility) {
+        .controller('SiteSummaryCtrl', function(Account, $location, Practice, project,
+            $rootScope, $route, summary, nodes, user, Utility, Map, mapbox, leafletData, leafletBoundsHelpers) {
 
             var self = this;
 
             $rootScope.page = {};
 
-            self.mapbox = mapbox;
+            self.map = Map;
+            //self.mapbox = mapbox;
 
             self.status = {
                 "loading": true
             }
+
+            //draw tools
+            function addNonGroupLayers(sourceLayer, targetGroup) {
+                if (sourceLayer instanceof L.LayerGroup) {
+                    sourceLayer.eachLayer(function (layer) {
+                        addNonGroupLayers(layer, targetGroup);
+                    });
+                } else {
+                    targetGroup.addLayer(sourceLayer);
+                }
+            }
+
+            self.setGeoJsonLayer = function (data, layerGroup, clearLayers) {
+
+                if (clearLayers) {
+
+                    layerGroup.clearLayers();
+
+                }
+
+                var featureGeometry = L.geoJson(data, {});
+
+                addNonGroupLayers(featureGeometry, layerGroup);
+
+            };
+
 
             self.cleanName = function(string_) {
                 return Utility.machineName(string_);
@@ -2843,6 +3430,29 @@ angular.module('FieldDoc')
                         ];
 
                     });
+                    //
+                    // If a valid site geometry is present, add it to the map
+                    // and track the object in `self.savedObjects`.
+                    //
+
+                    if (self.site.geometry !== null &&
+                        typeof self.site.geometry !== 'undefined') {
+
+                        leafletData.getMap('site--map').then(function (map) {
+
+                        self.siteExtent = new L.FeatureGroup();
+
+                        self.setGeoJsonLayer(self.site.geometry, self.siteExtent);
+
+                        map.fitBounds(self.siteExtent.getBounds(), {
+                                // padding: [20, 20],
+                            maxZoom: 18
+                        });
+                    });
+                    self.map.geojson = {
+                        data:self.site.geometry
+                    };
+                    }
                 }
 
             }, function(errorResponse) {
@@ -3713,7 +4323,7 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('PracticeEditController', function(Account, Image, leafletData, $location, $log, Map,
         mapbox, Media, Practice, practice, practice_types, $q, $rootScope, $route,
-        $scope, $timeout, $interval, site, user, Shapefile) {
+        $scope, $timeout, $interval, site, user, Shapefile, leafletBoundsHelpers) {
 
         var self = this,
             projectId = $route.current.params.projectId,
@@ -3726,15 +4336,7 @@ angular.module('FieldDoc')
 
         self.map = Map;
 
-        var southWest = L.latLng(25.837377, -124.211606),
-            northEast = L.latLng(49.384359, -67.158958),
-            bounds = L.latLngBounds(southWest, northEast);
-
-        console.log('United States bounds', bounds);
-
         self.savedObjects = [];
-
-        self.map.bounds = bounds;
 
         self.editableLayers = new L.FeatureGroup();
 
@@ -3847,32 +4449,6 @@ angular.module('FieldDoc')
 
             self.practice = successResponse;
 
-            self.map = {
-                defaults: {
-                    scrollWheelZoom: false,
-                    zoomControl: false,
-                    maxZoom: 18
-                },
-                bounds: bounds,
-                center: {
-                    lat: 39.828175,
-                    lng: -98.5795,
-                    zoom: 4
-                },
-                layers: {
-                    baselayers: {
-                        basemap: {
-                            name: 'Satellite Imagery',
-                            url: 'https://{s}.tiles.mapbox.com/v3/' + mapbox.satellite + '/{z}/{x}/{y}.png',
-                            type: 'xyz',
-                            layerOptions: {
-                                attribution: '<a href="https://www.mapbox.com/about/maps/" target="_blank">&copy; Mapbox &copy; OpenStreetMap</a>'
-                            }
-                        }
-                    }
-                }
-            };
-
             //
             // If a valid practice geometry is present, add it to the map
             // and track the object in `self.savedObjects`.
@@ -3880,15 +4456,32 @@ angular.module('FieldDoc')
 
             if (self.practice.geometry !== null &&
                 typeof self.practice.geometry !== 'undefined') {
+                
+                //Added by Lin 
+                leafletData.getMap('practice--map').then(function (map) {
 
-                var practiceGeometry = L.geoJson(self.practice.geometry, {});
+                    self.practiceExtent = new L.FeatureGroup();
 
-                addNonGroupLayers(practiceGeometry, self.editableLayers);
+                    self.setGeoJsonLayer(self.practice.geometry);
+
+                    map.fitBounds(self.editableLayers.getBounds(), {
+                        // padding: [20, 20],
+                        maxZoom: 18
+                    });
+                });
+                self.map.geojson = {
+                    data: self.practice.geometry
+                };
+                //existing
+                // var practiceGeometry = L.geoJson(self.practice.geometry, {});
+
+                // addNonGroupLayers(practiceGeometry, self.editableLayers);
 
                 self.savedObjects = [{
                     id: self.editableLayers._leaflet_id,
                     geoJson: self.practice.geometry
                 }];
+                console.log('self.practice.geometry', self.practice.geometry);
 
                 console.log('self.savedObjects', self.savedObjects);
 
@@ -3896,8 +4489,7 @@ angular.module('FieldDoc')
 
                 console.log('rawGeometry', rawGeometry);
 
-            }
-
+            };
             site.$promise.then(function(successResponse) {
                 self.site = successResponse;
 
@@ -4958,7 +5550,7 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('CustomSummaryController', function(Account, $location,
             $log, PracticeCustom, $rootScope, $route, $scope, summary,
-            Utility, user, $window) {
+            Utility, user, $window, Map, mapbox, leafletData, leafletBoundsHelpers) {
 
             var self = this,
                 projectId = $route.current.params.projectId,
@@ -4973,9 +5565,37 @@ angular.module('FieldDoc')
                 'id': projectId
             };
 
+            self.map = Map;
+
             self.status = {
                 loading: true
+            }
+
+            //draw tools
+            function addNonGroupLayers(sourceLayer, targetGroup) {
+                if (sourceLayer instanceof L.LayerGroup) {
+                    sourceLayer.eachLayer(function (layer) {
+                        addNonGroupLayers(layer, targetGroup);
+                    });
+                } else {
+                    targetGroup.addLayer(sourceLayer);
+                }
+            }
+
+            self.setGeoJsonLayer = function (data, layerGroup, clearLayers) {
+
+                if (clearLayers) {
+
+                    layerGroup.clearLayers();
+
+                }
+
+                var featureGeometry = L.geoJson(data, {});
+
+                addNonGroupLayers(featureGeometry, layerGroup);
+
             };
+            //Temp change loading to "loading"
 
             summary.$promise.then(function(successResponse) {
 
@@ -5023,6 +5643,25 @@ angular.module('FieldDoc')
                         type: 'active'
                     }
                 ];
+
+                if (self.summary.practice.geometry !== null &&
+                    typeof self.summary.practice.geometry !== 'undefined') {
+
+                    leafletData.getMap('practice--map').then(function (map) {
+
+                        self.practiceExtent = new L.FeatureGroup();
+
+                        self.setGeoJsonLayer(self.summary.practice.geometry, self.practiceExtent);
+
+                        map.fitBounds(self.practiceExtent.getBounds(), {
+                            // padding: [20, 20],
+                            maxZoom: 18
+                        });
+                    });
+                    self.map.geojson = {
+                        data: self.summary.practice.geometry
+                    };
+                }
 
                 $rootScope.page.actions = [{
                         type: 'button-link',
@@ -7434,98 +8073,107 @@ angular
 }());
 (function() {
 
-  'use strict';
+    'use strict';
 
-  /**
-   * @ngdoc service
-   * @name
-   * @description
-   */
-  angular.module('FieldDoc')
-    .service('Practice', function (environment, Preprocessors, $resource) {
-      return $resource(environment.apiUrl.concat('/v1/data/practice/:id'), {
-        'id': '@id'
-      }, {
-        'query': {
-          'isArray': false
-        },
-        'update': {
-          method: 'PATCH',
-          transformRequest: function(data) {
-            var feature = Preprocessors.geojson(data);
-            return angular.toJson(feature);
-          }
-        },
-        'custom': {
-          'method': 'GET',
-          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_custom'),
-          'isArray': false
-        },
-        'agricultureGeneric': {
-          'method': 'GET',
-          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_agriculture_generic'),
-          'isArray': false
-        },
-        'bankStabilization': {
-          'method': 'GET',
-          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_bank_stabilization'),
-          'isArray': false
-        },
-        'bioretention': {
-          'method': 'GET',
-          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_bioretention'),
-          'isArray': false
-        },
-        'enhancedStreamRestoration': {
-          'method': 'GET',
-          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_enhanced_stream_restoration'),
-          'isArray': false
-        },
-        'forestBuffer': {
-          'method': 'GET',
-          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_forest_buffer'),
-          'isArray': false
-        },
-        'grassBuffer': {
-          'method': 'GET',
-          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_grass_buffer'),
-          'isArray': false
-        },
-        'instreamHabitat': {
-          'method': 'GET',
-          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_instream_habitat'),
-          'isArray': false
-        },
-        'livestockExclusion': {
-          'method': 'GET',
-          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_livestock_exclusion'),
-          'isArray': false
-        },
-        'urbanHomeowner': {
-          'method': 'GET',
-          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_urban_homeowner'),
-          'isArray': false
-        },
-        'shorelineManagement': {
-          'method': 'GET',
-          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_shoreline_management'),
-          'isArray': false
-        },
-        'stormwater': {
-          'method': 'GET',
-          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_stormwater'),
-          'isArray': false
-        },
-        'wetlandsNontidal': {
-          'method': 'GET',
-          'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_wetlands_nontidal'),
-          'isArray': false
-        }
-      });
-    });
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('Practice', function(environment, Preprocessors, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/data/practice/:id'), {
+                'id': '@id'
+            }, {
+                'query': {
+                    'isArray': false
+                },
+                'update': {
+                    method: 'PATCH',
+                    transformRequest: function(data) {
+                        var feature = Preprocessors.geojson(data);
+                        return angular.toJson(feature);
+                    }
+                },
+                'metrics': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/metrics'),
+                    'isArray': false
+                },
+                'outcomes': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/outcomes'),
+                    'isArray': false
+                },
+                'custom': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_custom'),
+                    'isArray': false
+                },
+                'agricultureGeneric': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_agriculture_generic'),
+                    'isArray': false
+                },
+                'bankStabilization': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_bank_stabilization'),
+                    'isArray': false
+                },
+                'bioretention': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_bioretention'),
+                    'isArray': false
+                },
+                'enhancedStreamRestoration': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_enhanced_stream_restoration'),
+                    'isArray': false
+                },
+                'forestBuffer': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_forest_buffer'),
+                    'isArray': false
+                },
+                'grassBuffer': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_grass_buffer'),
+                    'isArray': false
+                },
+                'instreamHabitat': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_instream_habitat'),
+                    'isArray': false
+                },
+                'livestockExclusion': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_livestock_exclusion'),
+                    'isArray': false
+                },
+                'urbanHomeowner': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_urban_homeowner'),
+                    'isArray': false
+                },
+                'shorelineManagement': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_shoreline_management'),
+                    'isArray': false
+                },
+                'stormwater': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_stormwater'),
+                    'isArray': false
+                },
+                'wetlandsNontidal': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_wetlands_nontidal'),
+                    'isArray': false
+                }
+            });
+        });
 
 }());
-
 (function() {
 
     'use strict';
@@ -8149,6 +8797,11 @@ angular
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/data/project/:id/members')
                 },
+                sites: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/data/project/:id/sites')
+                },
                 minimal: {
                     method: 'GET',
                     isArray: false,
@@ -8262,6 +8915,16 @@ angular
                         var feature = Preprocessors.geojson(data);
                         return angular.toJson(feature);
                     }
+                },
+                'metrics': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/site/:id/metrics'),
+                    'isArray': false
+                },
+                'outcomes': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/site/:id/outcomes'),
+                    'isArray': false
                 },
                 'practices': {
                     method: 'GET',
@@ -8507,23 +9170,24 @@ angular.module('FieldDoc')
                 addItem: function(obj) {
                     // this.index[category] = obj;
 
-                    if (this.index.length < 2) {
+                    this.index.push(obj);
 
-                        this.index.push(obj);
+                    // if (this.index.length < 2) {
 
-                    } else {
+                    //     this.index.push(obj);
 
-                        this.index[1] = obj;
+                    // } else {
 
-                    }
+                    //     this.index[1] = obj;
+
+                    // }
 
                 },
                 clearItem: function(obj) {
 
                     var items = this.index.filter(function(item) {
 
-                        return (item.name !== obj.name &&
-                            item.category !== obj.category);
+                        return (item.name !== obj.name);
 
                     });
 
@@ -9058,7 +9722,7 @@ angular.module('FieldDoc')
 
                             // ProjectStore.filterProjects($item);
 
-                            ProjectStore.filterAll(FilterStore.index);
+                            // ProjectStore.filterAll(FilterStore.index);
 
                         };
 

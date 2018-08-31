@@ -10,9 +10,9 @@
 
             <h1>{{ page.card.heading }}</h1>
 
-            <div class="stat--group">
+            <div class="stat--group" data-ng-if="page.card.featureType !== 'practice'">
 
-                <div class="stat--block">
+                <div class="stat--block" data-ng-if="page.card.featureType === 'program' || page.card.featureType === 'project' || page.card.featureType === 'geography'">
                     <span class="label">Total funding</span>
                     <span class="total--funding">{{ page.card.funding }}</span>
                 </div>
@@ -20,42 +20,73 @@
                     <span class="label">Years active</span>
                     <span class="total--projects">{{ page.card.yearsActive }}</span>
                 </div>
-                <div class="stat--block" data-ng-if="!page.card.project">
+                <div class="stat--block" data-ng-if="page.card.featureType === 'program' || page.card.featureType === 'geography'">
                     <span class="label">Projects</span>
                     <span class="total--projects">{{ page.filteredProjects.length | number }}</span>
                 </div>
-                <div class="stat--block" data-ng-if="!page.card.project">
+                <div class="stat--block" data-ng-if="page.card.featureType === 'program' || page.card.featureType === 'geography'">
                     <span class="label">Grantees</span>
                     <span class="total--projects">{{ page.filteredProjects.length | number }}</span>
+                </div>
+                <div class="stat--block" data-ng-if="page.card.featureType === 'project'">
+                    <span class="label">Sites</span>
+                    <span class="total--projects">{{ page.sites.features.length | number }}</span>
+                </div>
+                <div class="stat--block" data-ng-if="page.card.featureType === 'site'">
+                    <span class="label">Practices</span>
+                    <span class="total--projects">{{ page.practices.features.length | number }}</span>
                 </div>
 
             </div>
 
             <p>{{ page.card.description }}</p>
 
-            <p><a href="{{ page.card.url }}" target="{{ page.card.linkTarget }}">Learn more &rarr;</a></p>
+            <p data-ng-if="page.card.featureType !== 'geography'">
+                <a href="{{ page.card.url }}" target="{{ page.card.linkTarget }}">Learn more &rarr;</a>
+            </p>
 
+        </div>
+
+        <!-- Back navigation -->
+
+        <div class="navigation--control" data-ng-if="page.historyItem.label">
+            <button class="navigate--up" type="button" data-ng-click="page.navigateBack()">
+                <i class="material-icons">
+                keyboard_arrow_left
+                </i>
+            </button>
+            <div class="navigate--label">
+                {{ page.historyItem.label }}
+            </div>
         </div>
 
         <!-- Filter Tools -->
 
-        <div class="filter--ui">
+        <div class="filter--ui" data-ng-if="page.showFilters">
+
+            <button class="close" type="button" data-ng-click="page.closeFilterModal()" title="Cancel">
+                <i class="material-icons">
+                clear
+                </i>
+            </button>
 
             <div class="filter--header">
 
                 <span class="filter--label">Filters</span>
 
-                <button class="trigger--search" type="button" data-ng-click="page.showFilters = !page.showFilters">
-                    <i class="material-icons">
-                    filter_list
-                    </i>
-                </button>
+                <p>Search for projects by name, status, geographic area, or conservation practice.<p>
 
             </div>
 
-            <div class="filter--controls" data-ng-if="page.showFilters">
+            <div class="filter--controls">
 
-                <div class="filter--group" data-ng-if="page.activeFilters">
+                <div class="search--group">
+                    <div global-search class="global--search" filter-projects="page.filterProjects">
+                        <input type="search" class="search" value="" placeholder="Type the name of a project, status, geography, or practice" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue)" typeahead-on-select="setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                    </div>
+                </div>
+
+                <div class="filter--group" data-ng-if="page.activeFilters && page.activeFilters.length">
                     <div class="filter--pill" data-ng-repeat="filter in page.activeFilters" data-ng-click="page.clearFilter(filter)">
                         <div>
                             <span class="category {{ filter.category }}">{{ filter.category }}</span>
@@ -69,45 +100,54 @@
                     </div>
                 </div>
 
-                <div class="search--group">
-                    <div global-search class="global--search" filter-projects="page.filterProjects">
-                        <input type="search" class="search" value="" placeholder="Search" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue)" typeahead-on-select="setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
-                    </div>
-                </div>
+            </div>
 
+            <div class="filter--actions" data-ng-if="page.activeFilters && page.activeFilters.length">
+                <button class="clear" type="button" data-ng-click="page.clearAllFilters()" title="Clear all filters">
+                    Clear all
+                </button>
+                <button class="search" type="button" data-ng-click="page.filterProjects()" title="Search projects">
+                    Search
+                </button>
             </div>
 
         </div>
 
         <div class="tab--controls">
 
-            <!-- <button class="trigger--search" type="button" data-ng-click="page.tabs.metrics = !page.tabs.metrics" title="Metrics">
-                <i class="material-icons">
-                filter_list
-                </i>
-            </button>
-
-            <button class="trigger--search" type="button" data-ng-click="page.tabs.list = !page.tabs.list" title="Project list">
-                <i class="material-icons">
-                filter_list
-                </i>
-            </button> -->
-
-            <button class="trigger--search" data-ng-class="{'active': page.activeTab === 'metric'}" type="button" data-ng-click="page.setTab('metric')" title="Metrics">
+            <button class="trigger--search tab" data-ng-class="{'active': page.activeTab.collection === 'metric'}" type="button" data-ng-click="page.setTab('metric')" title="Metrics">
                 Metrics
             </button>
 
-            <button class="trigger--search" data-ng-class="{'active': page.activeTab === 'list'}" type="button" data-ng-click="page.setTab('list')" title="Projects">
-                Projects
+            <button class="trigger--search tab" data-ng-class="{'active': page.activeTab.collection === 'list'}" type="button" data-ng-click="page.setTab('list')" title="{{ page.card.featureTabLabel }}">
+                {{ page.card.featureTabLabel }}
             </button>
+
+            <div class="filter--toggle">
+
+                <button class="trigger--search" type="button" data-ng-click="page.showFilters = !page.showFilters" title="Filters">
+                    <i class="material-icons">
+                    filter_list
+                    </i>
+                </button>
+
+            </div>
+
+            <div class="filter--count" data-ng-if="page.activeFilters.length">
+
+                <button class="trigger--search" type="button" data-ng-click="page.showFilters = !page.showFilters" title="{{ page.activeFilters.length }} active filters">
+                    {{ page.activeFilters.length | number }}
+                </button>
+
+            </div>
 
         </div>
 
         <!-- Project list -->
 
-        <ul class="project--list" data-ng-if="page.filteredProjects && page.filteredProjects.length && page.activeTab === 'list'">
+        <ul class="project--list" data-ng-if="page.filteredProjects && page.filteredProjects.length && page.activeTab.collection === 'list' && (page.card.featureType === 'program' || page.card.featureType === 'geography')">
 
-            <li class="project--card" data-ng-repeat="project in page.filteredProjects" data-ng-mouseover="page.setMarkerFocus(project)">
+            <li class="project--card" data-ng-repeat="project in page.filteredProjects" data-ng-mouseover="page.setMarkerFocus(project, 'project')">
 
                 <span class="title">{{ project.name }}</span>
 
@@ -121,13 +161,48 @@
 
         </ul>
 
+        <!-- Site list -->
+
+        <ul class="project--list" data-ng-if="page.sites && page.sites.features.length && page.activeTab.collection === 'list' && page.card.featureType === 'project'">
+
+            <li class="project--card" data-ng-repeat="feature in page.sites.features" data-ng-mouseover="page.setMarkerFocus(feature, 'site')">
+
+                <span class="title">{{ feature.properties.name }}</span>
+
+                <p>{{ feature.properties.description }}</p>
+
+                <p>
+                    <a href="sites/{{ feature.properties.id }}">Site detail &rarr;</a>
+                </p>
+
+            </li>
+
+        </ul>
+
+        <!-- Practice list -->
+
+        <ul class="project--list" data-ng-if="page.practices && page.practices.features.length && page.activeTab.collection === 'list' && page.card.featureType === 'site'">
+
+            <li class="project--card" data-ng-repeat="feature in page.practices.features" data-ng-mouseover="page.setMarkerFocus(feature, 'practice')">
+
+                <span class="title">{{ feature.properties.name }}</span>
+
+                <p>{{ feature.properties.description }}</p>
+
+                <p>
+                    <a href="practices/{{ feature.properties.id }}">Practice detail &rarr;</a>
+                </p>
+
+            </li>
+
+        </ul>
+
         <!-- Progress metrics -->
 
-        <div data-ng-if="page.filteredProjects && page.filteredProjects.length && page.activeTab === 'metric'">
+        <div data-ng-if="page.filteredProjects && page.filteredProjects.length && page.activeTab.collection === 'metric'">
             <section id="sites">
                 <div class="list">
 
-                    <!-- <h6 class="rule-above statistics--header"><strong>Program</strong> Metrics</h6> -->
                     <article class="row statistics project--summary">
                         <div class="column-4 statistics--statistic">
                             <p class="statistic--value">
