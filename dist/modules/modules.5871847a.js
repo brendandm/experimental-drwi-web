@@ -977,7 +977,7 @@ angular.module('FieldDoc')
                             heading: feature.properties.name,
                             yearsActive: '2018',
                             funding: '$100k',
-                            url: 'sites/' + feature.properties.id,
+                            url: 'projects/' + self.activeProject.properties.id + '/sites/' + feature.properties.id,
                             description: feature.properties.description,
                             linkTarget: '_self'
                         };
@@ -1040,7 +1040,7 @@ angular.module('FieldDoc')
                             heading: feature.properties.name,
                             yearsActive: null,
                             funding: null,
-                            url: 'practices/' + feature.properties.id,
+                            url: 'projects/' + self.activeProject.properties.id + '/sites/' + self.activeSite.properties.id + '/practices/' + feature.properties.id,
                             description: feature.properties.description,
                             linkTarget: '_self'
                         };
@@ -1579,7 +1579,7 @@ angular.module('FieldDoc')
 
                     self.resetMapExtent();
 
-                    self.clearAllFilters();
+                    self.clearAllFilters(true);
 
                     break;
 
@@ -1618,7 +1618,7 @@ angular.module('FieldDoc')
                         heading: self.activeSite.properties.name,
                         yearsActive: '2018',
                         funding: '$10k',
-                        url: 'sites/' + self.activeSite.properties.id,
+                        url: 'projects/' + self.activeProject.properties.id + '/sites/' + self.activeSite.properties.id,
                         description: self.activeSite.properties.description,
                         linkTarget: '_self'
                     };
@@ -1727,7 +1727,7 @@ angular.module('FieldDoc')
 
             if (FilterStore.index.length < 1) {
 
-                self.clearAllFilters();
+                self.clearAllFilters(true);
 
             }
 
@@ -1741,21 +1741,13 @@ angular.module('FieldDoc')
 
         };
 
-        self.clearAllFilters = function(obj) {
+        self.clearAllFilters = function(reload) {
 
             //
             // Remove all stored filter objects
             //
 
             FilterStore.clearAll();
-
-            //
-            // Refresh project list
-            //
-
-            self.loadProjects({
-                id: 3
-            }, false);
 
             //
             // Dismiss filter modal
@@ -1792,6 +1784,18 @@ angular.module('FieldDoc')
             //
 
             self.activeSite = null;
+
+            //
+            // Refresh project list
+            //
+
+            if (reload) {
+
+                self.loadProjects({
+                    id: 3
+                }, false);
+
+            }
 
         };
 
@@ -1867,6 +1871,12 @@ angular.module('FieldDoc')
             var params = {
                 id: 3
             };
+
+            if (self.limitScope) {
+
+                params.user = $rootScope.user.id
+
+            }
 
             FilterStore.index.forEach(function(obj) {
 
@@ -1970,21 +1980,66 @@ angular.module('FieldDoc')
 
         });
 
+        self.changeScope = function() {
+
+            //
+            // Reset map extent
+            //
+
+            self.resetMapExtent()
+
+            //
+            // Reset dashboard state
+            //
+
+            self.clearAllFilters(false);
+
+            //
+            // Refresh project data
+            //
+
+            if (self.limitScope) {
+
+                self.loadProjects({
+                    id: 3,
+                    user: $rootScope.user.id
+                }, true);
+
+            } else {
+
+                self.loadProjects({
+                    id: 3
+                }, false);
+
+            }
+
+        };
+
         //
         // Verify Account information for proper UI element display
         //
         if (Account.userObject && user) {
 
             user.$promise.then(function(userResponse) {
-                $rootScope.user = Account.userObject = userResponse;
-                self.permissions = {
-                    isLoggedIn: Account.hasToken()
-                };
-            });
 
-            self.loadProjects({
-                id: 3
-            }, false);
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    isAdmin: Account.hasRole('admin')
+                };
+
+                if (!self.permissions.isAdmin) {
+
+                    self.limitScope = true;
+
+                }
+
+                self.loadProjects({
+                    id: 3
+                }, false);
+
+            });
 
         } else {
 
