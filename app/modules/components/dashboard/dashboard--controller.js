@@ -13,9 +13,16 @@ angular.module('FieldDoc')
 
         $scope.filterStore = FilterStore;
 
-        $scope.projectStore = ProjectStore;
+        // $scope.projectStore = ProjectStore;
 
         var self = this;
+
+        //
+        // Setup basic page variables
+        //
+        $rootScope.page = {
+            title: 'Dashboard'
+        };
 
         self.activeTab = {
             collection: 'metric'
@@ -241,6 +248,18 @@ angular.module('FieldDoc')
 
                         self.setGeoFilter(layer.feature.properties);
 
+                        self.card = {
+                            featureType: 'geography',
+                            featureTabLabel: 'Projects',
+                            feature: feature.properties,
+                            heading: feature.properties.name,
+                            yearsActive: '2013-2018',
+                            funding: '$50k',
+                            url: 'geographies/' + feature.properties.id,
+                            description: feature.properties.description,
+                            linkTarget: '_self'
+                        };
+
                     } else if (layer.feature.properties.feature_type === 'practice') {
 
                         self.loadMetrics(null, {
@@ -325,6 +344,44 @@ angular.module('FieldDoc')
             //
 
             self.resetMapExtent();
+
+            //
+            // Set up layer visibility logic
+            //
+
+            leafletData.getMap('dashboard--map').then(function(map) {
+
+                map.on('zoomend', function(event) {
+
+                    var zoomLevel = map.getZoom();
+
+                    leafletData.getLayers('dashboard--map').then(function(layers) {
+
+                        console.log('leafletData.getLayers', layers);
+
+                        if (zoomLevel > 15) {
+
+                            map.removeLayer(layers.baselayers.streets);
+
+                            map.removeLayer(layers.baselayers.terrain);
+
+                            map.addLayer(layers.baselayers.satellite);
+
+                        } else {
+
+                            map.removeLayer(layers.baselayers.satellite);
+
+                            map.removeLayer(layers.baselayers.terrain);
+
+                            map.addLayer(layers.baselayers.streets);
+
+                        }
+
+                    });
+
+                });
+
+            });
 
         }, function(errorResponse) {
 
@@ -500,71 +557,6 @@ angular.module('FieldDoc')
 
         };
 
-        //
-        // Setup basic page variables
-        //
-        $rootScope.page = {
-            title: 'Dashboard'
-        };
-
-        //
-        // Project functionality
-        //
-
-        self.projects = projects;
-
-        console.log('self.projects', self.projects);
-
-        projects.$promise.then(function(successResponse) {
-
-            console.log('successResponse', successResponse);
-
-            $scope.projectStore.setProjects(successResponse.features);
-
-            self.filteredProjects = $scope.projectStore.filteredProjects;
-
-            self.processLocations(successResponse.features);
-
-            leafletData.getMap('dashboard--map').then(function(map) {
-
-                map.on('zoomend', function(event) {
-
-                    var zoomLevel = map.getZoom();
-
-                    leafletData.getLayers('dashboard--map').then(function(layers) {
-
-                        console.log('leafletData.getLayers', layers);
-
-                        if (zoomLevel > 15) {
-
-                            map.removeLayer(layers.baselayers.streets);
-
-                            map.removeLayer(layers.baselayers.terrain);
-
-                            map.addLayer(layers.baselayers.satellite);
-
-                        } else {
-
-                            map.removeLayer(layers.baselayers.satellite);
-
-                            map.removeLayer(layers.baselayers.terrain);
-
-                            map.addLayer(layers.baselayers.streets);
-
-                        }
-
-                    });
-
-                });
-
-            });
-
-        }, function(errorResponse) {
-
-            console.log('errorResponse', errorResponse);
-
-        });
-
         self.search = {
             query: '',
             execute: function(page) {
@@ -620,26 +612,6 @@ angular.module('FieldDoc')
 
                     self.projects = successResponse;
 
-                    // self.projects.features.forEach(function(feature) {
-
-                    // var centroid = feature.properties.centroid;
-
-                    // console.log('centroid', centroid);
-
-                    // if (centroid) {
-
-                    // self.map.markers['project_' + feature.id] = {
-                    // lat: centroid.coordinates[1],
-                    // lng: centroid.coordinates[0],
-                    // layer: 'projects'
-                    // };
-
-                    // }
-
-                    // });
-
-                    // console.log('self.map.markers', self.map.markers);
-
                 }, function(errorResponse) {
 
                     console.log('errorResponse', errorResponse);
@@ -683,28 +655,6 @@ angular.module('FieldDoc')
                     }
                 });
             }
-        }
-
-        //
-        // Verify Account information for proper UI element display
-        //
-        if (Account.userObject && user) {
-
-            user.$promise.then(function(userResponse) {
-                $rootScope.user = Account.userObject = userResponse;
-                self.permissions = {
-                    isLoggedIn: Account.hasToken()
-                };
-            });
-
-            self.loadOutcomes();
-
-            self.loadMetrics();
-
-        } else {
-
-            $location.path('/user/logout');
-
         }
 
         self.removeMarkerPopups = function() {
@@ -853,7 +803,7 @@ angular.module('FieldDoc')
 
             FilterStore.addItem(_filterObject);
 
-            ProjectStore.filterAll(FilterStore.index);
+            // ProjectStore.filterAll(FilterStore.index);
 
             self.loadMetrics([
                 obj
@@ -867,7 +817,7 @@ angular.module('FieldDoc')
             // Display filter controls
             //
 
-            self.showFilters = true;
+            // self.showFilters = true;
 
         };
 
@@ -883,13 +833,15 @@ angular.module('FieldDoc')
 
             FilterStore.addItem(_filterObject);
 
-            ProjectStore.filterAll(FilterStore.index);
+            // ProjectStore.filterAll(FilterStore.index);
 
             //
             // Display filter controls
             //
 
-            self.showFilters = true;
+            // self.showFilters = true;
+
+            self.filterProjects();
 
         };
 
@@ -901,17 +853,21 @@ angular.module('FieldDoc')
 
         };
 
-        self.clearFilter = function(obj) {
+        self.closeFilterModal = function() {
 
-            if (FilterStore.index.length === 1) {
+            if (FilterStore.index.length < 1) {
 
                 self.clearAllFilters();
 
-            } else {
-
-                FilterStore.clearItem(obj);
-
             }
+
+            self.showFilters = false;
+
+        };
+
+        self.clearFilter = function(obj) {
+
+            FilterStore.clearItem(obj);
 
         };
 
@@ -929,7 +885,7 @@ angular.module('FieldDoc')
 
             self.loadProjects({
                 id: 3
-            });
+            }, false);
 
             //
             // Dismiss filter modal
@@ -937,19 +893,68 @@ angular.module('FieldDoc')
 
             self.showFilters = false;
 
+            //
+            // Reset map extent
+            //
+
+            self.resetMapExtent();
+
+            //
+            // Reset metadata card values
+            //
+
+            self.card = self.cardTpl;
+
         };
 
-        self.loadProjects = function(params) {
+        self.zoomToProjects = function() {
+
+            var featureCollection = {
+                type: 'FeatureCollection',
+                features: []
+            };
+
+            self.filteredProjects.forEach(function(feature) {
+
+                featureCollection.features.push({
+                    type: 'Feature',
+                    properties: {},
+                    geometry: feature.extent
+                });
+
+            });
+
+            self.setMapBoundsToFeature(featureCollection);
+
+        };
+
+        self.loadProjects = function(params, trackIds) {
 
             Project.minimal(params).$promise.then(function(successResponse) {
 
                 console.log('self.filterProjects.successResponse', successResponse);
 
-                $scope.projectStore.setProjects(successResponse.features);
+                // $scope.projectStore.setProjects(successResponse.features);
 
-                self.filteredProjects = $scope.projectStore.filteredProjects;
+                self.filteredProjects = successResponse.features;
 
                 self.processLocations(successResponse.features);
+
+                if (!trackIds) {
+
+                    self.loadOutcomes();
+
+                    self.loadMetrics();
+
+                } else {
+
+                    self.loadOutcomes(self.filteredProjects);
+
+                    self.loadMetrics(self.filteredProjects);
+
+                    self.zoomToProjects();
+
+                }
 
             }, function(errorResponse) {
 
@@ -975,7 +980,7 @@ angular.module('FieldDoc')
                 id: 3
             };
 
-            self.activeFilters.forEach(function(obj) {
+            FilterStore.index.forEach(function(obj) {
 
                 if (params.hasOwnProperty(obj.category)) {
 
@@ -1019,7 +1024,7 @@ angular.module('FieldDoc')
             // Execute API request
             //
 
-            self.loadProjects(params);
+            self.loadProjects(params, true);
 
         };
 
@@ -1029,23 +1034,7 @@ angular.module('FieldDoc')
 
             self.activeFilters = newVal;
 
-            ProjectStore.filterAll(newVal);
-
         });
-
-        // $scope.$watch('projectStore.filteredProjects', function(newVal) {
-
-        //     console.log('Updated projectStore', newVal);
-
-        //     self.filteredProjects = newVal;
-
-        //     self.processLocations(newVal);
-
-        //     self.loadMetrics(newVal);
-
-        //     self.loadOutcomes(newVal);
-
-        // });
 
         $scope.$on('leafletDirectiveMarker.dashboard--map.click', function(event, args) {
 
@@ -1091,32 +1080,28 @@ angular.module('FieldDoc')
 
             self.setMarkerFocus(project, 'project');
 
-            // self.card = {
-            //     project: project,
-            //     heading: project.name,
-            //     yearsActive: '2018',
-            //     funding: '$100k',
-            //     url: 'projects/' + project.id,
-            //     description: project.description,
-            //     linkTarget: '_self'
-            // };
-
         });
 
-        // $scope.$on('leafletDirectiveGeoJson.mouseover', function(event, args) {
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
 
-        //     console.log('leafletDirectiveGeoJson.mouseover', event, args);
+            user.$promise.then(function(userResponse) {
+                $rootScope.user = Account.userObject = userResponse;
+                self.permissions = {
+                    isLoggedIn: Account.hasToken()
+                };
+            });
 
-        //     // self.card = self.cardTpl;
+            self.loadProjects({
+                id: 3
+            }, false);
 
-        // });
+        } else {
 
-        // $scope.$on('leafletDirectiveMarker.dashboard--map.mouseout', function(event, args) {
+            $location.path('/user/logout');
 
-        //     console.log('leafletDirectiveMarker.dashboard--map.click', event, args);
-
-        //     self.card = self.cardTpl;
-
-        // });
+        }
 
     });

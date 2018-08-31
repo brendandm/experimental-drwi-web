@@ -60,7 +60,7 @@
 
                             // ProjectStore.filterProjects($item);
 
-                            ProjectStore.filterAll(FilterStore.index);
+                            // ProjectStore.filterAll(FilterStore.index);
 
                         };
 

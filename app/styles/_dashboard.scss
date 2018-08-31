@@ -429,6 +429,9 @@
                     margin-right: 1em;
                     opacity: 0.6;
                     transition: all 250ms ease 0s;
+                }
+
+                .tab {
 
                     &:hover {
                         opacity: 1;
@@ -446,7 +449,6 @@
                         }
 
                     }
-
                 }
 
                 .active {
@@ -477,8 +479,32 @@
 
                     button {
                         margin-right: 0;
+
+                        &:hover {
+                            opacity: 1;
+                        }
                     }
 
+                }
+
+                .filter--count {
+                    text-align: right;
+                    display: flex;
+                    justify-content: center;
+                    align-items: flex-end;
+                    flex-flow: column;
+                    margin-top: -0.5em;
+
+                    button {
+                        border-radius: 8px;
+                        background: rgba(0,0,0,0.1);
+                        padding: 0.5em;
+                        text-align: center;
+                        font-size: .8em;
+                        margin-right: 0;
+                        margin-left: 0.5em;
+                        opacity: 1;
+                    }
                 }
 
             }
