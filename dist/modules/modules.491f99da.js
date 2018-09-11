@@ -1455,7 +1455,7 @@ angular.module('FieldDoc')
 
         };
 
-        self.setMarkerFocus = function(feature, collection) {
+        self.setMarkerFocus = function(feature, collection, setFilter) {
 
             if (collection === 'project') {
 
@@ -1467,6 +1467,12 @@ angular.module('FieldDoc')
                 if (marker) {
 
                     self.map.markers[markerId].focus = true;
+
+                    if (setFilter) {
+
+                        self.setProjectFilter(feature);
+
+                    }
 
                 }
 
@@ -1946,7 +1952,7 @@ angular.module('FieldDoc')
 
             })[0];
 
-            self.setMarkerFocus(project, 'project');
+            self.setMarkerFocus(project, 'project', true);
 
             self.card = {
                 featureType: 'project',
@@ -1959,8 +1965,6 @@ angular.module('FieldDoc')
                 description: project.description,
                 linkTarget: '_self'
             };
-
-            self.setProjectFilter(project);
 
         });
 
