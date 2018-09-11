@@ -955,6 +955,22 @@ angular.module('FieldDoc')
 
             self.activeProject = feature;
 
+            //
+            // Update `self.card` values
+            //
+
+            self.card = {
+                featureType: 'project',
+                featureTabLabel: 'Sites',
+                feature: feature,
+                heading: obj.name,
+                yearsActive: '2018',
+                funding: '$100k',
+                url: 'projects/' + obj.id,
+                description: obj.description,
+                linkTarget: '_self'
+            };
+
         };
 
         self.setGeoFilter = function(obj) {
@@ -1205,18 +1221,6 @@ angular.module('FieldDoc')
             })[0];
 
             self.setMarkerFocus(project, 'project', true);
-
-            self.card = {
-                featureType: 'project',
-                featureTabLabel: 'Sites',
-                feature: project,
-                heading: project.name,
-                yearsActive: '2018',
-                funding: '$100k',
-                url: 'projects/' + project.id,
-                description: project.description,
-                linkTarget: '_self'
-            };
 
         });
 
