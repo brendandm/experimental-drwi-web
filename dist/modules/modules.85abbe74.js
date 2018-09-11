@@ -797,7 +797,7 @@ angular.module('FieldDoc')
 
         self.project = {};
 
-        self.map = Map;
+        self.map = Object.assign({}, Map);
 
         self.map.layers = {
             baselayers: {

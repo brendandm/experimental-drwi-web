@@ -162,7 +162,8 @@
                 <p>{{ project.description }}</p>
 
                 <p>
-                    <a href="projects/{{ project.id }}">Project detail &rarr;</a>
+                    <button type="button" data-ng-click="page.setMarkerFocus(project, 'project')">View location</button>
+                    <a href="projects/{{ project.id }}">View profile</a>
                 </p>
 
             </li>
@@ -180,7 +181,8 @@
                 <p>{{ feature.properties.description }}</p>
 
                 <p>
-                    <a href="sites/{{ feature.properties.id }}">Site detail &rarr;</a>
+                    <button type="button" data-ng-click="page.setMarkerFocus(feature, 'site')">View location</button>
+                    <a href="projects/{{ page.activeProject.properties.id }}/sites/{{ feature.properties.id }}">View profile</a>
                 </p>
 
             </li>
@@ -198,7 +200,8 @@
                 <p>{{ feature.properties.description }}</p>
 
                 <p>
-                    <a href="practices/{{ feature.properties.id }}">Practice detail &rarr;</a>
+                    <button type="button" data-ng-click="page.setMarkerFocus(feature, 'practice')">View location</button>
+                    <a href="projects/{{ page.activeProject.properties.id }}/sites/{{ page.activeSite.properties.id }}/practices/{{ feature.properties.id }}">View profile</a>
                 </p>
 
             </li>
