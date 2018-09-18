@@ -19,6 +19,9 @@
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/snapshot/:id/projects')
+                },
+                'update': {
+                    method: 'PATCH'
                 }
             });
         });
