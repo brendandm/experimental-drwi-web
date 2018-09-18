@@ -52,9 +52,7 @@ angular.module('FieldDoc')
                         // Execute our query so that we can get the Reports back
                         //
 
-                        return Project.minimal({
-                            id: 3
-                        });
+                        return Project.collection();
 
                     },
                     user: function(Account) {

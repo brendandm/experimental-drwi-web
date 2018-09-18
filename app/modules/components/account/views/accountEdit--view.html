@@ -1,82 +1,127 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
 <main class="container feature">
-  <article class="feature-detail">
-    <div class="column-11 feature-detail-content">
+    <article class="feature-detail">
+        <div class="column-11 feature-detail-content">
 
-      <h1 class="large">Edit Account Details</h1>
+            <h1 class="large">Edit Account Details</h1>
 
+            <form role="form" class="form" method="POST" id="form" name="form" data-ng-submit="page.actions.save()">
+                <div class="form-element">
+                    <label for="email" class="control-label">
+                        Your Email Address
+                    </label>
+                    <input type="text" class="form-control" id="email" name="email" disabled="disabled" data-ng-model="page.user.properties.email" required="required" />
+                    <p class="help--text">
+                        <small style="color: #e5e5e5"><em>Email address is not editable</em></small>
+                    </p>
+                </div>
+                <div class="form-element">
+                    <label for="email" class="control-label">
+                        Your Name
+                    </label>
+                    <input type="text" class="form-control form-control-half" id="first_name" name="first_name" placeholder="First Name" data-ng-model="page.user.properties.first_name" required="required" tabindex="2" />
+                    <input type="text" class="form-control form-control-half" id="last_name" name="last_name" placeholder="Last Name" data-ng-model="page.user.properties.last_name" required="required" tabindex="3" />
+                </div>
+                <div class="form-element">
+                    <label for="email" class="control-label">
+                        Organization search
+                    </label>
+                    <organization model="page.user.properties.organizations" table="'organization'" field="'name'" display="['name']" placeholder="'Begin typing an organization name'" tabindexnumber="4">
+                    </organization>
+                </div>
 
-    <form role="form" class="form" method="POST" id="form"
-          name="form" data-ng-submit="page.actions.save()">
-      <div class="form-element">
-        <label for="email" class="control-label">
-          Your Email Address
-        </label>
-        <input type="text" class="form-control"
-               id="email" name="email" disabled="disabled"
-               data-ng-model="page.user.properties.email" required="required" />
-        <p class="help--text">
-            <small style="color: #e5e5e5"><em>Email address is not editable</em></small>
-        </p>
-      </div>
-      <div class="form-element">
-        <label for="email" class="control-label">
-          Your Name
-        </label>
-        <input type="text" class="form-control form-control-half"
-               id="first_name" name="first_name" placeholder="First Name"
-               data-ng-model="page.user.properties.first_name" required="required"
-               tabindex="2" />
-        <input type="text" class="form-control form-control-half"
-               id="last_name" name="last_name"  placeholder="Last Name"
-               data-ng-model="page.user.properties.last_name" required="required"
-               tabindex="3" />
-      </div>
-      <div class="form-element">
-        <label for="email" class="control-label">
-          Organization search
-        </label>
-        <organization model="page.user.properties.organizations"
-                      table="'organization'"
-                      field="'name'"
-                      display="['name']"
-                      placeholder="'Begin typing an organization name'"
-                      tabindexnumber="4">
-        </organization>
-      </div>
-      <button type="submit" class="button button-submit"
-              id="submit" name="submit" tabindex="3"
-              data-ng-if="!page.status.saving">
-        Save Changes
-      </button>
+                <!-- Snapshot list -->
 
-      <div class="throbber throbber-small" data-ng-if="page.status.saving">
-      </div>
-      <p style="text-align: center;" data-ng-if="page.status.saving">
-          Saving changes to your account...
-      </p>
-    </form>
+                <div class="list">
 
-    </div>
+                    <h2>Snapshots</h2>
 
-    <nav class="column-5 contextual-navigation-wrapper">
-      <h6><strong>Tools</strong></h6>
-      <ul class="contextual-navigation">
-        <!-- Proect Manangement Navigation -->
-        <li class="active">
-            <a href="/account/{{ $root.user.id }}/edit">
-                Edit
-            </a>
-        </li>
-        <li>
-            <a href="/logout">
-                Logout
-            </a>
-        </li>
-      </ul>
-    </nav>
-  </article>
+                    <article class="row list-item" data-ng-if="page.snapshots && !page.snapshots.length">
+                        <div class="column-16 list-item-content align-center empty-data">
+                            <div class="icon retinaicon-file-096"></div>
+                            <p>
+                                Snapshots will show up here,
+                                so you can easily view them later.
+                            </p>
+                            <p>
+                                <a href="javascript:void(0)" data-ng-click="page.createSnapshot()">
+                                    Create your first snapshot now
+                                </a>
+                            </p>
+                        </div>
+                    </article>
+
+                    <div class="row list-item">
+                        <div class="responsive-table">
+                            <table class="table" data-ng-if="page.snapshots && page.snapshots.length">
+                                <thead>
+                                    <tr>
+                                        <td class="align-left column--vertialCenter">
+                                            <strong>Name</strong>
+                                        </td>
+                                        <td class="align-left">
+                                            <strong>Description</strong>
+                                        </td>
+                                        <td class="align-left">
+                                            <strong>Last Updated</strong>
+                                        </td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-ng-repeat="snapshot in page.snapshots track by $index">
+                                        <td class="column--titleDescription align-left">
+                                            <a class="snapshot--title" href="/snapshot/{{ snapshot.id }}" title="{{ snapshot.name }} snapshot details">
+                                                {{ snapshot.name }}
+                                            </a>
+                                        </td>
+                                        <td class="align-left column--funder column--vertialCenter">
+                                            <span class="snapshot--funder" data-ng-if="snapshot.id && snapshot.description">
+                                                {{ snapshot.description }}
+                                            </span>
+                                        </td>
+                                        <td class="align-left column--lastUpdated column--vertialCenter">
+                                            <span data-ng-if="snapshot.id && snapshot.modified_on">
+                                                {{ snapshot.modified_on | date }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="button button-submit" id="submit" name="submit" tabindex="3" data-ng-if="!page.status.saving">
+                    Save Changes
+                </button>
+
+                <div class="throbber throbber-small" data-ng-if="page.status.saving">
+                </div>
+                <p style="text-align: center;" data-ng-if="page.status.saving">
+                    Saving changes to your account...
+                </p>
+            </form>
+
+        </div>
+
+        <nav class="column-5 contextual-navigation-wrapper">
+            <h6><strong>Tools</strong></h6>
+            <ul class="contextual-navigation">
+                <!-- Proect Manangement Navigation -->
+                <li class="active">
+                    <a href="/account/{{ $root.user.id }}/edit">
+                        Edit
+                    </a>
+                </li>
+                <li>
+                    <a href="/logout">
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </article>
 </main>
 
 <div data-ng-include="'/templates/footer--view.html'"></div>

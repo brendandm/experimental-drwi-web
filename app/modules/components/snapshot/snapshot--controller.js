@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('DashboardCtrl', function(Account, $location, $log, Project, Map,
+    .controller('SnapshotCtrl', function(Account, $location, $log, Project, Map,
         projects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
         MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox,
         Practice) {
@@ -1065,9 +1065,7 @@ angular.module('FieldDoc')
 
             if (reload) {
 
-                self.loadProjects({
-                    id: 3
-                }, false);
+                self.loadProjects({}, false);
 
             }
 
@@ -1142,9 +1140,7 @@ angular.module('FieldDoc')
             // Extract feature identifiers from active filters
             //
 
-            var params = {
-                id: 3
-            };
+            var params = {};
 
             if (self.limitScope) {
 
@@ -1261,15 +1257,12 @@ angular.module('FieldDoc')
             if (self.limitScope) {
 
                 self.loadProjects({
-                    id: 3,
                     user: $rootScope.user.id
                 }, true);
 
             } else {
 
-                self.loadProjects({
-                    id: 3
-                }, false);
+                self.loadProjects({}, false);
 
             }
 
@@ -1295,9 +1288,7 @@ angular.module('FieldDoc')
 
                 }
 
-                self.loadProjects({
-                    id: 3
-                }, false);
+                self.loadProjects({}, false);
 
             });
 

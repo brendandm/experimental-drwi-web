@@ -44,9 +44,7 @@ angular.module('FieldDoc')
                         //
                         // return Project.query(search_params);
 
-                        return Project.minimal({
-                            id: 3
-                        });
+                        return Project.collection({});
                     },
                     user: function(Account) {
                         if (Account.userObject && !Account.userObject.id) {

@@ -112,13 +112,13 @@
                                     <span class="project--description" data-ng-bind-html="project.description"></span>
                                 </td>
                                 <td class="align-left column--funder column--vertialCenter">
-                                    <span class="project--funder" data-ng-if="project.id && project.account.name">
-                                        {{ project.account.name }}
+                                    <span class="project--funder" data-ng-if="project.id && project.organization.name">
+                                        {{ project.organization.name }}
                                     </span>
                                 </td>
                                 <td class="align-left column--contact column--vertialCenter">
-                                    <a href="mailto:{{ project.creator.email }}" data-ng-if="project.id && project.creator.name">
-                                        {{ project.creator.name }}
+                                    <a href="mailto:{{ project.creator.email }}" data-ng-if="project.id && project.creator.first_name">
+                                        {{ project.creator.first_name }} {{ project.creator.last_name }}
                                     </a>
                                 </td>
                                 <td class="align-left column--lastUpdated column--vertialCenter">

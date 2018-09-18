@@ -172,6 +172,12 @@ angular.module('FieldDoc')
                     self.createProject();
                 },
                 text: 'Create project'
+            }, {
+                type: 'button-link new',
+                action: function() {
+                    self.createSnapshot();
+                },
+                text: 'Create snapshot'
             }]
         };
 

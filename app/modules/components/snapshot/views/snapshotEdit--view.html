@@ -1,0 +1,116 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="container feature">
+  <article class="feature-detail">
+    <div class="column-11 feature-detail-content">
+
+      <h1 class="large">Edit Project</h1>
+
+      <form role="form" class="row form" id="form--ProjectEdit" name="form--ProjectEdit" data-ng-if="page.project.id">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="project_title" class="control-label">1. What is the name of your project?</label>
+            <textarea rows="1" data-ng-model="page.project.properties.name" class="form-control animate"  msd-elastic id="name" name="name" placeholder="Project Name">{{ page.project.properties.name }}</textarea>
+          </div>
+        </div>
+
+        <!-- Program Type -->
+        <div class="form-row" data-ng-if="page.project.properties.program_type !== 'Pre-Project Plan'">
+          <div class="form-field">
+            <label for="program_type" class="control-label">2. Which funder is providing the grant?</label>
+            <select data-ng-model="page.project.properties.account_id" class="form-control" id="program_type" name="program_type">
+              <option value="2">Maryland – Trust Fund</option>
+              <option value="1">National Fish and Wildlife Foundation - Chesapeake Bay</option>
+              <option value="3">National Fish and Wildlife Foundation - Delaware</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Program Type -->
+        <div class="form-row">
+          <div class="form-field">
+            <label for="program_type" class="control-label" data-ng-if="page.project.properties.program_type !== 'Pre-Project Plan'">3. What type of grant are you requesting?</label>
+            <label for="program_type" class="control-label" data-ng-if="page.project.properties.program_type === 'Pre-Project Plan'">2. What type of grant are you requesting?</label>
+            <select data-ng-model="page.project.properties.program_type" class="form-control" id="program_type" name="program_type">
+              <option value="CBCIG">Chesapeake Bay Conservation Innovation Grant</option>
+              <option value="Delaware River Restoration Fund">Delaware River Restoration Fund</option>
+              <option value="INSR">Innovative Sediment and Nutrient Reduction</option>
+              <option value="SWG">Small Watershed Grant</option>
+              <option value="Trust Fund">Trust Fund</option>
+              <option value="Pre-Project Plan">Pre-Project Plan</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Project Abstract -->
+        <div class="form-row">
+          <div class="form-field">
+            <label for="project_abstract" class="control-label" data-ng-if="page.project.properties.program_type !== 'Pre-Project Plan'">4. Please provide a short project description.</label>
+            <label for="project_abstract" class="control-label" data-ng-if="page.project.properties.program_type === 'Pre-Project Plan'">3. Please provide a short project description.</label>
+            <textarea class="form-control animate" data-ng-model="page.project.properties.description"
+                      msd-elastic id="description" name="description" rows="1">{{ page.project.properties.description }}</textarea>
+          </div>
+        </div>
+
+        <!-- Project Abstract -->
+        <div class="form-row">
+          <div class="form-field">
+            <label for="project_abstract" class="control-label" data-ng-if="page.project.properties.program_type !== 'Pre-Project Plan'">5. Please tell us which organizations this project is associated with.</label>
+            <label for="project_abstract" class="control-label" data-ng-if="page.project.properties.program_type === 'Pre-Project Plan'">4. Please tell us which organizations this project is associated with.</label>
+            <organization model="page.project.properties.organizations"
+                          table="'organization'"
+                          field="'name'"
+                          display="['name']"
+                          placeholder="'Begin typing an organization name'"
+                          tabindexnumber="4">
+            </organization>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <div class="form-actions-buttons">
+            <button type="submit" data-ng-click="page.saveProject()"
+                    class="button button-submit">
+              Save Changes
+            </button>
+            <button type="button" class="button button-link button-outline pull-right"
+                    data-ng-click="page.confirmDelete =! page.confirmDelete"
+                    data-ng-if="!page.confirmDelete && !page.confirmDeleteReallySure && page.permissions.can_delete">
+              Delete
+            </button>
+            <span data-ng-if="page.confirmDelete" class="action pull-right">
+              <a data-ng-click="page.confirmDelete =! page.confirmDelete; page.confirmDeleteReallySure =! page.confirmDeleteReallySure;"
+                    class="remove">
+                Remove project, associated sites and practices?</a> or <a class="cancel" data-ng-click="page.confirmDelete =! page.confirmDelete">nevermind</a>
+            </span>
+            <span data-ng-if="page.confirmDeleteReallySure" class="action pull-right">
+              <a data-ng-click="page.deleteProject()"
+                    class="remove">
+                Yes, I'm sure, delete this project forever</a> or <a class="cancel" data-ng-click="page.confirmDelete = false; page.confirmDeleteReallySure = false;">nevermind</a>
+            </span>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <nav class="column-5 contextual-navigation-wrapper">
+      <h6><strong>Tools</strong></h6>
+      <ul class="contextual-navigation">
+        <!-- Proect Manangement Navigation -->
+        <li>
+          <a href="/projects/{{ page.project.id }}">
+              Project Overview
+          </a>
+        </li>
+        <li class="active" data-ng-if="page.permissions.can_edit">
+          <a href="/projects/{{ page.project.id }}/edit">Edit</a>
+        </li>
+        <li data-ng-if="page.permissions.can_edit">
+          <a href="/projects/{{ page.project.id }}/users">Collaborators</a>
+        </li>
+      </ul>
+    </nav>
+  </article>
+</main>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>
