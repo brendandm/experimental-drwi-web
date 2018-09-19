@@ -360,6 +360,10 @@
                             color: #b47db0;
                         }
 
+                        .program {
+                            color: #887ec5;
+                        }
+
                         .project {
                             color: #ce987e;
                         }
@@ -370,6 +374,10 @@
 
                         .status {
                             color: #c77d91;
+                        }
+
+                        .tag {
+                            color: #7ebbc5;
                         }
 
                         .category {
@@ -715,7 +723,8 @@
 .filter--group {
     display: flex;
     flex-flow: row wrap;
-    margin-bottom: 0.5em;
+    //margin-bottom: 0.5em;
+    margin-top: 1em;
 
     .filter--pill {
         display: flex;
@@ -733,7 +742,11 @@
         }
 
         .organization {
-            color: #740266;
+            color: #5a0393;
+        }
+
+        .program {
+            color: #033c93;
         }
 
         .project {
@@ -746,6 +759,10 @@
 
         .status {
             color: #990329;
+        }
+
+        .tag {
+            color: #033c93;
         }
 
         > div:last-child {

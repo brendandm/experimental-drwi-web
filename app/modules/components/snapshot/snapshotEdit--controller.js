@@ -169,7 +169,7 @@ angular.module('FieldDoc')
                         'geographies': 'geography',
                         'organizations': 'organization',
                         'practices': 'practice',
-                        'programs': 'programs',
+                        'programs': 'program',
                         'projects': 'project',
                         'statuses': 'status',
                         'tags': 'tag'
@@ -181,6 +181,8 @@ angular.module('FieldDoc')
                     return keyMap.plural[obj];
 
                 }
+
+                console.log('keyMap.single', obj, keyMap.single[obj]);
 
                 return keyMap.single[obj];
 
