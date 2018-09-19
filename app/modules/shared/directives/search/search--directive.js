@@ -58,6 +58,8 @@
 
                             FilterStore.addItem($item);
 
+                            console.log('FilterStore.index', FilterStore.index);
+
                             // ProjectStore.filterProjects($item);
 
                             // ProjectStore.filterAll(FilterStore.index);

@@ -337,6 +337,12 @@ angular.module('FieldDoc')
             });
         };
 
+        self.createSnapshot = function() {
+
+            $location.path('/snapshot');
+
+        };
+
         self.createPlan = function() {
             self.project = new Project({
                 'name': 'Project Plan',

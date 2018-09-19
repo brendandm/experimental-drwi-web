@@ -1303,7 +1303,7 @@ angular.module('FieldDoc')
 
         } else {
 
-            $location.path('/user/logout');
+            $location.path('/user/login');
 
         }
 

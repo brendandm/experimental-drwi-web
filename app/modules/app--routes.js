@@ -6,14 +6,14 @@
  * @description
  */
 angular.module('FieldDoc')
-  .config(function($routeProvider, $locationProvider) {
+    .config(function($routeProvider, $locationProvider) {
 
-    $routeProvider
-      .otherwise({
-        templateUrl: '/modules/shared/errors/error404--view.html'
-      });
+        $routeProvider
+            .otherwise({
+                templateUrl: '/modules/shared/errors/error404--view.html'
+            });
 
-    $locationProvider.html5Mode(true);
-    $locationProvider.hashPrefix('!');
+        $locationProvider.html5Mode(true);
+        $locationProvider.hashPrefix('!');
 
-  });
+    });

@@ -66,12 +66,13 @@
                                         <td class="align-left">
                                             <strong>Last Updated</strong>
                                         </td>
+                                        <td></td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr data-ng-repeat="snapshot in page.snapshots track by $index">
                                         <td class="column--titleDescription align-left">
-                                            <a class="snapshot--title" href="/snapshot/{{ snapshot.id }}" title="{{ snapshot.name }} snapshot details">
+                                            <a class="snapshot--title" href="/snapshot/{{ snapshot.id }}" title="View {{ snapshot.name }}">
                                                 {{ snapshot.name }}
                                             </a>
                                         </td>
@@ -84,6 +85,13 @@
                                             <span data-ng-if="snapshot.id && snapshot.modified_on">
                                                 {{ snapshot.modified_on | date }}
                                             </span>
+                                        </td>
+                                        <td>
+                                            <a class="snapshot--title" href="/snapshot/{{ snapshot.id }}/edit" title="Edit {{ snapshot.name }}">
+                                                <i class="material-icons">
+                                                edit
+                                                </i>
+                                            </a>
                                         </td>
                                     </tr>
                                 </tbody>

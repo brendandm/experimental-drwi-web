@@ -6,22 +6,33 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('SnapshotEditCtrl', function(Account, $location, $log, Snapshot, snapshot, $rootScope, $route, user) {
+    .controller('SnapshotEditCtrl',
+        function($scope, Account, $location, $log, Snapshot, snapshot, $rootScope, $route, user, FilterStore) {
 
-        var self = this;
+            var self = this;
 
-        $rootScope.page = {};
+            $rootScope.page = {};
 
-        //
-        // Assign project to a scoped variable
-        //
-        snapshot.$promise.then(function(successResponse) {
+            $scope.filterStore = FilterStore;
 
-            self.snapshot = successResponse;
+            console.log('self.filterStore', self.filterStore);
 
-            $rootScope.page.title = self.snapshot.name;
+            self.loadSnapshot = function() {
 
-            $rootScope.page.actions = [];
+                //
+                // Assign snapshot to a scoped variable
+                //
+                snapshot.$promise.then(function(successResponse) {
+
+                    self.processSnapshot(successResponse);
+
+                }, function(errorResponse) {
+
+                    $log.error('Unable to load snapshot');
+
+                });
+
+            };
 
             //
             // Verify Account information for proper UI element display
@@ -38,37 +49,231 @@ angular.module('FieldDoc')
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                     };
 
+                    self.loadSnapshot();
+
                 });
+
+            } else {
+
+                $location.path('/user/login');
 
             }
 
-        }, function(errorResponse) {
+            self.clearFilter = function(obj) {
 
-            $log.error('Unable to load snapshot');
+                FilterStore.clearItem(obj);
+
+            };
+
+            self.clearAllFilters = function(reload) {
+
+                //
+                // Remove all stored filter objects
+                //
+
+                FilterStore.clearAll();
+
+            };
+
+            self.updateCollection = function(obj, collection) {
+
+                self.snapshotObject[collection].push({
+                    id: obj.id
+                });
+
+            };
+
+            self.transformRelation = function(obj, category) {
+
+                switch (category) {
+
+                    case 'geography':
+
+                        self.updateCollection(obj, 'geographies');
+
+                        break;
+
+                    case 'organization':
+
+                        self.updateCollection(obj, 'organizations');
+
+                        break;
+
+                    case 'practice':
+
+                        self.updateCollection(obj, 'practices');
+
+                        break;
+
+                    case 'program':
+
+                        self.updateCollection(obj, 'programs');
+
+                        break;
+
+                    case 'project':
+
+                        self.updateCollection(obj, 'projects');
+
+                        break;
+
+                    case 'status':
+
+                        self.updateCollection(obj, 'statuses');
+
+                        break;
+
+                    case 'tag':
+
+                        self.updateCollection(obj, 'tags');
+
+                        break;
+
+                    default:
+
+                        self.updateCollection(obj, category);
+
+                        break;
+
+                }
+
+            };
+
+            self.extractFilter = function(key, data) {
+
+                data.forEach(function(datum) {
+
+                    FilterStore.addItem({
+                        id: datum.id,
+                        name: datum.name || datum.properties.name,
+                        category: self.parseKey(key)
+                    });
+
+                });
+
+            };
+
+            self.parseKey = function(obj, pluralize) {
+
+                var keyMap = {
+                    plural: {
+                        'geography': 'geographies',
+                        'organization': 'organizations',
+                        'practice': 'practices',
+                        'program': 'programs',
+                        'project': 'projects',
+                        'status': 'statuses',
+                        'tag': 'tags'
+                    },
+                    single: {
+                        'geographies': 'geography',
+                        'organizations': 'organization',
+                        'practices': 'practice',
+                        'programs': 'programs',
+                        'projects': 'project',
+                        'statuses': 'status',
+                        'tags': 'tag'
+                    }
+                };
+
+                if (pluralize) {
+
+                    return keyMap.plural[obj];
+
+                }
+
+                return keyMap.single[obj];
+
+            };
+
+            self.processSnapshot = function(data) {
+
+                //
+                // Reset filters
+                //
+
+                self.clearAllFilters();
+
+                var relations = [
+                    'creator',
+                    'geographies',
+                    'last_modified_by',
+                    'organizations',
+                    'organization',
+                    'practices',
+                    'programs',
+                    'projects',
+                    'statuses',
+                    'tags'
+                ];
+
+                self.snapshotObject = data;
+
+                $rootScope.page.title = self.snapshotObject.name;
+
+                $rootScope.page.actions = [];
+
+                relations.forEach(function(relation) {
+
+                    if (Array.isArray(self.snapshotObject[relation])) {
+
+                        self.extractFilter(relation, self.snapshotObject[relation]);
+
+                        self.snapshotObject[relation] = [];
+
+                    } else {
+
+                        delete self.snapshotObject[relation];
+
+                    }
+
+                });
+
+            };
+
+            self.processRelations = function(arr) {
+
+                arr.forEach(function(filter) {
+
+                    self.transformRelation(filter, filter.category);
+
+                });
+
+            };
+
+            self.saveSnapshot = function() {
+
+                self.processRelations(self.activeFilters);
+
+                Snapshot.update({
+                    id: +self.snapshotObject.id
+                }, self.snapshotObject).$promise.then(function(data) {
+
+                    self.processSnapshot(data.properties);
+
+                }).then(function(error) {
+                    // Do something with the error
+                });
+
+            };
+
+            self.deleteSnapshot = function() {
+
+                snapshot.$delete().then(function(response) {
+
+                    $location.path('/account');
+
+                }).then(function(error) {
+                    // Do something with the error
+                });
+            };
+
+            $scope.$watch('filterStore.index', function(newVal) {
+
+                console.log('Updated filterStore', newVal);
+
+                self.activeFilters = newVal;
+
+            });
 
         });
-
-        self.saveSnapshot = function() {
-
-            self.snapshot.$update().then(function(response) {
-
-                self.snapshot = response.properties;
-
-            }).then(function(error) {
-                // Do something with the error
-            });
-
-        };
-
-        self.deleteSnapshot = function() {
-
-            self.snapshot.$delete().then(function(response) {
-
-                $location.path('/account');
-
-            }).then(function(error) {
-                // Do something with the error
-            });
-        };
-
-    });
