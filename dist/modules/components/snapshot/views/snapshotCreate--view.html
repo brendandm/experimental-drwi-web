@@ -1,0 +1,39 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="container feature">
+    <article class="feature-detail">
+        <div class="column-11 feature-detail-content">
+
+            <h1 class="large">Create snapshot</h1>
+
+            <form role="form" class="row form" id="form--ProjectEdit" name="form--ProjectEdit">
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="project_title" class="control-label">Name</label>
+                        <textarea rows="1" data-ng-model="page.snapshot.name" class="form-control animate" msd-elastic id="name" name="name" placeholder="Snapshot name">{{ page.snapshot.name }}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="project_title" class="control-label">Description</label>
+                        <textarea rows="1" data-ng-model="page.snapshot.description" class="form-control animate" msd-elastic id="description" name="description" placeholder="Snapshot description">{{ page.snapshot.description }}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <div class="form-actions-buttons">
+                        <button type="submit" data-ng-click="page.saveSnapshot()" class="button button-submit">
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+    </article>
+</main>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>

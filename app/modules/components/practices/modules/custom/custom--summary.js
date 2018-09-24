@@ -177,8 +177,8 @@
                     'measurement_period': 'Planning',
                     'report_date': new Date(),
                     'practice_id': practiceId,
-                    'account_id': self.summary.site.properties
-                        .project.properties.account_id
+                    'organization_id': self.summary.site.properties
+                        .project.properties.organization_id
                 });
 
                 // if (measurementPeriod === "Planning") {
@@ -186,8 +186,8 @@
                 //         'measurement_period': measurementPeriod,
                 //         'report_date': new Date(),
                 //         'practice_id': practiceId,
-                //         'account_id': self.summary.site.properties
-                //             .project.properties.account_id
+                //         'organization_id': self.summary.site.properties
+                //             .project.properties.organization_id
                 //     });
                 // } else {
 

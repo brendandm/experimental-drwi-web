@@ -15,6 +15,11 @@
                 query: {
                     isArray: false
                 },
+                geographies: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/snapshot/:id/geographies')
+                },
                 projects: {
                     method: 'GET',
                     isArray: false,

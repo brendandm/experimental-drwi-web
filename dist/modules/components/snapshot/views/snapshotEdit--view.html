@@ -1,0 +1,83 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="container feature">
+    <article class="feature-detail">
+        <div class="column-11 feature-detail-content">
+
+            <h1 class="large">Edit snapshot</h1>
+
+            <form role="form" class="row form" id="form--ProjectEdit" name="form--ProjectEdit">
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="project_title" class="control-label">Name</label>
+                        <textarea rows="1" data-ng-model="page.snapshotObject.name" class="form-control animate" msd-elastic id="name" name="name" placeholder="Snapshot name">{{ page.snapshotObject.name }}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="project_title" class="control-label">Description</label>
+                        <textarea rows="1" data-ng-model="page.snapshotObject.description" class="form-control animate" msd-elastic id="description" name="description" placeholder="Snapshot description">{{ page.snapshotObject.description }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Filter Tools -->
+
+                <div class="filter--ui">
+
+                    <div class="filter--header">
+
+                        <span class="filter--label">Filters</span>
+
+                        <p>Search for projects by name, status, geographic area, or conservation practice.<p>
+
+                    </div>
+
+                    <div class="filter--controls">
+
+                        <div class="search--group">
+                            <div global-search class="global--search" filter-projects="page.filterProjects">
+                                <input type="search" class="search" value="" placeholder="Type the name of a project, status, geography, or practice" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue)" typeahead-on-select="setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                            </div>
+                        </div>
+
+                        <div class="filter--group">
+                            <div class="filter--pill" data-ng-repeat="filter in page.activeFilters">
+                                <div>
+                                    <span class="category {{ filter.category }}">{{ filter.category }}</span>
+                                    <span>{{ filter.name }}</span>
+                                </div>
+                                <div data-ng-click="page.clearFilter(filter)">
+                                    <i class="material-icons">
+                                        clear
+                                    </i>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="filter--actions" data-ng-if="page.activeFilters && page.activeFilters.length">
+                        <button class="clear" type="button" data-ng-click="page.clearAllFilters()" title="Clear all filters">
+                            Clear all
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="form-actions">
+                    <div class="form-actions-buttons">
+                        <button type="submit" data-ng-click="page.saveSnapshot()" class="button button-submit">
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+    </article>
+</main>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>

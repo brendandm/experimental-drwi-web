@@ -104,7 +104,7 @@ angular.module('FieldDoc')
                         role: $rootScope.user.properties.roles[0].properties.name,
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
                         can_edit: Account.canEdit(self.project),
-                        is_manager: (Account.hasRole('manager') || Account.inGroup(self.project.properties.account_id, Account.userObject.properties.account)),
+                        is_manager: (Account.hasRole('manager') || Account.inGroup(self.project.properties.organization_id, Account.userObject.properties.account)),
                         is_admin: Account.hasRole('admin')
                     };
                 });
@@ -161,7 +161,7 @@ angular.module('FieldDoc')
 
         self.submitProject = function() {
 
-            if (!self.project.properties.account_id) {
+            if (!self.project.properties.organization_id) {
                 $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.")
                 return;
             }
@@ -182,7 +182,7 @@ angular.module('FieldDoc')
 
         self.fundProject = function() {
 
-            if (!self.project.properties.account_id) {
+            if (!self.project.properties.organization_id) {
                 $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.")
                 return;
             }
@@ -203,7 +203,7 @@ angular.module('FieldDoc')
 
         self.completeProject = function() {
 
-            if (!self.project.properties.account_id) {
+            if (!self.project.properties.organization_id) {
                 $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.")
                 return;
             }
@@ -241,7 +241,7 @@ angular.module('FieldDoc')
             self.site = new Site({
                 'name': 'Untitled Site',
                 'project_id': self.project.id,
-                'account_id': self.project.properties.account_id
+                'organization_id': self.project.properties.organization_id
             });
 
             self.site.$save(function(successResponse) {

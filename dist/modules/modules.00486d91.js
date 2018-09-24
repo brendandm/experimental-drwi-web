@@ -41,18 +41,17 @@ angular
  * @description
  */
 angular.module('FieldDoc')
-  .config(function($routeProvider, $locationProvider) {
+    .config(function($routeProvider, $locationProvider) {
 
-    $routeProvider
-      .otherwise({
-        templateUrl: '/modules/shared/errors/error404--view.html'
-      });
+        $routeProvider
+            .otherwise({
+                templateUrl: '/modules/shared/errors/error404--view.html'
+            });
 
-    $locationProvider.html5Mode(true);
-    $locationProvider.hashPrefix('!');
+        $locationProvider.html5Mode(true);
+        $locationProvider.hashPrefix('!');
 
-  });
-
+    });
 "use strict";
 
  angular.module('config', [])
@@ -686,6 +685,1796 @@ angular.module('FieldDoc')
     .config(function($routeProvider, commonscloud) {
 
         $routeProvider
+            .when('/snapshot/:snapshotId', {
+                templateUrl: '/modules/components/snapshot/views/snapshot--view.html',
+                controller: 'SnapshotCtrl',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    geographies: function($route, $location, Snapshot) {
+
+                        return Snapshot.geographies({
+                            id: $route.current.params.snapshotId
+                        });
+
+                    },
+                    baseProjects: function($route, $location, Snapshot) {
+
+                        return Snapshot.projects({
+                            id: $route.current.params.snapshotId
+                        });
+
+                    },
+                    snapshot: function($route, $location, Snapshot) {
+
+                        return Snapshot.get({
+                            id: $route.current.params.snapshotId
+                        });
+
+                    },
+                    user: function(Account) {
+
+                        if (Account.userObject && !Account.userObject.id) {
+
+                            return Account.getUser();
+                            
+                        }
+
+                        return Account.userObject;
+
+                    }
+                }
+            })
+            .when('/snapshot', {
+                templateUrl: '/modules/components/snapshot/views/snapshotCreate--view.html',
+                controller: 'SnapshotCreateCtrl',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    user: function(Account) {
+
+                        if (Account.userObject && !Account.userObject.id) {
+
+                            return Account.getUser();
+                            
+                        }
+
+                        return Account.userObject;
+
+                    }
+                }
+            })
+            .when('/snapshot/:snapshotId/edit', {
+                templateUrl: '/modules/components/snapshot/views/snapshotEdit--view.html',
+                controller: 'SnapshotEditCtrl',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    snapshot: function($route, $location, Snapshot) {
+
+                        return Snapshot.get({
+                            id: $route.current.params.snapshotId
+                        });
+
+                    },
+                    user: function(Account) {
+
+                        if (Account.userObject && !Account.userObject.id) {
+
+                            return Account.getUser();
+                            
+                        }
+
+                        return Account.userObject;
+
+                    }
+                }
+            });
+
+    });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('SnapshotCtrl', function(Account, $location, $log, Project, Map,
+        baseProjects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
+        MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox,
+        Practice, snapshot) {
+
+        $scope.filterStore = FilterStore;
+
+        FilterStore.clearAll();
+
+        // $scope.projectStore = ProjectStore;
+
+        var self = this;
+
+        //
+        // Setup basic page variables
+        //
+        $rootScope.page = {
+            title: 'Dashboard'
+        };
+
+        self.activeTab = {
+            collection: 'metric'
+        };
+
+        self.cardTpl = {};
+
+        self.card = {};
+
+        // self.cardTpl = {
+        //     featureType: 'program',
+        //     featureTabLabel: 'Projects',
+        //     feature: null,
+        //     heading: 'Delaware River Watershed Initiative',
+        //     yearsActive: '2013 - 2018',
+        //     funding: '$2.65 million',
+        //     url: 'https://4states1source.org',
+        //     resourceUrl: null,
+        //     linkTarget: '_blank',
+        //     description: 'The Delaware River Watershed Initiative is a cross-cutting collaboration working to conserve and restore the streams that supply drinking water to 15 million people in New York, New Jersey, Pennsylvania and Delaware.',
+        // };
+
+        // self.card = self.cardTpl;
+
+        self.historyItem = null;
+
+        self.historyIndex = [];
+
+        self.project = {};
+
+        self.map = Object.assign({}, Map);
+
+        self.map.layers = {
+            baselayers: {
+                streets: {
+                    name: 'Streets',
+                    type: 'xyz',
+                    url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                    layerOptions: {
+                        apikey: mapbox.access_token,
+                        mapid: 'mapbox.streets',
+                        attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>'
+                    }
+                },
+                terrain: {
+                    name: 'Terrain',
+                    type: 'xyz',
+                    url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                    layerOptions: {
+                        apikey: mapbox.access_token,
+                        mapid: 'mapbox.run-bike-hike',
+                        attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>'
+                    }
+                },
+                satellite: {
+                    name: 'Satellite',
+                    type: 'xyz',
+                    url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                    layerOptions: {
+                        apikey: mapbox.access_token,
+                        mapid: 'mapbox.streets-satellite',
+                        attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>'
+                    }
+                }
+            }
+        };
+
+        self.map.markers = {};
+
+        self.map.layers.overlays = {
+            projects: {
+                type: 'group',
+                name: 'projects',
+                visible: true,
+                layerOptions: {
+                    showOnSelector: false
+                },
+                layerParams: {
+                    showOnSelector: false
+                }
+            }
+        };
+
+        console.log('self.map', self.map);
+
+        self.popupTemplate = function(feature) {
+
+            return '<div class=\"project--popup\">' +
+                '<div class=\"marker--title border--right\">' + feature.name + '</div>' +
+                '<a href=\"projects/' + feature.id + '\">' +
+                '<i class=\"material-icons\">keyboard_arrow_right</i>' +
+                '</a>' +
+                '</div>';
+
+        };
+
+        self.processLocations = function(features) {
+
+            self.map.markers = {};
+
+            features.forEach(function(feature) {
+
+                var centroid = feature.centroid;
+
+                console.log('centroid', centroid);
+
+                if (centroid) {
+
+                    self.map.markers['project_' + feature.id] = {
+                        lat: centroid.coordinates[1],
+                        lng: centroid.coordinates[0],
+                        layer: 'projects',
+                        focus: false,
+                        icon: {
+                            type: 'div',
+                            className: 'project--marker',
+                            iconSize: [24, 24],
+                            popupAnchor: [-2, -10],
+                            html: ''
+                        },
+                        message: self.popupTemplate(feature)
+                    };
+
+                }
+
+            });
+
+            console.log('self.map.markers', self.map.markers);
+
+        };
+
+        self.resetMapExtent = function() {
+
+            self.map.geojson.data = self.programGeographies;
+
+            leafletData.getMap('dashboard--map').then(function(map) {
+
+                map.closePopup();
+
+                leafletData.getLayers('dashboard--map').then(function(layers) {
+
+                    console.log('leafletData.getLayers', layers);
+
+                    map.removeLayer(layers.baselayers.satellite);
+
+                    map.removeLayer(layers.baselayers.terrain);
+
+                    map.addLayer(layers.baselayers.streets);
+
+                });
+
+                leafletData.getGeoJSON('dashboard--map').then(function(geoJsonLayer) {
+
+                    console.log('geoJsonLayer', geoJsonLayer);
+
+                    map.fitBounds(geoJsonLayer.getBounds(), {
+                        maxZoom: 18
+                    });
+
+                });
+
+            });
+
+        };
+
+        self.setMapBoundsToFeature = function(feature) {
+
+            console.log('setMapBoundsToFeature', feature);
+
+            var geoJsonLayer = L.geoJson(feature, {});
+
+            leafletData.getMap('dashboard--map').then(function(map) {
+
+                map.fitBounds(geoJsonLayer.getBounds(), {
+                    maxZoom: 18
+                });
+
+            });
+
+        };
+
+        //
+        // Load custom geographies
+        //
+
+        function onEachFeature(feature, layer) {
+
+            console.log('onEachFeature', feature, layer);
+
+            var popup;
+
+            layer.on({
+
+                click: function() {
+
+                    console.log(layer.feature.properties.name);
+
+                    self.setMapBoundsToFeature(layer.feature);
+
+                    if (layer.feature.properties.feature_type === 'site') {
+
+                        self.activeSite = feature;
+
+                        self.card = {
+                            featureType: 'site',
+                            featureTabLabel: 'Practices',
+                            feature: feature.properties,
+                            heading: feature.properties.name,
+                            yearsActive: '2018',
+                            funding: '$100k',
+                            url: 'projects/' + self.activeProject.properties.id + '/sites/' + feature.properties.id,
+                            description: feature.properties.description,
+                            linkTarget: '_self'
+                        };
+
+                        self.loadSitePractices(layer.feature.properties);
+
+                        self.loadMetrics(null, {
+                            collection: 'site',
+                            featureId: feature.properties.id
+                        });
+
+                        self.loadOutcomes(null, {
+                            collection: 'site',
+                            featureId: feature.properties.id
+                        });
+
+                        //
+                        // Set value of `self.historyItem`
+                        //
+
+                        self.historyItem = {
+                            feature: self.activeProject,
+                            label: self.activeProject.properties.name,
+                            geoJson: self.activeProject,
+                            type: 'project'
+                        };
+
+                    } else if (layer.feature.properties.feature_type === 'geography') {
+
+                        self.setGeoFilter(layer.feature.properties);
+
+                        self.card = {
+                            featureType: 'geography',
+                            featureTabLabel: 'Projects',
+                            feature: feature.properties,
+                            heading: feature.properties.name,
+                            yearsActive: '2013-2018',
+                            funding: '$50k',
+                            url: 'geographies/' + feature.properties.id,
+                            description: feature.properties.description,
+                            linkTarget: '_self'
+                        };
+
+                    } else if (layer.feature.properties.feature_type === 'practice') {
+
+                        self.loadMetrics(null, {
+                            collection: 'practice',
+                            featureId: feature.properties.id
+                        });
+
+                        self.loadOutcomes(null, {
+                            collection: 'practice',
+                            featureId: feature.properties.id
+                        });
+
+                        self.card = {
+                            featureType: 'practice',
+                            featureTabLabel: null,
+                            feature: feature.properties,
+                            heading: feature.properties.name,
+                            yearsActive: null,
+                            funding: null,
+                            url: 'projects/' + self.activeProject.properties.id + '/sites/' + self.activeSite.properties.id + '/practices/' + feature.properties.id,
+                            description: feature.properties.description,
+                            linkTarget: '_self'
+                        };
+
+                        //
+                        // Set value of `self.historyItem`
+                        //
+
+                        self.historyItem = {
+                            feature: self.activeSite,
+                            label: self.activeSite.properties.name,
+                            geoJson: self.activeSite,
+                            type: 'site'
+                        };
+
+                    }
+
+                },
+                mouseover: function(event) {
+
+                    console.log('onEachFeature.mouseover', event);
+
+                    console.log(layer.feature.properties.name);
+
+                    self.removeMarkerPopups();
+
+                    leafletData.getMap('dashboard--map').then(function(map) {
+
+                        if (popup) {
+
+                            map.closePopup(popup);
+
+                        }
+
+                        popup = L.popup()
+                            .setLatLng(event.latlng)
+                            .setContent('<div class=\"marker--title\">' + feature.properties.name + '</div>');
+
+                        popup.openOn(map);
+
+                    });
+
+                },
+                mouseout: function(event) {
+
+                    console.log('onEachFeature.mouseout', event);
+
+                    console.log(layer.feature.properties.name);
+
+                    leafletData.getMap('dashboard--map').then(function(map) {
+
+                        if (popup) {
+
+                            map.closePopup(popup);
+
+                        }
+
+                    });
+
+                }
+
+            });
+        }
+
+        geographies.$promise.then(function(successResponse) {
+
+            console.log('geographies.successResponse', successResponse);
+
+            self.programGeographies = successResponse;
+
+            self.map.geojson = {
+                data: successResponse,
+                onEachFeature: onEachFeature,
+                style: {
+                    color: '#00D',
+                    fillColor: 'red',
+                    weight: 2.0,
+                    opacity: 0.6,
+                    fillOpacity: 0.2
+                }
+            };
+
+            //
+            // Fit map bounds to GeoJSON
+            //
+
+            self.resetMapExtent();
+
+            //
+            // Set up layer visibility logic
+            //
+
+            leafletData.getMap('dashboard--map').then(function(map) {
+
+                map.on('zoomend', function(event) {
+
+                    var zoomLevel = map.getZoom();
+
+                    leafletData.getLayers('dashboard--map').then(function(layers) {
+
+                        console.log('leafletData.getLayers', layers);
+
+                        if (zoomLevel > 15) {
+
+                            map.removeLayer(layers.baselayers.streets);
+
+                            map.removeLayer(layers.baselayers.terrain);
+
+                            map.addLayer(layers.baselayers.satellite);
+
+                        } else {
+
+                            map.removeLayer(layers.baselayers.satellite);
+
+                            map.removeLayer(layers.baselayers.terrain);
+
+                            map.addLayer(layers.baselayers.streets);
+
+                        }
+
+                    });
+
+                });
+
+            });
+
+        }, function(errorResponse) {
+
+            console.log('errorResponse', errorResponse);
+
+        });
+
+        self.extractIds = function(arr) {
+
+            var projectIds = [];
+
+            arr.forEach(function(datum) {
+
+                projectIds.push(datum.id);
+
+            });
+
+            return projectIds.join(',');
+
+        };
+
+        self.loadMetrics = function(arr, options) {
+
+            if (options) {
+
+                if (options.collection === 'site') {
+
+                    Site.metrics({
+                        id: options.featureId
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('granteeResponse', successResponse);
+
+                        self.metrics = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                } else {
+
+                    Practice.metrics({
+                        id: options.featureId
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('granteeResponse', successResponse);
+
+                        self.metrics = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                }
+
+            } else {
+
+                //
+                // A program (account) identifier
+                // is required by default.
+                //
+
+                var params = {};
+
+                //
+                // If the `arr` parameter is valid,
+                // constrain the query to the given
+                // set of numeric project identifiers.
+                //
+
+                if (arr && arr.length) {
+
+                    params.projects = self.extractIds(arr);
+
+                }
+
+                MetricService.query(params).$promise.then(function(successResponse) {
+
+                    console.log('granteeResponse', successResponse);
+
+                    self.metrics = successResponse.features;
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
+
+            }
+
+        };
+
+        self.loadOutcomes = function(arr, options) {
+
+            if (options) {
+
+                if (options.collection === 'site') {
+
+                    Site.outcomes({
+                        id: options.featureId
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('siteOutcomesResponse', successResponse);
+
+                        self.outcomes = successResponse;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                } else {
+
+                    Practice.outcomes({
+                        id: options.featureId
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('practiceOutcomesResponse', successResponse);
+
+                        self.outcomes = successResponse;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                }
+
+            } else {
+
+                //
+                // A program (account) identifier
+                // is required by default.
+                //
+
+                var params = {};
+
+                //
+                // If the `arr` parameter is valid,
+                // constrain the query to the given
+                // set of numeric project identifiers.
+                //
+
+                if (arr && arr.length) {
+
+                    params.projects = self.extractIds(arr);
+
+                }
+
+                OutcomeService.query(params).$promise.then(function(successResponse) {
+
+                    console.log('granteeResponse', successResponse);
+
+                    self.outcomes = successResponse;
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
+
+            }
+
+        };
+
+        self.search = {
+            query: '',
+            execute: function(page) {
+
+                //
+                // Get all of our existing URL Parameters so that we can
+                // modify them to meet our goals
+                //
+
+                var q = {
+                    filters: [{
+                        'and': [{
+                            name: 'name',
+                            op: 'ilike',
+                            val: '%' + self.search.query + '%'
+                        }]
+                    }],
+                    order_by: [{
+                        field: 'created_on',
+                        direction: 'desc'
+                    }]
+                };
+
+                if (self.filters.active.workflow_state !== null) {
+                    console.log('add workflow state filter');
+
+                    q.filters.push({
+                        'name': 'workflow_state',
+                        'op': 'like',
+                        'val': self.filters.active.workflow_state
+                    });
+                }
+
+                if (self.filters.active.year && self.filters.active.year.year) {
+                    q.filters.push({
+                        'name': 'created_on',
+                        'op': 'gte',
+                        'val': self.filters.active.year.year + '-01-01'
+                    });
+                    q.filters.push({
+                        'name': 'created_on',
+                        'op': 'lte',
+                        'val': self.filters.active.year.year + '-12-31'
+                    });
+                }
+
+                Project.query({
+                    'q': q,
+                    'page': (page ? page : 1)
+                }).$promise.then(function(successResponse) {
+
+                    console.log('successResponse', successResponse);
+
+                    self.projects = successResponse;
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
+
+            },
+            paginate: function(pageNumber) {
+
+                //
+                // Get all of our existing URL Parameters so that we can
+                // modify them to meet our goals
+                //
+                self.search.execute(pageNumber);
+            },
+            clear: function() {
+
+                // $location.path('/projects/').search('');
+
+                self.q = {};
+
+                self.filteredProjects = self.projects;
+
+                self.processLocations(self.filteredProjects);
+
+            }
+        };
+
+        //
+        // Set Default Search Filter value
+        //
+        if (self.search && self.search.query === '') {
+
+            var searchParams = $location.search(),
+                q = angular.fromJson(searchParams.q);
+
+            if (q && q.filters && q.filters.length) {
+                angular.forEach(q.filters[0].and, function(filter) {
+                    if (filter.name === 'name') {
+                        self.search.query = filter.val.replace(/%/g, '');
+                    }
+                });
+            }
+        }
+
+        self.removeMarkerPopups = function() {
+
+            for (var key in self.map.markers) {
+
+                if (self.map.markers.hasOwnProperty(key)) {
+
+                    self.map.markers[key].focus = false;
+
+                }
+
+            }
+
+        };
+
+        self.setMarkerFocus = function(feature, collection, setFilter) {
+
+            if (collection === 'project') {
+
+                var markerId = 'project_' + feature.id,
+                    marker = self.map.markers[markerId];
+
+                self.removeMarkerPopups();
+
+                if (marker) {
+
+                    self.map.markers[markerId].focus = true;
+
+                    if (setFilter) {
+
+                        self.setProjectFilter(feature);
+
+                    }
+
+                }
+
+                console.log('setMarkerFocus', markerId, self.map.markers[markerId]);
+
+            } else {
+
+                if (collection === 'practice') {
+
+                    self.map.geojson.data = self.practices;
+
+                }
+
+                self.setMapBoundsToFeature(feature);
+
+            }
+
+        };
+
+        self.clearMarkerFocus = function(feature) {
+
+            var markerId = 'project_' + feature.id,
+                marker = self.map.markers[markerId];
+
+            if (marker) {
+
+                self.map.markers[markerId].focus = false;
+
+            }
+
+            console.log('clearMarkerFocus', markerId, self.map.markers[markerId]);
+
+        };
+
+        self.loadProjectSites = function(obj) {
+
+            Project.sites({
+                id: obj.id
+            }).$promise.then(function(successResponse) {
+
+                console.log('projectSiteResponse', successResponse);
+
+                self.sites = successResponse;
+
+                self.map.geojson = {
+                    data: successResponse,
+                    onEachFeature: onEachFeature,
+                    style: {
+                        color: '#00D',
+                        fillColor: 'red',
+                        weight: 2.0,
+                        opacity: 0.6,
+                        fillOpacity: 0.2
+                    }
+                };
+
+            }, function(errorResponse) {
+
+                console.log('errorResponse', errorResponse);
+
+            });
+
+        };
+
+        self.loadSitePractices = function(obj) {
+
+            Site.practices({
+                id: obj.id
+            }).$promise.then(function(successResponse) {
+
+                console.log('sitePracticeResponse', successResponse);
+
+                self.practices = successResponse;
+
+                leafletData.getMap('dashboard--map').then(function(map) {
+
+                    map.closePopup();
+
+                    self.setMapBoundsToFeature(successResponse);
+
+                });
+
+                self.map.geojson = {
+                    data: successResponse,
+                    onEachFeature: onEachFeature,
+                    style: {
+                        color: '#00D',
+                        fillColor: 'red',
+                        weight: 2.0,
+                        opacity: 0.6,
+                        fillOpacity: 0.2
+                    }
+                };
+
+            }, function(errorResponse) {
+
+                console.log('errorResponse', errorResponse);
+
+            });
+
+        };
+
+        self.navigateBack = function() {
+
+            var historyType = self.historyItem.type;
+
+            switch(historyType) {
+
+                case 'program':
+
+                    self.resetMapExtent();
+
+                    self.clearAllFilters(true);
+
+                    break;
+
+                case 'project':
+
+                    // self.setMapBoundsToFeature(self.activeProject);
+
+                    self.setProjectFilter(self.activeProject.properties);
+
+                    self.card = {
+                        featureType: 'project',
+                        featureTabLabel: 'Sites',
+                        feature: self.activeProject.properties,
+                        heading: self.activeProject.properties.name,
+                        yearsActive: '2018',
+                        funding: '$100k',
+                        url: 'projects/' + self.activeProject.properties.id,
+                        description: self.activeProject.properties.description,
+                        linkTarget: '_self'
+                    };
+
+                    break;
+
+                case 'site':
+
+                    self.map.geojson.data = self.activeSite;
+
+                    self.setMapBoundsToFeature(self.activeSite);
+
+                    // self.practices = null;
+
+                    self.card = {
+                        featureType: 'site',
+                        featureTabLabel: 'Practices',
+                        feature: self.activeSite.properties,
+                        heading: self.activeSite.properties.name,
+                        yearsActive: '2018',
+                        funding: '$10k',
+                        url: 'projects/' + self.activeProject.properties.id + '/sites/' + self.activeSite.properties.id,
+                        description: self.activeSite.properties.description,
+                        linkTarget: '_self'
+                    };
+
+                    //
+                    // Update history item
+                    //
+
+                    self.historyItem = {
+                        feature: self.activeProject,
+                        label: self.activeProject.properties.name,
+                        geoJson: self.activeProject,
+                        type: 'project'
+                    };
+
+                    break;
+
+                default:
+
+                    break;
+
+            }
+
+        };
+
+        self.setProjectFilter = function(obj) {
+
+            //
+            // Fit map bounds to GeoJSON
+            //
+
+            var feature = {
+                type: 'Feature',
+                properties: obj,
+                geometry: obj.extent
+            };
+
+            self.setMapBoundsToFeature(feature);
+
+            self.loadProjectSites(obj);
+
+            FilterStore.clearAll();
+
+            var _filterObject = {
+                id: obj.id,
+                name: obj.name,
+                category: 'project'
+            };
+
+            FilterStore.addItem(_filterObject);
+
+            // ProjectStore.filterAll(FilterStore.index);
+
+            self.loadMetrics([
+                obj
+            ]);
+
+            self.loadOutcomes([
+                obj
+            ]);
+
+            //
+            // Set value of `self.historyItem`
+            //
+
+            self.historyItem = {
+                feature: null,
+                label: 'All projects',
+                geoJson: self.programGeographies,
+                type: 'program'
+            };
+
+            //
+            // Track project object
+            //
+
+            self.activeProject = feature;
+
+            //
+            // Update `self.card` values
+            //
+
+            self.card = {
+                featureType: 'project',
+                featureTabLabel: 'Sites',
+                feature: feature,
+                heading: obj.name,
+                yearsActive: '2018',
+                funding: '$100k',
+                url: 'projects/' + obj.id,
+                description: obj.description,
+                linkTarget: '_self'
+            };
+
+        };
+
+        self.setGeoFilter = function(obj) {
+
+            FilterStore.clearAll();
+
+            var _filterObject = {
+                id: obj.id,
+                name: obj.name,
+                category: 'geography'
+            };
+
+            FilterStore.addItem(_filterObject);
+
+            self.filterProjects();
+
+        };
+
+        self.setTab = function(collection) {
+
+            self.activeTab = {
+                collection: collection
+            };
+
+        };
+
+        self.closeFilterModal = function() {
+
+            if (FilterStore.index.length < 1) {
+
+                self.clearAllFilters(true);
+
+            }
+
+            self.showFilters = false;
+
+        };
+
+        self.clearFilter = function(obj) {
+
+            FilterStore.clearItem(obj);
+
+        };
+
+        self.clearAllFilters = function(reload) {
+
+            //
+            // Remove all stored filter objects
+            //
+
+            FilterStore.clearAll();
+
+            //
+            // Dismiss filter modal
+            //
+
+            self.showFilters = false;
+
+            //
+            // Reset map extent
+            //
+
+            self.resetMapExtent();
+
+            //
+            // Reset metadata card values
+            //
+
+            self.card = self.cardTpl;
+
+            //
+            // Reset value of `self.historyItem`
+            //
+
+            self.historyItem = null;
+
+            //
+            // Reset value of `self.activeProject`
+            //
+
+            self.activeProject = null;
+
+            //
+            // Reset value of `self.activeSite`
+            //
+
+            self.activeSite = null;
+
+            //
+            // Refresh project list
+            //
+
+            if (reload) {
+
+                // self.loadProjects({}, false);
+
+                self.loadBaseProjects();
+
+            }
+
+        };
+
+        self.zoomToProjects = function() {
+
+            var featureCollection = {
+                type: 'FeatureCollection',
+                features: []
+            };
+
+            self.filteredProjects.forEach(function(feature) {
+
+                featureCollection.features.push({
+                    type: 'Feature',
+                    properties: {},
+                    geometry: feature.extent
+                });
+
+            });
+
+            self.setMapBoundsToFeature(featureCollection);
+
+        };
+
+        self.processProjectData = function(data) {
+
+            self.filteredProjects = data.features;
+
+            self.processLocations(data.features);
+
+            self.loadOutcomes(self.filteredProjects);
+
+            self.loadMetrics(self.filteredProjects);
+
+            self.zoomToProjects();
+
+        };
+
+        self.loadSnapshot = function() {
+
+            snapshot.$promise.then(function(successResponse) {
+
+                console.log('self.loadSnapshot.successResponse', successResponse);
+
+                self.snapshotObject = successResponse;
+
+                self.cardTpl = {
+                    featureType: 'snapshot',
+                    featureTabLabel: 'Projects',
+                    feature: null,
+                    heading: self.snapshotObject.name,
+                    // yearsActive: '2013 - 2018',
+                    // funding: '$2.65 million',
+                    // url: 'https://4states1source.org',
+                    // resourceUrl: null,
+                    // linkTarget: '_blank',
+                    description: self.snapshotObject.description
+                };
+
+                self.card = self.cardTpl;
+
+            }, function(errorResponse) {
+
+                console.log('self.loadSnapshot.errorResponse', errorResponse);
+
+            });
+
+        };
+
+        self.loadBaseProjects = function() {
+
+            baseProjects.$promise.then(function(successResponse) {
+
+                console.log('self.loadBaseProjects.successResponse', successResponse);
+
+                self.processProjectData(successResponse);
+
+            }, function(errorResponse) {
+
+                console.log('self.loadBaseProjects.errorResponse', errorResponse);
+
+            });
+
+        };
+
+        self.loadProjects = function(params) {
+
+            Project.collection(params).$promise.then(function(successResponse) {
+
+                console.log('self.filterProjects.successResponse', successResponse);
+
+                self.processProjectData(successResponse);
+
+            }, function(errorResponse) {
+
+                console.log('self.filterProjects.errorResponse', errorResponse);
+
+            });
+
+        };
+
+        self.filterProjects = function() {
+
+            //
+            // Dismiss filter modal
+            //
+
+            self.showFilters = false;
+
+            //
+            // Extract feature identifiers from active filters
+            //
+
+            var params = {};
+
+            if (self.limitScope) {
+
+                params.user = $rootScope.user.id
+
+            }
+
+            FilterStore.index.forEach(function(obj) {
+
+                if (params.hasOwnProperty(obj.category)) {
+
+                    params[obj.category].push(obj.id);
+
+                } else {
+
+                    params[obj.category] = [obj.id];
+
+                }
+
+            });
+
+            console.log('self.filterProjects.params', params);
+
+            //
+            // Convert arrays of feature identifiers to strings
+            //
+
+            for (var key in params) {
+
+                if (params.hasOwnProperty(key)) {
+
+                    //
+                    // If attribute value is an array, convert it to a string
+                    //
+
+                    if (Array.isArray(params[key])) {
+
+                        var parsedValue = params[key].join(',');
+
+                        params[key] = parsedValue;
+
+                    }
+
+                }
+
+            }
+
+            //
+            // Execute API request
+            //
+
+            self.loadProjects(params);
+
+        };
+
+        $scope.$watch('filterStore.index', function(newVal) {
+
+            console.log('Updated filterStore', newVal);
+
+            self.activeFilters = newVal;
+
+        });
+
+        $scope.$on('leafletDirectiveMarker.dashboard--map.click', function(event, args) {
+
+            console.log('leafletDirectiveMarker.dashboard--map.click', event, args);
+
+            var project = self.filteredProjects.filter(function(datum) {
+
+                var id = +(args.modelName.split('project_')[1]);
+
+                return datum.id === id;
+
+            })[0];
+
+            self.setMarkerFocus(project, 'project', true);
+
+        });
+
+        $scope.$on('leafletDirectiveMarker.dashboard--map.mouseover', function(event, args) {
+
+            console.log('leafletDirectiveMarker.dashboard--map.mouseover', event, args);
+
+            var project = self.filteredProjects.filter(function(datum) {
+
+                var id = +(args.modelName.split('project_')[1]);
+
+                return datum.id === id;
+
+            })[0];
+
+            self.setMarkerFocus(project, 'project');
+
+        });
+
+        self.changeScope = function() {
+
+            //
+            // Reset map extent
+            //
+
+            self.resetMapExtent();
+
+            //
+            // Reset dashboard state
+            //
+
+            self.clearAllFilters(false);
+
+            //
+            // Refresh project data
+            //
+
+            if (self.limitScope) {
+
+                self.loadProjects({
+                    user: $rootScope.user.id
+                });
+
+            } else {
+
+                // self.loadProjects({});
+
+                self.loadBaseProjects();
+
+                self.loadSnapshot();
+
+            }
+
+        };
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+
+            user.$promise.then(function(userResponse) {
+
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    isAdmin: Account.hasRole('admin')
+                };
+
+                if (!self.permissions.isAdmin) {
+
+                    self.limitScope = true;
+
+                }
+
+                // self.loadProjects({}, false);
+
+                self.loadBaseProjects();
+
+                self.loadSnapshot();
+
+            });
+
+        } else {
+
+            $location.path('/user/logout');
+
+        }
+
+    });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('SnapshotCreateCtrl', function(Account, $location, $log, Snapshot, $rootScope, $route, user) {
+
+        var self = this;
+
+        $rootScope.page = {};
+
+        $rootScope.page.actions = [];
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+
+            user.$promise.then(function(userResponse) {
+
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0].properties.name,
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                };
+
+                self.snapshot = new Snapshot();
+
+                $rootScope.page.title = 'Create snapshot';
+
+            });
+
+        }
+
+        self.saveSnapshot = function() {
+
+            self.snapshot.$save().then(function(response) {
+
+                self.snapshot = response;
+
+                $location.path('/snapshot/' + self.snapshot.id + '/edit');
+
+            }).then(function(error) {
+                // Do something with the error
+            });
+
+        };
+
+    });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('SnapshotEditCtrl',
+        function($scope, Account, $location, $log, Snapshot, snapshot, $rootScope, $route, user, FilterStore) {
+
+            var self = this;
+
+            $rootScope.page = {};
+
+            $scope.filterStore = FilterStore;
+
+            console.log('self.filterStore', self.filterStore);
+
+            self.loadSnapshot = function() {
+
+                //
+                // Assign snapshot to a scoped variable
+                //
+                snapshot.$promise.then(function(successResponse) {
+
+                    self.processSnapshot(successResponse);
+
+                }, function(errorResponse) {
+
+                    $log.error('Unable to load snapshot');
+
+                });
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0].properties.name,
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                    };
+
+                    self.loadSnapshot();
+
+                });
+
+            } else {
+
+                $location.path('/user/login');
+
+            }
+
+            self.clearFilter = function(obj) {
+
+                FilterStore.clearItem(obj);
+
+            };
+
+            self.clearAllFilters = function(reload) {
+
+                //
+                // Remove all stored filter objects
+                //
+
+                FilterStore.clearAll();
+
+            };
+
+            self.updateCollection = function(obj, collection) {
+
+                self.snapshotObject[collection].push({
+                    id: obj.id
+                });
+
+            };
+
+            self.transformRelation = function(obj, category) {
+
+                switch (category) {
+
+                    case 'geography':
+
+                        self.updateCollection(obj, 'geographies');
+
+                        break;
+
+                    case 'organization':
+
+                        self.updateCollection(obj, 'organizations');
+
+                        break;
+
+                    case 'practice':
+
+                        self.updateCollection(obj, 'practices');
+
+                        break;
+
+                    case 'program':
+
+                        self.updateCollection(obj, 'programs');
+
+                        break;
+
+                    case 'project':
+
+                        self.updateCollection(obj, 'projects');
+
+                        break;
+
+                    case 'status':
+
+                        self.updateCollection(obj, 'statuses');
+
+                        break;
+
+                    case 'tag':
+
+                        self.updateCollection(obj, 'tags');
+
+                        break;
+
+                    default:
+
+                        self.updateCollection(obj, category);
+
+                        break;
+
+                }
+
+            };
+
+            self.extractFilter = function(key, data) {
+
+                data.forEach(function(datum) {
+
+                    FilterStore.addItem({
+                        id: datum.id,
+                        name: datum.name || datum.properties.name,
+                        category: self.parseKey(key)
+                    });
+
+                });
+
+            };
+
+            self.parseKey = function(obj, pluralize) {
+
+                var keyMap = {
+                    plural: {
+                        'geography': 'geographies',
+                        'organization': 'organizations',
+                        'practice': 'practices',
+                        'program': 'programs',
+                        'project': 'projects',
+                        'status': 'statuses',
+                        'tag': 'tags'
+                    },
+                    single: {
+                        'geographies': 'geography',
+                        'organizations': 'organization',
+                        'practices': 'practice',
+                        'programs': 'program',
+                        'projects': 'project',
+                        'statuses': 'status',
+                        'tags': 'tag'
+                    }
+                };
+
+                if (pluralize) {
+
+                    return keyMap.plural[obj];
+
+                }
+
+                console.log('keyMap.single', obj, keyMap.single[obj]);
+
+                return keyMap.single[obj];
+
+            };
+
+            self.processSnapshot = function(data) {
+
+                //
+                // Reset filters
+                //
+
+                self.clearAllFilters();
+
+                var relations = [
+                    'creator',
+                    'geographies',
+                    'last_modified_by',
+                    'organizations',
+                    'organization',
+                    'practices',
+                    'programs',
+                    'projects',
+                    'statuses',
+                    'tags'
+                ];
+
+                self.snapshotObject = data;
+
+                $rootScope.page.title = self.snapshotObject.name;
+
+                $rootScope.page.actions = [];
+
+                relations.forEach(function(relation) {
+
+                    if (Array.isArray(self.snapshotObject[relation])) {
+
+                        self.extractFilter(relation, self.snapshotObject[relation]);
+
+                        self.snapshotObject[relation] = [];
+
+                    } else {
+
+                        delete self.snapshotObject[relation];
+
+                    }
+
+                });
+
+            };
+
+            self.processRelations = function(arr) {
+
+                arr.forEach(function(filter) {
+
+                    self.transformRelation(filter, filter.category);
+
+                });
+
+            };
+
+            self.saveSnapshot = function() {
+
+                self.processRelations(self.activeFilters);
+
+                Snapshot.update({
+                    id: +self.snapshotObject.id
+                }, self.snapshotObject).$promise.then(function(data) {
+
+                    self.processSnapshot(data.properties);
+
+                }).then(function(error) {
+                    // Do something with the error
+                });
+
+            };
+
+            self.deleteSnapshot = function() {
+
+                snapshot.$delete().then(function(response) {
+
+                    $location.path('/account');
+
+                }).then(function(error) {
+                    // Do something with the error
+                });
+            };
+
+            $scope.$watch('filterStore.index', function(newVal) {
+
+                console.log('Updated filterStore', newVal);
+
+                self.activeFilters = newVal;
+
+            });
+
+        });
+'use strict';
+
+/**
+ * @ngdoc overview
+ * @name FieldDoc
+ * @description
+ * # FieldDoc
+ *
+ * Main module of the application.
+ */
+angular.module('FieldDoc')
+    .config(function($routeProvider, commonscloud) {
+
+        $routeProvider
             .when('/dashboard', {
                 templateUrl: '/modules/components/dashboard/views/dashboard--view.html',
                 controller: 'DashboardCtrl',
@@ -726,9 +2515,7 @@ angular.module('FieldDoc')
                         // Execute our query so that we can get the Reports back
                         //
 
-                        return Project.minimal({
-                            id: 3
-                        });
+                        return Project.collection();
 
                     },
                     user: function(Account) {
@@ -1844,7 +3631,7 @@ angular.module('FieldDoc')
 
         self.loadProjects = function(params, trackIds) {
 
-            Project.minimal(params).$promise.then(function(successResponse) {
+            Project.collection(params).$promise.then(function(successResponse) {
 
                 console.log('self.filterProjects.successResponse', successResponse);
 
@@ -2051,7 +3838,7 @@ angular.module('FieldDoc')
 
         } else {
 
-            $location.path('/user/logout');
+            $location.path('/user/login');
 
         }
 
@@ -2102,9 +3889,7 @@ angular.module('FieldDoc')
                         //
                         // return Project.query(search_params);
 
-                        return Project.minimal({
-                            id: 3
-                        });
+                        return Project.collection({});
                     },
                     user: function(Account) {
                         if (Account.userObject && !Account.userObject.id) {
@@ -2367,32 +4152,14 @@ angular.module('FieldDoc')
                     self.createProject();
                 },
                 text: 'Create project'
+            }, {
+                type: 'button-link new',
+                action: function() {
+                    self.createSnapshot();
+                },
+                text: 'Create snapshot'
             }]
         };
-
-        //
-        // Project functionality
-        //
-
-        self.projects = projects;
-
-        console.log('self.projects', self.projects);
-
-        projects.$promise.then(function(successResponse) {
-
-            console.log('successResponse', successResponse);
-
-            $scope.projectStore.setProjects(successResponse.features);
-
-            self.filteredProjects = $scope.projectStore.filteredProjects;
-
-            self.processLocations(successResponse.features);
-
-        }, function(errorResponse) {
-
-            console.log('errorResponse', errorResponse);
-
-        });
 
         self.search = {
             query: '',
@@ -2526,6 +4293,12 @@ angular.module('FieldDoc')
             });
         };
 
+        self.createSnapshot = function() {
+
+            $location.path('/snapshot');
+
+        };
+
         self.createPlan = function() {
             self.project = new Project({
                 'name': 'Project Plan',
@@ -2563,9 +4336,33 @@ angular.module('FieldDoc')
                 };
             });
 
-            self.loadOutcomes();
+            //
+            // Project functionality
+            //
 
-            self.loadMetrics();
+            self.projects = projects;
+
+            console.log('self.projects', self.projects);
+
+            projects.$promise.then(function(successResponse) {
+
+                console.log('successResponse', successResponse);
+
+                $scope.projectStore.setProjects(successResponse.features);
+
+                self.filteredProjects = $scope.projectStore.filteredProjects;
+
+                self.processLocations(successResponse.features);
+
+            }, function(errorResponse) {
+
+                console.log('errorResponse', errorResponse);
+
+            });
+
+            // self.loadOutcomes();
+
+            // self.loadMetrics();
 
         } else {
 
@@ -2614,11 +4411,11 @@ angular.module('FieldDoc')
 
             self.filteredProjects = newVal;
 
-            self.processLocations(newVal);
+            // self.processLocations(newVal);
 
-            self.loadMetrics(newVal);
+            // self.loadMetrics(newVal);
 
-            self.loadOutcomes(newVal);
+            // self.loadOutcomes(newVal);
 
         });
 
@@ -2729,7 +4526,7 @@ angular.module('FieldDoc')
                         role: $rootScope.user.properties.roles[0].properties.name,
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
                         can_edit: Account.canEdit(self.project),
-                        is_manager: (Account.hasRole('manager') || Account.inGroup(self.project.properties.account_id, Account.userObject.properties.account)),
+                        is_manager: (Account.hasRole('manager') || Account.inGroup(self.project.properties.organization_id, Account.userObject.properties.account)),
                         is_admin: Account.hasRole('admin')
                     };
                 });
@@ -2786,7 +4583,7 @@ angular.module('FieldDoc')
 
         self.submitProject = function() {
 
-            if (!self.project.properties.account_id) {
+            if (!self.project.properties.organization_id) {
                 $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.")
                 return;
             }
@@ -2807,7 +4604,7 @@ angular.module('FieldDoc')
 
         self.fundProject = function() {
 
-            if (!self.project.properties.account_id) {
+            if (!self.project.properties.organization_id) {
                 $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.")
                 return;
             }
@@ -2828,7 +4625,7 @@ angular.module('FieldDoc')
 
         self.completeProject = function() {
 
-            if (!self.project.properties.account_id) {
+            if (!self.project.properties.organization_id) {
                 $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.")
                 return;
             }
@@ -2866,7 +4663,7 @@ angular.module('FieldDoc')
             self.site = new Site({
                 'name': 'Untitled Site',
                 'project_id': self.project.id,
-                'account_id': self.project.properties.account_id
+                'organization_id': self.project.properties.organization_id
             });
 
             self.site.$save(function(successResponse) {
@@ -3157,38 +4954,40 @@ angular.module('FieldDoc')
 
 (function() {
 
-  'use strict';
+    'use strict';
 
-  /**
-   * @ngdoc
-   * @name
-   * @description
-   */
-  angular.module('FieldDoc')
-    .config(function($routeProvider, commonscloud) {
+    /**
+     * @ngdoc
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .config(function($routeProvider, commonscloud) {
 
-      $routeProvider
-        .when('/account', {
-          redirectTo: '/projects'
-        })
-       .when('/account/:userId', {
-          redirectTo: '/account/:userId/edit'
-        })
-        .when('/account/:userId/edit', {
-          templateUrl: '/modules/components/account/views/accountEdit--view.html',
-          controller: 'AccountEditViewController',
-          controllerAs: 'page',
-          resolve: {
-            user: function(Account) {
-              return Account.getUser();
-            }
-          }
+            $routeProvider
+                .when('/account', {
+                    redirectTo: '/projects'
+                })
+                .when('/account/:userId', {
+                    redirectTo: '/account/:userId/edit'
+                })
+                .when('/account/:userId/edit', {
+                    templateUrl: '/modules/components/account/views/accountEdit--view.html',
+                    controller: 'AccountEditViewController',
+                    controllerAs: 'page',
+                    resolve: {
+                        user: function(Account) {
+                            return Account.getUser();
+                        },
+                        snapshots: function(Snapshot) {
+                            return Snapshot.query();
+                        }
+                    }
+                });
+
         });
 
-    });
-
 }());
-
 'use strict';
 
 /**
@@ -3197,119 +4996,131 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-  .controller('AccountEditViewController', function (Account, $location, $log, Notifications, $rootScope, $route, user, User) {
+    .controller('AccountEditViewController', function(Account, $location, $log, Notifications, $rootScope, $route, user, User, snapshots) {
 
-    var self = this;
+        var self = this;
 
-
-    //
-    // Assign project to a scoped variable
-    //
-    //
-    // Verify Account information for proper UI element display
-    //
-    if (Account.userObject && user) {
-        user.$promise.then(function(userResponse) {
-            $rootScope.user = Account.userObject = self.user = userResponse;
-
-            self.permissions = {
-                isLoggedIn: Account.hasToken(),
-                role: $rootScope.user.properties.roles[0].properties.name,
-                account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
-            };
-
-            //
-            // Setup page meta data
-            //
-            $rootScope.page = {
-                "title": "Edit Account Information « FieldDoc",
-                "links": [
-                    {
-                        "text": "Account",
-                        "url": "/"
-                    },
-                    {
-                        "text": "Edit",
-                        "url": "/account/" + $rootScope.user.id + "/edit"
-                    }
-                ]
-            };
-
-
-        });
-
-
-    }
-    else {
         //
-        // If there is not Account.userObject and no user object, then the
-        // user is not properly authenticated and we should send them, at
-        // minimum, back to the projects page, and have them attempt to
-        // come back to this page again.
+        // Assign project to a scoped variable
         //
-        self.actions.exit();
-    }
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
 
+            user.$promise.then(function(userResponse) {
 
+                $rootScope.user = Account.userObject = self.user = userResponse;
 
-    //
-    //
-    //
-    self.status = {
-        "saving": false
-    };
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0].properties.name,
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                };
 
-    self.actions = {
-        organizations: function() {
-          var _organizations = [];
+                //
+                // Setup page meta data
+                //
+                $rootScope.page = {
+                    "title": "Edit Account Information « FieldDoc",
+                    "links": [{
+                            "text": "Account",
+                            "url": "/"
+                        },
+                        {
+                            "text": "Edit",
+                            "url": "/account/" + $rootScope.user.id + "/edit"
+                        }
+                    ]
+                };
 
-          angular.forEach(self.user.properties.organizations, function(_organization, _index) {
-            if (_organization.id) {
-              _organizations.push({
-                "id": _organization.id
-              })
-            }
-            else {
-              _organizations.push({
-                "name": _organization.properties.name
-              })
-            }
-          });
+                //
+                // Load snapshot data
+                //
 
-          return _organizations;
-        },
-        save: function() {
+                self.actions.snapshots();
 
-            self.status.saving = true;
-
-            var _organizations = self.actions.organizations()
-
-            var _user = new User({
-                "id": self.user.id,
-                "first_name": self.user.properties.first_name,
-                "last_name": self.user.properties.last_name,
-                "organizations": _organizations
             });
 
-            _user.$update(function(successResponse) {
 
-                self.status.saving = false;
+        } else {
+            //
+            // If there is not Account.userObject and no user object, then the
+            // user is not properly authenticated and we should send them, at
+            // minimum, back to the projects page, and have them attempt to
+            // come back to this page again.
+            //
+            self.actions.exit();
 
-                $rootScope.notifications.success("Great!", "Your account changes were saved");
-
-                $location.path('/account/');
-
-            }, function(errorResponse) {
-                self.status.saving = false;
-            });
-        },
-        exit: function() {
-            $location.path('/projects');
         }
-    };
 
-  });
+        //
+        //
+        //
+        self.status = {
+            "saving": false
+        };
 
+        self.actions = {
+            organizations: function() {
+
+                var _organizations = [];
+
+                angular.forEach(self.user.properties.organizations, function(_organization, _index) {
+                    if (_organization.id) {
+                        _organizations.push({
+                            "id": _organization.id
+                        });
+                    } else {
+                        _organizations.push({
+                            "name": _organization.properties.name
+                        });
+                    }
+                });
+
+                return _organizations;
+            },
+            save: function() {
+
+                self.status.saving = true;
+
+                var _organizations = self.actions.organizations();
+
+                var _user = new User({
+                    "id": self.user.id,
+                    "first_name": self.user.properties.first_name,
+                    "last_name": self.user.properties.last_name,
+                    "organizations": _organizations
+                });
+
+                _user.$update(function(successResponse) {
+
+                    self.status.saving = false;
+
+                    $rootScope.notifications.success("Great!", "Your account changes were saved");
+
+                    $location.path('/account/');
+
+                }, function(errorResponse) {
+                    self.status.saving = false;
+                });
+            },
+            snapshots: function() {
+
+                snapshots.$promise.then(function(snapshotResponse) {
+
+                    self.snapshots = snapshotResponse.features;
+
+
+                });
+
+            },
+            exit: function() {
+                $location.path('/projects');
+            }
+        };
+
+    });
 'use strict';
 
 /**
@@ -3527,7 +5338,7 @@ angular.module('FieldDoc')
                 self.practice = new Practice({
                     'practice_type': 'Custom',
                     'site_id': self.site.id,
-                    'account_id': self.site.properties.project.properties.account_id
+                    'organization_id': self.site.properties.project.properties.organization_id
                 });
 
                 self.practice.$save(function(successResponse) {
@@ -5780,8 +7591,8 @@ angular.module('FieldDoc')
                     'measurement_period': 'Planning',
                     'report_date': new Date(),
                     'practice_id': practiceId,
-                    'account_id': self.summary.site.properties
-                        .project.properties.account_id
+                    'organization_id': self.summary.site.properties
+                        .project.properties.organization_id
                 });
 
                 // if (measurementPeriod === "Planning") {
@@ -5789,8 +7600,8 @@ angular.module('FieldDoc')
                 //         'measurement_period': measurementPeriod,
                 //         'report_date': new Date(),
                 //         'practice_id': practiceId,
-                //         'account_id': self.summary.site.properties
-                //             .project.properties.account_id
+                //         'organization_id': self.summary.site.properties
+                //             .project.properties.organization_id
                 //     });
                 // } else {
 
@@ -7510,124 +9321,123 @@ angular
 
 (function() {
 
-  'use strict';
+    'use strict';
 
-  /**
-   * @ngdoc service
-   * @name
-   * @description
-   */
-  angular.module('FieldDoc')
-    .service('Account', function (ipCookie, User) {
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('Account', function(ipCookie, User) {
 
-      var Account = {
-        userObject: {}
-      };
+            var Account = {
+                userObject: {}
+            };
 
-      Account.getUser = function() {
+            Account.getUser = function() {
 
-        var userId = ipCookie('FIELDSTACKIO_CURRENTUSER');
+                var userId = ipCookie('FIELDSTACKIO_CURRENTUSER');
 
-        if (!userId) {
-          return false;
-        }
-
-        var $promise = User.get({
-          id: userId
-        });
-
-        return $promise;
-      };
-
-      Account.setUserId = function() {
-        var $promise = User.me(function(accountResponse) {
-
-          ipCookie('FIELDSTACKIO_CURRENTUSER', accountResponse.id, {
-            path: '/',
-            expires: 2
-          });
-
-          return accountResponse.id;
-        });
-
-        return $promise;
-      };
-
-      Account.hasToken = function() {
-        if (ipCookie('FIELDSTACKIO_CURRENTUSER') && ipCookie('FIELDSTACKIO_SESSION')) {
-          return true;
-        }
-
-        return false;
-      };
-
-      Account.hasRole = function(roleNeeded) {
-
-        var roles = this.userObject.properties.roles;
-
-        if (!roles) {
-          return false;
-        }
-
-        for (var index = 0; index < roles.length; index++) {
-          if (roleNeeded === roles[index].properties.name) {
-            return true;
-          }
-        }
-
-        return false;
-      };
-
-      Account.inGroup = function(userId, group) {
-
-            var return_ = false;
-
-            angular.forEach(group, function(member) {
-                if (member.id === userId) {
-                    return_ = true;
+                if (!userId) {
+                    return false;
                 }
-            });
 
-            return return_;
-      };
+                var $promise = User.get({
+                    id: userId
+                });
 
-      Account.canEdit = function(resource) {
-        if (Account.userObject && !Account.userObject.id) {
-            return false;
-        }
+                return $promise;
+            };
 
-        if (Account.hasRole('admin')) {
-            return true;
-        } else if (Account.hasRole('manager') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(resource.properties.account_id, Account.userObject.properties.account) || Account.inGroup(Account.userObject.id, resource.properties.members))) {
-            return true;
-        } else if (Account.hasRole('grantee') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(Account.userObject.id, resource.properties.members))) {
-            return true;
-        }
+            Account.setUserId = function() {
+                var $promise = User.me(function(accountResponse) {
 
-        return false;
-      };
+                    ipCookie('FIELDSTACKIO_CURRENTUSER', accountResponse.id, {
+                        path: '/',
+                        expires: 2
+                    });
 
-      Account.canDelete = function(resource) {
-        if (Account.userObject && !Account.userObject.id) {
-            return false;
-        }
+                    return accountResponse.id;
+                });
 
-        if (Account.hasRole('admin')) {
-            return true;
-        } else if (Account.hasRole('manager') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(Account.userObject.id, resource.properties.members))) {
-            return true;
-        } else if (resource && resource.properties && Account.hasRole('grantee') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(Account.userObject.id, resource.properties.members))) {
-            return true;
-        }
+                return $promise;
+            };
 
-        return false;
-      };
+            Account.hasToken = function() {
+                if (ipCookie('FIELDSTACKIO_CURRENTUSER') && ipCookie('FIELDSTACKIO_SESSION')) {
+                    return true;
+                }
 
-      return Account;
-    });
+                return false;
+            };
+
+            Account.hasRole = function(roleNeeded) {
+
+                var roles = this.userObject.properties.roles;
+
+                if (!roles) {
+                    return false;
+                }
+
+                for (var index = 0; index < roles.length; index++) {
+                    if (roleNeeded === roles[index].properties.name) {
+                        return true;
+                    }
+                }
+
+                return false;
+            };
+
+            Account.inGroup = function(userId, group) {
+
+                var return_ = false;
+
+                angular.forEach(group, function(member) {
+                    if (member.id === userId) {
+                        return_ = true;
+                    }
+                });
+
+                return return_;
+            };
+
+            Account.canEdit = function(resource) {
+                if (Account.userObject && !Account.userObject.id) {
+                    return false;
+                }
+
+                if (Account.hasRole('admin')) {
+                    return true;
+                } else if (Account.hasRole('manager') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(resource.properties.organization_id, Account.userObject.properties.account) || Account.inGroup(Account.userObject.id, resource.properties.members))) {
+                    return true;
+                } else if (Account.hasRole('grantee') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(Account.userObject.id, resource.properties.members))) {
+                    return true;
+                }
+
+                return false;
+            };
+
+            Account.canDelete = function(resource) {
+                if (Account.userObject && !Account.userObject.id) {
+                    return false;
+                }
+
+                if (Account.hasRole('admin')) {
+                    return true;
+                } else if (Account.hasRole('manager') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(Account.userObject.id, resource.properties.members))) {
+                    return true;
+                } else if (resource && resource.properties && Account.hasRole('grantee') && (Account.userObject.id === resource.properties.creator_id || Account.inGroup(Account.userObject.id, resource.properties.members))) {
+                    return true;
+                }
+
+                return false;
+            };
+
+            return Account;
+        });
 
 }());
-
 (function() {
 
   'use strict';
@@ -8020,7 +9830,7 @@ angular
      */
     angular.module('FieldDoc')
         .service('MetricService', function(environment, Preprocessors, $resource) {
-            return $resource(environment.apiUrl.concat('/v1/data/program/:id/metrics'), {
+            return $resource(environment.apiUrl.concat('/v1/metrics'), {
                 id: '@id'
             }, {
                 query: {
@@ -8124,7 +9934,7 @@ angular
      */
     angular.module('FieldDoc')
         .service('OutcomeService', function(environment, Preprocessors, $resource) {
-            return $resource(environment.apiUrl.concat('/v1/data/program/:id/outcomes'), {
+            return $resource(environment.apiUrl.concat('/v1/outcomes'), {
                 id: '@id'
             }, {
                 query: {
@@ -8838,6 +10648,11 @@ angular
                 query: {
                     isArray: false
                 },
+                collection: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/projects')
+                },
                 'summary': {
                     isArray: false,
                     method: 'GET',
@@ -9115,6 +10930,40 @@ angular.module('FieldDoc')
 
   });
 
+(function() {
+
+    'use strict';
+
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('Snapshot', function(environment, Preprocessors, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/snapshot/:id'), {
+                id: '@id'
+            }, {
+                query: {
+                    isArray: false
+                },
+                geographies: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/snapshot/:id/geographies')
+                },
+                projects: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/snapshot/:id/projects')
+                },
+                'update': {
+                    method: 'PATCH'
+                }
+            });
+        });
+
+}());
 (function () {
 
     'use strict';
@@ -9782,6 +11631,8 @@ angular.module('FieldDoc')
                             // FilterStore.clearAll();
 
                             FilterStore.addItem($item);
+
+                            console.log('FilterStore.index', FilterStore.index);
 
                             // ProjectStore.filterProjects($item);
 

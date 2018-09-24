@@ -7,11 +7,13 @@
  */
 angular.module('FieldDoc')
     .controller('SnapshotCtrl', function(Account, $location, $log, Project, Map,
-        projects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
+        baseProjects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
         MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox,
-        Practice) {
+        Practice, snapshot) {
 
         $scope.filterStore = FilterStore;
+
+        FilterStore.clearAll();
 
         // $scope.projectStore = ProjectStore;
 
@@ -28,20 +30,24 @@ angular.module('FieldDoc')
             collection: 'metric'
         };
 
-        self.cardTpl = {
-            featureType: 'program',
-            featureTabLabel: 'Projects',
-            feature: null,
-            heading: 'Delaware River Watershed Initiative',
-            yearsActive: '2013 - 2018',
-            funding: '$2.65 million',
-            url: 'https://4states1source.org',
-            resourceUrl: null,
-            linkTarget: '_blank',
-            description: 'The Delaware River Watershed Initiative is a cross-cutting collaboration working to conserve and restore the streams that supply drinking water to 15 million people in New York, New Jersey, Pennsylvania and Delaware.',
-        };
+        self.cardTpl = {};
 
-        self.card = self.cardTpl;
+        self.card = {};
+
+        // self.cardTpl = {
+        //     featureType: 'program',
+        //     featureTabLabel: 'Projects',
+        //     feature: null,
+        //     heading: 'Delaware River Watershed Initiative',
+        //     yearsActive: '2013 - 2018',
+        //     funding: '$2.65 million',
+        //     url: 'https://4states1source.org',
+        //     resourceUrl: null,
+        //     linkTarget: '_blank',
+        //     description: 'The Delaware River Watershed Initiative is a cross-cutting collaboration working to conserve and restore the streams that supply drinking water to 15 million people in New York, New Jersey, Pennsylvania and Delaware.',
+        // };
+
+        // self.card = self.cardTpl;
 
         self.historyItem = null;
 
@@ -484,9 +490,7 @@ angular.module('FieldDoc')
                 // is required by default.
                 //
 
-                var params = {
-                    id: 3
-                };
+                var params = {};
 
                 //
                 // If the `arr` parameter is valid,
@@ -561,9 +565,7 @@ angular.module('FieldDoc')
                 // is required by default.
                 //
 
-                var params = {
-                    id: 3
-                };
+                var params = {};
 
                 //
                 // If the `arr` parameter is valid,
@@ -1065,7 +1067,9 @@ angular.module('FieldDoc')
 
             if (reload) {
 
-                self.loadProjects({}, false);
+                // self.loadProjects({}, false);
+
+                self.loadBaseProjects();
 
             }
 
@@ -1092,33 +1096,74 @@ angular.module('FieldDoc')
 
         };
 
-        self.loadProjects = function(params, trackIds) {
+        self.processProjectData = function(data) {
+
+            self.filteredProjects = data.features;
+
+            self.processLocations(data.features);
+
+            self.loadOutcomes(self.filteredProjects);
+
+            self.loadMetrics(self.filteredProjects);
+
+            self.zoomToProjects();
+
+        };
+
+        self.loadSnapshot = function() {
+
+            snapshot.$promise.then(function(successResponse) {
+
+                console.log('self.loadSnapshot.successResponse', successResponse);
+
+                self.snapshotObject = successResponse;
+
+                self.cardTpl = {
+                    featureType: 'snapshot',
+                    featureTabLabel: 'Projects',
+                    feature: null,
+                    heading: self.snapshotObject.name,
+                    // yearsActive: '2013 - 2018',
+                    // funding: '$2.65 million',
+                    // url: 'https://4states1source.org',
+                    // resourceUrl: null,
+                    // linkTarget: '_blank',
+                    description: self.snapshotObject.description
+                };
+
+                self.card = self.cardTpl;
+
+            }, function(errorResponse) {
+
+                console.log('self.loadSnapshot.errorResponse', errorResponse);
+
+            });
+
+        };
+
+        self.loadBaseProjects = function() {
+
+            baseProjects.$promise.then(function(successResponse) {
+
+                console.log('self.loadBaseProjects.successResponse', successResponse);
+
+                self.processProjectData(successResponse);
+
+            }, function(errorResponse) {
+
+                console.log('self.loadBaseProjects.errorResponse', errorResponse);
+
+            });
+
+        };
+
+        self.loadProjects = function(params) {
 
             Project.collection(params).$promise.then(function(successResponse) {
 
                 console.log('self.filterProjects.successResponse', successResponse);
 
-                // $scope.projectStore.setProjects(successResponse.features);
-
-                self.filteredProjects = successResponse.features;
-
-                self.processLocations(successResponse.features);
-
-                if (!trackIds) {
-
-                    self.loadOutcomes();
-
-                    self.loadMetrics();
-
-                } else {
-
-                    self.loadOutcomes(self.filteredProjects);
-
-                    self.loadMetrics(self.filteredProjects);
-
-                    self.zoomToProjects();
-
-                }
+                self.processProjectData(successResponse);
 
             }, function(errorResponse) {
 
@@ -1192,7 +1237,7 @@ angular.module('FieldDoc')
             // Execute API request
             //
 
-            self.loadProjects(params, true);
+            self.loadProjects(params);
 
         };
 
@@ -1242,7 +1287,7 @@ angular.module('FieldDoc')
             // Reset map extent
             //
 
-            self.resetMapExtent()
+            self.resetMapExtent();
 
             //
             // Reset dashboard state
@@ -1258,11 +1303,15 @@ angular.module('FieldDoc')
 
                 self.loadProjects({
                     user: $rootScope.user.id
-                }, true);
+                });
 
             } else {
 
-                self.loadProjects({}, false);
+                // self.loadProjects({});
+
+                self.loadBaseProjects();
+
+                self.loadSnapshot();
 
             }
 
@@ -1288,7 +1337,11 @@ angular.module('FieldDoc')
 
                 }
 
-                self.loadProjects({}, false);
+                // self.loadProjects({}, false);
+
+                self.loadBaseProjects();
+
+                self.loadSnapshot();
 
             });
 

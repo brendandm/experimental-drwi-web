@@ -150,7 +150,7 @@
                 self.practice = new Practice({
                     'practice_type': 'Custom',
                     'site_id': self.site.id,
-                    'account_id': self.site.properties.project.properties.account_id
+                    'organization_id': self.site.properties.project.properties.organization_id
                 });
 
                 self.practice.$save(function(successResponse) {

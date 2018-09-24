@@ -181,30 +181,6 @@ angular.module('FieldDoc')
             }]
         };
 
-        //
-        // Project functionality
-        //
-
-        self.projects = projects;
-
-        console.log('self.projects', self.projects);
-
-        projects.$promise.then(function(successResponse) {
-
-            console.log('successResponse', successResponse);
-
-            $scope.projectStore.setProjects(successResponse.features);
-
-            self.filteredProjects = $scope.projectStore.filteredProjects;
-
-            self.processLocations(successResponse.features);
-
-        }, function(errorResponse) {
-
-            console.log('errorResponse', errorResponse);
-
-        });
-
         self.search = {
             query: '',
             execute: function(page) {
@@ -380,9 +356,33 @@ angular.module('FieldDoc')
                 };
             });
 
-            self.loadOutcomes();
+            //
+            // Project functionality
+            //
 
-            self.loadMetrics();
+            self.projects = projects;
+
+            console.log('self.projects', self.projects);
+
+            projects.$promise.then(function(successResponse) {
+
+                console.log('successResponse', successResponse);
+
+                $scope.projectStore.setProjects(successResponse.features);
+
+                self.filteredProjects = $scope.projectStore.filteredProjects;
+
+                self.processLocations(successResponse.features);
+
+            }, function(errorResponse) {
+
+                console.log('errorResponse', errorResponse);
+
+            });
+
+            // self.loadOutcomes();
+
+            // self.loadMetrics();
 
         } else {
 
@@ -431,11 +431,11 @@ angular.module('FieldDoc')
 
             self.filteredProjects = newVal;
 
-            self.processLocations(newVal);
+            // self.processLocations(newVal);
 
-            self.loadMetrics(newVal);
+            // self.loadMetrics(newVal);
 
-            self.loadOutcomes(newVal);
+            // self.loadOutcomes(newVal);
 
         });
 

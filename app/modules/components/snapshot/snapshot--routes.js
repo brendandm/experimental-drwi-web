@@ -18,16 +18,23 @@ angular.module('FieldDoc')
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
-                    geographies: function($location, GeographyService) {
+                    geographies: function($route, $location, Snapshot) {
 
-                        return GeographyService.query({
-                            id: 3
+                        return Snapshot.geographies({
+                            id: $route.current.params.snapshotId
                         });
 
                     },
-                    projects: function($route, $location, Snapshot) {
+                    baseProjects: function($route, $location, Snapshot) {
 
                         return Snapshot.projects({
+                            id: $route.current.params.snapshotId
+                        });
+
+                    },
+                    snapshot: function($route, $location, Snapshot) {
+
+                        return Snapshot.get({
                             id: $route.current.params.snapshotId
                         });
 
