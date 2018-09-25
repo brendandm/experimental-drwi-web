@@ -12,7 +12,31 @@ angular.module('FieldDoc')
     .config(function($routeProvider, commonscloud) {
 
         $routeProvider
-            .when('/snapshot/:snapshotId', {
+            .when('/snapshots', {
+                templateUrl: '/modules/components/snapshot/views/snapshotList--view.html',
+                controller: 'SnapshotListCtrl',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    snapshots: function($route, $location, Snapshot) {
+
+                        return Snapshot.query();
+
+                    },
+                    user: function(Account) {
+
+                        if (Account.userObject && !Account.userObject.id) {
+
+                            return Account.getUser();
+                            
+                        }
+
+                        return Account.userObject;
+
+                    }
+                }
+            })
+            .when('/snapshots/:snapshotId', {
                 templateUrl: '/modules/components/snapshot/views/snapshot--view.html',
                 controller: 'SnapshotCtrl',
                 controllerAs: 'page',
@@ -52,7 +76,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/snapshot', {
+            .when('/snapshots/collection/new', {
                 templateUrl: '/modules/components/snapshot/views/snapshotCreate--view.html',
                 controller: 'SnapshotCreateCtrl',
                 controllerAs: 'page',
@@ -71,7 +95,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/snapshot/:snapshotId/edit', {
+            .when('/snapshots/:snapshotId/edit', {
                 templateUrl: '/modules/components/snapshot/views/snapshotEdit--view.html',
                 controller: 'SnapshotEditCtrl',
                 controllerAs: 'page',

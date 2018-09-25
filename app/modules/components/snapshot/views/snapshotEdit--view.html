@@ -2,6 +2,28 @@
 
 <main class="container feature">
     <article class="feature-detail">
+
+        <nav class="column-5 contextual-navigation-wrapper">
+            <h6><strong>Tools</strong></h6>
+            <ul class="contextual-navigation">
+                <li>
+                    <a href="/account/{{ $root.user.id }}/edit">
+                        Profile
+                    </a>
+                </li>
+                <li>
+                    <a href="/organizations">
+                        Organizations
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="/snapshots">
+                        Snapshots
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
         <div class="column-11 feature-detail-content">
 
             <h1 class="large">Edit snapshot</h1>

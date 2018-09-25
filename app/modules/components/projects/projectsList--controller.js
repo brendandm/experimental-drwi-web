@@ -315,7 +315,7 @@ angular.module('FieldDoc')
 
         self.createSnapshot = function() {
 
-            $location.path('/snapshot');
+            $location.path('/snapshots/collection/new');
 
         };
 
