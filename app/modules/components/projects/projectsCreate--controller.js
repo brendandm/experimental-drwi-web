@@ -6,13 +6,16 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('SnapshotCreateCtrl', function(Account, $location, $log, Snapshot, $rootScope, $route, user) {
+    .controller('ProjectCreateCtrl',
+        function(Account, $location, $log, Project, $rootScope, $route, user) {
 
         var self = this;
 
         $rootScope.page = {};
 
-        $rootScope.page.actions = [];
+        self.project = {};
+
+        $rootScope.page.title = 'Create Project';
 
         //
         // Verify Account information for proper UI element display
@@ -29,30 +32,24 @@ angular.module('FieldDoc')
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                 };
 
-                self.snapshot = new Snapshot();
-
-                //
-                // Setup page meta data
-                //
-                $rootScope.page = {
-                    'title': 'Create Snapshot',
-                    'links': []
-                };
-
             });
 
         }
 
-        self.saveSnapshot = function() {
+        self.saveProject = function() {
 
-            self.snapshot.$save().then(function(response) {
+            var project = new Project(self.project);
 
-                self.snapshot = response;
+            project.workflow_state = 'Draft';
 
-                $location.path('/snapshot/' + self.snapshot.id + '/edit');
+            project.$save().then(function(response) {
+
+                $location.path('/projects');
 
             }).then(function(error) {
-                // Do something with the error
+
+                $log.error('Unable to create Project object');
+
             });
 
         };

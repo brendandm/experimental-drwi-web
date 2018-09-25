@@ -23,7 +23,7 @@ angular.module('FieldDoc')
         // Setup basic page variables
         //
         $rootScope.page = {
-            title: 'Dashboard'
+            title: 'Snapshot'
         };
 
         self.activeTab = {

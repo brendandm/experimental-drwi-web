@@ -32,16 +32,8 @@ angular.module('FieldDoc')
                 // Setup page meta data
                 //
                 $rootScope.page = {
-                    "title": "Edit Account Information « FieldDoc",
-                    "links": [{
-                            "text": "Account",
-                            "url": "/"
-                        },
-                        {
-                            "text": "Edit",
-                            "url": "/account/" + $rootScope.user.id + "/edit"
-                        }
-                    ]
+                    'title': 'Profile',
+                    'links': []
                 };
 
                 //
@@ -68,7 +60,7 @@ angular.module('FieldDoc')
         //
         //
         self.status = {
-            "saving": false
+            'saving': false
         };
 
         self.actions = {
@@ -79,11 +71,11 @@ angular.module('FieldDoc')
                 angular.forEach(self.user.properties.organizations, function(_organization, _index) {
                     if (_organization.id) {
                         _organizations.push({
-                            "id": _organization.id
+                            'id': _organization.id
                         });
                     } else {
                         _organizations.push({
-                            "name": _organization.properties.name
+                            'name': _organization.properties.name
                         });
                     }
                 });
@@ -97,17 +89,17 @@ angular.module('FieldDoc')
                 var _organizations = self.actions.organizations();
 
                 var _user = new User({
-                    "id": self.user.id,
-                    "first_name": self.user.properties.first_name,
-                    "last_name": self.user.properties.last_name,
-                    "organizations": _organizations
+                    'id': self.user.id,
+                    'first_name': self.user.properties.first_name,
+                    'last_name': self.user.properties.last_name,
+                    'organizations': _organizations
                 });
 
                 _user.$update(function(successResponse) {
 
                     self.status.saving = false;
 
-                    $rootScope.notifications.success("Great!", "Your account changes were saved");
+                    $rootScope.notifications.success('Great!', 'Your account changes were saved');
 
                     $location.path('/account/');
 

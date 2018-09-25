@@ -17,7 +17,8 @@ angular.module('FieldDoc')
         project.$promise.then(function(successResponse) {
             self.project = successResponse;
 
-            $rootScope.page.title = self.project.properties.name;
+            $rootScope.page.title = 'Edit Project';
+
             $rootScope.page.links = [{
                     text: 'Projects',
                     url: '/projects'

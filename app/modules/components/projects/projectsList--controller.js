@@ -160,24 +160,14 @@ angular.module('FieldDoc')
         // Setup basic page variables
         //
         $rootScope.page = {
-            title: 'Program Summary',
-            links: [{
-                text: 'Program Summary',
-                url: '/projects',
-                type: 'active'
-            }],
+            title: 'Projects',
+            links: [],
             actions: [{
                 type: 'button-link new',
                 action: function() {
                     self.createProject();
                 },
                 text: 'Create project'
-            }, {
-                type: 'button-link new',
-                action: function() {
-                    self.createSnapshot();
-                },
-                text: 'Create snapshot'
             }]
         };
 
@@ -273,8 +263,6 @@ angular.module('FieldDoc')
             },
             clear: function() {
 
-                // $location.path('/projects/').search('');
-
                 self.q = {};
 
                 self.filteredProjects = self.projects;
@@ -284,38 +272,9 @@ angular.module('FieldDoc')
             }
         };
 
-        //
-        // Set Default Search Filter value
-        //
-        if (self.search && self.search.query === '') {
-
-            var searchParams = $location.search(),
-                q = angular.fromJson(searchParams.q);
-
-            if (q && q.filters && q.filters.length) {
-                angular.forEach(q.filters[0].and, function(filter) {
-                    if (filter.name === 'name') {
-                        self.search.query = filter.val.replace(/%/g, '');
-                    }
-                });
-            }
-        }
-
         self.createProject = function() {
-            self.project = new Project({
-                'name': 'Untitled Project'
-            });
 
-            self.project.$save(function(successResponse) {
-                $location.path('/projects/' + successResponse.id + '/edit');
-            }, function(errorResponse) {
-                $log.error('Unable to create Project object');
-            });
-        };
-
-        self.createSnapshot = function() {
-
-            $location.path('/snapshots/collection/new');
+            $location.path('/projects/collection/new');
 
         };
 

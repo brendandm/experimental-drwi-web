@@ -80,7 +80,8 @@ angular.module('FieldDoc')
 
             self.status.loading = false;
 
-            $rootScope.page.title = self.project.properties.name;
+            $rootScope.page.title = 'Project Summary';
+
             $rootScope.page.links = [{
                     text: 'Projects',
                     url: '/projects'

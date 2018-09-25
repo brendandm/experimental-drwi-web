@@ -159,7 +159,7 @@ angular.module('FieldDoc')
      * @name
      * @description
      */
-     angular.module('FieldDoc')
+    angular.module('FieldDoc')
         .controller('SecurityController', function(Account, $location, Security, ipCookie, Notifications, $route, $rootScope, $timeout) {
 
             var self = this;
@@ -173,77 +173,79 @@ angular.module('FieldDoc')
             // Before showing the user the login page,
             //
             if (ipCookie('FIELDSTACKIO_SESSION')) {
+
                 $location.path('/projects');
+                
             }
 
             self.login = {
-              processing: false,
-              submit: function(firstTime) {
+                processing: false,
+                submit: function(firstTime) {
 
-                self.login.processing = true;
+                    self.login.processing = true;
 
-                var credentials = new Security({
-                  email: self.login.email,
-                  password: self.login.password,
-                });
-
-                credentials.$save(function(response) {
-
-                  //
-                  // Check to see if there are any errors by checking for the existence
-                  // of response.response.errors
-                  //
-                  if (response.response && response.response.errors) {
-                    self.login.errors = response.response.errors;
-                    self.register.processing = false;
-                    self.login.processing = false;
-
-                    $timeout(function() {
-                      self.login.errors = null;
-                    }, 3500);
-                  } else {
-                    //
-                    // Make sure our cookies for the Session are being set properly
-                    //
-                    ipCookie.remove('FIELDSTACKIO_SESSION');
-                    ipCookie('FIELDSTACKIO_SESSION', response.access_token, self.cookieOptions);
-
-                    //
-                    // Make sure we also set the User ID Cookie, so we need to wait to
-                    // redirect until we're really sure the cookie is set
-                    //
-                    Account.setUserId().$promise.then(function() {
-                      Account.getUser().$promise.then(function(userResponse) {
-
-                        Account.userObject = userResponse;
-
-                        $rootScope.user = Account.userObject;
-                        $rootScope.isLoggedIn = Account.hasToken();
-                        $rootScope.isAdmin = Account.hasRole('admin');
-
-                        $location.path('/projects');
-                      });
+                    var credentials = new Security({
+                        email: self.login.email,
+                        password: self.login.password,
                     });
 
-                  }
-                }, function(){
-                  self.login.processing = false;
+                    credentials.$save(function(response) {
 
-                  var messageTitle = 'Incorrect Credentials',
-                      messageDescription = ['The email or password you provided was incorrect'];
+                        //
+                        // Check to see if there are any errors by checking for the existence
+                        // of response.response.errors
+                        //
+                        if (response.response && response.response.errors) {
+                            self.login.errors = response.response.errors;
+                            self.register.processing = false;
+                            self.login.processing = false;
 
-                  $rootScope.notifications.error(messageTitle, messageDescription);
+                            $timeout(function() {
+                                self.login.errors = null;
+                            }, 3500);
+                        } else {
+                            //
+                            // Make sure our cookies for the Session are being set properly
+                            //
+                            ipCookie.remove('FIELDSTACKIO_SESSION');
+                            ipCookie('FIELDSTACKIO_SESSION', response.access_token, self.cookieOptions);
 
-                  $timeout(function() {
-                    $rootScope.notifications.objects = [];
-                  }, 3500);
-                });
-              }
+                            //
+                            // Make sure we also set the User ID Cookie, so we need to wait to
+                            // redirect until we're really sure the cookie is set
+                            //
+                            Account.setUserId().$promise.then(function() {
+                                Account.getUser().$promise.then(function(userResponse) {
+
+                                    Account.userObject = userResponse;
+
+                                    $rootScope.user = Account.userObject;
+                                    $rootScope.isLoggedIn = Account.hasToken();
+                                    $rootScope.isAdmin = Account.hasRole('admin');
+
+                                    $location.path('/projects');
+
+                                });
+                            });
+
+                        }
+                    }, function() {
+                        self.login.processing = false;
+
+                        var messageTitle = 'Incorrect Credentials',
+                            messageDescription = ['The email or password you provided was incorrect'];
+
+                        $rootScope.notifications.error(messageTitle, messageDescription);
+
+                        $timeout(function() {
+                            $rootScope.notifications.objects = [];
+                        }, 3500);
+                    });
+                }
             };
         });
 
 }());
-
 (function () {
 
     'use strict';
@@ -685,7 +687,31 @@ angular.module('FieldDoc')
     .config(function($routeProvider, commonscloud) {
 
         $routeProvider
-            .when('/snapshot/:snapshotId', {
+            .when('/snapshots', {
+                templateUrl: '/modules/components/snapshot/views/snapshotList--view.html',
+                controller: 'SnapshotListCtrl',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    snapshots: function($route, $location, Snapshot) {
+
+                        return Snapshot.query();
+
+                    },
+                    user: function(Account) {
+
+                        if (Account.userObject && !Account.userObject.id) {
+
+                            return Account.getUser();
+                            
+                        }
+
+                        return Account.userObject;
+
+                    }
+                }
+            })
+            .when('/snapshots/:snapshotId', {
                 templateUrl: '/modules/components/snapshot/views/snapshot--view.html',
                 controller: 'SnapshotCtrl',
                 controllerAs: 'page',
@@ -725,7 +751,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/snapshot', {
+            .when('/snapshots/collection/new', {
                 templateUrl: '/modules/components/snapshot/views/snapshotCreate--view.html',
                 controller: 'SnapshotCreateCtrl',
                 controllerAs: 'page',
@@ -744,7 +770,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/snapshot/:snapshotId/edit', {
+            .when('/snapshots/:snapshotId/edit', {
                 templateUrl: '/modules/components/snapshot/views/snapshotEdit--view.html',
                 controller: 'SnapshotEditCtrl',
                 controllerAs: 'page',
@@ -797,7 +823,7 @@ angular.module('FieldDoc')
         // Setup basic page variables
         //
         $rootScope.page = {
-            title: 'Dashboard'
+            title: 'Snapshot'
         };
 
         self.activeTab = {
@@ -2134,6 +2160,145 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
+    .controller('SnapshotListCtrl',
+        function(Account, $location, $log, Notifications, $rootScope, $route, user, User, snapshots) {
+
+            var self = this;
+
+            //
+            // Assign project to a scoped variable
+            //
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = self.user = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0].properties.name,
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                    };
+
+                    //
+                    // Setup page meta data
+                    //
+                    $rootScope.page = {
+                        'title': 'Snapshots',
+                        'links': [],
+                        'actions': [{
+                            type: 'button-link new',
+                            action: function() {
+                                self.createSnapshot();
+                            },
+                            text: 'Create snapshot'
+                        }]
+                    };
+
+                    //
+                    // Load snapshot data
+                    //
+
+                    self.actions.snapshots();
+
+                });
+
+
+            } else {
+                //
+                // If there is not Account.userObject and no user object, then the
+                // user is not properly authenticated and we should send them, at
+                // minimum, back to the projects page, and have them attempt to
+                // come back to this page again.
+                //
+                self.actions.exit();
+
+            }
+
+            self.createSnapshot = function() {
+
+                $location.path('/snapshots/collection/new');
+
+            };
+
+            //
+            //
+            //
+            self.status = {
+                'saving': false
+            };
+
+            self.actions = {
+                organizations: function() {
+
+                    var _organizations = [];
+
+                    angular.forEach(self.user.properties.organizations, function(_organization, _index) {
+                        if (_organization.id) {
+                            _organizations.push({
+                                'id': _organization.id
+                            });
+                        } else {
+                            _organizations.push({
+                                'name': _organization.properties.name
+                            });
+                        }
+                    });
+
+                    return _organizations;
+                },
+                save: function() {
+
+                    self.status.saving = true;
+
+                    var _organizations = self.actions.organizations();
+
+                    var _user = new User({
+                        'id': self.user.id,
+                        'first_name': self.user.properties.first_name,
+                        'last_name': self.user.properties.last_name,
+                        'organizations': _organizations
+                    });
+
+                    _user.$update(function(successResponse) {
+
+                        self.status.saving = false;
+
+                        $rootScope.notifications.success('Great!', 'Your account changes were saved');
+
+                        $location.path('/account/');
+
+                    }, function(errorResponse) {
+                        self.status.saving = false;
+                    });
+                },
+                snapshots: function() {
+
+                    snapshots.$promise.then(function(snapshotResponse) {
+
+                        self.snapshots = snapshotResponse.features;
+
+
+                    });
+
+                },
+                exit: function() {
+                    $location.path('/projects');
+                }
+            };
+
+        });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
     .controller('SnapshotCreateCtrl', function(Account, $location, $log, Snapshot, $rootScope, $route, user) {
 
         var self = this;
@@ -2159,7 +2324,13 @@ angular.module('FieldDoc')
 
                 self.snapshot = new Snapshot();
 
-                $rootScope.page.title = 'Create snapshot';
+                //
+                // Setup page meta data
+                //
+                $rootScope.page = {
+                    'title': 'Create Snapshot',
+                    'links': []
+                };
 
             });
 
@@ -2232,6 +2403,14 @@ angular.module('FieldDoc')
                     };
 
                     self.loadSnapshot();
+
+                    //
+                    // Setup page meta data
+                    //
+                    $rootScope.page = {
+                        'title': 'Edit Snapshot',
+                        'links': []
+                    };
 
                 });
 
@@ -2392,8 +2571,6 @@ angular.module('FieldDoc')
                 ];
 
                 self.snapshotObject = data;
-
-                $rootScope.page.title = self.snapshotObject.name;
 
                 $rootScope.page.actions = [];
 
@@ -3843,6 +4020,284 @@ angular.module('FieldDoc')
         }
 
     });
+(function() {
+
+    'use strict';
+
+    /**
+     * @ngdoc
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .config(function($routeProvider, commonscloud) {
+
+            $routeProvider
+                .when('/organization', {
+                    templateUrl: '/modules/components/organization/views/organizationEdit--view.html',
+                    controller: 'OrganizationEditViewController',
+                    controllerAs: 'page',
+                    resolve: {
+                        user: function(Account) {
+                            return Account.getUser();
+                        }
+                    }
+                });
+
+        });
+
+}());
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('OrganizationEditViewController',
+        function(Account, $location, $log, Notifications, $rootScope, $route, user, User, Organization) {
+
+            var self = this;
+
+            //
+            // Assign project to a scoped variable
+            //
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = self.user = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0].properties.name,
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                    };
+
+                    //
+                    // Setup page meta data
+                    //
+                    $rootScope.page = {
+                        'title': 'Edit Organization',
+                        'links': []
+                    };
+
+                    //
+                    // Load organization data
+                    //
+
+                    self.actions.organization(self.user);
+
+                });
+
+
+            } else {
+                //
+                // If there is not Account.userObject and no user object, then the
+                // user is not properly authenticated and we should send them, at
+                // minimum, back to the projects page, and have them attempt to
+                // come back to this page again.
+                //
+                self.actions.exit();
+
+            }
+
+            //
+            //
+            //
+            self.status = {
+                'saving': false
+            };
+
+            self.actions = {
+                parseFeature:  function(data) {
+
+                    self.organization = data.properties;
+
+                    delete self.organization.creator;
+                    delete self.organization.last_modified_by;
+                    delete self.organization.project;
+                    delete self.organization.snapshots;
+
+                    console.log('self.organization', self.organization);
+
+                },
+                organization: function(user) {
+
+                    var organizationId = user.properties.organization.properties.id;
+
+                    Organization.get({
+                        id: organizationId
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('self.actions.organization', successResponse);
+
+                        self.actions.parseFeature(successResponse);
+
+                    }, function(errorResponse) {
+
+                        console.error('Unable to load organization.');
+
+                    });
+
+                },
+                save: function() {
+
+                    self.status.saving = true;
+
+                    Organization.update({
+                        id: self.organization.id
+                    }, self.organization).$promise.then(function(successResponse) {
+
+                        self.status.saving = false;
+
+                        $rootScope.notifications.success('Great!', 'Your organization changes were saved.');
+
+                        self.actions.parseFeature(successResponse);
+
+                    }, function(errorResponse) {
+
+                        self.status.saving = false;
+
+                        $rootScope.notifications.error('', 'Unable to save your organization changes.');
+
+                    });
+                },
+                exit: function() {
+                    $location.path('/projects');
+                }
+            };
+
+        });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('OrganizationListViewController', function(Account, $location, $log, Notifications, $rootScope, $route, user, User, snapshots) {
+
+        var self = this;
+
+        //
+        // Assign project to a scoped variable
+        //
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+
+            user.$promise.then(function(userResponse) {
+
+                $rootScope.user = Account.userObject = self.user = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0].properties.name,
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                };
+
+                //
+                // Setup page meta data
+                //
+                $rootScope.page = {
+                    'title': 'Organizations',
+                    'links': []
+                };
+
+                //
+                // Load snapshot data
+                //
+
+                self.actions.snapshots();
+
+            });
+
+
+        } else {
+            //
+            // If there is not Account.userObject and no user object, then the
+            // user is not properly authenticated and we should send them, at
+            // minimum, back to the projects page, and have them attempt to
+            // come back to this page again.
+            //
+            self.actions.exit();
+
+        }
+
+        //
+        //
+        //
+        self.status = {
+            'saving': false
+        };
+
+        self.actions = {
+            organizations: function() {
+
+                var _organizations = [];
+
+                angular.forEach(self.user.properties.organizations, function(_organization, _index) {
+                    if (_organization.id) {
+                        _organizations.push({
+                            'id': _organization.id
+                        });
+                    } else {
+                        _organizations.push({
+                            'name': _organization.properties.name
+                        });
+                    }
+                });
+
+                return _organizations;
+            },
+            save: function() {
+
+                self.status.saving = true;
+
+                var _organizations = self.actions.organizations();
+
+                var _user = new User({
+                    'id': self.user.id,
+                    'first_name': self.user.properties.first_name,
+                    'last_name': self.user.properties.last_name,
+                    'organizations': _organizations
+                });
+
+                _user.$update(function(successResponse) {
+
+                    self.status.saving = false;
+
+                    $rootScope.notifications.success('Great!', 'Your account changes were saved');
+
+                    $location.path('/account/');
+
+                }, function(errorResponse) {
+                    self.status.saving = false;
+                });
+            },
+            snapshots: function() {
+
+                snapshots.$promise.then(function(snapshotResponse) {
+
+                    self.snapshots = snapshotResponse.features;
+
+
+                });
+
+            },
+            exit: function() {
+                $location.path('/projects');
+            }
+        };
+
+    });
 'use strict';
 
 /**
@@ -3865,31 +4320,8 @@ angular.module('FieldDoc')
                 resolve: {
                     projects: function($location, Project) {
 
-                        //
-                        // Get all of our existing URL Parameters so that we can
-                        // modify them to meet our goals
-                        //
-                        var search_params = $location.search();
-
-                        //
-                        // Prepare any pre-filters to append to any of our user-defined
-                        // filters in the browser address bar
-                        //
-                        search_params.q = (search_params.q) ? angular.fromJson(search_params.q) : {};
-
-                        search_params.q.filters = (search_params.q.filters) ? search_params.q.filters : [];
-
-                        search_params.q.order_by = [{
-                            field: 'created_on',
-                            direction: 'desc'
-                        }];
-
-                        //
-                        // Execute our query so that we can get the Reports back
-                        //
-                        // return Project.query(search_params);
-
                         return Project.collection({});
+
                     },
                     user: function(Account) {
                         if (Account.userObject && !Account.userObject.id) {
@@ -3897,24 +4329,6 @@ angular.module('FieldDoc')
                         }
                         return Account.userObject;
                     }
-                    // 'years': function(Filters) {
-                    //     return Filters.projectsByYear();
-                    // },
-                    // geographies: function(Filters) {
-                    //     return Filters.customGeographies({
-                    //         id: 3
-                    //     });
-                    // },
-                    // grantees: function(Filters) {
-                    //     return Filters.grantees({
-                    //         id: 3
-                    //     });
-                    // },
-                    // practices: function(Filters) {
-                    //     return Filters.practices({
-                    //         id: 3
-                    //     });
-                    // }
                 }
             })
             .when('/projects/:projectId', {
@@ -3932,6 +4346,19 @@ angular.module('FieldDoc')
                         return Project.summary({
                             'id': $route.current.params.projectId
                         });
+                    }
+                }
+            })
+            .when('/projects/collection/new', {
+                templateUrl: '/modules/components/projects/views/projectsCreate--view.html',
+                controller: 'ProjectCreateCtrl',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account) {
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+                        return Account.userObject;
                     }
                 }
             })
@@ -4140,24 +4567,14 @@ angular.module('FieldDoc')
         // Setup basic page variables
         //
         $rootScope.page = {
-            title: 'Program Summary',
-            links: [{
-                text: 'Program Summary',
-                url: '/projects',
-                type: 'active'
-            }],
+            title: 'Projects',
+            links: [],
             actions: [{
                 type: 'button-link new',
                 action: function() {
                     self.createProject();
                 },
                 text: 'Create project'
-            }, {
-                type: 'button-link new',
-                action: function() {
-                    self.createSnapshot();
-                },
-                text: 'Create snapshot'
             }]
         };
 
@@ -4253,8 +4670,6 @@ angular.module('FieldDoc')
             },
             clear: function() {
 
-                // $location.path('/projects/').search('');
-
                 self.q = {};
 
                 self.filteredProjects = self.projects;
@@ -4264,38 +4679,9 @@ angular.module('FieldDoc')
             }
         };
 
-        //
-        // Set Default Search Filter value
-        //
-        if (self.search && self.search.query === '') {
-
-            var searchParams = $location.search(),
-                q = angular.fromJson(searchParams.q);
-
-            if (q && q.filters && q.filters.length) {
-                angular.forEach(q.filters[0].and, function(filter) {
-                    if (filter.name === 'name') {
-                        self.search.query = filter.val.replace(/%/g, '');
-                    }
-                });
-            }
-        }
-
         self.createProject = function() {
-            self.project = new Project({
-                'name': 'Untitled Project'
-            });
 
-            self.project.$save(function(successResponse) {
-                $location.path('/projects/' + successResponse.id + '/edit');
-            }, function(errorResponse) {
-                $log.error('Unable to create Project object');
-            });
-        };
-
-        self.createSnapshot = function() {
-
-            $location.path('/snapshot');
+            $location.path('/projects/collection/new');
 
         };
 
@@ -4502,7 +4888,8 @@ angular.module('FieldDoc')
 
             self.status.loading = false;
 
-            $rootScope.page.title = self.project.properties.name;
+            $rootScope.page.title = 'Project Summary';
+
             $rootScope.page.links = [{
                     text: 'Projects',
                     url: '/projects'
@@ -4723,235 +5110,289 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-  .controller('ProjectEditCtrl', function (Account, $location, $log, Project, project, $rootScope, $route, user) {
+    .controller('ProjectCreateCtrl',
+        function(Account, $location, $log, Project, $rootScope, $route, user) {
 
-    var self = this;
-    $rootScope.page = {};
+        var self = this;
 
-    //
-    // Assign project to a scoped variable
-    //
-    project.$promise.then(function(successResponse) {
-        self.project = successResponse;
+        $rootScope.page = {};
 
-        $rootScope.page.title = self.project.properties.name;
-        $rootScope.page.links = [
-            {
-              text: 'Projects',
-              url: '/projects'
-            },
-            {
-              text: self.project.properties.name,
-              url: '/projects/' + self.project.id
-            },
-            {
-              text: 'Edit',
-              url: '/projects/' + self.project.id + '/edit',
-              type: 'active'
-            }
-        ];
-        $rootScope.page.actions = [];
+        self.project = {};
+
+        $rootScope.page.title = 'Create Project';
 
         //
         // Verify Account information for proper UI element display
         //
         if (Account.userObject && user) {
+
             user.$promise.then(function(userResponse) {
+
                 $rootScope.user = Account.userObject = userResponse;
 
                 self.permissions = {
                     isLoggedIn: Account.hasToken(),
                     role: $rootScope.user.properties.roles[0].properties.name,
-                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                    can_edit: Account.canEdit(project),
-                    can_delete: Account.canDelete(project)
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                 };
+
             });
+
         }
 
-    }, function(errorResponse) {
-        $log.error('Unable to load request project');
+        self.saveProject = function() {
+
+            var project = new Project(self.project);
+
+            project.workflow_state = 'Draft';
+
+            project.$save().then(function(response) {
+
+                $location.path('/projects');
+
+            }).then(function(error) {
+
+                $log.error('Unable to create Project object');
+
+            });
+
+        };
+
     });
+'use strict';
 
-    self.saveProject = function() {
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('ProjectEditCtrl', function(Account, $location, $log, Project, project, $rootScope, $route, user) {
 
-      self.project.properties.workflow_state = "Draft";
+        var self = this;
+        $rootScope.page = {};
 
-      // We are simply removing this from the request because we should not
-      // be saving updates to the Projects Sites at this point, just the Project
-      delete self.project.properties.sites;
+        //
+        // Assign project to a scoped variable
+        //
+        project.$promise.then(function(successResponse) {
+            self.project = successResponse;
 
-      self.project.$update().then(function(response) {
+            $rootScope.page.title = 'Edit Project';
 
-        $location.path('/projects/' + self.project.id);
+            $rootScope.page.links = [{
+                    text: 'Projects',
+                    url: '/projects'
+                },
+                {
+                    text: self.project.properties.name,
+                    url: '/projects/' + self.project.id
+                },
+                {
+                    text: 'Edit',
+                    url: '/projects/' + self.project.id + '/edit',
+                    type: 'active'
+                }
+            ];
+            $rootScope.page.actions = [];
 
-      }).then(function(error) {
-        // Do something with the error
-      });
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+                user.$promise.then(function(userResponse) {
+                    $rootScope.user = Account.userObject = userResponse;
 
-    };
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0].properties.name,
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: Account.canEdit(project),
+                        can_delete: Account.canDelete(project)
+                    };
+                });
+            }
 
-    self.deleteProject = function() {
-      self.project.$delete().then(function(response) {
+        }, function(errorResponse) {
+            $log.error('Unable to load request project');
+        });
 
-        $location.path('/projects/');
+        self.saveProject = function() {
 
-      }).then(function(error) {
-        // Do something with the error
-      });
-    };
+            self.project.properties.workflow_state = "Draft";
 
-  });
+            // We are simply removing this from the request because we should not
+            // be saving updates to the Projects Sites at this point, just the Project
+            delete self.project.properties.sites;
 
+            self.project.$update().then(function(response) {
+
+                $location.path('/projects/' + self.project.id);
+
+            }).then(function(error) {
+                // Do something with the error
+            });
+
+        };
+
+        self.deleteProject = function() {
+            self.project.$delete().then(function(response) {
+
+                $location.path('/projects/');
+
+            }).then(function(error) {
+                // Do something with the error
+            });
+        };
+
+    });
 (function() {
 
-  'use strict';
+    'use strict';
 
-  /**
-   * @ngdoc function
-   * @name FieldDoc.controller:ProjectUsersCtrl
-   * @description
-   * # ProjectUsersCtrl
-   * Controller of the FieldDoc
-   */
-  angular.module('FieldDoc')
-    .controller('ProjectUsersCtrl', function (Account, Collaborators, $rootScope, $scope, $route, $location, project, user, members) {
+    /**
+     * @ngdoc function
+     * @name FieldDoc.controller:ProjectUsersCtrl
+     * @description
+     * # ProjectUsersCtrl
+     * Controller of the FieldDoc
+     */
+    angular.module('FieldDoc')
+        .controller('ProjectUsersCtrl', function(Account, Collaborators, $rootScope, $scope, $route, $location, project, user, members) {
 
-      var self = this;
-      $rootScope.page = {};
+            var self = this;
+            $rootScope.page = {};
 
-      //
-      // Assign project to a scoped variable
-      //
-      project.$promise.then(function(successResponse) {
-          self.project = successResponse;
+            //
+            // Assign project to a scoped variable
+            //
+            project.$promise.then(function(successResponse) {
+                self.project = successResponse;
 
-          $rootScope.page.title = self.project.properties.name;
-          $rootScope.page.links = [
-              {
-                text: 'Projects',
-                url: '/projects'
-              },
-              {
-                text: self.project.properties.name,
-                url: '/projects/' + self.project.id
-              },
-              {
-                text: 'Edit',
-                url: '/projects/' + self.project.id + '/edit',
-                type: 'active'
-              },
-              {
-                text: 'Collaborators',
-                url: '/projects/' + self.project.id + '/users'
-              }
-          ];
-          $rootScope.page.actions = [];
+                $rootScope.page.title = self.project.properties.name;
+                $rootScope.page.links = [{
+                        text: 'Projects',
+                        url: '/projects'
+                    },
+                    {
+                        text: self.project.properties.name,
+                        url: '/projects/' + self.project.id
+                    },
+                    {
+                        text: 'Edit',
+                        url: '/projects/' + self.project.id + '/edit',
+                        type: 'active'
+                    },
+                    {
+                        text: 'Collaborators',
+                        url: '/projects/' + self.project.id + '/users'
+                    }
+                ];
+                $rootScope.page.actions = [];
 
-          self.project.users = members;
-          self.project.users_edit = false;
+                self.project.users = members;
+                self.project.users_edit = false;
 
-          //
-          // Verify Account information for proper UI element display
-          //
-          if (Account.userObject && user) {
-              user.$promise.then(function(userResponse) {
-                  $rootScope.user = Account.userObject = userResponse;
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+                    user.$promise.then(function(userResponse) {
+                        $rootScope.user = Account.userObject = userResponse;
 
-                  self.permissions = {
-                      isLoggedIn: Account.hasToken(),
-                      role: $rootScope.user.properties.roles[0].properties.name,
-                      account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                      can_edit: Account.canEdit(project)
-                  };
-              });
-          }
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0].properties.name,
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                            can_edit: Account.canEdit(project)
+                        };
+                    });
+                }
 
-      }, function(errorResponse) {
-          console.error('Unable to load request project');
-      });
-
-      //
-      // Empty Collaborators object
-      //
-      // We need to have an empty geocode object so that we can fill it in later
-      // in the address geocoding process. This allows us to pass the results along
-      // to the Form Submit function we have in place below.
-      //
-      self.collaborator = {
-        invitations: [],
-        sendInvitations: function() {
-          Collaborators.invite({
-            'collaborators': self.collaborator.invitations,
-            'project_id': self.project.id
-          }).$promise.then(function(successResponse) {
-            $route.reload();
-          }, function(errorResponse) {
-            console.log('errorResponse', errorResponse);
-          });
-        }
-      };
-
-      //
-      // When the user has selected a response, we need to perform a few extra
-      // tasks so that our scope is updated properly.
-      //
-      $scope.$watch(angular.bind(this, function() {
-        return this.collaborator.response;
-      }), function (response) {
-
-        if (response) {
-
-          // Reset the fields we are done using
-          self.collaborator.query = null;
-          self.collaborator.response = null;
-
-          // Add the selected user value to the invitations list
-          self.collaborator.invitations.push(response);
-        }
-
-      });
-
-      self.users = {
-        list: members,
-        search: null,
-        invite: function(user) {
-          self.invite.push(user); // Add selected User object to invitation list
-          this.search = null; // Clear search text
-        },
-        add: function() {
-          angular.forEach(self.invite, function(user_, $index) {
-            Feature.AddUser({
-              storage: storage,
-              featureId: $scope.project.id,
-              userId: user_.id,
-              data: {
-                read: true,
-                write: true,
-                is_admin: false
-              }
-            }).then(function(response) {
-              //
-              // Once the users have been added to the project refresh the page
-              //
-              self.page.refresh();
+            }, function(errorResponse) {
+                console.error('Unable to load request project');
             });
-          });
-        },
-        remove: function() {
-          self.project.$update().then(function(response) {
-            $route.reload();
-          }).then(function(error) {
-            // Do something with the error
-          });
-        },
-        remove_confirm: false
-      };
 
-    });
+            //
+            // Empty Collaborators object
+            //
+            // We need to have an empty geocode object so that we can fill it in later
+            // in the address geocoding process. This allows us to pass the results along
+            // to the Form Submit function we have in place below.
+            //
+            self.collaborator = {
+                invitations: [],
+                sendInvitations: function() {
+                    Collaborators.invite({
+                        'collaborators': self.collaborator.invitations,
+                        'project_id': self.project.id
+                    }).$promise.then(function(successResponse) {
+                        $route.reload();
+                    }, function(errorResponse) {
+                        console.log('errorResponse', errorResponse);
+                    });
+                }
+            };
+
+            //
+            // When the user has selected a response, we need to perform a few extra
+            // tasks so that our scope is updated properly.
+            //
+            $scope.$watch(angular.bind(this, function() {
+                return this.collaborator.response;
+            }), function(response) {
+
+                if (response) {
+
+                    // Reset the fields we are done using
+                    self.collaborator.query = null;
+                    self.collaborator.response = null;
+
+                    // Add the selected user value to the invitations list
+                    self.collaborator.invitations.push(response);
+                }
+
+            });
+
+            self.users = {
+                list: members,
+                search: null,
+                invite: function(user) {
+                    self.invite.push(user); // Add selected User object to invitation list
+                    this.search = null; // Clear search text
+                },
+                add: function() {
+                    angular.forEach(self.invite, function(user_, $index) {
+                        Feature.AddUser({
+                            storage: storage,
+                            featureId: $scope.project.id,
+                            userId: user_.id,
+                            data: {
+                                read: true,
+                                write: true,
+                                is_admin: false
+                            }
+                        }).then(function(response) {
+                            //
+                            // Once the users have been added to the project refresh the page
+                            //
+                            self.page.refresh();
+                        });
+                    });
+                },
+                remove: function() {
+                    self.project.$update().then(function(response) {
+                        $route.reload();
+                    }).then(function(error) {
+                        // Do something with the error
+                    });
+                },
+                remove_confirm: false
+            };
+
+        });
 
 }());
-
 (function() {
 
     'use strict';
@@ -4966,12 +5407,6 @@ angular.module('FieldDoc')
 
             $routeProvider
                 .when('/account', {
-                    redirectTo: '/projects'
-                })
-                .when('/account/:userId', {
-                    redirectTo: '/account/:userId/edit'
-                })
-                .when('/account/:userId/edit', {
                     templateUrl: '/modules/components/account/views/accountEdit--view.html',
                     controller: 'AccountEditViewController',
                     controllerAs: 'page',
@@ -5022,16 +5457,8 @@ angular.module('FieldDoc')
                 // Setup page meta data
                 //
                 $rootScope.page = {
-                    "title": "Edit Account Information « FieldDoc",
-                    "links": [{
-                            "text": "Account",
-                            "url": "/"
-                        },
-                        {
-                            "text": "Edit",
-                            "url": "/account/" + $rootScope.user.id + "/edit"
-                        }
-                    ]
+                    'title': 'Profile',
+                    'links': []
                 };
 
                 //
@@ -5058,7 +5485,7 @@ angular.module('FieldDoc')
         //
         //
         self.status = {
-            "saving": false
+            'saving': false
         };
 
         self.actions = {
@@ -5069,11 +5496,11 @@ angular.module('FieldDoc')
                 angular.forEach(self.user.properties.organizations, function(_organization, _index) {
                     if (_organization.id) {
                         _organizations.push({
-                            "id": _organization.id
+                            'id': _organization.id
                         });
                     } else {
                         _organizations.push({
-                            "name": _organization.properties.name
+                            'name': _organization.properties.name
                         });
                     }
                 });
@@ -5087,17 +5514,17 @@ angular.module('FieldDoc')
                 var _organizations = self.actions.organizations();
 
                 var _user = new User({
-                    "id": self.user.id,
-                    "first_name": self.user.properties.first_name,
-                    "last_name": self.user.properties.last_name,
-                    "organizations": _organizations
+                    'id': self.user.id,
+                    'first_name': self.user.properties.first_name,
+                    'last_name': self.user.properties.last_name,
+                    'organizations': _organizations
                 });
 
                 _user.$update(function(successResponse) {
 
                     self.status.saving = false;
 
-                    $rootScope.notifications.success("Great!", "Your account changes were saved");
+                    $rootScope.notifications.success('Great!', 'Your account changes were saved');
 
                     $location.path('/account/');
 
@@ -9923,6 +10350,30 @@ angular
 
 }());
 
+(function() {
+
+    'use strict';
+
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('Organization', function(environment, Preprocessors, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/data/organization/:id'), {
+                id: '@id'
+            }, {
+                query: {
+                    isArray: false
+                },
+                update: {
+                    method: 'PATCH'
+                }
+            });
+        });
+
+}());
 (function() {
 
     'use strict';

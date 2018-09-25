@@ -2,38 +2,66 @@
 
 <main class="container feature">
     <article class="feature-detail">
+
+        <nav class="column-5 contextual-navigation-wrapper">
+            <ul class="contextual-navigation">
+                <li>
+                    <a href="/projects">
+                        Projects
+                    </a>
+                </li>
+                <li>
+                    <a href="/organization">
+                        Organization
+                    </a>
+                </li>
+                <li>
+                    <a href="/snapshots">
+                        Snapshots
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="/account">
+                        Profile
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
         <div class="column-11 feature-detail-content">
 
-            <h1 class="large">Edit Account Details</h1>
+            <h1 class="large">Profile</h1>
 
             <form role="form" class="form" method="POST" id="form" name="form" data-ng-submit="page.actions.save()">
+
                 <div class="form-element">
                     <label for="email" class="control-label">
-                        Your Email Address
+                        Name
+                    </label>
+                    <input type="text" class="form-control form-control-half" id="first_name" name="first_name" placeholder="First Name" data-ng-model="page.user.properties.first_name" required="required" tabindex="2" />
+                    <input type="text" class="form-control form-control-half" id="last_name" name="last_name" placeholder="Last Name" data-ng-model="page.user.properties.last_name" required="required" tabindex="3" />
+                </div>
+
+                <div class="form-element">
+                    <label for="email" class="control-label">
+                        Email Address
                     </label>
                     <input type="text" class="form-control" id="email" name="email" disabled="disabled" data-ng-model="page.user.properties.email" required="required" />
                     <p class="help--text">
                         <small style="color: #e5e5e5"><em>Email address is not editable</em></small>
                     </p>
                 </div>
-                <div class="form-element">
-                    <label for="email" class="control-label">
-                        Your Name
-                    </label>
-                    <input type="text" class="form-control form-control-half" id="first_name" name="first_name" placeholder="First Name" data-ng-model="page.user.properties.first_name" required="required" tabindex="2" />
-                    <input type="text" class="form-control form-control-half" id="last_name" name="last_name" placeholder="Last Name" data-ng-model="page.user.properties.last_name" required="required" tabindex="3" />
-                </div>
-                <div class="form-element">
+<!--                 <div class="form-element">
                     <label for="email" class="control-label">
                         Organization search
                     </label>
                     <organization model="page.user.properties.organizations" table="'organization'" field="'name'" display="['name']" placeholder="'Begin typing an organization name'" tabindexnumber="4">
                     </organization>
-                </div>
+                </div> -->
 
                 <!-- Snapshot list -->
 
-                <div class="list">
+<!--                 <div class="list">
 
                     <h2>Snapshots</h2>
 
@@ -98,7 +126,7 @@
                             </table>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <button type="submit" class="button button-submit" id="submit" name="submit" tabindex="3" data-ng-if="!page.status.saving">
                     Save Changes
@@ -113,22 +141,6 @@
 
         </div>
 
-        <nav class="column-5 contextual-navigation-wrapper">
-            <h6><strong>Tools</strong></h6>
-            <ul class="contextual-navigation">
-                <!-- Proect Manangement Navigation -->
-                <li class="active">
-                    <a href="/account/{{ $root.user.id }}/edit">
-                        Edit
-                    </a>
-                </li>
-                <li>
-                    <a href="/logout">
-                        Logout
-                    </a>
-                </li>
-            </ul>
-        </nav>
     </article>
 </main>
 

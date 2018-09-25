@@ -51,6 +51,14 @@ angular.module('FieldDoc')
 
                     self.loadSnapshot();
 
+                    //
+                    // Setup page meta data
+                    //
+                    $rootScope.page = {
+                        'title': 'Edit Snapshot',
+                        'links': []
+                    };
+
                 });
 
             } else {
@@ -210,8 +218,6 @@ angular.module('FieldDoc')
                 ];
 
                 self.snapshotObject = data;
-
-                $rootScope.page.title = self.snapshotObject.name;
 
                 $rootScope.page.actions = [];
 

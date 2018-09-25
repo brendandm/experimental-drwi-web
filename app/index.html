@@ -13,7 +13,7 @@
     <meta data-ng-repeat="tag in $root.page.meta" name="{{ tag.name }}" content="{{ tag.content }}" />
 
     <!-- Page Title based on either the root site title or the page specific site title -->
-    <title>{{ $root.page.title }} &middot; FieldDoc</title>
+    <title>FieldDoc - {{ $root.page.title }}</title>
 
     <link rel="stylesheet" type="text/css" href='//api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' />
 
@@ -136,6 +136,7 @@
             <script src="modules/components/projects/projects--routes.js"></script>
             <script src="modules/components/projects/projectsList--controller.js"></script>
             <script src="modules/components/projects/projectsSummary--controller.js"></script>
+            <script src="modules/components/projects/projectsCreate--controller.js"></script>
             <script src="modules/components/projects/projectsEdit--controller.js"></script>
             <script src="modules/components/projects/projectsUsers--controller.js"></script>
 
@@ -212,6 +213,7 @@
             <script src="modules/shared/api/metricType--service.js"></script>
             <script src="modules/shared/api/monitoringType--service.js"></script>
             <script src="modules/shared/api/nutrient--service.js"></script>
+            <script src="modules/shared/api/organization--service.js"></script>
             <script src="modules/shared/api/outcome--service.js"></script>
             <script src="modules/shared/api/practice--service.js"></script>
             <script src="modules/shared/api/practiceCustom--service.js"></script>

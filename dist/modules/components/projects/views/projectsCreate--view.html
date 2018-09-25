@@ -1,0 +1,103 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="container feature">
+
+    <article class="feature-detail">
+
+        <nav class="column-5 contextual-navigation-wrapper">
+            <ul class="contextual-navigation">
+                <li class="active">
+                    <a href="/projects">
+                        Projects
+                    </a>
+                </li>
+                <li>
+                    <a href="/organization">
+                        Organization
+                    </a>
+                </li>
+                <li>
+                    <a href="/snapshots">
+                        Snapshots
+                    </a>
+                </li>
+                <li>
+                    <a href="/account">
+                        Profile
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="column-11 feature-detail-content">
+
+            <h1 class="large">Create Project</h1>
+
+            <form role="form" class="row form" id="form--ProjectEdit" name="form--ProjectEdit">
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="project_title" class="control-label">1. What is the name of your project?</label>
+                        <textarea rows="1" data-ng-model="page.project.name" class="form-control animate" msd-elastic id="name" name="name" placeholder="Project Name">{{ page.project.name }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Program Type -->
+                <div class="form-row" data-ng-if="page.project.program_type !== 'Pre-Project Plan'">
+                    <div class="form-field">
+                        <label for="program_type" class="control-label">2. Which funder is providing the grant?</label>
+                        <select data-ng-model="page.project.organization_id" class="form-control" id="program_type" name="program_type">
+                            <option value="2">Maryland – Trust Fund</option>
+                            <option value="1">National Fish and Wildlife Foundation - Chesapeake Bay</option>
+                            <option value="3">National Fish and Wildlife Foundation - Delaware</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Program Type -->
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="program_type" class="control-label" data-ng-if="page.project.program_type !== 'Pre-Project Plan'">3. What type of grant are you requesting?</label>
+                        <label for="program_type" class="control-label" data-ng-if="page.project.program_type === 'Pre-Project Plan'">2. What type of grant are you requesting?</label>
+                        <select data-ng-model="page.project.program_type" class="form-control" id="program_type" name="program_type">
+                            <option value="CBCIG">Chesapeake Bay Conservation Innovation Grant</option>
+                            <option value="Delaware River Restoration Fund">Delaware River Restoration Fund</option>
+                            <option value="INSR">Innovative Sediment and Nutrient Reduction</option>
+                            <option value="SWG">Small Watershed Grant</option>
+                            <option value="Trust Fund">Trust Fund</option>
+                            <option value="Pre-Project Plan">Pre-Project Plan</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Project Abstract -->
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="project_abstract" class="control-label" data-ng-if="page.project.program_type !== 'Pre-Project Plan'">4. Please provide a short project description.</label>
+                        <label for="project_abstract" class="control-label" data-ng-if="page.project.program_type === 'Pre-Project Plan'">3. Please provide a short project description.</label>
+                        <textarea class="form-control animate" data-ng-model="page.project.description" msd-elastic id="description" name="description" rows="1">{{ page.project.description }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Project Abstract -->
+                <div class="form-row">
+                    <div class="form-field">
+                        <label for="project_abstract" class="control-label" data-ng-if="page.project.program_type !== 'Pre-Project Plan'">5. Please tell us which organizations this project is associated with.</label>
+                        <label for="project_abstract" class="control-label" data-ng-if="page.project.program_type === 'Pre-Project Plan'">4. Please tell us which organizations this project is associated with.</label>
+                        <organization model="page.project.organizations" table="'organization'" field="'name'" display="['name']" placeholder="'Begin typing an organization name'" tabindexnumber="4">
+                        </organization>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <div class="form-actions-buttons">
+                        <button type="submit" data-ng-click="page.saveProject()" class="button button-submit">
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </article>
+</main>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>
