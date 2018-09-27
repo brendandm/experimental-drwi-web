@@ -465,7 +465,8 @@ $susy: (
 // Generic
 //
 body {
-  background-color: $color-white-darker;
+  //background-color: $color-white-darker;
+  //background-color: $color-white-darker;
   color: $color-black-base;
   margin: 0;
   padding: 0;
@@ -480,14 +481,18 @@ body > div {
 }
 
 .container.meta {
-  background-color: $color-white-bright;
+  //background-color: $color-white-bright;
   padding-top: 6px;
 }
 
-main.container {
+main {
   flex: 1;
+}
+
+main.container {
+  //flex: 1;
   width: 100%;
-  background-color: $color-white-bright;
+  //background-color: $color-white-bright;
   margin-bottom: 32px;
   padding-bottom: 64px;
 }

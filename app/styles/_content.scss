@@ -298,20 +298,20 @@
     background-color: transparent;
 }
 
-  .page--legal {
-    background-color: transparent;
-    margin: 0 auto;
-    padding: 0 3em 3em;
-    max-width: 68em;
+.page--legal {
+  background-color: transparent;
+  margin: 0 auto;
+  padding: 0 3em 3em;
+  max-width: 68em;
 
-    p {
-        font-family: $font-sans;
-        font-size: 0.75em;
-        margin-left: auto;
-        margin-right: auto;
-        max-width: 100%;
-    }
+  p {
+      font-family: $font-sans;
+      font-size: 0.75em;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 100%;
   }
+}
 
 .site--footer--container {
   //background-color: $color-black-light;
@@ -327,17 +327,32 @@
   padding: 4em;
 }
 
-  .site--footer--content {
-    display: inline-block;
-    width: 100%;
-  }
+.snapshot {
 
-    .site--footer--column {
-      float: left;
+  .site--footer {
+    padding: 2em 4em;
+
+    p {
       margin: 0;
       padding: 0;
-      width: 50%;
+      text-align: center;
     }
+    
+  }
+
+}
+
+.site--footer--content {
+  display: inline-block;
+  width: 100%;
+}
+
+.site--footer--column {
+  float: left;
+  margin: 0;
+  padding: 0;
+  width: 50%;
+}
 
 
 .show_custom_practices {

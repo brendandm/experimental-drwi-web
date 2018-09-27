@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('SnapshotCtrl', function(Account, $location, $log, Project, Map,
+    .controller('SnapshotCtrl', function(Account, $location, $log, $interval, $timeout, Project, Map,
         baseProjects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
         MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox,
         Practice, snapshot) {
@@ -18,6 +18,40 @@ angular.module('FieldDoc')
         // $scope.projectStore = ProjectStore;
 
         var self = this;
+
+        self.loading = true;
+
+        self.fillMeter = $interval(function() {
+
+            var tempValue = (self.progressValue || 10) * 0.1;
+
+            if (!self.progressValue) {
+
+                self.progressValue = tempValue;
+
+            } else if ((100 - tempValue) > self.progressValue) {
+
+                self.progressValue += tempValue;
+
+            }
+
+            console.log('progressValue', self.progressValue);
+
+        }, 100);
+
+        self.showElements = function() {
+
+            $interval.cancel(self.fillMeter);
+
+            self.progressValue = 100;
+
+            $timeout(function() {
+
+                self.loading = false;
+
+            }, 800);
+
+        };
 
         //
         // Setup basic page variables
@@ -158,7 +192,7 @@ angular.module('FieldDoc')
 
         self.resetMapExtent = function() {
 
-            self.map.geojson.data = self.programGeographies;
+            self.map.geojson.data = self.geographies;
 
             leafletData.getMap('dashboard--map').then(function(map) {
 
@@ -363,73 +397,84 @@ angular.module('FieldDoc')
             });
         }
 
-        geographies.$promise.then(function(successResponse) {
+        self.loadGeographies = function() {
 
-            console.log('geographies.successResponse', successResponse);
+            geographies.$promise.then(function(successResponse) {
 
-            self.programGeographies = successResponse;
+                console.log('geographies.successResponse', successResponse);
 
-            self.map.geojson = {
-                data: successResponse,
-                onEachFeature: onEachFeature,
-                style: {
-                    color: '#00D',
-                    fillColor: 'red',
-                    weight: 2.0,
-                    opacity: 0.6,
-                    fillOpacity: 0.2
+                if (self.progressValue < 100 &&
+                    self.filteredProjects) {
+
+                    self.showElements();
+
                 }
-            };
 
-            //
-            // Fit map bounds to GeoJSON
-            //
+                self.geographies = successResponse;
 
-            self.resetMapExtent();
+                self.map.geojson = {
+                    data: successResponse,
+                    onEachFeature: onEachFeature,
+                    style: {
+                        color: '#00D',
+                        fillColor: 'red',
+                        weight: 2.0,
+                        opacity: 0.6,
+                        fillOpacity: 0.2
+                    }
+                };
 
-            //
-            // Set up layer visibility logic
-            //
+                //
+                // Fit map bounds to GeoJSON
+                //
 
-            leafletData.getMap('dashboard--map').then(function(map) {
+                self.resetMapExtent();
 
-                map.on('zoomend', function(event) {
+                //
+                // Set up layer visibility logic
+                //
 
-                    var zoomLevel = map.getZoom();
+                leafletData.getMap('dashboard--map').then(function(map) {
 
-                    leafletData.getLayers('dashboard--map').then(function(layers) {
+                    map.on('zoomend', function(event) {
 
-                        console.log('leafletData.getLayers', layers);
+                        var zoomLevel = map.getZoom();
 
-                        if (zoomLevel > 15) {
+                        leafletData.getLayers('dashboard--map').then(function(layers) {
 
-                            map.removeLayer(layers.baselayers.streets);
+                            console.log('leafletData.getLayers', layers);
 
-                            map.removeLayer(layers.baselayers.terrain);
+                            if (zoomLevel > 15) {
 
-                            map.addLayer(layers.baselayers.satellite);
+                                map.removeLayer(layers.baselayers.streets);
 
-                        } else {
+                                map.removeLayer(layers.baselayers.terrain);
 
-                            map.removeLayer(layers.baselayers.satellite);
+                                map.addLayer(layers.baselayers.satellite);
 
-                            map.removeLayer(layers.baselayers.terrain);
+                            } else {
 
-                            map.addLayer(layers.baselayers.streets);
+                                map.removeLayer(layers.baselayers.satellite);
 
-                        }
+                                map.removeLayer(layers.baselayers.terrain);
+
+                                map.addLayer(layers.baselayers.streets);
+
+                            }
+
+                        });
 
                     });
 
                 });
 
+            }, function(errorResponse) {
+
+                console.log('errorResponse', errorResponse);
+
             });
 
-        }, function(errorResponse) {
-
-            console.log('errorResponse', errorResponse);
-
-        });
+        };
 
         self.extractIds = function(arr) {
 
@@ -833,7 +878,7 @@ angular.module('FieldDoc')
 
             var historyType = self.historyItem.type;
 
-            switch(historyType) {
+            switch (historyType) {
 
                 case 'program':
 
@@ -947,7 +992,7 @@ angular.module('FieldDoc')
             self.historyItem = {
                 feature: null,
                 label: 'All projects',
-                geoJson: self.programGeographies,
+                geoJson: self.geographies,
                 type: 'program'
             };
 
@@ -1133,6 +1178,10 @@ angular.module('FieldDoc')
 
                 self.card = self.cardTpl;
 
+                self.loadBaseProjects();
+
+                self.loadGeographies();
+
             }, function(errorResponse) {
 
                 console.log('self.loadSnapshot.errorResponse', errorResponse);
@@ -1146,6 +1195,15 @@ angular.module('FieldDoc')
             baseProjects.$promise.then(function(successResponse) {
 
                 console.log('self.loadBaseProjects.successResponse', successResponse);
+
+                if (self.progressValue < 100 &&
+                    self.geographies) {
+
+                    self.showElements();
+
+                }
+
+                self.baseProjects = successResponse.features;
 
                 self.processProjectData(successResponse);
 
@@ -1189,7 +1247,7 @@ angular.module('FieldDoc')
 
             if (self.limitScope) {
 
-                params.user = $rootScope.user.id
+                params.user = $rootScope.user.id;
 
             }
 
@@ -1309,7 +1367,7 @@ angular.module('FieldDoc')
 
                 // self.loadProjects({});
 
-                self.loadBaseProjects();
+                // self.loadBaseProjects();
 
                 self.loadSnapshot();
 
@@ -1339,7 +1397,7 @@ angular.module('FieldDoc')
 
                 // self.loadProjects({}, false);
 
-                self.loadBaseProjects();
+                // self.loadBaseProjects();
 
                 self.loadSnapshot();
 
