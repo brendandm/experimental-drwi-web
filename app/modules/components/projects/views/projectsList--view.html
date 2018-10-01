@@ -1,10 +1,23 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main role="main" class="container feature">
+<main role="main" class="main container feature">
 
-    <article class="feature-detail">
+    <div class="snapshot--loader" data-ng-if="page.loading">
 
-        <nav class="column-5 contextual-navigation-wrapper">
+        <div class="progress--modal">
+            <div class="progress--container">
+                <p><strong>Loading snapshot data&hellip;</strong></p>
+                <div class="progress--meter--bar--wrapper">
+                    <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <article class="feature-detail" data-ng-if="!page.loading">
+
+        <nav class="column-4 contextual-navigation-wrapper">
             <ul class="contextual-navigation">
                 <li class="active">
                     <a href="/projects">
@@ -29,7 +42,7 @@
             </ul>
         </nav>
 
-        <div class="column-11 feature-detail-content">
+        <div class="column-12 feature-detail-content">
 
             <!-- Project list -->
 
