@@ -1,124 +1,75 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main role="main" class="container feature">
+<main class="site--content--flow fluid-content clearfix distinguish" view-frame>
 
-    <article class="feature-detail">
+    <div id="sidebar" data-ng-include="'/templates/side-bar.html'" view-frame></div>
 
-        <nav class="column-5 contextual-navigation-wrapper">
-            <ul class="contextual-navigation">
-                <li class="active">
-                    <a href="/projects">
-                        Projects
-                    </a>
-                </li>
-                <li>
-                    <a href="/organization">
-                        Organization
-                    </a>
-                </li>
-                <li>
-                    <a href="/snapshots">
-                        Snapshots
-                    </a>
-                </li>
-                <li>
-                    <a href="/account">
-                        Profile
-                    </a>
-                </li>
-            </ul>
-        </nav>
+    <div class="content--container" view-frame>
 
-        <div class="column-11 feature-detail-content">
+        <h1 class="inset">Projects</h1>
 
-            <!-- Project list -->
+        <div class="main--ui">
 
-            <div class="list">
-
-                <article class="row list-item" data-ng-if="page.projects.features && !page.projects.features.length">
-                    <div class="column-16 list-item-content align-center empty-data">
-                        <div class="icon retinaicon-file-096"></div>
-                        <p>
-                            Projects will show up here,
-                            so you can easily view them later.
-                        </p>
-                        <p>
-                            <a href="javascript:void(0)" data-ng-click="page.createProject()">
-                                Create your first project now
-                            </a>
-                        </p>
-                    </div>
-                </article>
-
-                <div class="row list-item">
-                    <div class="responsive-table">
-                        <table class="table" data-ng-if="page.filteredProjects && page.filteredProjects.length">
-                            <thead>
-                                <tr>
-                                    <td class="align-left column--vertialCenter">
-                                        Status
-                                    </td>
-                                    <td class="align-left column--vertialCenter">
-                                        <strong>Program</strong>
-                                    </td>
-                                    <td class="align-left">
-                                        <strong>Project</strong>
-                                    </td>
-                                    <td class="align-left">
-                                        <strong>Funder</strong>
-                                    </td>
-                                    <td class="align-left">
-                                        <strong>Contact</strong>
-                                    </td>
-                                    <td class="align-left">
-                                        <strong>Last Updated</strong>
-                                    </td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr data-ng-repeat="project in page.filteredProjects track by $index">
-                                    <td class="align-center column--state column--vertialCenter">
-                                        <span class="project--state">
-                                            <span class="project--state--highlight" data-ng-class="{'project--state--draft': (project.workflow_state === 'Draft'), 'project--state--submitted': (project.workflow_state === 'Submitted'), 'project--state--funded': (project.workflow_state === 'Funded'), 'project--state--completed': (project.workflow_state === 'Completed')}"></span>
-                                            {{ project.workflow_state }}
-                                        </span>
-                                    </td>
-                                    <td class="align-center column--programType column--vertialCenter">
-                                        <p>
-                                            <span data-ng-if="project.id && project.program_type" class="label" data-ng-class="{'label-info': (project.program_type !== 'Pre-Project Plan'), 'label-success': (project.program_type === 'Pre-Project Plan')}">
-                                                {{ project.program_type }}
-                                            </span>
-                                        </p>
-                                    </td>
-                                    <td class="column--titleDescription align-left">
-                                        <a class="project--title" href="/projects/{{ project.id }}#top" title="{{ project.name }} project details">
-                                            {{ project.name }}
-                                        </a><br />
-                                        <span class="project--description" data-ng-bind-html="project.description"></span>
-                                    </td>
-                                    <td class="align-left column--funder column--vertialCenter">
-                                        <span class="project--funder" data-ng-if="project.id && project.organization.name">
-                                            {{ project.organization.name }}
-                                        </span>
-                                    </td>
-                                    <td class="align-left column--contact column--vertialCenter">
-                                        <a href="mailto:{{ project.creator.email }}" data-ng-if="project.id && project.creator.first_name">
-                                            {{ project.creator.first_name }} {{ project.creator.last_name }}
-                                        </a>
-                                    </td>
-                                    <td class="align-left column--lastUpdated column--vertialCenter">
-                                        <span data-ng-if="project.id && project.modified_on">
-                                            {{ project.modified_on | date }}
-                                        </span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+            <div class="add--new--wrapper">
+                <span>Create project</span>
+                <a class="add--new--btn" href="projects/collection/new">
+                    +
+                </a>
             </div>
+
+            <p>You have <strong>{{ (page.filteredProjects.length | number) || 0 }}</strong> <ng-pluralize count="page.filteredProjects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
+
+<!--             <p class="pro-tip"><strong>Pro tip:&nbsp;&nbsp;</strong>Add new projects one-at-a-time or use the <a href="#">batch import feature</a> to upload a spreadsheet.</p> -->
+
+            <div class="features--container">
+
+                <input type="text" class="search-bar" data-ng-model="page.q" placeholder="Search projects">
+
+                <table class="features clearfix" data-ng-show="page.filteredProjects.length">
+                    <thead>
+                        <tr class="table-row clearfix">
+                            <th class="table-heading" style="text-align: left;">
+                                ID
+                            </th>
+                            <th class="table-heading" style="text-align: left;">
+                                Name
+                            </th>
+                            <th class="table-heading" style="text-align: left;">
+                                Program
+                            </th>
+                            <th class="table-heading" style="text-align: left;">
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-row clearfix" data-ng-repeat="project in page.filteredProjects | orderBy:'id' | filter: page.q">
+                            <td>
+                                <a data-ng-href="projects/{{ project.id }}">
+                                    <span><b>{{ project.id }}</b></span>
+                                    <!-- <span><b>{{ project.key }}</b></span> -->
+                                    <span><time datetime="{{ project.modified_on }}" title="{{ project.modified_on }}">Published {{ project.modified_on | date : 'mediumDate' }}</time></span>
+                                </a>
+                            </td>
+                            <td>
+                                <span>{{ project.name }}</span>
+                            </td>
+                            <td class="truncate">
+                                <span>{{ project.watershed }}</span>
+                            </td>
+                            <td>
+                                <span>{{ project.status.name }}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
         </div>
-    <article>
+
+    </div>
+
 </main>
 
 <div data-ng-include="'/templates/footer--view.html'"></div>

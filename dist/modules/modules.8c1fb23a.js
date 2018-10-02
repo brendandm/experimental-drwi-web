@@ -2219,9 +2219,14 @@ angular.module('FieldDoc')
  */
 angular.module('FieldDoc')
     .controller('SnapshotListCtrl',
-        function(Account, $location, $log, Notifications, $rootScope, $route, user, User, snapshots) {
+        function(Account, $location, $log, Notifications, $rootScope,
+            $route, user, User, snapshots) {
 
             var self = this;
+
+            $rootScope.viewState = {
+                'snapshot': true
+            };
 
             //
             // Assign project to a scoped variable
@@ -2245,15 +2250,7 @@ angular.module('FieldDoc')
                     // Setup page meta data
                     //
                     $rootScope.page = {
-                        'title': 'Snapshots',
-                        'links': [],
-                        'actions': [{
-                            type: 'button-link new',
-                            action: function() {
-                                self.createSnapshot();
-                            },
-                            text: 'Create snapshot'
-                        }]
+                        'title': 'Snapshots'
                     };
 
                     //
@@ -2339,7 +2336,6 @@ angular.module('FieldDoc')
 
                         self.snapshots = snapshotResponse.features;
 
-
                     });
 
                 },
@@ -2360,6 +2356,10 @@ angular.module('FieldDoc')
     .controller('SnapshotCreateCtrl', function(Account, $location, $log, Snapshot, $rootScope, $route, user) {
 
         var self = this;
+
+        $rootScope.viewState = {
+            'snapshot': true
+        };
 
         $rootScope.page = {};
 
@@ -2386,8 +2386,7 @@ angular.module('FieldDoc')
                 // Setup page meta data
                 //
                 $rootScope.page = {
-                    'title': 'Create Snapshot',
-                    'links': []
+                    'title': 'Create Snapshot'
                 };
 
             });
@@ -2421,6 +2420,10 @@ angular.module('FieldDoc')
         function($scope, Account, $location, $log, Snapshot, snapshot, $rootScope, $route, user, FilterStore) {
 
             var self = this;
+
+            $rootScope.viewState = {
+                'snapshot': true
+            };
 
             $rootScope.page = {};
 
@@ -2466,8 +2469,7 @@ angular.module('FieldDoc')
                     // Setup page meta data
                     //
                     $rootScope.page = {
-                        'title': 'Edit Snapshot',
-                        'links': []
+                        'title': 'Edit Snapshot'
                     };
 
                 });
@@ -4114,9 +4116,14 @@ angular.module('FieldDoc')
  */
 angular.module('FieldDoc')
     .controller('OrganizationEditViewController',
-        function(Account, $location, $log, Notifications, $rootScope, $route, user, User, Organization) {
+        function(Account, $location, $log, Notifications, $rootScope,
+            $route, user, User, Organization) {
 
             var self = this;
+
+            $rootScope.viewState = {
+                'organization': true
+            };
 
             //
             // Assign project to a scoped variable
@@ -4140,8 +4147,7 @@ angular.module('FieldDoc')
                     // Setup page meta data
                     //
                     $rootScope.page = {
-                        'title': 'Edit Organization',
-                        'links': []
+                        'title': 'Edit Organization'
                     };
 
                     //
@@ -4471,9 +4477,8 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProjectsCtrl', function(Account, $location, $log, Project, Map,
-        projects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
-        MetricService, OutcomeService, ProjectStore, FilterStore) {
+    .controller('ProjectsCtrl', function(Account, $location, $log, Project,
+        projects, $rootScope, $scope, Site, user, ProjectStore, FilterStore) {
 
         $scope.filterStore = FilterStore;
 
@@ -4487,138 +4492,8 @@ angular.module('FieldDoc')
             practices: []
         };
 
-        self.map = Map;
-
-        self.map.markers = {};
-
-        self.map.layers.overlays = {
-            projects: {
-                type: 'group',
-                name: 'projects',
-                visible: true,
-                layerOptions: {
-                    showOnSelector: false
-                },
-                layerParams: {
-                    showOnSelector: false
-                }
-            }
-        };
-
-        console.log('self.map', self.map);
-
-        self.processLocations = function(features) {
-
-            self.map.markers = {};
-
-            features.forEach(function(feature) {
-
-                var centroid = feature.centroid;
-
-                console.log('centroid', centroid);
-
-                if (centroid) {
-
-                    self.map.markers['project_' + feature.id] = {
-                        lat: centroid.coordinates[1],
-                        lng: centroid.coordinates[0],
-                        layer: 'projects'
-                    };
-
-                }
-
-            });
-
-            console.log('self.map.markers', self.map.markers);
-
-        };
-
-        self.extractIds = function(arr) {
-
-            var projectIds = [];
-
-            arr.forEach(function(datum) {
-
-                projectIds.push(datum.id);
-
-            });
-
-            return projectIds.join(',');
-
-        };
-
-        self.loadMetrics = function(arr) {
-
-            //
-            // A program (account) identifier
-            // is required by default.
-            //
-
-            var params = {
-                id: 3
-            };
-
-            //
-            // If the `arr` parameter is valid,
-            // constrain the query to the given
-            // set of numeric project identifiers.
-            //
-
-            if (arr && arr.length) {
-
-                params.projects = self.extractIds(arr);
-
-            }
-
-            MetricService.query(params).$promise.then(function(successResponse) {
-
-                console.log('granteeResponse', successResponse);
-
-                self.metrics = successResponse.features;
-
-            }, function(errorResponse) {
-
-                console.log('errorResponse', errorResponse);
-
-            });
-
-        };
-
-        self.loadOutcomes = function(arr) {
-
-            //
-            // A program (account) identifier
-            // is required by default.
-            //
-
-            var params = {
-                id: 3
-            };
-
-            //
-            // If the `arr` parameter is valid,
-            // constrain the query to the given
-            // set of numeric project identifiers.
-            //
-
-            if (arr && arr.length) {
-
-                params.projects = self.extractIds(arr);
-
-            }
-
-            OutcomeService.query(params).$promise.then(function(successResponse) {
-
-                console.log('granteeResponse', successResponse);
-
-                self.outcomes = successResponse;
-
-            }, function(errorResponse) {
-
-                console.log('errorResponse', errorResponse);
-
-            });
-
+        $rootScope.viewState = {
+            'project': true
         };
 
         //
@@ -4626,14 +4501,7 @@ angular.module('FieldDoc')
         //
         $rootScope.page = {
             title: 'Projects',
-            links: [],
-            actions: [{
-                type: 'button-link new',
-                action: function() {
-                    self.createProject();
-                },
-                text: 'Create project'
-            }]
+            actions: []
         };
 
         self.search = {
@@ -4743,31 +4611,6 @@ angular.module('FieldDoc')
 
         };
 
-        self.createPlan = function() {
-            self.project = new Project({
-                'name': 'Project Plan',
-                'program_type': 'Pre-Project Plan',
-                'description': 'This project plan was created to estimate the potential benefits of a project\'s site and best management practices.'
-            });
-
-            self.project.$save(function(successResponse) {
-
-                self.site = new Site({
-                    'name': 'Planned Site',
-                    'project_id': successResponse.id
-                });
-
-                self.site.$save(function(siteSuccessResponse) {
-                    $location.path('/projects/' + successResponse.id + '/sites/' + siteSuccessResponse.id + '/edit');
-                }, function(siteErrorResponse) {
-                    console.error('Could not save your new Project Plan');
-                });
-
-            }, function(errorResponse) {
-                $log.error('Unable to create Project object');
-            });
-        };
-
         //
         // Verify Account information for proper UI element display
         //
@@ -4796,40 +4639,17 @@ angular.module('FieldDoc')
 
                 self.filteredProjects = $scope.projectStore.filteredProjects;
 
-                self.processLocations(successResponse.features);
-
             }, function(errorResponse) {
 
                 console.log('errorResponse', errorResponse);
 
             });
 
-            // self.loadOutcomes();
-
-            // self.loadMetrics();
-
         } else {
 
             $location.path('/user/logout');
 
         }
-
-        //
-        // Define our map interactions via the Angular Leaflet Directive
-        //
-
-        leafletData.getMap('dashboard--map').then(function(map) {
-
-            // var southWest = L.latLng(25.837377, -124.211606),
-            //     northEast = L.latLng(49.384359, -67.158958),
-            //     bounds = L.latLngBounds(southWest, northEast);
-
-            // map.fitBounds(bounds, {
-            //     padding: [20, 20],
-            //     maxZoom: 18
-            // });
-
-        });
 
         self.clearFilter = function(obj) {
 
@@ -4838,30 +4658,6 @@ angular.module('FieldDoc')
             FilterStore.clearItem(obj);
 
         };
-
-        $scope.$watch('filterStore.index', function(newVal) {
-
-            console.log('Updated filterStore', newVal);
-
-            self.activeFilters = newVal;
-
-            ProjectStore.filterAll(newVal);
-
-        });
-
-        $scope.$watch('projectStore.filteredProjects', function(newVal) {
-
-            console.log('Updated projectStore', newVal);
-
-            self.filteredProjects = newVal;
-
-            // self.processLocations(newVal);
-
-            // self.loadMetrics(newVal);
-
-            // self.loadOutcomes(newVal);
-
-        });
 
     });
 'use strict';
@@ -5489,9 +5285,15 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-    .controller('AccountEditViewController', function(Account, $location, $log, Notifications, $rootScope, $route, user, User, snapshots) {
+    .controller('AccountEditViewController',
+        function(Account, $location, $log, Notifications, $rootScope,
+            $route, user, User, snapshots) {
 
         var self = this;
+
+        $rootScope.viewState = {
+            'profile': true
+        };
 
         //
         // Assign project to a scoped variable
@@ -5515,8 +5317,7 @@ angular.module('FieldDoc')
                 // Setup page meta data
                 //
                 $rootScope.page = {
-                    'title': 'Profile',
-                    'links': []
+                    'title': 'Profile'
                 };
 
                 //

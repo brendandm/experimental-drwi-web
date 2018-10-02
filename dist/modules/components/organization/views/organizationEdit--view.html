@@ -1,67 +1,65 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main class="container feature">
-    <article class="feature-detail">
+<main class="site--content--flow fluid-content clearfix distinguish" view-frame>
 
-        <nav class="column-5 contextual-navigation-wrapper">
-            <ul class="contextual-navigation">
-                <li>
-                    <a href="/projects">
-                        Projects
-                    </a>
-                </li>
-                <li class="active">
-                    <a href="/organization">
-                        Organization
-                    </a>
-                </li>
-                <li>
-                    <a href="/snapshots">
-                        Snapshots
-                    </a>
-                </li>
-                <li>
-                    <a href="/account">
-                        Profile
-                    </a>
-                </li>
-            </ul>
-        </nav>
+    <div id="sidebar" data-ng-include="'/templates/side-bar.html'" view-frame></div>
 
-        <div class="column-11 feature-detail-content">
+    <div class="content--container" view-frame>
 
-            <h1 class="large">Organization</h1>
+        <h1 class="inset">Organization</h1>
+
+        <div class="main--ui">
+
+            <div class="save--action--wrapper save--action--top">
+                <span>Save organization</span>
+                <button type="button" data-ng-click="page.actions.save()">
+                    <i class="material-icons">
+                        done
+                    </i>
+                </button>
+            </div>
 
             <form role="form" class="form" method="POST" id="form" name="form" data-ng-submit="page.actions.save()">
 
                 <div class="form-element">
-                    <label for="name" class="control-label">
-                        Name
-                    </label>
+                    <span class="meta-label"><b>Name</b></span>
                     <input type="text" class="form-control" id="name" name="name" placeholder="Name" data-ng-model="page.organization.name" required="required" tabindex="1" />
                 </div>
 
-                <div class="form-row">
-                    <div class="form-field">
-                        <label for="description" class="control-label">Description</label>
-                        <textarea rows="10" data-ng-model="page.organization.description" class="form-control animate" msd-elastic id="description" name="description" placeholder="Description" maxlength="500" tabindex="2">{{ page.organization.description }}</textarea>
-                    </div>
+                <div class="form-element">
+                    <span class="meta-label"><b>Description</b></span>
+                    <textarea rows="10" data-ng-model="page.organization.description" class="form-control animate" msd-elastic id="description" name="description" placeholder="Description" maxlength="500" tabindex="2">{{ page.organization.description }}</textarea>
                 </div>
-
-                <button type="submit" class="button button-submit" id="submit" name="submit" tabindex="3" data-ng-if="!page.status.saving">
-                    Save Changes
-                </button>
 
                 <div class="throbber throbber-small" data-ng-if="page.status.saving">
                 </div>
                 <p style="text-align: center;" data-ng-if="page.status.saving">
                     Saving changes to your account...
                 </p>
+
             </form>
+
+            <div class="save--action--wrapper save--action--bottom">
+                <span>Save organization</span>
+                <button type="button" data-ng-click="page.actions.save()">
+                    <i class="material-icons">
+                        done
+                    </i>
+                </button>
+            </div>
 
         </div>
 
-    </article>
+    </div>
+
+    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+        <div class="event--container">
+            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                <span class="event--message">{{ alert.msg }}</span>
+            </div>
+        </div>
+    </div>
+
 </main>
 
 <div data-ng-include="'/templates/footer--view.html'"></div>
