@@ -7,9 +7,14 @@
  */
 angular.module('FieldDoc')
     .controller('SnapshotListCtrl',
-        function(Account, $location, $log, Notifications, $rootScope, $route, user, User, snapshots) {
+        function(Account, $location, $log, Notifications, $rootScope,
+            $route, user, User, snapshots) {
 
             var self = this;
+
+            $rootScope.viewState = {
+                'snapshot': true
+            };
 
             //
             // Assign project to a scoped variable
@@ -33,15 +38,7 @@ angular.module('FieldDoc')
                     // Setup page meta data
                     //
                     $rootScope.page = {
-                        'title': 'Snapshots',
-                        'links': [],
-                        'actions': [{
-                            type: 'button-link new',
-                            action: function() {
-                                self.createSnapshot();
-                            },
-                            text: 'Create snapshot'
-                        }]
+                        'title': 'Snapshots'
                     };
 
                     //
@@ -126,7 +123,6 @@ angular.module('FieldDoc')
                     snapshots.$promise.then(function(snapshotResponse) {
 
                         self.snapshots = snapshotResponse.features;
-
 
                     });
 

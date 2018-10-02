@@ -6,9 +6,15 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('AccountEditViewController', function(Account, $location, $log, Notifications, $rootScope, $route, user, User, snapshots) {
+    .controller('AccountEditViewController',
+        function(Account, $location, $log, Notifications, $rootScope,
+            $route, user, User, snapshots) {
 
         var self = this;
+
+        $rootScope.viewState = {
+            'profile': true
+        };
 
         //
         // Assign project to a scoped variable
@@ -32,8 +38,7 @@ angular.module('FieldDoc')
                 // Setup page meta data
                 //
                 $rootScope.page = {
-                    'title': 'Profile',
-                    'links': []
+                    'title': 'Profile'
                 };
 
                 //

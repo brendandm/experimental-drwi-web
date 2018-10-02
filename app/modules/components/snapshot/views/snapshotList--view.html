@@ -1,38 +1,72 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main class="container feature">
-    <article class="feature-detail">
+<main class="site--content--flow fluid-content clearfix distinguish" view-frame>
 
-        <nav class="column-5 contextual-navigation-wrapper">
-            <ul class="contextual-navigation">
-                <li>
-                    <a href="/projects">
-                        Projects
-                    </a>
-                </li>
-                <li>
-                    <a href="/organization">
-                        Organization
-                    </a>
-                </li>
-                <li class="active">
-                    <a href="/snapshots">
-                        Snapshots
-                    </a>
-                </li>
-                <li>
-                    <a href="/account">
-                        Profile
-                    </a>
-                </li>
-            </ul>
-        </nav>
+    <div id="sidebar" data-ng-include="'/templates/side-bar.html'" view-frame></div>
 
-        <div class="column-11 feature-detail-content">
+    <div class="content--container" view-frame>
 
-            <h1 class="large">Snapshots</h1>
+        <h1 class="inset">Snapshots</h1>
 
-            <!-- Snapshot list -->
+        <div class="main--ui">
+
+            <div class="add--new--wrapper">
+                <span>Create snapshot</span>
+                <a class="add--new--btn" href="snapshots/collection/new">
+                    +
+                </a>
+            </div>
+
+            <p>You have <strong>{{ (page.snapshots.length | number) || 0 }}</strong> <ng-pluralize count="page.snapshots.length" when="{'one': 'snapshot','other': 'snapshots'}"></ng-pluralize>.</p>
+
+            <div class="features--container">
+
+                <input type="text" class="search-bar" data-ng-model="page.q" placeholder="Search snapshots">
+
+                <table class="features clearfix" data-ng-show="page.snapshots.length">
+                    <thead>
+                        <tr class="table-row clearfix">
+                            <th class="table-heading" style="text-align: left;">
+                                ID
+                            </th>
+                            <th class="table-heading" style="text-align: left;">
+                                Name
+                            </th>
+                            <th class="table-heading" style="text-align: left;">
+                                Program
+                            </th>
+                            <th class="table-heading" style="text-align: left;">
+                                Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-row clearfix" data-ng-repeat="project in page.snapshots | orderBy:'id' | filter: page.q">
+                            <td>
+                                <a data-ng-href="projects/{{ project.id }}">
+                                    <span><b>{{ project.id }}</b></span>
+                                    <!-- <span><b>{{ project.key }}</b></span> -->
+                                    <span><time datetime="{{ project.modified_on }}" title="{{ project.modified_on }}">Published {{ project.modified_on | date : 'mediumDate' }}</time></span>
+                                </a>
+                            </td>
+                            <td>
+                                <span>{{ project.name }}</span>
+                            </td>
+                            <td class="truncate">
+                                <span>{{ project.watershed }}</span>
+                            </td>
+                            <td>
+                                <span>{{ project.status.name }}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        <!-- <div class="column-11 feature-detail-content"> -->
+
+<!--             <h1 class="large">Snapshots</h1>
 
             <div class="list">
 
@@ -49,9 +83,9 @@
                             </a>
                         </p>
                     </div>
-                </article>
+                </article> -->
 
-                <div class="row list-item">
+<!--                 <div class="row list-item">
                     <div class="responsive-table">
                         <table class="table" data-ng-if="page.snapshots && page.snapshots.length">
                             <thead>
@@ -97,11 +131,12 @@
                         </table>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </div>
 
-    </article>
+    </div>
+
 </main>
 
 <div data-ng-include="'/templates/footer--view.html'"></div>

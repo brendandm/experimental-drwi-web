@@ -10,6 +10,10 @@ angular.module('FieldDoc')
 
         var self = this;
 
+        $rootScope.viewState = {
+            'snapshot': true
+        };
+
         $rootScope.page = {};
 
         $rootScope.page.actions = [];
@@ -35,8 +39,7 @@ angular.module('FieldDoc')
                 // Setup page meta data
                 //
                 $rootScope.page = {
-                    'title': 'Create Snapshot',
-                    'links': []
+                    'title': 'Create Snapshot'
                 };
 
             });

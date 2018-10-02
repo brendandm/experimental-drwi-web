@@ -7,9 +7,14 @@
  */
 angular.module('FieldDoc')
     .controller('OrganizationEditViewController',
-        function(Account, $location, $log, Notifications, $rootScope, $route, user, User, Organization) {
+        function(Account, $location, $log, Notifications, $rootScope,
+            $route, user, User, Organization) {
 
             var self = this;
+
+            $rootScope.viewState = {
+                'organization': true
+            };
 
             //
             // Assign project to a scoped variable
@@ -33,8 +38,7 @@ angular.module('FieldDoc')
                     // Setup page meta data
                     //
                     $rootScope.page = {
-                        'title': 'Edit Organization',
-                        'links': []
+                        'title': 'Edit Organization'
                     };
 
                     //

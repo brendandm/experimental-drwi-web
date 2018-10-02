@@ -21,19 +21,16 @@ angular.module('FieldDoc')
             practices: []
         };
 
+        $rootScope.viewState = {
+            'project': true
+        };
+
         //
         // Setup basic page variables
         //
         $rootScope.page = {
             title: 'Projects',
-            links: [],
-            actions: [{
-                type: 'button-link new',
-                action: function() {
-                    self.createProject();
-                },
-                text: 'Create project'
-            }]
+            actions: []
         };
 
         self.search = {
