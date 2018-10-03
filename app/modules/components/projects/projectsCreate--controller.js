@@ -13,6 +13,31 @@ angular.module('FieldDoc')
 
         $rootScope.page = {};
 
+        self.funders = [{
+            id: 1,
+            name: 'Maryland Department of Natural Resources'
+        }, {
+            id: 2,
+            name: 'National Fish and Wildlife Foundation'
+        }];
+
+        self.programs = [{
+            id: 1,
+            name: 'Chesapeake Bay Conservation Innovation Grant'
+        }, {
+            id: 2,
+            name: 'Chesapeake Bay Innovative Sediment and Nutrient Reduction'
+        }, {
+            id: 3,
+            name: 'Chesapeake Bay Small Watershed Grant'
+        }, {
+            id: 4,
+            name: 'Delaware River Restoration Fund'
+        }, {
+            id: 5,
+            name: 'Maryland Trust Fund'
+        }];
+
         self.project = {};
 
         $rootScope.page.title = 'Create Project';

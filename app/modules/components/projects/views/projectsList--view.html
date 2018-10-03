@@ -19,50 +19,35 @@
 
             <p>You have <strong>{{ (page.filteredProjects.length | number) || 0 }}</strong> <ng-pluralize count="page.filteredProjects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
 
-<!--             <p class="pro-tip"><strong>Pro tip:&nbsp;&nbsp;</strong>Add new projects one-at-a-time or use the <a href="#">batch import feature</a> to upload a spreadsheet.</p> -->
-
             <div class="features--container">
 
                 <input type="text" class="search-bar" data-ng-model="page.q" placeholder="Search projects">
 
-                <table class="features clearfix" data-ng-show="page.filteredProjects.length">
-                    <thead>
-                        <tr class="table-row clearfix">
-                            <th class="table-heading" style="text-align: left;">
-                                ID
-                            </th>
-                            <th class="table-heading" style="text-align: left;">
-                                Name
-                            </th>
-                            <th class="table-heading" style="text-align: left;">
-                                Program
-                            </th>
-                            <th class="table-heading" style="text-align: left;">
-                                Status
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="table-row clearfix" data-ng-repeat="project in page.filteredProjects | orderBy:'id' | filter: page.q">
-                            <td>
-                                <a data-ng-href="projects/{{ project.id }}">
-                                    <span><b>{{ project.id }}</b></span>
-                                    <!-- <span><b>{{ project.key }}</b></span> -->
-                                    <span><time datetime="{{ project.modified_on }}" title="{{ project.modified_on }}">Published {{ project.modified_on | date : 'mediumDate' }}</time></span>
-                                </a>
-                            </td>
-                            <td>
-                                <span>{{ project.name }}</span>
-                            </td>
-                            <td class="truncate">
-                                <span>{{ project.watershed }}</span>
-                            </td>
-                            <td>
-                                <span>{{ project.status.name }}</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <ul class="snapshot--cards list-unstyled">
+
+                    <li class="card" data-ng-repeat="project in page.filteredProjects | orderBy:'-modified_on' | filter: page.q">
+                        <div class="card--content">
+                            <div class="name">{{ project.name }}</div>
+                            <div class="body">
+                                <p>{{ project.description | truncate:80 }}</p>
+                                <span><time datetime="{{ project.modified_on }}" title="{{ project.modified_on }}">Published {{ project.modified_on | date : 'mediumDate' }}</time></span>
+                                <div class="actions">
+                                    <a class="snapshot--title" href="/projects/{{ project.id }}" title="Project summary">
+                                        <i class="material-icons">
+                                        dashboard
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="/projects/{{ project.id }}/edit" title="Edit project">
+                                        <i class="material-icons">
+                                        edit
+                                        </i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
 
             </div>
 

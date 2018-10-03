@@ -25,11 +25,11 @@
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="snapshot in page.snapshots | orderBy:'id' | filter: page.q">
+                    <li class="card" data-ng-repeat="snapshot in page.snapshots | orderBy:'-modified_on' | filter: page.q">
                         <div class="card--content">
                             <div class="name">{{ snapshot.name }}</div>
                             <div class="body">
-                                <p>{{ snapshot.description }}</p>
+                                <p>{{ snapshot.description | truncate:80 }}</p>
                                 <span><time datetime="{{ snapshot.modified_on }}" title="{{ snapshot.modified_on }}">Published {{ snapshot.modified_on | date : 'mediumDate' }}</time></span>
                                 <div class="actions">
                                     <a class="snapshot--title" href="/snapshots/{{ snapshot.id }}" title="View snapshot">
