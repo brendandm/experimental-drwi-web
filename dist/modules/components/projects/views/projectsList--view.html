@@ -1,10 +1,10 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main class="site--content--flow fluid-content clearfix distinguish" view-frame>
+<main class="site--content--flow fluid-content clearfix distinguish">
 
-    <div id="sidebar" data-ng-include="'/templates/side-bar.html'" view-frame></div>
+    <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" view-frame>
+    <div class="content--container">
 
         <h1 class="inset">Projects</h1>
 
@@ -17,52 +17,52 @@
                 </a>
             </div>
 
-            <p>You have <strong>{{ (page.filteredProjects.length | number) || 0 }}</strong> <ng-pluralize count="page.filteredProjects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
+            <div style="position: relative;" class="progress--modal" data-ng-if="page.loading">
+                <div class="progress--container">
+                    <p><strong>Loading your projects&hellip;</strong></p>
+                    <div class="progress--meter--bar--wrapper">
+                        <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+                    </div>
+                </div>
+            </div>
 
-<!--             <p class="pro-tip"><strong>Pro tip:&nbsp;&nbsp;</strong>Add new projects one-at-a-time or use the <a href="#">batch import feature</a> to upload a spreadsheet.</p> -->
+            <p data-ng-if="!page.loading">You have <strong>{{ (page.filteredProjects.length | number) || 0 }}</strong> <ng-pluralize count="page.filteredProjects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
 
-            <div class="features--container">
+            <div class="features--container" data-ng-if="!page.loading">
 
                 <input type="text" class="search-bar" data-ng-model="page.q" placeholder="Search projects">
 
-                <table class="features clearfix" data-ng-show="page.filteredProjects.length">
-                    <thead>
-                        <tr class="table-row clearfix">
-                            <th class="table-heading" style="text-align: left;">
-                                ID
-                            </th>
-                            <th class="table-heading" style="text-align: left;">
-                                Name
-                            </th>
-                            <th class="table-heading" style="text-align: left;">
-                                Program
-                            </th>
-                            <th class="table-heading" style="text-align: left;">
-                                Status
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="table-row clearfix" data-ng-repeat="project in page.filteredProjects | orderBy:'id' | filter: page.q">
-                            <td>
-                                <a data-ng-href="projects/{{ project.id }}">
-                                    <span><b>{{ project.id }}</b></span>
-                                    <!-- <span><b>{{ project.key }}</b></span> -->
-                                    <span><time datetime="{{ project.modified_on }}" title="{{ project.modified_on }}">Published {{ project.modified_on | date : 'mediumDate' }}</time></span>
-                                </a>
-                            </td>
-                            <td>
-                                <span>{{ project.name }}</span>
-                            </td>
-                            <td class="truncate">
-                                <span>{{ project.watershed }}</span>
-                            </td>
-                            <td>
-                                <span>{{ project.status.name }}</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <ul class="snapshot--cards list-unstyled">
+
+                    <li class="card" data-ng-repeat="project in page.filteredProjects | orderBy:'-modified_on' | filter: page.q">
+                        <div class="card--content">
+                            <div class="name">{{ project.name }}</div>
+                            <div class="body">
+                                <p>{{ project.description | truncate:80 }}</p>
+                                <!-- <span><time datetime="{{ project.modified_on }}" title="{{ project.modified_on }}">Last updated {{ project.modified_on | date : 'mediumDate' }}</time></span> -->
+                                <div class="actions">
+                                    <a class="snapshot--title" href="/projects/{{ project.id }}" title="Project summary">
+                                        <i class="material-icons">
+                                        dashboard
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="/projects/{{ project.id }}/edit" title="Edit project">
+                                        <i class="material-icons">
+                                        edit
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="#" title="Delete project" data-ng-click="page.confirmDelete(project)">
+                                        <i class="material-icons">
+                                        delete
+                                        </i>
+                                    </a>
+                                </div>
+                                <span><time datetime="{{ project.modified_on }}" title="{{ project.modified_on }}">Last updated {{ project.modified_on | date : 'mediumDate' }}</time></span>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
 
             </div>
 

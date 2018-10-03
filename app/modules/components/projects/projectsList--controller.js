@@ -6,8 +6,10 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProjectsCtrl', function(Account, $location, $log, Project,
-        projects, $rootScope, $scope, Site, user, ProjectStore, FilterStore) {
+    .controller('ProjectsCtrl',
+        function(Account, $location, $log, Project,
+        projects, $rootScope, $scope, Site, user,
+        ProjectStore, FilterStore, $interval, $timeout) {
 
         $scope.filterStore = FilterStore;
 
@@ -31,6 +33,40 @@ angular.module('FieldDoc')
         $rootScope.page = {
             title: 'Projects',
             actions: []
+        };
+
+        self.loading = true;
+
+        self.fillMeter = $interval(function() {
+
+            var tempValue = (self.progressValue || 10) * 0.2;
+
+            if (!self.progressValue) {
+
+                self.progressValue = tempValue;
+
+            } else if ((100 - tempValue) > self.progressValue) {
+
+                self.progressValue += tempValue;
+
+            }
+
+            console.log('progressValue', self.progressValue);
+
+        }, 100);
+
+        self.showElements = function() {
+
+            $interval.cancel(self.fillMeter);
+
+            self.progressValue = 100;
+
+            $timeout(function() {
+
+                self.loading = false;
+
+            }, 1000);
+
         };
 
         self.search = {
@@ -167,6 +203,8 @@ angular.module('FieldDoc')
                 $scope.projectStore.setProjects(successResponse.features);
 
                 self.filteredProjects = $scope.projectStore.filteredProjects;
+
+                self.showElements();
 
             }, function(errorResponse) {
 

@@ -2220,12 +2220,46 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('SnapshotListCtrl',
         function(Account, $location, $log, Notifications, $rootScope,
-            $route, user, User, snapshots) {
+            $route, user, User, snapshots, $interval, $timeout) {
 
             var self = this;
 
             $rootScope.viewState = {
                 'snapshot': true
+            };
+
+            self.loading = true;
+
+            self.fillMeter = $interval(function() {
+
+                var tempValue = (self.progressValue || 10) * 0.2;
+
+                if (!self.progressValue) {
+
+                    self.progressValue = tempValue;
+
+                } else if ((100 - tempValue) > self.progressValue) {
+
+                    self.progressValue += tempValue;
+
+                }
+
+                console.log('progressValue', self.progressValue);
+
+            }, 100);
+
+            self.showElements = function() {
+
+                $interval.cancel(self.fillMeter);
+
+                self.progressValue = 100;
+
+                $timeout(function() {
+
+                    self.loading = false;
+
+                }, 1000);
+
             };
 
             //
@@ -2335,6 +2369,8 @@ angular.module('FieldDoc')
                     snapshots.$promise.then(function(snapshotResponse) {
 
                         self.snapshots = snapshotResponse.features;
+
+                        self.showElements();
 
                     });
 
@@ -4477,8 +4513,10 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProjectsCtrl', function(Account, $location, $log, Project,
-        projects, $rootScope, $scope, Site, user, ProjectStore, FilterStore) {
+    .controller('ProjectsCtrl',
+        function(Account, $location, $log, Project,
+        projects, $rootScope, $scope, Site, user,
+        ProjectStore, FilterStore, $interval, $timeout) {
 
         $scope.filterStore = FilterStore;
 
@@ -4502,6 +4540,40 @@ angular.module('FieldDoc')
         $rootScope.page = {
             title: 'Projects',
             actions: []
+        };
+
+        self.loading = true;
+
+        self.fillMeter = $interval(function() {
+
+            var tempValue = (self.progressValue || 10) * 0.2;
+
+            if (!self.progressValue) {
+
+                self.progressValue = tempValue;
+
+            } else if ((100 - tempValue) > self.progressValue) {
+
+                self.progressValue += tempValue;
+
+            }
+
+            console.log('progressValue', self.progressValue);
+
+        }, 100);
+
+        self.showElements = function() {
+
+            $interval.cancel(self.fillMeter);
+
+            self.progressValue = 100;
+
+            $timeout(function() {
+
+                self.loading = false;
+
+            }, 1000);
+
         };
 
         self.search = {
@@ -4638,6 +4710,8 @@ angular.module('FieldDoc')
                 $scope.projectStore.setProjects(successResponse.features);
 
                 self.filteredProjects = $scope.projectStore.filteredProjects;
+
+                self.showElements();
 
             }, function(errorResponse) {
 
@@ -4970,6 +5044,31 @@ angular.module('FieldDoc')
         var self = this;
 
         $rootScope.page = {};
+
+        self.funders = [{
+            id: 1,
+            name: 'Maryland Department of Natural Resources'
+        }, {
+            id: 2,
+            name: 'National Fish and Wildlife Foundation'
+        }];
+
+        self.programs = [{
+            id: 1,
+            name: 'Chesapeake Bay Conservation Innovation Grant'
+        }, {
+            id: 2,
+            name: 'Chesapeake Bay Innovative Sediment and Nutrient Reduction'
+        }, {
+            id: 3,
+            name: 'Chesapeake Bay Small Watershed Grant'
+        }, {
+            id: 4,
+            name: 'Delaware River Restoration Fund'
+        }, {
+            id: 5,
+            name: 'Maryland Trust Fund'
+        }];
 
         self.project = {};
 
@@ -12063,5 +12162,35 @@ angular.module('FieldDoc')
         return (angular.isArray(input)) ? true : false;
       };
     });
+
+}());
+
+(function() {
+
+    'use strict';
+
+    /**
+     * @ngdoc function
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .filter('truncate', function() {
+
+            return function(string, length) {
+
+                if (string.length > length) {
+
+                    return string.substr(0, length) + '…';
+
+                } else {
+
+                    return string;
+
+                }
+
+            };
+
+        });
 
 }());

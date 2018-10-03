@@ -1,48 +1,39 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main class="container feature">
+<main class="site--content--flow fluid-content clearfix distinguish">
 
-    <article class="feature-detail">
+    <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-        <nav class="column-5 contextual-navigation-wrapper">
-            <ul class="contextual-navigation">
-                <li class="active">
-                    <a href="/projects">
-                        Projects
-                    </a>
-                </li>
-                <li>
-                    <a href="/organization">
-                        Organization
-                    </a>
-                </li>
-                <li>
-                    <a href="/snapshots">
-                        Snapshots
-                    </a>
-                </li>
-                <li>
-                    <a href="/account">
-                        Profile
-                    </a>
-                </li>
-            </ul>
-        </nav>
+    <div class="content--container">
 
-        <div class="column-11 feature-detail-content">
+        <h1 class="inset">Create project</h1>
 
-            <h1 class="large">Create Project</h1>
+        <div class="main--ui">
 
             <form role="form" class="row form" id="form--ProjectEdit" name="form--ProjectEdit">
-                <div class="form-row">
-                    <div class="form-field">
-                        <label for="project_title" class="control-label">1. What is the name of your project?</label>
-                        <textarea rows="1" data-ng-model="page.project.name" class="form-control animate" msd-elastic id="name" name="name" placeholder="Project Name">{{ page.project.name }}</textarea>
-                    </div>
+
+                <div class="form-element">
+                    <span class="meta-label"><b>What is the name of your project?</b></span>
+                    <textarea rows="1" data-ng-model="page.project.name" class="form-control animate" msd-elastic id="name" name="name" placeholder="">{{ page.project.name }}</textarea>
+                </div>
+
+                <div class="form-element">
+                    <span class="meta-label"><b>Please provide a short project description.</b></span>
+                    <textarea class="form-control animate" data-ng-model="page.project.description" msd-elastic id="description" name="description" rows="4" maxlength="500">{{ page.project.description }}</textarea>
+                </div>
+
+                <div class="form-element" data-ng-class="{dirty: page.parameter.unit_id}">
+                    <span class="meta-label"><b>Select a funder for this project.</b></span>
+                    <input type="text" value="page.funder.name" placeholder="Search funders" data-ng-model="page.funder" uib-typeahead="funder as funder.name for funder in page.funders | filter:$viewValue | limitTo:5" typeahead-on-select="page.setFunder($item,$model,$label)" typeahead-min-length="0">
+                </div>
+
+                <div class="form-element" data-ng-class="{dirty: page.parameter.unit_id}">
+                    <span class="meta-label"><b>Select a grant program for this project.</b></span>
+                    <input type="text" value="page.program.name" placeholder="Search programs" data-ng-model="page.program" uib-typeahead="program as program.name for program in page.programs | filter:$viewValue | limitTo:5" typeahead-on-select="page.setProgram($item,$model,$label)" typeahead-min-length="0">
                 </div>
 
                 <!-- Program Type -->
-                <div class="form-row" data-ng-if="page.project.program_type !== 'Pre-Project Plan'">
+<!--                 <div class="form-row" data-ng-if="page.project.program_type !== 'Pre-Project Plan'">
                     <div class="form-field">
                         <label for="program_type" class="control-label">2. Which funder is providing the grant?</label>
                         <select data-ng-model="page.project.organization_id" class="form-control" id="program_type" name="program_type">
@@ -51,10 +42,10 @@
                             <option value="3">National Fish and Wildlife Foundation - Delaware</option>
                         </select>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Program Type -->
-                <div class="form-row">
+<!--                 <div class="form-row">
                     <div class="form-field">
                         <label for="program_type" class="control-label" data-ng-if="page.project.program_type !== 'Pre-Project Plan'">3. What type of grant are you requesting?</label>
                         <label for="program_type" class="control-label" data-ng-if="page.project.program_type === 'Pre-Project Plan'">2. What type of grant are you requesting?</label>
@@ -67,37 +58,55 @@
                             <option value="Pre-Project Plan">Pre-Project Plan</option>
                         </select>
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Project Abstract -->
-                <div class="form-row">
-                    <div class="form-field">
-                        <label for="project_abstract" class="control-label" data-ng-if="page.project.program_type !== 'Pre-Project Plan'">4. Please provide a short project description.</label>
-                        <label for="project_abstract" class="control-label" data-ng-if="page.project.program_type === 'Pre-Project Plan'">3. Please provide a short project description.</label>
-                        <textarea class="form-control animate" data-ng-model="page.project.description" msd-elastic id="description" name="description" rows="1">{{ page.project.description }}</textarea>
-                    </div>
-                </div>
+<!--                 <div class="form-element">
+                    <span class="meta-label"><b>Please provide a short project description.</b></span>
+                    <textarea class="form-control animate" data-ng-model="page.project.description" msd-elastic id="description" name="description" rows="4" maxlength="500">{{ page.project.description }}</textarea>
+                </div> -->
 
                 <!-- Project Abstract -->
-                <div class="form-row">
+<!--                 <div class="form-row">
                     <div class="form-field">
                         <label for="project_abstract" class="control-label" data-ng-if="page.project.program_type !== 'Pre-Project Plan'">5. Please tell us which organizations this project is associated with.</label>
                         <label for="project_abstract" class="control-label" data-ng-if="page.project.program_type === 'Pre-Project Plan'">4. Please tell us which organizations this project is associated with.</label>
                         <organization model="page.project.organizations" table="'organization'" field="'name'" display="['name']" placeholder="'Begin typing an organization name'" tabindexnumber="4">
                         </organization>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="form-actions">
+<!--                 <div class="form-actions">
                     <div class="form-actions-buttons">
                         <button type="submit" data-ng-click="page.saveProject()" class="button button-submit">
                             Save Changes
                         </button>
                     </div>
-                </div>
+                </div> -->
+
             </form>
+
+            <div class="save--action--wrapper save--action--bottom">
+                <span>Save project</span>
+                <button type="button" data-ng-click="page.saveProject()">
+                    <i class="material-icons">
+                        done
+                    </i>
+                </button>
+            </div>
+
         </div>
-    </article>
+
+    </div>
+
+    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+        <div class="event--container">
+            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                <span class="event--message">{{ alert.msg }}</span>
+            </div>
+        </div>
+    </div>
+
 </main>
 
 <div data-ng-include="'/templates/footer--view.html'"></div>

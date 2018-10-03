@@ -84,7 +84,7 @@
 
 }
 
-.dashboard,
+//.dashboard,
 .site--content--flow {
   //margin-top: -4em;
   //padding: 0 !important;
@@ -4071,6 +4071,14 @@
         height: 100%;
         box-sizing: border-box;
 
+        time {
+          font-size: 0.9em;
+          //opacity: 0.8;
+          //font-weight: bold;
+          letter-spacing: 0;
+          color: #888;
+        }
+
         .actions {
           flex: 1;
           display: flex;
@@ -4083,6 +4091,8 @@
           a,
           a:link,
           a:visited {
+            display: inline-block;
+            margin-right: 1em;
             color: #333;
             opacity: 0.7;
             transition: all 250ms ease 0s;
@@ -4093,9 +4103,8 @@
             opacity: 1;
           }
 
-          a:first-of-type {
-            display: inline-block;
-            margin-right: 1em;
+          a:last-of-type {
+            margin-right: 0;
           }
 
         }

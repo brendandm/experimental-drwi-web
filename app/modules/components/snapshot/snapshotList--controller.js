@@ -8,12 +8,46 @@
 angular.module('FieldDoc')
     .controller('SnapshotListCtrl',
         function(Account, $location, $log, Notifications, $rootScope,
-            $route, user, User, snapshots) {
+            $route, user, User, snapshots, $interval, $timeout) {
 
             var self = this;
 
             $rootScope.viewState = {
                 'snapshot': true
+            };
+
+            self.loading = true;
+
+            self.fillMeter = $interval(function() {
+
+                var tempValue = (self.progressValue || 10) * 0.2;
+
+                if (!self.progressValue) {
+
+                    self.progressValue = tempValue;
+
+                } else if ((100 - tempValue) > self.progressValue) {
+
+                    self.progressValue += tempValue;
+
+                }
+
+                console.log('progressValue', self.progressValue);
+
+            }, 100);
+
+            self.showElements = function() {
+
+                $interval.cancel(self.fillMeter);
+
+                self.progressValue = 100;
+
+                $timeout(function() {
+
+                    self.loading = false;
+
+                }, 1000);
+
             };
 
             //
@@ -123,6 +157,8 @@ angular.module('FieldDoc')
                     snapshots.$promise.then(function(snapshotResponse) {
 
                         self.snapshots = snapshotResponse.features;
+
+                        self.showElements();
 
                     });
 

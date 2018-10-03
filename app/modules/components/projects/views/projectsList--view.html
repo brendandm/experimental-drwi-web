@@ -1,10 +1,10 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main class="site--content--flow fluid-content clearfix distinguish" view-frame>
+<main class="site--content--flow fluid-content clearfix distinguish">
 
-    <div id="sidebar" data-ng-include="'/templates/side-bar.html'" view-frame></div>
+    <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" view-frame>
+    <div class="content--container">
 
         <h1 class="inset">Projects</h1>
 
@@ -17,9 +17,18 @@
                 </a>
             </div>
 
-            <p>You have <strong>{{ (page.filteredProjects.length | number) || 0 }}</strong> <ng-pluralize count="page.filteredProjects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
+            <div style="position: relative;" class="progress--modal" data-ng-if="page.loading">
+                <div class="progress--container">
+                    <p><strong>Loading your projects&hellip;</strong></p>
+                    <div class="progress--meter--bar--wrapper">
+                        <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+                    </div>
+                </div>
+            </div>
 
-            <div class="features--container">
+            <p data-ng-if="!page.loading">You have <strong>{{ (page.filteredProjects.length | number) || 0 }}</strong> <ng-pluralize count="page.filteredProjects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
+
+            <div class="features--container" data-ng-if="!page.loading">
 
                 <input type="text" class="search-bar" data-ng-model="page.q" placeholder="Search projects">
 
@@ -30,7 +39,7 @@
                             <div class="name">{{ project.name }}</div>
                             <div class="body">
                                 <p>{{ project.description | truncate:80 }}</p>
-                                <span><time datetime="{{ project.modified_on }}" title="{{ project.modified_on }}">Published {{ project.modified_on | date : 'mediumDate' }}</time></span>
+                                <!-- <span><time datetime="{{ project.modified_on }}" title="{{ project.modified_on }}">Last updated {{ project.modified_on | date : 'mediumDate' }}</time></span> -->
                                 <div class="actions">
                                     <a class="snapshot--title" href="/projects/{{ project.id }}" title="Project summary">
                                         <i class="material-icons">
@@ -42,7 +51,13 @@
                                         edit
                                         </i>
                                     </a>
+                                    <a class="snapshot--title" href="#" title="Delete project" data-ng-click="page.confirmDelete(project)">
+                                        <i class="material-icons">
+                                        delete
+                                        </i>
+                                    </a>
                                 </div>
+                                <span><time datetime="{{ project.modified_on }}" title="{{ project.modified_on }}">Last updated {{ project.modified_on | date : 'mediumDate' }}</time></span>
                             </div>
                         </div>
                     </li>

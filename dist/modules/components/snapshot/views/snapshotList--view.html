@@ -1,10 +1,10 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main class="site--content--flow fluid-content clearfix distinguish" view-frame>
+<main class="site--content--flow fluid-content clearfix distinguish">
 
-    <div id="sidebar" data-ng-include="'/templates/side-bar.html'" view-frame></div>
+    <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" view-frame>
+    <div class="content--container">
 
         <h1 class="inset">Snapshots</h1>
 
@@ -17,20 +17,29 @@
                 </a>
             </div>
 
-            <p>You have <strong>{{ (page.snapshots.length | number) || 0 }}</strong> <ng-pluralize count="page.snapshots.length" when="{'one': 'snapshot','other': 'snapshots'}"></ng-pluralize>.</p>
+            <div style="position: relative;" class="progress--modal" data-ng-if="page.loading">
+                <div class="progress--container">
+                    <p><strong>Loading your snapshots&hellip;</strong></p>
+                    <div class="progress--meter--bar--wrapper">
+                        <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+                    </div>
+                </div>
+            </div>
 
-            <div class="features--container">
+            <p data-ng-if="!page.loading">You have <strong>{{ (page.snapshots.length | number) || 0 }}</strong> <ng-pluralize count="page.snapshots.length" when="{'one': 'snapshot','other': 'snapshots'}"></ng-pluralize>.</p>
+
+            <div class="features--container" data-ng-if="!page.loading">
 
                 <input type="text" class="search-bar" data-ng-model="page.q" placeholder="Search snapshots">
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="snapshot in page.snapshots | orderBy:'id' | filter: page.q">
+                    <li class="card" data-ng-repeat="snapshot in page.snapshots | orderBy:'-modified_on' | filter: page.q">
                         <div class="card--content">
                             <div class="name">{{ snapshot.name }}</div>
                             <div class="body">
-                                <p>{{ snapshot.description }}</p>
-                                <span><time datetime="{{ snapshot.modified_on }}" title="{{ snapshot.modified_on }}">Published {{ snapshot.modified_on | date : 'mediumDate' }}</time></span>
+                                <p>{{ snapshot.description | truncate:80 }}</p>
+                                <!-- <span><time datetime="{{ snapshot.modified_on }}" title="{{ snapshot.modified_on }}">Last updated {{ snapshot.modified_on | date : 'mediumDate' }}</time></span> -->
                                 <div class="actions">
                                     <a class="snapshot--title" href="/snapshots/{{ snapshot.id }}" title="View snapshot">
                                         <i class="material-icons">
@@ -42,7 +51,13 @@
                                         edit
                                         </i>
                                     </a>
+                                    <a class="snapshot--title" href="#" title="Delete snapshot" data-ng-click="page.confirmDelete(snapshot)">
+                                        <i class="material-icons">
+                                        delete
+                                        </i>
+                                    </a>
                                 </div>
+                                <span><time datetime="{{ snapshot.modified_on }}" title="{{ snapshot.modified_on }}">Last updated {{ snapshot.modified_on | date : 'mediumDate' }}</time></span>
                             </div>
                         </div>
                     </li>
