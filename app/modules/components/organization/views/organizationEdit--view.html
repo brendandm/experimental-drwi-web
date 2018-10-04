@@ -31,6 +31,16 @@
                     <textarea rows="10" data-ng-model="page.organization.description" class="form-control animate" msd-elastic id="description" name="description" placeholder="Description" maxlength="500" tabindex="2">{{ page.organization.description }}</textarea>
                 </div>
 
+                <div class="form-element">
+                    <span class="meta-label"><b>Email</b></span>
+                    <input type="text" class="form-control" id="email" name="email" placeholder="Email" data-ng-model="page.organization.email" required="required" />
+                </div>
+
+                <div class="form-element">
+                    <span class="meta-label"><b>Website</b></span>
+                    <input type="text" class="form-control" id="website" name="website" placeholder="Website" data-ng-model="page.organization.website" required="required" />
+                </div>
+
                 <div class="throbber throbber-small" data-ng-if="page.status.saving">
                 </div>
                 <p style="text-align: center;" data-ng-if="page.status.saving">

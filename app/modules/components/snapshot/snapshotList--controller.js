@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('SnapshotListCtrl',
         function(Account, $location, $log, Notifications, $rootScope,
-            $route, user, User, snapshots, $interval, $timeout) {
+            $route, user, User, snapshots, $interval, $timeout, Snapshot) {
 
             var self = this;
 
@@ -47,6 +47,55 @@ angular.module('FieldDoc')
                     self.loading = false;
 
                 }, 1000);
+
+            };
+
+            self.confirmDelete = function(obj) {
+
+                self.deletionTarget = obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.deleteFeature = function(obj) {
+
+                Snapshot.delete({
+                    id: obj.id
+                }).$promise.then(function(data) {
+
+                    self.deletionTarget = null;
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this snapshot.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(function(){
+
+                        self.alerts = [];
+
+                    }, 2000);
+
+                    self.snapshots.forEach(function(index, item) {
+
+                        if (item.id === obj.id) {
+
+                            self.deletionIndex = index;
+
+                        }
+
+                    });
+
+                    self.snapshots.splice(self.deletionIndex, 1);
+
+                });
 
             };
 

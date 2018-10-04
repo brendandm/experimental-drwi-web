@@ -82,16 +82,7 @@ angular.module('FieldDoc')
 
             $rootScope.page.title = 'Project Summary';
 
-            $rootScope.page.links = [{
-                    text: 'Projects',
-                    url: '/projects'
-                },
-                {
-                    text: self.project.properties.name,
-                    url: '/projects/' + $route.current.params.projectId,
-                    type: 'active'
-                }
-            ];
+            // $rootScope.page.links = [];
 
             //
             // Verify Account information for proper UI element display
@@ -255,30 +246,43 @@ angular.module('FieldDoc')
         //
         // Setup basic page variables
         //
-        $rootScope.page.actions = [{
-                type: 'button-link',
-                action: function() {
-                    $window.print();
-                },
-                hideIcon: true,
-                text: 'Print'
+        // $rootScope.page.actions = [{
+        //         type: 'button-link',
+        //         action: function() {
+        //             $window.print();
+        //         },
+        //         hideIcon: true,
+        //         text: 'Print'
+        //     },
+        //     {
+        //         type: 'button-link',
+        //         action: function() {
+        //             $scope.$emit('saveToPdf');
+        //         },
+        //         hideIcon: true,
+        //         text: 'Save as PDF'
+        //     },
+        //     {
+        //         type: 'button-link new',
+        //         action: function() {
+        //             self.createSite();
+        //         },
+        //         text: 'Create site'
+        //     }
+        // ];
+
+        self.actions = {
+            print: function() {
+
+                $window.print();                    
+
             },
-            {
-                type: 'button-link',
-                action: function() {
-                    $scope.$emit('saveToPdf');
-                },
-                hideIcon: true,
-                text: 'Save as PDF'
-            },
-            {
-                type: 'button-link new',
-                action: function() {
-                    self.createSite();
-                },
-                text: 'Create site'
+            saveToPdf: function() {
+
+                $scope.$emit('saveToPdf');
+                
             }
-        ];
+        };
 
         // leafletData.getMap('dashboard--map').then(function(map) {
 
