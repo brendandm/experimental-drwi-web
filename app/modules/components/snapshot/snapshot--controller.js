@@ -215,7 +215,7 @@ angular.module('FieldDoc')
                     console.log('geoJsonLayer', geoJsonLayer);
 
                     map.fitBounds(geoJsonLayer.getBounds(), {
-                        maxZoom: 18
+                        maxZoom: 22
                     });
 
                 });
@@ -233,7 +233,7 @@ angular.module('FieldDoc')
             leafletData.getMap('dashboard--map').then(function(map) {
 
                 map.fitBounds(geoJsonLayer.getBounds(), {
-                    maxZoom: 18
+                    maxZoom: 22
                 });
 
             });

@@ -1015,7 +1015,7 @@ angular.module('FieldDoc')
                     console.log('geoJsonLayer', geoJsonLayer);
 
                     map.fitBounds(geoJsonLayer.getBounds(), {
-                        maxZoom: 18
+                        maxZoom: 22
                     });
 
                 });
@@ -1033,7 +1033,7 @@ angular.module('FieldDoc')
             leafletData.getMap('dashboard--map').then(function(map) {
 
                 map.fitBounds(geoJsonLayer.getBounds(), {
-                    maxZoom: 18
+                    maxZoom: 22
                 });
 
             });
@@ -3032,7 +3032,7 @@ angular.module('FieldDoc')
                     console.log('geoJsonLayer', geoJsonLayer);
 
                     map.fitBounds(geoJsonLayer.getBounds(), {
-                        maxZoom: 18
+                        maxZoom: 22
                     });
 
                 });
@@ -3050,7 +3050,7 @@ angular.module('FieldDoc')
             leafletData.getMap('dashboard--map').then(function(map) {
 
                 map.fitBounds(geoJsonLayer.getBounds(), {
-                    maxZoom: 18
+                    maxZoom: 22
                 });
 
             });
@@ -4907,14 +4907,14 @@ angular.module('FieldDoc')
 
                     map.fitBounds(self.projectExtent.getBounds(), {
                         // padding: [20, 20],
-                        maxZoom: 18
+                        maxZoom: 22
                     });
 
                 } else {
 
                     map.fitBounds(bounds, {
                         // padding: [20, 20],
-                        maxZoom: 18
+                        maxZoom: 22
                     });
 
                 }
@@ -4933,7 +4933,7 @@ angular.module('FieldDoc')
 
                 map.fitBounds(self.projectExtent.getBounds(), {
                     // padding: [20, 20],
-                    maxZoom: 18
+                    maxZoom: 22
                 });
 
                 self.projectExtent.addTo(map);
@@ -5083,7 +5083,7 @@ angular.module('FieldDoc')
 
         //     map.fitBounds(bounds, {
         //         padding: [20, 20],
-        //         maxZoom: 18
+        //         maxZoom: 22
         //     });
 
         // });
@@ -5766,7 +5766,7 @@ angular.module('FieldDoc')
 
                         map.fitBounds(self.siteExtent.getBounds(), {
                                 // padding: [20, 20],
-                            maxZoom: 18
+                            maxZoom: 22
                         });
                     });
                     self.map.geojson = {
@@ -6355,7 +6355,7 @@ angular.module('FieldDoc')
 
                     // map.fitBounds(drawnItems.getBounds(), {
                     //     padding: [20, 20],
-                    //     maxZoom: 18
+                    //     maxZoom: 22
                     // });
 
                 });
@@ -6393,7 +6393,7 @@ angular.module('FieldDoc')
 
                     // map.fitBounds(drawnItems.getBounds(), {
                     //     padding: [20, 20],
-                    //     maxZoom: 18
+                    //     maxZoom: 22
                     // });
 
                 });
@@ -6428,7 +6428,7 @@ angular.module('FieldDoc')
 
                         map.fitBounds(e.layer.getBounds(), {
                             padding: [20, 20],
-                            maxZoom: 18
+                            maxZoom: 22
                         });
 
                     }
@@ -6782,7 +6782,7 @@ angular.module('FieldDoc')
                         siteExtent.addLayer(siteGeometry);
 
                         map.fitBounds(siteExtent.getBounds(), {
-                            maxZoom: 18
+                            maxZoom: 22
                         });
 
                     });
@@ -6844,7 +6844,7 @@ angular.module('FieldDoc')
 
                         map.fitBounds(self.editableLayers.getBounds(), {
                             // padding: [20, 20],
-                            maxZoom: 18
+                            maxZoom: 22
                         });
 
                     });
@@ -7233,7 +7233,7 @@ angular.module('FieldDoc')
 
                     map.fitBounds(e.layer.getBounds(), {
                         padding: [20, 20],
-                        maxZoom: 18
+                        maxZoom: 22
                     });
 
                 }
@@ -8017,7 +8017,7 @@ angular.module('FieldDoc')
 
                         map.fitBounds(self.practiceExtent.getBounds(), {
                             // padding: [20, 20],
-                            maxZoom: 18
+                            maxZoom: 22
                         });
                     });
                     self.map.geojson = {

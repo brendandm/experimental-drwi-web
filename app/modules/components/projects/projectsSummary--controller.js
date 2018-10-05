@@ -122,14 +122,14 @@ angular.module('FieldDoc')
 
                     map.fitBounds(self.projectExtent.getBounds(), {
                         // padding: [20, 20],
-                        maxZoom: 18
+                        maxZoom: 22
                     });
 
                 } else {
 
                     map.fitBounds(bounds, {
                         // padding: [20, 20],
-                        maxZoom: 18
+                        maxZoom: 22
                     });
 
                 }
@@ -148,7 +148,7 @@ angular.module('FieldDoc')
 
                 map.fitBounds(self.projectExtent.getBounds(), {
                     // padding: [20, 20],
-                    maxZoom: 18
+                    maxZoom: 22
                 });
 
                 self.projectExtent.addTo(map);
@@ -298,7 +298,7 @@ angular.module('FieldDoc')
 
         //     map.fitBounds(bounds, {
         //         padding: [20, 20],
-        //         maxZoom: 18
+        //         maxZoom: 22
         //     });
 
         // });

@@ -147,7 +147,7 @@ angular.module('FieldDoc')
                         siteExtent.addLayer(siteGeometry);
 
                         map.fitBounds(siteExtent.getBounds(), {
-                            maxZoom: 18
+                            maxZoom: 22
                         });
 
                     });
@@ -209,7 +209,7 @@ angular.module('FieldDoc')
 
                         map.fitBounds(self.editableLayers.getBounds(), {
                             // padding: [20, 20],
-                            maxZoom: 18
+                            maxZoom: 22
                         });
 
                     });
@@ -598,7 +598,7 @@ angular.module('FieldDoc')
 
                     map.fitBounds(e.layer.getBounds(), {
                         padding: [20, 20],
-                        maxZoom: 18
+                        maxZoom: 22
                     });
 
                 }

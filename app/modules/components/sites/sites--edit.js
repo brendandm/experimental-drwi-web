@@ -535,7 +535,7 @@
 
                     // map.fitBounds(drawnItems.getBounds(), {
                     //     padding: [20, 20],
-                    //     maxZoom: 18
+                    //     maxZoom: 22
                     // });
 
                 });
@@ -573,7 +573,7 @@
 
                     // map.fitBounds(drawnItems.getBounds(), {
                     //     padding: [20, 20],
-                    //     maxZoom: 18
+                    //     maxZoom: 22
                     // });
 
                 });
@@ -608,7 +608,7 @@
 
                         map.fitBounds(e.layer.getBounds(), {
                             padding: [20, 20],
-                            maxZoom: 18
+                            maxZoom: 22
                         });
 
                     }
