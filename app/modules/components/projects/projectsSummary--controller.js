@@ -8,11 +8,17 @@
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-    .controller('ProjectSummaryCtrl', function(Account, Notifications, $rootScope, Project, $route,
-        $scope, $location, Map, mapbox, summary, Site, user, $window, leafletData, leafletBoundsHelpers) {
+    .controller('ProjectSummaryCtrl',
+        function(Account, Notifications, $rootScope, Project, $route,
+        $scope, $location, Map, mapbox, summary, Site, user, $window,
+        leafletData, leafletBoundsHelpers) {
 
         //controller is set to self
         var self = this;
+
+        $rootScope.viewState = {
+            'project': true
+        };
 
         $rootScope.page = {};
 
@@ -280,7 +286,7 @@ angular.module('FieldDoc')
             saveToPdf: function() {
 
                 $scope.$emit('saveToPdf');
-                
+
             }
         };
 

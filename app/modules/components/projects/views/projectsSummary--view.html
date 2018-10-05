@@ -4,7 +4,7 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container">
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
         <h1 class="inset">{{ page.project.properties.name }}</h1>
 
@@ -16,8 +16,8 @@
                 <div class="feature-detail-content" save2pdf>
                     <h4>
                         <span data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">{{ page.project.properties.program_type }}</span>
-                        <span data-ng-if="page.project.id && page.project.properties.account.properties.name" class="label">{{ page.project.properties.account.properties.name }}</span>
-                        <span data-ng-if="page.project.id && !page.project.properties.account.properties.name && page.project.properties.program_type !== 'Pre-Project Plan'" class="label label-danger">No Funder</span>
+                        <!-- <span data-ng-if="page.project.id && page.project.properties.account.properties.name" class="label">{{ page.project.properties.account.properties.name }}</span>
+                        <span data-ng-if="page.project.id && !page.project.properties.account.properties.name && page.project.properties.program_type !== 'Pre-Project Plan'" class="label label-danger">No Funder</span> -->
 
                         <span data-ng-if="page.project.id && page.project.properties.last_modified_by.properties.first_name && page.project.properties.last_modified_by.properties.last_name" class="label">Last Modified by: {{ page.project.properties.last_modified_by.properties.first_name }} {{ page.project.properties.last_modified_by.properties.last_name }}</span>
                         <span data-ng-if="page.project.id && page.project.properties.modified_on" class="label">Modified on: {{ page.project.properties.modified_on | date }}</span>
@@ -138,7 +138,39 @@
 
 
                             <h6 class="rule-above"><strong>Project</strong> Sites</h6>
-                            <article class="row list-item list-item-thin" data-ng-if="page.sites.length" data-ng-repeat="site in page.sites | orderBy:'id' track by $index">
+
+                            <ul class="snapshot--cards list-unstyled">
+
+                                <li class="card" data-ng-repeat="site in page.sites | orderBy:'-modified_on' | filter: page.q track by $index">
+                                    <div class="card--content">
+                                        <div class="name">{{ site.site.properties.name }}</div>
+                                        <div class="body">
+                                            <p data-ng-if="site.site.properties.description">{{ site.site.properties.description | truncate:80 }}</p>
+                                            <div class="actions">
+                                                <a class="snapshot--title" href="/projects/{{ page.project.id }}/sites/{{ site.site.id }}" title="Site summary">
+                                                    <i class="material-icons">
+                                                        dashboard
+                                                    </i>
+                                                </a>
+                                                <a class="snapshot--title" href="/projects/{{ page.project.id }}/sites/{{ site.site.id }}/edit" title="Edit site">
+                                                    <i class="material-icons">
+                                                        edit
+                                                    </i>
+                                                </a>
+                                                <a class="snapshot--title" href="#" title="Delete site" data-ng-click="page.confirmDelete(project)">
+                                                    <i class="material-icons">
+                                                        delete
+                                                    </i>
+                                                </a>
+                                            </div>
+                                            <span><time datetime="{{ site.site.properties.modified_on }}" title="{{ site.site.properties.modified_on }}">Last updated by {{ site.site.properties.last_modified_by.properties.first_name }} {{ site.site.properties.last_modified_by.properties.last_name }} on {{ site.site.properties.modified_on | date : 'mediumDate' }}</time></span>
+                                        </div>
+                                    </div>
+                                </li>
+
+                            </ul>
+
+                            <!-- <article class="row list-item list-item-thin" data-ng-if="page.sites.length" data-ng-repeat="site in page.sites | orderBy:'id' track by $index">
                                 <div class="column-16 list-item-content">
                                     <div class="row">
                                         <div class="column-14">
@@ -166,9 +198,13 @@
                                         </div>
                                     </div>
                                 </div>
-                            </article>
+
+                            </article> -->
+
                         </div>
+
                     </section>
+
                 </div>
 
                 <nav class="column-5 contextual-navigation-wrapper">
@@ -207,7 +243,7 @@
                         </li>
                     </ul>
                 </nav>
-                
+
                 <!-- <nav class="column-5 contextual-navigation-wrapper">
                     <h6><strong>Tools</strong></h6>
                     <ul class="contextual-navigation">

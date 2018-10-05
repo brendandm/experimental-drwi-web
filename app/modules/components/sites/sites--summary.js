@@ -54,6 +54,8 @@
 
             summary.$promise.then(function(successResponse) {
 
+                console.log('self.summary', successResponse);
+
                 self.data = successResponse;
 
                 self.site = successResponse.site;

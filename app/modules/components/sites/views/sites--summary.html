@@ -1,35 +1,33 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
 <main class="container">
-  <div class="row feature summary">
+    <div class="row feature summary">
 
-    <div class="throbber throbber-small"
-         data-ng-if="page.status.loading"></div>
+        <div class="throbber throbber-small" data-ng-if="page.status.loading"></div>
 
-    <article class="feature-detail"
-             data-ng-if="!page.status.loading">
-      <div class="column-16 feature-detail-content">
-        <h4>
-          <span data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">{{ page.project.properties.program_type }}</span>
-          <span data-ng-if="page.project.id && page.project.properties.account.properties.name" class="label">{{ page.project.properties.account.properties.name }}</span>
-          <span data-ng-if="page.project.id && !page.project.properties.account.properties.name && page.project.properties.program_type !== 'Pre-Project Plan'" class="label label-danger">No Funder</span>
+        <article class="feature-detail" data-ng-if="!page.status.loading">
+            <div class="column-16 feature-detail-content">
+                <h4>
+                    <span data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">{{ page.project.properties.program_type }}</span>
+                    <span data-ng-if="page.project.id && page.project.properties.account.properties.name" class="label">{{ page.project.properties.account.properties.name }}</span>
+                    <span data-ng-if="page.project.id && !page.project.properties.account.properties.name && page.project.properties.program_type !== 'Pre-Project Plan'" class="label label-danger">No Funder</span>
 
-          <span data-ng-if="page.project.id && page.project.properties.last_modified_by.properties.first_name && page.project.properties.last_modified_by.properties.last_name" class="label">Last Modified by: {{ page.project.properties.last_modified_by.properties.first_name }} {{ page.project.properties.last_modified_by.properties.last_name }}</span>
-          <span data-ng-if="page.project.id && page.project.properties.modified_on" class="label">Modified on: {{ page.project.properties.modified_on | date }}</span>
-        </h4>
+                    <span data-ng-if="page.project.id && page.project.properties.last_modified_by.properties.first_name && page.project.properties.last_modified_by.properties.last_name" class="label">Last Modified by: {{ page.project.properties.last_modified_by.properties.first_name }} {{ page.project.properties.last_modified_by.properties.last_name }}</span>
+                    <span data-ng-if="page.project.id && page.project.properties.modified_on" class="label">Modified on: {{ page.project.properties.modified_on | date }}</span>
+                </h4>
 
-        <!-- <img data-ng-if="page.site.geometry" class="pull-left" style="margin-right: 16px;"
+                <!-- <img data-ng-if="page.site.geometry" class="pull-left" style="margin-right: 16px;"
              data-ng-src="https://api.tiles.mapbox.com/v4/{{ page.mapbox.map_id }}/pin-s+b1c11d({{ page.site.geometry.geometries[0].coordinates[0] }},{{ page.site.geometry.geometries[0].coordinates[1] }},17)/{{ page.site.geometry.geometries[0].coordinates[0] }},{{ page.site.geometry.geometries[0].coordinates[1] }},17/80x80@2x.png?access_token={{ page.mapbox.access_token }}"
              alt="{{ page.site.site_description }} location preview" width="80" height="80" /> -->
 
-        <h4 class="project-site-city">
-          {{ page.project.properties.name }}
-        </h4>
-        <h1>
-          {{ page.site.properties.name }}
-        </h1>
-        
-        <!-- <h4 class="project-site-city">
+                <h4 class="project-site-city">
+                    {{ page.project.properties.name }}
+                </h4>
+                <h1>
+                    {{ page.site.properties.name }}
+                </h1>
+
+                <!-- <h4 class="project-site-city">
           <span data-ng-if="page.site.properties.city">{{ page.site.properties.city }}</span><span data-ng-if="page.site.properties.city && page.site.properties.county.properties.county_name">,</span>
           <span data-ng-if="page.site.properties.county.properties.county_name">{{ page.site.properties.county.properties.county_name }} County</span><span data-ng-if="page.site.properties.state && page.site.properties.county.properties.county_name">,</span> {{ page.site.properties.state }}
         </h4>
@@ -43,54 +41,53 @@
           <span data-ng-if="page.site.properties.segment.properties.river_name">{{ page.site.properties.segment.properties.river_name }}</span>
         </h4> -->
 
-        <h4 class="project-site-city" data-ng-if="page.nodes.geographies.length">
-          <span data-ng-repeat="geography in page.nodes.geographies"><b>{{ geography.category }}:&nbsp;</b>{{ geography.name }}&nbsp;</span>
-        </h4>
+                <h4 class="project-site-city" data-ng-if="page.nodes.geographies.length">
+                    <span data-ng-repeat="geography in page.nodes.geographies"><b>{{ geography.category }}:&nbsp;</b>{{ geography.name }}&nbsp;</span>
+                </h4>
 
-        <h4 class="project-site-city" data-ng-if="page.nodes.counties.length">
-          Counties
-        </h4>
+                <h4 class="project-site-city" data-ng-if="page.nodes.counties.length">
+                    Counties
+                </h4>
 
-        <h4 class="project-site-city" data-ng-if="page.nodes.counties.length">
-          <span data-ng-repeat="county in page.nodes.counties">{{ county.name }}&nbsp;</span>
-        </h4>
+                <h4 class="project-site-city" data-ng-if="page.nodes.counties.length">
+                    <span data-ng-repeat="county in page.nodes.counties">{{ county.name }}&nbsp;</span>
+                </h4>
 
-          <!-- Map -->
-          
-        <div style="position:relative;">
-            <leaflet id="site--map" class="map tall" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers"
-              bounds="page.map.bounds" markers="page.map.markers" geojson="page.map.geojson"></leaflet>
-        </div>
+                <!-- Map -->
+
+                <div style="position:relative;">
+                    <leaflet id="site--map" class="map tall" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds" markers="page.map.markers" geojson="page.map.geojson"></leaflet>
+                </div>
 
 
-        <h2><strong>Practice</strong> Reductions</h2>
+                <h2><strong>Practice</strong> Reductions</h2>
 
-        <table class="table table-practices" data-ng-if="page.practices">
-          <thead>
-            <tr>
-              <th class="table-column-wide">&nbsp;</th>
-              <th class="table-practices-centered">Nitrogen</th>
-              <th class="table-practices-centered">Phosphorus</th>
-              <th class="table-practices-centered">Sediment</th>
-            </tr>
-            <tr>
-              <th class="table-column-wide table-column-label">
-                <span class="metrics--metric--title">Total</span>
-              </th>
-              <td class="table-column-even">
-                <strong class="metrics--metric--rollup">{{ page.rollups.nitrogen.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">lbs/yr<br />
-                of {{ page.rollups.nitrogen.total | number:2 }}</span>
-              </td>
-              <td class="table-column-top">
-                <strong class="metrics--metric--rollup">{{ page.rollups.phosphorus.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">lbs/yr<br />
-                of {{ page.rollups.phosphorus.total | number:2 }}</span>
-              </td>
-              <td class="table-column-even">
-                <strong class="metrics--metric--rollup">{{ page.rollups.sediment.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">tons/yr<br />
-                of {{ page.rollups.sediment.total | number:2 }}</span>
-              </td>
-            </tr>
-            <!-- <tr class="table-row-short">
+                <table class="table table-practices" data-ng-if="page.practices">
+                    <thead>
+                        <tr>
+                            <th class="table-column-wide">&nbsp;</th>
+                            <th class="table-practices-centered">Nitrogen</th>
+                            <th class="table-practices-centered">Phosphorus</th>
+                            <th class="table-practices-centered">Sediment</th>
+                        </tr>
+                        <tr>
+                            <th class="table-column-wide table-column-label">
+                                <span class="metrics--metric--title">Total</span>
+                            </th>
+                            <td class="table-column-even">
+                                <strong class="metrics--metric--rollup">{{ page.rollups.nitrogen.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">lbs/yr<br />
+                                    of {{ page.rollups.nitrogen.total | number:2 }}</span>
+                            </td>
+                            <td class="table-column-top">
+                                <strong class="metrics--metric--rollup">{{ page.rollups.phosphorus.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">lbs/yr<br />
+                                    of {{ page.rollups.phosphorus.total | number:2 }}</span>
+                            </td>
+                            <td class="table-column-even">
+                                <strong class="metrics--metric--rollup">{{ page.rollups.sediment.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">tons/yr<br />
+                                    of {{ page.rollups.sediment.total | number:2 }}</span>
+                            </td>
+                        </tr>
+                        <!-- <tr class="table-row-short">
               <td class="table-column-wide">&nbsp;</td>
               <td class="table-column-even">
                 <span class="metrics--metric--secondary">Phase 5.3.2</span>
@@ -102,174 +99,187 @@
                 <span class="metrics--metric--secondary">Phase 5.3.2</span>
               </td>
             </tr> -->
-          </thead>
+                    </thead>
 
-          <tbody class="metrics">
-            <tr class="metrics--metric"
-                data-ng-repeat="practice in page.rollups.nitrogen.practices track by $index">
-              <td class="table-column-wide">
-                <p class="metric--title">
-                  <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}/{{ page.cleanName(practice.name) }}">
-                    <span data-ng-if="practice.name === 'Custom'">Other Conservation Practice</span>
-                    <span data-ng-if="practice.name !== 'Custom'">{{ practice.name }}</span> <span data-ng-if="practice.has_majority_design_completion === false"><90%</span> #{{ $index+1 }}
-                  </a>
-                </p>
-                <div class="metric--chart">
-                  <div class="metric--chart--value"
-                       data-ng-if="!practice.inactive"
-                       data-ng-style="{'width': practice.percentage.whole + '%' }"></div>
-                </div>
-                <div data-ng-if="practice.name === 'Custom'"
-                     class="show_custom_practices">
-                  <a href="javascript:void(0);"
-                     data-ng-if="practice.show_custom_practices !== true"
-                     data-ng-click="practice.show_custom_practices =! practice.show_custom_practices">
+                    <tbody class="metrics">
+                        <tr class="metrics--metric" data-ng-repeat="practice in page.rollups.nitrogen.practices track by $index">
+                            <td class="table-column-wide">
+                                <p class="metric--title">
+                                    <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}/{{ page.cleanName(practice.name) }}">
+                                        <span data-ng-if="practice.name === 'Custom'">Other Conservation Practice</span>
+                                        <span data-ng-if="practice.name !== 'Custom'">{{ practice.name }}</span> <span data-ng-if="practice.has_majority_design_completion === false">
+                                            <90%</span> #{{ $index+1 }} </a> </p> <div class="metric--chart">
+                                                <div class="metric--chart--value" data-ng-if="!practice.inactive" data-ng-style="{'width': practice.percentage.whole + '%' }"></div>
+            </div>
+            <div data-ng-if="practice.name === 'Custom'" class="show_custom_practices">
+                <a href="javascript:void(0);" data-ng-if="practice.show_custom_practices !== true" data-ng-click="practice.show_custom_practices =! practice.show_custom_practices">
                     Show Practices
-                  </a>
-                  <a href="javascript:void(0);"
-                     data-ng-if="practice.show_custom_practices === true"
-                     data-ng-click="practice.show_custom_practices =! practice.show_custom_practices">
+                </a>
+                <a href="javascript:void(0);" data-ng-if="practice.show_custom_practices === true" data-ng-click="practice.show_custom_practices =! practice.show_custom_practices">
                     Hide Practices
-                  </a>
-                </div>
-                <div data-ng-if="practice.show_custom_practices"
-                     class="subpractices">
-                  <div data-ng-repeat="subpractice in practice.practices track by $index"
-                       class="subpractices--name">
+                </a>
+            </div>
+            <div data-ng-if="practice.show_custom_practices" class="subpractices">
+                <div data-ng-repeat="subpractice in practice.practices track by $index" class="subpractices--name">
                     <p class="metric--title">
-                      {{ subpractice.name }}
+                        {{ subpractice.name }}
                     </p>
                     <div class="metric--chart">
-                      <div class="metric--chart--value"
-                           data-ng-style="{'width': subpractice.percentage.whole + '%' }"></div>
+                        <div class="metric--chart--value" data-ng-style="{'width': subpractice.percentage.whole + '%' }"></div>
                     </div>
-                  </div>
                 </div>
-              </td>
-              <td class="table-column-even table-column-top">
+            </div>
+            </td>
+            <td class="table-column-even table-column-top">
                 <p class="metric--title">&nbsp;</p>
 
                 <span data-ng-if="!practice.inactive">
-                  {{ practice.installed | number:2 }}
+                    {{ practice.installed | number:2 }}
                 </span>
                 <span data-ng-if="practice.inactive">
-                  not applicable
+                    not applicable
                 </span>
-                <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices === true"
-                     class="subpractice--nutrients">
-                  <div data-ng-repeat="subpractice in practice.practices track by $index"
-                       class="subpractice--nutrients--nutrient">
-                    <p class="metric--title">
-                      {{ subpractice.installed.nitrogen || 0 | number:2 }}
-                    </p>
-                  </div>
+                <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices === true" class="subpractice--nutrients">
+                    <div data-ng-repeat="subpractice in practice.practices track by $index" class="subpractice--nutrients--nutrient">
+                        <p class="metric--title">
+                            {{ subpractice.installed.nitrogen || 0 | number:2 }}
+                        </p>
+                    </div>
                 </div>
-              </td>
-              <td class="table-column-odd table-column-top">
+            </td>
+            <td class="table-column-odd table-column-top">
                 <p class="metric--title">&nbsp;</p>
                 <span data-ng-if="!page.rollups.phosphorus.practices[$index].inactive">
-                  {{ page.rollups.phosphorus.practices[$index].installed | number:2 }}
+                    {{ page.rollups.phosphorus.practices[$index].installed | number:2 }}
                 </span>
                 <span data-ng-if="page.rollups.phosphorus.practices[$index].inactive">
-                  not applicable
+                    not applicable
                 </span>
-                <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices === true"
-                     class="subpractice--nutrients">
-                  <div data-ng-repeat="subpractice in practice.practices track by $index"
-                       class="subpractice--nutrients--nutrient">
-                    <p class="metric--title">
-                      {{ subpractice.installed.phosphorus || 0 | number:2 }}
-                    </p>
-                  </div>
+                <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices === true" class="subpractice--nutrients">
+                    <div data-ng-repeat="subpractice in practice.practices track by $index" class="subpractice--nutrients--nutrient">
+                        <p class="metric--title">
+                            {{ subpractice.installed.phosphorus || 0 | number:2 }}
+                        </p>
+                    </div>
                 </div>
-              </td>
-              <td class="table-column-even table-column-top">
+            </td>
+            <td class="table-column-even table-column-top">
                 <p class="metric--title">&nbsp;</p>
                 <span data-ng-if="!page.rollups.sediment.practices[$index].inactive">
-                  {{ page.rollups.sediment.practices[$index].installed | number:2 }}
+                    {{ page.rollups.sediment.practices[$index].installed | number:2 }}
                 </span>
                 <span data-ng-if="page.rollups.sediment.practices[$index].inactive">
-                  not applicable
+                    not applicable
                 </span>
-                <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices === true"
-                     class="subpractice--nutrients">
-                  <div data-ng-repeat="subpractice in practice.practices track by $index"
-                       class="subpractice--nutrients--nutrient">
-                    <p class="metric--title">
-                      {{ subpractice.installed.sediment || 0 | number:2 }}
-                    </p>
-                  </div>
+                <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices === true" class="subpractice--nutrients">
+                    <div data-ng-repeat="subpractice in practice.practices track by $index" class="subpractice--nutrients--nutrient">
+                        <p class="metric--title">
+                            {{ subpractice.installed.sediment || 0 | number:2 }}
+                        </p>
+                    </div>
                 </div>
-              </td>
+            </td>
             </tr>
-          </tbody>
+            </tbody>
 
-          <tfoot>
-            <tr>
-              <th class="table-column-wide table-column-label">
-                <span class="metrics--metric--title">Total</span>
-              </th>
-              <td class="table-column-even">
-                <strong class="metrics--metric--rollup">{{ page.rollups.nitrogen.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">lbs/yr<br />
-                of {{ page.rollups.nitrogen.total | number:2 }}</span>
-              </td>
-              <td>
-                <strong class="metrics--metric--rollup">{{ page.rollups.phosphorus.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">lbs/yr<br />
-                of {{ page.rollups.phosphorus.total | number:2 }}</span>
-              </td>
-              <td class="table-column-even">
-                <strong class="metrics--metric--rollup">{{ page.rollups.sediment.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">tons/yr<br />
-                of {{ page.rollups.sediment.total | number:2 }}</span>
-              </td>
-            </tr>
-          </tfoot>
-        </table>
+            <tfoot>
+                <tr>
+                    <th class="table-column-wide table-column-label">
+                        <span class="metrics--metric--title">Total</span>
+                    </th>
+                    <td class="table-column-even">
+                        <strong class="metrics--metric--rollup">{{ page.rollups.nitrogen.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">lbs/yr<br />
+                            of {{ page.rollups.nitrogen.total | number:2 }}</span>
+                    </td>
+                    <td>
+                        <strong class="metrics--metric--rollup">{{ page.rollups.phosphorus.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">lbs/yr<br />
+                            of {{ page.rollups.phosphorus.total | number:2 }}</span>
+                    </td>
+                    <td class="table-column-even">
+                        <strong class="metrics--metric--rollup">{{ page.rollups.sediment.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">tons/yr<br />
+                            of {{ page.rollups.sediment.total | number:2 }}</span>
+                    </td>
+                </tr>
+            </tfoot>
+            </table>
 
-        <h2><strong>Practice</strong> Metrics</h2>
+            <h2><strong>Practice</strong> Metrics</h2>
 
-        <table class="table table-practices with-metrics" data-ng-if="page.rollups.metrics">
-          <thead>
-            <tr>
-              <th class="table-column-wide table-metrics-header">Metric</th>
-              <th class="table-metrics-header">Installed To-Date</th>
-              <th class="table-metrics-header">% Installed</th>
-              <th>&nbsp;</th>
-            </tr>
-          </thead>
+            <table class="table table-practices with-metrics" data-ng-if="page.rollups.metrics">
+                <thead>
+                    <tr>
+                        <th class="table-column-wide table-metrics-header">Metric</th>
+                        <th class="table-metrics-header">Installed To-Date</th>
+                        <th class="table-metrics-header">% Installed</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
 
-          <tbody class="metrics">
-            <tr class="metrics--metric"
-                data-ng-if="metric.total"
-                data-ng-repeat="metric in page.rollups.metrics track by $index">
-              <td class="table-column-wide">
-                <p class="metric--title">
-                  {{ metric.label }}
-                </p>
-              </td>
-              <td>
-                <strong class="metrics--metric--rollup--small">{{ metric.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.units }}<br />
-                of {{ metric.total | number:2 }}</span>
-              </td>
-              <td>
-                <strong class="metrics--metric--percentage">
-                  {{ (metric.installed/metric.total)*100 | number:1 }}%
-                </strong>
-              </td>
-              <td>
-                <div class="donut-chart chart{{ (metric.installed/metric.total)*100 | number:0 }}">
-                  <div class="slice one"></div>
-                  <div class="slice two"></div>
-                  <div class="chart-center">
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                <tbody class="metrics">
+                    <tr class="metrics--metric" data-ng-if="metric.total" data-ng-repeat="metric in page.rollups.metrics track by $index">
+                        <td class="table-column-wide">
+                            <p class="metric--title">
+                                {{ metric.label }}
+                            </p>
+                        </td>
+                        <td>
+                            <strong class="metrics--metric--rollup--small">{{ metric.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.units }}<br />
+                                of {{ metric.total | number:2 }}</span>
+                        </td>
+                        <td>
+                            <strong class="metrics--metric--percentage">
+                                {{ (metric.installed/metric.total)*100 | number:1 }}%
+                            </strong>
+                        </td>
+                        <td>
+                            <div class="donut-chart chart{{ (metric.installed/metric.total)*100 | number:0 }}">
+                                <div class="slice one"></div>
+                                <div class="slice two"></div>
+                                <div class="chart-center">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-        <section class="list action-list" data-ng-if="page.practices">
+            <section class="list action-list" data-ng-if="page.practices">
 
-          <article class="row list-item"
+                <h6 class="rule-above"><strong>Site</strong> Practices</h6>
+
+                <ul class="snapshot--cards list-unstyled">
+
+                    <li class="card" data-ng-repeat="practice in page.rollups.nitrogen.practices | orderBy:'name' track by $index">
+                        <div class="card--content">
+                            <div class="name">{{ practice.name }}</div>
+                            <div class="body">
+                                <p data-ng-if="practice.description">{{ practice.description | truncate:80 }}</p>
+                                <div class="actions">
+                                    <a class="snapshot--title" href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}" title="Practice summary">
+                                        <i class="material-icons">
+                                            dashboard
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ practice.id }}/edit" title="Edit practice">
+                                        <i class="material-icons">
+                                            edit
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="#" title="Delete practice" data-ng-click="page.confirmDelete(project)">
+                                        <i class="material-icons">
+                                            delete
+                                        </i>
+                                    </a>
+                                </div>
+                                <span><time datetime="{{ practice.created_on }}" title="{{ practice.created_on }}">
+                                        Created on {{ practice.created_on | date }}</time></span>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+
+                <!-- <article class="row list-item"
                    data-ng-if="page.practices && page.practices.length"
                    data-ng-repeat="practice in page.rollups.nitrogen.practices | orderBy:'name' track by $index">
              <div class="column-16 list-item-content">
@@ -297,20 +307,20 @@
                 </div>
               </div>
             </div>
-          </article>
-        </section>
+          </article> -->
+            </section>
 
-      </div>
+    </div>
     </article>
-  </div>
+    </div>
 </main>
 
 <div data-ng-include="'/templates/footer--view.html'"></div>
 
 <div data-ng-show="page.showData">
-  <code>
-    <pre>
+    <code>
+        <pre>
       {{ page.data | json }}
     </pre>
-  </code>
+    </code>
 </div>

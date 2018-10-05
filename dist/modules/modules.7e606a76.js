@@ -2220,7 +2220,7 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('SnapshotListCtrl',
         function(Account, $location, $log, Notifications, $rootScope,
-            $route, user, User, snapshots, $interval, $timeout) {
+            $route, user, User, snapshots, $interval, $timeout, Snapshot) {
 
             var self = this;
 
@@ -2259,6 +2259,55 @@ angular.module('FieldDoc')
                     self.loading = false;
 
                 }, 1000);
+
+            };
+
+            self.confirmDelete = function(obj) {
+
+                self.deletionTarget = obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.deleteFeature = function(obj) {
+
+                Snapshot.delete({
+                    id: obj.id
+                }).$promise.then(function(data) {
+
+                    self.deletionTarget = null;
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this snapshot.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(function(){
+
+                        self.alerts = [];
+
+                    }, 2000);
+
+                    self.snapshots.forEach(function(index, item) {
+
+                        if (item.id === obj.id) {
+
+                            self.deletionIndex = index;
+
+                        }
+
+                    });
+
+                    self.snapshots.splice(self.deletionIndex, 1);
+
+                });
 
             };
 
@@ -4744,11 +4793,17 @@ angular.module('FieldDoc')
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-    .controller('ProjectSummaryCtrl', function(Account, Notifications, $rootScope, Project, $route,
-        $scope, $location, Map, mapbox, summary, Site, user, $window, leafletData, leafletBoundsHelpers) {
+    .controller('ProjectSummaryCtrl',
+        function(Account, Notifications, $rootScope, Project, $route,
+        $scope, $location, Map, mapbox, summary, Site, user, $window,
+        leafletData, leafletBoundsHelpers) {
 
         //controller is set to self
         var self = this;
+
+        $rootScope.viewState = {
+            'project': true
+        };
 
         $rootScope.page = {};
 
@@ -4818,16 +4873,7 @@ angular.module('FieldDoc')
 
             $rootScope.page.title = 'Project Summary';
 
-            $rootScope.page.links = [{
-                    text: 'Projects',
-                    url: '/projects'
-                },
-                {
-                    text: self.project.properties.name,
-                    url: '/projects/' + $route.current.params.projectId,
-                    type: 'active'
-                }
-            ];
+            // $rootScope.page.links = [];
 
             //
             // Verify Account information for proper UI element display
@@ -4991,30 +5037,43 @@ angular.module('FieldDoc')
         //
         // Setup basic page variables
         //
-        $rootScope.page.actions = [{
-                type: 'button-link',
-                action: function() {
-                    $window.print();
-                },
-                hideIcon: true,
-                text: 'Print'
+        // $rootScope.page.actions = [{
+        //         type: 'button-link',
+        //         action: function() {
+        //             $window.print();
+        //         },
+        //         hideIcon: true,
+        //         text: 'Print'
+        //     },
+        //     {
+        //         type: 'button-link',
+        //         action: function() {
+        //             $scope.$emit('saveToPdf');
+        //         },
+        //         hideIcon: true,
+        //         text: 'Save as PDF'
+        //     },
+        //     {
+        //         type: 'button-link new',
+        //         action: function() {
+        //             self.createSite();
+        //         },
+        //         text: 'Create site'
+        //     }
+        // ];
+
+        self.actions = {
+            print: function() {
+
+                $window.print();                    
+
             },
-            {
-                type: 'button-link',
-                action: function() {
-                    $scope.$emit('saveToPdf');
-                },
-                hideIcon: true,
-                text: 'Save as PDF'
-            },
-            {
-                type: 'button-link new',
-                action: function() {
-                    self.createSite();
-                },
-                text: 'Create site'
+            saveToPdf: function() {
+
+                $scope.$emit('saveToPdf');
+
             }
-        ];
+        };
 
         // leafletData.getMap('dashboard--map').then(function(map) {
 
@@ -5626,6 +5685,8 @@ angular.module('FieldDoc')
             };
 
             summary.$promise.then(function(successResponse) {
+
+                console.log('self.summary', successResponse);
 
                 self.data = successResponse;
 
@@ -6704,53 +6765,29 @@ angular.module('FieldDoc')
 
         $rootScope.page = {};
 
-        practice.$promise.then(function(successResponse) {
+        self.loadSite = function() {
 
-            self.practice = successResponse;
-
-            //
-            // If a valid practice geometry is present, add it to the map
-            // and track the object in `self.savedObjects`.
-            //
-
-            if (self.practice.geometry !== null &&
-                typeof self.practice.geometry !== 'undefined') {
-                
-                //Added by Lin 
-                leafletData.getMap('practice--map').then(function (map) {
-
-                    self.practiceExtent = new L.FeatureGroup();
-
-                    self.setGeoJsonLayer(self.practice.geometry);
-
-                    map.fitBounds(self.editableLayers.getBounds(), {
-                        // padding: [20, 20],
-                        maxZoom: 18
-                    });
-                });
-                self.map.geojson = {
-                    data: self.practice.geometry
-                };
-                //existing
-                // var practiceGeometry = L.geoJson(self.practice.geometry, {});
-
-                // addNonGroupLayers(practiceGeometry, self.editableLayers);
-
-                self.savedObjects = [{
-                    id: self.editableLayers._leaflet_id,
-                    geoJson: self.practice.geometry
-                }];
-                console.log('self.practice.geometry', self.practice.geometry);
-
-                console.log('self.savedObjects', self.savedObjects);
-
-                var rawGeometry = self.practice.geometry.geometries[0];
-
-                console.log('rawGeometry', rawGeometry);
-
-            };
             site.$promise.then(function(successResponse) {
+
                 self.site = successResponse;
+
+                if (self.site.geometry) {
+
+                    leafletData.getMap('practice--map').then(function(map) {
+
+                        var siteExtent = new L.FeatureGroup();
+
+                        var siteGeometry = L.geoJson(successResponse, {});
+
+                        siteExtent.addLayer(siteGeometry);
+
+                        map.fitBounds(siteExtent.getBounds(), {
+                            maxZoom: 18
+                        });
+
+                    });
+
+                }
 
                 $rootScope.page.title = self.practice.properties.practice_type;
                 $rootScope.page.links = [{
@@ -6775,26 +6812,92 @@ angular.module('FieldDoc')
                         type: 'active'
                     }
                 ];
+
+                self.loadPractice();
+
             }, function(errorResponse) {
                 //
             });
 
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
-                user.$promise.then(function(userResponse) {
-                    $rootScope.user = Account.userObject = userResponse;
+        };
 
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0].properties.name,
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        can_edit: true
+        self.loadPractice = function() {
+
+            practice.$promise.then(function(successResponse) {
+
+                self.practice = successResponse;
+
+                //
+                // If a valid practice geometry is present, add it to the map
+                // and track the object in `self.savedObjects`.
+                //
+
+                if (self.practice.geometry !== null &&
+                    typeof self.practice.geometry !== 'undefined') {
+
+                    //Added by Lin 
+                    leafletData.getMap('practice--map').then(function(map) {
+
+                        self.practiceExtent = new L.FeatureGroup();
+
+                        self.setGeoJsonLayer(self.practice.geometry);
+
+                        map.fitBounds(self.editableLayers.getBounds(), {
+                            // padding: [20, 20],
+                            maxZoom: 18
+                        });
+
+                    });
+
+                    self.map.geojson = {
+                        data: self.practice.geometry
                     };
-                });
-            }
-        });
+                    //existing
+                    // var practiceGeometry = L.geoJson(self.practice.geometry, {});
+
+                    // addNonGroupLayers(practiceGeometry, self.editableLayers);
+
+                    self.savedObjects = [{
+                        id: self.editableLayers._leaflet_id,
+                        geoJson: self.practice.geometry
+                    }];
+                    console.log('self.practice.geometry', self.practice.geometry);
+
+                    console.log('self.savedObjects', self.savedObjects);
+
+                    var rawGeometry = self.practice.geometry.geometries[0];
+
+                    console.log('rawGeometry', rawGeometry);
+
+                }
+
+            }, function(errorResponse) {
+                //
+            });
+
+        };
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+
+            user.$promise.then(function(userResponse) {
+
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0].properties.name,
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: true
+                };
+
+                self.loadSite();
+
+            });
+
+        }
 
         self.uploadShapefile = function() {
 

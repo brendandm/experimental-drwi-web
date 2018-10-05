@@ -130,53 +130,29 @@ angular.module('FieldDoc')
 
         $rootScope.page = {};
 
-        practice.$promise.then(function(successResponse) {
+        self.loadSite = function() {
 
-            self.practice = successResponse;
-
-            //
-            // If a valid practice geometry is present, add it to the map
-            // and track the object in `self.savedObjects`.
-            //
-
-            if (self.practice.geometry !== null &&
-                typeof self.practice.geometry !== 'undefined') {
-                
-                //Added by Lin 
-                leafletData.getMap('practice--map').then(function (map) {
-
-                    self.practiceExtent = new L.FeatureGroup();
-
-                    self.setGeoJsonLayer(self.practice.geometry);
-
-                    map.fitBounds(self.editableLayers.getBounds(), {
-                        // padding: [20, 20],
-                        maxZoom: 18
-                    });
-                });
-                self.map.geojson = {
-                    data: self.practice.geometry
-                };
-                //existing
-                // var practiceGeometry = L.geoJson(self.practice.geometry, {});
-
-                // addNonGroupLayers(practiceGeometry, self.editableLayers);
-
-                self.savedObjects = [{
-                    id: self.editableLayers._leaflet_id,
-                    geoJson: self.practice.geometry
-                }];
-                console.log('self.practice.geometry', self.practice.geometry);
-
-                console.log('self.savedObjects', self.savedObjects);
-
-                var rawGeometry = self.practice.geometry.geometries[0];
-
-                console.log('rawGeometry', rawGeometry);
-
-            };
             site.$promise.then(function(successResponse) {
+
                 self.site = successResponse;
+
+                if (self.site.geometry) {
+
+                    leafletData.getMap('practice--map').then(function(map) {
+
+                        var siteExtent = new L.FeatureGroup();
+
+                        var siteGeometry = L.geoJson(successResponse, {});
+
+                        siteExtent.addLayer(siteGeometry);
+
+                        map.fitBounds(siteExtent.getBounds(), {
+                            maxZoom: 18
+                        });
+
+                    });
+
+                }
 
                 $rootScope.page.title = self.practice.properties.practice_type;
                 $rootScope.page.links = [{
@@ -201,26 +177,92 @@ angular.module('FieldDoc')
                         type: 'active'
                     }
                 ];
+
+                self.loadPractice();
+
             }, function(errorResponse) {
                 //
             });
 
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
-                user.$promise.then(function(userResponse) {
-                    $rootScope.user = Account.userObject = userResponse;
+        };
 
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0].properties.name,
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        can_edit: true
+        self.loadPractice = function() {
+
+            practice.$promise.then(function(successResponse) {
+
+                self.practice = successResponse;
+
+                //
+                // If a valid practice geometry is present, add it to the map
+                // and track the object in `self.savedObjects`.
+                //
+
+                if (self.practice.geometry !== null &&
+                    typeof self.practice.geometry !== 'undefined') {
+
+                    //Added by Lin 
+                    leafletData.getMap('practice--map').then(function(map) {
+
+                        self.practiceExtent = new L.FeatureGroup();
+
+                        self.setGeoJsonLayer(self.practice.geometry);
+
+                        map.fitBounds(self.editableLayers.getBounds(), {
+                            // padding: [20, 20],
+                            maxZoom: 18
+                        });
+
+                    });
+
+                    self.map.geojson = {
+                        data: self.practice.geometry
                     };
-                });
-            }
-        });
+                    //existing
+                    // var practiceGeometry = L.geoJson(self.practice.geometry, {});
+
+                    // addNonGroupLayers(practiceGeometry, self.editableLayers);
+
+                    self.savedObjects = [{
+                        id: self.editableLayers._leaflet_id,
+                        geoJson: self.practice.geometry
+                    }];
+                    console.log('self.practice.geometry', self.practice.geometry);
+
+                    console.log('self.savedObjects', self.savedObjects);
+
+                    var rawGeometry = self.practice.geometry.geometries[0];
+
+                    console.log('rawGeometry', rawGeometry);
+
+                }
+
+            }, function(errorResponse) {
+                //
+            });
+
+        };
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+
+            user.$promise.then(function(userResponse) {
+
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0].properties.name,
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: true
+                };
+
+                self.loadSite();
+
+            });
+
+        }
 
         self.uploadShapefile = function() {
 
