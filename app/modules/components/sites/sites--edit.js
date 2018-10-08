@@ -19,7 +19,7 @@
 
             $rootScope.page = {};
 
-            self.map = Map;
+            self.map = JSON.parse(JSON.stringify(Map));
 
             self.savedObjects = [];
 
@@ -535,7 +535,7 @@
 
                     // map.fitBounds(drawnItems.getBounds(), {
                     //     padding: [20, 20],
-                    //     maxZoom: 22
+                    //     maxZoom: 18
                     // });
 
                 });
@@ -573,7 +573,7 @@
 
                     // map.fitBounds(drawnItems.getBounds(), {
                     //     padding: [20, 20],
-                    //     maxZoom: 22
+                    //     maxZoom: 18
                     // });
 
                 });
@@ -608,7 +608,7 @@
 
                         map.fitBounds(e.layer.getBounds(), {
                             padding: [20, 20],
-                            maxZoom: 22
+                            maxZoom: 18
                         });
 
                     }

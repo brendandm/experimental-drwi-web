@@ -19,7 +19,7 @@ angular.module('FieldDoc')
         self.files = Media;
         self.files.images = [];
 
-        self.map = Map;
+        self.map = JSON.parse(JSON.stringify(Map));
 
         self.savedObjects = [];
 
@@ -147,12 +147,50 @@ angular.module('FieldDoc')
                         siteExtent.addLayer(siteGeometry);
 
                         map.fitBounds(siteExtent.getBounds(), {
-                            maxZoom: 22
+                            maxZoom: 18
                         });
 
                     });
 
                 }
+
+                // $rootScope.page.title = self.practice.properties.practice_type;
+                // $rootScope.page.links = [{
+                //         text: 'Projects',
+                //         url: '/projects'
+                //     },
+                //     {
+                //         text: self.site.properties.project.properties.name,
+                //         url: '/projects/' + projectId
+                //     },
+                //     {
+                //         text: self.site.properties.name,
+                //         url: '/projects/' + projectId + '/sites/' + siteId
+                //     },
+                //     {
+                //         text: self.practice.properties.practice_type,
+                //         url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id
+                //     },
+                //     {
+                //         text: 'Edit',
+                //         url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id + '/edit',
+                //         type: 'active'
+                //     }
+                // ];
+
+                self.loadPractice();
+
+            }, function(errorResponse) {
+                //
+            });
+
+        };
+
+        self.loadPractice = function() {
+
+            practice.$promise.then(function(successResponse) {
+
+                self.practice = successResponse;
 
                 $rootScope.page.title = self.practice.properties.practice_type;
                 $rootScope.page.links = [{
@@ -178,20 +216,6 @@ angular.module('FieldDoc')
                     }
                 ];
 
-                self.loadPractice();
-
-            }, function(errorResponse) {
-                //
-            });
-
-        };
-
-        self.loadPractice = function() {
-
-            practice.$promise.then(function(successResponse) {
-
-                self.practice = successResponse;
-
                 //
                 // If a valid practice geometry is present, add it to the map
                 // and track the object in `self.savedObjects`.
@@ -209,7 +233,7 @@ angular.module('FieldDoc')
 
                         map.fitBounds(self.editableLayers.getBounds(), {
                             // padding: [20, 20],
-                            maxZoom: 22
+                            maxZoom: 18
                         });
 
                     });
@@ -598,7 +622,7 @@ angular.module('FieldDoc')
 
                     map.fitBounds(e.layer.getBounds(), {
                         padding: [20, 20],
-                        maxZoom: 22
+                        maxZoom: 18
                     });
 
                 }

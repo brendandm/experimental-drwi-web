@@ -687,7 +687,7 @@ angular.module('FieldDoc')
     .config(function($routeProvider, commonscloud) {
 
         $routeProvider
-            .when('/snapshots', {
+            .when('/dashboards', {
                 templateUrl: '/modules/components/snapshot/views/snapshotList--view.html',
                 controller: 'SnapshotListCtrl',
                 controllerAs: 'page',
@@ -711,7 +711,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/snapshots/:snapshotId', {
+            .when('/dashboards/:snapshotId', {
                 templateUrl: '/modules/components/snapshot/views/snapshot--view.html',
                 controller: 'SnapshotCtrl',
                 controllerAs: 'page',
@@ -751,7 +751,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/snapshots/collection/new', {
+            .when('/dashboard/collection/new', {
                 templateUrl: '/modules/components/snapshot/views/snapshotCreate--view.html',
                 controller: 'SnapshotCreateCtrl',
                 controllerAs: 'page',
@@ -770,7 +770,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/snapshots/:snapshotId/edit', {
+            .when('/dashboards/:snapshotId/edit', {
                 templateUrl: '/modules/components/snapshot/views/snapshotEdit--view.html',
                 controller: 'SnapshotEditCtrl',
                 controllerAs: 'page',
@@ -1015,7 +1015,7 @@ angular.module('FieldDoc')
                     console.log('geoJsonLayer', geoJsonLayer);
 
                     map.fitBounds(geoJsonLayer.getBounds(), {
-                        maxZoom: 22
+                        maxZoom: 18
                     });
 
                 });
@@ -1033,7 +1033,7 @@ angular.module('FieldDoc')
             leafletData.getMap('dashboard--map').then(function(map) {
 
                 map.fitBounds(geoJsonLayer.getBounds(), {
-                    maxZoom: 22
+                    maxZoom: 18
                 });
 
             });
@@ -3032,7 +3032,7 @@ angular.module('FieldDoc')
                     console.log('geoJsonLayer', geoJsonLayer);
 
                     map.fitBounds(geoJsonLayer.getBounds(), {
-                        maxZoom: 22
+                        maxZoom: 18
                     });
 
                 });
@@ -3050,7 +3050,7 @@ angular.module('FieldDoc')
             leafletData.getMap('dashboard--map').then(function(map) {
 
                 map.fitBounds(geoJsonLayer.getBounds(), {
-                    maxZoom: 22
+                    maxZoom: 18
                 });
 
             });
@@ -4907,14 +4907,14 @@ angular.module('FieldDoc')
 
                     map.fitBounds(self.projectExtent.getBounds(), {
                         // padding: [20, 20],
-                        maxZoom: 22
+                        maxZoom: 18
                     });
 
                 } else {
 
                     map.fitBounds(bounds, {
                         // padding: [20, 20],
-                        maxZoom: 22
+                        maxZoom: 18
                     });
 
                 }
@@ -4933,7 +4933,7 @@ angular.module('FieldDoc')
 
                 map.fitBounds(self.projectExtent.getBounds(), {
                     // padding: [20, 20],
-                    maxZoom: 22
+                    maxZoom: 18
                 });
 
                 self.projectExtent.addTo(map);
@@ -5083,7 +5083,7 @@ angular.module('FieldDoc')
 
         //     map.fitBounds(bounds, {
         //         padding: [20, 20],
-        //         maxZoom: 22
+        //         maxZoom: 18
         //     });
 
         // });
@@ -5192,21 +5192,22 @@ angular.module('FieldDoc')
 
             $rootScope.page.title = 'Edit Project';
 
-            $rootScope.page.links = [{
-                    text: 'Projects',
-                    url: '/projects'
-                },
-                {
-                    text: self.project.properties.name,
-                    url: '/projects/' + self.project.id
-                },
-                {
-                    text: 'Edit',
-                    url: '/projects/' + self.project.id + '/edit',
-                    type: 'active'
-                }
-            ];
-            $rootScope.page.actions = [];
+            // $rootScope.page.links = [{
+            //         text: 'Projects',
+            //         url: '/projects'
+            //     },
+            //     {
+            //         text: self.project.properties.name,
+            //         url: '/projects/' + self.project.id
+            //     },
+            //     {
+            //         text: 'Edit',
+            //         url: '/projects/' + self.project.id + '/edit',
+            //         type: 'active'
+            //     }
+            // ];
+            
+            // $rootScope.page.actions = [];
 
             //
             // Verify Account information for proper UI element display
@@ -5766,7 +5767,7 @@ angular.module('FieldDoc')
 
                         map.fitBounds(self.siteExtent.getBounds(), {
                                 // padding: [20, 20],
-                            maxZoom: 22
+                            maxZoom: 18
                         });
                     });
                     self.map.geojson = {
@@ -5839,7 +5840,7 @@ angular.module('FieldDoc')
 
             $rootScope.page = {};
 
-            self.map = Map;
+            self.map = JSON.parse(JSON.stringify(Map));
 
             self.savedObjects = [];
 
@@ -5974,23 +5975,23 @@ angular.module('FieldDoc')
                 self.site = successResponse;
 
                 $rootScope.page.title = self.site.properties.name;
-                $rootScope.page.links = [{
-                        text: 'Projects',
-                        url: '/projects'
-                    },
-                    {
-                        text: self.site.properties.project.properties.name,
-                        url: '/projects/' + $route.current.params.projectId
-                    },
-                    {
-                        text: self.site.properties.name,
-                        url: '/projects/' + $route.current.params.projectId + '/sites/' + self.site.id
-                    },
-                    {
-                        text: 'Edit',
-                        type: 'active'
-                    }
-                ];
+                // $rootScope.page.links = [{
+                //         text: 'Projects',
+                //         url: '/projects'
+                //     },
+                //     {
+                //         text: self.site.properties.project.properties.name,
+                //         url: '/projects/' + $route.current.params.projectId
+                //     },
+                //     {
+                //         text: self.site.properties.name,
+                //         url: '/projects/' + $route.current.params.projectId + '/sites/' + self.site.id
+                //     },
+                //     {
+                //         text: 'Edit',
+                //         type: 'active'
+                //     }
+                // ];
 
                 //
                 // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
@@ -6355,7 +6356,7 @@ angular.module('FieldDoc')
 
                     // map.fitBounds(drawnItems.getBounds(), {
                     //     padding: [20, 20],
-                    //     maxZoom: 22
+                    //     maxZoom: 18
                     // });
 
                 });
@@ -6393,7 +6394,7 @@ angular.module('FieldDoc')
 
                     // map.fitBounds(drawnItems.getBounds(), {
                     //     padding: [20, 20],
-                    //     maxZoom: 22
+                    //     maxZoom: 18
                     // });
 
                 });
@@ -6428,7 +6429,7 @@ angular.module('FieldDoc')
 
                         map.fitBounds(e.layer.getBounds(), {
                             padding: [20, 20],
-                            maxZoom: 22
+                            maxZoom: 18
                         });
 
                     }
@@ -6654,7 +6655,7 @@ angular.module('FieldDoc')
         self.files = Media;
         self.files.images = [];
 
-        self.map = Map;
+        self.map = JSON.parse(JSON.stringify(Map));
 
         self.savedObjects = [];
 
@@ -6782,12 +6783,50 @@ angular.module('FieldDoc')
                         siteExtent.addLayer(siteGeometry);
 
                         map.fitBounds(siteExtent.getBounds(), {
-                            maxZoom: 22
+                            maxZoom: 18
                         });
 
                     });
 
                 }
+
+                // $rootScope.page.title = self.practice.properties.practice_type;
+                // $rootScope.page.links = [{
+                //         text: 'Projects',
+                //         url: '/projects'
+                //     },
+                //     {
+                //         text: self.site.properties.project.properties.name,
+                //         url: '/projects/' + projectId
+                //     },
+                //     {
+                //         text: self.site.properties.name,
+                //         url: '/projects/' + projectId + '/sites/' + siteId
+                //     },
+                //     {
+                //         text: self.practice.properties.practice_type,
+                //         url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id
+                //     },
+                //     {
+                //         text: 'Edit',
+                //         url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id + '/edit',
+                //         type: 'active'
+                //     }
+                // ];
+
+                self.loadPractice();
+
+            }, function(errorResponse) {
+                //
+            });
+
+        };
+
+        self.loadPractice = function() {
+
+            practice.$promise.then(function(successResponse) {
+
+                self.practice = successResponse;
 
                 $rootScope.page.title = self.practice.properties.practice_type;
                 $rootScope.page.links = [{
@@ -6813,20 +6852,6 @@ angular.module('FieldDoc')
                     }
                 ];
 
-                self.loadPractice();
-
-            }, function(errorResponse) {
-                //
-            });
-
-        };
-
-        self.loadPractice = function() {
-
-            practice.$promise.then(function(successResponse) {
-
-                self.practice = successResponse;
-
                 //
                 // If a valid practice geometry is present, add it to the map
                 // and track the object in `self.savedObjects`.
@@ -6844,7 +6869,7 @@ angular.module('FieldDoc')
 
                         map.fitBounds(self.editableLayers.getBounds(), {
                             // padding: [20, 20],
-                            maxZoom: 22
+                            maxZoom: 18
                         });
 
                     });
@@ -7233,7 +7258,7 @@ angular.module('FieldDoc')
 
                     map.fitBounds(e.layer.getBounds(), {
                         padding: [20, 20],
-                        maxZoom: 22
+                        maxZoom: 18
                     });
 
                 }
@@ -8017,7 +8042,7 @@ angular.module('FieldDoc')
 
                         map.fitBounds(self.practiceExtent.getBounds(), {
                             // padding: [20, 20],
-                            maxZoom: 22
+                            maxZoom: 18
                         });
                     });
                     self.map.geojson = {

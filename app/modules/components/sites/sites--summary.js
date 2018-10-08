@@ -134,7 +134,7 @@
 
                         map.fitBounds(self.siteExtent.getBounds(), {
                                 // padding: [20, 20],
-                            maxZoom: 22
+                            maxZoom: 18
                         });
                     });
                     self.map.geojson = {
