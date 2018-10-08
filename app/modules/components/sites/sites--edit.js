@@ -154,23 +154,23 @@
                 self.site = successResponse;
 
                 $rootScope.page.title = self.site.properties.name;
-                $rootScope.page.links = [{
-                        text: 'Projects',
-                        url: '/projects'
-                    },
-                    {
-                        text: self.site.properties.project.properties.name,
-                        url: '/projects/' + $route.current.params.projectId
-                    },
-                    {
-                        text: self.site.properties.name,
-                        url: '/projects/' + $route.current.params.projectId + '/sites/' + self.site.id
-                    },
-                    {
-                        text: 'Edit',
-                        type: 'active'
-                    }
-                ];
+                // $rootScope.page.links = [{
+                //         text: 'Projects',
+                //         url: '/projects'
+                //     },
+                //     {
+                //         text: self.site.properties.project.properties.name,
+                //         url: '/projects/' + $route.current.params.projectId
+                //     },
+                //     {
+                //         text: self.site.properties.name,
+                //         url: '/projects/' + $route.current.params.projectId + '/sites/' + self.site.id
+                //     },
+                //     {
+                //         text: 'Edit',
+                //         type: 'active'
+                //     }
+                // ];
 
                 //
                 // If the page is being loaded, and a parcel exists within the user's plan, that means they've already

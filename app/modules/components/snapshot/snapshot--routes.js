@@ -12,7 +12,7 @@ angular.module('FieldDoc')
     .config(function($routeProvider, commonscloud) {
 
         $routeProvider
-            .when('/snapshots', {
+            .when('/dashboards', {
                 templateUrl: '/modules/components/snapshot/views/snapshotList--view.html',
                 controller: 'SnapshotListCtrl',
                 controllerAs: 'page',
@@ -36,7 +36,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/snapshots/:snapshotId', {
+            .when('/dashboards/:snapshotId', {
                 templateUrl: '/modules/components/snapshot/views/snapshot--view.html',
                 controller: 'SnapshotCtrl',
                 controllerAs: 'page',
@@ -76,7 +76,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/snapshots/collection/new', {
+            .when('/dashboard/collection/new', {
                 templateUrl: '/modules/components/snapshot/views/snapshotCreate--view.html',
                 controller: 'SnapshotCreateCtrl',
                 controllerAs: 'page',
@@ -95,7 +95,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/snapshots/:snapshotId/edit', {
+            .when('/dashboards/:snapshotId/edit', {
                 templateUrl: '/modules/components/snapshot/views/snapshotEdit--view.html',
                 controller: 'SnapshotEditCtrl',
                 controllerAs: 'page',
