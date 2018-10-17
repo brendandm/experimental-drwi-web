@@ -751,7 +751,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/dashboard/collection/new', {
+            .when('/dashboards/collection/new', {
                 templateUrl: '/modules/components/snapshot/views/snapshotCreate--view.html',
                 controller: 'SnapshotCreateCtrl',
                 controllerAs: 'page',

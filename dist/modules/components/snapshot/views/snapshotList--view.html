@@ -6,31 +6,31 @@
 
     <div class="content--container">
 
-        <h1 class="inset">Snapshots</h1>
+        <h1 class="inset">Dashboards</h1>
 
         <div class="main--ui">
 
             <div class="add--new--wrapper">
                 <span>Create snapshot</span>
-                <a class="add--new--btn" href="snapshots/collection/new">
+                <a class="add--new--btn" href="dashboards/collection/new">
                     +
                 </a>
             </div>
 
             <div style="position: relative;" class="progress--modal" data-ng-if="page.loading">
                 <div class="progress--container">
-                    <p><strong>Loading your snapshots&hellip;</strong></p>
+                    <p><strong>Loading your dashboards&hellip;</strong></p>
                     <div class="progress--meter--bar--wrapper">
                         <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
                     </div>
                 </div>
             </div>
 
-            <p data-ng-if="!page.loading">You have <strong>{{ (page.snapshots.length | number) || 0 }}</strong> <ng-pluralize count="page.snapshots.length" when="{'one': 'snapshot','other': 'snapshots'}"></ng-pluralize>.</p>
+            <p data-ng-if="!page.loading">You have <strong>{{ (page.snapshots.length | number) || 0 }}</strong> <ng-pluralize count="page.snapshots.length" when="{'one': 'dashboard','other': 'dashboards'}"></ng-pluralize>.</p>
 
             <div class="features--container" data-ng-if="!page.loading">
 
-                <input type="text" class="search-bar" data-ng-model="page.q" placeholder="Search snapshots">
+                <input type="text" class="search-bar" data-ng-model="page.q" placeholder="Search dashboards">
 
                 <ul class="snapshot--cards list-unstyled">
 
@@ -52,17 +52,17 @@
                                 <p>{{ snapshot.description | truncate:80 }}</p>
                                 <!-- <span><time datetime="{{ snapshot.modified_on }}" title="{{ snapshot.modified_on }}">Last updated {{ snapshot.modified_on | date : 'mediumDate' }}</time></span> -->
                                 <div class="actions">
-                                    <a class="snapshot--title" href="/snapshots/{{ snapshot.id }}" title="View snapshot">
+                                    <a class="snapshot--title" href="/dashboards/{{ snapshot.id }}" title="View dashboard">
                                         <i class="material-icons">
                                         dashboard
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="/snapshots/{{ snapshot.id }}/edit" title="Edit snapshot">
+                                    <a class="snapshot--title" href="/dashboards/{{ snapshot.id }}/edit" title="Edit dashboard">
                                         <i class="material-icons">
                                         edit
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="#" title="Delete snapshot" data-ng-click="page.confirmDelete(snapshot)">
+                                    <a class="snapshot--title" href="#" title="Delete dashboard" data-ng-click="page.confirmDelete(snapshot)">
                                         <i class="material-icons">
                                         delete
                                         </i>
