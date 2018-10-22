@@ -12,7 +12,7 @@ angular.module('FieldDoc')
     .config(function($routeProvider) {
 
         $routeProvider
-            .when('/projects/:projectId/sites/:siteId/practices/:practiceId/custom', {
+            .when('/practices/:practiceId', {
                 templateUrl: '/modules/components/practices/modules/custom/views/summary--view.html',
                 controller: 'CustomSummaryController',
                 controllerAs: 'page',
@@ -30,7 +30,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/projects/:projectId/sites/:siteId/practices/:practiceId/custom/:reportId/edit', {
+            .when('/practices/:practiceId/:reportId/edit', {
                 templateUrl: '/modules/components/practices/modules/custom/views/form--view.html',
                 controller: 'CustomFormController',
                 controllerAs: 'page',
@@ -77,6 +77,34 @@ angular.module('FieldDoc')
                         });
                     }
 
+                }
+            })
+            .when('/practices/:practiceId/edit', {
+                templateUrl: '/modules/components/practices/views/practices--edit.html',
+                controller: 'PracticeEditController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account) {
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+                        return Account.userObject;
+                    },
+                    site: function(Site, $route) {
+                        return Site.get({
+                            id: $route.current.params.siteId
+                        });
+                    },
+                    practice_types: function(PracticeType, $route) {
+                        return PracticeType.query({
+                            results_per_page: 500
+                        });
+                    },
+                    practice: function(Practice, $route) {
+                        return Practice.get({
+                            id: $route.current.params.practiceId
+                        });
+                    }
                 }
             });
 

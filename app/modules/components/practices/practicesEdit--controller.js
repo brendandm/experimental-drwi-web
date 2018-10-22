@@ -10,9 +10,7 @@ angular.module('FieldDoc')
         mapbox, Media, Practice, practice, practice_types, $q, $rootScope, $route,
         $scope, $timeout, $interval, site, user, Shapefile, leafletBoundsHelpers) {
 
-        var self = this,
-            projectId = $route.current.params.projectId,
-            siteId = $route.current.params.siteId;
+        var self = this;
 
         self.practiceTypes = practice_types;
 
@@ -154,7 +152,23 @@ angular.module('FieldDoc')
 
                 }
 
-                // $rootScope.page.title = self.practice.properties.practice_type;
+                self.loadPractice();
+
+            }, function(errorResponse) {
+
+                //
+                
+            });
+
+        };
+
+        self.loadPractice = function() {
+
+            practice.$promise.then(function(successResponse) {
+
+                self.practice = successResponse;
+
+                $rootScope.page.title = self.practice.properties.practice_type;
                 // $rootScope.page.links = [{
                 //         text: 'Projects',
                 //         url: '/projects'
@@ -169,52 +183,14 @@ angular.module('FieldDoc')
                 //     },
                 //     {
                 //         text: self.practice.properties.practice_type,
-                //         url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id
+                //         url: '/practices/' + self.practice.id
                 //     },
                 //     {
                 //         text: 'Edit',
-                //         url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id + '/edit',
+                //         url: '/practices/' + self.practice.id + '/edit',
                 //         type: 'active'
                 //     }
                 // ];
-
-                self.loadPractice();
-
-            }, function(errorResponse) {
-                //
-            });
-
-        };
-
-        self.loadPractice = function() {
-
-            practice.$promise.then(function(successResponse) {
-
-                self.practice = successResponse;
-
-                $rootScope.page.title = self.practice.properties.practice_type;
-                $rootScope.page.links = [{
-                        text: 'Projects',
-                        url: '/projects'
-                    },
-                    {
-                        text: self.site.properties.project.properties.name,
-                        url: '/projects/' + projectId
-                    },
-                    {
-                        text: self.site.properties.name,
-                        url: '/projects/' + projectId + '/sites/' + siteId
-                    },
-                    {
-                        text: self.practice.properties.practice_type,
-                        url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id
-                    },
-                    {
-                        text: 'Edit',
-                        url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id + '/edit',
-                        type: 'active'
-                    }
-                ];
 
                 //
                 // If a valid practice geometry is present, add it to the map
@@ -453,7 +429,7 @@ angular.module('FieldDoc')
                     });
 
                     self.practice.$update().then(function(successResponse) {
-                        $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id);
+                        $location.path('/practices/' + self.practice.id);
                     }, function(errorResponse) {
                         // Error message
                     });
@@ -464,7 +440,7 @@ angular.module('FieldDoc')
 
             } else {
                 self.practice.$update().then(function(successResponse) {
-                    $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id);
+                    $location.path('/practices/' + self.practice.id);
                 }, function(errorResponse) {
                     // Error message
                 });

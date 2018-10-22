@@ -138,11 +138,11 @@
                             },
                             {
                                 text: "Other Conservation Practice",
-                                url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
+                                url: '/practices/' + self.practice.id,
                             },
                             {
                                 text: 'Edit',
-                                url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + self.report.id + '/edit',
+                                url: '/practices/' + practiceId + '/' + self.practiceType + '/' + self.report.id + '/edit',
                                 type: 'active'
                             }
                         ];
@@ -185,7 +185,7 @@
                 self.report.properties.report_date = self.date.month + ' ' + self.date.date + ' ' + self.date.year;
 
                 self.report.$update().then(function(successResponse) {
-                    $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
+                    $location.path('/practices/' + practiceId + '/' + self.practiceType);
                 }, function(errorResponse) {
                     console.error('ERROR: ', errorResponse);
                 });
@@ -194,7 +194,7 @@
 
             self.deleteReport = function() {
                 self.report.$delete().then(function(successResponse) {
-                    $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
+                    $location.path('/practices/' + practiceId + '/' + self.practiceType);
                 }, function(errorResponse) {
                     console.error('ERROR: ', errorResponse);
                 });

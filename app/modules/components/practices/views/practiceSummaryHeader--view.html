@@ -1,56 +1,39 @@
-<section class="row feature summary">
-  <article class="feature-detail"
-           data-ng-if="!page.status.loading">
-    <div class="column-11 feature-detail-content">
+<article class="feature-detail" data-ng-if="!page.status.loading">
 
-      <h1 data-ng-if="page.summary.practice.properties.practice_type !== 'Agriculture Generic'">Summary for {{ page.summary.practice.properties.practice_type }}</h1>
-      <h1 data-ng-if="page.summary.practice.properties.practice_type === 'Agriculture Generic'">Summary for Other Agricultural Practices</h1>
-      <p data-ng-if="page.summary.practice.properties.description" data-ng-bind-html="page.summary.practice.properties.description"></p>
+    <div class="feature-detail-content">
 
-      <p><small>
-        <strong>Project Title:</strong> {{ page.summary.site.properties.project.properties.name }}
-        <strong>Site Name:</strong> {{ page.summary.site.properties.name }}<br />
-        <strong>Stream Name: </strong> {{ page.summary.site.properties.segment.properties.river_name }}
-        <strong>HGMR: </strong> {{ page.summary.site.properties.segment.properties.hgmr_name }}
-      </small></p>
+        <!-- <h2 data-ng-if="page.summary.practice.properties.practice_type !== 'Agriculture Generic'">{{ page.summary.practice.properties.practice_type }}</h2> -->
 
-      <!-- Map - LP -->
+        <p data-ng-if="page.summary.practice.properties.description" data-ng-bind-html="page.summary.practice.properties.description"></p>
+
+        <p><small>
+                <strong>Project Title:</strong> {{ page.summary.site.properties.project.properties.name }}
+                <strong>Site Name:</strong> {{ page.summary.site.properties.name }}<br />
+                <strong>Stream Name: </strong> {{ page.summary.site.properties.segment.properties.river_name }}
+                <strong>HGMR: </strong> {{ page.summary.site.properties.segment.properties.hgmr_name }}
+            </small></p>
+
+        <!-- Map - LP -->
         <div style="position:relative;">
-          <leaflet id="practice--map" class="map" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
-          <div class="progress--modal" data-ng-if="page.progressValue && page.progressValue > 0">
-            <div class="progress--container">
-              <p>
-                <strong>{{ page.progressMessage }}
-                </strong>
-              </p>
-              <div class="progress--meter--bar--wrapper">
-                <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
-              </div>
+
+            <leaflet id="practice--map" class="map" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
+
+            <div class="progress--modal" data-ng-if="page.progressValue && page.progressValue > 0">
+
+                <div class="progress--container">
+                    <p>
+                        <strong>{{ page.progressMessage }}
+                        </strong>
+                    </p>
+                    <div class="progress--meter--bar--wrapper">
+                        <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+                    </div>
+                </div>
+
             </div>
-          </div>
+
         </div>
-        <!-- <leaflet id="practice--map" class="map" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet> -->
-      </div>
-      <!-- Map End -->
+
     </div>
 
-
-    <nav class="column-5 contextual-navigation-wrapper">
-      <h6><strong>Tools</strong></h6>
-      <ul class="contextual-navigation">
-        <!-- Practice Manangement Navigation -->
-        <li class="active">
-          <a href="/projects/{{ page.summary.site.properties.project_id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}">
-            Practice Overview
-          </a>
-        </li>
-        <li data-ng-if="page.permissions.can_edit">
-          <a href="/projects/{{ page.summary.site.properties.project_id }}/sites/{{ page.summary.site.id }}/practices/{{ page.summary.practice.id }}/edit">
-            Edit
-          </a>
-        </li>
-      </ul>
-    </nav>
-
-  </article>
-</section>
+</article>

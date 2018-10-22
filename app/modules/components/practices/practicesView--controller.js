@@ -6,22 +6,22 @@
  * @description
  */
 angular.module('FieldDoc')
-  .controller('PracticeViewController', function ($location, practice, $route, Utility) {
+    .controller('PracticeViewController', function($location, practice, $route, Utility) {
 
-    var self = this,
-        projectId = $route.current.params.projectId,
-        siteId = $route.current.params.siteId,
-        practiceId = $route.current.params.practiceId,
-        practiceType;
+        var self = this,
+            projectId = $route.current.params.projectId,
+            siteId = $route.current.params.siteId,
+            practiceId = $route.current.params.practiceId,
+            practiceType;
 
-    practice.$promise.then(function(successResponse) {
+        practice.$promise.then(function(successResponse) {
 
-      self.practice = successResponse;
+            self.practice = successResponse;
 
-      practiceType = Utility.machineName(self.practice.properties.practice_type);
+            practiceType = Utility.machineName(self.practice.properties.practice_type);
 
-      $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + practiceType);
+            $location.path('/practices/' + practiceId + '/' + practiceType);
+
+        });
 
     });
-
-  });
