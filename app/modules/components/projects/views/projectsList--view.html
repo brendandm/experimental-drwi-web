@@ -38,6 +38,17 @@
                         <div class="card--content">
                             <div class="name">{{ project.name }}</div>
                             <div class="body">
+                                <div class="confirm--delete" data-ng-if="page.deletionTarget.id === project.id">
+                                    <p>Do you want to delete this project?</p>
+                                    <div class="actions" style="flex: 0;">
+                                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature(project, $index)">
+                                            Yes, delete forever.
+                                        </a>
+                                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                                            Cancel
+                                        </a>
+                                    </div>
+                                </div>
                                 <p>{{ project.description | truncate:80 }}</p>
                                 <!-- <span><time datetime="{{ project.modified_on }}" title="{{ project.modified_on }}">Last updated {{ project.modified_on | date : 'mediumDate' }}</time></span> -->
                                 <div class="actions">

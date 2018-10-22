@@ -52,7 +52,7 @@ angular.module('FieldDoc')
 
                 self.snapshot = response;
 
-                $location.path('/snapshots/' + self.snapshot.id + '/edit');
+                $location.path('/dashboards/' + self.snapshot.id + '/edit');
 
             }).then(function(error) {
                 // Do something with the error

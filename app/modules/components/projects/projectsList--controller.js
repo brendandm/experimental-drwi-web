@@ -8,141 +8,224 @@
 angular.module('FieldDoc')
     .controller('ProjectsCtrl',
         function(Account, $location, $log, Project,
-        projects, $rootScope, $scope, Site, user,
-        ProjectStore, FilterStore, $interval, $timeout) {
+            projects, $rootScope, $scope, Site, user,
+            ProjectStore, FilterStore, $interval, $timeout) {
 
-        $scope.filterStore = FilterStore;
+            $scope.filterStore = FilterStore;
 
-        $scope.projectStore = ProjectStore;
+            $scope.projectStore = ProjectStore;
 
-        var self = this;
+            var self = this;
 
-        self.dashboardFilters = {
-            geographies: [],
-            grantees: [],
-            practices: []
-        };
+            self.alerts = [];
 
-        $rootScope.viewState = {
-            'project': true
-        };
+            self.dashboardFilters = {
+                geographies: [],
+                grantees: [],
+                practices: []
+            };
 
-        //
-        // Setup basic page variables
-        //
-        $rootScope.page = {
-            title: 'Projects',
-            actions: []
-        };
+            $rootScope.viewState = {
+                'project': true
+            };
 
-        self.loading = true;
+            //
+            // Setup basic page variables
+            //
+            $rootScope.page = {
+                title: 'Projects',
+                actions: []
+            };
 
-        self.fillMeter = $interval(function() {
+            self.loading = true;
 
-            var tempValue = (self.progressValue || 10) * 0.2;
+            self.fillMeter = $interval(function() {
 
-            if (!self.progressValue) {
+                var tempValue = (self.progressValue || 10) * 0.2;
 
-                self.progressValue = tempValue;
+                if (!self.progressValue) {
 
-            } else if ((100 - tempValue) > self.progressValue) {
+                    self.progressValue = tempValue;
 
-                self.progressValue += tempValue;
+                } else if ((100 - tempValue) > self.progressValue) {
 
-            }
+                    self.progressValue += tempValue;
 
-            console.log('progressValue', self.progressValue);
+                }
 
-        }, 100);
+                console.log('progressValue', self.progressValue);
 
-        self.showElements = function() {
+            }, 100);
 
-            $interval.cancel(self.fillMeter);
+            self.showElements = function() {
 
-            self.progressValue = 100;
+                $interval.cancel(self.fillMeter);
 
-            $timeout(function() {
+                self.progressValue = 100;
 
-                self.loading = false;
+                $timeout(function() {
 
-            }, 1000);
+                    self.loading = false;
 
-        };
+                }, 1000);
 
-        self.search = {
-            query: '',
-            execute: function(page) {
+            };
 
-                //
-                // Get all of our existing URL Parameters so that we can
-                // modify them to meet our goals
-                //
+            self.confirmDelete = function(obj) {
 
-                var q = {
-                    filters: [{
-                        'and': [{
-                            name: 'name',
-                            op: 'ilike',
-                            val: '%' + self.search.query + '%'
+                self.deletionTarget = obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.deleteFeature = function(obj, index) {
+
+                Project.delete({
+                    id: obj.id
+                }).$promise.then(function(data) {
+
+                    self.deletionTarget = null;
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this project.',
+                        'prompt': 'OK'
+                    }];
+
+                    self.filteredProjects.splice(index, 1);
+
+                    $timeout(function() {
+
+                        self.alerts = [];
+
+                    }, 2000);
+
+                });
+
+            };
+
+            self.search = {
+                query: '',
+                execute: function(page) {
+
+                    //
+                    // Get all of our existing URL Parameters so that we can
+                    // modify them to meet our goals
+                    //
+
+                    var q = {
+                        filters: [{
+                            'and': [{
+                                name: 'name',
+                                op: 'ilike',
+                                val: '%' + self.search.query + '%'
+                            }]
+                        }],
+                        order_by: [{
+                            field: 'created_on',
+                            direction: 'desc'
                         }]
-                    }],
-                    order_by: [{
-                        field: 'created_on',
-                        direction: 'desc'
-                    }]
-                };
+                    };
 
-                if (self.filters.active.workflow_state !== null) {
-                    console.log('add workflow state filter');
+                    if (self.filters.active.workflow_state !== null) {
+                        console.log('add workflow state filter');
 
-                    q.filters.push({
-                        'name': 'workflow_state',
-                        'op': 'like',
-                        'val': self.filters.active.workflow_state
+                        q.filters.push({
+                            'name': 'workflow_state',
+                            'op': 'like',
+                            'val': self.filters.active.workflow_state
+                        });
+                    }
+
+                    if (self.filters.active.year && self.filters.active.year.year) {
+                        q.filters.push({
+                            'name': 'created_on',
+                            'op': 'gte',
+                            'val': self.filters.active.year.year + '-01-01'
+                        });
+                        q.filters.push({
+                            'name': 'created_on',
+                            'op': 'lte',
+                            'val': self.filters.active.year.year + '-12-31'
+                        });
+                    }
+
+                    Project.query({
+                        'q': q,
+                        'page': (page ? page : 1)
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('successResponse', successResponse);
+
+                        self.projects = successResponse;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
                     });
+
+                },
+                paginate: function(pageNumber) {
+
+                    //
+                    // Get all of our existing URL Parameters so that we can
+                    // modify them to meet our goals
+                    //
+                    self.search.execute(pageNumber);
+                },
+                clear: function() {
+
+                    self.q = {};
+
+                    self.filteredProjects = self.projects;
+
+                    self.processLocations(self.filteredProjects);
+
                 }
+            };
 
-                if (self.filters.active.year && self.filters.active.year.year) {
-                    q.filters.push({
-                        'name': 'created_on',
-                        'op': 'gte',
-                        'val': self.filters.active.year.year + '-01-01'
-                    });
-                    q.filters.push({
-                        'name': 'created_on',
-                        'op': 'lte',
-                        'val': self.filters.active.year.year + '-12-31'
-                    });
-                }
+            self.createProject = function() {
 
-                Project.query({
-                    'q': q,
-                    'page': (page ? page : 1)
-                }).$promise.then(function(successResponse) {
+                $location.path('/projects/collection/new');
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+                    $rootScope.user = Account.userObject = userResponse;
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken()
+                    };
+                });
+
+                //
+                // Project functionality
+                //
+
+                self.projects = projects;
+
+                console.log('self.projects', self.projects);
+
+                projects.$promise.then(function(successResponse) {
 
                     console.log('successResponse', successResponse);
 
-                    self.projects = successResponse;
+                    $scope.projectStore.setProjects(successResponse.features);
 
-                    // self.projects.features.forEach(function(feature) {
+                    self.filteredProjects = $scope.projectStore.filteredProjects;
 
-                    // var centroid = feature.properties.centroid;
-
-                    // console.log('centroid', centroid);
-
-                    // if (centroid) {
-
-                    // self.map.markers['project_' + feature.id] = {
-                    // lat: centroid.coordinates[1],
-                    // lng: centroid.coordinates[0],
-                    // layer: 'projects'
-                    // };
-
-                    // }
-
-                    // });
-
-                    // console.log('self.map.markers', self.map.markers);
+                    self.showElements();
 
                 }, function(errorResponse) {
 
@@ -150,80 +233,18 @@ angular.module('FieldDoc')
 
                 });
 
-            },
-            paginate: function(pageNumber) {
+            } else {
 
-                //
-                // Get all of our existing URL Parameters so that we can
-                // modify them to meet our goals
-                //
-                self.search.execute(pageNumber);
-            },
-            clear: function() {
-
-                self.q = {};
-
-                self.filteredProjects = self.projects;
-
-                self.processLocations(self.filteredProjects);
+                $location.path('/user/logout');
 
             }
-        };
 
-        self.createProject = function() {
+            self.clearFilter = function(obj) {
 
-            $location.path('/projects/collection/new');
+                // ProjectStore.reset();
 
-        };
+                FilterStore.clearItem(obj);
 
-        //
-        // Verify Account information for proper UI element display
-        //
-        if (Account.userObject && user) {
+            };
 
-            user.$promise.then(function(userResponse) {
-                $rootScope.user = Account.userObject = userResponse;
-                self.permissions = {
-                    isLoggedIn: Account.hasToken()
-                };
-            });
-
-            //
-            // Project functionality
-            //
-
-            self.projects = projects;
-
-            console.log('self.projects', self.projects);
-
-            projects.$promise.then(function(successResponse) {
-
-                console.log('successResponse', successResponse);
-
-                $scope.projectStore.setProjects(successResponse.features);
-
-                self.filteredProjects = $scope.projectStore.filteredProjects;
-
-                self.showElements();
-
-            }, function(errorResponse) {
-
-                console.log('errorResponse', errorResponse);
-
-            });
-
-        } else {
-
-            $location.path('/user/logout');
-
-        }
-
-        self.clearFilter = function(obj) {
-
-            // ProjectStore.reset();
-
-            FilterStore.clearItem(obj);
-
-        };
-
-    });
+        });

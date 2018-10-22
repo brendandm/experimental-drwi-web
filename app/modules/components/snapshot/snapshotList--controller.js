@@ -62,7 +62,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.deleteFeature = function(obj) {
+            self.deleteFeature = function(obj, index) {
 
                 Snapshot.delete({
                     id: obj.id
@@ -83,17 +83,7 @@ angular.module('FieldDoc')
 
                     }, 2000);
 
-                    self.snapshots.forEach(function(index, item) {
-
-                        if (item.id === obj.id) {
-
-                            self.deletionIndex = index;
-
-                        }
-
-                    });
-
-                    self.snapshots.splice(self.deletionIndex, 1);
+                    self.snapshots.splice(index, 1);
 
                 });
 
@@ -146,7 +136,7 @@ angular.module('FieldDoc')
 
             self.createSnapshot = function() {
 
-                $location.path('/snapshots/collection/new');
+                $location.path('/dashboards/collection/new');
 
             };
 
