@@ -332,7 +332,7 @@ angular.module('FieldDoc')
                             heading: feature.properties.name,
                             yearsActive: null,
                             funding: null,
-                            url: 'projects/' + self.activeProject.properties.id + '/sites/' + self.activeSite.properties.id + '/practices/' + feature.properties.id,
+                            url: '/practices/' + feature.properties.id,
                             description: feature.properties.description,
                             linkTarget: '_self'
                         };

@@ -1132,7 +1132,7 @@ angular.module('FieldDoc')
                             heading: feature.properties.name,
                             yearsActive: null,
                             funding: null,
-                            url: 'projects/' + self.activeProject.properties.id + '/sites/' + self.activeSite.properties.id + '/practices/' + feature.properties.id,
+                            url: '/practices/' + feature.properties.id,
                             description: feature.properties.description,
                             linkTarget: '_self'
                         };
@@ -5796,7 +5796,7 @@ angular.module('FieldDoc')
                 });
 
                 self.practice.$save(function(successResponse) {
-                    $location.path('/projects/' + self.site.properties.project.id + '/sites/' + self.site.id + '/practices/' + successResponse.id + '/edit');
+                    $location.path('/practices/' + successResponse.id + '/edit');
                 }, function(errorResponse) {
                     console.error('Unable to create your practice, please try again later');
                 });
@@ -6484,66 +6484,66 @@ angular.module('FieldDoc')
         });
 
 }());
-(function() {
+// (function() {
 
-    'use strict';
+//     'use strict';
 
-    /**
-     * @ngdoc
-     * @name
-     * @description
-     */
-    angular.module('FieldDoc')
-        .config(function($routeProvider, commonscloud) {
+//     /**
+//      * @ngdoc
+//      * @name
+//      * @description
+//      */
+//     angular.module('FieldDoc')
+//         .config(function($routeProvider, commonscloud) {
 
-            $routeProvider
-                .when('/projects/:projectId/sites/:siteId/practices', {
-                    redirectTo: '/projects/:projectId/sites/:siteId'
-                })
-                .when('/projects/:projectId/sites/:siteId/practices/:practiceId', {
-                    templateUrl: '/modules/components/practices/views/practices--view.html',
-                    controller: 'PracticeViewController',
-                    controllerAs: 'page',
-                    resolve: {
-                        practice: function(Practice, $route) {
-                            return Practice.get({
-                                id: $route.current.params.practiceId
-                            });
-                        }
-                    }
-                })
-                .when('/projects/:projectId/sites/:siteId/practices/:practiceId/edit', {
-                    templateUrl: '/modules/components/practices/views/practices--edit.html',
-                    controller: 'PracticeEditController',
-                    controllerAs: 'page',
-                    resolve: {
-                        user: function(Account) {
-                            if (Account.userObject && !Account.userObject.id) {
-                                return Account.getUser();
-                            }
-                            return Account.userObject;
-                        },
-                        site: function(Site, $route) {
-                            return Site.get({
-                                id: $route.current.params.siteId
-                            });
-                        },
-                        practice_types: function(PracticeType, $route) {
-                            return PracticeType.query({
-                                results_per_page: 500
-                            });
-                        },
-                        practice: function(Practice, $route) {
-                            return Practice.get({
-                                id: $route.current.params.practiceId
-                            });
-                        }
-                    }
-                });
+//             $routeProvider
+//                 .when('/projects/:projectId/sites/:siteId/practices', {
+//                     redirectTo: '/projects/:projectId/sites/:siteId'
+//                 })
+//                 .when('/projects/:projectId/sites/:siteId/practices/:practiceId', {
+//                     templateUrl: '/modules/components/practices/views/practices--view.html',
+//                     controller: 'PracticeViewController',
+//                     controllerAs: 'page',
+//                     resolve: {
+//                         practice: function(Practice, $route) {
+//                             return Practice.get({
+//                                 id: $route.current.params.practiceId
+//                             });
+//                         }
+//                     }
+//                 })
+//                 .when('/projects/:projectId/sites/:siteId/practices/:practiceId/edit', {
+//                     templateUrl: '/modules/components/practices/views/practices--edit.html',
+//                     controller: 'PracticeEditController',
+//                     controllerAs: 'page',
+//                     resolve: {
+//                         user: function(Account) {
+//                             if (Account.userObject && !Account.userObject.id) {
+//                                 return Account.getUser();
+//                             }
+//                             return Account.userObject;
+//                         },
+//                         site: function(Site, $route) {
+//                             return Site.get({
+//                                 id: $route.current.params.siteId
+//                             });
+//                         },
+//                         practice_types: function(PracticeType, $route) {
+//                             return PracticeType.query({
+//                                 results_per_page: 500
+//                             });
+//                         },
+//                         practice: function(Practice, $route) {
+//                             return Practice.get({
+//                                 id: $route.current.params.practiceId
+//                             });
+//                         }
+//                     }
+//                 });
 
-        });
+//         });
 
-}());
+// }());
 (function() {
 
   'use strict';
@@ -6653,9 +6653,7 @@ angular.module('FieldDoc')
         mapbox, Media, Practice, practice, practice_types, $q, $rootScope, $route,
         $scope, $timeout, $interval, site, user, Shapefile, leafletBoundsHelpers) {
 
-        var self = this,
-            projectId = $route.current.params.projectId,
-            siteId = $route.current.params.siteId;
+        var self = this;
 
         self.practiceTypes = practice_types;
 
@@ -6797,7 +6795,23 @@ angular.module('FieldDoc')
 
                 }
 
-                // $rootScope.page.title = self.practice.properties.practice_type;
+                self.loadPractice();
+
+            }, function(errorResponse) {
+
+                //
+                
+            });
+
+        };
+
+        self.loadPractice = function() {
+
+            practice.$promise.then(function(successResponse) {
+
+                self.practice = successResponse;
+
+                $rootScope.page.title = self.practice.properties.practice_type;
                 // $rootScope.page.links = [{
                 //         text: 'Projects',
                 //         url: '/projects'
@@ -6812,52 +6826,14 @@ angular.module('FieldDoc')
                 //     },
                 //     {
                 //         text: self.practice.properties.practice_type,
-                //         url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id
+                //         url: '/practices/' + self.practice.id
                 //     },
                 //     {
                 //         text: 'Edit',
-                //         url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id + '/edit',
+                //         url: '/practices/' + self.practice.id + '/edit',
                 //         type: 'active'
                 //     }
                 // ];
-
-                self.loadPractice();
-
-            }, function(errorResponse) {
-                //
-            });
-
-        };
-
-        self.loadPractice = function() {
-
-            practice.$promise.then(function(successResponse) {
-
-                self.practice = successResponse;
-
-                $rootScope.page.title = self.practice.properties.practice_type;
-                $rootScope.page.links = [{
-                        text: 'Projects',
-                        url: '/projects'
-                    },
-                    {
-                        text: self.site.properties.project.properties.name,
-                        url: '/projects/' + projectId
-                    },
-                    {
-                        text: self.site.properties.name,
-                        url: '/projects/' + projectId + '/sites/' + siteId
-                    },
-                    {
-                        text: self.practice.properties.practice_type,
-                        url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id
-                    },
-                    {
-                        text: 'Edit',
-                        url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id + '/edit',
-                        type: 'active'
-                    }
-                ];
 
                 //
                 // If a valid practice geometry is present, add it to the map
@@ -7096,7 +7072,7 @@ angular.module('FieldDoc')
                     });
 
                     self.practice.$update().then(function(successResponse) {
-                        $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id);
+                        $location.path('/practices/' + self.practice.id);
                     }, function(errorResponse) {
                         // Error message
                     });
@@ -7107,7 +7083,7 @@ angular.module('FieldDoc')
 
             } else {
                 self.practice.$update().then(function(successResponse) {
-                    $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id);
+                    $location.path('/practices/' + self.practice.id);
                 }, function(errorResponse) {
                     // Error message
                 });
@@ -7310,26 +7286,25 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-  .controller('PracticeViewController', function ($location, practice, $route, Utility) {
+    .controller('PracticeViewController', function($location, practice, $route, Utility) {
 
-    var self = this,
-        projectId = $route.current.params.projectId,
-        siteId = $route.current.params.siteId,
-        practiceId = $route.current.params.practiceId,
-        practiceType;
+        var self = this,
+            projectId = $route.current.params.projectId,
+            siteId = $route.current.params.siteId,
+            practiceId = $route.current.params.practiceId,
+            practiceType;
 
-    practice.$promise.then(function(successResponse) {
+        practice.$promise.then(function(successResponse) {
 
-      self.practice = successResponse;
+            self.practice = successResponse;
 
-      practiceType = Utility.machineName(self.practice.properties.practice_type);
+            practiceType = Utility.machineName(self.practice.properties.practice_type);
 
-      $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + practiceType);
+            $location.path('/practices/' + practiceId + '/' + practiceType);
+
+        });
 
     });
-
-  });
-
 (function() {
 
   'use strict';
@@ -7471,7 +7446,7 @@ angular.module('FieldDoc')
     .config(function($routeProvider) {
 
         $routeProvider
-            .when('/projects/:projectId/sites/:siteId/practices/:practiceId/custom', {
+            .when('/practices/:practiceId', {
                 templateUrl: '/modules/components/practices/modules/custom/views/summary--view.html',
                 controller: 'CustomSummaryController',
                 controllerAs: 'page',
@@ -7489,7 +7464,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/projects/:projectId/sites/:siteId/practices/:practiceId/custom/:reportId/edit', {
+            .when('/practices/:practiceId/:reportId/edit', {
                 templateUrl: '/modules/components/practices/modules/custom/views/form--view.html',
                 controller: 'CustomFormController',
                 controllerAs: 'page',
@@ -7536,6 +7511,34 @@ angular.module('FieldDoc')
                         });
                     }
 
+                }
+            })
+            .when('/practices/:practiceId/edit', {
+                templateUrl: '/modules/components/practices/views/practices--edit.html',
+                controller: 'PracticeEditController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account) {
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+                        return Account.userObject;
+                    },
+                    site: function(Site, $route) {
+                        return Site.get({
+                            id: $route.current.params.siteId
+                        });
+                    },
+                    practice_types: function(PracticeType, $route) {
+                        return PracticeType.query({
+                            results_per_page: 500
+                        });
+                    },
+                    practice: function(Practice, $route) {
+                        return Practice.get({
+                            id: $route.current.params.practiceId
+                        });
+                    }
                 }
             });
 
@@ -7680,11 +7683,11 @@ angular.module('FieldDoc')
                             },
                             {
                                 text: "Other Conservation Practice",
-                                url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + self.practice.id,
+                                url: '/practices/' + self.practice.id,
                             },
                             {
                                 text: 'Edit',
-                                url: '/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType + '/' + self.report.id + '/edit',
+                                url: '/practices/' + practiceId + '/' + self.practiceType + '/' + self.report.id + '/edit',
                                 type: 'active'
                             }
                         ];
@@ -7727,7 +7730,7 @@ angular.module('FieldDoc')
                 self.report.properties.report_date = self.date.month + ' ' + self.date.date + ' ' + self.date.year;
 
                 self.report.$update().then(function(successResponse) {
-                    $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
+                    $location.path('/practices/' + practiceId + '/' + self.practiceType);
                 }, function(errorResponse) {
                     console.error('ERROR: ', errorResponse);
                 });
@@ -7736,7 +7739,7 @@ angular.module('FieldDoc')
 
             self.deleteReport = function() {
                 self.report.$delete().then(function(successResponse) {
-                    $location.path('/projects/' + projectId + '/sites/' + siteId + '/practices/' + practiceId + '/' + self.practiceType);
+                    $location.path('/practices/' + practiceId + '/' + self.practiceType);
                 }, function(errorResponse) {
                     console.error('ERROR: ', errorResponse);
                 });

@@ -1,47 +1,120 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main class="container">
-  <section class="row feature summary">
-    <article class="feature-detail">
-      <div class="column-11 feature-detail-content">
+<main class="site--content--flow fluid-content clearfix distinguish">
 
-        <h1>Summary for {{ page.practice.properties.practice_type }}</h1>
-        <p data-ng-if="page.practice.properties.description" data-ng-bind-html="page.practice.properties.description"></p>
+    <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-        <p><small>
-          <strong>Project Title:</strong> {{ page.site.properties.project.properties.name }}
-          <strong>Site Number:</strong> {{ page.site.properties.name }}<br />
-        </small></p>
-      </div>
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-      <nav class="column-5 contextual-navigation-wrapper">
-        <h6><strong>Tools</strong></h6>
-        <ul class="contextual-navigation">
-          <!-- Practice Manangement Navigation -->
-          <li class="active">
-            <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}">
-              Practice Overview
-            </a>
-          </li>
-          <li data-ng-if="page.permissions.can_edit">
-            <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/edit">
-              Edit
-            </a>
-          </li>
-        </ul>
-      </nav>
+        <h1 class="inset">Edit practice</h1>
 
-    </article>
-  </section>
-  <section class="row feature summary">
-    <article class="feature-detail">
-      <div class="column-16 feature-detail-content">
-        <div class="table-responsive">
-          <div data-ng-include="page.template.path"></div>
+        <div class="main--ui">
+
+            <article class="feature-detail">
+
+                <div class="feature-detail-content">
+
+                    <h1>Summary for {{ page.practice.properties.practice_type }}</h1>
+                    <p data-ng-if="page.practice.properties.description" data-ng-bind-html="page.practice.properties.description"></p>
+
+                    <p><small>
+                            <strong>Project Title:</strong> {{ page.site.properties.project.properties.name }}
+                            <strong>Site Number:</strong> {{ page.site.properties.name }}<br />
+                        </small></p>
+                </div>
+
+                <nav class="column-5 contextual-navigation-wrapper">
+                    <h6><strong>Tools</strong></h6>
+                    <ul class="contextual-navigation">
+                        <!-- Practice Manangement Navigation -->
+                        <li class="active">
+                            <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}">
+                                Practice Overview
+                            </a>
+                        </li>
+                        <li data-ng-if="page.permissions.can_edit">
+                            <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/practices/{{ page.practice.id }}/edit">
+                                Edit
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+            </article>
+
+            <article class="feature-detail">
+
+                <div class="feature-detail-content">
+
+                    <div class="table-responsive">
+
+                        <div data-ng-include="page.template.path"></div>
+
+                    </div>
+
+                </div>
+
+            </article>
+
         </div>
-      </div>
-    </article>
-  </section>
+
+    </div>
+
+    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
+        <ul>
+            <li class="active">
+                <a href="/projects/{{ page.project.id }}">
+                    <i class="material-icons">
+                        dashboard
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="/projects/{{ page.project.id }}/users">
+                    <i class="material-icons">
+                        group
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="/projects/{{ page.project.id }}/edit">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="#">
+                    <i class="material-icons">
+                        delete
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="#" data-ng-click="page.actions.saveToPdf()">
+                    <i class="material-icons">
+                        picture_as_pdf
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="#" data-ng-click="page.actions.print()">
+                    <i class="material-icons">
+                        print
+                    </i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+        <div class="event--container">
+            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                <span class="event--message">{{ alert.msg }}</span>
+            </div>
+        </div>
+    </div>
+
 </main>
 
 <div data-ng-include="'/templates/footer--view.html'"></div>

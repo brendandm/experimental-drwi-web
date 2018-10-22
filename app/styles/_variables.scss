@@ -46,6 +46,9 @@ $color-grid-border: rgb(243, 67, 18);
 //
 // Typography Variables
 //
-$font-serif: "Times New Roman", "Times", serif;;
-$font-sans: "Roboto", "Helvetica Neue", "Helvetica", Arial, sans-serif;
-$font-sans-plain: "Helvetica Neue", "Helvetica", Arial, sans-serif;
+//$font-serif: "Times New Roman", "Times", serif;
+$font-serif: Georgia,Cambria,"Times New Roman",Times,serif;
+//$font-sans: "Roboto", "Helvetica Neue", "Helvetica", Arial, sans-serif;
+$font-sans: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+//$font-sans-plain: "Helvetica Neue", "Helvetica", Arial, sans-serif;
+$font-sans-plain: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";

@@ -32,7 +32,7 @@
 
                 <input type="text" class="search-bar" data-ng-model="page.q" placeholder="Search projects">
 
-                <ul class="snapshot--cards list-unstyled">
+                <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
                     <li class="card" data-ng-repeat="project in page.filteredProjects | orderBy:'-modified_on' | filter: page.q">
                         <div class="card--content">
