@@ -178,15 +178,15 @@
                 </tfoot>
                 </table>
 
-                <h2><strong>Practice</strong> Metrics</h2>
+                <h2>Metrics</h2>
 
                 <table class="table table-practices with-metrics" data-ng-if="page.rollups.metrics">
                     <thead>
                         <tr>
-                            <th class="table-column-wide table-metrics-header">Metric</th>
+                            <th class="table-column-wide table-metrics-header">&nbsp;</th>
                             <th class="table-metrics-header">Installed To-Date</th>
                             <th class="table-metrics-header">% Installed</th>
-                            <th>&nbsp;</th>
+                            <!-- <th>&nbsp;</th> -->
                         </tr>
                     </thead>
 
@@ -201,7 +201,7 @@
                                 <strong class="metrics--metric--rollup--small">{{ metric.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.units }}<br />
                                     of {{ metric.total | number:2 }}</span>
                             </td>
-                            <td>
+                            <!-- <td>
                                 <strong class="metrics--metric--percentage">
                                     {{ (metric.installed/metric.total)*100 | number:1 }}%
                                 </strong>
@@ -213,6 +213,19 @@
                                     <div class="chart-center">
                                     </div>
                                 </div>
+                            </td> -->
+                            <td>
+                                <div style="display: flex; flex-flow: row nowrap; align-items: center; width: 100%; height: 100%;">
+                                    <strong class="metrics--metric--percentage">
+                                        {{ (metric.installed/metric.total)*100 | number:1 }}%
+                                    </strong>
+                                    <div class="donut-chart chart{{ (metric.installed/metric.total)*100 | number:0 }}" style="display: inline-block; margin-left: 1em;">
+                                        <div class="slice one"></div>
+                                        <div class="slice two"></div>
+                                        <div class="chart-center" style="background: #fff;">
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -220,7 +233,9 @@
 
                 <section class="list action-list" data-ng-if="page.practices">
 
-                    <h6 class="rule-above"><strong>Site</strong> Practices</h6>
+                    <!-- <h6 class="rule-above"><strong>Site</strong> Practices</h6> -->
+
+                    <h2>Practices</h2>
 
                     <ul class="snapshot--cards list-unstyled">
 

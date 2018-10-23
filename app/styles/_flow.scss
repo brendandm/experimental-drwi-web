@@ -118,10 +118,11 @@
 
   h2 {
     font-size: 1.5em;
-    font-weight: 700;
+    //font-weight: 700;
+    font-weight: normal;
     //font-family: sans-serif;
-    letter-spacing: 0;
-    margin: 0 0 1em;
+    letter-spacing: 0.03em;
+    margin: 1em 0;
     color: #333;
     //text-align: center;
   }
@@ -356,10 +357,10 @@
     width: 100%;
     padding: 1em 1em 1em 0;
     color: #333;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-size: 0.8em;
+    //font-weight: bold;
+    //text-transform: uppercase;
+    //letter-spacing: 0.08em;
+    //font-size: 0.8em;
     text-decoration: none;
     text-align: right;
     border: 0 none;
@@ -420,7 +421,8 @@
     position: relative;
     display: flex;
     flex-grow: 1;
-    flex-shrink: 1;
+    flex-basis: 0;
+    //flex-shrink: 1;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
@@ -429,6 +431,7 @@
     height: 100%;
     border-left: 1px solid rgb(224,224,224);
     padding-right: 2em;
+    min-width: 0; // Prevent content from overflowing flex parent
   }
 
   .main--ui {
@@ -3183,6 +3186,7 @@
     border-bottom: 1px solid rgb(216,216,216);
     margin: 0;
     font-weight: normal;
+    letter-spacing: 0.04em;
   }
 
   h2.inset {

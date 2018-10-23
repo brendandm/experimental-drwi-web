@@ -18,16 +18,25 @@ h6.rule-above.statistics--header {
 
 .statistics,
 .row .row.statistics {
-  background-color: $color-darkBlue-base;
-  color: $color-white-default;
+  //background-color: $color-darkBlue-base;
+  //color: $color-white-default;
+  float: none;
   display: table-row;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  width: 100%;
   height: 100%;
   margin: 0;
-  padding: 2em 0 2.5em;
+  //padding: 2em 0 2.5em;
+  padding: 0;
+  margin-left: -1em;
+  margin-right: -1em;
 
   &.project--summary {
-    padding-left: 2em;
-    padding-right: 2em;
+    //padding-left: 2em;
+    //padding-right: 2em;
+    margin-bottom: 4em;
   }
 
   &.statistics--navigation {
@@ -35,13 +44,19 @@ h6.rule-above.statistics--header {
 
     .statistics--statistic {
       cursor: pointer;
-      padding: 2em 1em 2.5em;
+      //padding: 2em 1em 2.5em;
     }
   }
 }
 
 .statistics--statistic {
   display: table-cell;
+  flex-basis: 0;
+  flex-grow: 1;
+  min-width: 33%;
+  max-width: 33.3333%;
+  padding-right: 1em;
+  padding-left: 1em;
   height: 100%;
 
   &.statistics--statistic--active {
@@ -54,7 +69,7 @@ h6.rule-above.statistics--header {
   }
 
   .statistic--value {
-    color: $color-white-default;
+    //color: $color-white-default;
     font-size: 24px;
     font-weight: 400;
     line-height: 1;
@@ -62,18 +77,19 @@ h6.rule-above.statistics--header {
     margin-top: 0.5em;
   }
   .statistic--valueLabel {
-    color: $color-white-default;
+    //color: $color-white-default;
     font-size: 16px;
   }
 
   .statistic--title {
-    color: $color-white-default;
+    //color: $color-white-default;
     font-size: 14px;
     font-weight: 400;
   }
 
   .statistic--chart {
-    background-color: #535A63;
+    //background-color: #535A63;
+    background-color: #e8e8e8;
     border-radius: 6px;
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
@@ -107,7 +123,7 @@ h6.rule-above.statistics--header {
   padding-right: 2em;
 
   .metric--title {
-    color: $color-white-default;
+    //color: $color-white-default;
     font-size: 14px;
     font-weight: 400;
     margin-bottom: 4px;
@@ -117,12 +133,12 @@ h6.rule-above.statistics--header {
     a:active,
     a:link,
     a:visited {
-      color: $color-white-default;
+      //color: $color-white-default;
       border-bottom: 1px dashed rgba($color-white-default, 0.5);
       text-decoration: none;
 
       &:hover {
-        color: $color-white-default;
+        //color: $color-white-default;
         border-bottom: 1px dashed $color-white-default;
         text-decoration: none;
       }
@@ -149,7 +165,7 @@ h6.rule-above.statistics--header {
     }
   }
   .metric--help--text {
-    color: $color-white-default;
+    //color: $color-white-default;
     font-size: 12px;
     font-weight: 400;
     margin-top: 2px;

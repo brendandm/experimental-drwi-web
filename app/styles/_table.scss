@@ -5,7 +5,6 @@
 // specifications.
 //
 
-
 table {
   background-color: transparent;
   border-spacing: 0;
@@ -30,7 +29,6 @@ th {
 .table > tbody > tr > th.wrap {
   white-space: normal;
 }
-
 
 .table {
   width: 100%;
@@ -389,24 +387,21 @@ table th[class*="col-"] {
   }
 }
 
-
 td.disabled-value {
     color: #BBBBBB !important;
 }
-
-
-
 
 //
 // Site Practices
 //
 .table.table-practices {
-  background-color: #262F3A;
-  color: #F2F2F2;
+  //background-color: #262F3A;
+  //color: #F2F2F2;
   text-align: left;
+  margin-bottom: 4em;
 
   td, th {
-    color: #F2F2F2;
+    //color: #F2F2F2;
     text-align: left;
   }
 }
@@ -415,7 +410,7 @@ td.disabled-value {
 .table.table-practices > tbody > tr {
   td.table-column-even,
   th.table-column-even {
-    background-color: #373F4A;
+    //background-color: #373F4A;
 
     &.table-column-top {
       vertical-align: top;
@@ -425,7 +420,7 @@ td.disabled-value {
 
   td.table-column-odd,
   th.table-column-odd {
-    background-color: #373F4A;
+    //background-color: #373F4A;
 
     &.table-column-top {
       vertical-align: top;
@@ -458,7 +453,7 @@ td.disabled-value {
   &> th {
     background-color: transparent;
     border-top: none;
-    color: #F2F2F2;
+    //color: #F2F2F2;
     font-size: 16px;
     line-height: 1;
     padding: 16px 24px;
@@ -495,17 +490,18 @@ td.disabled-value {
 
 .table.table-practices.with-metrics {
   border-collapse: separate;
-  padding: 12px 12px 48px;
+  //padding: 12px 12px 48px;
+  padding: 0;
 }
 
 .table.table-practices.with-metrics > thead > tr > th,
 .table.table-practices.with-metrics > thead > tr > td {
-  border-bottom: 4px solid #373F49;
+  //border-bottom: 4px solid #373F49;
 }
 
 .table.table-practices.with-metrics > tbody > tr > th,
 .table.table-practices.with-metrics > tbody > tr > td {
-  border-bottom: 1px solid #373F49;
+  //border-bottom: 1px solid #373F49;
 }
 
 .table.table-practices.with-metrics > thead > tr,
@@ -552,8 +548,6 @@ td.disabled-value {
   font-weight: normal;
   vertical-align: bottom;
 }
-
-
 
 .table {
   td {
