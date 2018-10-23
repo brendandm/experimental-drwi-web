@@ -1,6 +1,6 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main class="site--content--flow fluid-content clearfix distinguish">
+<main class="site--content--flow fluid-content clearfix distinguish" save2pdf>
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
@@ -13,7 +13,8 @@
             <div class="throbber throbber-small" data-ng-if="page.status.loading"></div>
 
             <article class="feature-detail" data-ng-if="!page.status.loading">
-                <div class="column-16 feature-detail-content">
+
+                <div class="feature-detail-content">
                     <h4>
                         <span data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">{{ page.project.properties.program_type }}</span>
 
@@ -24,9 +25,6 @@
                     <h4 class="project-site-city">
                         {{ page.project.properties.name }}
                     </h4>
-                    <!-- <h1>
-                        {{ page.site.properties.name }}
-                    </h1> -->
 
                     <h4 class="project-site-city" data-ng-if="page.nodes.geographies.length">
                         <span data-ng-repeat="geography in page.nodes.geographies"><b>{{ geography.category }}:&nbsp;</b>{{ geography.name }}&nbsp;</span>
@@ -178,15 +176,15 @@
                 </tfoot>
                 </table>
 
-                <h2><strong>Practice</strong> Metrics</h2>
+                <h2>Metrics</h2>
 
                 <table class="table table-practices with-metrics" data-ng-if="page.rollups.metrics">
                     <thead>
                         <tr>
-                            <th class="table-column-wide table-metrics-header">Metric</th>
+                            <th class="table-column-wide table-metrics-header">&nbsp;</th>
                             <th class="table-metrics-header">Installed To-Date</th>
                             <th class="table-metrics-header">% Installed</th>
-                            <th>&nbsp;</th>
+                            <!-- <th>&nbsp;</th> -->
                         </tr>
                     </thead>
 
@@ -201,7 +199,7 @@
                                 <strong class="metrics--metric--rollup--small">{{ metric.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.units }}<br />
                                     of {{ metric.total | number:2 }}</span>
                             </td>
-                            <td>
+                            <!-- <td>
                                 <strong class="metrics--metric--percentage">
                                     {{ (metric.installed/metric.total)*100 | number:1 }}%
                                 </strong>
@@ -213,6 +211,19 @@
                                     <div class="chart-center">
                                     </div>
                                 </div>
+                            </td> -->
+                            <td>
+                                <div style="display: flex; flex-flow: row nowrap; align-items: center; width: 100%; height: 100%;">
+                                    <strong class="metrics--metric--percentage">
+                                        {{ (metric.installed/metric.total)*100 | number:1 }}%
+                                    </strong>
+                                    <div class="donut-chart chart{{ (metric.installed/metric.total)*100 | number:0 }}" style="display: inline-block; margin-left: 1em;">
+                                        <div class="slice one"></div>
+                                        <div class="slice two"></div>
+                                        <div class="chart-center" style="background: #fff;">
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                         </tr>
                     </tbody>
@@ -220,13 +231,13 @@
 
                 <section class="list action-list" data-ng-if="page.practices">
 
-                    <h6 class="rule-above"><strong>Site</strong> Practices</h6>
+                    <h2>Practices</h2>
 
                     <ul class="snapshot--cards list-unstyled">
 
                         <li class="card" data-ng-repeat="practice in page.rollups.nitrogen.practices | orderBy:'name' track by $index">
                             <div class="card--content">
-                                <div class="name">{{ practice.name }}</div>
+                                <div class="name">{{ practice.name || 'Un-named' }}</div>
                                 <div class="body">
                                     <p data-ng-if="practice.description">{{ practice.description | truncate:80 }}</p>
                                     <div class="actions">
@@ -252,6 +263,18 @@
                             </div>
                         </li>
 
+                        <li class="card">
+                            <div class="card--content">
+                                <div class="body">
+                                    <button type="button" class="snapshot--title" data-ng-click="page.createPractice()" title="Create practice">
+                                        <i class="material-icons">
+                                            add
+                                        </i>
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+
                     </ul>
 
                 </section>
@@ -265,28 +288,61 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
         <ul>
             <li class="active">
-                <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}">
+                <a href="/sites/{{ page.site.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/edit">
+                <a href="/sites/{{ page.site.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <a href="#">
+                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.id === page.site.id">
+                    <p>Do you want to delete this site?</p>
+                    <div class="actions">
+                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('site')">
+                            Yes
+                        </a>
+                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+                <a href="#" data-ng-click="page.confirmDelete(page.site)">
                     <i class="material-icons">
                         delete
                     </i>
                 </a>
             </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="#" data-ng-click="page.actions.saveToPdf()">
+                    <i class="material-icons">
+                        picture_as_pdf
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="#" data-ng-click="page.actions.print()">
+                    <i class="material-icons">
+                        print
+                    </i>
+                </a>
+            </li>
         </ul>
     </nav>
+
+    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+        <div class="event--container">
+            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                <span class="event--message">{{ alert.msg }}</span>
+            </div>
+        </div>
+    </div>
 
 </main>
 

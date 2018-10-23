@@ -372,7 +372,7 @@
   #sidebar nav ul li a:hover,
   #sidebar nav ul li a.viewing {
     opacity: 1;
-    padding: 1em 1.5em 1em 0;
+    //padding: 1em 1.5em 1em 0;
     text-decoration: none;
   }
 
@@ -389,13 +389,14 @@
       padding: 0;
 
       li {
+        position: relative;
         display: flex;
         flex-flow: column;
         justify-content: center;
         align-items: center;
         margin-bottom: 1em;
 
-        a {
+        > a {
           display: flex;
           flex-flow: column;
           justify-content: center;
@@ -406,8 +407,8 @@
           transition: all 250ms ease 0s;
         }
 
-        a:hover,
-        a:focus {
+        > a:hover,
+        > a:focus {
           opacity: 1;
         }
 
@@ -2771,6 +2772,67 @@
     text-decoration: none;
   }
 
+  /* - - Delete confirmation - - */
+
+  .confirm--delete--popup {
+    position: absolute;
+    top: 0;
+    //left: 0;
+    //bottom: 0;
+    right: 120%;
+    //width: 100%;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 2em 1em;
+    min-width: 320px;
+    background: #fff;
+    border-radius: 4px;
+    z-index: 9990;
+    box-shadow: 0 1px 1px 0 rgba(60,64,67,.08),0 1px 3px 1px rgba(60,64,67,.16);
+
+    .actions {
+      flex: 1;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      //justify-content: flex-end;
+      //text-align: right;
+      //margin-top: 1em;
+
+      a,
+      a:link,
+      a:visited {
+        display: inline-block;
+        margin-right: 1em;
+        //color: #333;
+        opacity: 0.7;
+        transition: all 250ms ease 0s;
+      }
+
+      a:hover,
+      a:focus {
+        opacity: 1;
+      }
+
+      a:last-of-type {
+        color: #333;
+        margin-right: 0;
+      }
+
+      a:first-of-type {
+        background: red;
+        padding: 0.5em 1em;
+        border-radius: 3px;
+        color: #fff;
+      }
+
+    }
+
+  }
+
   /* - - Notification bar - - */
 
   .transient--notification {
@@ -4093,8 +4155,11 @@
     //min-width: 33.33333333%;
     //padding-right: 1em;
     //padding-bottom: 3.5%;
-    max-width: 33.3333%;
-    min-width: 33%;
+    //max-width: 33.3333%;
+    //min-width: 33%;
+    max-width: 25%;
+    min-width: 24.9%;
+    min-height: 240px;
     flex-basis: 0;
     flex-grow: 1;
     padding-right: 1em;
@@ -4199,6 +4264,50 @@
             margin-right: 0;
           }
 
+        }
+
+      }
+
+    }
+
+    &:last-of-type {
+
+      //.body {
+        //padding: 0;
+      //}
+
+      button {
+        appearance: none;
+        border: 0 none;
+        outline: none;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-flow: column;
+        color: rgba(0,0,0,0.32);
+        //background: rgb(41,204,130);
+        background: transparent;
+        //font-size: 2em;
+        //border-radius: 50%;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        //-webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+        //-moz-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+        //box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+        transition: all 250ms ease 0s;
+        cursor: pointer;
+
+        &:hover {
+          //background: rgb(37,183,116);
+          //color: #fff;
+          color: rgb(37,183,116);
+          outline: 0 none;
+          text-decoration: none;
+        }
+
+        i {
+          font-size: 48px;
         }
 
       }

@@ -20,12 +20,9 @@
                         <!-- Practice Type -->
                         <div class="form-row">
                             <div class="form-field">
-                                <label for="practice_type" class="control-label">Practice
-                                    Type
-                                </label>
+                                <label for="practice_type" class="control-label">Practice Type</label>
                                 <select class="form-control" data-ng-model="page.practice.properties.category_id" id="practice_type_id" name="practice_type_id" data-ng-options="value.properties.id as value.properties.name group by value.properties.group for value in page.practiceTypes.features | orderBy:'properties.best_management_practice'">
-                                    <option value="">-- Select a practice type --
-                                    </option>
+                                    <option value="">-- Select a practice type --</option>
                                 </select>
                             </div>
                         </div>

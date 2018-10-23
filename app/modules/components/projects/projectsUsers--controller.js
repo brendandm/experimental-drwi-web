@@ -10,37 +10,39 @@
      * Controller of the FieldDoc
      */
     angular.module('FieldDoc')
-        .controller('ProjectUsersCtrl', function(Account, Collaborators, $rootScope, $scope, $route, $location, project, user, members) {
+        .controller('ProjectUsersCtrl', 
+            function(Account, Collaborators, $window, $rootScope, $scope, $route,
+                $location, project, user, members) {
 
             var self = this;
+
             $rootScope.page = {};
+
+            self.actions = {
+                print: function() {
+
+                    $window.print();
+
+                },
+                saveToPdf: function() {
+
+                    $scope.$emit('saveToPdf');
+
+                }
+            };
+
+            $rootScope.viewState = {
+                'project': true
+            };
 
             //
             // Assign project to a scoped variable
             //
             project.$promise.then(function(successResponse) {
+
                 self.project = successResponse;
 
                 $rootScope.page.title = self.project.properties.name;
-                $rootScope.page.links = [{
-                        text: 'Projects',
-                        url: '/projects'
-                    },
-                    {
-                        text: self.project.properties.name,
-                        url: '/projects/' + self.project.id
-                    },
-                    {
-                        text: 'Edit',
-                        url: '/projects/' + self.project.id + '/edit',
-                        type: 'active'
-                    },
-                    {
-                        text: 'Collaborators',
-                        url: '/projects/' + self.project.id + '/users'
-                    }
-                ];
-                $rootScope.page.actions = [];
 
                 self.project.users = members;
                 self.project.users_edit = false;

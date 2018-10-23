@@ -5,7 +5,6 @@
  * Licensed under the MIT License.
  * http://opensource.org/licenses/mit-license
  */
-
 (function() {
     'use strict';
 
@@ -13,27 +12,26 @@
         .module('save2pdf', [])
         .directive('save2pdf', function() {
             return {
-              link: function($scope, element, Attrs, controller) {
-                $scope.$on('saveToPdf', function(event, mass) {
+                link: function($scope, element, Attrs, controller) {
+                    $scope.$on('saveToPdf', function(event, mass) {
 
-                  if (!element[0]) {
-                    return;
-                  }
-                  var pdf = new jsPDF('p', 'pt', 'letter');
+                        if (!element[0]) {
+                            return;
+                        }
+                        var pdf = new jsPDF('p', 'pt', 'letter');
 
-                  //
-                  // Make sure we modify the scale of the images.
-                  //
-                  pdf.internal.scaleFactor = 2.25;
+                        //
+                        // Make sure we modify the scale of the images.
+                        //
+                        pdf.internal.scaleFactor = 2.25;
 
-                  pdf.addHTML(element[0], 0, 0, {
-                    pagesplit: true
-                  }, function() {
-                    pdf.save('FieldStack-PracticeMetrics-' + new Date() + '.pdf');
-                  });
-                });
+                        pdf.addHTML(element[0], 0, 0, {
+                            pagesplit: true
+                        }, function() {
+                            pdf.save('FieldStack-PracticeMetrics-' + new Date() + '.pdf');
+                        });
+                    });
+                }
             }
-          }
         });
-    }
-)();
+})();

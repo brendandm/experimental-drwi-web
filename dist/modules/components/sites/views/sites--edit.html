@@ -108,22 +108,6 @@
 
                 </div>
 
-                <!-- <nav class="column-5 contextual-navigation-wrapper">
-                    <h6><strong>Tools</strong></h6>
-                    <ul class="contextual-navigation">
-                        <li>
-                            <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}">
-                                Site Overview
-                            </a>
-                        </li>
-                        <li class="active" data-ng-if="page.permissions.can_edit">
-                            <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/edit">
-                                Edit
-                            </a>
-                        </li>
-                    </ul>
-                </nav> -->
-
             </article>
 
         </div>
@@ -133,14 +117,14 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
         <ul>
             <li class="active">
-                <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}">
+                <a href="/sites/{{ page.site.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <a href="/projects/{{ page.site.properties.project_id }}/sites/{{ page.site.id }}/edit">
+                <a href="/sites/{{ page.site.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>

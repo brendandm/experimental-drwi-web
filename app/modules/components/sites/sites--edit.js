@@ -154,23 +154,6 @@
                 self.site = successResponse;
 
                 $rootScope.page.title = self.site.properties.name;
-                // $rootScope.page.links = [{
-                //         text: 'Projects',
-                //         url: '/projects'
-                //     },
-                //     {
-                //         text: self.site.properties.project.properties.name,
-                //         url: '/projects/' + $route.current.params.projectId
-                //     },
-                //     {
-                //         text: self.site.properties.name,
-                //         url: '/projects/' + $route.current.params.projectId + '/sites/' + self.site.id
-                //     },
-                //     {
-                //         text: 'Edit',
-                //         type: 'active'
-                //     }
-                // ];
 
                 //
                 // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
@@ -363,19 +346,25 @@
                 }
 
                 self.site.$update().then(function(successResponse) {
-                    $location.path('/projects/' + $route.current.params.projectId + '/sites/' + $route.current.params.siteId);
+
+                    $location.path('/sites/' + $route.current.params.siteId);
+
                 }, function(errorResponse) {
 
                 });
             };
 
-            self.deleteSite = function() {
-                self.site.$delete().then(function(successResponse) {
-                    $location.path('/projects/' + $route.current.params.projectId);
-                }, function(errorResponse) {
+            // self.deleteSite = function() {
 
-                });
-            };
+            //     self.site.$delete().then(function(successResponse) {
+
+            //         $location.path('/projects/' + $route.current.params.projectId);
+
+            //     }, function(errorResponse) {
+
+            //     });
+                
+            // };
 
             /**
              * Mapping functionality

@@ -1,6 +1,6 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main class="site--content--flow fluid-content clearfix distinguish">
+<main class="site--content--flow fluid-content clearfix distinguish" save2pdf>
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
@@ -13,16 +13,15 @@
             <div class="throbber throbber-small" data-ng-if="page.status.loading"></div>
 
             <article class="feature-detail" data-ng-if="!page.status.loading">
-                <div class="feature-detail-content" save2pdf>
+
+                <div class="feature-detail-content">
                     <h4>
                         <span data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">{{ page.project.properties.program_type }}</span>
-                        <!-- <span data-ng-if="page.project.id && page.project.properties.account.properties.name" class="label">{{ page.project.properties.account.properties.name }}</span>
-                        <span data-ng-if="page.project.id && !page.project.properties.account.properties.name && page.project.properties.program_type !== 'Pre-Project Plan'" class="label label-danger">No Funder</span> -->
 
                         <span data-ng-if="page.project.id && page.project.properties.last_modified_by.properties.first_name && page.project.properties.last_modified_by.properties.last_name" class="label">Last Modified by: {{ page.project.properties.last_modified_by.properties.first_name }} {{ page.project.properties.last_modified_by.properties.last_name }}</span>
                         <span data-ng-if="page.project.id && page.project.properties.modified_on" class="label">Modified on: {{ page.project.properties.modified_on | date }}</span>
                     </h4>
-                    <!-- <h1 class="large">{{ page.project.properties.name }}</h1> -->
+                    
                     <p data-ng-bind-html="page.project.properties.description"></p>
 
                     <!-- Map -->
@@ -56,13 +55,11 @@
                                     values from practices that <strong>are less than 90% designed</strong>.
                                 </em>
                             </p>
-                            <p data-ng-if="page.sites" class="pull-right">
-                                <strong>
-                                    {{ page.sites.length | number }} <span data-ng-if="page.sites.length !== 1">sites</span><span data-ng-if="page.sites.length === 1">sites</span>
-                                </strong>
-                            </p>
+
+                            <h2>Metrics</h2>
+
                             <article class="row statistics project--summary">
-                                <div class="column-4 statistics--statistic">
+                                <div class="statistics--statistic">
                                     <p class="statistic--value">
                                         {{ page.rollups.nitrogen.installed | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.rollups.nitrogen.total | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
                                         <span class="statistic--title">Nitrogen</span>
@@ -72,8 +69,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="column-2"></div>
-                                <div class="column-4 statistics--statistic">
+                                
+                                <div class="statistics--statistic">
                                     <p class="statistic--value">
                                         {{ page.rollups.phosphorus.installed | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.rollups.phosphorus.total | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
                                         <span class="statistic--title">Phosphorus</span>
@@ -83,8 +80,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="column-2"></div>
-                                <div class="column-4 statistics--statistic">
+                                
+                                <div class="statistics--statistic">
                                     <p class="statistic--value">
                                         {{ page.rollups.sediment.installed | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.rollups.sediment.total | number:2 }} <span class="statistic--valueLabel">tons/yr</span><br />
                                         <span class="statistic--title">Sediment</span>
@@ -96,15 +93,12 @@
                                 </div>
                             </article>
 
-                            <h2><strong>Practice</strong> Metrics</h2>
-
                             <table class="table table-practices with-metrics" data-ng-if="page.rollups.metrics">
                                 <thead>
                                     <tr>
-                                        <th class="table-column-wide table-metrics-header">Metric</th>
+                                        <th class="table-column-wide table-metrics-header">&nbsp;</th>
                                         <th class="table-metrics-header">Installed To-Date</th>
                                         <th class="table-metrics-header">% Installed</th>
-                                        <th>&nbsp;</th>
                                     </tr>
                                 </thead>
 
@@ -120,15 +114,15 @@
                                                 of {{ metric.total | number:2 }}</span>
                                         </td>
                                         <td>
-                                            <strong class="metrics--metric--percentage">
-                                                {{ (metric.installed/metric.total)*100 | number:1 }}%
-                                            </strong>
-                                        </td>
-                                        <td>
-                                            <div class="donut-chart chart{{ (metric.installed/metric.total)*100 | number:0 }}">
-                                                <div class="slice one"></div>
-                                                <div class="slice two"></div>
-                                                <div class="chart-center">
+                                            <div style="display: flex; flex-flow: row nowrap; align-items: center; width: 100%; height: 100%;">
+                                                <strong class="metrics--metric--percentage">
+                                                    {{ (metric.installed/metric.total)*100 | number:1 }}%
+                                                </strong>
+                                                <div class="donut-chart chart{{ (metric.installed/metric.total)*100 | number:0 }}" style="display: inline-block; margin-left: 1em;">
+                                                    <div class="slice one"></div>
+                                                    <div class="slice two"></div>
+                                                    <div class="chart-center" style="background: #fff;">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
@@ -136,23 +130,22 @@
                                 </tbody>
                             </table>
 
-
-                            <h6 class="rule-above"><strong>Project</strong> Sites</h6>
+                            <h2>Sites</h2>
 
                             <ul class="snapshot--cards list-unstyled">
 
                                 <li class="card" data-ng-repeat="site in page.sites | orderBy:'-modified_on' | filter: page.q track by $index">
                                     <div class="card--content">
-                                        <div class="name">{{ site.site.properties.name }}</div>
+                                        <div class="name">{{ site.site.properties.name || 'Un-named' }}</div>
                                         <div class="body">
                                             <p data-ng-if="site.site.properties.description">{{ site.site.properties.description | truncate:80 }}</p>
                                             <div class="actions">
-                                                <a class="snapshot--title" href="/projects/{{ page.project.id }}/sites/{{ site.site.id }}" title="Site summary">
+                                                <a class="snapshot--title" href="/sites/{{ site.site.id }}" title="Site summary">
                                                     <i class="material-icons">
                                                         dashboard
                                                     </i>
                                                 </a>
-                                                <a class="snapshot--title" href="/projects/{{ page.project.id }}/sites/{{ site.site.id }}/edit" title="Edit site">
+                                                <a class="snapshot--title" href="/sites/{{ site.site.id }}/edit" title="Edit site">
                                                     <i class="material-icons">
                                                         edit
                                                     </i>
@@ -168,38 +161,19 @@
                                     </div>
                                 </li>
 
-                            </ul>
-
-                            <!-- <article class="row list-item list-item-thin" data-ng-if="page.sites.length" data-ng-repeat="site in page.sites | orderBy:'id' track by $index">
-                                <div class="column-16 list-item-content">
-                                    <div class="row">
-                                        <div class="column-14">
-                                            <h1 class="project-site-number">
-                                                <a href="/projects/{{ page.project.id }}/sites/{{ site.site.id }}" title="{{ site.site.properties.name }} project details">
-                                                    {{ site.site.properties.name }}
-                                                </a>
-                                            </h1>
-                                            <p data-ng-if="site.site.properties.description">
-                                                {{ site.site.properties.description | limitTo:140 }}<span data-ng-if="site.site.properties.description.length >= 140">...</span>
-                                            </p>
-                                            <h4 class="project-site-city">
-                                                <span data-ng-if="site.site.properties.city">{{ site.site.properties.city }}</span><span data-ng-if="site.site.properties.city && site.site.properties.county.properties.county_name">,</span>
-                                                <span data-ng-if="site.site.properties.county.properties.county_name">{{ site.site.properties.county.properties.county_name }} County</span><span data-ng-if="site.site.properties.state && site.site.properties.county.properties.county_name">,</span> {{ site.site.properties.state }}
-                                            </h4>
-                                            <h4 class="project-site-city">
-                                                <span data-ng-if="site.site.id && site.site.properties.last_modified_by.properties.first_name && site.site.properties.last_modified_by.properties.last_name">Last Modified by: {{ site.site.properties.last_modified_by.properties.first_name }} {{ site.site.properties.last_modified_by.properties.last_name }}</span>
-                                                <span data-ng-if="site.site.id && site.site.properties.modified_on">Modified on: {{ site.site.properties.modified_on | date }}</span>
-                                            </h4>
-                                            <h4 class="project-site-city">
-                                                <span data-ng-if="site.site.properties.segment.properties.hgmr_code">{{ site.site.properties.segment.properties.hgmr_code }}</span>,
-                                                <span data-ng-if="site.site.properties.segment.properties.hgmr_name">{{ site.site.properties.segment.properties.hgmr_name }}</span>,
-                                                <span data-ng-if="site.site.properties.segment.properties.river_name">{{ site.site.properties.segment.properties.river_name }}</span>
-                                            </h4>
+                                <li class="card">
+                                    <div class="card--content">
+                                        <div class="body">
+                                            <button type="button" class="snapshot--title" data-ng-click="page.createSite()" title="Create site">
+                                                <i class="material-icons">
+                                                    add
+                                                </i>
+                                            </button>
                                         </div>
                                     </div>
-                                </div>
+                                </li>
 
-                            </article> -->
+                            </ul>
 
                         </div>
 
@@ -244,23 +218,6 @@
                     </ul>
                 </nav>
 
-                <!-- <nav class="column-5 contextual-navigation-wrapper">
-                    <h6><strong>Tools</strong></h6>
-                    <ul class="contextual-navigation">
-                        <li class="active">
-                            <a href="/projects/{{ page.project.id }}">
-                                Project Overview
-                            </a>
-                        </li>
-                        <li data-ng-if="page.permissions.can_edit">
-                            <a href="/projects/{{ page.project.id }}/edit">Edit</a>
-                        </li>
-                        <li data-ng-if="page.permissions.can_edit">
-                            <a href="/projects/{{ page.project.id }}/users">Collaborators</a>
-                        </li>
-                    </ul>
-                </nav> -->
-
             </article>
 
         </div>
@@ -276,13 +233,13 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit">
+            <!-- <li data-ng-if="page.permissions.can_edit">
                 <a href="#" data-ng-click="page.createSite()">
                     <i class="material-icons">
                         location_on
                     </i>
                 </a>
-            </li>
+            </li> -->
             <li data-ng-if="page.permissions.can_edit">
                 <a href="/projects/{{ page.project.id }}/users">
                     <i class="material-icons">
@@ -298,7 +255,18 @@
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.confirmDelete()">
+                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.id === page.project.id">
+                    <p>Do you want to delete this project?</p>
+                    <div class="actions">
+                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('project')">
+                            Yes
+                        </a>
+                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+                <a href="#" data-ng-click="page.confirmDelete(page.project)">
                     <i class="material-icons">
                         delete
                     </i>
@@ -320,6 +288,14 @@
             </li>
         </ul>
     </nav>
+
+    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+        <div class="event--container">
+            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                <span class="event--message">{{ alert.msg }}</span>
+            </div>
+        </div>
+    </div>
 
 </main>
 

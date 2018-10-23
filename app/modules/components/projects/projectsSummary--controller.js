@@ -11,12 +11,23 @@ angular.module('FieldDoc')
     .controller('ProjectSummaryCtrl',
         function(Account, Notifications, $rootScope, Project, $routeParams,
             $scope, $location, Map, mapbox, summary, Site, user, $window,
-            leafletData, leafletBoundsHelpers) {
+            leafletData, leafletBoundsHelpers, $timeout, Practice) {
 
             //controller is set to self
             var self = this;
 
-            self.alerts = [];
+            self.actions = {
+                print: function() {
+
+                    $window.print();
+
+                },
+                saveToPdf: function() {
+
+                    $scope.$emit('saveToPdf');
+
+                }
+            };
 
             $rootScope.viewState = {
                 'project': true
@@ -240,35 +251,41 @@ angular.module('FieldDoc')
             };
 
             self.createSite = function() {
+
                 self.site = new Site({
-                    'name': 'Untitled Site',
                     'project_id': self.project.id,
                     'organization_id': self.project.properties.organization_id
                 });
 
                 self.site.$save(function(successResponse) {
-                    $location.path('/projects/' + self.project.id + '/sites/' + successResponse.id + '/edit');
+
+                    $location.path('/sites/' + successResponse.id + '/edit');
+
                 }, function(errorResponse) {
+
                     console.error('Unable to create your site, please try again later');
+
                 });
+
             };
 
-            self.actions = {
-                print: function() {
+            self.alerts = [];
 
-                    $window.print();
+            function closeAlerts() {
 
-                },
-                saveToPdf: function() {
+                self.alerts = [];
 
-                    $scope.$emit('saveToPdf');
+            }
 
-                }
-            };
+            function closeRoute() {
+
+                $location.path('/projects');
+
+            }
 
             self.confirmDelete = function(obj) {
 
-                self.deletionTarget = obj;
+                self.deletionTarget = self.deletionTarget ? null : obj;
 
             };
 
@@ -278,22 +295,79 @@ angular.module('FieldDoc')
 
             };
 
-            self.deleteFeature = function() {
+            self.deleteFeature = function(featureType) {
 
-                Project.delete({
-                    id: $routeParams.projectId
+                var targetCollection;
+
+                switch (featureType) {
+
+                    case 'practice':
+
+                        targetCollection = Practice;
+
+                        break;
+
+                    case 'site':
+
+                        targetCollection = Site;
+
+                        break;
+
+                    default:
+
+                        targetCollection = Project;
+
+                        break;
+
+                }
+
+                targetCollection.delete({
+                    id: +self.deletionTarget.id
                 }).$promise.then(function(data) {
 
-                    self.deletionTarget = null;
-
-                    self.alerts = [{
+                    self.alerts.push({
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Successfully deleted this project.',
+                        'msg': 'Successfully deleted this ' + featureType + '.',
                         'prompt': 'OK'
-                    }];
+                    });
 
-                    $location.path('/projects');
+                    $timeout(closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
 
                 });
 

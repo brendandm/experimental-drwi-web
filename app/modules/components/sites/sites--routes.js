@@ -12,10 +12,10 @@ angular.module('FieldDoc')
     .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
 
         $routeProvider
-            .when('/projects/:projectId/sites', {
+            .when('/sites', {
                 redirectTo: '/projects/:projectId'
             })
-            .when('/projects/:projectId/sites/:siteId', {
+            .when('/sites/:siteId', {
                 templateUrl: '/modules/components/sites/views/sites--summary.html',
                 controller: 'SiteSummaryCtrl',
                 controllerAs: 'page',
@@ -43,7 +43,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/projects/:projectId/sites/:siteId/edit', {
+            .when('/sites/:siteId/edit', {
                 templateUrl: '/modules/components/sites/views/sites--edit.html',
                 controller: 'SiteEditCtrl',
                 controllerAs: 'page',

@@ -8,181 +8,274 @@
      * @description
      */
     angular.module('FieldDoc')
-        .controller('SiteSummaryCtrl', function(Account, $location, Practice, project,
-            $rootScope, $route, summary, nodes, user, Utility, Map, mapbox, leafletData, leafletBoundsHelpers) {
+        .controller('SiteSummaryCtrl',
+            function(Account, $location, $window, $timeout, Practice, project,
+                $rootScope, $scope, $route, summary, nodes, user, Utility,
+                Map, mapbox, leafletData, leafletBoundsHelpers, Site, Project) {
 
-            var self = this;
+                var self = this;
 
-            $rootScope.page = {};
+                $rootScope.page = {};
 
-            self.map = Map;
-            //self.mapbox = mapbox;
+                self.map = Map;
 
-            self.status = {
-                "loading": true
-            }
+                self.status = {
+                    'loading': true
+                };
 
-            //draw tools
-            function addNonGroupLayers(sourceLayer, targetGroup) {
-                if (sourceLayer instanceof L.LayerGroup) {
-                    sourceLayer.eachLayer(function (layer) {
-                        addNonGroupLayers(layer, targetGroup);
-                    });
-                } else {
-                    targetGroup.addLayer(sourceLayer);
+                self.actions = {
+                    print: function() {
+
+                        $window.print();
+
+                    },
+                    saveToPdf: function() {
+
+                        $scope.$emit('saveToPdf');
+
+                    }
+                };
+
+                self.alerts = [];
+
+                function closeAlerts() {
+
+                    self.alerts = [];
+
                 }
-            }
 
-            self.setGeoJsonLayer = function (data, layerGroup, clearLayers) {
+                function closeRoute() {
 
-                if (clearLayers) {
+                    // var parentPath = self.links.project.split('org')[1];
 
-                    layerGroup.clearLayers();
+                    var parentPath = '/projects/' + self.data.project.id;
+
+                    $location.path(parentPath);
 
                 }
 
-                var featureGeometry = L.geoJson(data, {});
+                self.confirmDelete = function(obj) {
 
-                addNonGroupLayers(featureGeometry, layerGroup);
+                    self.deletionTarget = self.deletionTarget ? null : obj;
 
-            };
+                };
 
+                self.cancelDelete = function() {
 
-            self.cleanName = function(string_) {
-                return Utility.machineName(string_);
-            };
+                    self.deletionTarget = null;
 
-            summary.$promise.then(function(successResponse) {
+                };
 
-                console.log('self.summary', successResponse);
+                self.deleteFeature = function(featureType) {
 
-                self.data = successResponse;
+                    var targetCollection;
 
-                self.site = successResponse.site;
-                self.practices = successResponse.practices;
+                    switch (featureType) {
 
-                //
-                // Add rollups to the page scope
-                //
-                self.rollups = successResponse.rollups;
+                        case 'practice':
 
-                //
-                // Set the default tab to "All"
-                //
-                self.rollups.active = "all";
+                            targetCollection = Practice;
 
-                self.status.loading = false;
+                            break;
 
-                //
-                // Load spatial nodes
-                //
+                        case 'site':
 
-                nodes.$promise.then(function(successResponse) {
+                            targetCollection = Site;
 
-                    self.nodes = successResponse;
+                            break;
 
-                }, function(errorResponse) {
+                        default:
 
-                });
+                            targetCollection = Project;
 
-                //
-                // Verify Account information for proper UI element display
-                //
-                if (Account.userObject && user) {
-                    user.$promise.then(function(userResponse) {
-                        $rootScope.user = Account.userObject = userResponse;
+                            break;
 
-                        self.project = project;
+                    }
 
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0].properties.name,
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                            can_edit: Account.canEdit(self.project)
-                        };
+                    targetCollection.delete({
+                        id: +self.deletionTarget.id
+                    }).$promise.then(function(data) {
 
-                        $rootScope.page.title = self.site.properties.name;
-                        $rootScope.page.links = [{
-                                text: 'Projects',
-                                url: '/projects'
-                            },
-                            {
-                                text: self.site.properties.project.properties.name,
-                                url: '/projects/' + $route.current.params.projectId
-                            },
-                            {
-                                text: self.site.properties.name,
-                                url: '/projects/' + $route.current.params.projectId + '/sites/' + self.site.id,
-                                type: 'active'
-                            }
-                        ];
-
-                    });
-                    //
-                    // If a valid site geometry is present, add it to the map
-                    // and track the object in `self.savedObjects`.
-                    //
-
-                    if (self.site.geometry !== null &&
-                        typeof self.site.geometry !== 'undefined') {
-
-                        leafletData.getMap('site--map').then(function (map) {
-
-                        self.siteExtent = new L.FeatureGroup();
-
-                        self.setGeoJsonLayer(self.site.geometry, self.siteExtent);
-
-                        map.fitBounds(self.siteExtent.getBounds(), {
-                                // padding: [20, 20],
-                            maxZoom: 18
+                        self.alerts.push({
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Successfully deleted this ' + featureType + '.',
+                            'prompt': 'OK'
                         });
+
+                        $timeout(closeRoute, 2000);
+
+                    }).catch(function(errorResponse) {
+
+                        console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                        if (errorResponse.status === 409) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else if (errorResponse.status === 403) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'You don’t have permission to delete this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Something went wrong while attempting to delete this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        }
+
+                        $timeout(closeAlerts, 2000);
+
                     });
-                    self.map.geojson = {
-                        data:self.site.geometry
-                    };
+
+                };
+
+                //draw tools
+                function addNonGroupLayers(sourceLayer, targetGroup) {
+                    if (sourceLayer instanceof L.LayerGroup) {
+                        sourceLayer.eachLayer(function(layer) {
+                            addNonGroupLayers(layer, targetGroup);
+                        });
+                    } else {
+                        targetGroup.addLayer(sourceLayer);
                     }
                 }
 
-            }, function(errorResponse) {
+                self.setGeoJsonLayer = function(data, layerGroup, clearLayers) {
+
+                    if (clearLayers) {
+
+                        layerGroup.clearLayers();
+
+                    }
+
+                    var featureGeometry = L.geoJson(data, {});
+
+                    addNonGroupLayers(featureGeometry, layerGroup);
+
+                };
+
+
+                self.cleanName = function(string_) {
+                    return Utility.machineName(string_);
+                };
+
+                summary.$promise.then(function(successResponse) {
+
+                    console.log('self.summary', successResponse);
+
+                    self.data = successResponse;
+
+                    self.site = successResponse.site;
+                    self.practices = successResponse.practices;
+
+                    //
+                    // Add rollups to the page scope
+                    //
+                    self.rollups = successResponse.rollups;
+
+                    //
+                    // Set the default tab to 'All'
+                    //
+                    self.rollups.active = 'all';
+
+                    self.status.loading = false;
+
+                    //
+                    // Load spatial nodes
+                    //
+
+                    nodes.$promise.then(function(successResponse) {
+
+                        self.nodes = successResponse;
+
+                    }, function(errorResponse) {
+
+                    });
+
+                    //
+                    // Verify Account information for proper UI element display
+                    //
+                    if (Account.userObject && user) {
+                        user.$promise.then(function(userResponse) {
+                            $rootScope.user = Account.userObject = userResponse;
+
+                            self.project = project;
+
+                            self.permissions = {
+                                isLoggedIn: Account.hasToken(),
+                                role: $rootScope.user.properties.roles[0].properties.name,
+                                account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                                can_edit: Account.canEdit(self.project)
+                            };
+
+                            $rootScope.page.title = self.site.properties.name;
+
+                        });
+                        //
+                        // If a valid site geometry is present, add it to the map
+                        // and track the object in `self.savedObjects`.
+                        //
+
+                        if (self.site.geometry !== null &&
+                            typeof self.site.geometry !== 'undefined') {
+
+                            leafletData.getMap('site--map').then(function(map) {
+
+                                self.siteExtent = new L.FeatureGroup();
+
+                                self.setGeoJsonLayer(self.site.geometry, self.siteExtent);
+
+                                map.fitBounds(self.siteExtent.getBounds(), {
+                                    // padding: [20, 20],
+                                    maxZoom: 18
+                                });
+                            });
+                            self.map.geojson = {
+                                data: self.site.geometry
+                            };
+                        }
+                    }
+
+                }, function(errorResponse) {
+
+                });
+
+                self.createPractice = function() {
+
+                    self.practice = new Practice({
+                        'practice_type': 'Custom',
+                        'site_id': self.site.id,
+                        'organization_id': self.site.properties.project.properties.organization_id
+                    });
+
+                    self.practice.$save(function(successResponse) {
+
+                        $location.path('/practices/' + successResponse.id + '/edit');
+
+                    }, function(errorResponse) {
+
+                        console.error('Unable to create your practice, please try again later');
+                        
+                    });
+
+                };
+
 
             });
-
-            self.createPractice = function() {
-
-                self.practice = new Practice({
-                    'practice_type': 'Custom',
-                    'site_id': self.site.id,
-                    'organization_id': self.site.properties.project.properties.organization_id
-                });
-
-                self.practice.$save(function(successResponse) {
-                    $location.path('/practices/' + successResponse.id + '/edit');
-                }, function(errorResponse) {
-                    console.error('Unable to create your practice, please try again later');
-                });
-
-            };
-
-            //
-            // Setup basic page variables
-            //
-            $rootScope.page.actions = [{
-                    type: 'button-link',
-                    action: function() {
-                        $location.path('/projects/' + $route.current.params.projectId + '/sites/' + $route.current.params.siteId + '/edit');
-                    },
-                    text: 'Edit Site'
-                },
-                {
-                    type: 'button-link new',
-                    action: function() {
-                        self.createPractice();
-                    },
-                    text: 'Create practice'
-                }
-            ];
-
-
-        });
 
 })();

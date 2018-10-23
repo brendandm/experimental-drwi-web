@@ -6,7 +6,7 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <h1 class="inset">{{ page.summary.practice.properties.practice_type }}</h1>
+        <h1 class="inset">{{ page.summary.practice.properties.category.properties.name }}</h1>
 
         <div class="main--ui">
 
@@ -21,6 +21,7 @@
                     <div class="table-responsive">
 
                         <div data-ng-if="!page.summary.practice.properties.has_planning_data">
+
                             <h2><strong>Empty</strong> Summary</h2>
 
                             <p>No planning or measurement data has been added to this practice yet. Please add a new “Planning” measurement period to this practice to begin.</p>
@@ -28,6 +29,7 @@
                             <p>
                                 <a class="button" data-ng-click="page.addReading('Planning')">Add Planning Data</a>
                             </p>
+
                         </div>
 
                         <table class="table" data-ng-if="page.summary.practice.properties.has_planning_data">
@@ -395,7 +397,18 @@
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <a href="#">
+                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.id === page.summary.practice.id">
+                    <p>Do you want to delete this practice?</p>
+                    <div class="actions">
+                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('practice')">
+                            Yes
+                        </a>
+                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+                <a href="#" data-ng-click="page.confirmDelete(page.summary.practice)">
                     <i class="material-icons">
                         delete
                     </i>

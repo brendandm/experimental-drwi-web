@@ -8,208 +8,266 @@
      * @description
      */
     angular.module('FieldDoc')
-        .controller('CustomSummaryController', function(Account, $location,
-            $log, PracticeCustom, $rootScope, $route, $scope, summary,
-            Utility, user, $window, Map, mapbox, leafletData, leafletBoundsHelpers) {
+        .controller('CustomSummaryController',
+            function(Account, $location, $timeout, $log, PracticeCustom,
+                $rootScope, $route, $scope, summary, Utility, user, Project, Site,
+                $window, Map, mapbox, leafletData, leafletBoundsHelpers) {
 
-            var self = this,
-                projectId = $route.current.params.projectId,
-                siteId = $route.current.params.siteId,
-                practiceId = $route.current.params.practiceId;
+                var self = this,
+                    projectId = $route.current.params.projectId,
+                    siteId = $route.current.params.siteId,
+                    practiceId = $route.current.params.practiceId;
 
-            $rootScope.page = {};
+                $rootScope.page = {};
 
-            self.practiceType = null;
+                self.practiceType = null;
 
-            self.project = {
-                'id': projectId
-            };
+                self.project = {
+                    'id': projectId
+                };
 
-            self.map = Map;
+                self.map = Map;
 
-            self.status = {
-                loading: true
-            }
+                self.status = {
+                    loading: true
+                };
 
-            //draw tools
-            function addNonGroupLayers(sourceLayer, targetGroup) {
-                if (sourceLayer instanceof L.LayerGroup) {
-                    sourceLayer.eachLayer(function (layer) {
-                        addNonGroupLayers(layer, targetGroup);
-                    });
-                } else {
-                    targetGroup.addLayer(sourceLayer);
-                }
-            }
+                self.actions = {
+                    print: function() {
 
-            self.setGeoJsonLayer = function (data, layerGroup, clearLayers) {
+                        $window.print();
 
-                if (clearLayers) {
-
-                    layerGroup.clearLayers();
-
-                }
-
-                var featureGeometry = L.geoJson(data, {});
-
-                addNonGroupLayers(featureGeometry, layerGroup);
-
-            };
-            //Temp change loading to "loading"
-
-            summary.$promise.then(function(successResponse) {
-
-                self.data = successResponse;
-
-                console.log('self.summary', successResponse);
-
-                self.summary = successResponse;
-
-                //
-                // Determine if the actions should be shown or hidden depending on
-                // whether of not this practice has planning data
-                //
-                if (self.summary.practice.properties.has_planning_data) {
-                    $rootScope.page.hideActions = false;
-                } else {
-                    $rootScope.page.hideActions = true;
-                }
-
-                $rootScope.page.title =
-                    "Other Conservation Practice";
-
-                self.practiceType = Utility.machineName(self.summary
-                    .practice.properties.practice_type);
-
-                $rootScope.page.links = [{
-                        text: 'Projects',
-                        url: '/projects'
                     },
-                    {
-                        text: self.summary.site.properties.project
-                            .properties.name,
-                        url: '/projects/' + projectId
-                    },
-                    {
-                        text: self.summary.site.properties.name,
-                        url: '/projects/' + projectId +
-                            '/sites/' + siteId
-                    },
-                    {
-                        text: "Other Conservation Practice",
-                        url: '/projects/' + projectId +
-                            '/sites/' + siteId +
-                            '/practices/' + practiceId,
-                        type: 'active'
+                    saveToPdf: function() {
+
+                        $scope.$emit('saveToPdf');
+
                     }
-                ];
+                };
 
-                if (self.summary.practice.geometry !== null &&
-                    typeof self.summary.practice.geometry !== 'undefined') {
+                self.alerts = [];
 
-                    leafletData.getMap('practice--map').then(function (map) {
+                function closeAlerts() {
 
-                        self.practiceExtent = new L.FeatureGroup();
+                    self.alerts = [];
 
-                        self.setGeoJsonLayer(self.summary.practice.geometry, self.practiceExtent);
+                }
 
-                        map.fitBounds(self.practiceExtent.getBounds(), {
-                            // padding: [20, 20],
-                            maxZoom: 18
+                function closeRoute() {
+
+                    // var sitePath = self.links.site.split('org')[1];
+
+                    var parentPath = '/sites/' + self.data.site.id;
+
+                    $location.path(parentPath);
+
+                }
+
+                self.confirmDelete = function(obj) {
+
+                    console.log('self.confirmDelete', obj);
+
+                    self.deletionTarget = self.deletionTarget ? null : obj;
+
+                };
+
+                self.cancelDelete = function() {
+
+                    self.deletionTarget = null;
+
+                };
+
+                self.deleteFeature = function(featureType) {
+
+                    var targetCollection;
+
+                    switch (featureType) {
+
+                        case 'practice':
+
+                            targetCollection = Practice;
+
+                            break;
+
+                        case 'site':
+
+                            targetCollection = Site;
+
+                            break;
+
+                        default:
+
+                            targetCollection = Project;
+
+                            break;
+
+                    }
+
+                    targetCollection.delete({
+                        id: +self.deletionTarget.id
+                    }).$promise.then(function(data) {
+
+                        self.alerts.push({
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Successfully deleted this ' + featureType + '.',
+                            'prompt': 'OK'
                         });
+
+                        $timeout(closeRoute, 2000);
+
+                    }).catch(function(errorResponse) {
+
+                        console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                        if (errorResponse.status === 409) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else if (errorResponse.status === 403) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'You don’t have permission to delete this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Something went wrong while attempting to delete this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        }
+
+                        $timeout(closeAlerts, 2000);
+
                     });
-                    self.map.geojson = {
-                        data: self.summary.practice.geometry
-                    };
+
+                };
+
+                //draw tools
+                function addNonGroupLayers(sourceLayer, targetGroup) {
+                    if (sourceLayer instanceof L.LayerGroup) {
+                        sourceLayer.eachLayer(function(layer) {
+                            addNonGroupLayers(layer, targetGroup);
+                        });
+                    } else {
+                        targetGroup.addLayer(sourceLayer);
+                    }
                 }
 
-                $rootScope.page.actions = [{
-                        type: 'button-link',
-                        action: function() {
-                            $window.print();
-                        },
-                        hideIcon: true,
-                        text: 'Print'
-                    },
-                    {
-                        type: 'button-link',
-                        action: function() {
-                            $scope.$emit('saveToPdf');
-                        },
-                        hideIcon: true,
-                        text: 'Save as PDF'
-                    },
-                    {
-                        type: 'button-link new',
-                        action: function() {
-                            self.addReading();
-                        },
-                        text: 'Add Measurement Data'
+                self.setGeoJsonLayer = function(data, layerGroup, clearLayers) {
+
+                    if (clearLayers) {
+
+                        layerGroup.clearLayers();
+
                     }
-                ];
 
-                self.status.loading = false;
-            }, function() {});
+                    var featureGeometry = L.geoJson(data, {});
 
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
-                user.$promise.then(function(userResponse) {
-                    $rootScope.user = Account.userObject =
-                        userResponse;
+                    addNonGroupLayers(featureGeometry, layerGroup);
 
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[
-                            0].properties.name,
-                        account: ($rootScope.account &&
-                                $rootScope.account.length) ?
-                            $rootScope.account[0] : null,
-                        can_edit: true
-                    };
-                });
-            }
+                };
+                //Temp change loading to "loading"
 
-            self.addReading = function(measurementPeriod) {
+                summary.$promise.then(function(successResponse) {
 
-                var newReading = new PracticeCustom({
-                    'measurement_period': 'Planning',
-                    'report_date': new Date(),
-                    'practice_id': practiceId,
-                    'organization_id': self.summary.site.properties
-                        .project.properties.organization_id
-                });
+                    self.data = successResponse;
 
-                // if (measurementPeriod === "Planning") {
-                //     var newReading = new PracticeCustom({
-                //         'measurement_period': measurementPeriod,
-                //         'report_date': new Date(),
-                //         'practice_id': practiceId,
-                //         'organization_id': self.summary.site.properties
-                //             .project.properties.organization_id
-                //     });
-                // } else {
+                    console.log('self.summary', successResponse);
 
-                //     var defaults = angular.copy(self.summary.practice
-                //         .properties.defaults.properties);
+                    self.summary = successResponse;
 
-                //     defaults.measurement_period = "Installation";
+                    //
+                    // Determine if the actions should be shown or hidden depending on
+                    // whether of not this practice has planning data
+                    //
+                    if (self.summary.practice.properties.has_planning_data) {
+                        $rootScope.page.hideActions = false;
+                    } else {
+                        $rootScope.page.hideActions = true;
+                    }
 
-                //     var newReading = new PracticeCustom(defaults);
-                // }
+                    $rootScope.page.title =
+                        "Other Conservation Practice";
 
-                newReading.$save().then(function(successResponse) {
-                    $location.path('/projects/' + projectId +
-                        '/sites/' + siteId +
-                        '/practices/' + practiceId +
-                        '/' + self.practiceType + '/' +
-                        successResponse.id + '/edit');
-                }, function(errorResponse) {
-                    console.error('ERROR: ', errorResponse);
-                });
-            };
+                    self.practiceType = Utility.machineName(self.summary
+                        .practice.properties.practice_type);
 
-        });
+                    if (self.summary.practice.geometry !== null &&
+                        typeof self.summary.practice.geometry !== 'undefined') {
+
+                        leafletData.getMap('practice--map').then(function(map) {
+
+                            self.practiceExtent = new L.FeatureGroup();
+
+                            self.setGeoJsonLayer(self.summary.practice.geometry, self.practiceExtent);
+
+                            map.fitBounds(self.practiceExtent.getBounds(), {
+                                // padding: [20, 20],
+                                maxZoom: 18
+                            });
+                        });
+                        self.map.geojson = {
+                            data: self.summary.practice.geometry
+                        };
+                    }
+
+                    self.status.loading = false;
+                }, function() {});
+
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+                    user.$promise.then(function(userResponse) {
+                        $rootScope.user = Account.userObject =
+                            userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[
+                                0].properties.name,
+                            account: ($rootScope.account &&
+                                    $rootScope.account.length) ?
+                                $rootScope.account[0] : null,
+                            can_edit: true
+                        };
+                    });
+                }
+
+                self.addReading = function(measurementPeriod) {
+
+                    var newReading = new PracticeCustom({
+                        'measurement_period': 'Planning',
+                        'report_date': new Date(),
+                        'practice_id': practiceId,
+                        'organization_id': self.summary.site.properties
+                            .project.properties.organization_id
+                    });
+
+                    newReading.$save().then(function(successResponse) {
+                        $location.path('/projects/' + projectId +
+                            '/sites/' + siteId +
+                            '/practices/' + practiceId +
+                            '/' + self.practiceType + '/' +
+                            successResponse.id + '/edit');
+                    }, function(errorResponse) {
+                        console.error('ERROR: ', errorResponse);
+                    });
+                };
+
+            });
 
 }());

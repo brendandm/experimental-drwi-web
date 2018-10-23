@@ -269,7 +269,7 @@ angular.module('FieldDoc')
                             heading: feature.properties.name,
                             yearsActive: '2018',
                             funding: '$100k',
-                            url: 'projects/' + self.activeProject.properties.id + '/sites/' + feature.properties.id,
+                            url: '/sites/' + feature.properties.id,
                             description: feature.properties.description,
                             linkTarget: '_self'
                         };
@@ -923,7 +923,7 @@ angular.module('FieldDoc')
                         heading: self.activeSite.properties.name,
                         yearsActive: '2018',
                         funding: '$10k',
-                        url: 'projects/' + self.activeProject.properties.id + '/sites/' + self.activeSite.properties.id,
+                        url: '/sites/' + self.activeSite.properties.id,
                         description: self.activeSite.properties.description,
                         linkTarget: '_self'
                     };
