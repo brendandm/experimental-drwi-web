@@ -935,9 +935,9 @@
   /* - - - - Search view - - - - */
 
   .list-filter {
-    width: 40%;
+    width: 40% !important;
     min-width: 320px;
-    padding: 0.75em 1em;
+    padding: 0.75em 1em !important;
   }
 
   .search-bar {
