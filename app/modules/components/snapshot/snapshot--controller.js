@@ -7,7 +7,7 @@
  */
 angular.module('FieldDoc')
     .controller('SnapshotCtrl', function(Account, $location, $log, $interval, $timeout, Project, Map,
-        baseProjects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
+        baseProjects, $rootScope, $scope, Site, leafletData, leafletBoundsHelpers,
         MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox,
         Practice, snapshot) {
 

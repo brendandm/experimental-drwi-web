@@ -35,7 +35,10 @@
 
                         config.headers.Authorization = 'Bearer ' + sessionCookie;
 
-                    } else if (!sessionCookie && $location.path() !== '/account/register' && $location.path() !== '/account/reset') {
+                    } else if (!sessionCookie &&
+                        $location.path() !== '/account/register' &&
+                        $location.path() !== '/account/reset' &&
+                        $location.path().lastIndexOf('/dashboard', 0) !== 0) {
                         /**
                          * Remove all cookies present for authentication
                          */

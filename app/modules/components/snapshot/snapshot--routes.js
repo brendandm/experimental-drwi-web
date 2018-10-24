@@ -63,17 +63,6 @@ angular.module('FieldDoc')
                         });
 
                     }
-                    // user: function(Account) {
-
-                    //     if (Account.userObject && !Account.userObject.id) {
-
-                    //         return Account.getUser();
-                            
-                    //     }
-
-                    //     return Account.userObject;
-
-                    // }
                 }
             })
             .when('/dashboards/collection/new', {
