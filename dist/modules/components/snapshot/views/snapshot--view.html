@@ -19,7 +19,7 @@
 
         <div class="sidebar">
 
-            <div class="scope--control">
+            <div class="scope--control" data-ng-if="$root.user.id">
                 <label class="switch">
                     <input class="inputdemo" type="checkbox" data-ng-model="page.limitScope" data-ng-checked="page.limitScope" data-ng-change="page.changeScope()">
                     <div class="slider round"></div>

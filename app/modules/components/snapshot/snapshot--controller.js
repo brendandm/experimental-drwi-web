@@ -1389,24 +1389,10 @@ angular.module('FieldDoc')
                     isAdmin: Account.hasRole('admin')
                 };
 
-                if (!self.permissions.isAdmin) {
-
-                    self.limitScope = true;
-
-                }
-
-                // self.loadProjects({}, false);
-
-                // self.loadBaseProjects();
-
-                self.loadSnapshot();
-
             });
 
-        } else {
-
-            $location.path('/user/logout');
-
         }
+
+        self.loadSnapshot();
 
     });
