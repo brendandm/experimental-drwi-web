@@ -31,6 +31,7 @@
                     </div>
 
                     <section id="sites">
+
                         <div class="list">
 
                             <article class="row list-item list-item-thin" data-ng-if="!page.sites.length">
@@ -46,9 +47,9 @@
                                         </a>
                                     </p>
                                 </div>
+
                             </article>
 
-                            <h6 class="rule-above statistics--header"><strong>Project</strong> Summary</h6>
                             <p class="pull-left" data-ng-if="page.data.has_majority_design_completion === false">
                                 <em>
                                     Nutrient reductions expressed on this summary contain<br />
@@ -115,15 +116,15 @@
                                         </td>
                                         <td>
                                             <div style="display: flex; flex-flow: row nowrap; align-items: center; width: 100%; height: 100%;">
-                                                <strong class="metrics--metric--percentage">
-                                                    {{ (metric.installed/metric.total)*100 | number:1 }}%
-                                                </strong>
-                                                <div class="donut-chart chart{{ (metric.installed/metric.total)*100 | number:0 }}" style="display: inline-block; margin-left: 1em;">
+                                                <div class="donut-chart chart{{ (metric.installed/metric.total)*100 | number:0 }}" style="display: inline-block; margin-right: 1em;">
                                                     <div class="slice one"></div>
                                                     <div class="slice two"></div>
                                                     <div class="chart-center" style="background: #fff;">
                                                     </div>
                                                 </div>
+                                                <strong class="metrics--metric--percentage">
+                                                    {{ (metric.installed/metric.total)*100 | number:1 }}%
+                                                </strong>
                                             </div>
                                         </td>
                                     </tr>

@@ -199,30 +199,17 @@
                                 <strong class="metrics--metric--rollup--small">{{ metric.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.units }}<br />
                                     of {{ metric.total | number:2 }}</span>
                             </td>
-                            <!-- <td>
-                                <strong class="metrics--metric--percentage">
-                                    {{ (metric.installed/metric.total)*100 | number:1 }}%
-                                </strong>
-                            </td>
-                            <td>
-                                <div class="donut-chart chart{{ (metric.installed/metric.total)*100 | number:0 }}">
-                                    <div class="slice one"></div>
-                                    <div class="slice two"></div>
-                                    <div class="chart-center">
-                                    </div>
-                                </div>
-                            </td> -->
                             <td>
                                 <div style="display: flex; flex-flow: row nowrap; align-items: center; width: 100%; height: 100%;">
-                                    <strong class="metrics--metric--percentage">
-                                        {{ (metric.installed/metric.total)*100 | number:1 }}%
-                                    </strong>
-                                    <div class="donut-chart chart{{ (metric.installed/metric.total)*100 | number:0 }}" style="display: inline-block; margin-left: 1em;">
+                                    <div class="donut-chart chart{{ (metric.installed/metric.total)*100 | number:0 }}" style="display: inline-block; margin-right: 1em;">
                                         <div class="slice one"></div>
                                         <div class="slice two"></div>
                                         <div class="chart-center" style="background: #fff;">
                                         </div>
                                     </div>
+                                    <strong class="metrics--metric--percentage">
+                                        {{ (metric.installed/metric.total)*100 | number:1 }}%
+                                    </strong>
                                 </div>
                             </td>
                         </tr>
