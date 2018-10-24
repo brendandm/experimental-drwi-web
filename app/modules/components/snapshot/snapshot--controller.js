@@ -1378,20 +1378,20 @@ angular.module('FieldDoc')
         //
         // Verify Account information for proper UI element display
         //
-        if (Account.userObject && user) {
+        // if (Account.userObject && user) {
 
-            user.$promise.then(function(userResponse) {
+        //     user.$promise.then(function(userResponse) {
 
-                $rootScope.user = Account.userObject = userResponse;
+        //         $rootScope.user = Account.userObject = userResponse;
 
-                self.permissions = {
-                    isLoggedIn: Account.hasToken(),
-                    isAdmin: Account.hasRole('admin')
-                };
+        //         self.permissions = {
+        //             isLoggedIn: Account.hasToken(),
+        //             isAdmin: Account.hasRole('admin')
+        //         };
 
-            });
+        //     });
 
-        }
+        // }
 
         self.loadSnapshot();
 

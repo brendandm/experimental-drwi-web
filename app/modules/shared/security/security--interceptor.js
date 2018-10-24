@@ -10,65 +10,87 @@
      * Service in the FieldDoc.
      */
     angular.module('FieldDoc')
-      .factory('AuthorizationInterceptor', function($location, $q, ipCookie, $log) {
+        .factory('AuthorizationInterceptor', function($location, $q, ipCookie, $log) {
 
-        return {
-          request: function(config) {
+            return {
+                request: function(config) {
 
-            var sessionCookie = ipCookie('FIELDSTACKIO_SESSION');
+                    var sessionCookie = ipCookie('FIELDSTACKIO_SESSION');
 
-            //
-            // Configure our headers to contain the appropriate tags
-            //
-            config.headers = config.headers || {};
+                    //
+                    // Configure our headers to contain the appropriate tags
+                    //
 
-            if (config.headers['Authorization-Bypass'] === true) {
-              delete config.headers['Authorization-Bypass'];
-              return config || $q.when(config);
-            }
+                    config.headers = config.headers || {};
 
-            if (sessionCookie) {
-              config.headers.Authorization = 'Bearer ' + sessionCookie;
-            } else if (!sessionCookie && $location.path() !== '/account/register' && $location.path() !== '/account/reset') {
-              /**
-               * Remove all cookies present for authentication
-               */
-              ipCookie.remove('FIELDSTACKIO_SESSION');
-              ipCookie.remove('FIELDSTACKIO_SESSION', { path: '/' });
+                    if (config.headers['Authorization-Bypass'] === true) {
 
-              ipCookie.remove('FIELDSTACKIO_CURRENTUSER');
-              ipCookie.remove('FIELDSTACKIO_CURRENTUSER', { path: '/' });
+                        delete config.headers['Authorization-Bypass'];
 
-              $location.path('/account/login').search('');
-            }
+                        return config || $q.when(config);
 
-            config.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate';
+                    }
 
-            //
-            // Configure or override parameters where necessary
-            //
-            config.params = (config.params === undefined) ? {} : config.params;
+                    if (sessionCookie) {
 
-            console.log('SecurityInterceptor::Request', config || $q.when(config));
+                        config.headers.Authorization = 'Bearer ' + sessionCookie;
 
-            return config || $q.when(config);
-          },
-          response: function(response) {
-            $log.info('AuthorizationInterceptor::Response', response || $q.when(response));
-            return response || $q.when(response);
-          },
-          responseError: function (response) {
-            $log.info('AuthorizationInterceptor::ResponseError', response || $q.when(response));
+                    } else if (!sessionCookie && $location.path() !== '/account/register' && $location.path() !== '/account/reset') {
+                        /**
+                         * Remove all cookies present for authentication
+                         */
+                        ipCookie.remove('FIELDSTACKIO_SESSION');
+                        ipCookie.remove('FIELDSTACKIO_SESSION', {
+                            path: '/'
+                        });
 
-            if (response.status === 401 || response.status === 403) {
-              $location.path('/user/logout');
-            }
+                        ipCookie.remove('FIELDSTACKIO_CURRENTUSER');
+                        ipCookie.remove('FIELDSTACKIO_CURRENTUSER', {
+                            path: '/'
+                        });
 
-            return $q.reject(response);
-          }
-        };
-      }).config(function ($httpProvider) {
-        $httpProvider.interceptors.push('AuthorizationInterceptor');
-      });
+                        $location.path('/account/login').search('');
+
+                    }
+
+                    config.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate';
+
+                    //
+                    // Configure or override parameters where necessary
+                    //
+                    config.params = (config.params === undefined) ? {} : config.params;
+
+                    console.log('SecurityInterceptor::Request', config || $q.when(config));
+
+                    return config || $q.when(config);
+
+                },
+                response: function(response) {
+
+                    $log.info('AuthorizationInterceptor::Response', response || $q.when(response));
+
+                    return response || $q.when(response);
+
+                },
+                responseError: function(response) {
+
+                    $log.info('AuthorizationInterceptor::ResponseError', response || $q.when(response));
+
+                    if (response.status === 401 || response.status === 403) {
+
+                        $location.path('/user/logout');
+                        
+                    }
+
+                    return $q.reject(response);
+
+                }
+            };
+
+        }).config(function($httpProvider) {
+
+            $httpProvider.interceptors.push('AuthorizationInterceptor');
+
+        });
 
 }());

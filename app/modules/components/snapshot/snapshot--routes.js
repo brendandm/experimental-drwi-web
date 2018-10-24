@@ -62,18 +62,18 @@ angular.module('FieldDoc')
                             id: $route.current.params.snapshotId
                         });
 
-                    },
-                    user: function(Account) {
-
-                        if (Account.userObject && !Account.userObject.id) {
-
-                            return Account.getUser();
-                            
-                        }
-
-                        return Account.userObject;
-
                     }
+                    // user: function(Account) {
+
+                    //     if (Account.userObject && !Account.userObject.id) {
+
+                    //         return Account.getUser();
+                            
+                    //     }
+
+                    //     return Account.userObject;
+
+                    // }
                 }
             })
             .when('/dashboards/collection/new', {
