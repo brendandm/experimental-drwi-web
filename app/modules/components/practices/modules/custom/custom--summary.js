@@ -11,7 +11,7 @@
         .controller('CustomSummaryController',
             function(Account, $location, $timeout, $log, PracticeCustom,
                 $rootScope, $route, $scope, summary, Utility, user, Project, Site,
-                $window, Map, mapbox, leafletData, leafletBoundsHelpers) {
+                $window, Map, mapbox, leafletData, leafletBoundsHelpers, Practice) {
 
                 var self = this,
                     projectId = $route.current.params.projectId,
@@ -55,8 +55,6 @@
 
                 function closeRoute() {
 
-                    // var sitePath = self.links.site.split('org')[1];
-
                     var parentPath = '/sites/' + self.data.site.id;
 
                     $location.path(parentPath);
@@ -77,40 +75,16 @@
 
                 };
 
-                self.deleteFeature = function(featureType) {
+                self.deleteFeature = function() {
 
-                    var targetCollection;
-
-                    switch (featureType) {
-
-                        case 'practice':
-
-                            targetCollection = Practice;
-
-                            break;
-
-                        case 'site':
-
-                            targetCollection = Site;
-
-                            break;
-
-                        default:
-
-                            targetCollection = Project;
-
-                            break;
-
-                    }
-
-                    targetCollection.delete({
+                    Practice.delete({
                         id: +self.deletionTarget.id
                     }).$promise.then(function(data) {
 
                         self.alerts.push({
                             'type': 'success',
                             'flag': 'Success!',
-                            'msg': 'Successfully deleted this ' + featureType + '.',
+                            'msg': 'Successfully deleted this practice.',
                             'prompt': 'OK'
                         });
 
@@ -125,7 +99,7 @@
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                                'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this practice.',
                                 'prompt': 'OK'
                             }];
 
@@ -134,7 +108,7 @@
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'You don’t have permission to delete this ' + featureType + '.',
+                                'msg': 'You don’t have permission to delete this practice.',
                                 'prompt': 'OK'
                             }];
 
@@ -143,7 +117,7 @@
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'Something went wrong while attempting to delete this ' + featureType + '.',
+                                'msg': 'Something went wrong while attempting to delete this practice.',
                                 'prompt': 'OK'
                             }];
 

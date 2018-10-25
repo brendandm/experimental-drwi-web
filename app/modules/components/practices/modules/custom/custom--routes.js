@@ -90,9 +90,9 @@ angular.module('FieldDoc')
                         }
                         return Account.userObject;
                     },
-                    site: function(Site, $route) {
-                        return Site.get({
-                            id: $route.current.params.siteId
+                    site: function(Practice, $route) {
+                        return Practice.site({
+                            id: $route.current.params.practiceId
                         });
                     },
                     practice_types: function(PracticeType, $route) {

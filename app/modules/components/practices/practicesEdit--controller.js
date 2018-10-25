@@ -132,6 +132,8 @@ angular.module('FieldDoc')
 
             site.$promise.then(function(successResponse) {
 
+                console.log('self.site', successResponse);
+
                 self.site = successResponse;
 
                 if (self.site.geometry) {
@@ -157,7 +159,7 @@ angular.module('FieldDoc')
             }, function(errorResponse) {
 
                 //
-                
+
             });
 
         };
@@ -166,31 +168,11 @@ angular.module('FieldDoc')
 
             practice.$promise.then(function(successResponse) {
 
+                console.log('self.practice', successResponse);
+
                 self.practice = successResponse;
 
-                $rootScope.page.title = self.practice.properties.practice_type;
-                // $rootScope.page.links = [{
-                //         text: 'Projects',
-                //         url: '/projects'
-                //     },
-                //     {
-                //         text: self.site.properties.project.properties.name,
-                //         url: '/projects/' + projectId
-                //     },
-                //     {
-                //         text: self.site.properties.name,
-                //         url: '/projects/' + projectId + '/sites/' + siteId
-                //     },
-                //     {
-                //         text: self.practice.properties.practice_type,
-                //         url: '/practices/' + self.practice.id
-                //     },
-                //     {
-                //         text: 'Edit',
-                //         url: '/practices/' + self.practice.id + '/edit',
-                //         type: 'active'
-                //     }
-                // ];
+                $rootScope.page.title = self.practice.properties.name || self.practice.properties.category.properties.name;
 
                 //
                 // If a valid practice geometry is present, add it to the map
@@ -447,12 +429,86 @@ angular.module('FieldDoc')
             }
         };
 
-        self.deletePractice = function() {
-            self.practice.$delete().then(function(successResponse) {
-                $location.path('/projects/' + projectId + '/sites/' + siteId);
-            }, function(errorResponse) {
-                // Error message
+        self.alerts = [];
+
+        function closeAlerts() {
+
+            self.alerts = [];
+
+        }
+
+        function closeRoute() {
+
+            $location.path(self.practice.links.site.html);
+
+        }
+
+        self.confirmDelete = function(obj) {
+
+            console.log('self.confirmDelete', obj);
+
+            self.deletionTarget = self.deletionTarget ? null : obj;
+
+        };
+
+        self.cancelDelete = function() {
+
+            self.deletionTarget = null;
+
+        };
+
+        self.deleteFeature = function() {
+
+            Practice.delete({
+                id: +self.deletionTarget.id
+            }).$promise.then(function(data) {
+
+                self.alerts.push({
+                    'type': 'success',
+                    'flag': 'Success!',
+                    'msg': 'Successfully deleted this practice.',
+                    'prompt': 'OK'
+                });
+
+                $timeout(closeRoute, 2000);
+
+            }).catch(function(errorResponse) {
+
+                console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                if (errorResponse.status === 409) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this practice.',
+                        'prompt': 'OK'
+                    }];
+
+                } else if (errorResponse.status === 403) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'You don’t have permission to delete this practice.',
+                        'prompt': 'OK'
+                    }];
+
+                } else {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong while attempting to delete this practice.',
+                        'prompt': 'OK'
+                    }];
+
+                }
+
+                $timeout(closeAlerts, 2000);
+
             });
+
         };
 
         //

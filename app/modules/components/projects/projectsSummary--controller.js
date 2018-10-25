@@ -283,9 +283,23 @@ angular.module('FieldDoc')
 
             }
 
-            self.confirmDelete = function(obj) {
+            self.confirmDelete = function(obj, targetCollection) {
 
-                self.deletionTarget = self.deletionTarget ? null : obj;
+                console.log('self.confirmDelete', obj, targetCollection);
+
+                if (self.deletionTarget &&
+                    self.deletionTarget.collection === 'project') {
+
+                    self.cancelDelete();
+
+                } else {
+
+                    self.deletionTarget = {
+                        'collection': targetCollection,
+                        'feature': obj
+                    };
+
+                }
 
             };
 
@@ -295,7 +309,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.deleteFeature = function(featureType) {
+            self.deleteFeature = function(featureType, index) {
 
                 var targetCollection;
 
@@ -322,7 +336,7 @@ angular.module('FieldDoc')
                 }
 
                 targetCollection.delete({
-                    id: +self.deletionTarget.id
+                    id: +self.deletionTarget.feature.id
                 }).$promise.then(function(data) {
 
                     self.alerts.push({
@@ -332,7 +346,21 @@ angular.module('FieldDoc')
                         'prompt': 'OK'
                     });
 
-                    $timeout(closeRoute, 2000);
+                    if (index !== null &&
+                        typeof index === 'number' &&
+                        featureType === 'site') {
+
+                        self.sites.splice(index, 1);
+
+                        self.cancelDelete();
+
+                        $timeout(closeAlerts, 2000);
+
+                    } else {
+
+                        $timeout(closeRoute, 2000);
+
+                    }
 
                 }).catch(function(errorResponse) {
 
@@ -343,7 +371,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                            'msg': 'Unable to delete “' + self.deletionTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
                             'prompt': 'OK'
                         }];
 

@@ -11,7 +11,7 @@
         .controller('SiteSummaryCtrl',
             function(Account, $location, $window, $timeout, Practice, project,
                 $rootScope, $scope, $route, summary, nodes, user, Utility,
-                Map, mapbox, leafletData, leafletBoundsHelpers, Site, Project) {
+                Map, mapbox, leafletData, leafletBoundsHelpers, Site, Project, practices) {
 
                 var self = this;
 
@@ -54,9 +54,23 @@
 
                 }
 
-                self.confirmDelete = function(obj) {
+                self.confirmDelete = function(obj, targetCollection) {
 
-                    self.deletionTarget = self.deletionTarget ? null : obj;
+                    console.log('self.confirmDelete', obj, targetCollection);
+
+                    if (self.deletionTarget &&
+                        self.deletionTarget.collection === 'site') {
+
+                        self.cancelDelete();
+
+                    } else {
+
+                        self.deletionTarget = {
+                            'collection': targetCollection,
+                            'feature': obj
+                        };
+
+                    }
 
                 };
 
@@ -66,7 +80,9 @@
 
                 };
 
-                self.deleteFeature = function(featureType) {
+                self.deleteFeature = function(featureType, index) {
+
+                    console.log('self.deleteFeature', featureType, index);
 
                     var targetCollection;
 
@@ -93,7 +109,7 @@
                     }
 
                     targetCollection.delete({
-                        id: +self.deletionTarget.id
+                        id: +self.deletionTarget.feature.properties.id
                     }).$promise.then(function(data) {
 
                         self.alerts.push({
@@ -103,7 +119,21 @@
                             'prompt': 'OK'
                         });
 
-                        $timeout(closeRoute, 2000);
+                        if (index !== null &&
+                            typeof index === 'number' &&
+                            featureType === 'practice') {
+
+                            self.practices.splice(index, 1);
+
+                            self.cancelDelete();
+
+                            $timeout(closeAlerts, 2000);
+
+                        } else {
+
+                            $timeout(closeRoute, 2000);
+
+                        }
 
                     }).catch(function(errorResponse) {
 
@@ -114,7 +144,7 @@
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                                'msg': 'Unable to delete “' + self.deletionTarget.feature.properties.name + '”. There are pending tasks affecting this ' + featureType + '.',
                                 'prompt': 'OK'
                             }];
 
@@ -169,7 +199,6 @@
 
                 };
 
-
                 self.cleanName = function(string_) {
                     return Utility.machineName(string_);
                 };
@@ -180,8 +209,12 @@
 
                     self.data = successResponse;
 
+                    self.project = successResponse.project;
+
+                    console.log('self.project', self.project);
+
                     self.site = successResponse.site;
-                    self.practices = successResponse.practices;
+                    // self.practices = successResponse.practices;
 
                     //
                     // Add rollups to the page scope
@@ -201,7 +234,23 @@
 
                     nodes.$promise.then(function(successResponse) {
 
+                        console.log('self.nodes', successResponse);
+
                         self.nodes = successResponse;
+
+                    }, function(errorResponse) {
+
+                    });
+
+                    //
+                    // Load spatial nodes
+                    //
+
+                    practices.$promise.then(function(successResponse) {
+
+                        console.log('self.practices', successResponse);
+
+                        self.practices = successResponse.features;
 
                     }, function(errorResponse) {
 
@@ -214,7 +263,7 @@
                         user.$promise.then(function(userResponse) {
                             $rootScope.user = Account.userObject = userResponse;
 
-                            self.project = project;
+                            // self.project = project;
 
                             self.permissions = {
                                 isLoggedIn: Account.hasToken(),
@@ -270,7 +319,7 @@
                     }, function(errorResponse) {
 
                         console.error('Unable to create your practice, please try again later');
-                        
+
                     });
 
                 };

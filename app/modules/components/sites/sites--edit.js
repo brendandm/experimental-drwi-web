@@ -151,6 +151,8 @@
 
             site.$promise.then(function(successResponse) {
 
+                console.log('self.site', successResponse);
+
                 self.site = successResponse;
 
                 $rootScope.page.title = self.site.properties.name;
@@ -354,17 +356,87 @@
                 });
             };
 
-            // self.deleteSite = function() {
+            self.alerts = [];
 
-            //     self.site.$delete().then(function(successResponse) {
+            function closeAlerts() {
 
-            //         $location.path('/projects/' + $route.current.params.projectId);
+                self.alerts = [];
 
-            //     }, function(errorResponse) {
+            }
 
-            //     });
-                
-            // };
+            function closeRoute() {
+
+                $location.path(self.site.links.project.html);
+
+            }
+
+            self.confirmDelete = function(obj) {
+
+                console.log('self.confirmDelete', obj);
+
+                self.deletionTarget = self.deletionTarget ? null : obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.deleteFeature = function() {
+
+                Site.delete({
+                    id: +self.deletionTarget.id
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this site.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this site.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this site.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this site.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
+
+                });
+
+            };
 
             /**
              * Mapping functionality

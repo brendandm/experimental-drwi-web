@@ -6,7 +6,7 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <h1 class="inset">{{ page.summary.practice.properties.category.properties.name }}</h1>
+        <h1 class="inset">{{ page.summary.practice.properties.name || 'Un-named' }}</h1>
 
         <div class="main--ui">
 
@@ -414,20 +414,6 @@
                     </i>
                 </a>
             </li>
-            <!-- <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.actions.saveToPdf()">
-                    <i class="material-icons">
-                        picture_as_pdf
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.actions.print()">
-                    <i class="material-icons">
-                        print
-                    </i>
-                </a>
-            </li> -->
         </ul>
     </nav>
 

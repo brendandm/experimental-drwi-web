@@ -32,6 +32,11 @@
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/outcomes'),
                     'isArray': false
                 },
+                'site': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/site'),
+                    'isArray': false
+                },
                 'custom': {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_custom'),
