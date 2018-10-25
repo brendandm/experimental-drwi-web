@@ -238,7 +238,7 @@
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
         <ul>
-            <li class="active">
+            <li data-ng-class="{active: $root.toolbarState.dashboard}">
                 <a href="/projects/{{ page.project.id }}">
                     <i class="material-icons">
                         dashboard

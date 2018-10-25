@@ -24,14 +24,22 @@
                                 <select class="form-control" data-ng-model="page.practice.properties.category_id" id="practice_type_id" name="practice_type_id" data-ng-options="value.properties.id as value.properties.name group by value.properties.group for value in page.practiceTypes.features | orderBy:'properties.best_management_practice'">
                                     <option value="">-- Select a practice type --</option>
                                 </select>
+                                <p data-ng-if="page.practice.properties.category_id">
+                                    {{ page.practice.properties.category.properties.description }}
+                                </p>
                             </div>
+                        </div>
+
+                        <div class="form-element">
+                            <span class="meta-label"><b>Name</b></span>
+                            <input type="text" data-ng-model="page.practice.properties.name" class="form-control animate" id="name" name="name" placeholder="Practice name" />
                         </div>
 
                         <!-- Practice Description -->
                         <div class="form-row">
                             <div class="form-field">
                                 <label for="description" class="control-label">Description</label>
-                                <textarea class="form-control" msd-elastic data-ng-model="page.practice.properties.category.properties.description">{{ page.practice.properties.category.properties.description }}</textarea>
+                                <textarea class="form-control" msd-elastic data-ng-model="page.practice.properties.description">{{ page.practice.properties.description }}</textarea>
                             </div>
                         </div>
 
@@ -109,7 +117,7 @@
                                 <span data-ng-if="page.isSavingChanges">
                                     Saving changes...
                                 </span>
-                                <button type="button" class="button button-link button-outline pull-right" data-ng-click="page.confirmDelete =! page.confirmDelete" data-ng-if="!page.confirmDelete && !page.confirmDeleteReallySure">
+                                <!-- <button type="button" class="button button-link button-outline pull-right" data-ng-click="page.confirmDelete =! page.confirmDelete" data-ng-if="!page.confirmDelete && !page.confirmDeleteReallySure">
                                     Delete
                                 </button>
                                 <span data-ng-if="page.confirmDelete" class="action pull-right">
@@ -123,7 +131,7 @@
                                         Yes, I'm sure, delete this practice forever</a>
                                     or
                                     <a class="cancel" data-ng-click="page.confirmDelete = false; page.confirmDeleteReallySure = false;">nevermind</a>
-                                </span>
+                                </span> -->
                             </div>
                         </div>
                     </form>
@@ -138,14 +146,14 @@
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
         <ul>
-            <li class="active">
+            <li>
                 <a href="/practices/{{ page.practice.properties.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit">
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
                 <a href="/practices/{{ page.practice.properties.id }}/edit">
                     <i class="material-icons">
                         edit
@@ -153,23 +161,20 @@
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <a href="#">
+                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
+                    <p>Do you want to delete this practice?</p>
+                    <div class="actions">
+                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature()">
+                            Yes
+                        </a>
+                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+                <a href="#" data-ng-click="page.confirmDelete(page.practice)">
                     <i class="material-icons">
                         delete
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.actions.saveToPdf()">
-                    <i class="material-icons">
-                        picture_as_pdf
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.actions.print()">
-                    <i class="material-icons">
-                        print
                     </i>
                 </a>
             </li>

@@ -135,10 +135,21 @@
 
                             <ul class="snapshot--cards list-unstyled">
 
-                                <li class="card" data-ng-repeat="site in page.sites | orderBy:'-modified_on' | filter: page.q track by $index">
+                                <li class="card" data-ng-repeat="site in page.sites | orderBy:'-site.modified_on' track by $index">
                                     <div class="card--content">
                                         <div class="name">{{ site.site.properties.name || 'Un-named' }}</div>
                                         <div class="body">
+                                            <div class="confirm--delete" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === site.site.id && page.deletionTarget.collection === 'site'">
+                                                <p>Do you want to delete this site?</p>
+                                                <div class="actions" style="flex: 0;">
+                                                    <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('site', $index)">
+                                                        Yes
+                                                    </a>
+                                                    <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                                                        Cancel
+                                                    </a>
+                                                </div>
+                                            </div>
                                             <p data-ng-if="site.site.properties.description">{{ site.site.properties.description | truncate:80 }}</p>
                                             <div class="actions">
                                                 <a class="snapshot--title" href="/sites/{{ site.site.id }}" title="Site summary">
@@ -151,7 +162,7 @@
                                                         edit
                                                     </i>
                                                 </a>
-                                                <a class="snapshot--title" href="#" title="Delete site" data-ng-click="page.confirmDelete(project)">
+                                                <a class="snapshot--title" href="#" title="Delete site" data-ng-click="page.confirmDelete(site.site, 'site')">
                                                     <i class="material-icons">
                                                         delete
                                                     </i>
@@ -227,20 +238,13 @@
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
         <ul>
-            <li class="active">
+            <li data-ng-class="{active: $root.toolbarState.dashboard}">
                 <a href="/projects/{{ page.project.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
-            <!-- <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.createSite()">
-                    <i class="material-icons">
-                        location_on
-                    </i>
-                </a>
-            </li> -->
             <li data-ng-if="page.permissions.can_edit">
                 <a href="/projects/{{ page.project.id }}/users">
                     <i class="material-icons">
@@ -256,7 +260,7 @@
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.id === page.project.id">
+                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.project.id && page.deletionTarget.collection === 'project'">
                     <p>Do you want to delete this project?</p>
                     <div class="actions">
                         <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('project')">
@@ -267,23 +271,9 @@
                         </a>
                     </div>
                 </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.project)">
+                <a href="#" data-ng-click="page.confirmDelete(page.project, 'project')">
                     <i class="material-icons">
                         delete
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.actions.saveToPdf()">
-                    <i class="material-icons">
-                        picture_as_pdf
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.actions.print()">
-                    <i class="material-icons">
-                        print
                     </i>
                 </a>
             </li>

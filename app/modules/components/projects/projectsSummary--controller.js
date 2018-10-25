@@ -33,6 +33,10 @@ angular.module('FieldDoc')
                 'project': true
             };
 
+            $rootScope.toolbarState = {
+                'dashboard': true
+            };
+
             $rootScope.page = {};
 
             self.map = Map;

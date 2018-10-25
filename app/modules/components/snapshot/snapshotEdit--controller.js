@@ -15,6 +15,10 @@ angular.module('FieldDoc')
                 'snapshot': true
             };
 
+            $rootScope.toolbarState = {
+                'edit': true
+            };
+
             $rootScope.page = {};
 
             $scope.filterStore = FilterStore;

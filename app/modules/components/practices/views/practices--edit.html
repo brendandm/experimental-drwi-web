@@ -146,14 +146,14 @@
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
         <ul>
-            <li class="active">
+            <li>
                 <a href="/practices/{{ page.practice.properties.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit">
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
                 <a href="/practices/{{ page.practice.properties.id }}/edit">
                     <i class="material-icons">
                         edit

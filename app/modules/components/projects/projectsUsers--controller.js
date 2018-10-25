@@ -35,6 +35,10 @@
                 'project': true
             };
 
+            $rootScope.toolbarState = {
+                'users': true
+            };
+
             //
             // Assign project to a scoped variable
             //

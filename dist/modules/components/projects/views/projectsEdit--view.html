@@ -113,17 +113,10 @@
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
         <ul>
-            <li class="active">
+            <li>
                 <a href="/projects/{{ page.project.id }}">
                     <i class="material-icons">
                         dashboard
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.createSite()">
-                    <i class="material-icons">
-                        location_on
                     </i>
                 </a>
             </li>
@@ -134,7 +127,7 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit">
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
                 <a href="/projects/{{ page.project.id }}/edit">
                     <i class="material-icons">
                         edit
@@ -142,23 +135,20 @@
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <a href="#">
+                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
+                    <p>Do you want to delete this project?</p>
+                    <div class="actions">
+                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature()">
+                            Yes
+                        </a>
+                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+                <a href="#" data-ng-click="page.confirmDelete(page.project)">
                     <i class="material-icons">
                         delete
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.actions.saveToPdf()">
-                    <i class="material-icons">
-                        picture_as_pdf
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.actions.print()">
-                    <i class="material-icons">
-                        print
                     </i>
                 </a>
             </li>

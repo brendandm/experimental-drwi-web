@@ -15,6 +15,10 @@
 
                 var self = this;
 
+                $rootScope.toolbarState = {
+                    'dashboard': true
+                };
+
                 $rootScope.page = {};
 
                 self.map = Map;

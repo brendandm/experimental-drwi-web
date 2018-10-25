@@ -109,44 +109,43 @@ angular.module('FieldDoc')
      * Main module of the application.
      */
     angular.module('FieldDoc')
-      .config(function ($routeProvider) {
-        $routeProvider
-          .when('/', {
-            redirectTo: '/account/login'
-          })
-          .when('/user', {
-            redirectTo: '/account/login'
-          })
-          .when('/user/login', {
-            redirectTo: '/account/login'
-          })
-          .when('/account/login', {
-            templateUrl: '/modules/shared/security/views/securityLogin--view.html',
-            controller: 'SecurityController',
-            controllerAs: 'page'
-          })
-          .when('/account/register', {
-            templateUrl: '/modules/shared/security/views/securityRegister--view.html',
-            controller: 'SecurityRegisterController',
-            controllerAs: 'page'
-          })
-          .when('/account/reset', {
-            templateUrl: '/modules/shared/security/views/securityResetPassword--view.html',
-            controller: 'SecurityResetPasswordController',
-            controllerAs: 'page'
-          })
-          .when('/logout', {
-            redirectTo: '/user/logout'
-          })
-          .when('/user/logout', {
-            template: 'Logging out ...',
-            controller: 'SecurityLogoutController',
-            controllerAs: 'page'
-          });
-      });
+        .config(function($routeProvider) {
+            $routeProvider
+                .when('/', {
+                    redirectTo: '/account/login'
+                })
+                .when('/user', {
+                    redirectTo: '/account/login'
+                })
+                .when('/user/login', {
+                    redirectTo: '/account/login'
+                })
+                .when('/account/login', {
+                    templateUrl: '/modules/shared/security/views/securityLogin--view.html',
+                    controller: 'SecurityController',
+                    controllerAs: 'page'
+                })
+                .when('/account/register', {
+                    templateUrl: '/modules/shared/security/views/securityRegister--view.html',
+                    controller: 'SecurityRegisterController',
+                    controllerAs: 'page'
+                })
+                .when('/account/reset', {
+                    templateUrl: '/modules/shared/security/views/securityResetPassword--view.html',
+                    controller: 'SecurityResetPasswordController',
+                    controllerAs: 'page'
+                })
+                .when('/logout', {
+                    redirectTo: '/user/logout'
+                })
+                .when('/user/logout', {
+                    template: 'Logging out ...',
+                    controller: 'SecurityLogoutController',
+                    controllerAs: 'page'
+                });
+        });
 
 }());
-
 (function() {
 
     'use strict';
@@ -591,7 +590,10 @@ angular.module('FieldDoc')
 
                         config.headers.Authorization = 'Bearer ' + sessionCookie;
 
-                    } else if (!sessionCookie && $location.path() !== '/account/register' && $location.path() !== '/account/reset') {
+                    } else if (!sessionCookie &&
+                        $location.path() !== '/account/register' &&
+                        $location.path() !== '/account/reset' &&
+                        $location.path().lastIndexOf('/dashboard', 0) !== 0) {
                         /**
                          * Remove all cookies present for authentication
                          */
@@ -756,17 +758,6 @@ angular.module('FieldDoc')
                         });
 
                     }
-                    // user: function(Account) {
-
-                    //     if (Account.userObject && !Account.userObject.id) {
-
-                    //         return Account.getUser();
-                            
-                    //     }
-
-                    //     return Account.userObject;
-
-                    // }
                 }
             })
             .when('/dashboards/collection/new', {
@@ -825,7 +816,7 @@ angular.module('FieldDoc')
  */
 angular.module('FieldDoc')
     .controller('SnapshotCtrl', function(Account, $location, $log, $interval, $timeout, Project, Map,
-        baseProjects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
+        baseProjects, $rootScope, $scope, Site, leafletData, leafletBoundsHelpers,
         MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox,
         Practice, snapshot) {
 
@@ -2502,6 +2493,10 @@ angular.module('FieldDoc')
 
             $rootScope.viewState = {
                 'snapshot': true
+            };
+
+            $rootScope.toolbarState = {
+                'edit': true
             };
 
             $rootScope.page = {};
@@ -4833,6 +4828,10 @@ angular.module('FieldDoc')
                 'project': true
             };
 
+            $rootScope.toolbarState = {
+                'dashboard': true
+            };
+
             $rootScope.page = {};
 
             self.map = Map;
@@ -5083,9 +5082,23 @@ angular.module('FieldDoc')
 
             }
 
-            self.confirmDelete = function(obj) {
+            self.confirmDelete = function(obj, targetCollection) {
 
-                self.deletionTarget = self.deletionTarget ? null : obj;
+                console.log('self.confirmDelete', obj, targetCollection);
+
+                if (self.deletionTarget &&
+                    self.deletionTarget.collection === 'project') {
+
+                    self.cancelDelete();
+
+                } else {
+
+                    self.deletionTarget = {
+                        'collection': targetCollection,
+                        'feature': obj
+                    };
+
+                }
 
             };
 
@@ -5095,7 +5108,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.deleteFeature = function(featureType) {
+            self.deleteFeature = function(featureType, index) {
 
                 var targetCollection;
 
@@ -5122,7 +5135,7 @@ angular.module('FieldDoc')
                 }
 
                 targetCollection.delete({
-                    id: +self.deletionTarget.id
+                    id: +self.deletionTarget.feature.id
                 }).$promise.then(function(data) {
 
                     self.alerts.push({
@@ -5132,7 +5145,21 @@ angular.module('FieldDoc')
                         'prompt': 'OK'
                     });
 
-                    $timeout(closeRoute, 2000);
+                    if (index !== null &&
+                        typeof index === 'number' &&
+                        featureType === 'site') {
+
+                        self.sites.splice(index, 1);
+
+                        self.cancelDelete();
+
+                        $timeout(closeAlerts, 2000);
+
+                    } else {
+
+                        $timeout(closeRoute, 2000);
+
+                    }
 
                 }).catch(function(errorResponse) {
 
@@ -5143,7 +5170,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                            'msg': 'Unable to delete “' + self.deletionTarget.feature.name + '”. There are pending tasks affecting this ' + featureType + '.',
                             'prompt': 'OK'
                         }];
 
@@ -5264,9 +5291,15 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProjectEditCtrl', function(Account, $location, $log, Project, project, $rootScope, $route, user) {
+    .controller('ProjectEditCtrl',
+        function(Account, $location, $log, Project, project, $rootScope, $route, user) {
 
         var self = this;
+
+        $rootScope.toolbarState = {
+            'edit': true
+        };
+
         $rootScope.page = {};
 
         //
@@ -5379,6 +5412,10 @@ angular.module('FieldDoc')
 
             $rootScope.viewState = {
                 'project': true
+            };
+
+            $rootScope.toolbarState = {
+                'users': true
             };
 
             //
@@ -5695,6 +5732,11 @@ angular.module('FieldDoc')
                         return Site.nodes({
                             id: $route.current.params.siteId
                         });
+                    },
+                    practices: function(Site, $route) {
+                        return Site.practices({
+                            id: $route.current.params.siteId
+                        });
                     }
                 }
             })
@@ -5731,9 +5773,13 @@ angular.module('FieldDoc')
         .controller('SiteSummaryCtrl',
             function(Account, $location, $window, $timeout, Practice, project,
                 $rootScope, $scope, $route, summary, nodes, user, Utility,
-                Map, mapbox, leafletData, leafletBoundsHelpers, Site, Project) {
+                Map, mapbox, leafletData, leafletBoundsHelpers, Site, Project, practices) {
 
                 var self = this;
+
+                $rootScope.toolbarState = {
+                    'dashboard': true
+                };
 
                 $rootScope.page = {};
 
@@ -5774,9 +5820,23 @@ angular.module('FieldDoc')
 
                 }
 
-                self.confirmDelete = function(obj) {
+                self.confirmDelete = function(obj, targetCollection) {
 
-                    self.deletionTarget = self.deletionTarget ? null : obj;
+                    console.log('self.confirmDelete', obj, targetCollection);
+
+                    if (self.deletionTarget &&
+                        self.deletionTarget.collection === 'site') {
+
+                        self.cancelDelete();
+
+                    } else {
+
+                        self.deletionTarget = {
+                            'collection': targetCollection,
+                            'feature': obj
+                        };
+
+                    }
 
                 };
 
@@ -5786,7 +5846,9 @@ angular.module('FieldDoc')
 
                 };
 
-                self.deleteFeature = function(featureType) {
+                self.deleteFeature = function(featureType, index) {
+
+                    console.log('self.deleteFeature', featureType, index);
 
                     var targetCollection;
 
@@ -5813,7 +5875,7 @@ angular.module('FieldDoc')
                     }
 
                     targetCollection.delete({
-                        id: +self.deletionTarget.id
+                        id: +self.deletionTarget.feature.properties.id
                     }).$promise.then(function(data) {
 
                         self.alerts.push({
@@ -5823,7 +5885,21 @@ angular.module('FieldDoc')
                             'prompt': 'OK'
                         });
 
-                        $timeout(closeRoute, 2000);
+                        if (index !== null &&
+                            typeof index === 'number' &&
+                            featureType === 'practice') {
+
+                            self.practices.splice(index, 1);
+
+                            self.cancelDelete();
+
+                            $timeout(closeAlerts, 2000);
+
+                        } else {
+
+                            $timeout(closeRoute, 2000);
+
+                        }
 
                     }).catch(function(errorResponse) {
 
@@ -5834,7 +5910,7 @@ angular.module('FieldDoc')
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                                'msg': 'Unable to delete “' + self.deletionTarget.feature.properties.name + '”. There are pending tasks affecting this ' + featureType + '.',
                                 'prompt': 'OK'
                             }];
 
@@ -5889,7 +5965,6 @@ angular.module('FieldDoc')
 
                 };
 
-
                 self.cleanName = function(string_) {
                     return Utility.machineName(string_);
                 };
@@ -5900,8 +5975,12 @@ angular.module('FieldDoc')
 
                     self.data = successResponse;
 
+                    self.project = successResponse.project;
+
+                    console.log('self.project', self.project);
+
                     self.site = successResponse.site;
-                    self.practices = successResponse.practices;
+                    // self.practices = successResponse.practices;
 
                     //
                     // Add rollups to the page scope
@@ -5921,7 +6000,23 @@ angular.module('FieldDoc')
 
                     nodes.$promise.then(function(successResponse) {
 
+                        console.log('self.nodes', successResponse);
+
                         self.nodes = successResponse;
+
+                    }, function(errorResponse) {
+
+                    });
+
+                    //
+                    // Load spatial nodes
+                    //
+
+                    practices.$promise.then(function(successResponse) {
+
+                        console.log('self.practices', successResponse);
+
+                        self.practices = successResponse.features;
 
                     }, function(errorResponse) {
 
@@ -5934,7 +6029,7 @@ angular.module('FieldDoc')
                         user.$promise.then(function(userResponse) {
                             $rootScope.user = Account.userObject = userResponse;
 
-                            self.project = project;
+                            // self.project = project;
 
                             self.permissions = {
                                 isLoggedIn: Account.hasToken(),
@@ -5990,7 +6085,7 @@ angular.module('FieldDoc')
                     }, function(errorResponse) {
 
                         console.error('Unable to create your practice, please try again later');
-                        
+
                     });
 
                 };
@@ -6011,12 +6106,17 @@ angular.module('FieldDoc')
      * Controller of the FieldDoc
      */
     angular.module('FieldDoc')
-        .controller('SiteEditCtrl', function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
+        .controller('SiteEditCtrl',
+            function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
             Map, mapbox, Notifications, Site, site, $rootScope,
             $route, $scope, Segment, $timeout, $interval, user, Shapefile) {
 
             var self = this,
                 timeout;
+
+            $rootScope.toolbarState = {
+                'edit': true
+            };
 
             $rootScope.page = {};
 
@@ -6151,6 +6251,8 @@ angular.module('FieldDoc')
             };
 
             site.$promise.then(function(successResponse) {
+
+                console.log('self.site', successResponse);
 
                 self.site = successResponse;
 
@@ -6355,17 +6457,87 @@ angular.module('FieldDoc')
                 });
             };
 
-            // self.deleteSite = function() {
+            self.alerts = [];
 
-            //     self.site.$delete().then(function(successResponse) {
+            function closeAlerts() {
 
-            //         $location.path('/projects/' + $route.current.params.projectId);
+                self.alerts = [];
 
-            //     }, function(errorResponse) {
+            }
 
-            //     });
-                
-            // };
+            function closeRoute() {
+
+                $location.path(self.site.links.project.html);
+
+            }
+
+            self.confirmDelete = function(obj) {
+
+                console.log('self.confirmDelete', obj);
+
+                self.deletionTarget = self.deletionTarget ? null : obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.deleteFeature = function() {
+
+                Site.delete({
+                    id: +self.deletionTarget.id
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this site.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this site.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this site.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this site.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
+
+                });
+
+            };
 
             /**
              * Mapping functionality
@@ -6817,6 +6989,10 @@ angular.module('FieldDoc')
 
         var self = this;
 
+        $rootScope.toolbarState = {
+            'edit': true
+        };
+
         self.practiceTypes = practice_types;
 
         self.files = Media;
@@ -6937,6 +7113,8 @@ angular.module('FieldDoc')
 
             site.$promise.then(function(successResponse) {
 
+                console.log('self.site', successResponse);
+
                 self.site = successResponse;
 
                 if (self.site.geometry) {
@@ -6962,7 +7140,7 @@ angular.module('FieldDoc')
             }, function(errorResponse) {
 
                 //
-                
+
             });
 
         };
@@ -6971,31 +7149,11 @@ angular.module('FieldDoc')
 
             practice.$promise.then(function(successResponse) {
 
+                console.log('self.practice', successResponse);
+
                 self.practice = successResponse;
 
-                $rootScope.page.title = self.practice.properties.practice_type;
-                // $rootScope.page.links = [{
-                //         text: 'Projects',
-                //         url: '/projects'
-                //     },
-                //     {
-                //         text: self.site.properties.project.properties.name,
-                //         url: '/projects/' + projectId
-                //     },
-                //     {
-                //         text: self.site.properties.name,
-                //         url: '/projects/' + projectId + '/sites/' + siteId
-                //     },
-                //     {
-                //         text: self.practice.properties.practice_type,
-                //         url: '/practices/' + self.practice.id
-                //     },
-                //     {
-                //         text: 'Edit',
-                //         url: '/practices/' + self.practice.id + '/edit',
-                //         type: 'active'
-                //     }
-                // ];
+                $rootScope.page.title = self.practice.properties.name || self.practice.properties.category.properties.name;
 
                 //
                 // If a valid practice geometry is present, add it to the map
@@ -7252,12 +7410,86 @@ angular.module('FieldDoc')
             }
         };
 
-        self.deletePractice = function() {
-            self.practice.$delete().then(function(successResponse) {
-                $location.path('/projects/' + projectId + '/sites/' + siteId);
-            }, function(errorResponse) {
-                // Error message
+        self.alerts = [];
+
+        function closeAlerts() {
+
+            self.alerts = [];
+
+        }
+
+        function closeRoute() {
+
+            $location.path(self.practice.links.site.html);
+
+        }
+
+        self.confirmDelete = function(obj) {
+
+            console.log('self.confirmDelete', obj);
+
+            self.deletionTarget = self.deletionTarget ? null : obj;
+
+        };
+
+        self.cancelDelete = function() {
+
+            self.deletionTarget = null;
+
+        };
+
+        self.deleteFeature = function() {
+
+            Practice.delete({
+                id: +self.deletionTarget.id
+            }).$promise.then(function(data) {
+
+                self.alerts.push({
+                    'type': 'success',
+                    'flag': 'Success!',
+                    'msg': 'Successfully deleted this practice.',
+                    'prompt': 'OK'
+                });
+
+                $timeout(closeRoute, 2000);
+
+            }).catch(function(errorResponse) {
+
+                console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                if (errorResponse.status === 409) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this practice.',
+                        'prompt': 'OK'
+                    }];
+
+                } else if (errorResponse.status === 403) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'You don’t have permission to delete this practice.',
+                        'prompt': 'OK'
+                    }];
+
+                } else {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong while attempting to delete this practice.',
+                        'prompt': 'OK'
+                    }];
+
+                }
+
+                $timeout(closeAlerts, 2000);
+
             });
+
         };
 
         //
@@ -7686,9 +7918,9 @@ angular.module('FieldDoc')
                         }
                         return Account.userObject;
                     },
-                    site: function(Site, $route) {
-                        return Site.get({
-                            id: $route.current.params.siteId
+                    site: function(Practice, $route) {
+                        return Practice.site({
+                            id: $route.current.params.practiceId
                         });
                     },
                     practice_types: function(PracticeType, $route) {
@@ -8110,12 +8342,16 @@ angular.module('FieldDoc')
         .controller('CustomSummaryController',
             function(Account, $location, $timeout, $log, PracticeCustom,
                 $rootScope, $route, $scope, summary, Utility, user, Project, Site,
-                $window, Map, mapbox, leafletData, leafletBoundsHelpers) {
+                $window, Map, mapbox, leafletData, leafletBoundsHelpers, Practice) {
 
                 var self = this,
                     projectId = $route.current.params.projectId,
                     siteId = $route.current.params.siteId,
                     practiceId = $route.current.params.practiceId;
+
+                $rootScope.toolbarState = {
+                    'dashboard': true
+                };
 
                 $rootScope.page = {};
 
@@ -8154,8 +8390,6 @@ angular.module('FieldDoc')
 
                 function closeRoute() {
 
-                    // var sitePath = self.links.site.split('org')[1];
-
                     var parentPath = '/sites/' + self.data.site.id;
 
                     $location.path(parentPath);
@@ -8176,40 +8410,16 @@ angular.module('FieldDoc')
 
                 };
 
-                self.deleteFeature = function(featureType) {
+                self.deleteFeature = function() {
 
-                    var targetCollection;
-
-                    switch (featureType) {
-
-                        case 'practice':
-
-                            targetCollection = Practice;
-
-                            break;
-
-                        case 'site':
-
-                            targetCollection = Site;
-
-                            break;
-
-                        default:
-
-                            targetCollection = Project;
-
-                            break;
-
-                    }
-
-                    targetCollection.delete({
+                    Practice.delete({
                         id: +self.deletionTarget.id
                     }).$promise.then(function(data) {
 
                         self.alerts.push({
                             'type': 'success',
                             'flag': 'Success!',
-                            'msg': 'Successfully deleted this ' + featureType + '.',
+                            'msg': 'Successfully deleted this practice.',
                             'prompt': 'OK'
                         });
 
@@ -8224,7 +8434,7 @@ angular.module('FieldDoc')
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                                'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this practice.',
                                 'prompt': 'OK'
                             }];
 
@@ -8233,7 +8443,7 @@ angular.module('FieldDoc')
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'You don’t have permission to delete this ' + featureType + '.',
+                                'msg': 'You don’t have permission to delete this practice.',
                                 'prompt': 'OK'
                             }];
 
@@ -8242,7 +8452,7 @@ angular.module('FieldDoc')
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'Something went wrong while attempting to delete this ' + featureType + '.',
+                                'msg': 'Something went wrong while attempting to delete this practice.',
                                 'prompt': 'OK'
                             }];
 
@@ -10743,6 +10953,11 @@ angular
                 'outcomes': {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/outcomes'),
+                    'isArray': false
+                },
+                'site': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/practice/:id/site'),
                     'isArray': false
                 },
                 'custom': {

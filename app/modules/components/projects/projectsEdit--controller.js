@@ -6,9 +6,15 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProjectEditCtrl', function(Account, $location, $log, Project, project, $rootScope, $route, user) {
+    .controller('ProjectEditCtrl',
+        function(Account, $location, $log, Project, project, $rootScope, $route, user) {
 
         var self = this;
+
+        $rootScope.toolbarState = {
+            'edit': true
+        };
+
         $rootScope.page = {};
 
         //

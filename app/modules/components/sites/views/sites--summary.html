@@ -292,7 +292,7 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit">
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
                 <a href="/sites/{{ page.site.id }}/edit">
                     <i class="material-icons">
                         edit

@@ -6,7 +6,7 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <h1 class="inset">{{ page.summary.practice.properties.category.properties.name }}</h1>
+        <h1 class="inset">{{ page.summary.practice.properties.name || 'Un-named' }}</h1>
 
         <div class="main--ui">
 
@@ -382,7 +382,7 @@
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
         <ul>
-            <li class="active">
+            <li data-ng-class="{active: $root.toolbarState.dashboard}">
                 <a href="/practices/{{ page.summary.practice.id }}">
                     <i class="material-icons">
                         dashboard
@@ -411,20 +411,6 @@
                 <a href="#" data-ng-click="page.confirmDelete(page.summary.practice)">
                     <i class="material-icons">
                         delete
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.actions.saveToPdf()">
-                    <i class="material-icons">
-                        picture_as_pdf
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.actions.print()">
-                    <i class="material-icons">
-                        print
                     </i>
                 </a>
             </li>

@@ -18,6 +18,10 @@
                     siteId = $route.current.params.siteId,
                     practiceId = $route.current.params.practiceId;
 
+                $rootScope.toolbarState = {
+                    'dashboard': true
+                };
+
                 $rootScope.page = {};
 
                 self.practiceType = null;

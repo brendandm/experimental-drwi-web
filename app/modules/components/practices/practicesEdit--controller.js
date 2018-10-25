@@ -12,6 +12,10 @@ angular.module('FieldDoc')
 
         var self = this;
 
+        $rootScope.toolbarState = {
+            'edit': true
+        };
+
         self.practiceTypes = practice_types;
 
         self.files = Media;

@@ -113,20 +113,13 @@
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
         <ul>
-            <li class="active">
+            <li>
                 <a href="/projects/{{ page.project.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
-            <!-- <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.createSite()">
-                    <i class="material-icons">
-                        location_on
-                    </i>
-                </a>
-            </li> -->
             <li data-ng-if="page.permissions.can_edit">
                 <a href="/projects/{{ page.project.id }}/users">
                     <i class="material-icons">
@@ -134,7 +127,7 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit">
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
                 <a href="/projects/{{ page.project.id }}/edit">
                     <i class="material-icons">
                         edit
@@ -159,20 +152,6 @@
                     </i>
                 </a>
             </li>
-            <!-- <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.actions.saveToPdf()">
-                    <i class="material-icons">
-                        picture_as_pdf
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.actions.print()">
-                    <i class="material-icons">
-                        print
-                    </i>
-                </a>
-            </li> -->
         </ul>
     </nav>
 
