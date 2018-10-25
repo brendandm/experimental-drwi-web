@@ -176,7 +176,7 @@ angular.module('FieldDoc')
 
                 self.practice = successResponse;
 
-                $rootScope.page.title = self.practice.properties.name || self.practice.properties.category.properties.name;
+                $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
 
                 //
                 // If a valid practice geometry is present, add it to the map
