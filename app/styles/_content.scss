@@ -433,7 +433,7 @@
   }
 }
 
-@mixin donut-chart($name, $perc, $size: 32px, $width: 5px, $base: #1E5151, $center: #262F3A, $color: #01DBB0, $textColor: $color, $textSize: 40px) {
+@mixin donut-chart($name, $perc, $size: 32px, $width: 5px, $base: #ccc, $center: #f7f8f9, $color: #2196F3, $textColor: $color, $textSize: 40px) {
 
   $color2: $color;
   $base2: $base;

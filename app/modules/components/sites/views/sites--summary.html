@@ -245,7 +245,7 @@
 
                                     <div class="name">{{ practice.properties.name || practice.properties.category || 'Un-named' }}</div>
 
-                                    <img data-ng-if="practice.geometry" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/geojson({{ practice.geometry.geometries[0] }})/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="200" />
+                                    <img data-ng-if="practice.staticURL" data-ng-src="{{ practice.staticURL }}" width="auto" height="200" />
 
                                     <img data-ng-if="!practice.geometry && page.site.geometry" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/geojson({{ page.site.geometry.geometries[0] }})/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="200" />
 
