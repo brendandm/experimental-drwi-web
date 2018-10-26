@@ -18,16 +18,25 @@
 
                         <h1>{{ page.site.properties.name }}</h1>
 
-                        <h4>
+                        <p data-ng-if="page.site.id && page.site.properties.last_modified_by.properties.first_name && page.site.properties.last_modified_by.properties.last_name" class="label">
+                            Last modified by {{ page.site.properties.last_modified_by.properties.first_name }} {{ page.site.properties.last_modified_by.properties.last_name }} on {{ page.site.properties.modified_on | date:'medium' }}
+                        </p>
+
+                        <p data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">
+                            <strong>Program:</strong> {{ page.project.properties.program_type }}
+                        </p>
+
+                        <p>
+                            <strong>Project:</strong> <a href="{{ page.data.links.project.html }}">{{ page.project.properties.name }}</a>
+                        </p>
+
+                        <!-- <h4>
                             <span data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">{{ page.project.properties.program_type }}</span>
 
                             <span data-ng-if="page.project.id && page.project.properties.last_modified_by.properties.first_name && page.project.properties.last_modified_by.properties.last_name" class="label">Last Modified by: {{ page.project.properties.last_modified_by.properties.first_name }} {{ page.project.properties.last_modified_by.properties.last_name }}</span>
-                            <span data-ng-if="page.project.id && page.project.properties.modified_on" class="label">Modified on: {{ page.project.properties.modified_on | date }}</span>
-                        </h4>
 
-                        <h4 class="project-site-city">
-                            <a href="{{ page.data.links.project.html }}">{{ page.project.properties.name }}</a>
-                        </h4>
+                            <span data-ng-if="page.project.id && page.project.properties.modified_on" class="label">Modified on: {{ page.project.properties.modified_on | date }}</span>
+                        </h4> -->
 
                         <h4 class="project-site-city" data-ng-if="page.nodes.geographies.length">
                             <span data-ng-repeat="geography in page.nodes.geographies"><b>{{ geography.category }}:&nbsp;</b>{{ geography.name }}&nbsp;</span>
@@ -58,7 +67,7 @@
                         <h2>Metrics</h2>
 
                         <table class="table table-practices" data-ng-if="page.practices">
-                            
+
                             <thead>
 
                                 <tr>

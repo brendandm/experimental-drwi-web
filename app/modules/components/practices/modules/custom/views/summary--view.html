@@ -21,13 +21,20 @@
                         <h1>{{ page.summary.practice.properties.name || 'Un-named' }}</h1>
 
                         <p>
-                            <small>
-                                <strong>Project Title:</strong> <a href="{{ page.summary.links.project.html }}">{{ page.summary.site.properties.project.properties.name }}</a>
-                                <strong>Site Name:</strong> <a href="{{ page.summary.links.site.html }}">{{ page.summary.site.properties.name }}</a><br />
-                            </small>
+                            <strong>Project:</strong> <a href="{{ page.summary.links.project.html }}">{{ page.summary.site.properties.project.properties.name }}</a>
+                        </p>
+
+                        <p>
+                            <strong>Site:</strong> <a href="{{ page.summary.links.site.html }}">{{ page.summary.site.properties.name }}</a>
+                        </p>
+
+                        <p>
+                            <strong>Practice Type:</strong> {{ page.summary.practice.properties.category.properties.name }}
                         </p>
 
                         <p data-ng-if="page.summary.practice.properties.description" data-ng-bind-html="page.summary.practice.properties.description"></p>
+
+                        <p data-ng-if="!page.summary.practice.properties.description">{{ page.summary.practice.properties.category.properties.description }}</p>
 
                     </article>
 

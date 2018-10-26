@@ -18,14 +18,57 @@
 
                         <h1>{{ page.project.properties.name }}</h1>
 
-                        <h4>
-                            <span data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">{{ page.project.properties.program_type }}</span>
+                        <p data-ng-if="page.project.id && page.project.properties.last_modified_by.properties.first_name && page.project.properties.last_modified_by.properties.last_name" class="label">
+                            Last modified by {{ page.project.properties.last_modified_by.properties.first_name }} {{ page.project.properties.last_modified_by.properties.last_name }} on {{ page.project.properties.modified_on | date:'medium' }}
+                        </p>
 
-                            <span data-ng-if="page.project.id && page.project.properties.last_modified_by.properties.first_name && page.project.properties.last_modified_by.properties.last_name" class="label">Last Modified by: {{ page.project.properties.last_modified_by.properties.first_name }} {{ page.project.properties.last_modified_by.properties.last_name }}</span>
-                            <span data-ng-if="page.project.id && page.project.properties.modified_on" class="label">Modified on: {{ page.project.properties.modified_on | date }}</span>
-                        </h4>
+                        <p data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">
+                            <strong>Program:</strong> {{ page.project.properties.program_type }}
+                        </p>
 
                         <p data-ng-bind-html="page.project.properties.description"></p>
+
+                        <nav class="contextual-navigation-wrapper" style="float: none; padding:0; margin: 0; border: 0 none;">
+
+                            <p><strong>Status</strong></p>
+
+                            <ul class="contextual-navigation" style="float: none; padding:0; margin: 0; border: 0 none;">
+
+                                <li data-ng-if="(page.permissions.is_admin || page.permissions.is_manager) && (page.project.properties.workflow_state === 'Submitted' || page.project.properties.workflow_state === 'Completed')" style="flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
+                                    <button data-ng-click="page.fundProject()" class="button button-submit" data-ng-class="{'button-outline': (page.project.properties.workflow_state === 'Completed')}">
+                                        <span>
+                                            Mark Project as Funded
+                                        </span>
+                                    </button>
+                                </li>
+
+                                <li data-ng-if="(page.permissions.is_admin || page.permissions.is_manager) && page.project.properties.workflow_state === 'Funded'" style="flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
+                                    <button data-ng-click="page.completeProject()" class="button button-submit">
+                                        <span>
+                                            Mark Project as Complete
+                                        </span>
+                                    </button>
+                                </li>
+
+                                <li data-ng-if="page.project.properties.workflow_state === 'Draft'" style="flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
+                                    <button data-ng-click="page.submitProject()" class="button button-info">
+                                        <span>
+                                            Submit Project to Funder
+                                        </span>
+                                    </button>
+                                </li>
+
+                                <li data-ng-if="page.project.properties.workflow_state === 'Submitted'" style="flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
+                                    <button data-ng-click="page.rollbackProjectSubmission()" class="button button-info button-outline">
+                                        <span>
+                                            Retract Submission
+                                        </span>
+                                    </button>
+                                </li>
+
+                            </ul>
+
+                        </nav>
 
                     </article>
 
@@ -181,7 +224,7 @@
 
                 </div>
 
-                <div class="group">
+                <!-- <div class="group">
 
                     <section class="pad">
 
@@ -224,7 +267,7 @@
 
                     </section>
 
-                </div>
+                </div> -->
 
             </div>
 
