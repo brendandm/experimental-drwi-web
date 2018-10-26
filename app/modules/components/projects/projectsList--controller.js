@@ -221,6 +221,23 @@ angular.module('FieldDoc')
 
                     console.log('successResponse', successResponse);
 
+                    // var projects = [];
+
+                    // successResponse.features.forEach(function(feature) {
+
+                    //     var extentFeature = {
+                    //         'type': 'Feature',
+                    //         'properties': {}
+                    //     };
+
+                    //     extentFeature.geometry = feature.extent;
+
+                    //     feature.extent = extentFeature;
+
+                    //     project.push(feature);
+
+                    // });
+
                     $scope.projectStore.setProjects(successResponse.features);
 
                     self.filteredProjects = $scope.projectStore.filteredProjects;
