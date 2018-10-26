@@ -21,6 +21,12 @@
                     isArray: false,
                     cache: true,
                     url: environment.apiUrl.concat('/v1/data/search/user')
+                },
+                workspace: {
+                    method: 'GET',
+                    isArray: false,
+                    cache: true,
+                    url: environment.apiUrl.concat('/v1/data/search/workspace')
                 }
             });
         });

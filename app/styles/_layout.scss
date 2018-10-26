@@ -526,3 +526,36 @@ main.container {
 .pull-right {
   float: right;
 }
+
+header .header {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 1em 0;
+}
+
+.module--grid {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  > div,
+  > article,
+  > section {
+    flex-basis: 0;
+    flex-grow: 1;
+    border-radius: 4px;
+    margin-bottom: 2em;
+    overflow: hidden;
+    box-shadow: 0 1px 1px 0 rgba(60,64,67,.08),0 1px 3px 1px rgba(60,64,67,.16);
+  }
+
+  .map--module {
+    min-width: 40%;
+    max-width: 60%;
+  }
+
+}

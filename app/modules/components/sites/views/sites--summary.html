@@ -77,9 +77,18 @@
                         <tbody class="metrics">
                             <tr class="metrics--metric" data-ng-repeat="practice in page.rollups.nitrogen.practices.practices track by $index">
                                 <td class="table-column-wide">
-                                    <p class="metric--title">
+                                    <!-- <div class="subpractices"> -->
+                                    <div data-ng-repeat="subpractice in practice.practices track by $index" class="subpractices--name">
+                                        <p class="metric--title">
+                                            <a href="/practices/{{ practice.id }}">{{ subpractice.name }}</a>
+                                        </p>
+                                        <div class="metric--chart">
+                                            <div class="metric--chart--value" data-ng-style="{'width': subpractice.percentage.whole + '%' }"></div>
+                                        </div>
+                                    </div>
+                                    <!-- </div> -->
+                                    <!-- <p class="metric--title">
                                         <a href="/practices/{{ practice.id }}">
-                                            <!-- <span data-ng-if="practice.name === 'Custom'">Other Conservation Practice</span> -->
                                             <span data-ng-if="practice.name !== 'Custom'">{{ practice.name }}</span>
                                             <span data-ng-if="practice.has_majority_design_completion === false">90%</span> 
                                             #{{ $index+1 }}
@@ -87,7 +96,7 @@
                                     </p>
                                     <div class="metric--chart">
                                         <div class="metric--chart--value" data-ng-if="!practice.inactive" data-ng-style="{'width': practice.percentage.whole + '%' }"></div>
-                                    </div>
+                                    </div> -->
                                     <!-- <div data-ng-if="practice.name === 'Custom'" class="show_custom_practices">
                                         <a href="javascript:void(0);" data-ng-if="practice.show_custom_practices !== true" data-ng-click="practice.show_custom_practices =! practice.show_custom_practices">
                                             Show Practices
@@ -96,7 +105,7 @@
                                             Hide Practices
                                         </a>
                                     </div> -->
-                                    <div class="subpractices">
+                                    <!-- <div class="subpractices">
                                         <div data-ng-repeat="subpractice in practice.practices track by $index" class="subpractices--name">
                                             <p class="metric--title">
                                                 {{ subpractice.name }}
@@ -105,7 +114,7 @@
                                                 <div class="metric--chart--value" data-ng-style="{'width': subpractice.percentage.whole + '%' }"></div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </td>
                                 <td class="table-column-even table-column-top">
                                     <p class="metric--title">&nbsp;</p>

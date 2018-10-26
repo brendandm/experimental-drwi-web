@@ -1,36 +1,29 @@
 <div data-ng-include="'/modules/shared/notifications/notifications--view.html'"></div>
 
 <header role="banner" class="site-header">
+
     <div class="container">
-        <div class="row">
-            <section class="site-brand column-8">
+
+        <div class="header">
+
+            <section>
                 <a href="/">
                     <img src="/images/logo-FieldDoc.png" width="128" alt="" title="" />
                 </a>
             </section>
 
-            <nav class="site-navigation-utility column-8 align-right">
+            <div global-search class="global--search">
+                <input type="search" class="search" value="" placeholder="Search your workspace" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue, 'workspace')" typeahead-on-select="routeTo($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+            </div>
+
+            <nav class="site-navigation-utility align-right">
+
                 <ul class="utility-navigation">
                     <li data-ng-if="!$root.user.id">
                         <a class="button-link" href="/account/register">
                             Create Account
                         </a>
                     </li>
-                    <!-- <li data-ng-if="$root.user.id">
-                        <a href="/projects" class="user">
-                            Projects
-                        </a>
-                    </li> -->
-                    <!-- <li data-ng-if="$root.user.id">
-                        <a href="/dashboard" class="user">
-                            Dashboard
-                        </a>
-                    </li> -->
-                    <!-- <li data-ng-if="$root.user.id">
-                        <a href="/account/{{ $root.user.id }}" class="user">
-                            Account
-                        </a>
-                    </li> -->
                     <li data-ng-if="$root.user.id">
                         <a href="/account">
                             <i class="material-icons">
@@ -49,9 +42,13 @@
                         </a>
                     </li>
                 </ul>
+
             </nav>
+
         </div>
+
     </div>
+
 </header>
 
 <section class="container meta" data-ng-if="!page.status.loading && $root.page.links">

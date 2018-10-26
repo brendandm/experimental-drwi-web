@@ -30,17 +30,30 @@
 
                             console.log('searchItem', item);
 
-                            $location.path(item.permalink).search({});
+                            var path = item.category + 's/' + item.id;
+
+                            // $location.path(item.permalink).search({});
+
+                            $location.path(path).search({});
 
                         };
 
                         // Populate a list of possible matches based on the search string
 
-                        scope.fetchSuggestions = function(a) {
+                        scope.fetchSuggestions = function(a, scope_) {
 
-                            return SearchService.get({
+                            var params = {
                                 q: a
-                            }).$promise.then(function(response) {
+                            };
+
+                            if (typeof scope_ === 'string' &&
+                                scope_.length > 0) {
+
+                                params.scope = scope_;
+
+                            }
+
+                            return SearchService.get(params).$promise.then(function(response) {
 
                                 console.log(response);
 
