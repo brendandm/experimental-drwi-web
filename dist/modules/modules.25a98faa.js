@@ -6075,6 +6075,7 @@ angular.module('FieldDoc')
                     self.practice = new Practice({
                         'practice_type': 'Custom',
                         'site_id': self.site.id,
+                        'project_id': self.site.properties.project.id,
                         'organization_id': self.site.properties.project.properties.organization_id
                     });
 
@@ -7153,7 +7154,7 @@ angular.module('FieldDoc')
 
                 self.practice = successResponse;
 
-                $rootScope.page.title = self.practice.properties.name || self.practice.properties.category.properties.name;
+                $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
 
                 //
                 // If a valid practice geometry is present, add it to the map
@@ -11694,6 +11695,12 @@ angular
                     isArray: false,
                     cache: true,
                     url: environment.apiUrl.concat('/v1/data/search/user')
+                },
+                workspace: {
+                    method: 'GET',
+                    isArray: false,
+                    cache: true,
+                    url: environment.apiUrl.concat('/v1/data/search/workspace')
                 }
             });
         });
@@ -12586,17 +12593,30 @@ angular.module('FieldDoc')
 
                             console.log('searchItem', item);
 
-                            $location.path(item.permalink).search({});
+                            var path = item.category + 's/' + item.id;
+
+                            // $location.path(item.permalink).search({});
+
+                            $location.path(path).search({});
 
                         };
 
                         // Populate a list of possible matches based on the search string
 
-                        scope.fetchSuggestions = function(a) {
+                        scope.fetchSuggestions = function(a, scope_) {
 
-                            return SearchService.get({
+                            var params = {
                                 q: a
-                            }).$promise.then(function(response) {
+                            };
+
+                            if (typeof scope_ === 'string' &&
+                                scope_.length > 0) {
+
+                                params.scope = scope_;
+
+                            }
+
+                            return SearchService.get(params).$promise.then(function(response) {
 
                                 console.log(response);
 
