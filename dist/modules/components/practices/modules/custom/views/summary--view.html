@@ -6,19 +6,67 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <h1 class="inset">{{ page.summary.practice.properties.name || 'Un-named' }}</h1>
-
         <div class="main--ui">
 
-            <div data-ng-include="'/modules/components/practices/views/practiceSummaryHeader--view.html'"></div>
+            <div class="throbber throbber-small" data-ng-if="page.status.loading"></div>
 
-            <article class="feature-detail">
+            <div class="module--grid" data-ng-if="!page.status.loading">
 
-                <div class="throbber throbber-small" data-ng-if="page.status.loading"></div>
+                <div class="group">
 
-                <div class="feature-detail-content" data-ng-if="!page.status.loading">
+                    <!-- Descriptors -->
 
-                    <div class="table-responsive">
+                    <article class="pad space-right" data-ng-if="!page.status.loading">
+
+                        <h1>{{ page.summary.practice.properties.name || 'Un-named' }}</h1>
+
+                        <p>
+                            <strong>Project:</strong> <a href="{{ page.summary.links.project.html }}">{{ page.summary.site.properties.project.properties.name }}</a>
+                        </p>
+
+                        <p>
+                            <strong>Site:</strong> <a href="{{ page.summary.links.site.html }}">{{ page.summary.site.properties.name }}</a>
+                        </p>
+
+                        <p>
+                            <strong>Practice Type:</strong> {{ page.summary.practice.properties.category.properties.name }}
+                        </p>
+
+                        <p data-ng-if="page.summary.practice.properties.description" data-ng-bind-html="page.summary.practice.properties.description"></p>
+
+                        <p data-ng-if="!page.summary.practice.properties.description">{{ page.summary.practice.properties.category.properties.description }}</p>
+
+                    </article>
+
+                    <!-- Map -->
+
+                    <div style="position:relative;">
+
+                        <leaflet id="practice--map" class="map" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
+
+                        <div class="progress--modal" data-ng-if="page.progressValue && page.progressValue > 0">
+
+                            <div class="progress--container">
+                                <p>
+                                    <strong>{{ page.progressMessage }}
+                                    </strong>
+                                </p>
+                                <div class="progress--meter--bar--wrapper">
+                                    <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="group" data-ng-if="!page.status.loading">
+
+                    <div class="table-responsive pad">
+
+                        <h2>Installation Summary</h2>
 
                         <div data-ng-if="!page.summary.practice.properties.has_planning_data">
 
@@ -36,11 +84,11 @@
 
                             <tbody>
 
-                                <tr class="no-rule">
+                                <!-- <tr class="no-rule">
                                     <td class="align-left" colspan="{{ page.summary.practice.properties.readings_custom.length + 5 }}">
                                         <h2><strong>Installation</strong> Summary</h2>
                                     </td>
-                                </tr>
+                                </tr> -->
 
                                 <tr>
                                     <th colspan="2">&nbsp;</th>
@@ -56,6 +104,9 @@
                                 </tr>
 
                                 <tr>
+                                    <td>
+                                        &nbsp;
+                                    </td>
                                     <td class="collapse">
                                         <strong>Practice Extent</strong>
                                     </td>
@@ -112,12 +163,15 @@
                                 </tr>
 
                                 <tr>
+                                    <td>
+                                        &nbsp;
+                                    </td>
                                     <td class="align-middle">
                                         <strong>Nitrogen</strong>
                                     </td>
-                                    <td class="align-middle">
+                                    <!-- <td class="align-middle">
                                         <strong>Total</strong>
-                                    </td>
+                                    </td> -->
                                     <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false" class="collapse">
                                         <strong>{{ report.properties.custom_model_nitrogen_total || 0 | number:2 }}</strong>
                                     </td>
@@ -134,12 +188,15 @@
                                 </tr>
 
                                 <tr>
+                                    <td>
+                                        &nbsp;
+                                    </td>
                                     <td class="align-middle">
                                         <strong>Phosphorus</strong>
                                     </td>
-                                    <td class="align-middle">
+                                    <!-- <td class="align-middle">
                                         <strong>Total</strong>
-                                    </td>
+                                    </td> -->
                                     <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false" class="collapse">
                                         <strong>{{ report.properties.custom_model_phosphorus_total || 0 | number:2 }}</strong>
                                     </td>
@@ -156,12 +213,15 @@
                                 </tr>
 
                                 <tr>
+                                    <td>
+                                        &nbsp;
+                                    </td>
                                     <td class="align-middle">
                                         <strong>Sediment</strong>
                                     </td>
-                                    <td class="align-middle">
+                                    <!-- <td class="align-middle">
                                         <strong>Total</strong>
-                                    </td>
+                                    </td> -->
                                     <td data-ng-if="report.properties.measurement_period === 'Planning' || report.properties.measurement_period === 'Installation'" data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false" class="collapse">
                                         <strong>{{ report.properties.custom_model_sediment_total || 0 | number:2 }}</strong>
                                     </td>
@@ -266,7 +326,7 @@
                                             <tr data-ng-repeat="metric in report.properties.metrics | orderBy:'id':false">
                                                 <td style="white-space:nowrap;">
                                                     <strong>
-                                                        {{ page.summary.practice.properties.quantity_installed.metrics[$index].value || 0 | number:2 }}
+                                                        {{ page.summary.practice.properties.quantity_installed.metrics[$index].value || 0 | number:2 }} {{ metric.units }}
                                                     </strong>
                                                 </td>
                                             </tr>
@@ -344,37 +404,41 @@
 
                         </table>
 
-                        <div data-ng-if="page.summary.practice.properties.has_planning_data">
-
-                            <h2>Notes</h2>
-
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th class="align-left" width="10%">Date</th>
-                                        <th class="align-left" width="90%">Notes</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
-                                        <td class="align-left">
-                                            <a href="/practices/{{ page.summary.practice.id }}/{{ report.properties.id }}/edit">
-                                                {{ report.properties.report_date }}
-                                            </a>
-                                        </td>
-                                        <td class="align-left" data-ng-if="report.properties.notes">{{ report.properties.notes }}</td>
-                                        <td class="align-left" data-ng-if="!report.properties.notes"><em>No notes recorded for this date</em></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
-
                     </div>
 
                 </div>
 
-            </article>
+                <div class="group" data-ng-if="page.summary.practice.properties.has_planning_data">
+
+                    <section class="pad">
+
+                        <h2>Notes</h2>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="align-left" width="10%">Date</th>
+                                    <th class="align-left" width="90%">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-ng-repeat="report in page.summary.practice.properties.readings_custom | orderBy:'properties.report_date':false">
+                                    <td class="align-left">
+                                        <a href="/practices/{{ page.summary.practice.id }}/{{ report.properties.id }}/edit">
+                                            {{ report.properties.report_date }}
+                                        </a>
+                                    </td>
+                                    <td class="align-left" data-ng-if="report.properties.notes">{{ report.properties.notes }}</td>
+                                    <td class="align-left" data-ng-if="!report.properties.notes"><em>No notes recorded for this date</em></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </section>
+
+                </div>
+
+            </div>
 
         </div>
 

@@ -18,14 +18,57 @@
 
                         <h1>{{ page.project.properties.name }}</h1>
 
-                        <h4>
-                            <span data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">{{ page.project.properties.program_type }}</span>
+                        <p data-ng-if="page.project.id && page.project.properties.last_modified_by.properties.first_name && page.project.properties.last_modified_by.properties.last_name" class="label">
+                            Last modified by {{ page.project.properties.last_modified_by.properties.first_name }} {{ page.project.properties.last_modified_by.properties.last_name }} on {{ page.project.properties.modified_on | date:'medium' }}
+                        </p>
 
-                            <span data-ng-if="page.project.id && page.project.properties.last_modified_by.properties.first_name && page.project.properties.last_modified_by.properties.last_name" class="label">Last Modified by: {{ page.project.properties.last_modified_by.properties.first_name }} {{ page.project.properties.last_modified_by.properties.last_name }}</span>
-                            <span data-ng-if="page.project.id && page.project.properties.modified_on" class="label">Modified on: {{ page.project.properties.modified_on | date }}</span>
-                        </h4>
+                        <p data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">
+                            <strong>Program:</strong> {{ page.project.properties.program_type }}
+                        </p>
 
                         <p data-ng-bind-html="page.project.properties.description"></p>
+
+                        <nav class="contextual-navigation-wrapper" style="float: none; padding:0; margin: 0; border: 0 none;">
+
+                            <p><strong>Status</strong></p>
+
+                            <ul class="contextual-navigation" style="float: none; padding:0; margin: 0; border: 0 none;">
+
+                                <li data-ng-if="(page.permissions.is_admin || page.permissions.is_manager) && (page.project.properties.workflow_state === 'Submitted' || page.project.properties.workflow_state === 'Completed')" style="flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
+                                    <button data-ng-click="page.fundProject()" class="button button-submit" data-ng-class="{'button-outline': (page.project.properties.workflow_state === 'Completed')}">
+                                        <span>
+                                            Mark Project as Funded
+                                        </span>
+                                    </button>
+                                </li>
+
+                                <li data-ng-if="(page.permissions.is_admin || page.permissions.is_manager) && page.project.properties.workflow_state === 'Funded'" style="flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
+                                    <button data-ng-click="page.completeProject()" class="button button-submit">
+                                        <span>
+                                            Mark Project as Complete
+                                        </span>
+                                    </button>
+                                </li>
+
+                                <li data-ng-if="page.project.properties.workflow_state === 'Draft'" style="flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
+                                    <button data-ng-click="page.submitProject()" class="button button-info">
+                                        <span>
+                                            Submit Project to Funder
+                                        </span>
+                                    </button>
+                                </li>
+
+                                <li data-ng-if="page.project.properties.workflow_state === 'Submitted'" style="flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
+                                    <button data-ng-click="page.rollbackProjectSubmission()" class="button button-info button-outline">
+                                        <span>
+                                            Retract Submission
+                                        </span>
+                                    </button>
+                                </li>
+
+                            </ul>
+
+                        </nav>
 
                     </article>
 
@@ -48,7 +91,7 @@
                                     <span class="statistic--title">Nitrogen</span>
                                 </p>
                                 <div class="statistic--chart">
-                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.rollups.nitrogen.installed/page.rollups.nitrogen.total)*100) + '%' }">
+                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.rollups.nitrogen.installed/page.rollups.nitrogen.total)*100) + '%' }" style="background-color: #2196F3;">
                                     </div>
                                 </div>
                             </div>
@@ -59,7 +102,7 @@
                                     <span class="statistic--title">Phosphorus</span>
                                 </p>
                                 <div class="statistic--chart">
-                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.rollups.phosphorus.installed/page.rollups.phosphorus.total)*100) + '%' }">
+                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.rollups.phosphorus.installed/page.rollups.phosphorus.total)*100) + '%' }" style="background-color: #2196F3;">
                                     </div>
                                 </div>
                             </div>
@@ -70,7 +113,7 @@
                                     <span class="statistic--title">Sediment</span>
                                 </p>
                                 <div class="statistic--chart">
-                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.rollups.sediment.installed/page.rollups.sediment.total)*100) + '%' }">
+                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.rollups.sediment.installed/page.rollups.sediment.total)*100) + '%' }" style="background-color: #2196F3;">
                                     </div>
                                 </div>
                             </div>
@@ -126,9 +169,19 @@
                         <ul class="snapshot--cards list-unstyled">
 
                             <li class="card" data-ng-repeat="site in page.sites | orderBy:'-site.modified_on' track by $index">
+
                                 <div class="card--content">
+
                                     <div class="name">{{ site.site.properties.name || 'Un-named' }}</div>
+
+                                    <img data-ng-if="site.site.geometry" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/geojson({{ site.site.geometry }})/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="200" />
+
+                                    <img data-ng-if="!site.site.geometry && page.project.properties.extent" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/geojson({{ page.project.properties.extent }})/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="200" />
+
+                                    <img data-ng-if="!site.site.geometry && !page.project.properties.extent" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,5/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="200" />
+
                                     <div class="body">
+
                                         <div class="confirm--delete" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === site.site.id && page.deletionTarget.collection === 'site'">
                                             <p>Do you want to delete this site?</p>
                                             <div class="actions" style="flex: 0;">
@@ -160,7 +213,9 @@
                                         </div>
                                         <span><time datetime="{{ site.site.properties.modified_on }}" title="{{ site.site.properties.modified_on }}">Last updated by {{ site.site.properties.last_modified_by.properties.first_name }} {{ site.site.properties.last_modified_by.properties.last_name }} on {{ site.site.properties.modified_on | date : 'mediumDate' }}</time></span>
                                     </div>
+
                                 </div>
+
                             </li>
 
                             <li class="card">
@@ -176,51 +231,6 @@
                             </li>
 
                         </ul>
-
-                    </section>
-
-                </div>
-
-                <div class="group">
-
-                    <section class="pad">
-
-                        <nav class="contextual-navigation-wrapper">
-                            <h6><strong>Status</strong></h6>
-                            <ul class="contextual-navigation">
-                                <li data-ng-if="(page.permissions.is_admin || page.permissions.is_manager) && (page.project.properties.workflow_state === 'Submitted' || page.project.properties.workflow_state === 'Completed')">
-                                    <button data-ng-click="page.fundProject()" class="button button-submit button-indent" data-ng-class="{'button-outline': (page.project.properties.workflow_state === 'Completed')}">
-                                        <span>
-                                            Mark Project as Funded
-                                        </span>
-                                    </button>
-                                </li>
-
-                                <li data-ng-if="(page.permissions.is_admin || page.permissions.is_manager) && page.project.properties.workflow_state === 'Funded'">
-                                    <button data-ng-click="page.completeProject()" class="button button-submit button-indent">
-                                        <span>
-                                            Mark Project as Complete
-                                        </span>
-                                    </button>
-                                </li>
-
-                                <li data-ng-if="page.project.properties.workflow_state === 'Draft'">
-                                    <button data-ng-click="page.submitProject()" class="button button-info button-indent">
-                                        <span>
-                                            Submit Project to Funder
-                                        </span>
-                                    </button>
-                                </li>
-
-                                <li data-ng-if="page.project.properties.workflow_state === 'Submitted'">
-                                    <button data-ng-click="page.rollbackProjectSubmission()" class="button button-info button-indent button-outline">
-                                        <span>
-                                            Retract Submission
-                                        </span>
-                                    </button>
-                                </li>
-                            </ul>
-                        </nav>
 
                     </section>
 

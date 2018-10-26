@@ -8,12 +8,11 @@
             <small>
                 <strong>Project Title:</strong> <a href="{{ page.summary.links.project.html }}">{{ page.summary.site.properties.project.properties.name }}</a>
                 <strong>Site Name:</strong> <a href="{{ page.summary.links.site.html }}">{{ page.summary.site.properties.name }}</a><br />
-                <!-- <strong>Stream Name: </strong> {{ page.summary.site.properties.segment.properties.river_name }}
-                <strong>HGMR: </strong> {{ page.summary.site.properties.segment.properties.hgmr_name }} -->
             </small>
         </p>
 
-        <!-- Map - LP -->
+        <!-- Map -->
+        
         <div style="position:relative;">
 
             <leaflet id="practice--map" class="map" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>

@@ -4766,6 +4766,23 @@ angular.module('FieldDoc')
 
                     console.log('successResponse', successResponse);
 
+                    // var projects = [];
+
+                    // successResponse.features.forEach(function(feature) {
+
+                    //     var extentFeature = {
+                    //         'type': 'Feature',
+                    //         'properties': {}
+                    //     };
+
+                    //     extentFeature.geometry = feature.extent;
+
+                    //     feature.extent = extentFeature;
+
+                    //     project.push(feature);
+
+                    // });
+
                     $scope.projectStore.setProjects(successResponse.features);
 
                     self.filteredProjects = $scope.projectStore.filteredProjects;
@@ -6015,6 +6032,36 @@ angular.module('FieldDoc')
                     practices.$promise.then(function(successResponse) {
 
                         console.log('self.practices', successResponse);
+
+                        successResponse.features.forEach(function(feature) {
+
+                            if (feature.geometry) {
+
+                                var styledFeature = {
+                                    "type": "Feature",
+                                    "geometry": feature.geometry.geometries[0],
+                                    "properties": {
+                                        "marker-size": "small",
+                                        "marker-color": "#00FFFFFF",
+                                        "stroke": "#00555555",
+                                        "stroke-opacity": 0,
+                                        "stroke-width": 0,
+                                        "fill": "#00555555",
+                                        "fill-opacity": 0
+                                    }
+                                }
+
+                                feature.geometry = styledFeature;
+
+                                // 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/geojson({{ practice.geometry }})/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+
+                                var staticURL = 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
+
+                                feature.staticURL = staticURL;
+
+                            }
+
+                        });
 
                         self.practices = successResponse.features;
 
