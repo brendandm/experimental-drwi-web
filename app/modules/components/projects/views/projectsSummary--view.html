@@ -174,11 +174,11 @@
 
                                     <div class="name">{{ site.site.properties.name || 'Un-named' }}</div>
 
-                                    <img data-ng-if="site.site.geometry" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/geojson({{ site.site.geometry }})/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="200" />
+                                    <img data-ng-if="site.staticURL" data-ng-src="{{ site.staticURL }}" width="auto" height="200" />
 
-                                    <img data-ng-if="!site.site.geometry && page.project.properties.extent" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/geojson({{ page.project.properties.extent }})/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="200" />
+                                    <img data-ng-if="!site.staticURL && page.project.staticURL" data-ng-src="page.project.staticURL" width="auto" height="200" />
 
-                                    <img data-ng-if="!site.site.geometry && !page.project.properties.extent" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,5/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="200" />
+                                    <img data-ng-if="!site.staticURL && !page.project.staticURL" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,5/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="200" />
 
                                     <div class="body">
 

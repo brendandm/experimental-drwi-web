@@ -221,22 +221,35 @@ angular.module('FieldDoc')
 
                     console.log('successResponse', successResponse);
 
-                    // var projects = [];
+                    successResponse.features.forEach(function(feature) {
 
-                    // successResponse.features.forEach(function(feature) {
+                        if (feature.extent) {
 
-                    //     var extentFeature = {
-                    //         'type': 'Feature',
-                    //         'properties': {}
-                    //     };
+                            var styledFeature = {
+                                "type": "Feature",
+                                "geometry": feature.extent,
+                                "properties": {
+                                    "marker-size": "small",
+                                    "marker-color": "#2196F3",
+                                    "stroke": "#2196F3",
+                                    "stroke-opacity": 1.0,
+                                    "stroke-width": 2,
+                                    "fill": "#2196F3",
+                                    "fill-opacity": 0.5
+                                }
+                            };
 
-                    //     extentFeature.geometry = feature.extent;
+                            feature.geometry = styledFeature;
 
-                    //     feature.extent = extentFeature;
+                            // Build static map URL for Mapbox API
 
-                    //     project.push(feature);
+                            var staticURL = 'https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
 
-                    // });
+                            feature.staticURL = staticURL;
+
+                        }
+
+                    });
 
                     $scope.projectStore.setProjects(successResponse.features);
 

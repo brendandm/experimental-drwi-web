@@ -82,6 +82,28 @@ angular.module('FieldDoc')
 
             };
 
+            self.buildStaticMapURL = function(geometry) {
+
+                var styledFeature = {
+                    "type": "Feature",
+                    "geometry": geometry,
+                    "properties": {
+                        "marker-size": "small",
+                        "marker-color": "#2196F3",
+                        "stroke": "#2196F3",
+                        "stroke-opacity": 1.0,
+                        "stroke-width": 2,
+                        "fill": "#2196F3",
+                        "fill-opacity": 0.5
+                    }
+                };
+
+                // Build static map URL for Mapbox API
+
+                return 'https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
+
+            };
+
             //
             // Assign project to a scoped variable
             //
@@ -90,7 +112,26 @@ angular.module('FieldDoc')
                 console.log('projectSummary', successResponse);
 
                 self.data = successResponse;
-                self.project = successResponse.project;
+
+                var project_ = successResponse.project;
+
+                if (project_.properties.extent) {
+
+                    project_.staticURL = self.buildStaticMapURL(project_.properties.extent);
+
+                }
+
+                self.project = project_;
+
+                successResponse.sites.forEach(function(feature) {
+
+                    if (feature.site.geometry) {
+
+                        feature.staticURL = self.buildStaticMapURL(feature.site.geometry);
+
+                    }
+
+                });
 
                 self.sites = successResponse.sites;
 
