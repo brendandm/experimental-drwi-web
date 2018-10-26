@@ -169,9 +169,19 @@
                         <ul class="snapshot--cards list-unstyled">
 
                             <li class="card" data-ng-repeat="site in page.sites | orderBy:'-site.modified_on' track by $index">
+
                                 <div class="card--content">
+
                                     <div class="name">{{ site.site.properties.name || 'Un-named' }}</div>
+
+                                    <img data-ng-if="site.site.geometry" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/geojson({{ site.site.geometry }})/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="200" />
+
+                                    <img data-ng-if="!site.site.geometry && page.project.properties.extent" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/geojson({{ page.project.properties.extent }})/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="200" />
+
+                                    <img data-ng-if="!site.site.geometry && !page.project.properties.extent" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,5/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="200" />
+
                                     <div class="body">
+
                                         <div class="confirm--delete" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === site.site.id && page.deletionTarget.collection === 'site'">
                                             <p>Do you want to delete this site?</p>
                                             <div class="actions" style="flex: 0;">
@@ -203,7 +213,9 @@
                                         </div>
                                         <span><time datetime="{{ site.site.properties.modified_on }}" title="{{ site.site.properties.modified_on }}">Last updated by {{ site.site.properties.last_modified_by.properties.first_name }} {{ site.site.properties.last_modified_by.properties.last_name }} on {{ site.site.properties.modified_on | date : 'mediumDate' }}</time></span>
                                     </div>
+
                                 </div>
+
                             </li>
 
                             <li class="card">
@@ -223,51 +235,6 @@
                     </section>
 
                 </div>
-
-                <!-- <div class="group">
-
-                    <section class="pad">
-
-                        <nav class="contextual-navigation-wrapper">
-                            <h6><strong>Status</strong></h6>
-                            <ul class="contextual-navigation">
-                                <li data-ng-if="(page.permissions.is_admin || page.permissions.is_manager) && (page.project.properties.workflow_state === 'Submitted' || page.project.properties.workflow_state === 'Completed')">
-                                    <button data-ng-click="page.fundProject()" class="button button-submit button-indent" data-ng-class="{'button-outline': (page.project.properties.workflow_state === 'Completed')}">
-                                        <span>
-                                            Mark Project as Funded
-                                        </span>
-                                    </button>
-                                </li>
-
-                                <li data-ng-if="(page.permissions.is_admin || page.permissions.is_manager) && page.project.properties.workflow_state === 'Funded'">
-                                    <button data-ng-click="page.completeProject()" class="button button-submit button-indent">
-                                        <span>
-                                            Mark Project as Complete
-                                        </span>
-                                    </button>
-                                </li>
-
-                                <li data-ng-if="page.project.properties.workflow_state === 'Draft'">
-                                    <button data-ng-click="page.submitProject()" class="button button-info button-indent">
-                                        <span>
-                                            Submit Project to Funder
-                                        </span>
-                                    </button>
-                                </li>
-
-                                <li data-ng-if="page.project.properties.workflow_state === 'Submitted'">
-                                    <button data-ng-click="page.rollbackProjectSubmission()" class="button button-info button-indent button-outline">
-                                        <span>
-                                            Retract Submission
-                                        </span>
-                                    </button>
-                                </li>
-                            </ul>
-                        </nav>
-
-                    </section>
-
-                </div> -->
 
             </div>
 
