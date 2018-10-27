@@ -40,7 +40,9 @@
 
                         <div class="card--content">
 
-                            <div class="name">{{ project.name }}</div>
+                            <div class="name">
+                                <span>{{ project.name }}</span>
+                            </div>
 
                             <img data-ng-if="project.staticURL" data-ng-src="{{ project.staticURL }}" width="auto" height="200" />
 
@@ -59,7 +61,6 @@
                                     </div>
                                 </div>
                                 <p>{{ project.description | truncate:80 }}</p>
-                                <!-- <span><time datetime="{{ project.modified_on }}" title="{{ project.modified_on }}">Last updated {{ project.modified_on | date : 'mediumDate' }}</time></span> -->
                                 <div class="actions">
                                     <a class="snapshot--title" href="/projects/{{ project.id }}" title="Project summary">
                                         <i class="material-icons">

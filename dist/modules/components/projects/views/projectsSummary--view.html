@@ -189,7 +189,9 @@
 
                                 <div class="card--content">
 
-                                    <div class="name">{{ site.properties.name || 'Un-named' }}</div>
+                                    <div class="name">
+                                        <span>{{ site.properties.name || 'Un-named' }}</span>
+                                    </div>
 
                                     <img data-ng-if="site.staticURL" data-ng-src="{{ site.staticURL }}" width="auto" height="200" />
 

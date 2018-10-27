@@ -163,7 +163,9 @@
 
                                 <div class="card--content">
 
-                                    <div class="name">{{ practice.properties.name || practice.properties.category || 'Un-named' }}</div>
+                                    <div class="name">
+                                        <span>{{ practice.properties.name || practice.properties.category || 'Un-named' }}</span>
+                                    </div>
 
                                     <img data-ng-if="practice.staticURL" data-ng-src="{{ practice.staticURL }}" width="auto" height="200" />
 
