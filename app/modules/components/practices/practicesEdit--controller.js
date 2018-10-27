@@ -16,7 +16,7 @@ angular.module('FieldDoc')
             'edit': true
         };
 
-        self.practiceTypes = practice_types;
+        // self.practiceTypes = practice_types;
 
         self.files = Media;
         self.files.images = [];
@@ -175,6 +175,8 @@ angular.module('FieldDoc')
                 console.log('self.practice', successResponse);
 
                 self.practice = successResponse;
+
+                self.practiceType = successResponse.properties.category;
 
                 $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
 
@@ -415,22 +417,35 @@ angular.module('FieldDoc')
                     });
 
                     self.practice.$update().then(function(successResponse) {
+
                         $location.path('/practices/' + self.practice.id);
+
                     }, function(errorResponse) {
+
                         // Error message
+
                     });
 
                 }, function(errorResponse) {
+
                     $log.log('errorResponse', errorResponse);
+
                 });
 
             } else {
+
                 self.practice.$update().then(function(successResponse) {
+
                     $location.path('/practices/' + self.practice.id);
+
                 }, function(errorResponse) {
+
                     // Error message
+
                 });
+
             }
+
         };
 
         self.alerts = [];
@@ -691,6 +706,36 @@ angular.module('FieldDoc')
                 var zoom = map._zoom + 1;
                 map.setZoom(zoom);
             });
+
+        });
+
+        self.setPracticeType = function($item,$model,$label) {
+
+            console.log('self.practiceType', $item);
+
+            self.practice.properties.category_id = $item.id;
+
+        };
+
+        //
+        // Load practices
+        //
+
+        practice_types.$promise.then(function(successResponse) {
+
+            console.log('self.practiceTypes', successResponse);
+
+            var _practiceTypes = [];
+
+            successResponse.features.forEach(function(feature) {
+
+                _practiceTypes.push(feature.properties);
+
+            });
+
+            self.practiceTypes = _practiceTypes;
+
+        }, function(errorResponse) {
 
         });
 

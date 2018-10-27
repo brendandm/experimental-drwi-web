@@ -16,4 +16,13 @@ angular.module('FieldDoc')
         $locationProvider.html5Mode(true);
         $locationProvider.hashPrefix('!');
 
-    });
+    })
+    .run(['$rootScope', '$window', '$location', '$anchorScroll', function($rootScope, $window, $location, $anchorScroll) {
+
+        $rootScope.$on('$routeChangeSuccess', function() {
+
+            $anchorScroll();
+
+        });
+
+    }]);

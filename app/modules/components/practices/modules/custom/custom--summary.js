@@ -36,19 +36,6 @@
                     loading: true
                 };
 
-                self.actions = {
-                    print: function() {
-
-                        $window.print();
-
-                    },
-                    saveToPdf: function() {
-
-                        $scope.$emit('saveToPdf');
-
-                    }
-                };
-
                 self.alerts = [];
 
                 function closeAlerts() {
@@ -65,11 +52,23 @@
 
                 }
 
-                self.confirmDelete = function(obj) {
+                self.confirmDelete = function(obj, targetCollection) {
 
-                    console.log('self.confirmDelete', obj);
+                    console.log('self.confirmDelete', obj, targetCollection);
 
-                    self.deletionTarget = self.deletionTarget ? null : obj;
+                    if (self.deletionTarget &&
+                        self.deletionTarget.collection === 'practice') {
+
+                        self.cancelDelete();
+
+                    } else {
+
+                        self.deletionTarget = {
+                            'collection': targetCollection,
+                            'feature': obj
+                        };
+
+                    }
 
                 };
 
@@ -79,20 +78,54 @@
 
                 };
 
-                self.deleteFeature = function() {
+                self.deleteFeature = function(featureType, index) {
 
-                    Practice.delete({
-                        id: +self.deletionTarget.id
+                    console.log('self.deleteFeature', featureType, index);
+
+                    var targetCollection;
+
+                    switch (featureType) {
+
+                        case 'report':
+
+                            targetCollection = PracticeCustom;
+
+                            break;
+
+                        default:
+
+                            targetCollection = Practice;
+
+                            break;
+
+                    }
+
+                    targetCollection.delete({
+                        id: +self.deletionTarget.feature.id
                     }).$promise.then(function(data) {
 
                         self.alerts.push({
                             'type': 'success',
                             'flag': 'Success!',
-                            'msg': 'Successfully deleted this practice.',
+                            'msg': 'Successfully deleted this ' + featureType + '.',
                             'prompt': 'OK'
                         });
 
-                        $timeout(closeRoute, 2000);
+                        if (index !== null &&
+                            typeof index === 'number' &&
+                            featureType === 'report') {
+
+                            self.summary.practice.properties.readings_custom.splice(index, 1);
+
+                            self.cancelDelete();
+
+                            $timeout(closeAlerts, 2000);
+
+                        } else {
+
+                            $timeout(closeRoute, 2000);
+
+                        }
 
                     }).catch(function(errorResponse) {
 
@@ -103,7 +136,7 @@
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this practice.',
+                                'msg': 'Unable to delete this ' + featureType + '. There are pending tasks affecting this feature.',
                                 'prompt': 'OK'
                             }];
 
@@ -112,7 +145,7 @@
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'You don’t have permission to delete this practice.',
+                                'msg': 'You don’t have permission to delete this ' + featureType + '.',
                                 'prompt': 'OK'
                             }];
 
@@ -121,7 +154,7 @@
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'Something went wrong while attempting to delete this practice.',
+                                'msg': 'Something went wrong while attempting to delete this ' + featureType + '.',
                                 'prompt': 'OK'
                             }];
 
@@ -177,8 +210,8 @@
                         $rootScope.page.hideActions = true;
                     }
 
-                    $rootScope.page.title =
-                        "Other Conservation Practice";
+                    // $rootScope.page.title =
+                    //     "Other Conservation Practice";
 
                     self.practiceType = Utility.machineName(self.summary
                         .practice.properties.practice_type);
@@ -197,21 +230,25 @@
                                 maxZoom: 18
                             });
                         });
+
                         self.map.geojson = {
                             data: self.summary.practice.geometry
                         };
+
                     }
 
                     self.status.loading = false;
+
                 }, function() {});
 
                 //
                 // Verify Account information for proper UI element display
                 //
                 if (Account.userObject && user) {
+
                     user.$promise.then(function(userResponse) {
-                        $rootScope.user = Account.userObject =
-                            userResponse;
+
+                        $rootScope.user = Account.userObject = userResponse;
 
                         self.permissions = {
                             isLoggedIn: Account.hasToken(),
@@ -236,14 +273,16 @@
                     });
 
                     newReading.$save().then(function(successResponse) {
-                        $location.path('/projects/' + projectId +
-                            '/sites/' + siteId +
-                            '/practices/' + practiceId +
-                            '/' + self.practiceType + '/' +
-                            successResponse.id + '/edit');
+
+                        $location.path('/practices/' + practiceId +
+                            '/' + successResponse.id + '/edit');
+
                     }, function(errorResponse) {
+
                         console.error('ERROR: ', errorResponse);
+
                     });
+
                 };
 
             });

@@ -247,7 +247,7 @@
                     });
 
                     //
-                    // Load spatial nodes
+                    // Load practices
                     //
 
                     practices.$promise.then(function(successResponse) {
@@ -263,11 +263,11 @@
                                     "geometry": feature.geometry.geometries[0],
                                     "properties": {
                                         "marker-size": "small",
-                                        "marker-color": "#00FFFFFF",
-                                        "stroke": "#00555555",
+                                        "marker-color": "#2196F3",
+                                        "stroke": "#2196F3",
                                         "stroke-opacity": 0,
                                         "stroke-width": 0,
-                                        "fill": "#00555555",
+                                        "fill": "#2196F3",
                                         "fill-opacity": 0
                                     }
                                 }
