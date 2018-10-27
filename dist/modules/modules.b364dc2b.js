@@ -5902,16 +5902,6 @@ angular.module('FieldDoc')
                         }
                         return Account.userObject;
                     },
-                    // project: function(Project, $route) {
-                    //     return Project.get({
-                    //         'id': $route.current.params.projectId
-                    //     });
-                    // },
-                    // summary: function(Site, $route) {
-                    //     return Site.summary({
-                    //         id: $route.current.params.siteId
-                    //     });
-                    // },
                     metrics: function(Site, $route) {
                         return Site.metrics({
                             id: $route.current.params.siteId
@@ -5988,19 +5978,6 @@ angular.module('FieldDoc')
                     'loading': true
                 };
 
-                self.actions = {
-                    print: function() {
-
-                        $window.print();
-
-                    },
-                    saveToPdf: function() {
-
-                        $scope.$emit('saveToPdf');
-
-                    }
-                };
-
                 self.alerts = [];
 
                 function closeAlerts() {
@@ -6011,11 +5988,7 @@ angular.module('FieldDoc')
 
                 function closeRoute() {
 
-                    // var parentPath = self.links.project.split('org')[1];
-
-                    var parentPath = '/projects/' + self.data.project.id;
-
-                    $location.path(parentPath);
+                    $location.path(self.site.links.project.html);
 
                 }
 
@@ -6150,15 +6123,22 @@ angular.module('FieldDoc')
 
                 };
 
-                //draw tools
                 function addNonGroupLayers(sourceLayer, targetGroup) {
+
                     if (sourceLayer instanceof L.LayerGroup) {
+
                         sourceLayer.eachLayer(function(layer) {
+
                             addNonGroupLayers(layer, targetGroup);
+
                         });
+
                     } else {
+
                         targetGroup.addLayer(sourceLayer);
+
                     }
+
                 }
 
                 self.setGeoJsonLayer = function(data, layerGroup, clearLayers) {
@@ -6183,7 +6163,7 @@ angular.module('FieldDoc')
 
                     site.$promise.then(function(successResponse) {
 
-                        console.log('self.summary', successResponse);
+                        console.log('self.site', successResponse);
 
                         self.site = successResponse;
 
@@ -6268,7 +6248,6 @@ angular.module('FieldDoc')
                                 self.setGeoJsonLayer(self.site.geometry, self.siteExtent);
 
                                 map.fitBounds(self.siteExtent.getBounds(), {
-                                    // padding: [20, 20],
                                     maxZoom: 18
                                 });
 
@@ -7089,163 +7068,127 @@ angular.module('FieldDoc')
         });
 
 }());
-// (function() {
+'use strict';
 
-//     'use strict';
+/**
+ * @ngdoc overview
+ * @name FieldDoc
+ * @description
+ * # FieldDoc
+ *
+ * Main module of the application.
+ */
+angular.module('FieldDoc')
+    .config(function($routeProvider) {
 
-//     /**
-//      * @ngdoc
-//      * @name
-//      * @description
-//      */
-//     angular.module('FieldDoc')
-//         .config(function($routeProvider, commonscloud) {
-
-//             $routeProvider
-//                 .when('/projects/:projectId/sites/:siteId/practices', {
-//                     redirectTo: '/projects/:projectId/sites/:siteId'
-//                 })
-//                 .when('/projects/:projectId/sites/:siteId/practices/:practiceId', {
-//                     templateUrl: '/modules/components/practices/views/practices--view.html',
-//                     controller: 'PracticeViewController',
-//                     controllerAs: 'page',
-//                     resolve: {
-//                         practice: function(Practice, $route) {
-//                             return Practice.get({
-//                                 id: $route.current.params.practiceId
-//                             });
-//                         }
-//                     }
-//                 })
-//                 .when('/projects/:projectId/sites/:siteId/practices/:practiceId/edit', {
-//                     templateUrl: '/modules/components/practices/views/practices--edit.html',
-//                     controller: 'PracticeEditController',
-//                     controllerAs: 'page',
-//                     resolve: {
-//                         user: function(Account) {
-//                             if (Account.userObject && !Account.userObject.id) {
-//                                 return Account.getUser();
-//                             }
-//                             return Account.userObject;
-//                         },
-//                         site: function(Site, $route) {
-//                             return Site.get({
-//                                 id: $route.current.params.siteId
-//                             });
-//                         },
-//                         practice_types: function(PracticeType, $route) {
-//                             return PracticeType.query({
-//                                 results_per_page: 500
-//                             });
-//                         },
-//                         practice: function(Practice, $route) {
-//                             return Practice.get({
-//                                 id: $route.current.params.practiceId
-//                             });
-//                         }
-//                     }
-//                 });
-
-//         });
-
-// }());
-(function() {
-
-  'use strict';
-
-  /**
-   * @ngdoc service
-   * @name
-   * @description
-   */
-  angular.module('FieldDoc')
-    .service('Calculate', function(LoadData, $q) {
-      return {
-        getExistingLanduse: function(measurementPeriod, readings) {
-
-          var landuse;
-
-          angular.forEach(readings, function(reading) {
-            if (reading.properties.measurement_period === measurementPeriod) {
-              landuse = reading.properties.existing_riparian_landuse;
-            }
-          });
-
-          return landuse;
-        },
-        getUplandLanduse: function(measurementPeriod, readings) {
-
-          var landuse;
-
-          angular.forEach(readings, function(reading) {
-            if (reading.properties.measurement_period === measurementPeriod) {
-              landuse = reading.properties.upland_landuse;
-            }
-          });
-
-          return landuse;
-        },
-        getLoadPromise: function(landuse, segment) {
-
-          var defer = $q.defer();
-
-          var request = LoadData.query({
-            q: {
-              filters: [
-                {
-                  name: 'land_river_segment',
-                  op: 'eq',
-                  val: segment
-                },
-                {
-                  name: 'landuse',
-                  op: 'eq',
-                  val: landuse
+        $routeProvider
+            .when('/practices/:practiceId', {
+                templateUrl: '/modules/components/practices/views/summary--view.html',
+                controller: 'CustomSummaryController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account) {
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+                        return Account.userObject;
+                    },
+                    metrics: function(Practice, $route) {
+                        return Practice.metrics({
+                            id: $route.current.params.practiceId
+                        });
+                    },
+                    outcomes: function(Practice, $route) {
+                        return Practice.outcomes({
+                            id: $route.current.params.practiceId
+                        });
+                    },
+                    practice: function(Practice, $route) {
+                        return Practice.get({
+                            id: $route.current.params.practiceId
+                        });
+                    }
                 }
-              ],
-              single: true
-            }
-          }, function() {
-            defer.resolve(request);
-          });
+            })
+            .when('/practices/:practiceId/:reportId/edit', {
+                templateUrl: '/modules/components/practices/views/form--view.html',
+                controller: 'CustomFormController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account) {
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+                        return Account.userObject;
+                    },
+                    site: function(Site, $route) {
+                        return Site.get({
+                            id: $route.current.params.siteId
+                        });
+                    },
+                    practice: function(Practice, $route) {
+                        return Practice.get({
+                            id: $route.current.params.practiceId
+                        });
+                    },
+                    report: function(PracticeCustom, $route) {
+                        return PracticeCustom.get({
+                            id: $route.current.params.reportId
+                        });
+                    },
+                    practice_types: function(PracticeType, $route) {
+                        return PracticeType.query({
+                            results_per_page: 500
+                        });
+                    },
+                    metric_types: function(MetricType, $route) {
+                        return MetricType.query({
+                            results_per_page: 500
+                        });
+                    },
+                    monitoring_types: function(MonitoringType, $route) {
+                        return MonitoringType.query({
+                            results_per_page: 500
+                        });
+                    },
+                    unit_types: function(UnitType, $route) {
+                        return UnitType.query({
+                            results_per_page: 500
+                        });
+                    }
 
-          return defer.promise;
-        },
-        getLoadTotals: function(area, efficiency) {
-          return {
-            nitrogen: (area*(efficiency.eos_totn/efficiency.eos_acres)),
-            phosphorus: (area*(efficiency.eos_totp/efficiency.eos_acres)),
-            sediment: ((area*(efficiency.eos_tss/efficiency.eos_acres))/2000)
-          };
-        },
-        getTotalReadingsByCategory: function(period, readings) {
-          var total = 0;
+                }
+            })
+            .when('/practices/:practiceId/edit', {
+                templateUrl: '/modules/components/practices/views/practices--edit.html',
+                controller: 'PracticeEditController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account) {
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+                        return Account.userObject;
+                    },
+                    site: function(Practice, $route) {
+                        return Practice.site({
+                            id: $route.current.params.practiceId
+                        });
+                    },
+                    practice_types: function(PracticeType, $route) {
+                        return PracticeType.query({
+                            results_per_page: 500
+                        });
+                    },
+                    practice: function(Practice, $route) {
+                        return Practice.get({
+                            id: $route.current.params.practiceId
+                        });
+                    }
+                }
+            });
 
-          for (var i = 0; i < readings.length; i++) {
-            if (readings[i].properties.measurement_period === period) {
-              total++;
-            }
-          }
-
-          return total;
-        },
-        getPlanningData: function(readings) {
-
-          var planningData = {};
-
-          angular.forEach(readings, function(reading) {
-            if (reading.properties.measurement_period === 'Planning') {
-              planningData = reading;
-            }
-          });
-
-          return planningData;
-        }
-      };
     });
-
-}());
-
 'use strict';
 
 /**
@@ -7423,6 +7366,10 @@ angular.module('FieldDoc')
                 console.log('self.practice', successResponse);
 
                 self.practice = successResponse;
+
+                delete self.practice.properties.organization;
+                delete self.practice.properties.project;
+                delete self.practice.properties.site;
 
                 self.practiceType = successResponse.properties.category;
 
@@ -7988,291 +7935,349 @@ angular.module('FieldDoc')
         });
 
     });
-'use strict';
-
-/**
- * @ngdoc function
- * @name
- * @description
- */
-angular.module('FieldDoc')
-    .controller('PracticeViewController', function($location, practice, $route, Utility) {
-
-        var self = this,
-            projectId = $route.current.params.projectId,
-            siteId = $route.current.params.siteId,
-            practiceId = $route.current.params.practiceId,
-            practiceType;
-
-        practice.$promise.then(function(successResponse) {
-
-            self.practice = successResponse;
-
-            practiceType = Utility.machineName(self.practice.properties.practice_type);
-
-            $location.path('/practices/' + practiceId + '/' + practiceType);
-
-        });
-
-    });
 (function() {
 
-  'use strict';
+    'use strict';
 
-  /**
-   * @ngdoc function
-   * @name
-   * @description
-   */
-  angular.module('FieldDoc')
-    .service('Nutrients', function ($log, Nutrient) {
+    /**
+     * @ngdoc function
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .controller('CustomSummaryController', [
+            'Account',
+            '$location',
+            '$timeout',
+            '$log',
+            'PracticeCustom',
+            '$rootScope',
+            '$route',
+            '$scope',
+            'Utility',
+            'user',
+            'Project',
+            'Site',
+            '$window',
+            'Map',
+            'mapbox',
+            'leafletData',
+            'leafletBoundsHelpers',
+            'Practice',
+            'metrics',
+            'outcomes',
+            'practice',
+            function(Account, $location, $timeout, $log, PracticeCustom, $rootScope,
+                $route, $scope, Utility, user, Project, Site, $window, Map, mapbox,
+                leafletData, leafletBoundsHelpers, Practice, metrics, outcomes, practice) {
 
-      var nutrients = {};
+                var self = this,
+                    practiceId = $route.current.params.practiceId;
 
-      //
-      // Custom Nutrient Interactions
-      //
-      nutrients.showNutrientForm = [];
-      nutrients.showNutrientFormSaved = [];
-      nutrients.showNutrientFormUpdated = [];
-      nutrients.showNutrientFormDeleted = [];
+                $rootScope.toolbarState = {
+                    'dashboard': true
+                };
 
-      nutrients.addCustomNutrients = function(report_id) {
-        nutrients.showNutrientForm[report_id] = true;
+                $rootScope.page = {};
 
-        //
-        // RESET ALL MESSAGES TO HIDDEN
-        //
-        nutrients.showNutrientFormSaved[report_id] = false;
-        nutrients.showNutrientFormUpdated[report_id] = false;
-        nutrients.showNutrientFormDeleted[report_id] = false;
-      }
+                self.map = Map;
 
-      nutrients.cancelCustomNutrients = function(report_id) {
-        nutrients.showNutrientForm[report_id] = false;
+                self.status = {
+                    loading: true
+                };
 
-        //
-        // RESET ALL MESSAGES TO HIDDEN
-        //
-        nutrients.showNutrientFormSaved[report_id] = false;
-        nutrients.showNutrientFormUpdated[report_id] = false;
-        nutrients.showNutrientFormDeleted[report_id] = false;
-      }
+                self.alerts = [];
 
-      nutrients.saveCustomNutrients = function(report_, practice_type) {
-        nutrients.showNutrientForm[report_.id] = false;
+                function closeAlerts() {
 
-        var newNutrient = new Nutrient({
-          "nitrogen": report_.properties.custom_nutrient_reductions.nitrogen,
-          "nitrogen_2": report_.properties.custom_nutrient_reductions.nitrogen_2,
-          "phosphorus": report_.properties.custom_nutrient_reductions.phosphorus,
-          "phosphorus_2": report_.properties.custom_nutrient_reductions.phosphorus_2,
-          "sediment": report_.properties.custom_nutrient_reductions.sediment,
-          "sediment_2": report_.properties.custom_nutrient_reductions.sediment_2
-        });
+                    self.alerts = [];
 
-        newNutrient[practice_type] = [
-          {
-            "id": report_.id
-          }
-        ]
+                }
 
-        newNutrient.$save().then(
-          function(successResponse) {
-            $log.log('saveCustomNutrients::successResponse', successResponse)
-            report_.properties.custom_nutrient_reductions.id = successResponse.id;
-          },
-          function(errorResponse) {
-            $log.log('saveCustomNutrients::errorResponse', errorResponse)
-          }
-        );
+                function closeRoute() {
 
-        nutrients.showNutrientFormSaved[report_.id] = true;
-      };
+                    $location.path(self.practice.links.site.html);
 
-      nutrients.updateCustomNutrients = function(report_) {
-        nutrients.showNutrientForm[report_.id] = false;
+                }
 
-        var existingNutrient = new Nutrient({
-          "nitrogen": report_.properties.custom_nutrient_reductions.nitrogen,
-          "nitrogen_2": report_.properties.custom_nutrient_reductions.nitrogen_2,
-          "phosphorus": report_.properties.custom_nutrient_reductions.phosphorus,
-          "phosphorus_2": report_.properties.custom_nutrient_reductions.phosphorus_2,
-          "sediment": report_.properties.custom_nutrient_reductions.sediment,
-          "sediment_2": report_.properties.custom_nutrient_reductions.sediment_2
-        });
+                self.confirmDelete = function(obj, targetCollection) {
 
-        existingNutrient.$update({
-          "id": report_.properties.custom_nutrient_reductions.id
-        }).then(
-          function(successResponse) {
-            $log.log('updateCustomNutrients::successResponse', successResponse)
-          },
-          function(errorResponse) {
-            $log.log('updateCustomNutrients::errorResponse', errorResponse)
-          }
-        );
+                    console.log('self.confirmDelete', obj, targetCollection);
 
-        nutrients.showNutrientFormUpdated[report_.id] = true;
-      };
+                    if (self.deletionTarget &&
+                        self.deletionTarget.collection === 'practice') {
 
-      nutrients.deleteCustomNutrients = function(report_) {
-        nutrients.showNutrientForm[report_.id] = false;
+                        self.cancelDelete();
 
-        var tmp = new Nutrient({
-          "id": report_.properties.custom_nutrient_reductions.id
-        });
+                    } else {
 
-        tmp.$delete().then(
-          function(successResponse) {
-            $log.log('deleteCustomNutrients::successResponse', successResponse);
-            report_.properties.custom_nutrient_reductions = null;
-          },
-          function(errorResponse) {
-            $log.log('deleteCustomNutrients::errorResponse', errorResponse)
-          }
-        );
+                        self.deletionTarget = {
+                            'collection': targetCollection,
+                            'feature': obj
+                        };
 
-        nutrients.showNutrientFormDeleted[report_.id] = true;
-      };
+                    }
 
-      return nutrients;
+                };
 
-    });
+                self.cancelDelete = function() {
+
+                    self.deletionTarget = null;
+
+                };
+
+                self.deleteFeature = function(featureType, index) {
+
+                    console.log('self.deleteFeature', featureType, index);
+
+                    var targetCollection;
+
+                    switch (featureType) {
+
+                        case 'report':
+
+                            targetCollection = PracticeCustom;
+
+                            break;
+
+                        default:
+
+                            targetCollection = Practice;
+
+                            break;
+
+                    }
+
+                    targetCollection.delete({
+                        id: +self.deletionTarget.feature.id
+                    }).$promise.then(function(data) {
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Successfully deleted this ' + featureType + '.',
+                            'prompt': 'OK'
+                        }];
+
+                        if (index !== null &&
+                            typeof index === 'number' &&
+                            featureType === 'report') {
+
+                            self.practice.properties.readings_custom.splice(index, 1);
+
+                            self.cancelDelete();
+
+                            $timeout(closeAlerts, 2000);
+
+                        } else {
+
+                            $timeout(closeRoute, 2000);
+
+                        }
+
+                    }).catch(function(errorResponse) {
+
+                        console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                        if (errorResponse.status === 409) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Unable to delete this ' + featureType + '. There are pending tasks affecting this feature.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else if (errorResponse.status === 403) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'You don’t have permission to delete this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Something went wrong while attempting to delete this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        }
+
+                        $timeout(closeAlerts, 2000);
+
+                    });
+
+                };
+
+                function addNonGroupLayers(sourceLayer, targetGroup) {
+
+                    if (sourceLayer instanceof L.LayerGroup) {
+
+                        sourceLayer.eachLayer(function(layer) {
+
+                            addNonGroupLayers(layer, targetGroup);
+
+                        });
+
+                    } else {
+
+                        targetGroup.addLayer(sourceLayer);
+
+                    }
+
+                }
+
+                self.setGeoJsonLayer = function(data, layerGroup, clearLayers) {
+
+                    if (clearLayers) {
+
+                        layerGroup.clearLayers();
+
+                    }
+
+                    var featureGeometry = L.geoJson(data, {});
+
+                    addNonGroupLayers(featureGeometry, layerGroup);
+
+                };
+
+                self.loadPractice = function() {
+
+                    practice.$promise.then(function(successResponse) {
+
+                        console.log('self.practice', successResponse);
+
+                        self.practice = successResponse;
+
+                        $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
+
+                        //
+                        // If a valid practice geometry is present, add it to the map
+                        // and track the object in `self.savedObjects`.
+                        //
+
+                        if (self.practice.geometry !== null &&
+                            typeof self.practice.geometry !== 'undefined') {
+
+                            leafletData.getMap('practice--map').then(function(map) {
+
+                                self.practiceExtent = new L.FeatureGroup();
+
+                                self.setGeoJsonLayer(self.practice.geometry.geometries[0], self.practiceExtent);
+
+                                map.fitBounds(self.practiceExtent.getBounds(), {
+                                    maxZoom: 18
+                                });
+
+                            });
+
+                            self.map.geojson = {
+                                data: self.practice.geometry.geometries[0]
+                            };
+
+                        }
+
+                        self.status.loading = false;
+
+                    }, function(errorResponse) {
+
+
+
+                    });
+
+                };
+
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+
+                    user.$promise.then(function(userResponse) {
+
+                        $rootScope.user = Account.userObject = userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[
+                                0].properties.name,
+                            account: ($rootScope.account &&
+                                    $rootScope.account.length) ?
+                                $rootScope.account[0] : null,
+                            can_edit: true
+                        };
+
+                        self.loadPractice();
+
+                        self.loadMetrics();
+
+                        self.loadOutcomes();
+
+                    });
+                }
+
+                self.addReading = function(measurementPeriod) {
+
+                    var newReading = new PracticeCustom({
+                        'measurement_period': 'Planning',
+                        'report_date': new Date(),
+                        'practice_id': practiceId,
+                        'organization_id': self.practice.properties.organization_id
+                    });
+
+                    newReading.$save().then(function(successResponse) {
+
+                        $location.path('/practices/' + practiceId +
+                            '/' + successResponse.id + '/edit');
+
+                    }, function(errorResponse) {
+
+                        console.error('ERROR: ', errorResponse);
+
+                    });
+
+                };
+
+                self.loadMetrics = function() {
+
+                    metrics.$promise.then(function(successResponse) {
+
+                        console.log('Project metrics', successResponse);
+
+                        self.metrics = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+                self.loadOutcomes = function() {
+
+                    outcomes.$promise.then(function(successResponse) {
+
+                        console.log('Project outcomes', successResponse);
+
+                        self.outcomes = successResponse;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+            }
+        ]);
 
 }());
-
-'use strict';
-
-/**
- * @ngdoc overview
- * @name FieldDoc
- * @description
- * # FieldDoc
- *
- * Main module of the application.
- */
-angular.module('FieldDoc')
-    .config(function($routeProvider) {
-
-        $routeProvider
-            .when('/practices/:practiceId', {
-                templateUrl: '/modules/components/practices/modules/custom/views/summary--view.html',
-                controller: 'CustomSummaryController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account) {
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
-                        return Account.userObject;
-                    },
-                    // summary: function(PracticeCustom, $route) {
-                    //     return PracticeCustom.summary({
-                    //         id: $route.current.params.practiceId
-                    //     });
-                    // },
-                    metrics: function(Practice, $route) {
-                        return Practice.metrics({
-                            id: $route.current.params.practiceId
-                        });
-                    },
-                    // nodes: function(Site, $route) {
-                    //     return Site.nodes({
-                    //         id: $route.current.params.siteId
-                    //     });
-                    // },
-                    outcomes: function(Practice, $route) {
-                        return Practice.outcomes({
-                            id: $route.current.params.practiceId
-                        });
-                    },
-                    practice: function(Practice, $route) {
-                        return Practice.get({
-                            id: $route.current.params.practiceId
-                        });
-                    }
-                }
-            })
-            .when('/practices/:practiceId/:reportId/edit', {
-                templateUrl: '/modules/components/practices/modules/custom/views/form--view.html',
-                controller: 'CustomFormController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account) {
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
-                        return Account.userObject;
-                    },
-                    site: function(Site, $route) {
-                        return Site.get({
-                            id: $route.current.params.siteId
-                        });
-                    },
-                    practice: function(Practice, $route) {
-                        return Practice.get({
-                            id: $route.current.params.practiceId
-                        });
-                    },
-                    report: function(PracticeCustom, $route) {
-                        return PracticeCustom.get({
-                            id: $route.current.params.reportId
-                        });
-                    },
-                    practice_types: function(PracticeType, $route) {
-                        return PracticeType.query({
-                            results_per_page: 500
-                        });
-                    },
-                    metric_types: function(MetricType, $route) {
-                        return MetricType.query({
-                            results_per_page: 500
-                        });
-                    },
-                    monitoring_types: function(MonitoringType, $route) {
-                        return MonitoringType.query({
-                            results_per_page: 500
-                        });
-                    },
-                    unit_types: function(UnitType, $route) {
-                        return UnitType.query({
-                            results_per_page: 500
-                        });
-                    }
-
-                }
-            })
-            .when('/practices/:practiceId/edit', {
-                templateUrl: '/modules/components/practices/views/practices--edit.html',
-                controller: 'PracticeEditController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account) {
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
-                        return Account.userObject;
-                    },
-                    site: function(Practice, $route) {
-                        return Practice.site({
-                            id: $route.current.params.practiceId
-                        });
-                    },
-                    practice_types: function(PracticeType, $route) {
-                        return PracticeType.query({
-                            results_per_page: 500
-                        });
-                    },
-                    practice: function(Practice, $route) {
-                        return Practice.get({
-                            id: $route.current.params.practiceId
-                        });
-                    }
-                }
-            });
-
-    });
 (function() {
 
     'use strict';
@@ -8742,353 +8747,6 @@ angular.module('FieldDoc')
                 };
 
             });
-
-}());
-(function() {
-
-    'use strict';
-
-    /**
-     * @ngdoc function
-     * @name
-     * @description
-     */
-    angular.module('FieldDoc')
-        .controller('CustomSummaryController', [
-            'Account',
-            '$location',
-            '$timeout',
-            '$log',
-            'PracticeCustom',
-            '$rootScope',
-            '$route',
-            '$scope',
-            'Utility',
-            'user',
-            'Project',
-            'Site',
-            '$window',
-            'Map',
-            'mapbox',
-            'leafletData',
-            'leafletBoundsHelpers',
-            'Practice',
-            'metrics',
-            'outcomes',
-            'practice',
-            function(Account, $location, $timeout, $log, PracticeCustom, $rootScope,
-                $route, $scope, Utility, user, Project, Site, $window, Map, mapbox,
-                leafletData, leafletBoundsHelpers, Practice, metrics, outcomes, practice) {
-
-                var self = this,
-                    practiceId = $route.current.params.practiceId;
-
-                $rootScope.toolbarState = {
-                    'dashboard': true
-                };
-
-                $rootScope.page = {};
-
-                self.map = Map;
-
-                self.status = {
-                    loading: true
-                };
-
-                self.alerts = [];
-
-                function closeAlerts() {
-
-                    self.alerts = [];
-
-                }
-
-                function closeRoute() {
-
-                    var parentPath = '/sites/' + self.data.site.id;
-
-                    $location.path(parentPath);
-
-                }
-
-                self.confirmDelete = function(obj, targetCollection) {
-
-                    console.log('self.confirmDelete', obj, targetCollection);
-
-                    if (self.deletionTarget &&
-                        self.deletionTarget.collection === 'practice') {
-
-                        self.cancelDelete();
-
-                    } else {
-
-                        self.deletionTarget = {
-                            'collection': targetCollection,
-                            'feature': obj
-                        };
-
-                    }
-
-                };
-
-                self.cancelDelete = function() {
-
-                    self.deletionTarget = null;
-
-                };
-
-                self.deleteFeature = function(featureType, index) {
-
-                    console.log('self.deleteFeature', featureType, index);
-
-                    var targetCollection;
-
-                    switch (featureType) {
-
-                        case 'report':
-
-                            targetCollection = PracticeCustom;
-
-                            break;
-
-                        default:
-
-                            targetCollection = Practice;
-
-                            break;
-
-                    }
-
-                    targetCollection.delete({
-                        id: +self.deletionTarget.feature.id
-                    }).$promise.then(function(data) {
-
-                        self.alerts.push({
-                            'type': 'success',
-                            'flag': 'Success!',
-                            'msg': 'Successfully deleted this ' + featureType + '.',
-                            'prompt': 'OK'
-                        });
-
-                        if (index !== null &&
-                            typeof index === 'number' &&
-                            featureType === 'report') {
-
-                            self.practice.properties.readings_custom.splice(index, 1);
-
-                            self.cancelDelete();
-
-                            $timeout(closeAlerts, 2000);
-
-                        } else {
-
-                            $timeout(closeRoute, 2000);
-
-                        }
-
-                    }).catch(function(errorResponse) {
-
-                        console.log('self.deleteFeature.errorResponse', errorResponse);
-
-                        if (errorResponse.status === 409) {
-
-                            self.alerts = [{
-                                'type': 'error',
-                                'flag': 'Error!',
-                                'msg': 'Unable to delete this ' + featureType + '. There are pending tasks affecting this feature.',
-                                'prompt': 'OK'
-                            }];
-
-                        } else if (errorResponse.status === 403) {
-
-                            self.alerts = [{
-                                'type': 'error',
-                                'flag': 'Error!',
-                                'msg': 'You don’t have permission to delete this ' + featureType + '.',
-                                'prompt': 'OK'
-                            }];
-
-                        } else {
-
-                            self.alerts = [{
-                                'type': 'error',
-                                'flag': 'Error!',
-                                'msg': 'Something went wrong while attempting to delete this ' + featureType + '.',
-                                'prompt': 'OK'
-                            }];
-
-                        }
-
-                        $timeout(closeAlerts, 2000);
-
-                    });
-
-                };
-
-                //draw tools
-                function addNonGroupLayers(sourceLayer, targetGroup) {
-                    if (sourceLayer instanceof L.LayerGroup) {
-                        sourceLayer.eachLayer(function(layer) {
-                            addNonGroupLayers(layer, targetGroup);
-                        });
-                    } else {
-                        targetGroup.addLayer(sourceLayer);
-                    }
-                }
-
-                self.setGeoJsonLayer = function(data, layerGroup, clearLayers) {
-
-                    if (clearLayers) {
-
-                        layerGroup.clearLayers();
-
-                    }
-
-                    var featureGeometry = L.geoJson(data, {});
-
-                    addNonGroupLayers(featureGeometry, layerGroup);
-
-                };
-
-                self.loadPractice = function() {
-
-                    practice.$promise.then(function(successResponse) {
-
-                        console.log('self.practice', successResponse);
-
-                        self.practice = successResponse;
-
-                        $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
-
-                        //
-                        // Determine if the actions should be shown or hidden depending on
-                        // whether of not this practice has planning data
-                        //
-                        if (self.practice.properties.has_planning_data) {
-
-                            $rootScope.page.hideActions = false;
-
-                        } else {
-
-                            $rootScope.page.hideActions = true;
-
-                        }
-
-                        if (self.practice.geometry !== null &&
-                            typeof self.practice.geometry !== 'undefined') {
-
-                            leafletData.getMap('practice--map').then(function(map) {
-
-                                self.practiceExtent = new L.FeatureGroup();
-
-                                self.setGeoJsonLayer(self.practice.geometry, self.practiceExtent);
-
-                                map.fitBounds(self.practiceExtent.getBounds(), {
-                                    // padding: [20, 20],
-                                    maxZoom: 18
-                                });
-                            });
-
-                            self.map.geojson = {
-                                data: self.practice.geometry
-                            };
-
-                        }
-
-                        self.status.loading = false;
-
-                    }, function(errorResponse) {
-
-
-
-                    });
-
-                };
-
-                //
-                // Verify Account information for proper UI element display
-                //
-                if (Account.userObject && user) {
-
-                    user.$promise.then(function(userResponse) {
-
-                        $rootScope.user = Account.userObject = userResponse;
-
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[
-                                0].properties.name,
-                            account: ($rootScope.account &&
-                                    $rootScope.account.length) ?
-                                $rootScope.account[0] : null,
-                            can_edit: true
-                        };
-
-                        self.loadPractice();
-
-                        self.loadMetrics();
-
-                        self.loadOutcomes();
-
-                    });
-                }
-
-                self.addReading = function(measurementPeriod) {
-
-                    var newReading = new PracticeCustom({
-                        'measurement_period': 'Planning',
-                        'report_date': new Date(),
-                        'practice_id': practiceId,
-                        'organization_id': self.practice.properties.organization_id
-                    });
-
-                    newReading.$save().then(function(successResponse) {
-
-                        $location.path('/practices/' + practiceId +
-                            '/' + successResponse.id + '/edit');
-
-                    }, function(errorResponse) {
-
-                        console.error('ERROR: ', errorResponse);
-
-                    });
-
-                };
-
-                self.loadMetrics = function() {
-
-                    metrics.$promise.then(function(successResponse) {
-
-                        console.log('Project metrics', successResponse);
-
-                        self.metrics = successResponse.features;
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                    });
-
-                };
-
-                self.loadOutcomes = function() {
-
-                    outcomes.$promise.then(function(successResponse) {
-
-                        console.log('Project outcomes', successResponse);
-
-                        self.outcomes = successResponse;
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                    });
-
-                };
-
-            }
-        ]);
 
 }());
 'use strict';

@@ -59,9 +59,7 @@
 
                 function closeRoute() {
 
-                    var parentPath = '/sites/' + self.data.site.id;
-
-                    $location.path(parentPath);
+                    $location.path(self.practice.links.site.html);
 
                 }
 
@@ -117,12 +115,12 @@
                         id: +self.deletionTarget.feature.id
                     }).$promise.then(function(data) {
 
-                        self.alerts.push({
+                        self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
                             'msg': 'Successfully deleted this ' + featureType + '.',
                             'prompt': 'OK'
-                        });
+                        }];
 
                         if (index !== null &&
                             typeof index === 'number' &&
@@ -179,15 +177,22 @@
 
                 };
 
-                //draw tools
                 function addNonGroupLayers(sourceLayer, targetGroup) {
+
                     if (sourceLayer instanceof L.LayerGroup) {
+
                         sourceLayer.eachLayer(function(layer) {
+
                             addNonGroupLayers(layer, targetGroup);
+
                         });
+
                     } else {
+
                         targetGroup.addLayer(sourceLayer);
+
                     }
+
                 }
 
                 self.setGeoJsonLayer = function(data, layerGroup, clearLayers) {
@@ -215,18 +220,9 @@
                         $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
 
                         //
-                        // Determine if the actions should be shown or hidden depending on
-                        // whether of not this practice has planning data
+                        // If a valid practice geometry is present, add it to the map
+                        // and track the object in `self.savedObjects`.
                         //
-                        if (self.practice.properties.has_planning_data) {
-
-                            $rootScope.page.hideActions = false;
-
-                        } else {
-
-                            $rootScope.page.hideActions = true;
-
-                        }
 
                         if (self.practice.geometry !== null &&
                             typeof self.practice.geometry !== 'undefined') {
@@ -235,16 +231,16 @@
 
                                 self.practiceExtent = new L.FeatureGroup();
 
-                                self.setGeoJsonLayer(self.practice.geometry, self.practiceExtent);
+                                self.setGeoJsonLayer(self.practice.geometry.geometries[0], self.practiceExtent);
 
                                 map.fitBounds(self.practiceExtent.getBounds(), {
-                                    // padding: [20, 20],
                                     maxZoom: 18
                                 });
+
                             });
 
                             self.map.geojson = {
-                                data: self.practice.geometry
+                                data: self.practice.geometry.geometries[0]
                             };
 
                         }

@@ -30,14 +30,6 @@
                             <strong>Project:</strong> <a href="{{ page.site.links.project.html }}">{{ page.project.properties.name }}</a>
                         </p>
 
-                        <!-- <h4>
-                            <span data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">{{ page.project.properties.program_type }}</span>
-
-                            <span data-ng-if="page.project.id && page.project.properties.last_modified_by.properties.first_name && page.project.properties.last_modified_by.properties.last_name" class="label">Last Modified by: {{ page.project.properties.last_modified_by.properties.first_name }} {{ page.project.properties.last_modified_by.properties.last_name }}</span>
-
-                            <span data-ng-if="page.project.id && page.project.properties.modified_on" class="label">Modified on: {{ page.project.properties.modified_on | date }}</span>
-                        </h4> -->
-
                         <h4 class="project-site-city" data-ng-if="page.nodes.geographies.length">
                             <span data-ng-repeat="geography in page.nodes.geographies"><b>{{ geography.category }}:&nbsp;</b>{{ geography.name }}&nbsp;</span>
                         </h4>
@@ -74,7 +66,7 @@
 
                                     <article class="statistics project--summary">
 
-                                        <div class="column-4 statistics--statistic">
+                                        <div class="statistics--statistic">
                                             <p class="statistic--value">
                                                 {{ page.outcomes.installation.nitrogen | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.nitrogen | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
                                                 <span class="statistic--title">Nitrogen</span>
@@ -85,9 +77,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="column-2"></div>
-
-                                        <div class="column-4 statistics--statistic">
+                                        <div class="statistics--statistic">
                                             <p class="statistic--value">
                                                 {{ page.outcomes.installation.phosphorus | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.phosphorus | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
                                                 <span class="statistic--title">Phosphorus</span>
@@ -98,9 +88,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="column-2"></div>
-
-                                        <div class="column-4 statistics--statistic">
+                                        <div class="statistics--statistic">
                                             <p class="statistic--value">
                                                 {{ page.outcomes.installation.sediment | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.sediment | number:2 }} <span class="statistic--valueLabel">tons/yr</span><br />
                                                 <span class="statistic--title">Sediment</span>
@@ -158,167 +146,6 @@
                             </section>
 
                         </div>
-
-                        <!-- <table class="table table-practices" data-ng-if="page.practices">
-
-                            <thead>
-
-                                <tr>
-                                    <th class="table-column-wide">&nbsp;</th>
-                                    <th class="table-practices-centered">Nitrogen</th>
-                                    <th class="table-practices-centered">Phosphorus</th>
-                                    <th class="table-practices-centered">Sediment</th>
-                                </tr> -->
-                                <!-- <tr>
-                                    <th class="table-column-wide table-column-label">
-                                        <span class="metrics--metric--title">Total</span>
-                                    </th>
-                                    <td class="table-column-even">
-                                        <strong class="metrics--metric--rollup">{{ page.rollups.nitrogen.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">lbs/yr<br />
-                                            of {{ page.rollups.nitrogen.total | number:2 }}</span>
-                                    </td>
-                                    <td class="table-column-top">
-                                        <strong class="metrics--metric--rollup">{{ page.rollups.phosphorus.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">lbs/yr<br />
-                                            of {{ page.rollups.phosphorus.total | number:2 }}</span>
-                                    </td>
-                                    <td class="table-column-even">
-                                        <strong class="metrics--metric--rollup">{{ page.rollups.sediment.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">tons/yr<br />
-                                            of {{ page.rollups.sediment.total | number:2 }}</span>
-                                    </td>
-                                </tr> -->
-
-                            <!-- </thead>
-
-                            <tbody class="metrics">
-
-                                <tr class="metrics--metric" data-ng-repeat="practice in page.rollups.nitrogen.practices track by $index">
-                                    <td class="table-column-wide">
-                                        <div data-ng-repeat="subpractice in practice.practices track by $index" class="subpractices--name">
-                                            <p class="metric--title">
-                                                <a href="/practices/{{ practice.id }}">{{ subpractice.name }}</a>
-                                            </p>
-                                            <div class="metric--chart" style="background: #e8e8e8;">
-                                                <div class="metric--chart--value" data-ng-style="{'width': subpractice.percentage.whole + '%' }" style="background-color: #2196F3;"></div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="table-column-even table-column-top">
-                                        <p class="metric--title">&nbsp;</p>
-
-                                        <span data-ng-if="!practice.inactive">
-                                            {{ practice.installed | number:2 }}
-                                        </span>
-                                        <span data-ng-if="practice.inactive">
-                                            not applicable
-                                        </span>
-                                        <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices === true" class="subpractice--nutrients">
-                                            <div data-ng-repeat="subpractice in practice.practices track by $index" class="subpractice--nutrients--nutrient">
-                                                <p class="metric--title">
-                                                    {{ subpractice.installed.nitrogen || 0 | number:2 }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="table-column-odd table-column-top">
-                                        <p class="metric--title">&nbsp;</p>
-                                        <span data-ng-if="!page.rollups.phosphorus.practices[$index].inactive">
-                                            {{ page.rollups.phosphorus.practices[$index].installed | number:2 }}
-                                        </span>
-                                        <span data-ng-if="page.rollups.phosphorus.practices[$index].inactive">
-                                            not applicable
-                                        </span>
-                                        <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices === true" class="subpractice--nutrients">
-                                            <div data-ng-repeat="subpractice in practice.practices track by $index" class="subpractice--nutrients--nutrient">
-                                                <p class="metric--title">
-                                                    {{ subpractice.installed.phosphorus || 0 | number:2 }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="table-column-even table-column-top">
-                                        <p class="metric--title">&nbsp;</p>
-                                        <span data-ng-if="!page.rollups.sediment.practices[$index].inactive">
-                                            {{ page.rollups.sediment.practices[$index].installed | number:2 }}
-                                        </span>
-                                        <span data-ng-if="page.rollups.sediment.practices[$index].inactive">
-                                            not applicable
-                                        </span>
-                                        <div data-ng-if="practice.name === 'Custom' && practice.show_custom_practices === true" class="subpractice--nutrients">
-                                            <div data-ng-repeat="subpractice in practice.practices track by $index" class="subpractice--nutrients--nutrient">
-                                                <p class="metric--title">
-                                                    {{ subpractice.installed.sediment || 0 | number:2 }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                            </tbody>
-
-                            <tfoot>
-
-                                <tr>
-                                    <th class="table-column-wide table-column-label">
-                                        <span class="metrics--metric--title">Total</span>
-                                    </th>
-                                    <td class="table-column-even">
-                                        <strong class="metrics--metric--rollup">{{ page.rollups.nitrogen.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">lbs/yr<br />
-                                            of {{ page.rollups.nitrogen.total | number:2 }}</span>
-                                    </td>
-                                    <td>
-                                        <strong class="metrics--metric--rollup">{{ page.rollups.phosphorus.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">lbs/yr<br />
-                                            of {{ page.rollups.phosphorus.total | number:2 }}</span>
-                                    </td>
-                                    <td class="table-column-even">
-                                        <strong class="metrics--metric--rollup">{{ page.rollups.sediment.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">tons/yr<br />
-                                            of {{ page.rollups.sediment.total | number:2 }}</span>
-                                    </td>
-                                </tr>
-
-                            </tfoot>
-
-                        </table>
-
-                        <table class="table table-practices with-metrics" data-ng-if="page.rollups.metrics">
-
-                            <thead>
-                                <tr>
-                                    <th class="table-column-wide table-metrics-header">&nbsp;</th>
-                                    <th class="table-metrics-header">Installed To-Date</th>
-                                    <th class="table-metrics-header">% Installed</th>
-                                </tr>
-                            </thead>
-
-                            <tbody class="metrics">
-
-                                <tr class="metrics--metric" data-ng-if="metric.total" data-ng-repeat="metric in page.rollups.metrics track by $index">
-                                    <td class="table-column-wide">
-                                        <p class="metric--title">
-                                            {{ metric.label }}
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <strong class="metrics--metric--rollup--small">{{ metric.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.units }}<br />
-                                            of {{ metric.total | number:2 }}</span>
-                                    </td>
-                                    <td>
-                                        <div style="display: flex; flex-flow: row nowrap; align-items: center; width: 100%; height: 100%;">
-                                            <div class="donut-chart chart{{ (metric.installed/metric.total)*100 | number:0 }}" style="display: inline-block; margin-right: 1em;">
-                                                <div class="slice one"></div>
-                                                <div class="slice two"></div>
-                                                <div class="chart-center" style="background: #fff;">
-                                                </div>
-                                            </div>
-                                            <strong class="metrics--metric--percentage">
-                                                {{ (metric.installed/metric.total)*100 | number:1 }}%
-                                            </strong>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                            </tbody>
-
-                        </table> -->
 
                     </section>
 

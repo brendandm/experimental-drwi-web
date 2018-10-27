@@ -13,7 +13,7 @@ angular.module('FieldDoc')
 
         $routeProvider
             .when('/practices/:practiceId', {
-                templateUrl: '/modules/components/practices/modules/custom/views/summary--view.html',
+                templateUrl: '/modules/components/practices/views/summary--view.html',
                 controller: 'CustomSummaryController',
                 controllerAs: 'page',
                 resolve: {
@@ -23,21 +23,11 @@ angular.module('FieldDoc')
                         }
                         return Account.userObject;
                     },
-                    // summary: function(PracticeCustom, $route) {
-                    //     return PracticeCustom.summary({
-                    //         id: $route.current.params.practiceId
-                    //     });
-                    // },
                     metrics: function(Practice, $route) {
                         return Practice.metrics({
                             id: $route.current.params.practiceId
                         });
                     },
-                    // nodes: function(Site, $route) {
-                    //     return Site.nodes({
-                    //         id: $route.current.params.siteId
-                    //     });
-                    // },
                     outcomes: function(Practice, $route) {
                         return Practice.outcomes({
                             id: $route.current.params.practiceId
@@ -51,7 +41,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/practices/:practiceId/:reportId/edit', {
-                templateUrl: '/modules/components/practices/modules/custom/views/form--view.html',
+                templateUrl: '/modules/components/practices/views/form--view.html',
                 controller: 'CustomFormController',
                 controllerAs: 'page',
                 resolve: {

@@ -176,6 +176,10 @@ angular.module('FieldDoc')
 
                 self.practice = successResponse;
 
+                delete self.practice.properties.organization;
+                delete self.practice.properties.project;
+                delete self.practice.properties.site;
+
                 self.practiceType = successResponse.properties.category;
 
                 $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';

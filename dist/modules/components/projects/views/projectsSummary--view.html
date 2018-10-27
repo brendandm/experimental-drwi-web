@@ -92,7 +92,7 @@
 
                                     <article class="statistics project--summary">
 
-                                        <div class="column-4 statistics--statistic">
+                                        <div class="statistics--statistic">
                                             <p class="statistic--value">
                                                 {{ page.outcomes.installation.nitrogen | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.nitrogen | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
                                                 <span class="statistic--title">Nitrogen</span>
@@ -103,9 +103,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="column-2"></div>
-
-                                        <div class="column-4 statistics--statistic">
+                                        <div class="statistics--statistic">
                                             <p class="statistic--value">
                                                 {{ page.outcomes.installation.phosphorus | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.phosphorus | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
                                                 <span class="statistic--title">Phosphorus</span>
@@ -116,9 +114,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="column-2"></div>
-
-                                        <div class="column-4 statistics--statistic">
+                                        <div class="statistics--statistic">
                                             <p class="statistic--value">
                                                 {{ page.outcomes.installation.sediment | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.sediment | number:2 }} <span class="statistic--valueLabel">tons/yr</span><br />
                                                 <span class="statistic--title">Sediment</span>
@@ -177,78 +173,6 @@
 
                         </div>
 
-                        <!-- <article class="row statistics project--summary">
-                            <div class="statistics--statistic">
-                                <p class="statistic--value">
-                                    {{ page.rollups.nitrogen.installed | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.rollups.nitrogen.total | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
-                                    <span class="statistic--title">Nitrogen</span>
-                                </p>
-                                <div class="statistic--chart">
-                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.rollups.nitrogen.installed/page.rollups.nitrogen.total)*100) + '%' }" style="background-color: #2196F3;">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="statistics--statistic">
-                                <p class="statistic--value">
-                                    {{ page.rollups.phosphorus.installed | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.rollups.phosphorus.total | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
-                                    <span class="statistic--title">Phosphorus</span>
-                                </p>
-                                <div class="statistic--chart">
-                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.rollups.phosphorus.installed/page.rollups.phosphorus.total)*100) + '%' }" style="background-color: #2196F3;">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="statistics--statistic">
-                                <p class="statistic--value">
-                                    {{ page.rollups.sediment.installed | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.rollups.sediment.total | number:2 }} <span class="statistic--valueLabel">tons/yr</span><br />
-                                    <span class="statistic--title">Sediment</span>
-                                </p>
-                                <div class="statistic--chart">
-                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.rollups.sediment.installed/page.rollups.sediment.total)*100) + '%' }" style="background-color: #2196F3;">
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-
-                        <table class="table table-practices with-metrics" data-ng-if="page.rollups.metrics">
-                            <thead>
-                                <tr>
-                                    <th class="table-column-wide table-metrics-header">&nbsp;</th>
-                                    <th class="table-metrics-header">Installed To-Date</th>
-                                    <th class="table-metrics-header">% Installed</th>
-                                </tr>
-                            </thead>
-
-                            <tbody class="metrics">
-                                <tr class="metrics--metric" data-ng-if="metric.total" data-ng-repeat="metric in page.rollups.metrics track by $index">
-                                    <td class="table-column-wide">
-                                        <p class="metric--title">
-                                            {{ metric.label }}
-                                        </p>
-                                    </td>
-                                    <td>
-                                        <strong class="metrics--metric--rollup--small">{{ metric.installed | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.units }}<br />
-                                            of {{ metric.total | number:2 }}</span>
-                                    </td>
-                                    <td>
-                                        <div style="display: flex; flex-flow: row nowrap; align-items: center; width: 100%; height: 100%;">
-                                            <div class="donut-chart chart{{ (metric.installed/metric.total)*100 | number:0 }}" style="display: inline-block; margin-right: 1em;">
-                                                <div class="slice one"></div>
-                                                <div class="slice two"></div>
-                                                <div class="chart-center" style="background: #fff;">
-                                                </div>
-                                            </div>
-                                            <strong class="metrics--metric--percentage">
-                                                {{ (metric.installed/metric.total)*100 | number:1 }}%
-                                            </strong>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
- -->
                     </section>
 
                 </div>
@@ -298,7 +222,7 @@
                                                     edit
                                                 </i>
                                             </a>
-                                            <a class="snapshot--title" href="#" title="Delete site" data-ng-click="page.confirmDelete(site.site, 'site')">
+                                            <a class="snapshot--title" href="#" title="Delete site" data-ng-click="page.confirmDelete(site, 'site')">
                                                 <i class="material-icons">
                                                     delete
                                                 </i>

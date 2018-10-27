@@ -27,19 +27,6 @@
                     'loading': true
                 };
 
-                self.actions = {
-                    print: function() {
-
-                        $window.print();
-
-                    },
-                    saveToPdf: function() {
-
-                        $scope.$emit('saveToPdf');
-
-                    }
-                };
-
                 self.alerts = [];
 
                 function closeAlerts() {
@@ -50,11 +37,7 @@
 
                 function closeRoute() {
 
-                    // var parentPath = self.links.project.split('org')[1];
-
-                    var parentPath = '/projects/' + self.data.project.id;
-
-                    $location.path(parentPath);
+                    $location.path(self.site.links.project.html);
 
                 }
 
@@ -189,15 +172,22 @@
 
                 };
 
-                //draw tools
                 function addNonGroupLayers(sourceLayer, targetGroup) {
+
                     if (sourceLayer instanceof L.LayerGroup) {
+
                         sourceLayer.eachLayer(function(layer) {
+
                             addNonGroupLayers(layer, targetGroup);
+
                         });
+
                     } else {
+
                         targetGroup.addLayer(sourceLayer);
+
                     }
+
                 }
 
                 self.setGeoJsonLayer = function(data, layerGroup, clearLayers) {
@@ -222,7 +212,7 @@
 
                     site.$promise.then(function(successResponse) {
 
-                        console.log('self.summary', successResponse);
+                        console.log('self.site', successResponse);
 
                         self.site = successResponse;
 
@@ -307,7 +297,6 @@
                                 self.setGeoJsonLayer(self.site.geometry, self.siteExtent);
 
                                 map.fitBounds(self.siteExtent.getBounds(), {
-                                    // padding: [20, 20],
                                     maxZoom: 18
                                 });
 
