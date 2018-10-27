@@ -42,9 +42,34 @@ angular.module('FieldDoc')
                         }
                         return Account.userObject;
                     },
-                    summary: function(Project, $route) {
-                        return Project.summary({
+                    project: function(Project, $route) {
+                        return Project.get({
                             'id': $route.current.params.projectId
+                        });
+                    },
+                    // summary: function(Project, $route) {
+                    //     return Project.summary({
+                    //         'id': $route.current.params.projectId
+                    //     });
+                    // },
+                    metrics: function(Project, $route) {
+                        return Project.metrics({
+                            id: $route.current.params.projectId
+                        });
+                    },
+                    // nodes: function(Site, $route) {
+                    //     return Site.nodes({
+                    //         id: $route.current.params.projectId
+                    //     });
+                    // },
+                    outcomes: function(Project, $route) {
+                        return Project.outcomes({
+                            id: $route.current.params.projectId
+                        });
+                    },
+                    sites: function(Project, $route) {
+                        return Project.sites({
+                            id: $route.current.params.projectId
                         });
                     }
                 }

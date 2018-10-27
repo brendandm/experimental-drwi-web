@@ -8,14 +8,33 @@
      * @description
      */
     angular.module('FieldDoc')
-        .controller('CustomSummaryController',
-            function(Account, $location, $timeout, $log, PracticeCustom,
-                $rootScope, $route, $scope, summary, Utility, user, Project, Site,
-                $window, Map, mapbox, leafletData, leafletBoundsHelpers, Practice) {
+        .controller('CustomSummaryController', [
+            'Account',
+            '$location',
+            '$timeout',
+            '$log',
+            'PracticeCustom',
+            '$rootScope',
+            '$route',
+            '$scope',
+            'Utility',
+            'user',
+            'Project',
+            'Site',
+            '$window',
+            'Map',
+            'mapbox',
+            'leafletData',
+            'leafletBoundsHelpers',
+            'Practice',
+            'metrics',
+            'outcomes',
+            'practice',
+            function(Account, $location, $timeout, $log, PracticeCustom, $rootScope,
+                $route, $scope, Utility, user, Project, Site, $window, Map, mapbox,
+                leafletData, leafletBoundsHelpers, Practice, metrics, outcomes, practice) {
 
                 var self = this,
-                    projectId = $route.current.params.projectId,
-                    siteId = $route.current.params.siteId,
                     practiceId = $route.current.params.practiceId;
 
                 $rootScope.toolbarState = {
@@ -23,12 +42,6 @@
                 };
 
                 $rootScope.page = {};
-
-                self.practiceType = null;
-
-                self.project = {
-                    'id': projectId
-                };
 
                 self.map = Map;
 
@@ -115,7 +128,7 @@
                             typeof index === 'number' &&
                             featureType === 'report') {
 
-                            self.summary.practice.properties.readings_custom.splice(index, 1);
+                            self.practice.properties.readings_custom.splice(index, 1);
 
                             self.cancelDelete();
 
@@ -190,56 +203,61 @@
                     addNonGroupLayers(featureGeometry, layerGroup);
 
                 };
-                //Temp change loading to "loading"
 
-                summary.$promise.then(function(successResponse) {
+                self.loadPractice = function() {
 
-                    self.data = successResponse;
+                    practice.$promise.then(function(successResponse) {
 
-                    console.log('self.summary', successResponse);
+                        console.log('self.practice', successResponse);
 
-                    self.summary = successResponse;
+                        self.practice = successResponse;
 
-                    //
-                    // Determine if the actions should be shown or hidden depending on
-                    // whether of not this practice has planning data
-                    //
-                    if (self.summary.practice.properties.has_planning_data) {
-                        $rootScope.page.hideActions = false;
-                    } else {
-                        $rootScope.page.hideActions = true;
-                    }
+                        $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
 
-                    // $rootScope.page.title =
-                    //     "Other Conservation Practice";
+                        //
+                        // Determine if the actions should be shown or hidden depending on
+                        // whether of not this practice has planning data
+                        //
+                        if (self.practice.properties.has_planning_data) {
 
-                    self.practiceType = Utility.machineName(self.summary
-                        .practice.properties.practice_type);
+                            $rootScope.page.hideActions = false;
 
-                    if (self.summary.practice.geometry !== null &&
-                        typeof self.summary.practice.geometry !== 'undefined') {
+                        } else {
 
-                        leafletData.getMap('practice--map').then(function(map) {
+                            $rootScope.page.hideActions = true;
 
-                            self.practiceExtent = new L.FeatureGroup();
+                        }
 
-                            self.setGeoJsonLayer(self.summary.practice.geometry, self.practiceExtent);
+                        if (self.practice.geometry !== null &&
+                            typeof self.practice.geometry !== 'undefined') {
 
-                            map.fitBounds(self.practiceExtent.getBounds(), {
-                                // padding: [20, 20],
-                                maxZoom: 18
+                            leafletData.getMap('practice--map').then(function(map) {
+
+                                self.practiceExtent = new L.FeatureGroup();
+
+                                self.setGeoJsonLayer(self.practice.geometry, self.practiceExtent);
+
+                                map.fitBounds(self.practiceExtent.getBounds(), {
+                                    // padding: [20, 20],
+                                    maxZoom: 18
+                                });
                             });
-                        });
 
-                        self.map.geojson = {
-                            data: self.summary.practice.geometry
-                        };
+                            self.map.geojson = {
+                                data: self.practice.geometry
+                            };
 
-                    }
+                        }
 
-                    self.status.loading = false;
+                        self.status.loading = false;
 
-                }, function() {});
+                    }, function(errorResponse) {
+
+
+
+                    });
+
+                };
 
                 //
                 // Verify Account information for proper UI element display
@@ -259,6 +277,13 @@
                                 $rootScope.account[0] : null,
                             can_edit: true
                         };
+
+                        self.loadPractice();
+
+                        self.loadMetrics();
+
+                        self.loadOutcomes();
+
                     });
                 }
 
@@ -268,8 +293,7 @@
                         'measurement_period': 'Planning',
                         'report_date': new Date(),
                         'practice_id': practiceId,
-                        'organization_id': self.summary.site.properties
-                            .project.properties.organization_id
+                        'organization_id': self.practice.properties.organization_id
                     });
 
                     newReading.$save().then(function(successResponse) {
@@ -285,6 +309,39 @@
 
                 };
 
-            });
+                self.loadMetrics = function() {
+
+                    metrics.$promise.then(function(successResponse) {
+
+                        console.log('Project metrics', successResponse);
+
+                        self.metrics = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+                self.loadOutcomes = function() {
+
+                    outcomes.$promise.then(function(successResponse) {
+
+                        console.log('Project outcomes', successResponse);
+
+                        self.outcomes = successResponse;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+            }
+        ]);
 
 }());

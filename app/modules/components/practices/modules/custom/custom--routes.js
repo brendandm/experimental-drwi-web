@@ -23,8 +23,28 @@ angular.module('FieldDoc')
                         }
                         return Account.userObject;
                     },
-                    summary: function(PracticeCustom, $route) {
-                        return PracticeCustom.summary({
+                    // summary: function(PracticeCustom, $route) {
+                    //     return PracticeCustom.summary({
+                    //         id: $route.current.params.practiceId
+                    //     });
+                    // },
+                    metrics: function(Practice, $route) {
+                        return Practice.metrics({
+                            id: $route.current.params.practiceId
+                        });
+                    },
+                    // nodes: function(Site, $route) {
+                    //     return Site.nodes({
+                    //         id: $route.current.params.siteId
+                    //     });
+                    // },
+                    outcomes: function(Practice, $route) {
+                        return Practice.outcomes({
+                            id: $route.current.params.practiceId
+                        });
+                    },
+                    practice: function(Practice, $route) {
+                        return Practice.get({
                             id: $route.current.params.practiceId
                         });
                     }

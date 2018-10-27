@@ -9,9 +9,9 @@
      */
     angular.module('FieldDoc')
         .controller('SiteSummaryCtrl',
-            function(Account, $location, $window, $timeout, Practice, project,
-                $rootScope, $scope, $route, summary, nodes, user, Utility,
-                Map, mapbox, leafletData, leafletBoundsHelpers, Site, Project, practices) {
+            function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
+                $route, nodes, user, Utility, metrics, outcomes, site, Map, mapbox, leafletData,
+                leafletBoundsHelpers, Site, Project, practices) {
 
                 var self = this;
 
@@ -119,7 +119,7 @@
 
                     } else {
 
-                        targetId = self.deletionTarget.feature.id
+                        targetId = self.deletionTarget.feature.id;
 
                     }
 
@@ -218,106 +218,80 @@
                     return Utility.machineName(string_);
                 };
 
-                summary.$promise.then(function(successResponse) {
+                self.loadSite = function() {
 
-                    console.log('self.summary', successResponse);
+                    site.$promise.then(function(successResponse) {
 
-                    self.data = successResponse;
+                        console.log('self.summary', successResponse);
 
-                    self.project = successResponse.project;
+                        self.site = successResponse;
 
-                    console.log('self.project', self.project);
+                        self.permissions.can_edit = Account.canEdit(self.site);
 
-                    self.site = successResponse.site;
-                    // self.practices = successResponse.practices;
+                        $rootScope.page.title = self.site.properties.name;
 
-                    //
-                    // Add rollups to the page scope
-                    //
-                    self.rollups = successResponse.rollups;
+                        self.project = successResponse.properties.project;
 
-                    //
-                    // Set the default tab to 'All'
-                    //
-                    self.rollups.active = 'all';
+                        console.log('self.project', self.project);
 
-                    self.status.loading = false;
+                        self.status.loading = false;
 
-                    //
-                    // Load spatial nodes
-                    //
+                        //
+                        // Load spatial nodes
+                        //
 
-                    nodes.$promise.then(function(successResponse) {
+                        nodes.$promise.then(function(successResponse) {
 
-                        console.log('self.nodes', successResponse);
+                            console.log('self.nodes', successResponse);
 
-                        self.nodes = successResponse;
+                            self.nodes = successResponse;
 
-                    }, function(errorResponse) {
+                        }, function(errorResponse) {
 
-                    });
+                        });
 
-                    //
-                    // Load practices
-                    //
+                        //
+                        // Load practices
+                        //
 
-                    practices.$promise.then(function(successResponse) {
+                        practices.$promise.then(function(successResponse) {
 
-                        console.log('self.practices', successResponse);
+                            console.log('self.practices', successResponse);
 
-                        successResponse.features.forEach(function(feature) {
+                            successResponse.features.forEach(function(feature) {
 
-                            if (feature.geometry) {
+                                if (feature.geometry) {
 
-                                var styledFeature = {
-                                    "type": "Feature",
-                                    "geometry": feature.geometry.geometries[0],
-                                    "properties": {
-                                        "marker-size": "small",
-                                        "marker-color": "#2196F3",
-                                        "stroke": "#2196F3",
-                                        "stroke-opacity": 1.0,
-                                        "stroke-width": 2,
-                                        "fill": "#2196F3",
-                                        "fill-opacity": 0.5
-                                    }
+                                    var styledFeature = {
+                                        "type": "Feature",
+                                        "geometry": feature.geometry.geometries[0],
+                                        "properties": {
+                                            "marker-size": "small",
+                                            "marker-color": "#2196F3",
+                                            "stroke": "#2196F3",
+                                            "stroke-opacity": 1.0,
+                                            "stroke-width": 2,
+                                            "fill": "#2196F3",
+                                            "fill-opacity": 0.5
+                                        }
+                                    };
+
+                                    // Build static map URL for Mapbox API
+
+                                    var staticURL = 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
+
+                                    feature.staticURL = staticURL;
+
                                 }
 
-                                // Build static map URL for Mapbox API
+                            });
 
-                                var staticURL = 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
+                            self.practices = successResponse.features;
 
-                                feature.staticURL = staticURL;
-
-                            }
+                        }, function(errorResponse) {
 
                         });
 
-                        self.practices = successResponse.features;
-
-                    }, function(errorResponse) {
-
-                    });
-
-                    //
-                    // Verify Account information for proper UI element display
-                    //
-                    if (Account.userObject && user) {
-                        user.$promise.then(function(userResponse) {
-                            $rootScope.user = Account.userObject = userResponse;
-
-                            // self.project = project;
-
-                            self.permissions = {
-                                isLoggedIn: Account.hasToken(),
-                                role: $rootScope.user.properties.roles[0].properties.name,
-                                account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                                can_edit: Account.canEdit(self.project)
-                            };
-
-                            $rootScope.page.title = self.site.properties.name;
-
-                        });
                         //
                         // If a valid site geometry is present, add it to the map
                         // and track the object in `self.savedObjects`.
@@ -336,16 +310,18 @@
                                     // padding: [20, 20],
                                     maxZoom: 18
                                 });
+
                             });
+
                             self.map.geojson = {
                                 data: self.site.geometry
                             };
+
                         }
-                    }
 
-                }, function(errorResponse) {
+                    });
 
-                });
+                };
 
                 self.createPractice = function() {
 
@@ -368,6 +344,62 @@
 
                 };
 
+                self.loadMetrics = function() {
+
+                    metrics.$promise.then(function(successResponse) {
+
+                        console.log('Project metrics', successResponse);
+
+                        self.metrics = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+                self.loadOutcomes = function() {
+
+                    outcomes.$promise.then(function(successResponse) {
+
+                        console.log('Project outcomes', successResponse);
+
+                        self.outcomes = successResponse;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+
+                    user.$promise.then(function(userResponse) {
+
+                        $rootScope.user = Account.userObject = userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0].properties.name,
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                        };
+
+                        self.loadSite();
+
+                        self.loadMetrics();
+
+                        self.loadOutcomes();
+
+                    });
+
+                }
 
             });
 

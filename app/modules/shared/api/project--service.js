@@ -51,6 +51,16 @@
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/data/program/:id/projects')
+                },
+                'metrics': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/project/:id/metrics'),
+                    'isArray': false
+                },
+                'outcomes': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/project/:id/outcomes'),
+                    'isArray': false
                 }
             });
         });

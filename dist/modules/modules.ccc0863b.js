@@ -4489,9 +4489,34 @@ angular.module('FieldDoc')
                         }
                         return Account.userObject;
                     },
-                    summary: function(Project, $route) {
-                        return Project.summary({
+                    project: function(Project, $route) {
+                        return Project.get({
                             'id': $route.current.params.projectId
+                        });
+                    },
+                    // summary: function(Project, $route) {
+                    //     return Project.summary({
+                    //         'id': $route.current.params.projectId
+                    //     });
+                    // },
+                    metrics: function(Project, $route) {
+                        return Project.metrics({
+                            id: $route.current.params.projectId
+                        });
+                    },
+                    // nodes: function(Site, $route) {
+                    //     return Site.nodes({
+                    //         id: $route.current.params.projectId
+                    //     });
+                    // },
+                    outcomes: function(Project, $route) {
+                        return Project.outcomes({
+                            id: $route.current.params.projectId
+                        });
+                    },
+                    sites: function(Project, $route) {
+                        return Project.sites({
+                            id: $route.current.params.projectId
                         });
                     }
                 }
@@ -4881,8 +4906,9 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('ProjectSummaryCtrl',
         function(Account, Notifications, $rootScope, Project, $routeParams,
-            $scope, $location, Map, mapbox, summary, Site, user, $window,
-            leafletData, leafletBoundsHelpers, $timeout, Practice) {
+            $scope, $location, Map, mapbox, Site, user, $window,
+            leafletData, leafletBoundsHelpers, $timeout, Practice, project,
+            metrics, outcomes) {
 
             //controller is set to self
             var self = this;
@@ -4978,113 +5004,93 @@ angular.module('FieldDoc')
             //
             // Assign project to a scoped variable
             //
-            summary.$promise.then(function(successResponse) {
+            self.loadProject = function() {
 
-                console.log('projectSummary', successResponse);
+                project.$promise.then(function(successResponse) {
 
-                self.data = successResponse;
+                    console.log('self.project', successResponse);
 
-                var project_ = successResponse.project;
+                    var project_ = successResponse;
 
-                if (project_.properties.extent) {
+                    self.permissions.can_edit = Account.canEdit(project_);
+                    self.permissions.is_manager = (Account.hasRole('manager') || Account.inGroup(project_.properties.organization_id, Account.userObject.properties.account));
 
-                    project_.staticURL = self.buildStaticMapURL(project_.properties.extent);
+                    if (project_.properties.extent) {
 
-                }
-
-                self.project = project_;
-
-                successResponse.sites.forEach(function(feature) {
-
-                    if (feature.site.geometry) {
-
-                        feature.staticURL = self.buildStaticMapURL(feature.site.geometry);
+                        project_.staticURL = self.buildStaticMapURL(project_.properties.extent);
 
                     }
 
-                });
+                    self.project = project_;
 
-                self.sites = successResponse.sites;
+                    successResponse.properties.sites.forEach(function(feature) {
 
-                self.practices = successResponse.practices;
+                        if (feature.geometry) {
 
-                //
-                // Add rollups to the page scope
-                //
-                self.rollups = successResponse.rollups;
+                            feature.staticURL = self.buildStaticMapURL(feature.geometry);
 
-                self.status.loading = false;
+                        }
 
-                $rootScope.page.title = 'Project Summary';
-
-                // $rootScope.page.links = [];
-
-                //
-                // Verify Account information for proper UI element display
-                //
-                if (Account.userObject && user) {
-                    user.$promise.then(function(userResponse) {
-                        $rootScope.user = Account.userObject = userResponse;
-
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0].properties.name,
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                            can_edit: Account.canEdit(self.project),
-                            is_manager: (Account.hasRole('manager') || Account.inGroup(self.project.properties.organization_id, Account.userObject.properties.account)),
-                            is_admin: Account.hasRole('admin')
-                        };
                     });
-                }
 
-                leafletData.getMap('project--map').then(function(map) {
+                    self.sites = successResponse.properties.sites;
 
-                    var southWest = L.latLng(25.837377, -124.211606),
-                        northEast = L.latLng(49.384359, -67.158958),
-                        bounds = L.latLngBounds(southWest, northEast);
+                    // self.practices = successResponse.practices;
 
-                    self.projectExtent = new L.FeatureGroup();
+                    self.status.loading = false;
 
-                    if (self.project.properties.extent) {
+                    $rootScope.page.title = 'Project Summary';
 
-                        self.setGeoJsonLayer(self.project.properties.extent, self.projectExtent);
+                    leafletData.getMap('project--map').then(function(map) {
+
+                        var southWest = L.latLng(25.837377, -124.211606),
+                            northEast = L.latLng(49.384359, -67.158958),
+                            bounds = L.latLngBounds(southWest, northEast);
+
+                        self.projectExtent = new L.FeatureGroup();
+
+                        if (self.project.properties.extent) {
+
+                            self.setGeoJsonLayer(self.project.properties.extent, self.projectExtent);
+
+                            map.fitBounds(self.projectExtent.getBounds(), {
+                                // padding: [20, 20],
+                                maxZoom: 18
+                            });
+
+                        } else {
+
+                            map.fitBounds(bounds, {
+                                // padding: [20, 20],
+                                maxZoom: 18
+                            });
+
+                        }
+
+                        self.projectExtent.clearLayers();
+
+                        self.sites.forEach(function(feature) {
+
+                            if (feature.geometry) {
+
+                                self.setGeoJsonLayer(feature.geometry, self.projectExtent);
+
+                            }
+
+                        });
 
                         map.fitBounds(self.projectExtent.getBounds(), {
                             // padding: [20, 20],
                             maxZoom: 18
                         });
 
-                    } else {
-
-                        map.fitBounds(bounds, {
-                            // padding: [20, 20],
-                            maxZoom: 18
-                        });
-
-                    }
-
-                    self.projectExtent.clearLayers();
-
-                    self.sites.forEach(function(feature) {
-
-                        if (feature.site.geometry) {
-
-                            self.setGeoJsonLayer(feature.site.geometry, self.projectExtent);
-
-                        }
+                        self.projectExtent.addTo(map);
 
                     });
-
-                    map.fitBounds(self.projectExtent.getBounds(), {
-                        // padding: [20, 20],
-                        maxZoom: 18
-                    });
-
-                    self.projectExtent.addTo(map);
 
                 });
 
-            });
+            };
 
             self.submitProject = function() {
 
@@ -5316,6 +5322,67 @@ angular.module('FieldDoc')
                 });
 
             };
+
+            self.loadMetrics = function() {
+
+                metrics.$promise.then(function(successResponse) {
+
+                    console.log('Project metrics', successResponse);
+
+                    self.metrics = successResponse.features;
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
+
+            };
+
+            self.loadOutcomes = function() {
+
+                outcomes.$promise.then(function(successResponse) {
+
+                    console.log('Project outcomes', successResponse);
+
+                    self.outcomes = successResponse;
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0].properties.name,
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        // can_edit: Account.canEdit(self.project),
+                        // is_manager: (Account.hasRole('manager') || Account.inGroup(self.project.properties.organization_id, Account.userObject.properties.account)),
+                        is_admin: Account.hasRole('admin')
+                    };
+
+                    self.loadProject();
+
+                    self.loadMetrics();
+
+                    self.loadOutcomes();
+
+                });
+
+            }
 
         });
 'use strict';
@@ -5821,9 +5888,9 @@ angular.module('FieldDoc')
     .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
 
         $routeProvider
-            .when('/sites', {
-                redirectTo: '/projects/:projectId'
-            })
+            // .when('/sites', {
+            //     redirectTo: '/projects/:projectId'
+            // })
             .when('/sites/:siteId', {
                 templateUrl: '/modules/components/sites/views/sites--summary.html',
                 controller: 'SiteSummaryCtrl',
@@ -5835,13 +5902,18 @@ angular.module('FieldDoc')
                         }
                         return Account.userObject;
                     },
-                    project: function(Project, $route) {
-                        return Project.get({
-                            'id': $route.current.params.projectId
-                        });
-                    },
-                    summary: function(Site, $route) {
-                        return Site.summary({
+                    // project: function(Project, $route) {
+                    //     return Project.get({
+                    //         'id': $route.current.params.projectId
+                    //     });
+                    // },
+                    // summary: function(Site, $route) {
+                    //     return Site.summary({
+                    //         id: $route.current.params.siteId
+                    //     });
+                    // },
+                    metrics: function(Site, $route) {
+                        return Site.metrics({
                             id: $route.current.params.siteId
                         });
                     },
@@ -5850,8 +5922,18 @@ angular.module('FieldDoc')
                             id: $route.current.params.siteId
                         });
                     },
+                    outcomes: function(Site, $route) {
+                        return Site.outcomes({
+                            id: $route.current.params.siteId
+                        });
+                    },
                     practices: function(Site, $route) {
                         return Site.practices({
+                            id: $route.current.params.siteId
+                        });
+                    },
+                    site: function(Site, $route) {
+                        return Site.get({
                             id: $route.current.params.siteId
                         });
                     }
@@ -5888,9 +5970,9 @@ angular.module('FieldDoc')
      */
     angular.module('FieldDoc')
         .controller('SiteSummaryCtrl',
-            function(Account, $location, $window, $timeout, Practice, project,
-                $rootScope, $scope, $route, summary, nodes, user, Utility,
-                Map, mapbox, leafletData, leafletBoundsHelpers, Site, Project, practices) {
+            function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
+                $route, nodes, user, Utility, metrics, outcomes, site, Map, mapbox, leafletData,
+                leafletBoundsHelpers, Site, Project, practices) {
 
                 var self = this;
 
@@ -5998,7 +6080,7 @@ angular.module('FieldDoc')
 
                     } else {
 
-                        targetId = self.deletionTarget.feature.id
+                        targetId = self.deletionTarget.feature.id;
 
                     }
 
@@ -6097,106 +6179,80 @@ angular.module('FieldDoc')
                     return Utility.machineName(string_);
                 };
 
-                summary.$promise.then(function(successResponse) {
+                self.loadSite = function() {
 
-                    console.log('self.summary', successResponse);
+                    site.$promise.then(function(successResponse) {
 
-                    self.data = successResponse;
+                        console.log('self.summary', successResponse);
 
-                    self.project = successResponse.project;
+                        self.site = successResponse;
 
-                    console.log('self.project', self.project);
+                        self.permissions.can_edit = Account.canEdit(self.site);
 
-                    self.site = successResponse.site;
-                    // self.practices = successResponse.practices;
+                        $rootScope.page.title = self.site.properties.name;
 
-                    //
-                    // Add rollups to the page scope
-                    //
-                    self.rollups = successResponse.rollups;
+                        self.project = successResponse.properties.project;
 
-                    //
-                    // Set the default tab to 'All'
-                    //
-                    self.rollups.active = 'all';
+                        console.log('self.project', self.project);
 
-                    self.status.loading = false;
+                        self.status.loading = false;
 
-                    //
-                    // Load spatial nodes
-                    //
+                        //
+                        // Load spatial nodes
+                        //
 
-                    nodes.$promise.then(function(successResponse) {
+                        nodes.$promise.then(function(successResponse) {
 
-                        console.log('self.nodes', successResponse);
+                            console.log('self.nodes', successResponse);
 
-                        self.nodes = successResponse;
+                            self.nodes = successResponse;
 
-                    }, function(errorResponse) {
+                        }, function(errorResponse) {
 
-                    });
+                        });
 
-                    //
-                    // Load practices
-                    //
+                        //
+                        // Load practices
+                        //
 
-                    practices.$promise.then(function(successResponse) {
+                        practices.$promise.then(function(successResponse) {
 
-                        console.log('self.practices', successResponse);
+                            console.log('self.practices', successResponse);
 
-                        successResponse.features.forEach(function(feature) {
+                            successResponse.features.forEach(function(feature) {
 
-                            if (feature.geometry) {
+                                if (feature.geometry) {
 
-                                var styledFeature = {
-                                    "type": "Feature",
-                                    "geometry": feature.geometry.geometries[0],
-                                    "properties": {
-                                        "marker-size": "small",
-                                        "marker-color": "#2196F3",
-                                        "stroke": "#2196F3",
-                                        "stroke-opacity": 1.0,
-                                        "stroke-width": 2,
-                                        "fill": "#2196F3",
-                                        "fill-opacity": 0.5
-                                    }
+                                    var styledFeature = {
+                                        "type": "Feature",
+                                        "geometry": feature.geometry.geometries[0],
+                                        "properties": {
+                                            "marker-size": "small",
+                                            "marker-color": "#2196F3",
+                                            "stroke": "#2196F3",
+                                            "stroke-opacity": 1.0,
+                                            "stroke-width": 2,
+                                            "fill": "#2196F3",
+                                            "fill-opacity": 0.5
+                                        }
+                                    };
+
+                                    // Build static map URL for Mapbox API
+
+                                    var staticURL = 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
+
+                                    feature.staticURL = staticURL;
+
                                 }
 
-                                // Build static map URL for Mapbox API
+                            });
 
-                                var staticURL = 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
+                            self.practices = successResponse.features;
 
-                                feature.staticURL = staticURL;
-
-                            }
+                        }, function(errorResponse) {
 
                         });
 
-                        self.practices = successResponse.features;
-
-                    }, function(errorResponse) {
-
-                    });
-
-                    //
-                    // Verify Account information for proper UI element display
-                    //
-                    if (Account.userObject && user) {
-                        user.$promise.then(function(userResponse) {
-                            $rootScope.user = Account.userObject = userResponse;
-
-                            // self.project = project;
-
-                            self.permissions = {
-                                isLoggedIn: Account.hasToken(),
-                                role: $rootScope.user.properties.roles[0].properties.name,
-                                account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                                can_edit: Account.canEdit(self.project)
-                            };
-
-                            $rootScope.page.title = self.site.properties.name;
-
-                        });
                         //
                         // If a valid site geometry is present, add it to the map
                         // and track the object in `self.savedObjects`.
@@ -6215,16 +6271,18 @@ angular.module('FieldDoc')
                                     // padding: [20, 20],
                                     maxZoom: 18
                                 });
+
                             });
+
                             self.map.geojson = {
                                 data: self.site.geometry
                             };
+
                         }
-                    }
 
-                }, function(errorResponse) {
+                    });
 
-                });
+                };
 
                 self.createPractice = function() {
 
@@ -6247,6 +6305,62 @@ angular.module('FieldDoc')
 
                 };
 
+                self.loadMetrics = function() {
+
+                    metrics.$promise.then(function(successResponse) {
+
+                        console.log('Project metrics', successResponse);
+
+                        self.metrics = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+                self.loadOutcomes = function() {
+
+                    outcomes.$promise.then(function(successResponse) {
+
+                        console.log('Project outcomes', successResponse);
+
+                        self.outcomes = successResponse;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+
+                    user.$promise.then(function(userResponse) {
+
+                        $rootScope.user = Account.userObject = userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0].properties.name,
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                        };
+
+                        self.loadSite();
+
+                        self.loadMetrics();
+
+                        self.loadOutcomes();
+
+                    });
+
+                }
 
             });
 
@@ -8053,8 +8167,28 @@ angular.module('FieldDoc')
                         }
                         return Account.userObject;
                     },
-                    summary: function(PracticeCustom, $route) {
-                        return PracticeCustom.summary({
+                    // summary: function(PracticeCustom, $route) {
+                    //     return PracticeCustom.summary({
+                    //         id: $route.current.params.practiceId
+                    //     });
+                    // },
+                    metrics: function(Practice, $route) {
+                        return Practice.metrics({
+                            id: $route.current.params.practiceId
+                        });
+                    },
+                    // nodes: function(Site, $route) {
+                    //     return Site.nodes({
+                    //         id: $route.current.params.siteId
+                    //     });
+                    // },
+                    outcomes: function(Practice, $route) {
+                        return Practice.outcomes({
+                            id: $route.current.params.practiceId
+                        });
+                    },
+                    practice: function(Practice, $route) {
+                        return Practice.get({
                             id: $route.current.params.practiceId
                         });
                     }
@@ -8620,14 +8754,33 @@ angular.module('FieldDoc')
      * @description
      */
     angular.module('FieldDoc')
-        .controller('CustomSummaryController',
-            function(Account, $location, $timeout, $log, PracticeCustom,
-                $rootScope, $route, $scope, summary, Utility, user, Project, Site,
-                $window, Map, mapbox, leafletData, leafletBoundsHelpers, Practice) {
+        .controller('CustomSummaryController', [
+            'Account',
+            '$location',
+            '$timeout',
+            '$log',
+            'PracticeCustom',
+            '$rootScope',
+            '$route',
+            '$scope',
+            'Utility',
+            'user',
+            'Project',
+            'Site',
+            '$window',
+            'Map',
+            'mapbox',
+            'leafletData',
+            'leafletBoundsHelpers',
+            'Practice',
+            'metrics',
+            'outcomes',
+            'practice',
+            function(Account, $location, $timeout, $log, PracticeCustom, $rootScope,
+                $route, $scope, Utility, user, Project, Site, $window, Map, mapbox,
+                leafletData, leafletBoundsHelpers, Practice, metrics, outcomes, practice) {
 
                 var self = this,
-                    projectId = $route.current.params.projectId,
-                    siteId = $route.current.params.siteId,
                     practiceId = $route.current.params.practiceId;
 
                 $rootScope.toolbarState = {
@@ -8635,12 +8788,6 @@ angular.module('FieldDoc')
                 };
 
                 $rootScope.page = {};
-
-                self.practiceType = null;
-
-                self.project = {
-                    'id': projectId
-                };
 
                 self.map = Map;
 
@@ -8727,7 +8874,7 @@ angular.module('FieldDoc')
                             typeof index === 'number' &&
                             featureType === 'report') {
 
-                            self.summary.practice.properties.readings_custom.splice(index, 1);
+                            self.practice.properties.readings_custom.splice(index, 1);
 
                             self.cancelDelete();
 
@@ -8802,56 +8949,61 @@ angular.module('FieldDoc')
                     addNonGroupLayers(featureGeometry, layerGroup);
 
                 };
-                //Temp change loading to "loading"
 
-                summary.$promise.then(function(successResponse) {
+                self.loadPractice = function() {
 
-                    self.data = successResponse;
+                    practice.$promise.then(function(successResponse) {
 
-                    console.log('self.summary', successResponse);
+                        console.log('self.practice', successResponse);
 
-                    self.summary = successResponse;
+                        self.practice = successResponse;
 
-                    //
-                    // Determine if the actions should be shown or hidden depending on
-                    // whether of not this practice has planning data
-                    //
-                    if (self.summary.practice.properties.has_planning_data) {
-                        $rootScope.page.hideActions = false;
-                    } else {
-                        $rootScope.page.hideActions = true;
-                    }
+                        $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
 
-                    // $rootScope.page.title =
-                    //     "Other Conservation Practice";
+                        //
+                        // Determine if the actions should be shown or hidden depending on
+                        // whether of not this practice has planning data
+                        //
+                        if (self.practice.properties.has_planning_data) {
 
-                    self.practiceType = Utility.machineName(self.summary
-                        .practice.properties.practice_type);
+                            $rootScope.page.hideActions = false;
 
-                    if (self.summary.practice.geometry !== null &&
-                        typeof self.summary.practice.geometry !== 'undefined') {
+                        } else {
 
-                        leafletData.getMap('practice--map').then(function(map) {
+                            $rootScope.page.hideActions = true;
 
-                            self.practiceExtent = new L.FeatureGroup();
+                        }
 
-                            self.setGeoJsonLayer(self.summary.practice.geometry, self.practiceExtent);
+                        if (self.practice.geometry !== null &&
+                            typeof self.practice.geometry !== 'undefined') {
 
-                            map.fitBounds(self.practiceExtent.getBounds(), {
-                                // padding: [20, 20],
-                                maxZoom: 18
+                            leafletData.getMap('practice--map').then(function(map) {
+
+                                self.practiceExtent = new L.FeatureGroup();
+
+                                self.setGeoJsonLayer(self.practice.geometry, self.practiceExtent);
+
+                                map.fitBounds(self.practiceExtent.getBounds(), {
+                                    // padding: [20, 20],
+                                    maxZoom: 18
+                                });
                             });
-                        });
 
-                        self.map.geojson = {
-                            data: self.summary.practice.geometry
-                        };
+                            self.map.geojson = {
+                                data: self.practice.geometry
+                            };
 
-                    }
+                        }
 
-                    self.status.loading = false;
+                        self.status.loading = false;
 
-                }, function() {});
+                    }, function(errorResponse) {
+
+
+
+                    });
+
+                };
 
                 //
                 // Verify Account information for proper UI element display
@@ -8871,6 +9023,13 @@ angular.module('FieldDoc')
                                 $rootScope.account[0] : null,
                             can_edit: true
                         };
+
+                        self.loadPractice();
+
+                        self.loadMetrics();
+
+                        self.loadOutcomes();
+
                     });
                 }
 
@@ -8880,8 +9039,7 @@ angular.module('FieldDoc')
                         'measurement_period': 'Planning',
                         'report_date': new Date(),
                         'practice_id': practiceId,
-                        'organization_id': self.summary.site.properties
-                            .project.properties.organization_id
+                        'organization_id': self.practice.properties.organization_id
                     });
 
                     newReading.$save().then(function(successResponse) {
@@ -8897,7 +9055,40 @@ angular.module('FieldDoc')
 
                 };
 
-            });
+                self.loadMetrics = function() {
+
+                    metrics.$promise.then(function(successResponse) {
+
+                        console.log('Project metrics', successResponse);
+
+                        self.metrics = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+                self.loadOutcomes = function() {
+
+                    outcomes.$promise.then(function(successResponse) {
+
+                        console.log('Project outcomes', successResponse);
+
+                        self.outcomes = successResponse;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+            }
+        ]);
 
 }());
 'use strict';
@@ -11986,6 +12177,16 @@ angular
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/data/program/:id/projects')
+                },
+                'metrics': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/project/:id/metrics'),
+                    'isArray': false
+                },
+                'outcomes': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/data/project/:id/outcomes'),
+                    'isArray': false
                 }
             });
         });

@@ -12,9 +12,9 @@ angular.module('FieldDoc')
     .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
 
         $routeProvider
-            .when('/sites', {
-                redirectTo: '/projects/:projectId'
-            })
+            // .when('/sites', {
+            //     redirectTo: '/projects/:projectId'
+            // })
             .when('/sites/:siteId', {
                 templateUrl: '/modules/components/sites/views/sites--summary.html',
                 controller: 'SiteSummaryCtrl',
@@ -26,13 +26,18 @@ angular.module('FieldDoc')
                         }
                         return Account.userObject;
                     },
-                    project: function(Project, $route) {
-                        return Project.get({
-                            'id': $route.current.params.projectId
-                        });
-                    },
-                    summary: function(Site, $route) {
-                        return Site.summary({
+                    // project: function(Project, $route) {
+                    //     return Project.get({
+                    //         'id': $route.current.params.projectId
+                    //     });
+                    // },
+                    // summary: function(Site, $route) {
+                    //     return Site.summary({
+                    //         id: $route.current.params.siteId
+                    //     });
+                    // },
+                    metrics: function(Site, $route) {
+                        return Site.metrics({
                             id: $route.current.params.siteId
                         });
                     },
@@ -41,8 +46,18 @@ angular.module('FieldDoc')
                             id: $route.current.params.siteId
                         });
                     },
+                    outcomes: function(Site, $route) {
+                        return Site.outcomes({
+                            id: $route.current.params.siteId
+                        });
+                    },
                     practices: function(Site, $route) {
                         return Site.practices({
+                            id: $route.current.params.siteId
+                        });
+                    },
+                    site: function(Site, $route) {
+                        return Site.get({
                             id: $route.current.params.siteId
                         });
                     }
