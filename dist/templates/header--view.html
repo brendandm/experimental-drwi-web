@@ -12,7 +12,7 @@
                 </a>
             </section>
 
-            <div global-search class="global--search">
+            <div global-search class="global--search" data-ng-if="$root.user.id">
                 <input type="search" class="search" value="" placeholder="Search your workspace" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue, 'workspace')" typeahead-on-select="routeTo($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
             </div>
 
