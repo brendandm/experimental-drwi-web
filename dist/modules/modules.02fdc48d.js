@@ -907,7 +907,7 @@ angular.module('FieldDoc')
 
         self.project = {};
 
-        self.map = Object.assign({}, Map);
+        self.map = JSON.parse(JSON.stringify(Map));
 
         self.map.layers = {
             baselayers: {
@@ -4936,7 +4936,7 @@ angular.module('FieldDoc')
 
             $rootScope.page = {};
 
-            self.map = Map;
+            self.map = JSON.parse(JSON.stringify(Map));
 
             self.map.markers = {};
 
@@ -5972,7 +5972,7 @@ angular.module('FieldDoc')
 
                 $rootScope.page = {};
 
-                self.map = Map;
+                self.map = JSON.parse(JSON.stringify(Map));
 
                 self.status = {
                     'loading': true
@@ -7980,7 +7980,7 @@ angular.module('FieldDoc')
 
                 $rootScope.page = {};
 
-                self.map = Map;
+                self.map = JSON.parse(JSON.stringify(Map));
 
                 self.status = {
                     loading: true

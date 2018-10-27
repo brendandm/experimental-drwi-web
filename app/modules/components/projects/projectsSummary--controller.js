@@ -40,7 +40,7 @@ angular.module('FieldDoc')
 
             $rootScope.page = {};
 
-            self.map = Map;
+            self.map = JSON.parse(JSON.stringify(Map));
 
             self.map.markers = {};
 

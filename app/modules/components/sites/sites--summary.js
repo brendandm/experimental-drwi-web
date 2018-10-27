@@ -21,7 +21,7 @@
 
                 $rootScope.page = {};
 
-                self.map = Map;
+                self.map = JSON.parse(JSON.stringify(Map));
 
                 self.status = {
                     'loading': true
