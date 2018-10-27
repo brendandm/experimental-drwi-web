@@ -88,7 +88,8 @@
 
                     console.log('self.deleteFeature', featureType, index);
 
-                    var targetCollection;
+                    var targetCollection,
+                        targetId;
 
                     switch (featureType) {
 
@@ -112,8 +113,18 @@
 
                     }
 
+                    if (self.deletionTarget.feature.properties) {
+
+                        targetId = self.deletionTarget.feature.properties.id;
+
+                    } else {
+
+                        targetId = self.deletionTarget.feature.id
+
+                    }
+
                     targetCollection.delete({
-                        id: +self.deletionTarget.feature.properties.id
+                        id: +targetId
                     }).$promise.then(function(data) {
 
                         self.alerts.push({
@@ -265,10 +276,10 @@
                                         "marker-size": "small",
                                         "marker-color": "#2196F3",
                                         "stroke": "#2196F3",
-                                        "stroke-opacity": 0,
-                                        "stroke-width": 0,
+                                        "stroke-opacity": 1.0,
+                                        "stroke-width": 2,
                                         "fill": "#2196F3",
-                                        "fill-opacity": 0
+                                        "fill-opacity": 0.5
                                     }
                                 }
 

@@ -17,8 +17,6 @@ angular.module('FieldDoc')
 
             var self = this;
 
-            self.alerts = [];
-
             self.dashboardFilters = {
                 geographies: [],
                 grantees: [],
@@ -71,6 +69,14 @@ angular.module('FieldDoc')
 
             };
 
+            self.alerts = [];
+
+            function closeAlerts() {
+
+                self.alerts = [];
+
+            }
+
             self.confirmDelete = function(obj) {
 
                 self.deletionTarget = obj;
@@ -100,11 +106,42 @@ angular.module('FieldDoc')
 
                     self.filteredProjects.splice(index, 1);
 
-                    $timeout(function() {
+                    $timeout(closeAlerts, 2000);
 
-                        self.alerts = [];
+                }).catch(function(errorResponse) {
 
-                    }, 2000);
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + obj.name + '”. There are pending tasks affecting this project.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this project.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this project.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
 
                 });
 
