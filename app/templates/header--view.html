@@ -1,5 +1,3 @@
-<div data-ng-include="'/modules/shared/notifications/notifications--view.html'"></div>
-
 <header role="banner" class="site-header">
 
     <div class="container">
@@ -50,41 +48,3 @@
     </div>
 
 </header>
-
-<section class="container meta" data-ng-if="!page.status.loading && $root.page.links">
-    <article class="row">
-        <nav class="column-10">
-            <ul data-ng-if="$root.page.links" class="breadcrumb-navigation crumbs">
-                <li data-ng-repeat="link in $root.page.links">
-                    <a href="{{ link.url }}" class="{{ link.type }}">
-                        {{ link.text }}
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        <nav class="column-6">
-            <ul data-ng-if="$root.page.actions && $root.page.hideActions !== true" class="breadcrumb-navigation">
-                <li data-ng-repeat="action in $root.page.actions track by $index">
-                    <button data-ng-if="!action.loading && action.button !== 'submit'" data-ng-click="action.action($index)"
-                        class="button {{ action.type }}">
-                        <span class="add" data-ng-if="!action.hideIcon">+</span>
-                        <span data-ng-if="(!action.visible && action.alt) || (!action.alt)">{{
-                            action.text }}</span>
-                        <span data-ng-if="action.alt && action.visible">{{ action.alt
-                            }}</span>
-                    </button>
-                    <button data-ng-if="!action.loading && action.button === 'submit'" data-ng-click="action.action($index)"
-                        class="button {{ action.type }}">
-                        <span data-ng-if="(!action.visible && action.alt) || (!action.alt)">{{
-                            action.text }}</span>
-                        <span data-ng-if="action.alt && action.visible">{{ action.alt
-                            }}</span>
-                    </button>
-                    <a data-ng-if="action.loading" class="">
-                        <span class="throbber"></span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </article>
-</section>

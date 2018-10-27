@@ -465,7 +465,7 @@ angular.module('FieldDoc')
 
 }());
 
-(function () {
+(function() {
 
     'use strict';
 
@@ -474,32 +474,36 @@ angular.module('FieldDoc')
      * @name
      * @description
      */
-     angular.module('FieldDoc')
-       .controller('SecurityLogoutController', function (Account, ipCookie, $location, $rootScope) {
+    angular.module('FieldDoc')
+        .controller('SecurityLogoutController', function(Account, ipCookie, $location, $rootScope) {
 
-         /**
-          * Remove all cookies present for authentication
-          */
-         ipCookie.remove('FIELDSTACKIO_SESSION');
-         ipCookie.remove('FIELDSTACKIO_SESSION', { path: '/' });
+            /**
+             * Remove all cookies present for authentication
+             */
+            ipCookie.remove('FIELDSTACKIO_SESSION');
+            ipCookie.remove('FIELDSTACKIO_SESSION', {
+                path: '/'
+            });
 
-         ipCookie.remove('FIELDSTACKIO_CURRENTUSER');
-         ipCookie.remove('FIELDSTACKIO_CURRENTUSER', { path: '/' });
+            ipCookie.remove('FIELDSTACKIO_CURRENTUSER');
+            ipCookie.remove('FIELDSTACKIO_CURRENTUSER', {
+                path: '/'
+            });
 
-         /**
-          * Remove all data from the User and Account objects, this is really just
-          * for display purposes and has no bearing on the actual session
-          */
-         $rootScope.user = $rootScope.page.links = $rootScope.page.actions = Account.userObject = null;
+            /**
+             * Remove all data from the User and Account objects, this is really just
+             * for display purposes and has no bearing on the actual session
+             */
+            $rootScope.user = Account.userObject = null;
 
-         /**
-          * Redirect individuals back to the activity list
-          */
-         $location.path('/');
-       });
+            /**
+             * Redirect individuals back to the activity list
+             */
+            $location.path('/');
+            
+        });
 
 }());
-
 (function() {
 
   'use strict';
@@ -2442,8 +2446,6 @@ angular.module('FieldDoc')
 
         $rootScope.page = {};
 
-        $rootScope.page.actions = [];
-
         //
         // Verify Account information for proper UI element display
         //
@@ -2714,8 +2716,6 @@ angular.module('FieldDoc')
                 ];
 
                 self.snapshotObject = data;
-
-                $rootScope.page.actions = [];
 
                 relations.forEach(function(relation) {
 
@@ -5490,26 +5490,10 @@ angular.module('FieldDoc')
         // Assign project to a scoped variable
         //
         project.$promise.then(function(successResponse) {
+
             self.project = successResponse;
 
             $rootScope.page.title = 'Edit Project';
-
-            // $rootScope.page.links = [{
-            //         text: 'Projects',
-            //         url: '/projects'
-            //     },
-            //     {
-            //         text: self.project.properties.name,
-            //         url: '/projects/' + self.project.id
-            //     },
-            //     {
-            //         text: 'Edit',
-            //         url: '/projects/' + self.project.id + '/edit',
-            //         type: 'active'
-            //     }
-            // ];
-            
-            // $rootScope.page.actions = [];
 
             //
             // Verify Account information for proper UI element display
@@ -7953,7 +7937,6 @@ angular.module('FieldDoc')
             'PracticeCustom',
             '$rootScope',
             '$route',
-            '$scope',
             'Utility',
             'user',
             'Project',
@@ -7968,7 +7951,7 @@ angular.module('FieldDoc')
             'outcomes',
             'practice',
             function(Account, $location, $timeout, $log, PracticeCustom, $rootScope,
-                $route, $scope, Utility, user, Project, Site, $window, Map, mapbox,
+                $route, Utility, user, Project, Site, $window, Map, mapbox,
                 leafletData, leafletBoundsHelpers, Practice, metrics, outcomes, practice) {
 
                 var self = this,

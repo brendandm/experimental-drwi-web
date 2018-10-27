@@ -21,26 +21,10 @@ angular.module('FieldDoc')
         // Assign project to a scoped variable
         //
         project.$promise.then(function(successResponse) {
+
             self.project = successResponse;
 
             $rootScope.page.title = 'Edit Project';
-
-            // $rootScope.page.links = [{
-            //         text: 'Projects',
-            //         url: '/projects'
-            //     },
-            //     {
-            //         text: self.project.properties.name,
-            //         url: '/projects/' + self.project.id
-            //     },
-            //     {
-            //         text: 'Edit',
-            //         url: '/projects/' + self.project.id + '/edit',
-            //         type: 'active'
-            //     }
-            // ];
-            
-            // $rootScope.page.actions = [];
 
             //
             // Verify Account information for proper UI element display

@@ -16,8 +16,6 @@ angular.module('FieldDoc')
 
         $rootScope.page = {};
 
-        $rootScope.page.actions = [];
-
         //
         // Verify Account information for proper UI element display
         //

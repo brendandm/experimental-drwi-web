@@ -226,8 +226,6 @@ angular.module('FieldDoc')
 
                 self.snapshotObject = data;
 
-                $rootScope.page.actions = [];
-
                 relations.forEach(function(relation) {
 
                     if (Array.isArray(self.snapshotObject[relation])) {

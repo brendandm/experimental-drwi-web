@@ -16,7 +16,6 @@
             'PracticeCustom',
             '$rootScope',
             '$route',
-            '$scope',
             'Utility',
             'user',
             'Project',
@@ -31,7 +30,7 @@
             'outcomes',
             'practice',
             function(Account, $location, $timeout, $log, PracticeCustom, $rootScope,
-                $route, $scope, Utility, user, Project, Site, $window, Map, mapbox,
+                $route, Utility, user, Project, Site, $window, Map, mapbox,
                 leafletData, leafletBoundsHelpers, Practice, metrics, outcomes, practice) {
 
                 var self = this,
