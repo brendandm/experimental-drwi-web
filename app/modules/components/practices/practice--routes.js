@@ -41,7 +41,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/practices/:practiceId/:reportId/edit', {
-                templateUrl: '/modules/components/practices/views/form--view.html',
+                templateUrl: '/modules/components/practices/views/edit--view.html',
                 controller: 'CustomFormController',
                 controllerAs: 'page',
                 resolve: {
@@ -90,7 +90,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/practices/:practiceId/edit', {
-                templateUrl: '/modules/components/practices/views/practices--edit.html',
+                templateUrl: '/modules/components/practices/views/practiceEdit--view.html',
                 controller: 'PracticeEditController',
                 controllerAs: 'page',
                 resolve: {

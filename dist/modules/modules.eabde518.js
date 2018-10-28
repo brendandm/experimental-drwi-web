@@ -5329,6 +5329,14 @@ angular.module('FieldDoc')
 
                     console.log('Project metrics', successResponse);
 
+                    successResponse.features.forEach(function(metric) {
+
+                        var _percentComplete = +((metric.installation/metric.planning)*100).toFixed(0);
+
+                        metric.percentComplete = _percentComplete;
+
+                    });
+
                     self.metrics = successResponse.features;
 
                 }, function(errorResponse) {
@@ -6253,7 +6261,7 @@ angular.module('FieldDoc')
                         'practice_type': 'Custom',
                         'site_id': self.site.id,
                         'project_id': self.site.properties.project.id,
-                        'organization_id': self.site.properties.project.properties.organization_id
+                        'organization_id': self.site.properties.organization_id
                     });
 
                     self.practice.$save(function(successResponse) {
@@ -6273,6 +6281,14 @@ angular.module('FieldDoc')
                     metrics.$promise.then(function(successResponse) {
 
                         console.log('Project metrics', successResponse);
+
+                        successResponse.features.forEach(function(metric) {
+
+                            var _percentComplete = +((metric.installation/metric.planning)*100).toFixed(0);
+
+                            metric.percentComplete = _percentComplete;
+
+                        });
 
                         self.metrics = successResponse.features;
 
@@ -6342,8 +6358,8 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('SiteEditCtrl',
             function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
-            Map, mapbox, Notifications, Site, site, $rootScope,
-            $route, $scope, Segment, $timeout, $interval, user, Shapefile) {
+            Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, Segment,
+            $timeout, $interval, user, Shapefile) {
 
             var self = this,
                 timeout;
@@ -6363,17 +6379,24 @@ angular.module('FieldDoc')
             //
             // Set default image path for Leaflet iconography
             //
-
             L.Icon.Default.imagePath = '/images/leaflet';
 
             function addNonGroupLayers(sourceLayer, targetGroup) {
+
                 if (sourceLayer instanceof L.LayerGroup) {
+
                     sourceLayer.eachLayer(function(layer) {
+
                         addNonGroupLayers(layer, targetGroup);
+
                     });
+
                 } else {
+
                     targetGroup.addLayer(sourceLayer);
+
                 }
+
             }
 
             //
@@ -6382,38 +6405,12 @@ angular.module('FieldDoc')
             //
             self.processPin = function(coordinates, zoom) {
 
-                if (coordinates.lat === null || coordinates.lat === undefined || coordinates.lng === null || coordinates.lng === undefined) {
+                if (coordinates.lat === null ||
+                    coordinates.lat === undefined ||
+                    coordinates.lng === null ||
+                    coordinates.lng === undefined) {
                     return;
                 }
-
-                // self.geolocation.getSegment(coordinates);
-
-                //
-                // Move the map pin/marker and recenter the map on the new location
-                //
-                // self.map.markers = {
-                //     reportGeometry: {
-                //         lng: coordinates.lng,
-                //         lat: coordinates.lat,
-                //         focus: false,
-                //         draggable: true
-                //     }
-                // };
-
-                // //
-                // // Update the coordinates for the Report
-                // //
-                // self.site.geometry = {
-                //     type: 'GeometryCollection',
-                //     geometries: []
-                // };
-                // self.site.geometry.geometries.push({
-                //     type: 'Point',
-                //     coordinates: [
-                //         coordinates.lng,
-                //         coordinates.lat
-                //     ]
-                // });
 
                 //
                 // Update the visible pin on the map
@@ -6426,6 +6423,7 @@ angular.module('FieldDoc')
                 };
 
                 self.showGeocoder = false;
+
             };
 
             //
@@ -6524,7 +6522,17 @@ angular.module('FieldDoc')
                 if (self.site.geometry !== null &&
                     typeof self.site.geometry !== 'undefined') {
 
-                    self.setGeoJsonLayer(self.site.geometry);
+                    var geometry = self.site.geometry;
+
+                    if (geometry.geometries) {
+
+                        self.setGeoJsonLayer(geometry.geometries[0]);
+
+                    } else {
+
+                        self.setGeoJsonLayer(geometry);
+
+                    }
 
                 }
 
@@ -6648,24 +6656,16 @@ angular.module('FieldDoc')
 
             self.saveSite = function() {
 
-                // self.site.geometry = {
-                //     type: 'GeometryCollection',
-                //     geometries: []
-                // };
-
                 if (self.savedObjects.length) {
 
                     self.savedObjects.forEach(function(object) {
 
                         console.log('Iterating self.savedObjects', object);
 
-                        if (object.geoJson.geometry) {
+                        if (object.geoJson.geometry &&
+                            typeof object.geoJson.geometry !== 'undefined') {
 
                             self.site.geometry = object.geoJson.geometry;
-
-                        } else {
-
-                            self.site.geometry = object.geoJson.geometries[0];
 
                         }
 
@@ -7095,7 +7095,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/practices/:practiceId/:reportId/edit', {
-                templateUrl: '/modules/components/practices/views/form--view.html',
+                templateUrl: '/modules/components/practices/views/edit--view.html',
                 controller: 'CustomFormController',
                 controllerAs: 'page',
                 resolve: {
@@ -7144,7 +7144,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/practices/:practiceId/edit', {
-                templateUrl: '/modules/components/practices/views/practices--edit.html',
+                templateUrl: '/modules/components/practices/views/practiceEdit--view.html',
                 controller: 'PracticeEditController',
                 controllerAs: 'page',
                 resolve: {
@@ -8230,6 +8230,14 @@ angular.module('FieldDoc')
                     metrics.$promise.then(function(successResponse) {
 
                         console.log('Project metrics', successResponse);
+
+                        successResponse.features.forEach(function(metric) {
+
+                            var _percentComplete = +((metric.installation/metric.planning)*100).toFixed(0);
+
+                            metric.percentComplete = _percentComplete;
+
+                        });
 
                         self.metrics = successResponse.features;
 

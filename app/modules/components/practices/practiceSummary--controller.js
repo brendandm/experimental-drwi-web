@@ -310,6 +310,14 @@
 
                         console.log('Project metrics', successResponse);
 
+                        successResponse.features.forEach(function(metric) {
+
+                            var _percentComplete = +((metric.installation/metric.planning)*100).toFixed(0);
+
+                            metric.percentComplete = _percentComplete;
+
+                        });
+
                         self.metrics = successResponse.features;
 
                     }, function(errorResponse) {

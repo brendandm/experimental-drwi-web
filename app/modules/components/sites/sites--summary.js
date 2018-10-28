@@ -318,7 +318,7 @@
                         'practice_type': 'Custom',
                         'site_id': self.site.id,
                         'project_id': self.site.properties.project.id,
-                        'organization_id': self.site.properties.project.properties.organization_id
+                        'organization_id': self.site.properties.organization_id
                     });
 
                     self.practice.$save(function(successResponse) {
@@ -338,6 +338,14 @@
                     metrics.$promise.then(function(successResponse) {
 
                         console.log('Project metrics', successResponse);
+
+                        successResponse.features.forEach(function(metric) {
+
+                            var _percentComplete = +((metric.installation/metric.planning)*100).toFixed(0);
+
+                            metric.percentComplete = _percentComplete;
+
+                        });
 
                         self.metrics = successResponse.features;
 
