@@ -4908,7 +4908,7 @@ angular.module('FieldDoc')
         function(Account, Notifications, $rootScope, Project, $routeParams,
             $scope, $location, Map, mapbox, Site, user, $window,
             leafletData, leafletBoundsHelpers, $timeout, Practice, project,
-            metrics, outcomes) {
+            metrics, outcomes, sites) {
 
             //controller is set to self
             var self = this;
@@ -5023,20 +5023,6 @@ angular.module('FieldDoc')
 
                     self.project = project_;
 
-                    successResponse.properties.sites.forEach(function(feature) {
-
-                        if (feature.geometry) {
-
-                            feature.staticURL = self.buildStaticMapURL(feature.geometry);
-
-                        }
-
-                    });
-
-                    self.sites = successResponse.properties.sites;
-
-                    // self.practices = successResponse.practices;
-
                     self.status.loading = false;
 
                     $rootScope.page.title = 'Project Summary';
@@ -5054,39 +5040,20 @@ angular.module('FieldDoc')
                             self.setGeoJsonLayer(self.project.properties.extent, self.projectExtent);
 
                             map.fitBounds(self.projectExtent.getBounds(), {
-                                // padding: [20, 20],
                                 maxZoom: 18
                             });
 
                         } else {
 
                             map.fitBounds(bounds, {
-                                // padding: [20, 20],
                                 maxZoom: 18
                             });
 
                         }
 
-                        self.projectExtent.clearLayers();
-
-                        self.sites.forEach(function(feature) {
-
-                            if (feature.geometry) {
-
-                                self.setGeoJsonLayer(feature.geometry, self.projectExtent);
-
-                            }
-
-                        });
-
-                        map.fitBounds(self.projectExtent.getBounds(), {
-                            // padding: [20, 20],
-                            maxZoom: 18
-                        });
-
-                        self.projectExtent.addTo(map);
-
                     });
+
+                    self.loadSites();
 
                 });
 
@@ -5233,7 +5200,8 @@ angular.module('FieldDoc')
 
             self.deleteFeature = function(featureType, index) {
 
-                var targetCollection;
+                var targetCollection,
+                    targetId;
 
                 switch (featureType) {
 
@@ -5257,8 +5225,18 @@ angular.module('FieldDoc')
 
                 }
 
+                if (self.deletionTarget.feature.properties) {
+
+                    targetId = self.deletionTarget.feature.properties.id;
+
+                } else {
+
+                    targetId = self.deletionTarget.feature.id;
+
+                }
+
                 targetCollection.delete({
-                    id: +self.deletionTarget.feature.id
+                    id: +targetId
                 }).$promise.then(function(data) {
 
                     self.alerts.push({
@@ -5323,6 +5301,54 @@ angular.module('FieldDoc')
 
             };
 
+            self.loadSites = function() {
+
+                sites.$promise.then(function(successResponse) {
+
+                    console.log('Project sites', successResponse);
+
+                    successResponse.features.forEach(function(feature) {
+
+                        if (feature.geometry) {
+
+                            feature.staticURL = self.buildStaticMapURL(feature.geometry);
+
+                        }
+
+                    });
+
+                    self.sites = successResponse.features;
+
+                    leafletData.getMap('project--map').then(function(map) {
+
+                        self.projectExtent.clearLayers();
+
+                        self.sites.forEach(function(feature) {
+
+                            if (feature.geometry) {
+
+                                self.setGeoJsonLayer(feature.geometry, self.projectExtent);
+
+                            }
+
+                        });
+
+                        map.fitBounds(self.projectExtent.getBounds(), {
+                            maxZoom: 18
+                        });
+
+                        self.projectExtent.addTo(map);
+
+                    });
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
+
+            };
+
             self.loadMetrics = function() {
 
                 metrics.$promise.then(function(successResponse) {
@@ -5331,7 +5357,7 @@ angular.module('FieldDoc')
 
                     successResponse.features.forEach(function(metric) {
 
-                        var _percentComplete = +((metric.installation/metric.planning)*100).toFixed(0);
+                        var _percentComplete = +((metric.installation / metric.planning) * 100).toFixed(0);
 
                         metric.percentComplete = _percentComplete;
 
