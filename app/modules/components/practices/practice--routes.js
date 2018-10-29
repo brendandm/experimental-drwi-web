@@ -116,6 +116,62 @@ angular.module('FieldDoc')
                         });
                     }
                 }
+            })
+            .when('/practices/:practiceId/location', {
+                templateUrl: '/modules/components/practices/views/practiceLocation--view.html',
+                controller: 'PracticeLocationController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account) {
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+                        return Account.userObject;
+                    },
+                    site: function(Practice, $route) {
+                        return Practice.site({
+                            id: $route.current.params.practiceId
+                        });
+                    },
+                    practice_types: function(PracticeType, $route) {
+                        return PracticeType.query({
+                            results_per_page: 500
+                        });
+                    },
+                    practice: function(Practice, $route) {
+                        return Practice.get({
+                            id: $route.current.params.practiceId
+                        });
+                    }
+                }
+            })
+            .when('/practices/:practiceId/photos', {
+                templateUrl: '/modules/components/practices/views/practicePhoto--view.html',
+                controller: 'PracticePhotoController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account) {
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+                        return Account.userObject;
+                    },
+                    site: function(Practice, $route) {
+                        return Practice.site({
+                            id: $route.current.params.practiceId
+                        });
+                    },
+                    practice_types: function(PracticeType, $route) {
+                        return PracticeType.query({
+                            results_per_page: 500
+                        });
+                    },
+                    practice: function(Practice, $route) {
+                        return Practice.get({
+                            id: $route.current.params.practiceId
+                        });
+                    }
+                }
             });
 
     });

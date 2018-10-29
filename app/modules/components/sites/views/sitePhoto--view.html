@@ -29,7 +29,7 @@
                             <textarea rows="1" data-ng-model="page.site.properties.description" class="form-control animate" msd-elastic id="description" name="description" placeholder="Site description">{{ page.site.properties.description }}</textarea>
                         </div>
 
-<!--                         <div class="form-row">
+                        <div class="form-row">
                             <div class="form-field">
 
                                 <div class="form-element">
@@ -57,10 +57,10 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
 
                         <!-- Shapefile input -->
-<!--                         <div class="form-row">
+                        <div class="form-row">
                             <div class="form-field">
                                 <label for="shapefile" class="control-label">
                                     Upload an ESRI Shapefile
@@ -75,7 +75,7 @@
                                     Upload
                                 </button>
                             </div>
-                        </div> -->
+                        </div>
 
                         <!-- <div class="form-actions">
                             <div class="form-actions-buttons">
@@ -134,6 +134,13 @@
                 <a href="/sites/{{ page.site.id }}/location">
                     <i class="material-icons">
                         location_on
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
+                <a href="/sites/{{ page.site.id }}/photos">
+                    <i class="material-icons">
+                        insert_photo
                     </i>
                 </a>
             </li>

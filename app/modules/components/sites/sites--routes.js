@@ -70,6 +70,42 @@ angular.module('FieldDoc')
                         });
                     }
                 }
+            })
+            .when('/sites/:siteId/location', {
+                templateUrl: '/modules/components/sites/views/siteLocation--view.html',
+                controller: 'SiteLocationCtrl',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account) {
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+                        return Account.userObject;
+                    },
+                    site: function(Site, $route) {
+                        return Site.get({
+                            id: $route.current.params.siteId
+                        });
+                    }
+                }
+            })
+            .when('/sites/:siteId/photos', {
+                templateUrl: '/modules/components/sites/views/sitePhoto--view.html',
+                controller: 'SitePhotoCtrl',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account) {
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+                        return Account.userObject;
+                    },
+                    site: function(Site, $route) {
+                        return Site.get({
+                            id: $route.current.params.siteId
+                        });
+                    }
+                }
             });
 
     }]);
