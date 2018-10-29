@@ -21,6 +21,20 @@ angular.module('FieldDoc')
 
         $rootScope.page = {};
 
+        self.alerts = [];
+
+        self.closeAlerts = function() {
+
+            self.alerts = [];
+
+        };
+
+        self.closeRoute = function() {
+
+            $location.path(self.practice.links.site.html);
+
+        };
+
         self.loadPractice = function() {
 
             practice.$promise.then(function(successResponse) {
@@ -78,14 +92,27 @@ angular.module('FieldDoc')
                     $log.log('Images::successResponse', successResponse);
 
                     angular.forEach(successResponse, function(image) {
+
                         self.practice.properties.images.push({
+
                             id: image.id
+
                         });
+
                     });
 
                     self.practice.$update().then(function(successResponse) {
 
                         self.practice = successResponse;
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Photo library updated.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
 
                     }, function(errorResponse) {
 
@@ -114,20 +141,6 @@ angular.module('FieldDoc')
             }
 
         };
-
-        self.alerts = [];
-
-        function closeAlerts() {
-
-            self.alerts = [];
-
-        }
-
-        function closeRoute() {
-
-            $location.path(self.practice.links.site.html);
-
-        }
 
         self.confirmDelete = function(obj, targetCollection) {
 
@@ -196,7 +209,7 @@ angular.module('FieldDoc')
 
                     self.cancelDelete();
 
-                    $timeout(closeAlerts, 2000);
+                    $timeout(self.closeAlerts, 2000);
 
                     if (index === 0) {
 
@@ -206,7 +219,7 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    $timeout(closeRoute, 2000);
+                    $timeout(self.closeRoute, 2000);
 
                 }
 
@@ -243,7 +256,7 @@ angular.module('FieldDoc')
 
                 }
 
-                $timeout(closeAlerts, 2000);
+                $timeout(self.closeAlerts, 2000);
 
             });
 

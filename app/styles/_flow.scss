@@ -4230,6 +4230,11 @@
         box-sizing: border-box;
         background: #fff;
 
+        .visible {
+          visibility: visible !important;
+          opacity: 1 !important;
+        }
+
         .confirm--delete {
           position: absolute;
           top: 0;
@@ -4243,6 +4248,7 @@
           text-align: center;
           background: #fff;
           z-index: 999;
+          transition: all 250ms ease 0s;
 
           .actions {
             flex: 0;
