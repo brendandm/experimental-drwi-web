@@ -57,6 +57,8 @@ angular.module('FieldDoc')
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                 };
 
+                self.project.organization_id = $rootScope.user.properties.organization.id;
+
             });
 
         }

@@ -5478,6 +5478,8 @@ angular.module('FieldDoc')
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                 };
 
+                self.project.organization_id = $rootScope.user.properties.organization.id;
+
             });
 
         }
@@ -7131,11 +7133,6 @@ angular.module('FieldDoc')
                         }
                         return Account.userObject;
                     },
-                    site: function(Site, $route) {
-                        return Site.get({
-                            id: $route.current.params.siteId
-                        });
-                    },
                     practice: function(Practice, $route) {
                         return Practice.get({
                             id: $route.current.params.practiceId
@@ -7143,6 +7140,11 @@ angular.module('FieldDoc')
                     },
                     report: function(PracticeCustom, $route) {
                         return PracticeCustom.get({
+                            id: $route.current.params.reportId
+                        });
+                    },
+                    report_metrics: function(PracticeCustom, $route) {
+                        return PracticeCustom.metrics({
                             id: $route.current.params.reportId
                         });
                     },
@@ -8078,6 +8080,12 @@ angular.module('FieldDoc')
 
                             $timeout(closeAlerts, 2000);
 
+                            if (index === 0) {
+
+                                $route.reload();
+
+                            }
+
                         } else {
 
                             $timeout(closeRoute, 2000);
@@ -8308,13 +8316,25 @@ angular.module('FieldDoc')
         .controller('CustomFormController',
             function(Account, leafletData, $location, metric_types,
                 monitoring_types, practice, PracticeCustom, PracticeCustomReading, PracticeCustomMetric,
-                PracticeCustomMonitoring, practice_types, report, $rootScope, $route, site, $scope,
-                unit_types, user, Utility, $timeout) {
+                PracticeCustomMonitoring, practice_types, report, $rootScope, $route, $scope,
+                unit_types, user, Utility, $timeout, report_metrics) {
 
                 var self = this,
-                    projectId = $route.current.params.projectId,
-                    siteId = $route.current.params.siteId,
                     practiceId = $route.current.params.practiceId;
+
+                self.measurementPeriods = [{
+                        'name': 'Installation',
+                        'description': null
+                    },
+                    {
+                        'name': 'Planning',
+                        'description': null
+                    },
+                    {
+                        'name': 'Monitoring',
+                        'description': null
+                    }
+                ];
 
                 $rootScope.page = {};
 
@@ -8331,20 +8351,106 @@ angular.module('FieldDoc')
                     }
                 };
 
-                self.practiceType = null;
-                self.practiceTypes = practice_types;
+                unit_types.$promise.then(function(successResponse) {
 
-                self.unitTypes = unit_types;
+                    console.log('Unit types', successResponse);
 
-                self.metricType = null;
-                self.metricTypes = metric_types;
+                    var _unitTypes = [];
+
+                    successResponse.features.forEach(function(unit) {
+
+                        var datum = unit.properties;
+
+                        datum.name = datum.plural;
+
+                        _unitTypes.push(datum);
+
+                    });
+
+                    self.unitTypes = _unitTypes;
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
+
+                self.processMetric = function(metric) {
+
+                    var datum = metric.properties;
+
+                    if (metric.properties.metric_type !== null) {
+
+                        datum.metric_type = metric.properties.metric_type.properties;
+
+                    } else {
+
+                        datum.metric_type = null;
+
+                    }
+
+                    if (metric.properties.metric_unit !== null) {
+
+                        datum.metric_unit = metric.properties.metric_unit.properties;
+
+                        datum.metric_unit.name = datum.metric_unit.plural;
+
+                    } else {
+
+                        datum.metric_unit = null;
+
+                    }
+
+                    return datum;
+
+                };
+
+                metric_types.$promise.then(function(successResponse) {
+
+                    console.log('Metric types', successResponse);
+
+                    var _metricTypes = [];
+
+                    successResponse.features.forEach(function(metric) {
+
+                        var datum = metric.properties;
+
+                        _metricTypes.push(datum);
+
+                    });
+
+                    self.metricTypes = _metricTypes;
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
+
+                report_metrics.$promise.then(function(successResponse) {
+
+                    console.log('Report metrics', successResponse);
+
+                    var _reportMetrics = [];
+
+                    successResponse.features.forEach(function(metric) {
+
+                        var datum = self.processMetric(metric);
+
+                        _reportMetrics.push(datum);
+
+                    });
+
+                    self.reportMetrics = _reportMetrics;
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
 
                 self.monitoringType = null;
                 self.monitoringTypes = monitoring_types;
-
-                self.project = {
-                    'id': projectId
-                };
 
                 //
                 // Setup all of our basic date information so that we can use it
@@ -8362,19 +8468,66 @@ angular.module('FieldDoc')
                     'Saturday'
                 ];
 
-                self.months = [
-                    'Jan',
-                    'Feb',
-                    'Mar',
-                    'Apr',
-                    'May',
-                    'Jun',
-                    'Jul',
-                    'Aug',
-                    'Sep',
-                    'Oct',
-                    'Nov',
-                    'Dec'
+                self.months = [{
+                        'shortName': 'Jan',
+                        'name': 'January',
+                        'numeric': '01'
+                    },
+                    {
+                        'shortName': 'Feb',
+                        'name': 'February',
+                        'numeric': '02'
+                    },
+                    {
+                        'shortName': 'Mar',
+                        'name': 'March',
+                        'numeric': '03'
+                    },
+                    {
+                        'shortName': 'Apr',
+                        'name': 'April',
+                        'numeric': '04'
+                    },
+                    {
+                        'shortName': 'May',
+                        'name': 'May',
+                        'numeric': '05'
+                    },
+                    {
+                        'shortName': 'Jun',
+                        'name': 'June',
+                        'numeric': '06'
+                    },
+                    {
+                        'shortName': 'Jul',
+                        'name': 'July',
+                        'numeric': '07'
+                    },
+                    {
+                        'shortName': 'Aug',
+                        'name': 'August',
+                        'numeric': '08'
+                    },
+                    {
+                        'shortName': 'Sep',
+                        'name': 'September',
+                        'numeric': '09'
+                    },
+                    {
+                        'shortName': 'Oct',
+                        'name': 'October',
+                        'numeric': '10'
+                    },
+                    {
+                        'shortName': 'Nov',
+                        'name': 'November',
+                        'numeric': '11'
+                    },
+                    {
+                        'shortName': 'Dec',
+                        'name': 'December',
+                        'numeric': '12'
+                    }
                 ];
 
                 function parseISOLike(s) {
@@ -8389,53 +8542,48 @@ angular.module('FieldDoc')
                     self.practiceType = Utility.machineName(self.practice.properties.practice_type);
 
                     //
+                    // 
                     //
-                    //
-                    self.template = {
-                        path: '/modules/components/practices/modules/' + self.practiceType + '/views/report--view.html'
-                    };
+                    report.$promise.then(function(successResponse) {
 
-                    //
-                    //
-                    //
-                    site.$promise.then(function(successResponse) {
-                        self.site = successResponse;
+                        console.log('self.report', successResponse);
+
+                        self.report = successResponse;
+
+                        if (self.report.properties.practice_unit !== null) {
+
+                            var _unit = self.report.properties.practice_unit.properties;
+
+                            _unit.name = _unit.plural;
+
+                            self.report.properties.practice_unit = _unit;
+
+                        }
+
+                        if (self.report.properties.report_date) {
+
+                            self.today = parseISOLike(self.report.properties.report_date);
+
+                        }
 
                         //
-                        // Assign project to a scoped variable
+                        // Check to see if there is a valid date
                         //
-                        report.$promise.then(function(successResponse) {
+                        self.date = {
+                            month: self.months[self.today.getMonth()],
+                            date: self.today.getDate(),
+                            day: self.days[self.today.getDay()],
+                            year: self.today.getFullYear()
+                        };
 
-                            self.report = successResponse;
+                        // $rootScope.page.title = "Other Conservation Practice";
 
-                            if (self.report.properties.report_date) {
-                                self.today = parseISOLike(self.report.properties.report_date);
-                            }
+                        $rootScope.page.title = 'Edit measurement data';
 
-                            //
-                            // Check to see if there is a valid date
-                            //
-                            self.date = {
-                                month: self.months[self.today.getMonth()],
-                                date: self.today.getDate(),
-                                day: self.days[self.today.getDay()],
-                                year: self.today.getFullYear()
-                            };
-
-                            // $rootScope.page.title = "Other Conservation Practice";
-
-                            $rootScope.page.title = 'Edit measurement data';
-
-
-                        }, function(errorResponse) {
-
-                            console.error('ERROR: ', errorResponse);
-
-                        });
 
                     }, function(errorResponse) {
 
-                        //
+                        console.error('ERROR: ', errorResponse);
 
                     });
 
@@ -8443,7 +8591,9 @@ angular.module('FieldDoc')
                     // Verify Account information for proper UI element display
                     //
                     if (Account.userObject && user) {
+
                         user.$promise.then(function(userResponse) {
+
                             $rootScope.user = Account.userObject = userResponse;
 
                             self.permissions = {
@@ -8451,23 +8601,51 @@ angular.module('FieldDoc')
                                 role: $rootScope.user.properties.roles[0].properties.name,
                                 account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                             };
+
                         });
+
                     }
+
                 });
 
                 $scope.$watch(angular.bind(this, function() {
+
                     return this.date;
+
                 }), function(response) {
+
                     if (response) {
-                        var _new = response.month + ' ' + response.date + ' ' + response.year,
+
+                        var _new = response.year + '-' + response.month.numeric + '-' + response.date,
                             _date = new Date(_new);
                         self.date.day = self.days[_date.getDay()];
+
                     }
+
                 }, true);
 
-                self.saveReport = function() {
+                self.saveReport = function(metricArray) {
 
-                    self.report.properties.report_date = self.date.month + ' ' + self.date.date + ' ' + self.date.year;
+                    console.log('self.saveReport.metricArray', metricArray);
+
+                    if (self.report.properties.measurement_period.name) {
+
+                        self.report.properties.measurement_period = self.report.properties.measurement_period.name;
+
+                    }
+
+                    self.report.properties.metrics = metricArray;
+
+                    if (self.date.month.numeric !== null &&
+                        typeof self.date.month.numeric === 'string') {
+
+                        self.report.properties.report_date = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
+
+                    } else {
+
+                        self.report.properties.report_date = self.date.year + '-' + self.date.month + '-' + self.date.date;
+
+                    }
 
                     self.report.$update().then(function(successResponse) {
 
@@ -8481,18 +8659,55 @@ angular.module('FieldDoc')
 
                 };
 
-                // self.deleteReport = function() {
+                self.saveMetrics = function() {
 
-                //     self.report.$delete().then(function(successResponse) {
+                    console.log('self.saveMetrics.reportMetrics', self.reportMetrics);
 
-                //         $location.path('/practices/' + practiceId + '/' + self.practiceType);
+                    var _modifiedMetrics = [];
 
-                //     }, function(errorResponse) {
+                    self.reportMetrics.forEach(function(metric) {
 
-                //         console.error('ERROR: ', errorResponse);
+                        console.log('Updating metric...', metric);
 
-                //     });
-                // };
+                        var datum = metric;
+
+                        if (datum.metric_type !== null) {
+
+                            datum.metric_type_id = datum.metric_type.id;
+
+                        }
+
+                        if (datum.metric_unit !== null) {
+
+                            datum.metric_unit_id = datum.metric_unit.id;
+
+                        }
+
+                        // delete datum.id;
+                        delete datum.metric_type;
+                        delete datum.metric_unit;
+
+                        PracticeCustomMetric.update({
+                            id: metric.id
+                        }, datum).$promise.then(function(successResponse) {
+
+                            _modifiedMetrics.push(successResponse.properties);
+
+                            if (_modifiedMetrics.length === self.reportMetrics.length) {
+
+                                self.saveReport(_modifiedMetrics);
+
+                            }
+
+                        }, function(errorResponse) {
+
+                            console.error('ERROR: ', errorResponse);
+
+                        });
+
+                    });
+
+                };
 
                 self.addReading = function(reading_) {
 
@@ -8544,8 +8759,11 @@ angular.module('FieldDoc')
                         self.status.readings.loading = false;
 
                     }, function(errorResponse) {
+
                         console.log('An error occurred while trying to create a new reading', errorResponse);
+
                         self.status.readings.loading = false;
+
                     });
 
                 };
@@ -8556,6 +8774,15 @@ angular.module('FieldDoc')
                     // Step 1: Show a new row with a "loading" indiciator
                     //
                     self.status.metrics.loading = true;
+
+                    // var datum = {
+                    //     "metric_type_id": null,
+                    //     "metric_value": 0,
+                    //     "metric_unit_id": null,
+                    //     "metric_description": ""
+                    // };
+
+                    // self.reportMetrics.push(datum);
 
                     //
                     // Step 2: Create empty Reading to post to the system
@@ -8577,12 +8804,21 @@ angular.module('FieldDoc')
 
                         console.log('A new reading has been created for this report', successResponse);
 
-                        var metric_ = successResponse;
-
                         //
                         // Step 4: Add the new reading to the existing report
                         //
-                        self.report.properties.metrics.push(metric_);
+                        // self.reportMetrics.push(metric_);
+
+                        if (successResponse.properties.metric_type !== null) {
+                            successResponse.properties.metric_type.properties = successResponse.properties.metric_type;
+                        }
+                        if (successResponse.properties.metric_unit !== null) {
+                            successResponse.properties.metric_unit.properties = successResponse.properties.metric_unit;
+                        }
+
+                        var datum = self.processMetric(successResponse);
+
+                        self.reportMetrics.push(datum);
 
                         //
                         // Step 5: Hide Loading Indicator and display the form to the user
@@ -8590,8 +8826,11 @@ angular.module('FieldDoc')
                         self.status.metrics.loading = false;
 
                     }, function(errorResponse) {
+
                         console.log('An error occurred while trying to create a new metric', errorResponse);
+
                         self.status.metrics.loading = false;
+
                     });
 
                 };
@@ -8636,8 +8875,11 @@ angular.module('FieldDoc')
                         self.status.monitoring.loading = false;
 
                     }, function(errorResponse) {
+
                         console.log('An error occurred while trying to create a new metric', errorResponse);
+
                         self.status.monitoring.loading = false;
+
                     });
 
                 };
@@ -8653,19 +8895,25 @@ angular.module('FieldDoc')
                     });
 
                     self.report.properties.readings = readings_;
+
                 };
 
                 self.deleteMetric = function(metric_id) {
 
                     var metrics_ = [];
 
-                    angular.forEach(self.report.properties.metrics, function(metric_, index_) {
+                    angular.forEach(self.reportMetrics, function(metric_, index_) {
+
                         if (metric_id !== metric_.id) {
+
                             metrics_.push(metric_);
+
                         }
+
                     });
 
-                    self.report.properties.metrics = metrics_;
+                    self.reportMetrics = metrics_;
+
                 };
 
                 self.deleteMonitoringCheck = function(monitoring_id) {
@@ -8679,6 +8927,7 @@ angular.module('FieldDoc')
                     });
 
                     self.report.properties.monitoring = monitorings_;
+
                 };
 
                 self.alerts = [];
@@ -11232,6 +11481,11 @@ angular
                 'query': {
                     isArray: false
                 },
+                'metrics': {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/data/bmp-custom/:id/metrics')
+                },
                 'summary': {
                     isArray: false,
                     method: 'GET',
@@ -11288,42 +11542,36 @@ angular
 }());
 (function() {
 
-  'use strict';
+    'use strict';
 
-  /**
-   * @ngdoc service
-   * @name
-   * @description
-   */
-  angular.module('FieldDoc')
-    .service('PracticeCustomMetric', function (environment, Preprocessors, $resource) {
-      return $resource(environment.apiUrl.concat('/v1/data/bmp-custom-metric/:id'), {
-        'id': '@id'
-      }, {
-        'query': {
-          isArray: false
-        },
-        'save': {
-          method: 'POST',
-          transformRequest: function(data) {
-            var feature = Preprocessors.geojson(data),
-                json_ = angular.toJson(feature);
-            return json_;
-          }
-        },
-        'update': {
-          method: 'PATCH',
-          transformRequest: function(data) {
-            var feature = Preprocessors.geojson(data),
-                json_ = angular.toJson(feature);
-            return json_;
-          }
-        }
-      });
-    });
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('PracticeCustomMetric', function(environment, Preprocessors, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/data/bmp-custom-metric/:id'), {
+                'id': '@id'
+            }, {
+                'query': {
+                    isArray: false
+                },
+                'save': {
+                    method: 'POST',
+                    transformRequest: function(data) {
+                        var feature = Preprocessors.geojson(data),
+                            json_ = angular.toJson(feature);
+                        return json_;
+                    }
+                },
+                'update': {
+                    method: 'PATCH'
+                }
+            });
+        });
 
 }());
-
 (function() {
 
   'use strict';

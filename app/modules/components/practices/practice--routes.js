@@ -51,11 +51,6 @@ angular.module('FieldDoc')
                         }
                         return Account.userObject;
                     },
-                    site: function(Site, $route) {
-                        return Site.get({
-                            id: $route.current.params.siteId
-                        });
-                    },
                     practice: function(Practice, $route) {
                         return Practice.get({
                             id: $route.current.params.practiceId
@@ -63,6 +58,11 @@ angular.module('FieldDoc')
                     },
                     report: function(PracticeCustom, $route) {
                         return PracticeCustom.get({
+                            id: $route.current.params.reportId
+                        });
+                    },
+                    report_metrics: function(PracticeCustom, $route) {
+                        return PracticeCustom.metrics({
                             id: $route.current.params.reportId
                         });
                     },

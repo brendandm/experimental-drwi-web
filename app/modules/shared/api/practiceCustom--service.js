@@ -15,6 +15,11 @@
                 'query': {
                     isArray: false
                 },
+                'metrics': {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/data/bmp-custom/:id/metrics')
+                },
                 'summary': {
                     isArray: false,
                     method: 'GET',

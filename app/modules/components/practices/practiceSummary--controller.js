@@ -131,6 +131,12 @@
 
                             $timeout(closeAlerts, 2000);
 
+                            if (index === 0) {
+
+                                $route.reload();
+
+                            }
+
                         } else {
 
                             $timeout(closeRoute, 2000);
