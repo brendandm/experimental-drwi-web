@@ -69,40 +69,6 @@ angular.module('FieldDoc')
 
         self.savePractice = function() {
 
-            self.practice.geometry = {
-                type: 'GeometryCollection',
-                geometries: []
-            };
-
-            if (self.savedObjects.length) {
-
-                self.savedObjects.forEach(function(object) {
-
-                    console.log('Iterating self.savedObjects', object);
-
-                    if (object.geoJson.geometry) {
-
-                        self.practice.geometry.geometries.push(object.geoJson.geometry);
-
-                    } else {
-
-                        self.practice.geometry = object.geoJson;
-
-                    }
-
-                });
-
-            } else {
-
-                self.practice.geometry.geometries.push({
-                    type: 'Point',
-                    coordinates: [-98.5795,
-                        39.828175
-                    ]
-                });
-
-            }
-
             if (self.files.images.length) {
 
                 var savedQueries = self.files.preupload(self.files.images);
@@ -119,7 +85,7 @@ angular.module('FieldDoc')
 
                     self.practice.$update().then(function(successResponse) {
 
-                        $location.path('/practices/' + self.practice.id);
+                        self.practice = successResponse;
 
                     }, function(errorResponse) {
 
