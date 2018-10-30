@@ -20,7 +20,7 @@
 
                         <div class="card--content">
 
-                            <img data-ng-if="geography.staticURL" data-ng-src="{{ geography.staticURL }}" width="auto" height="200" />
+                            <img data-ng-if="geography.staticURL" data-ng-src="{{ geography.staticURL }}" width="auto" height="auto" />
 
                             <div class="name" style="background: #fff;">
                                 <span>{{ geography.name || 'Un-named' }}</span>
@@ -78,14 +78,15 @@
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="geography in page.nodes.watersheds | orderBy: 'name'">
+                    <li class="card" data-ng-repeat="geography in page.nodes.watersheds | orderBy: 'name'" data-ng-if="geography.code.length > 10">
 
                         <div class="card--content">
 
-                            <img data-ng-if="geography.staticURL" data-ng-src="{{ geography.staticURL }}" width="auto" height="200" />
+                            <img data-ng-if="geography.staticURL" data-ng-src="{{ geography.staticURL }}" width="auto" height="auto" />
 
                             <div class="name" style="background: #fff;">
                                 <span>{{ geography.name || 'Un-named' }}</span>
+                                <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;">HUC{{ geography.code.length }} | {{ geography.code }}</span>
                             </div>
 
                         </div>
@@ -106,7 +107,7 @@
 
                         <div class="card--content">
 
-                            <img data-ng-if="geography.staticURL" data-ng-src="{{ geography.staticURL }}" width="auto" height="200" />
+                            <img data-ng-if="geography.staticURL" data-ng-src="{{ geography.staticURL }}" width="auto" height="auto" />
 
                             <div class="name" style="background: #fff;">
                                 <span>{{ geography.name || 'Un-named' }}</span>

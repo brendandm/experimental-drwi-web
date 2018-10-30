@@ -193,11 +193,11 @@
 
                         <div class="card--content">
 
-                            <img data-ng-if="site.staticURL" data-ng-src="{{ site.staticURL }}" width="auto" height="200" />
+                            <img data-ng-if="site.staticURL" data-ng-src="{{ site.staticURL }}" width="auto" height="auto" />
 
-                            <img data-ng-if="!site.staticURL && page.project.staticURL" data-ng-src="page.project.staticURL" width="auto" height="200" />
+                            <img data-ng-if="!site.staticURL && page.project.staticURL" data-ng-src="{{ page.project.staticURL }}" width="auto" height="auto" />
 
-                            <img data-ng-if="!site.staticURL && !page.project.staticURL" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,5/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="200" />
+                            <img data-ng-if="!site.staticURL && !page.project.staticURL" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,5/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
 
                             <div class="name" style="background: #fff;">
                                 <span>{{ site.properties.name || 'Un-named' }}</span>
@@ -226,6 +226,11 @@
                                     <a class="snapshot--title" href="/sites/{{ site.properties.id }}/edit" title="Edit site">
                                         <i class="material-icons">
                                             edit
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/location" title="Edit location">
+                                        <i class="material-icons">
+                                            location_on
                                         </i>
                                     </a>
                                     <a class="snapshot--title" href="#" title="Delete site" data-ng-click="page.confirmDelete(site, 'site')">

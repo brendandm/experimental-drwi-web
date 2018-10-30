@@ -9,7 +9,7 @@ angular.module('FieldDoc')
     .controller('SnapshotCtrl', function(Account, $location, $log, $interval, $timeout, Project, Map,
         baseProjects, $rootScope, $scope, Site, leafletData, leafletBoundsHelpers,
         MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox,
-        Practice, snapshot) {
+        Practice, snapshot, $routeParams, Snapshot) {
 
         $scope.filterStore = FilterStore;
 
@@ -549,7 +549,9 @@ angular.module('FieldDoc')
 
                 }
 
-                MetricService.query(params).$promise.then(function(successResponse) {
+                Snapshot.metrics({
+                    id: $routeParams.snapshotId
+                }).$promise.then(function(successResponse) {
 
                     console.log('granteeResponse', successResponse);
 
@@ -624,7 +626,9 @@ angular.module('FieldDoc')
 
                 }
 
-                OutcomeService.query(params).$promise.then(function(successResponse) {
+                Snapshot.outcomes({
+                    id: $routeParams.snapshotId
+                }).$promise.then(function(successResponse) {
 
                     console.log('granteeResponse', successResponse);
 

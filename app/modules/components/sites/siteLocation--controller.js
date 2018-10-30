@@ -310,6 +310,10 @@
 
             self.saveSite = function() {
 
+                delete self.site.properties.counties;
+                delete self.site.properties.geographies;
+                delete self.site.properties.watersheds;
+
                 if (self.savedObjects.length) {
 
                     self.savedObjects.forEach(function(object) {
