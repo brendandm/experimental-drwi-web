@@ -30,6 +30,10 @@
                             <strong>Project:</strong> <a href="{{ page.site.links.project.html }}">{{ page.project.properties.name }}</a>
                         </p>
 
+                        <p data-ng-if="page.site.properties.description" data-ng-bind-html="page.site.properties.description"></p>
+
+                        <p data-ng-if="!page.site.properties.description">No description</p>
+
                         <p>
                             <strong>Related</strong>
                         </p>
