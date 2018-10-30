@@ -30,17 +30,20 @@
                             <strong>Project:</strong> <a href="{{ page.site.links.project.html }}">{{ page.project.properties.name }}</a>
                         </p>
 
-                        <h4 class="project-site-city" data-ng-if="page.nodes.geographies.length">
-                            <span data-ng-repeat="geography in page.nodes.geographies"><b>{{ geography.category }}:&nbsp;</b>{{ geography.name }}&nbsp;</span>
-                        </h4>
+                        <p>
+                            <strong>Related</strong>
+                        </p>
 
-                        <h4 class="project-site-city" data-ng-if="page.nodes.counties.length">
-                            Counties
-                        </h4>
+                        <ul class="related--nodes" data-ng-if="page.nodes.geographies.length">
+                            <li data-ng-repeat="geography in page.nodes.geographies | limitTo:2">
+                                <span>{{ geography.name }}</span>
+                                <span>{{ geography.category }}</span>
+                            </li>
+                        </ul>
 
-                        <h4 class="project-site-city" data-ng-if="page.nodes.counties.length">
-                            <span data-ng-repeat="county in page.nodes.counties">{{ county.name }}&nbsp;</span>
-                        </h4>
+                        <p>
+                            <a href="{{ page.site.links.self.html }}/geographies">View all &rarr;</a>
+                        </p>
 
                     </article>
 
@@ -51,6 +54,18 @@
                     </div>
 
                 </div>
+
+                <!-- <div class="group">
+
+                    <section class="pad shadow">
+
+                        <h2>Geographies</h2>
+
+                        
+
+                    </section>
+
+                </div> -->
 
                 <div class="group">
 
@@ -199,6 +214,11 @@
                                     <a class="snapshot--title" href="/practices/{{ practice.properties.id }}" title="Practice summary">
                                         <i class="material-icons">
                                             dashboard
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/photos" title="Practice photos">
+                                        <i class="material-icons">
+                                            insert_photo
                                         </i>
                                     </a>
                                     <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/edit" title="Edit practice">

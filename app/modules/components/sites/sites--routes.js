@@ -53,6 +53,29 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            .when('/sites/:siteId/geographies', {
+                templateUrl: '/modules/components/sites/views/siteGeography--view.html',
+                controller: 'SiteGeographyCtrl',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account) {
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+                        return Account.userObject;
+                    },
+                    nodes: function(Site, $route) {
+                        return Site.nodes({
+                            id: $route.current.params.siteId
+                        });
+                    },
+                    site: function(Site, $route) {
+                        return Site.get({
+                            id: $route.current.params.siteId
+                        });
+                    }
+                }
+            })
             .when('/sites/:siteId/edit', {
                 templateUrl: '/modules/components/sites/views/sites--edit.html',
                 controller: 'SiteEditCtrl',

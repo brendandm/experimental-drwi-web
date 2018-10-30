@@ -5949,6 +5949,29 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            .when('/sites/:siteId/geographies', {
+                templateUrl: '/modules/components/sites/views/siteGeography--view.html',
+                controller: 'SiteGeographyCtrl',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account) {
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+                        return Account.userObject;
+                    },
+                    nodes: function(Site, $route) {
+                        return Site.nodes({
+                            id: $route.current.params.siteId
+                        });
+                    },
+                    site: function(Site, $route) {
+                        return Site.get({
+                            id: $route.current.params.siteId
+                        });
+                    }
+                }
+            })
             .when('/sites/:siteId/edit', {
                 templateUrl: '/modules/components/sites/views/sites--edit.html',
                 controller: 'SiteEditCtrl',
@@ -8532,6 +8555,284 @@ angular.module('FieldDoc')
         });
 
 }());
+(function() {
+
+    'use strict';
+
+    /**
+     * @ngdoc function
+     * @name FieldDoc.controller:SiteSummaryCtrl
+     * @description
+     */
+    angular.module('FieldDoc')
+        .controller('SiteGeographyCtrl',
+            function(Account, $location, $window, $timeout, $rootScope, $scope,
+                $route, nodes, user, Utility, site, Site, Practice) {
+
+                var self = this;
+
+                $rootScope.toolbarState = {
+                    'dashboard': true
+                };
+
+                $rootScope.page = {};
+
+                self.status = {
+                    'loading': true
+                };
+
+                self.alerts = [];
+
+                function closeAlerts() {
+
+                    self.alerts = [];
+
+                }
+
+                function closeRoute() {
+
+                    $location.path(self.site.links.project.html);
+
+                }
+
+                self.confirmDelete = function(obj, targetCollection) {
+
+                    console.log('self.confirmDelete', obj, targetCollection);
+
+                    if (self.deletionTarget &&
+                        self.deletionTarget.collection === 'site') {
+
+                        self.cancelDelete();
+
+                    } else {
+
+                        self.deletionTarget = {
+                            'collection': targetCollection,
+                            'feature': obj
+                        };
+
+                    }
+
+                };
+
+                self.cancelDelete = function() {
+
+                    self.deletionTarget = null;
+
+                };
+
+                self.deleteFeature = function(featureType, index) {
+
+                    console.log('self.deleteFeature', featureType, index);
+
+                    var targetCollection,
+                        targetId;
+
+                    switch (featureType) {
+
+                        case 'practice':
+
+                            targetCollection = Practice;
+
+                            break;
+
+                        default:
+
+                            targetCollection = Site;
+
+                            break;
+
+                    }
+
+                    if (self.deletionTarget.feature.properties) {
+
+                        targetId = self.deletionTarget.feature.properties.id;
+
+                    } else {
+
+                        targetId = self.deletionTarget.feature.id;
+
+                    }
+
+                    targetCollection.delete({
+                        id: +targetId
+                    }).$promise.then(function(data) {
+
+                        self.alerts.push({
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Successfully deleted this ' + featureType + '.',
+                            'prompt': 'OK'
+                        });
+
+                        if (index !== null &&
+                            typeof index === 'number' &&
+                            featureType === 'practice') {
+
+                            self.practices.splice(index, 1);
+
+                            self.cancelDelete();
+
+                            $timeout(closeAlerts, 2000);
+
+                        } else {
+
+                            $timeout(closeRoute, 2000);
+
+                        }
+
+                    }).catch(function(errorResponse) {
+
+                        console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                        if (errorResponse.status === 409) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Unable to delete “' + self.deletionTarget.feature.properties.name + '”. There are pending tasks affecting this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else if (errorResponse.status === 403) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'You don’t have permission to delete this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Something went wrong while attempting to delete this ' + featureType + '.',
+                                'prompt': 'OK'
+                            }];
+
+                        }
+
+                        $timeout(closeAlerts, 2000);
+
+                    });
+
+                };
+
+                self.buildStaticMapURL = function(geometry) {
+
+                    var styledFeature = {
+                        "type": "Feature",
+                        "geometry": geometry,
+                        "properties": {
+                            "marker-size": "small",
+                            "marker-color": "#2196F3",
+                            "stroke": "#2196F3",
+                            "stroke-opacity": 1.0,
+                            "stroke-width": 2,
+                            "fill": "#2196F3",
+                            "fill-opacity": 0.5
+                        }
+                    };
+
+                    // Build static map URL for Mapbox API
+
+                    return 'https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
+
+                };
+
+                self.processCollection = function(arr) {
+
+                    arr.forEach(function(feature) {
+
+                        if (feature.geometry !== null) {
+
+                            feature.staticURL = self.buildStaticMapURL(feature.geometry);
+
+                        }
+
+                    });
+
+                };
+
+                self.loadSite = function() {
+
+                    site.$promise.then(function(successResponse) {
+
+                        console.log('self.site', successResponse);
+
+                        self.site = successResponse;
+
+                        if (self.site.geometry !== null) {
+
+                            self.site.staticURL = self.buildStaticMapURL(self.site.geometry);
+
+                        }
+
+                        self.permissions.can_edit = Account.canEdit(self.site);
+
+                        $rootScope.page.title = self.site.properties.name;
+
+                        self.project = successResponse.properties.project;
+
+                        console.log('self.project', self.project);
+
+                        self.status.loading = false;
+
+                        //
+                        // Load spatial nodes
+                        //
+
+                        nodes.$promise.then(function(successResponse) {
+
+                            console.log('self.nodes', successResponse);
+
+                            for (var collection in successResponse) {
+
+                                if (successResponse.hasOwnProperty(collection) &&
+                                    Array.isArray(successResponse[collection])) {
+
+                                    self.processCollection(successResponse[collection]);
+
+                                }
+
+                            }
+
+                            self.nodes = successResponse;
+
+                        }, function(errorResponse) {
+
+                        });
+
+                    });
+
+                };
+
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+
+                    user.$promise.then(function(userResponse) {
+
+                        $rootScope.user = Account.userObject = userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0].properties.name,
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                        };
+
+                        self.loadSite();
+
+                    });
+
+                }
+
+            });
+
+})();
 'use strict';
 
 /**
@@ -10580,6 +10881,20 @@ angular.module('FieldDoc')
 
         $rootScope.page = {};
 
+        self.alerts = [];
+
+        self.closeAlerts = function() {
+
+            self.alerts = [];
+
+        };
+
+        self.closeRoute = function() {
+
+            $location.path(self.practice.links.site.html);
+
+        };
+
         self.loadPractice = function() {
 
             practice.$promise.then(function(successResponse) {
@@ -10628,6 +10943,20 @@ angular.module('FieldDoc')
 
         self.savePractice = function() {
 
+            var _images = [];
+
+            self.practice.properties.images.forEach(function(image) {
+
+                _images.push({
+                    id: image.id
+                });
+
+            });
+
+            self.practice.properties = {
+                'images': _images
+            };
+
             if (self.files.images.length) {
 
                 var savedQueries = self.files.preupload(self.files.images);
@@ -10637,14 +10966,29 @@ angular.module('FieldDoc')
                     $log.log('Images::successResponse', successResponse);
 
                     angular.forEach(successResponse, function(image) {
+
                         self.practice.properties.images.push({
+
                             id: image.id
+
                         });
+
                     });
 
                     self.practice.$update().then(function(successResponse) {
 
                         self.practice = successResponse;
+
+                        self.files.images = [];
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Photo library updated.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
 
                     }, function(errorResponse) {
 
@@ -10662,7 +11006,18 @@ angular.module('FieldDoc')
 
                 self.practice.$update().then(function(successResponse) {
 
-                    $location.path('/practices/' + self.practice.id);
+                    self.practice = successResponse;
+
+                    self.files.images = [];
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Photo library updated.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
 
                 }, function(errorResponse) {
 
@@ -10673,20 +11028,6 @@ angular.module('FieldDoc')
             }
 
         };
-
-        self.alerts = [];
-
-        function closeAlerts() {
-
-            self.alerts = [];
-
-        }
-
-        function closeRoute() {
-
-            $location.path(self.practice.links.site.html);
-
-        }
 
         self.confirmDelete = function(obj, targetCollection) {
 
@@ -10719,6 +11060,14 @@ angular.module('FieldDoc')
             console.log('self.deleteFeature', featureType, index);
 
             var targetCollection;
+
+            if (featureType === 'image') {
+
+                self.practice.properties.images.splice(index, 1);
+
+                return;
+
+            }
 
             switch (featureType) {
 
@@ -10755,7 +11104,7 @@ angular.module('FieldDoc')
 
                     self.cancelDelete();
 
-                    $timeout(closeAlerts, 2000);
+                    $timeout(self.closeAlerts, 2000);
 
                     if (index === 0) {
 
@@ -10765,7 +11114,7 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    $timeout(closeRoute, 2000);
+                    $timeout(self.closeRoute, 2000);
 
                 }
 
@@ -10802,7 +11151,7 @@ angular.module('FieldDoc')
 
                 }
 
-                $timeout(closeAlerts, 2000);
+                $timeout(self.closeAlerts, 2000);
 
             });
 

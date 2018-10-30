@@ -83,6 +83,20 @@ angular.module('FieldDoc')
 
         self.savePractice = function() {
 
+            var _images = [];
+
+            self.practice.properties.images.forEach(function(image) {
+
+                _images.push({
+                    id: image.id
+                });
+
+            });
+
+            self.practice.properties = {
+                'images': _images
+            };
+
             if (self.files.images.length) {
 
                 var savedQueries = self.files.preupload(self.files.images);
@@ -104,6 +118,8 @@ angular.module('FieldDoc')
                     self.practice.$update().then(function(successResponse) {
 
                         self.practice = successResponse;
+
+                        self.files.images = [];
 
                         self.alerts = [{
                             'type': 'success',
@@ -130,7 +146,18 @@ angular.module('FieldDoc')
 
                 self.practice.$update().then(function(successResponse) {
 
-                    $location.path('/practices/' + self.practice.id);
+                    self.practice = successResponse;
+
+                    self.files.images = [];
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Photo library updated.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
 
                 }, function(errorResponse) {
 
@@ -173,6 +200,14 @@ angular.module('FieldDoc')
             console.log('self.deleteFeature', featureType, index);
 
             var targetCollection;
+
+            if (featureType === 'image') {
+
+                self.practice.properties.images.splice(index, 1);
+
+                return;
+
+            }
 
             switch (featureType) {
 
