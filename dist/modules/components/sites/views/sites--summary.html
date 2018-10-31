@@ -34,7 +34,7 @@
 
                         <p data-ng-if="!page.site.properties.description">No description</p>
 
-                        <p>
+                        <!-- <p>
                             <strong>Related</strong>
                         </p>
 
@@ -47,7 +47,7 @@
 
                         <p>
                             <a href="{{ page.site.links.self.html }}/geographies">View all &rarr;</a>
-                        </p>
+                        </p> -->
 
                     </article>
 
@@ -284,6 +284,13 @@
                 <a href="/sites/{{ page.site.id }}/location">
                     <i class="material-icons">
                         location_on
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.viewGeographies}">
+                <a href="/sites/{{ page.site.id }}/geographies">
+                    <i class="material-icons">
+                        public
                     </i>
                 </a>
             </li>

@@ -160,6 +160,13 @@
                     </i>
                 </a>
             </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.viewGeographies}">
+                <a href="/sites/{{ page.site.id }}/geographies">
+                    <i class="material-icons">
+                        public
+                    </i>
+                </a>
+            </li>
             <li data-ng-if="page.permissions.can_edit">
                 <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.site.id && page.deletionTarget.collection === 'site'">
                     <p>Do you want to delete this site?</p>

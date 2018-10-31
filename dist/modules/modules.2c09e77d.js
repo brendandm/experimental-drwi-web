@@ -8031,7 +8031,7 @@ angular.module('FieldDoc')
                 var self = this;
 
                 $rootScope.toolbarState = {
-                    'dashboard': true
+                    'viewGeographies': true
                 };
 
                 $rootScope.page = {};

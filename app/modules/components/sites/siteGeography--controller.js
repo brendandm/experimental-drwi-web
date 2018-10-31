@@ -16,7 +16,7 @@
                 var self = this;
 
                 $rootScope.toolbarState = {
-                    'dashboard': true
+                    'viewGeographies': true
                 };
 
                 $rootScope.page = {};
