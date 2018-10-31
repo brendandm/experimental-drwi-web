@@ -16,11 +16,6 @@ angular.module('FieldDoc')
             'editLocation': true
         };
 
-        // self.practiceTypes = practice_types;
-
-        self.files = Media;
-        self.files.images = [];
-
         self.map = JSON.parse(JSON.stringify(Map));
 
         self.savedObjects = [];
@@ -200,7 +195,6 @@ angular.module('FieldDoc')
                         self.setGeoJsonLayer(self.practice.geometry);
 
                         map.fitBounds(self.editableLayers.getBounds(), {
-                            // padding: [20, 20],
                             maxZoom: 18
                         });
 
@@ -209,15 +203,12 @@ angular.module('FieldDoc')
                     self.map.geojson = {
                         data: self.practice.geometry
                     };
-                    //existing
-                    // var practiceGeometry = L.geoJson(self.practice.geometry, {});
-
-                    // addNonGroupLayers(practiceGeometry, self.editableLayers);
 
                     self.savedObjects = [{
                         id: self.editableLayers._leaflet_id,
                         geoJson: self.practice.geometry
                     }];
+
                     console.log('self.practice.geometry', self.practice.geometry);
 
                     console.log('self.savedObjects', self.savedObjects);
@@ -406,49 +397,15 @@ angular.module('FieldDoc')
 
             }
 
-            if (self.files.images.length) {
+            self.practice.$update().then(function(successResponse) {
 
-                var savedQueries = self.files.preupload(self.files.images);
+                $location.path('/practices/' + self.practice.id);
 
-                $q.all(savedQueries).then(function(successResponse) {
+            }, function(errorResponse) {
 
-                    $log.log('Images::successResponse', successResponse);
+                // Error message
 
-                    angular.forEach(successResponse, function(image) {
-                        self.practice.properties.images.push({
-                            id: image.id
-                        });
-                    });
-
-                    self.practice.$update().then(function(successResponse) {
-
-                        $location.path('/practices/' + self.practice.id);
-
-                    }, function(errorResponse) {
-
-                        // Error message
-
-                    });
-
-                }, function(errorResponse) {
-
-                    $log.log('errorResponse', errorResponse);
-
-                });
-
-            } else {
-
-                self.practice.$update().then(function(successResponse) {
-
-                    $location.path('/practices/' + self.practice.id);
-
-                }, function(errorResponse) {
-
-                    // Error message
-
-                });
-
-            }
+            });
 
         };
 
@@ -713,7 +670,7 @@ angular.module('FieldDoc')
 
         });
 
-        self.setPracticeType = function($item,$model,$label) {
+        self.setPracticeType = function($item, $model, $label) {
 
             console.log('self.practiceType', $item);
 
