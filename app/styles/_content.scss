@@ -338,6 +338,16 @@
     margin-bottom: 0.5em;
     padding: 0;
     text-align: center;
+
+    a {
+      color: #21cbf3;
+
+      &:hover {
+        color: #6adcf7;
+      }
+
+    }
+      
   }
 
   p:last-of-type {
