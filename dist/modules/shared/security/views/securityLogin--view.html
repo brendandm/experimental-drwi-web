@@ -1,47 +1,48 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main role="main" class="container">
+<main role="main" class="site--content--flow container">
 
     <div class="site-content">
 
-        <div class="page-content-form">
+        <h1 style="text-align: center; margin-top: 2em; padding: 0;">Log in</h1>
 
-            <h1>Log in</h1>
+        <form role="form" class="form form-centered" method="POST" data-ng-submit="page.login.submit()">
 
-            <p>
-                Do you have a FieldDoc account? If so, you can login below to access
-                your project history, create new pre-project planning calculations, or
-                manage your FieldDoc account.
-            </p>
-            
-        </div>
-
-        <form role="form" class="form form-centered" method="POST" data-ng-if="!page.login.processing" data-ng-submit="page.login.submit()">
             <div class="form-element">
-                <label for="email" class="control-label">
-                    Email Address
-                    <small>
-                        <em>
-                            <a href="/account/register" tabindex="5">
-                                Need an account?
-                            </a>
-                        </em>
-                    </small>
-                </label>
-                <input tabindex="1" type="text" class="form-control" type="text" id="email" name="email" data-ng-model="page.login.email" autofocus />
+                <span class="meta-label"><b>Email</b></span>
+                <input type="text" class="form-control" id="email" name="email" placeholder="&hellip;" data-ng-model="page.login.email" required="required" tabindex="1" autofocus />
+                <p>
+                    <a href="/account/register" tabindex="2">
+                        Need an account?
+                    </a>
+                </p>
             </div>
+
             <div class="form-element">
-                <label for="password" class="control-label">Password <small><em><a href="/account/reset" tabindex="4">Forgot your password?</a></em></small></label>
-                <input tabindex="2" type="password" class="form-control" type="text" id="password" name="password" data-ng-model="page.login.password" />
+                <span class="meta-label"><b>Password</b></span>
+                <input type="password" class="form-control" id="password" name="password" placeholder="&hellip;" data-ng-model="page.login.password" required="required" tabindex="3" />
+                <p>
+                    <a href="/account/reset" tabindex="4">
+                        Forgot your password?
+                    </a>
+                </p>
             </div>
-            <input tabindex="3" type="submit" class="button button-submit" id="submit" name="submit" value="Log in" />
+
             <div class="throbber throbber-small" data-ng-if="page.login.processing"></div>
+
+            <div class="save--action--wrapper save--action--bottom">
+                <span>Log in</span>
+                <button type="submit" data-ng-disabled="page.login.processing || !page.login.email || !page.login.password" tabindex="5">
+                    <i class="material-icons">
+                        done
+                    </i>
+                </button>
+            </div>
+
         </form>
 
-        <div data-ng-if="page.login.processing">
-            <div class="throbber"></div>
-        </div>
     </div>
+
 </main>
 
 <div data-ng-include="'/templates/footer--view.html'"></div>

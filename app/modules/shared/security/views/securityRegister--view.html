@@ -1,91 +1,71 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main role="main" class="container">
-  <div class="site-content">
+<main role="main" class="site--content--flow container">
 
-    <div data-ng-if="page.login.errors" class="notifications">
-      <div class="notify notify-error notify-dismissable" role="alert">
-        {{ page.login.errors.email[0] }}
-      </div>
+    <div class="site-content">
+
+        <div data-ng-if="page.login.errors" class="notifications">
+            <div class="notify notify-error notify-dismissable" role="alert">
+                {{ page.login.errors.email[0] }}
+            </div>
+        </div>
+
+        <h1 style="text-align: center; margin-top: 2em; padding: 0;">Register</h1>
+
+        <form role="form" class="form form-centered" style="position: relative;" method="POST" id="formRegister" name="formRegister" data-ng-submit="page.register.submit()">
+
+            <div class="form-element">
+                <span class="meta-label"><b>First name</b></span>
+                <input type="text" class="form-control" id="first_name" name="first_name" placeholder="&hellip;" data-ng-model="page.register.data.first_name" required="required" tabindex="1" />
+            </div>
+
+            <div class="form-element">
+                <span class="meta-label"><b>Last name</b></span>
+                <input type="text" class="form-control" id="last_name" name="last_name" placeholder="&hellip;" data-ng-model="page.register.data.last_name" required="required" tabindex="2" />
+            </div>
+
+            <div class="form-element">
+                <span class="meta-label"><b>Email</b></span>
+                <input type="text" class="form-control" id="email" name="email" placeholder="&hellip;" data-ng-model="page.register.data.email" required="required" tabindex="3" />
+            </div>
+
+            <div class="form-element">
+                <span class="meta-label"><b>Password</b></span>
+                <input type="password" class="form-control" id="password" name="password" placeholder="&hellip;" data-ng-model="page.register.data.password" required="required" tabindex="4" />
+            </div>
+
+            <div class="form-element">
+                <span class="meta-label"><b>Confirm password</b></span>
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="&hellip;" data-ng-model="page.register.data.confirm_password" required="required" tabindex="5" />
+                <p data-ng-if="page.register.password !== page.register.confirm_password">
+                    Passwords do not match
+                </p>
+            </div>
+
+            <div class="throbber throbber-small" data-ng-if="page.register.processing || page.register.processingLogin">
+            </div>
+
+            <p style="text-align: center;" data-ng-if="page.register.processing">
+                Creating your user account
+            </p>
+
+            <p style="text-align: center;" data-ng-if="page.register.processingLogin">
+                Logging in
+            </p>
+
+            <div class="save--action--wrapper save--action--bottom">
+                <span>Create account</span>
+                <button type="submit" data-ng-disabled="page.register.processing || page.register.processingLogin || !page.register.data.password || page.register.data.password !== page.register.data.confirm_password">
+                    <i class="material-icons">
+                        done
+                    </i>
+                </button>
+            </div>
+
+        </form>
+
     </div>
 
-    <div class="page-content-form">
-
-      <h1>
-        Register
-      </h1>
-
-    <form role="form" class="form form-centered" method="POST" id="formRegister"
-          name="formRegister" data-ng-submit="page.register.submit()">
-      <div class="form-element">
-        <label for="email" class="control-label">
-          Your Email Address
-        </label>
-        <input type="text" class="form-control" type="text" id="email"
-               name="email" data-ng-model="page.register.data.email" tabindex="1"
-               required="required" placeholder="" />
-      </div>
-      <div class="form-element">
-        <label for="email" class="control-label">
-          Your Name
-        </label>
-        <input type="text" class="form-control form-control-half"
-               id="first_name" name="first_name" placeholder="First Name"
-               data-ng-model="page.register.data.first_name" required="required"
-               tabindex="2" />
-        <input type="text" class="form-control form-control-half"
-               id="last_name" name="last_name"  placeholder="Last Name"
-               data-ng-model="page.register.data.last_name" required="required"
-               tabindex="3" />
-      </div>
-      <div class="form-element">
-        <label for="email" class="control-label">
-          Organization search
-        </label>
-        <organization model="page.register.data.organizations"
-                      table="'organization'"
-                      field="'name'"
-                      display="['name']"
-                      placeholder="'Begin typing an organization name'"
-                      tabindexnumber="4">
-        </organization>
-      </div>
-      <div class="form-element">
-        <label for="password" class="control-label">
-          Type a password
-        </label>
-        <input type="password" class="form-control" type="text" id="password"
-               name="password" data-ng-model="page.register.data.password"
-               tabindex="5" required="required" />
-      </div>
-      <div class="form-element">
-        <label for="password" class="control-label">
-          Retype your password
-        </label>
-        <input type="password" class="form-control" type="text" id="confirm_password"
-               name="confirm_password" data-ng-model="page.register.data.confirm_password"
-               tabindex="6" required="required" />
-        <p class="help-text" data-ng-if="page.register.password !== page.register.confirm_password">
-            Passwords do not match
-        </p>
-      </div>
-      <button type="submit" class="button button-submit button-center"
-              id="submitUserRegister" name="submitUserRegister" tabindex="7"
-              data-ng-if="!page.register.processing && !page.register.processingLogin && page.register.data.password && page.register.data.password === page.register.data.confirm_password">
-        Create Account
-      </button>
-
-      <div class="throbber throbber-small" data-ng-if="page.register.processing || page.register.processingLogin">
-      </div>
-      <p style="text-align: center;" data-ng-if="page.register.processing">
-        Creating your user account
-      </p>
-      <p style="text-align: center;" data-ng-if="page.register.processingLogin">
-        Logging in
-      </p>
-    </form>
-
-  </div>
 </main>
 
 <div data-ng-include="'/templates/footer--view.html'"></div>

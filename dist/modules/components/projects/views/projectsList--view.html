@@ -32,8 +32,6 @@
 
             <div class="features--container" data-ng-if="!page.loading">
 
-                <input type="text" class="search-bar list-filter" data-ng-model="page.q" placeholder="Search projects">
-
                 <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
                     <li class="card" data-ng-repeat="project in page.filteredProjects | orderBy:'-modified_on' | filter: page.q">
