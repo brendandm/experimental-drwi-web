@@ -20,8 +20,6 @@
 
                         <div class="card--content">
 
-                            <!-- <img data-ng-if="geography.staticURL" data-ng-src="{{ geography.staticURL }}" width="auto" height="auto" /> -->
-
                             <div style="position:relative;">
                                 <leaflet id="geography-preview-{{ geography.id }}" style="width: 100%; height: 200px;" defaults="page.map.defaults" layers="page.map.layers" bounds="geography.bounds" geojson="geography.geojson"></leaflet>
                             </div>
@@ -46,11 +44,6 @@
                                             edit
                                         </i>
                                     </a>
-                                    <!-- <a class="snapshot--title" href="#" title="Delete practice" data-ng-click="page.confirmDelete(practice, 'practice')">
-                                        <i class="material-icons">
-                                            delete
-                                        </i>
-                                    </a> -->
                                 </div>
                                 <span><time datetime="{{ geography.created_on }}" title="{{ geography.created_on }}">
                                         Created on {{ geography.created_on | date }}</time></span>
@@ -86,8 +79,6 @@
 
                         <div class="card--content">
 
-                            <!-- <img data-ng-if="geography.staticURL" data-ng-src="{{ geography.staticURL }}" width="auto" height="auto" /> -->
-
                             <div style="position:relative;">
                                 <leaflet id="watershed-preview-{{ geography.id }}" style="width: 100%; height: 200px;" defaults="page.map.defaults" layers="page.map.layers" bounds="geography.bounds" geojson="geography.geojson"></leaflet>
                             </div>
@@ -115,8 +106,6 @@
 
                         <div class="card--content">
 
-                            <!-- <img data-ng-if="geography.staticURL" data-ng-src="{{ geography.staticURL }}" width="auto" height="auto" /> -->
-
                             <div style="position:relative;">
                                 <leaflet id="county-preview-{{ geography.id }}" style="width: 100%; height: 200px;" defaults="page.map.defaults" layers="page.map.layers" bounds="geography.bounds" geojson="geography.geojson"></leaflet>
                             </div>
@@ -139,7 +128,7 @@
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
         <ul>
-            <li class="active">
+            <li>
                 <a href="/sites/{{ page.site.id }}">
                     <i class="material-icons">
                         dashboard
