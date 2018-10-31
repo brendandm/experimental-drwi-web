@@ -8025,7 +8025,8 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('SiteGeographyCtrl',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
-                $route, nodes, user, Utility, site, Site, Practice) {
+                $route, nodes, user, Utility, site, Site, Practice, MapPreview,
+                leafletBoundsHelpers) {
 
                 var self = this;
 
@@ -8034,6 +8035,10 @@ angular.module('FieldDoc')
                 };
 
                 $rootScope.page = {};
+
+                self.map = MapPreview;
+
+                console.log('self.map', self.map);
 
                 self.status = {
                     'loading': true
@@ -8200,6 +8205,81 @@ angular.module('FieldDoc')
 
                 };
 
+                self.buildFeature = function(geometry) {
+
+                    var styleProperties = {
+                        color: "#2196F3",
+                        opacity: 1.0,
+                        weight: 2,
+                        fillColor: "#2196F3",
+                        fillOpacity: 0.5
+                    };
+
+                    return {
+                        data: {
+                            "type": "Feature",
+                            "geometry": geometry,
+                            "properties": {
+                                "marker-size": "small",
+                                "marker-color": "#2196F3",
+                                "stroke": "#2196F3",
+                                "stroke-opacity": 1.0,
+                                "stroke-width": 2,
+                                "fill": "#2196F3",
+                                "fill-opacity": 0.5
+                            }
+                        },
+                        style: styleProperties
+                    };
+
+                };
+
+                //             var southWest = L.latLng(40.712, -74.227),
+                // northEast = L.latLng(40.774, -74.125),
+                // bounds = L.latLngBounds(southWest, northEast);
+
+                // Math.max.apply(null, numbers)
+
+                self.transformBounds = function(obj) {
+
+                    var xRange = [],
+                        yRange = [],
+                        southWest,
+                        northEast,
+                        bounds;
+
+                    obj.bounds.coordinates[0].forEach(function(coords) {
+
+                        xRange.push(coords[0]);
+
+                        yRange.push(coords[1]);
+
+                    });
+
+                    southWest = [
+                        Math.min.apply(null, yRange),
+                        Math.min.apply(null, xRange)
+                    ];
+
+                    northEast = [
+                        Math.max.apply(null, yRange),
+                        Math.max.apply(null, xRange)
+                    ];
+
+                    bounds = leafletBoundsHelpers.createBoundsFromArray([
+                        southWest,
+                        northEast
+                    ]);
+
+                    return bounds;
+
+                    //         var bounds = leafletBoundsHelpers.createBoundsFromArray([
+                    //     [ 51.508742458803326, -0.087890625 ],
+                    //     [ 51.508742458803326, -0.087890625 ]
+                    // ]);
+
+                };
+
                 self.processCollection = function(arr) {
 
                     arr.forEach(function(feature) {
@@ -8207,6 +8287,10 @@ angular.module('FieldDoc')
                         if (feature.geometry !== null) {
 
                             feature.staticURL = self.buildStaticMapURL(feature.geometry);
+
+                            feature.geojson = self.buildFeature(feature.geometry);
+
+                            feature.bounds = self.transformBounds(feature);
 
                         }
 
@@ -8244,8 +8328,6 @@ angular.module('FieldDoc')
 
                         nodes.$promise.then(function(successResponse) {
 
-                            console.log('self.nodes', successResponse);
-
                             for (var collection in successResponse) {
 
                                 if (successResponse.hasOwnProperty(collection) &&
@@ -8258,6 +8340,8 @@ angular.module('FieldDoc')
                             }
 
                             self.nodes = successResponse;
+
+                            console.log('self.nodes', self.nodes);
 
                         }, function(errorResponse) {
 
@@ -12069,80 +12153,6 @@ angular.module('Mapbox')
 
 /**
  * @ngdoc service
- * @name managerApp.directive:Map
- * @description
- *   Assist Directives in loading templates
- */
-angular.module('Mapbox')
-    .service('Map', function(mapbox) {
-
-        var Map = {
-            defaults: {
-                scrollWheelZoom: false,
-                maxZoom: 19
-            },
-            layers: {
-                baselayers: {
-                    streets: {
-                        name: 'Streets',
-                        url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-                        options: {
-                            apikey: mapbox.access_token,
-                            mapid: 'mapbox.streets'
-                        }
-                    },
-                    terrain: {
-                        name: 'Terrain',
-                        url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-                        options: {
-                            apikey: mapbox.access_token,
-                            mapid: 'mapbox.run-bike-hike'
-                        }
-                    },
-                    satellite: {
-                        name: 'Satellite',
-                        url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-                        options: {
-                            apikey: mapbox.access_token,
-                            mapid: 'mapbox.satellite'
-                        }
-                    }
-                }
-            },
-            center: {
-                lat: 39.828175,
-                lng: -98.5795,
-                zoom: 4
-            },
-            markers: {},
-            styles: {
-                icon: {
-                    parcel: {
-                        iconUrl: 'https://api.tiles.mapbox.com/v4/marker/pin-l-cc0000.png?access_token=' + mapbox.access_token,
-                        iconRetinaUrl: 'https://api.tiles.mapbox.com/v4/marker/pin-l-cc0000@2x.png?access_token=' + mapbox.access_token,
-                        iconSize: [35, 90],
-                        iconAnchor: [18, 44],
-                        popupAnchor: [0, 0]
-                    }
-                }
-            },
-            geojson: {}
-        };
-
-        var southWest = L.latLng(25.837377, -124.211606),
-            northEast = L.latLng(49.384359, -67.158958),
-            bounds = L.latLngBounds(southWest, northEast);
-
-        console.log('United States bounds', bounds);
-
-        Map.bounds = bounds;
-
-        return Map;
-    });
-'use strict';
-
-/**
- * @ngdoc service
  * @name cleanWaterCommunitiesApp.Site
  * @description
  * # Site
@@ -12394,6 +12404,101 @@ angular.module('Mapbox')
     };
   });
 
+'use strict';
+
+/**
+ * @ngdoc service
+ * @name managerApp.directive:Map
+ * @description
+ *   Assist Directives in loading templates
+ */
+angular.module('Mapbox')
+    .service('MapPreview', function(mapbox) {
+
+        var MapPreview = {
+            defaults: {
+                attributionControl: false,
+                dragging: false,
+                doubleClickZoom: false,
+                scrollWheelZoom: false,
+                touchZoom: false,
+                tap: false,
+                maxZoom: 19,
+                zoomControl: false
+            },
+            layers: {
+                baselayers: {
+                    streets: {
+                        name: 'Streets',
+                        type: 'xyz',
+                        url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                        layerOptions: {
+                            apikey: mapbox.access_token,
+                            mapid: 'mapbox.streets',
+                            // attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>',
+                            showOnSelector: false
+                        }
+                    }
+                }
+            },
+            center: {
+                lat: 39.828175,
+                lng: -98.5795,
+                zoom: 4
+            },
+            styles: {
+                icon: {
+                    parcel: {
+                        iconUrl: '/images/pin-l+cc0000.png?access_token=' + mapbox.access_token,
+                        iconRetinaUrl: '/images/pin-l+cc0000@2x.png?access_token=' + mapbox.access_token,
+                        iconSize: [35, 90],
+                        iconAnchor: [18, 44],
+                        popupAnchor: [0, 0]
+                    }
+                },
+                polygon: {
+                    parcel: {
+                        stroke: true,
+                        fill: false,
+                        weight: 3,
+                        opacity: 1,
+                        color: 'rgb(255,255,255)',
+                        lineCap: 'square'
+                    },
+                    canopy: {
+                        stroke: false,
+                        fill: true,
+                        weight: 3,
+                        opacity: 1,
+                        color: 'rgb(0,204,34)',
+                        lineCap: 'square',
+                        fillOpacity: 0.6
+                    },
+                    impervious: {
+                        stroke: false,
+                        fill: true,
+                        weight: 3,
+                        opacity: 1,
+                        color: 'rgb(204,0,0)',
+                        lineCap: 'square',
+                        fillOpacity: 0.6
+                    }
+                }
+            },
+            marker: {},
+            geojson: {}
+        };
+
+        var southWest = L.latLng(25.837377, -124.211606),
+            northEast = L.latLng(49.384359, -67.158958),
+            bounds = L.latLngBounds(southWest, northEast);
+
+        console.log('United States bounds', bounds);
+
+        MapPreview.bounds = bounds;
+
+        return MapPreview;
+    });
 (function() {
 
   'use strict';

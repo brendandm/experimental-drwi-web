@@ -10,7 +10,8 @@
     angular.module('FieldDoc')
         .controller('SiteGeographyCtrl',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
-                $route, nodes, user, Utility, site, Site, Practice) {
+                $route, nodes, user, Utility, site, Site, Practice, MapPreview,
+                leafletBoundsHelpers) {
 
                 var self = this;
 
@@ -19,6 +20,10 @@
                 };
 
                 $rootScope.page = {};
+
+                self.map = MapPreview;
+
+                console.log('self.map', self.map);
 
                 self.status = {
                     'loading': true
@@ -185,6 +190,81 @@
 
                 };
 
+                self.buildFeature = function(geometry) {
+
+                    var styleProperties = {
+                        color: "#2196F3",
+                        opacity: 1.0,
+                        weight: 2,
+                        fillColor: "#2196F3",
+                        fillOpacity: 0.5
+                    };
+
+                    return {
+                        data: {
+                            "type": "Feature",
+                            "geometry": geometry,
+                            "properties": {
+                                "marker-size": "small",
+                                "marker-color": "#2196F3",
+                                "stroke": "#2196F3",
+                                "stroke-opacity": 1.0,
+                                "stroke-width": 2,
+                                "fill": "#2196F3",
+                                "fill-opacity": 0.5
+                            }
+                        },
+                        style: styleProperties
+                    };
+
+                };
+
+                //             var southWest = L.latLng(40.712, -74.227),
+                // northEast = L.latLng(40.774, -74.125),
+                // bounds = L.latLngBounds(southWest, northEast);
+
+                // Math.max.apply(null, numbers)
+
+                self.transformBounds = function(obj) {
+
+                    var xRange = [],
+                        yRange = [],
+                        southWest,
+                        northEast,
+                        bounds;
+
+                    obj.bounds.coordinates[0].forEach(function(coords) {
+
+                        xRange.push(coords[0]);
+
+                        yRange.push(coords[1]);
+
+                    });
+
+                    southWest = [
+                        Math.min.apply(null, yRange),
+                        Math.min.apply(null, xRange)
+                    ];
+
+                    northEast = [
+                        Math.max.apply(null, yRange),
+                        Math.max.apply(null, xRange)
+                    ];
+
+                    bounds = leafletBoundsHelpers.createBoundsFromArray([
+                        southWest,
+                        northEast
+                    ]);
+
+                    return bounds;
+
+                    //         var bounds = leafletBoundsHelpers.createBoundsFromArray([
+                    //     [ 51.508742458803326, -0.087890625 ],
+                    //     [ 51.508742458803326, -0.087890625 ]
+                    // ]);
+
+                };
+
                 self.processCollection = function(arr) {
 
                     arr.forEach(function(feature) {
@@ -192,6 +272,10 @@
                         if (feature.geometry !== null) {
 
                             feature.staticURL = self.buildStaticMapURL(feature.geometry);
+
+                            feature.geojson = self.buildFeature(feature.geometry);
+
+                            feature.bounds = self.transformBounds(feature);
 
                         }
 
@@ -229,8 +313,6 @@
 
                         nodes.$promise.then(function(successResponse) {
 
-                            console.log('self.nodes', successResponse);
-
                             for (var collection in successResponse) {
 
                                 if (successResponse.hasOwnProperty(collection) &&
@@ -243,6 +325,8 @@
                             }
 
                             self.nodes = successResponse;
+
+                            console.log('self.nodes', self.nodes);
 
                         }, function(errorResponse) {
 
