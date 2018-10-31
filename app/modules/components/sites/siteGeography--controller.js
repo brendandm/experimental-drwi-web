@@ -279,6 +279,13 @@
 
                         }
 
+                        if (feature.code !== null &&
+                            typeof feature.code === 'string') {
+
+                            feature.classification = feature.code.length;
+
+                        }
+
                     });
 
                 };
