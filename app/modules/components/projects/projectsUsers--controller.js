@@ -101,14 +101,6 @@
 
                 self.removeOwner = function(id) {
 
-                    if (self.tempOwners.length === 1) {
-
-                        self.tempOwners = [];
-
-                        return;
-
-                    }
-
                     var _index;
 
                     self.tempOwners.forEach(function(item, idx) {
@@ -123,7 +115,7 @@
 
                     console.log('Remove owner at index', _index);
 
-                    if (_index) {
+                    if (typeof _index === 'number') {
 
                         self.tempOwners.splice(_index, 1);
 
