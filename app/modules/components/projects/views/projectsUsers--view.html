@@ -6,89 +6,49 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <h1 class="inset">{{ page.project.properties.name }}</h1>
+        <h1 class="inset">Collaborators</h1>
 
         <div class="main--ui">
 
-            <article class="feature-detail">
+            <article class="feature-detail" style="width: 100%; max-width: 48rem; margin: 1em auto;">
 
-                <div class="feature-detail-content">
+                <div class="form--row">
 
-                    <h1 class="large">Collaborators</h1>
+                    <form role="form" class="form" id="form--ProjectOwners" name="form--ProjectOwners" data-ng-submit="page.saveProject()">
 
-                    <hr />
-
-                    <!-- List of existing users -->
-                    <table class="table table-hover table-align-left">
-                        <thead>
-                            <tr>
-                                <th>&nbsp;</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th style="width:40%">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr data-ng-repeat="user in page.project.properties.members track by $index">
-                                <td>
-                                    <big>{{ user.properties.first_name }} {{ user.properties.last_name }}</big>
-                                </td>
-                                <td>
-                                    <a href="mailto:{{ user.properties.email }}" target="_blank">
-                                        {{ user.properties.email }}
-                                    </a>
-                                </td>
-                                <td>
-                                    <span data-ng-if="user.id !== page.project.properties.creator_id">member</span>
-                                    <span data-ng-if="user.id === page.project.properties.creator_id">creator</span>
-                                </td>
-                                <td class="action align-right">
-                                    <div data-ng-if="user.id != $root.user.id">
-                                        <a data-ng-if="!page.project.properties.members[$index].remove_confirm" data-ng-click="page.project.properties.members[$index].remove_confirm = true;" class="remove">remove</a>
-                                        <span data-ng-if="page.project.properties.members[$index].remove_confirm" class="confirm">
-                                            <a data-ng-click="page.project.properties.members.splice($index, 1); page.users.remove(user);" class="remove">Remove from project?</a>
-                                            <span>or</span>
-                                            <a data-ng-click="page.project.properties.members[$index].remove_confirm = false;" class="cancel">go back</a>
-                                        </span>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <div class="row">
-                        <div class="column-11">
-                            <form role="form" id="formInviteCollaborator" name="formInviteCollaborator" data-ng-submit="page.collaborator.sendInvitations()">
-                                <div class="form-element">
-                                    <div class="autocomplete">
-                                        <label class="control-label">
-                                            Add a Collaborator
-                                        </label>
-                                        <div class="typeAhead">
-                                            <input type="text" id="invitation" name="invitation" data-ng-model="page.collaborator.query" class="form-control" placeholder="Type in an email address..." collaborator-invite collaborator-invite-query="page.collaborator.query" collaborator-invite-response="page.collaborator.response" autofocus="autofocus" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-element">
-                                    <ul data-ng-if="page.collaborator.invitations && page.collaborator.invitations.length">
-                                        <li data-ng-repeat="collaborator in page.collaborator.invitations track by $index">
-                                            <span data-ng-if="collaborator.properties.first_name">{{ collaborator.properties.first_name }}</span> <span data-ng-if="collaborator.properties.last_name">{{ collaborator.properties.last_name }}, </span><em>{{ collaborator.properties.email }}</em>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <div class="form-actions">
-                                    <div class="form-actions-buttons">
-                                        <button type="submit" class="button button-submit">
-                                            Invite Collaborators
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-
+                        <div class="classification--search">
+                            <p>Add or remove project members here. Please remember that everyone on the team will have full access to all editing capabilities, so make sure you grant these permissions only to people you trust. If you have trouble managing project ownership, feel free to drop us a line at <a href="mailto:support@fielddoc.org">support@fielddoc.org</a>.</p>
+                            <input type="search" class="search" value="" placeholder="Search users" data-ng-model="page.ownerQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchUsers($viewValue)" typeahead-on-select="page.addOwner($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
                         </div>
-                    </div>
+
+                        <div class="classification--list">
+                            <ul>
+                                <li data-ng-repeat="owner in page.tempOwners">
+                                    <img data-ng-if="owner.properties.picture" style="height: 48px; width: 48px; margin-top: 0; margin-bottom: 0; box-sizing: border-box; border-width: 3px;" class="profile--image img-circle" data-ng-src="{{ owner.properties.picture }}" width="48" height="48" imageonload />
+                                    <img data-ng-if="!owner.properties.picture" style="height: 48px; width: 48px; margin-top: 0; margin-bottom: 0; box-sizing: border-box; border-width: 3px;" class="profile--image img-circle" data-ng-src="{{ owner.properties.avatar }}" width="48" height="48" imageonload />
+                                    <span data-ng-if="!owner.properties.name" style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ owner.properties.first_name }} {{ owner.properties.last_name }}</span>
+                                    <span data-ng-if="owner.properties.name" style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ owner.properties.name }}</span>
+                                    <div class="button--container">
+                                        <button data-ng-if="owner.id !== page.profile.id" type="button" class="button button--danger" data-ng-click="page.removeOwner(owner.id)">Remove</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="save--action--wrapper save--action--bottom">
+                            <span>Save changes</span>
+                            <button type="submit" data-ng-disabled="page.processing">
+                                <i class="material-icons" data-ng-if="page.processing">
+                                    more_horiz
+                                </i>
+                                <i class="material-icons" data-ng-if="!page.processing">
+                                    done
+                                </i>
+                            </button>
+                        </div>
+
+                    </form>
+
                 </div>
 
             </article>

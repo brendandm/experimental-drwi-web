@@ -10,144 +10,169 @@
      * Controller of the FieldDoc
      */
     angular.module('FieldDoc')
-        .controller('ProjectUsersCtrl', 
+        .controller('ProjectUsersCtrl',
             function(Account, Collaborators, $window, $rootScope, $scope, $route,
-                $location, project, user, members) {
+                $location, project, user, members, SearchService) {
 
-            var self = this;
+                var self = this;
 
-            $rootScope.page = {};
+                $rootScope.page = {};
 
-            self.actions = {
-                print: function() {
+                $rootScope.viewState = {
+                    'project': true
+                };
 
-                    $window.print();
-
-                },
-                saveToPdf: function() {
-
-                    $scope.$emit('saveToPdf');
-
-                }
-            };
-
-            $rootScope.viewState = {
-                'project': true
-            };
-
-            $rootScope.toolbarState = {
-                'users': true
-            };
-
-            //
-            // Assign project to a scoped variable
-            //
-            project.$promise.then(function(successResponse) {
-
-                self.project = successResponse;
-
-                $rootScope.page.title = self.project.properties.name;
-
-                self.project.users = members;
-                self.project.users_edit = false;
+                $rootScope.toolbarState = {
+                    'users': true
+                };
 
                 //
-                // Verify Account information for proper UI element display
+                // Assign project to a scoped variable
                 //
-                if (Account.userObject && user) {
-                    user.$promise.then(function(userResponse) {
-                        $rootScope.user = Account.userObject = userResponse;
+                project.$promise.then(function(successResponse) {
 
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0].properties.name,
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                            can_edit: Account.canEdit(project)
-                        };
-                    });
-                }
+                    console.log('self.project', successResponse);
 
-            }, function(errorResponse) {
-                console.error('Unable to load request project');
-            });
+                    self.project = successResponse;
 
-            //
-            // Empty Collaborators object
-            //
-            // We need to have an empty geocode object so that we can fill it in later
-            // in the address geocoding process. This allows us to pass the results along
-            // to the Form Submit function we have in place below.
-            //
-            self.collaborator = {
-                invitations: [],
-                sendInvitations: function() {
-                    Collaborators.invite({
-                        'collaborators': self.collaborator.invitations,
-                        'project_id': self.project.id
-                    }).$promise.then(function(successResponse) {
-                        $route.reload();
-                    }, function(errorResponse) {
-                        console.log('errorResponse', errorResponse);
-                    });
-                }
-            };
+                    $rootScope.page.title = self.project.properties.name;
 
-            //
-            // When the user has selected a response, we need to perform a few extra
-            // tasks so that our scope is updated properly.
-            //
-            $scope.$watch(angular.bind(this, function() {
-                return this.collaborator.response;
-            }), function(response) {
+                    self.tempOwners = self.project.properties.members;
 
-                if (response) {
+                    console.log('tempOwners', self.tempOwners);
 
-                    // Reset the fields we are done using
-                    self.collaborator.query = null;
-                    self.collaborator.response = null;
+                    // self.project.users = members;
+                    self.project.users_edit = false;
 
-                    // Add the selected user value to the invitations list
-                    self.collaborator.invitations.push(response);
-                }
+                    //
+                    // Verify Account information for proper UI element display
+                    //
+                    if (Account.userObject && user) {
 
-            });
+                        user.$promise.then(function(userResponse) {
 
-            self.users = {
-                list: members,
-                search: null,
-                invite: function(user) {
-                    self.invite.push(user); // Add selected User object to invitation list
-                    this.search = null; // Clear search text
-                },
-                add: function() {
-                    angular.forEach(self.invite, function(user_, $index) {
-                        Feature.AddUser({
-                            storage: storage,
-                            featureId: $scope.project.id,
-                            userId: user_.id,
-                            data: {
-                                read: true,
-                                write: true,
-                                is_admin: false
-                            }
-                        }).then(function(response) {
-                            //
-                            // Once the users have been added to the project refresh the page
-                            //
-                            self.page.refresh();
+                            $rootScope.user = Account.userObject = userResponse;
+
+                            self.permissions = {
+                                isLoggedIn: Account.hasToken(),
+                                role: $rootScope.user.properties.roles[0].properties.name,
+                                account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                                can_edit: Account.canEdit(project)
+                            };
+
                         });
-                    });
-                },
-                remove: function() {
-                    self.project.$update().then(function(response) {
-                        $route.reload();
-                    }).then(function(error) {
-                        // Do something with the error
-                    });
-                },
-                remove_confirm: false
-            };
 
-        });
+                    }
+
+                }, function(errorResponse) {
+
+                    console.error('Unable to load request project');
+
+                });
+
+                self.searchUsers = function(value) {
+
+                    return SearchService.users({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService response', response);
+
+                        return response.results;
+
+                    });
+
+                };
+
+                self.addOwner = function(item, model, label) {
+
+                    var _datum = {
+                        id: item.id,
+                        properties: item
+                    };
+
+                    self.tempOwners.push(_datum);
+
+                    self.ownerQuery = null;
+
+                    console.log('Updated owners (addition)', self.tempOwners);
+
+                };
+
+                self.removeOwner = function(id) {
+
+                    if (self.tempOwners.length === 1) {
+
+                        self.tempOwners = [];
+
+                        return;
+
+                    }
+
+                    var _index;
+
+                    self.tempOwners.forEach(function(item, idx) {
+
+                        if (item.id === id) {
+
+                            _index = idx;
+
+                        }
+
+                    });
+
+                    console.log('Remove owner at index', _index);
+
+                    if (_index) {
+
+                        self.tempOwners.splice(_index, 1);
+
+                    }
+
+                    console.log('Updated owners (removal)', self.tempOwners);
+
+                };
+
+                self.processOwners = function(list) {
+
+                    var _list = [];
+
+                    angular.forEach(list, function(item) {
+
+                        var _datum = {};
+
+                        if (item && item.id) {
+                            _datum.id = item.id;
+                        }
+
+                        _list.push(_datum);
+
+                    });
+
+                    return _list;
+
+                };
+
+                self.saveProject = function() {
+
+                    self.project.properties.members = self.processOwners(self.tempOwners);
+
+                    // We are simply removing this from the request because we should not
+                    // be saving updates to the Projects Sites at this point, just the Project
+                    delete self.project.properties.sites;
+
+                    self.project.$update().then(function(response) {
+
+                        $location.path('/projects/' + self.project.id);
+
+                    }).then(function(error) {
+
+                        // Do something with the error
+
+                    });
+
+                };
+
+            });
 
 }());
