@@ -254,7 +254,7 @@
 
                                     var styledFeature = {
                                         "type": "Feature",
-                                        "geometry": feature.geometry.geometries[0],
+                                        "geometry": feature.geometry,
                                         "properties": {
                                             "marker-size": "small",
                                             "marker-color": "#2196F3",

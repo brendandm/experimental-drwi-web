@@ -178,15 +178,7 @@
 
                     var geometry = self.site.geometry;
 
-                    if (geometry.geometries) {
-
-                        self.setGeoJsonLayer(geometry.geometries[0]);
-
-                    } else {
-
-                        self.setGeoJsonLayer(geometry);
-
-                    }
+                    self.setGeoJsonLayer(geometry);
 
                 }
 

@@ -213,7 +213,7 @@ angular.module('FieldDoc')
 
                     console.log('self.savedObjects', self.savedObjects);
 
-                    var rawGeometry = self.practice.geometry.geometries[0];
+                    var rawGeometry = self.practice.geometry;
 
                     console.log('rawGeometry', rawGeometry);
 
@@ -363,10 +363,10 @@ angular.module('FieldDoc')
 
         self.savePractice = function() {
 
-            self.practice.geometry = {
-                type: 'GeometryCollection',
-                geometries: []
-            };
+            // self.practice.geometry = {
+            //     type: 'GeometryCollection',
+            //     geometries: []
+            // };
 
             if (self.savedObjects.length) {
 
@@ -376,7 +376,7 @@ angular.module('FieldDoc')
 
                     if (object.geoJson.geometry) {
 
-                        self.practice.geometry.geometries.push(object.geoJson.geometry);
+                        self.practice.geometry = object.geoJson.geometry;
 
                     } else {
 
@@ -388,12 +388,12 @@ angular.module('FieldDoc')
 
             } else {
 
-                self.practice.geometry.geometries.push({
-                    type: 'Point',
-                    coordinates: [-98.5795,
-                        39.828175
-                    ]
-                });
+                // self.practice.geometry.geometries.push({
+                //     type: 'Point',
+                //     coordinates: [-98.5795,
+                //         39.828175
+                //     ]
+                // });
 
             }
 

@@ -222,7 +222,7 @@ angular.module('FieldDoc')
 
                     console.log('self.savedObjects', self.savedObjects);
 
-                    var rawGeometry = self.practice.geometry.geometries[0];
+                    var rawGeometry = self.practice.geometry;
 
                     console.log('rawGeometry', rawGeometry);
 

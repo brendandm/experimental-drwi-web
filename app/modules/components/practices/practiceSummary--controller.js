@@ -236,7 +236,7 @@
 
                                 self.practiceExtent = new L.FeatureGroup();
 
-                                self.setGeoJsonLayer(self.practice.geometry.geometries[0], self.practiceExtent);
+                                self.setGeoJsonLayer(self.practice.geometry, self.practiceExtent);
 
                                 map.fitBounds(self.practiceExtent.getBounds(), {
                                     maxZoom: 18
@@ -245,7 +245,7 @@
                             });
 
                             self.map.geojson = {
-                                data: self.practice.geometry.geometries[0]
+                                data: self.practice.geometry
                             };
 
                         }

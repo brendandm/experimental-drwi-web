@@ -165,7 +165,7 @@
 
                             <img data-ng-if="practice.staticURL" data-ng-src="{{ practice.staticURL }}" width="auto" height="auto" />
 
-                            <img data-ng-if="!practice.geometry && page.site.geometry" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/geojson({{ page.site.geometry.geometries[0] }})/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
+                            <img data-ng-if="!practice.geometry && page.site.geometry" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/geojson({{ page.site.geometry }})/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
 
                             <img data-ng-if="!practice.geometry && !page.site.geometry" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,5/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
 

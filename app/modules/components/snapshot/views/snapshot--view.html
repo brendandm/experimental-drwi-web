@@ -128,9 +128,9 @@
                     Metrics
                 </button>
 
-                <button class="trigger--search tab" data-ng-class="{'active': page.activeTab.collection === 'list'}" type="button" data-ng-click="page.setTab('list')" title="{{ page.card.featureTabLabel }}">
+                <!-- <button class="trigger--search tab" data-ng-class="{'active': page.activeTab.collection === 'list'}" type="button" data-ng-click="page.setTab('list')" title="{{ page.card.featureTabLabel }}">
                     {{ page.card.featureTabLabel }}
-                </button>
+                </button> -->
 
                 <div class="filter--toggle">
 
@@ -154,7 +154,7 @@
 
             <!-- Project list -->
 
-            <ul class="project--list" data-ng-if="page.filteredProjects && page.filteredProjects.length && page.activeTab.collection === 'list' && (page.card.featureType === 'snapshot' || page.card.featureType === 'geography')">
+            <!-- <ul class="project--list" data-ng-if="page.filteredProjects && page.filteredProjects.length && page.activeTab.collection === 'list' && (page.card.featureType === 'snapshot' || page.card.featureType === 'geography')">
 
                 <li class="project--card" data-ng-repeat="project in page.filteredProjects" data-ng-mouseover="page.setMarkerFocus(project, 'project')">
 
@@ -169,11 +169,11 @@
 
                 </li>
 
-            </ul>
+            </ul> -->
 
             <!-- Site list -->
 
-            <ul class="project--list" data-ng-if="page.sites && page.sites.features.length && page.activeTab.collection === 'list' && page.card.featureType === 'project'">
+            <!-- <ul class="project--list" data-ng-if="page.sites && page.sites.features.length && page.activeTab.collection === 'list' && page.card.featureType === 'project'">
 
                 <li class="project--card" data-ng-repeat="feature in page.sites.features" data-ng-mouseover="page.setMarkerFocus(feature, 'site')">
 
@@ -188,11 +188,11 @@
 
                 </li>
 
-            </ul>
+            </ul> -->
 
             <!-- Practice list -->
 
-            <ul class="project--list" data-ng-if="page.practices && page.practices.features.length && page.activeTab.collection === 'list' && page.card.featureType === 'site'">
+            <!-- <ul class="project--list" data-ng-if="page.practices && page.practices.features.length && page.activeTab.collection === 'list' && page.card.featureType === 'site'">
 
                 <li class="project--card" data-ng-repeat="feature in page.practices.features" data-ng-mouseover="page.setMarkerFocus(feature, 'practice')">
 
@@ -207,7 +207,7 @@
 
                 </li>
 
-            </ul>
+            </ul> -->
 
             <!-- Progress metrics -->
 
