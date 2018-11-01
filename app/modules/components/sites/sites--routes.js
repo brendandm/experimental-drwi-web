@@ -20,11 +20,16 @@ angular.module('FieldDoc')
                 controller: 'SiteSummaryCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     metrics: function(Site, $route) {
                         return Site.metrics({
@@ -58,11 +63,16 @@ angular.module('FieldDoc')
                 controller: 'SiteGeographyCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     nodes: function(Site, $route) {
                         return Site.nodes({
@@ -81,11 +91,16 @@ angular.module('FieldDoc')
                 controller: 'SiteEditCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     site: function(Site, $route) {
                         return Site.get({
@@ -99,11 +114,16 @@ angular.module('FieldDoc')
                 controller: 'SiteLocationCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     site: function(Site, $route) {
                         return Site.get({
@@ -117,11 +137,16 @@ angular.module('FieldDoc')
                 controller: 'SitePhotoCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     site: function(Site, $route) {
                         return Site.get({

@@ -23,12 +23,17 @@ angular.module('FieldDoc')
                         return Project.collection({});
 
                     },
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
-                    }
+
+                    },
                 }
             })
             .when('/projects/:projectId', {
@@ -36,11 +41,16 @@ angular.module('FieldDoc')
                 controller: 'ProjectSummaryCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     project: function(Project, $route) {
                         return Project.get({
@@ -79,11 +89,16 @@ angular.module('FieldDoc')
                 controller: 'ProjectCreateCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     }
                 }
             })
@@ -92,11 +107,16 @@ angular.module('FieldDoc')
                 controller: 'ProjectEditCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     project: function(Project, $route) {
                         return Project.get({
@@ -110,11 +130,16 @@ angular.module('FieldDoc')
                 controller: 'ProjectUsersCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     project: function(Project, $route) {
                         return Project.get({

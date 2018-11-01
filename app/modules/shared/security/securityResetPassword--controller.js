@@ -1,61 +1,85 @@
 (function() {
 
-  'use strict';
+    'use strict';
 
-  /**
-   * @ngdoc function
-   * @name
-   * @description
-   */
-  angular.module('FieldDoc')
-    .controller('SecurityResetPasswordController', function ($location, Security, $timeout) {
+    /**
+     * @ngdoc function
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .controller('SecurityResetPasswordController',
+            function($location, Security, $timeout, $rootScope) {
 
-      var self = this;
+                var self = this;
 
-      self.reset = {
-        success: false,
-        processing: false,
-        visible: true,
-        submit: function() {
+                function closeAlerts() {
 
-          self.reset.processing = true;
+                    $rootScope.alerts = null;
 
-          var credentials = new Security({
-            email: self.reset.email
-          });
+                }
 
-          credentials.$reset(function(response) {
+                self.showError = function(msg) {
 
-            //
-            // Check to see if there are any errors by checking for the existence
-            // of response.response.errors
-            //
-            if (response.response && response.response.errors) {
-              self.reset.errors = response.response.errors;
-              self.register.processing = false;
-              self.reset.processing = false;
+                    console.log('showError', Date.now());
 
-              $timeout(function() {
-                self.reset.errors = null;
-              }, 3500);
-            } else {
-              self.reset.processing = false;
-              self.reset.success = true;
-            }
-          }, function(){
-            self.reset.processing = false;
+                    self.reset.processing = false;
+                    self.reset.success = false;
 
-            self.reset.errors = {
-              email: ['The email or password you provided was incorrect']
-            };
+                    $rootScope.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': msg,
+                        'prompt': 'OK'
+                    }];
 
-            $timeout(function() {
-              self.reset.errors = null;
-            }, 3500);
-          });
-        }
-      };
+                    console.log('$rootScope.alerts', $rootScope.alerts);
 
-    });
+                    $timeout(closeAlerts, 2000);
 
-} ());
+                };
+
+                self.reset = {
+                    success: false,
+                    processing: false,
+                    visible: true,
+                    submit: function() {
+
+                        self.reset.processing = true;
+
+                        var credentials = new Security({
+                            email: self.reset.email
+                        });
+
+                        credentials.$reset().then(function(response) {
+
+                            //
+                            // Check to see if there are any errors by checking for the existence
+                            // of response.response.errors
+                            //
+                            if (response.response && response.response.errors) {
+
+                                self.reset.errors = response.response.errors;
+                                
+                                self.showError(self.reset.errors.email[0]);
+
+                            } else {
+
+                                self.reset.processing = false;
+                                self.reset.success = true;
+
+                            }
+
+                        }).catch(function(errorResponse) {
+
+                            console.log('self.reset.errorResponse', errorResponse);
+
+                            self.showError();
+
+                        });
+                    }
+                };
+
+            });
+
+}());

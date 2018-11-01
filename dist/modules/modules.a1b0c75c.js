@@ -165,61 +165,86 @@ angular.module('FieldDoc')
      * @description
      */
     angular.module('FieldDoc')
-        .controller('SecurityController', function(Account, $location, Security, ipCookie, Notifications, $route, $rootScope, $timeout) {
+        .controller('SecurityController',
+            function(Account, $location, Security, ipCookie, Notifications, $route, $rootScope, $timeout) {
 
-            var self = this;
+                var self = this;
 
-            self.cookieOptions = {
-                'path': '/',
-                'expires': 7
-            };
+                self.cookieOptions = {
+                    'path': '/',
+                    'expires': 7
+                };
 
-            //
-            // Before showing the user the login page,
-            //
-            if (ipCookie('FIELDSTACKIO_SESSION')) {
+                function closeAlerts() {
 
-                $location.path('/projects');
-                
-            }
+                    $rootScope.alerts = null;
 
-            self.login = {
-                processing: false,
-                submit: function(firstTime) {
+                }
 
-                    self.login.processing = true;
+                //
+                // Before showing the user the login page,
+                //
+                if (ipCookie('FIELDSTACKIO_SESSION')) {
 
-                    var credentials = new Security({
-                        email: self.login.email,
-                        password: self.login.password,
-                    });
+                    if ($rootScope.targetPath &&
+                        typeof $rootScope.targetPath === 'string') {
 
-                    credentials.$save(function(response) {
+                        $location.path($rootScope.targetPath);
 
-                        //
-                        // Check to see if there are any errors by checking for the existence
-                        // of response.response.errors
-                        //
-                        if (response.response && response.response.errors) {
-                            self.login.errors = response.response.errors;
-                            self.register.processing = false;
-                            self.login.processing = false;
+                    } else {
 
-                            $timeout(function() {
-                                self.login.errors = null;
-                            }, 3500);
-                        } else {
+                        $location.path('/projects');
+
+                    }
+
+                }
+
+                self.showError = function() {
+
+                    console.log('showError', Date.now());
+
+                    self.login.processing = false;
+
+                    $rootScope.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'The email or password you provided was incorrect.',
+                        'prompt': 'OK'
+                    }];
+
+                    console.log('$rootScope.alerts', $rootScope.alerts);
+
+                    $timeout(closeAlerts, 2000);
+
+                };
+
+                self.login = {
+                    processing: false,
+                    submit: function(firstTime) {
+
+                        self.login.processing = true;
+
+                        var credentials = new Security({
+                            email: self.login.email,
+                            password: self.login.password,
+                        });
+
+                        credentials.$save().then(function(successResponse) {
+
+                            console.log('credentials.save.successResponse', successResponse);
+
                             //
                             // Make sure our cookies for the Session are being set properly
                             //
                             ipCookie.remove('FIELDSTACKIO_SESSION');
-                            ipCookie('FIELDSTACKIO_SESSION', response.access_token, self.cookieOptions);
+                            ipCookie('FIELDSTACKIO_SESSION', successResponse.access_token, self.cookieOptions);
 
                             //
                             // Make sure we also set the User ID Cookie, so we need to wait to
                             // redirect until we're really sure the cookie is set
                             //
                             Account.setUserId().$promise.then(function() {
+
                                 Account.getUser().$promise.then(function(userResponse) {
 
                                     Account.userObject = userResponse;
@@ -228,27 +253,31 @@ angular.module('FieldDoc')
                                     $rootScope.isLoggedIn = Account.hasToken();
                                     $rootScope.isAdmin = Account.hasRole('admin');
 
-                                    $location.path('/projects');
+                                    if ($rootScope.targetPath &&
+                                        typeof $rootScope.targetPath === 'string') {
+
+                                        $location.path($rootScope.targetPath);
+
+                                    } else {
+
+                                        $location.path('/projects');
+
+                                    }
 
                                 });
+
                             });
 
-                        }
-                    }, function() {
-                        self.login.processing = false;
+                        }).catch(function(errorResponse) {
 
-                        var messageTitle = 'Incorrect Credentials',
-                            messageDescription = ['The email or password you provided was incorrect'];
+                            console.log('credentials.save.errorResponse', errorResponse);
 
-                        $rootScope.notifications.error(messageTitle, messageDescription);
+                            self.showError();
 
-                        $timeout(function() {
-                            $rootScope.notifications.objects = [];
-                        }, 3500);
-                    });
-                }
-            };
-        });
+                        });
+                    }
+                };
+            });
 
 }());
 (function() {
@@ -264,201 +293,195 @@ angular.module('FieldDoc')
         .controller('SecurityRegisterController',
             function(Account, $location, Notifications, Security, ipCookie, $rootScope, $timeout, User) {
 
-            var self = this,
-                userId = null;
+                var self = this,
+                    userId = null;
 
-            self.cookieOptions = {
-                path: '/',
-                expires: 2
-            };
+                self.cookieOptions = {
+                    path: '/',
+                    expires: 2
+                };
 
-            //
-            // We have a continuing problem with bad data being placed in the URL,
-            // the following fixes that
-            //
-            $location.search({
-                q: undefined,
-                results_per_page: undefined
-            });
+                //
+                // We have a continuing problem with bad data being placed in the URL,
+                // the following fixes that
+                //
+                $location.search({
+                    q: undefined,
+                    results_per_page: undefined
+                });
 
-            self.register = {
-                data: {
-                    email: null,
-                    first_name: null,
-                    last_name: null,
-                    password: null
-                },
-                organizations: function() {
-                    var _organizations = [];
+                function closeAlerts() {
 
-                    angular.forEach(self.register.data.organizations, function(_organization, _index) {
-                        if (_organization.id) {
-                            _organizations.push({
-                                "id": _organization.id
-                            });
-                        } else {
-                            _organizations.push({
-                                "name": _organization.properties.name
-                            });
-                        }
-                    });
+                    $rootScope.alerts = null;
 
-                    return _organizations;
-                },
-                visible: false,
-                login: function(userId) {
+                }
 
-                    var credentials = new Security({
-                        email: self.register.data.email,
-                        password: self.register.data.password,
-                    });
+                self.showError = function(msg) {
 
-                    credentials.$save(function(response) {
+                    console.log('showError', Date.now());
 
-                        //
-                        // Check to see if there are any errors by checking for the existence
-                        // of response.response.errors
-                        //
-                        if (response.response && response.response.errors) {
+                    self.register.processing = false;
+
+                    $rootScope.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': msg,
+                        'prompt': 'OK'
+                    }];
+
+                    console.log('$rootScope.alerts', $rootScope.alerts);
+
+                    $timeout(closeAlerts, 2000);
+
+                };
+
+                self.register = {
+                    data: {
+                        email: null,
+                        first_name: null,
+                        last_name: null,
+                        password: null
+                    },
+                    visible: false,
+                    login: function(userId) {
+
+                        var credentials = new Security({
+                            email: self.register.data.email,
+                            password: self.register.data.password,
+                        });
+
+                        credentials.$save(function(response) {
+
+                            //
+                            // Check to see if there are any errors by checking for the existence
+                            // of response.response.errors
+                            //
+                            if (response.response && response.response.errors) {
+
+                                if (response.response.errors.email) {
+                                    self.showError(response.response.errors.email[0]);
+                                }
+
+                                if (response.response.errors.password) {
+                                    self.showError(response.response.errors.password[0]);
+                                }
+
+                                return;
+
+                            } else {
+
+                                ipCookie.remove('FIELDSTACKIO_SESSION');
+
+                                ipCookie('FIELDSTACKIO_SESSION', response.access_token, self.cookieOptions);
+
+                                //
+                                // Make sure we also set the User ID Cookie, so we need to wait to
+                                // redirect until we're really sure the cookie is set
+                                //
+                                Account.setUserId().$promise.then(function() {
+
+                                    Account.getUser().$promise.then(function(userResponse) {
+
+                                        Account.userObject = userResponse;
+
+                                        $rootScope.user = Account.userObject;
+
+                                        $rootScope.isLoggedIn = Account.hasToken();
+
+                                        self.newUser = new User({
+                                            id: $rootScope.user.id,
+                                            first_name: self.register.data.first_name,
+                                            last_name: self.register.data.last_name
+                                        });
+
+                                        self.newUser.$update().then(function(updateUserSuccessResponse) {
+                                            $location.path('/account');
+                                        }, function(updateUserErrorResponse) {
+                                            console.log('updateUserErrorResponse', updateUserErrorResponse);
+                                        });
+
+                                    });
+                                });
+
+                            }
+
+                        }, function(response) {
 
                             if (response.response.errors.email) {
-                                $rootScope.notifications.error('', response.response.errors.email);
+                                self.showError(response.response.errors.email[0]);
                             }
+
                             if (response.response.errors.password) {
-                                $rootScope.notifications.error('', response.response.errors.password);
+                                self.showError(response.response.errors.password[0]);
                             }
-
-                            self.register.processing = false;
-
-                            $timeout(function() {
-                                $rootScope.notifications.objects = [];
-                            }, 3500);
 
                             return;
-                        } else {
 
-                            ipCookie.remove('FIELDSTACKIO_SESSION');
+                        });
 
-                            ipCookie('FIELDSTACKIO_SESSION', response.access_token, self.cookieOptions);
+                    },
+                    submit: function() {
+
+                        self.register.processing = true;
+
+                        //
+                        // Check to see if Username and Password field are valid
+                        //
+                        if (!self.register.data.email) {
+
+                            self.showError('An email is required.');
+
+                            return;
+
+                        } else if (!self.register.data.password) {
+
+                            self.showError('A password is required.');
+
+                            return;
+
+                        }
+
+                        //
+                        // If all fields have values move on to the next step
+                        //
+                        Security.register({
+                            email: self.register.data.email,
+                            password: self.register.data.password
+                        }, function(response) {
 
                             //
-                            // Make sure we also set the User ID Cookie, so we need to wait to
-                            // redirect until we're really sure the cookie is set
+                            // Check to see if there are any errors by checking for the
+                            // existence of response.response.errors
                             //
-                            Account.setUserId().$promise.then(function() {
-                                Account.getUser().$promise.then(function(userResponse) {
+                            if (response.response && response.response.errors) {
 
-                                    Account.userObject = userResponse;
+                                if (response.response.errors.email) {
+                                    self.showError(response.response.errors.email[0]);
+                                }
 
-                                    $rootScope.user = Account.userObject;
+                                if (response.response.errors.password) {
+                                    self.showError(response.response.errors.password[0]);
+                                }
 
-                                    $rootScope.isLoggedIn = Account.hasToken();
+                                return;
 
-                                    self.newUser = new User({
-                                        id: $rootScope.user.id,
-                                        first_name: self.register.data.first_name,
-                                        last_name: self.register.data.last_name
-                                    });
+                            } else {
 
-                                    self.newUser.$update().then(function(updateUserSuccessResponse) {
-                                        $location.path('/account');
-                                    }, function(updateUserErrorResponse) {
-                                        console.log('updateUserErrorResponse', updateUserErrorResponse);
-                                    });
+                                self.register.processing = false;
 
-                                });
-                            });
+                                self.register.processingLogin = true;
 
-                        }
-                    }, function(response) {
+                                self.register.login(response.response.user.id);
 
-                        if (response.response.errors.email) {
-                            $rootScope.notifications.error('', response.response.errors.email);
-                        }
-                        if (response.response.errors.password) {
-                            $rootScope.notifications.error('', response.response.errors.password);
-                        }
+                            }
 
-                        self.register.processing = false;
+                        });
 
-                        $timeout(function() {
-                            $rootScope.notifications.objects = [];
-                        }, 3500);
-
-                        return;
-                    });
-
-                },
-                submit: function() {
-
-                    self.register.processing = true;
-
-                    //
-                    // Check to see if Username and Password field are valid
-                    //
-                    if (!self.register.data.email) {
-                        $rootScope.notifications.warning('Email', 'field is required');
-
-                        self.register.processing = false;
-
-                        $timeout(function() {
-                            $rootScope.notifications.objects = [];
-                        }, 3500);
-
-                        return;
-                    } else if (!self.register.data.password) {
-                        $rootScope.notifications.warning('Password', 'field is required');
-
-                        self.register.processing = false;
-
-                        $timeout(function() {
-                            $rootScope.notifications.objects = [];
-                        }, 3500);
-
-                        return;
                     }
 
-                    //
-                    // If all fields have values move on to the next step
-                    //
-                    Security.register({
-                        email: self.register.data.email,
-                        password: self.register.data.password
-                    }, function(response) {
+                };
 
-                        //
-                        // Check to see if there are any errors by checking for the
-                        // existence of response.response.errors
-                        //
-                        if (response.response && response.response.errors) {
-
-                            if (response.response.errors.email) {
-                                $rootScope.notifications.error('', response.response.errors.email);
-                            }
-                            if (response.response.errors.password) {
-                                $rootScope.notifications.error('', response.response.errors.password);
-                            }
-
-                            self.register.processing = false;
-
-                            $timeout(function() {
-                                $rootScope.notifications.objects = [];
-                            }, 3500);
-
-                            return;
-                        } else {
-
-                            self.register.processing = false;
-
-                            self.register.processingLogin = true;
-
-                            self.register.login(response.response.user.id);
-                        }
-                    });
-                }
-            };
-
-        });
+            });
 
 }());
 (function() {
@@ -471,7 +494,8 @@ angular.module('FieldDoc')
      * @description
      */
     angular.module('FieldDoc')
-        .controller('SecurityLogoutController', function(Account, ipCookie, $location, $rootScope) {
+        .controller('SecurityLogoutController',
+            function(Account, ipCookie, $location, $rootScope) {
 
             /**
              * Remove all cookies present for authentication
@@ -492,6 +516,8 @@ angular.module('FieldDoc')
              */
             $rootScope.user = Account.userObject = null;
 
+            $rootScope.targetPath = null;
+
             /**
              * Redirect individuals back to the activity list
              */
@@ -502,66 +528,89 @@ angular.module('FieldDoc')
 }());
 (function() {
 
-  'use strict';
+    'use strict';
 
-  /**
-   * @ngdoc function
-   * @name
-   * @description
-   */
-  angular.module('FieldDoc')
-    .controller('SecurityResetPasswordController', function ($location, Security, $timeout) {
+    /**
+     * @ngdoc function
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .controller('SecurityResetPasswordController',
+            function($location, Security, $timeout, $rootScope) {
 
-      var self = this;
+                var self = this;
 
-      self.reset = {
-        success: false,
-        processing: false,
-        visible: true,
-        submit: function() {
+                function closeAlerts() {
 
-          self.reset.processing = true;
+                    $rootScope.alerts = null;
 
-          var credentials = new Security({
-            email: self.reset.email
-          });
+                }
 
-          credentials.$reset(function(response) {
+                self.showError = function(msg) {
 
-            //
-            // Check to see if there are any errors by checking for the existence
-            // of response.response.errors
-            //
-            if (response.response && response.response.errors) {
-              self.reset.errors = response.response.errors;
-              self.register.processing = false;
-              self.reset.processing = false;
+                    console.log('showError', Date.now());
 
-              $timeout(function() {
-                self.reset.errors = null;
-              }, 3500);
-            } else {
-              self.reset.processing = false;
-              self.reset.success = true;
-            }
-          }, function(){
-            self.reset.processing = false;
+                    self.reset.processing = false;
+                    self.reset.success = false;
 
-            self.reset.errors = {
-              email: ['The email or password you provided was incorrect']
-            };
+                    $rootScope.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': msg,
+                        'prompt': 'OK'
+                    }];
 
-            $timeout(function() {
-              self.reset.errors = null;
-            }, 3500);
-          });
-        }
-      };
+                    console.log('$rootScope.alerts', $rootScope.alerts);
 
-    });
+                    $timeout(closeAlerts, 2000);
 
-} ());
+                };
 
+                self.reset = {
+                    success: false,
+                    processing: false,
+                    visible: true,
+                    submit: function() {
+
+                        self.reset.processing = true;
+
+                        var credentials = new Security({
+                            email: self.reset.email
+                        });
+
+                        credentials.$reset().then(function(response) {
+
+                            //
+                            // Check to see if there are any errors by checking for the existence
+                            // of response.response.errors
+                            //
+                            if (response.response && response.response.errors) {
+
+                                self.reset.errors = response.response.errors;
+                                
+                                self.showError(self.reset.errors.email[0]);
+
+                            } else {
+
+                                self.reset.processing = false;
+                                self.reset.success = true;
+
+                            }
+
+                        }).catch(function(errorResponse) {
+
+                            console.log('self.reset.errorResponse', errorResponse);
+
+                            self.showError();
+
+                        });
+                    }
+                };
+
+            });
+
+}());
 (function() {
 
     'use strict';
@@ -4470,12 +4519,17 @@ angular.module('FieldDoc')
                         return Project.collection({});
 
                     },
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
-                    }
+
+                    },
                 }
             })
             .when('/projects/:projectId', {
@@ -4483,11 +4537,16 @@ angular.module('FieldDoc')
                 controller: 'ProjectSummaryCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     project: function(Project, $route) {
                         return Project.get({
@@ -4526,11 +4585,16 @@ angular.module('FieldDoc')
                 controller: 'ProjectCreateCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     }
                 }
             })
@@ -4539,11 +4603,16 @@ angular.module('FieldDoc')
                 controller: 'ProjectEditCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     project: function(Project, $route) {
                         return Project.get({
@@ -4557,11 +4626,16 @@ angular.module('FieldDoc')
                 controller: 'ProjectUsersCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     project: function(Project, $route) {
                         return Project.get({
@@ -5752,8 +5826,12 @@ angular.module('FieldDoc')
                     controller: 'AccountEditViewController',
                     controllerAs: 'page',
                     resolve: {
-                        user: function(Account) {
+                        user: function(Account, $rootScope, $document) {
+
+                            $rootScope.targetPath = document.location.pathname;
+
                             return Account.getUser();
+
                         },
                         snapshots: function(Snapshot) {
                             return Snapshot.query();
@@ -5916,11 +5994,16 @@ angular.module('FieldDoc')
                 controller: 'SiteSummaryCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     metrics: function(Site, $route) {
                         return Site.metrics({
@@ -5954,11 +6037,16 @@ angular.module('FieldDoc')
                 controller: 'SiteGeographyCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     nodes: function(Site, $route) {
                         return Site.nodes({
@@ -5977,11 +6065,16 @@ angular.module('FieldDoc')
                 controller: 'SiteEditCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     site: function(Site, $route) {
                         return Site.get({
@@ -5995,11 +6088,16 @@ angular.module('FieldDoc')
                 controller: 'SiteLocationCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     site: function(Site, $route) {
                         return Site.get({
@@ -6013,11 +6111,16 @@ angular.module('FieldDoc')
                 controller: 'SitePhotoCtrl',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     site: function(Site, $route) {
                         return Site.get({
@@ -8397,11 +8500,16 @@ angular.module('FieldDoc')
                 controller: 'CustomSummaryController',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     metrics: function(Practice, $route) {
                         return Practice.metrics({
@@ -8425,11 +8533,16 @@ angular.module('FieldDoc')
                 controller: 'CustomFormController',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     practice: function(Practice, $route) {
                         return Practice.get({
@@ -8474,11 +8587,16 @@ angular.module('FieldDoc')
                 controller: 'PracticeEditController',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     site: function(Practice, $route) {
                         return Practice.site({
@@ -8502,11 +8620,16 @@ angular.module('FieldDoc')
                 controller: 'PracticeLocationController',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     site: function(Practice, $route) {
                         return Practice.site({
@@ -8530,11 +8653,16 @@ angular.module('FieldDoc')
                 controller: 'PracticePhotoController',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     site: function(Practice, $route) {
                         return Practice.site({

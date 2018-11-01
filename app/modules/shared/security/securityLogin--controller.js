@@ -8,61 +8,86 @@
      * @description
      */
     angular.module('FieldDoc')
-        .controller('SecurityController', function(Account, $location, Security, ipCookie, Notifications, $route, $rootScope, $timeout) {
+        .controller('SecurityController',
+            function(Account, $location, Security, ipCookie, Notifications, $route, $rootScope, $timeout) {
 
-            var self = this;
+                var self = this;
 
-            self.cookieOptions = {
-                'path': '/',
-                'expires': 7
-            };
+                self.cookieOptions = {
+                    'path': '/',
+                    'expires': 7
+                };
 
-            //
-            // Before showing the user the login page,
-            //
-            if (ipCookie('FIELDSTACKIO_SESSION')) {
+                function closeAlerts() {
 
-                $location.path('/projects');
-                
-            }
+                    $rootScope.alerts = null;
 
-            self.login = {
-                processing: false,
-                submit: function(firstTime) {
+                }
 
-                    self.login.processing = true;
+                //
+                // Before showing the user the login page,
+                //
+                if (ipCookie('FIELDSTACKIO_SESSION')) {
 
-                    var credentials = new Security({
-                        email: self.login.email,
-                        password: self.login.password,
-                    });
+                    if ($rootScope.targetPath &&
+                        typeof $rootScope.targetPath === 'string') {
 
-                    credentials.$save(function(response) {
+                        $location.path($rootScope.targetPath);
 
-                        //
-                        // Check to see if there are any errors by checking for the existence
-                        // of response.response.errors
-                        //
-                        if (response.response && response.response.errors) {
-                            self.login.errors = response.response.errors;
-                            self.register.processing = false;
-                            self.login.processing = false;
+                    } else {
 
-                            $timeout(function() {
-                                self.login.errors = null;
-                            }, 3500);
-                        } else {
+                        $location.path('/projects');
+
+                    }
+
+                }
+
+                self.showError = function() {
+
+                    console.log('showError', Date.now());
+
+                    self.login.processing = false;
+
+                    $rootScope.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'The email or password you provided was incorrect.',
+                        'prompt': 'OK'
+                    }];
+
+                    console.log('$rootScope.alerts', $rootScope.alerts);
+
+                    $timeout(closeAlerts, 2000);
+
+                };
+
+                self.login = {
+                    processing: false,
+                    submit: function(firstTime) {
+
+                        self.login.processing = true;
+
+                        var credentials = new Security({
+                            email: self.login.email,
+                            password: self.login.password,
+                        });
+
+                        credentials.$save().then(function(successResponse) {
+
+                            console.log('credentials.save.successResponse', successResponse);
+
                             //
                             // Make sure our cookies for the Session are being set properly
                             //
                             ipCookie.remove('FIELDSTACKIO_SESSION');
-                            ipCookie('FIELDSTACKIO_SESSION', response.access_token, self.cookieOptions);
+                            ipCookie('FIELDSTACKIO_SESSION', successResponse.access_token, self.cookieOptions);
 
                             //
                             // Make sure we also set the User ID Cookie, so we need to wait to
                             // redirect until we're really sure the cookie is set
                             //
                             Account.setUserId().$promise.then(function() {
+
                                 Account.getUser().$promise.then(function(userResponse) {
 
                                     Account.userObject = userResponse;
@@ -71,26 +96,30 @@
                                     $rootScope.isLoggedIn = Account.hasToken();
                                     $rootScope.isAdmin = Account.hasRole('admin');
 
-                                    $location.path('/projects');
+                                    if ($rootScope.targetPath &&
+                                        typeof $rootScope.targetPath === 'string') {
+
+                                        $location.path($rootScope.targetPath);
+
+                                    } else {
+
+                                        $location.path('/projects');
+
+                                    }
 
                                 });
+
                             });
 
-                        }
-                    }, function() {
-                        self.login.processing = false;
+                        }).catch(function(errorResponse) {
 
-                        var messageTitle = 'Incorrect Credentials',
-                            messageDescription = ['The email or password you provided was incorrect'];
+                            console.log('credentials.save.errorResponse', errorResponse);
 
-                        $rootScope.notifications.error(messageTitle, messageDescription);
+                            self.showError();
 
-                        $timeout(function() {
-                            $rootScope.notifications.objects = [];
-                        }, 3500);
-                    });
-                }
-            };
-        });
+                        });
+                    }
+                };
+            });
 
 }());

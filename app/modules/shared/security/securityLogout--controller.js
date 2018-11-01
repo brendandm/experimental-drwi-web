@@ -8,7 +8,8 @@
      * @description
      */
     angular.module('FieldDoc')
-        .controller('SecurityLogoutController', function(Account, ipCookie, $location, $rootScope) {
+        .controller('SecurityLogoutController',
+            function(Account, ipCookie, $location, $rootScope) {
 
             /**
              * Remove all cookies present for authentication
@@ -28,6 +29,8 @@
              * for display purposes and has no bearing on the actual session
              */
             $rootScope.user = Account.userObject = null;
+
+            $rootScope.targetPath = null;
 
             /**
              * Redirect individuals back to the activity list

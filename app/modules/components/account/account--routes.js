@@ -16,8 +16,12 @@
                     controller: 'AccountEditViewController',
                     controllerAs: 'page',
                     resolve: {
-                        user: function(Account) {
+                        user: function(Account, $rootScope, $document) {
+
+                            $rootScope.targetPath = document.location.pathname;
+
                             return Account.getUser();
+
                         },
                         snapshots: function(Snapshot) {
                             return Snapshot.query();

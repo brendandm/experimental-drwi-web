@@ -17,11 +17,16 @@ angular.module('FieldDoc')
                 controller: 'CustomSummaryController',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     metrics: function(Practice, $route) {
                         return Practice.metrics({
@@ -45,11 +50,16 @@ angular.module('FieldDoc')
                 controller: 'CustomFormController',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     practice: function(Practice, $route) {
                         return Practice.get({
@@ -94,11 +104,16 @@ angular.module('FieldDoc')
                 controller: 'PracticeEditController',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     site: function(Practice, $route) {
                         return Practice.site({
@@ -122,11 +137,16 @@ angular.module('FieldDoc')
                 controller: 'PracticeLocationController',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     site: function(Practice, $route) {
                         return Practice.site({
@@ -150,11 +170,16 @@ angular.module('FieldDoc')
                 controller: 'PracticePhotoController',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
                         }
+
                         return Account.userObject;
+
                     },
                     site: function(Practice, $route) {
                         return Practice.site({
