@@ -90,7 +90,7 @@
                 <div class="filter--controls">
 
                     <div class="search--group">
-                        <div global-search class="global--search" filter-projects="page.filterProjects">
+                        <div global-search class="global--search" style="width: 100%; max-width: none;" filter-projects="page.filterProjects">
                             <input type="search" class="search" value="" placeholder="Type the name of a project, status, geography, or practice" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue)" typeahead-on-select="setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
                         </div>
                     </div>
@@ -212,50 +212,54 @@
             <!-- Progress metrics -->
 
             <div data-ng-if="page.filteredProjects && page.filteredProjects.length && page.activeTab.collection === 'metric'">
+
                 <section id="sites">
+
                     <div class="list">
 
-                        <article class="row statistics project--summary">
-                            <div class="column-4 statistics--statistic">
-                                <p class="statistic--value">
+                        <article style="padding: 1em 2em 0 2em;" class="statistics project--summary">
+
+                            <div class="statistics--statistic">
+                                <p class="statistic--value" style="color: #e0e0e0;">
                                     {{ page.outcomes.installation.nitrogen | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.nitrogen | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
                                     <span class="statistic--title">Nitrogen</span>
                                 </p>
-                                <div class="statistic--chart">
-                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.nitrogen/page.outcomes.planning.nitrogen)*100) + '%' }">
+                                <div class="statistic--chart" style="color: #e0e0e0; background: #161c22;">
+                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.nitrogen/page.outcomes.planning.nitrogen)*100) + '%' }" style="background: #2196F3;">
                                     </div>
                                 </div>
                             </div>
-                            <div class="column-2"></div>
-                            <div class="column-4 statistics--statistic">
-                                <p class="statistic--value">
+
+                            <div class="statistics--statistic">
+                                <p class="statistic--value" style="color: #e0e0e0;">
                                     {{ page.outcomes.installation.phosphorus | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.phosphorus | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
                                     <span class="statistic--title">Phosphorus</span>
                                 </p>
-                                <div class="statistic--chart">
-                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.phosphorus/page.outcomes.planning.phosphorus)*100) + '%' }">
+                                <div class="statistic--chart" style="color: #e0e0e0; background: #161c22;">
+                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.phosphorus/page.outcomes.planning.phosphorus)*100) + '%' }" style="background: #2196F3;">
                                     </div>
                                 </div>
                             </div>
-                            <div class="column-2"></div>
-                            <div class="column-4 statistics--statistic">
-                                <p class="statistic--value">
+
+                            <div class="statistics--statistic">
+                                <p class="statistic--value" style="color: #e0e0e0;">
                                     {{ page.outcomes.installation.sediment | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.sediment | number:2 }} <span class="statistic--valueLabel">tons/yr</span><br />
                                     <span class="statistic--title">Sediment</span>
                                 </p>
-                                <div class="statistic--chart">
-                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.sediment/page.outcomes.planning.sediment)*100) + '%' }">
+                                <div class="statistic--chart" style="color: #e0e0e0; background: #161c22;">
+                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.sediment/page.outcomes.planning.sediment)*100) + '%' }" style="background: #2196F3;">
                                     </div>
                                 </div>
                             </div>
+
                         </article>
 
                         <table class="table table-practices with-metrics" data-ng-if="page.metrics">
                             <thead>
                                 <tr>
-                                    <th class="table-column-wide table-metrics-header">Metric</th>
-                                    <th class="table-metrics-header">Installed To-Date</th>
-                                    <th class="table-metrics-header">% Installed</th>
+                                    <th class="table-column-wide table-metrics-header" style="color: #e0e0e0;">Metric</th>
+                                    <th class="table-metrics-header" style="color: #e0e0e0;">Installed To-Date</th>
+                                    <th class="table-metrics-header" style="color: #e0e0e0;">% Installed</th>
                                     <th>&nbsp;</th>
                                 </tr>
                             </thead>
@@ -263,24 +267,24 @@
                             <tbody class="metrics">
                                 <tr class="metrics--metric" data-ng-repeat="metric in page.metrics track by $index">
                                     <td class="table-column-wide">
-                                        <p class="metric--title">
+                                        <p class="metric--title" style="color: #e0e0e0;">
                                             {{ metric.name }}
                                         </p>
                                     </td>
                                     <td>
-                                        <strong class="metrics--metric--rollup--small">{{ metric.installation | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit }}<br />
+                                        <strong class="metrics--metric--rollup--small" style="color: #e0e0e0;">{{ metric.installation | number:2 }}</strong> <span class="metrics--metric--rollup--label" style="color: #e0e0e0;">{{ metric.unit }}<br />
                                             of {{ metric.planning | number:2 }}</span>
                                     </td>
                                     <td>
-                                        <strong class="metrics--metric--percentage">
+                                        <strong class="metrics--metric--percentage" style="color: #e0e0e0;">
                                             {{ (metric.installation/metric.planning)*100 | number:1 }}%
                                         </strong>
                                     </td>
                                     <td>
                                         <div class="donut-chart chart{{ (metric.installation/metric.planning)*100 | number:0 }}">
-                                            <div class="slice one"></div>
-                                            <div class="slice two"></div>
-                                            <div class="chart-center">
+                                            <div class="slice one" style="background: #161c22;"></div>
+                                            <div class="slice two" style="background: #161c22;"></div>
+                                            <div class="chart-center" style="background: #252f3a;">
                                             </div>
                                         </div>
                                     </td>

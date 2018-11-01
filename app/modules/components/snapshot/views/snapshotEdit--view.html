@@ -37,7 +37,7 @@
                     <div class="filter--controls">
 
                         <div class="search--group">
-                            <div global-search class="global--search" filter-projects="page.filterProjects">
+                            <div global-search class="global--search" style="width: 100%; max-width: none;" filter-projects="page.filterProjects">
                                 <input type="search" class="search" value="" placeholder="Type the name of a project, status, geography, or practice" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue)" typeahead-on-select="setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
                             </div>
                         </div>
