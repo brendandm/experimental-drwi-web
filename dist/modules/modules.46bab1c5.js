@@ -5735,7 +5735,13 @@ angular.module('FieldDoc')
 
                         console.log('SearchService response', response);
 
-                        return response.results;
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0,5);
 
                     });
 
