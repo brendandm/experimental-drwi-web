@@ -363,11 +363,6 @@ angular.module('FieldDoc')
 
         self.savePractice = function() {
 
-            // self.practice.geometry = {
-            //     type: 'GeometryCollection',
-            //     geometries: []
-            // };
-
             if (self.savedObjects.length) {
 
                 self.savedObjects.forEach(function(object) {
@@ -385,15 +380,6 @@ angular.module('FieldDoc')
                     }
 
                 });
-
-            } else {
-
-                // self.practice.geometry.geometries.push({
-                //     type: 'Point',
-                //     coordinates: [-98.5795,
-                //         39.828175
-                //     ]
-                // });
 
             }
 
