@@ -16,6 +16,18 @@
                     isArray: false,
                     cache: true
                 },
+                organizations: {
+                    method: 'GET',
+                    isArray: false,
+                    cache: true,
+                    url: environment.apiUrl.concat('/v1/data/search/organization')
+                },
+                programs: {
+                    method: 'GET',
+                    isArray: false,
+                    cache: true,
+                    url: environment.apiUrl.concat('/v1/data/search/program')
+                },
                 users: {
                     method: 'GET',
                     isArray: false,

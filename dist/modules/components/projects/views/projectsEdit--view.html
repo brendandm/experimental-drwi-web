@@ -6,7 +6,7 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <h1 class="inset">{{ page.project.properties.name }}</h1>
+        <h1 class="inset">Edit project</h1>
 
         <div class="main--ui">
 
@@ -14,7 +14,9 @@
 
                 <div class="feature-detail-content">
 
-                    <form role="form" class="row form" id="form--ProjectEdit" name="form--ProjectEdit" data-ng-if="page.project.id">
+                    <form role="form" class="row form" id="form--ProjectEdit" name="form--ProjectEdit" data-ng-submit="page.saveProject()">
+
+                        <h2>Profile</h2>
 
                         <div class="form-element">
                             <span class="meta-label"><b>Name</b></span>
@@ -26,82 +28,89 @@
                             <textarea class="form-control animate" data-ng-model="page.project.properties.description" msd-elastic id="description" name="description" rows="4">{{ page.project.properties.description }}</textarea>
                         </div>
 
-                        <!-- Program Type -->
-                        <div class="form-row" data-ng-if="page.project.properties.program_type !== 'Pre-Project Plan'">
-                            <div class="form-field">
-                                <label for="program_type" class="control-label">2. Which funder is providing the grant?</label>
-                                <select data-ng-model="page.project.properties.organization_id" class="form-control" id="program_type" name="program_type">
-                                    <option value="2">Maryland – Trust Fund</option>
-                                    <option value="1">National Fish and Wildlife Foundation - Chesapeake Bay</option>
-                                    <option value="3">National Fish and Wildlife Foundation - Delaware</option>
-                                </select>
-                            </div>
+                        <div class="form-element">
+                            <span class="meta-label"><b>Organization</b></span>
+                            <input type="text" class="form-control" id="email" name="email" disabled="disabled" data-ng-model="page.project.properties.organization.properties.name" readonly />
+                            <p style="color: #9e9e9e; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
+                                The project’s organization cannot be changed.
+                            </p>
                         </div>
 
-                        <!-- Program Type -->
-                        <div class="form-row">
-                            <div class="form-field">
-                                <label for="program_type" class="control-label" data-ng-if="page.project.properties.program_type !== 'Pre-Project Plan'">3. What type of grant are you requesting?</label>
-                                <label for="program_type" class="control-label" data-ng-if="page.project.properties.program_type === 'Pre-Project Plan'">2. What type of grant are you requesting?</label>
-                                <select data-ng-model="page.project.properties.program_type" class="form-control" id="program_type" name="program_type">
-                                    <option value="CBCIG">Chesapeake Bay Conservation Innovation Grant</option>
-                                    <option value="Delaware River Restoration Fund">Delaware River Restoration Fund</option>
-                                    <option value="INSR">Innovative Sediment and Nutrient Reduction</option>
-                                    <option value="SWG">Small Watershed Grant</option>
-                                    <option value="Trust Fund">Trust Fund</option>
-                                    <option value="Pre-Project Plan">Pre-Project Plan</option>
-                                </select>
-                            </div>
+                        <h2>Partners</h2>
+
+                        <div class="classification--search" style="position: relative;">
+                            <p style="font-style: normal; color: #616161; font-size: 1em; margin-bottom: 2em;">Add or remove partner organizations here.</p>
+                            <input type="search" class="search" value="" placeholder="Search organizations" data-ng-model="page.partnerQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchOrganizations($viewValue)" typeahead-on-select="page.addRelation($item, $model, $label, page.tempPartners, page.partnerQuery)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
                         </div>
 
-                        <!-- Project Abstract -->
-                        <!-- <div class="form-row">
-                            <div class="form-field">
-                                <label for="project_abstract" class="control-label" data-ng-if="page.project.properties.program_type !== 'Pre-Project Plan'">4. Please provide a short project description.</label>
-                                <label for="project_abstract" class="control-label" data-ng-if="page.project.properties.program_type === 'Pre-Project Plan'">3. Please provide a short project description.</label>
-                                <textarea class="form-control animate" data-ng-model="page.project.properties.description" msd-elastic id="description" name="description" rows="1">{{ page.project.properties.description }}</textarea>
-                            </div>
-                        </div> -->
-
-                        <!-- Project Abstract -->
-                        <div class="form-row">
-                            <div class="form-field">
-                                <label for="project_abstract" class="control-label" data-ng-if="page.project.properties.program_type !== 'Pre-Project Plan'">5. Please tell us which organizations this project is associated with.</label>
-                                <label for="project_abstract" class="control-label" data-ng-if="page.project.properties.program_type === 'Pre-Project Plan'">4. Please tell us which organizations this project is associated with.</label>
-                                <organization model="page.project.properties.organizations" table="'organization'" field="'name'" display="['name']" placeholder="'Begin typing an organization name'" tabindexnumber="4">
-                                </organization>
-                            </div>
+                        <div class="classification--list" style="margin-top: 2em;">
+                            <ul>
+                                <li data-ng-repeat="partner in page.tempPartners | orderBy:'properties.name'">
+                                    <i class="material-icons">
+                                        group_work
+                                    </i>
+                                    <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ partner.properties.name }}</span>
+                                    <div class="button--container">
+                                        <button type="button" class="remove-item" data-ng-click="page.removeRelation(partner.id, page.tempPartners)">
+                                            <i class="material-icons">
+                                                remove_circle
+                                            </i>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
 
-                        <!-- <div class="form-actions">
-                            <div class="form-actions-buttons">
-                                <button type="submit" data-ng-click="page.saveProject()" class="button button-submit">
-                                    Save Changes
-                                </button>
-                                <button type="button" class="button button-link button-outline pull-right" data-ng-click="page.confirmDelete =! page.confirmDelete" data-ng-if="!page.confirmDelete && !page.confirmDeleteReallySure && page.permissions.can_delete">
-                                    Delete
-                                </button>
-                                <span data-ng-if="page.confirmDelete" class="action pull-right">
-                                    <a data-ng-click="page.confirmDelete =! page.confirmDelete; page.confirmDeleteReallySure =! page.confirmDeleteReallySure;" class="remove">
-                                        Remove project, associated sites and practices?</a> or <a class="cancel" data-ng-click="page.confirmDelete =! page.confirmDelete">nevermind</a>
-                                </span>
-                                <span data-ng-if="page.confirmDeleteReallySure" class="action pull-right">
-                                    <a data-ng-click="page.deleteProject()" class="remove">
-                                        Yes, I'm sure, delete this project forever</a> or <a class="cancel" data-ng-click="page.confirmDelete = false; page.confirmDeleteReallySure = false;">nevermind</a>
-                                </span>
-                            </div>
-                        </div> -->
+                        <h2>Grant Programs</h2>
+
+                        <div class="classification--search" style="position: relative;">
+                            <p style="font-style: normal; color: #616161; font-size: 1em; margin-bottom: 2em;">Which grant programs are funding this project?</p>
+                            <input type="search" class="search" value="" placeholder="Search programs" data-ng-model="page.programQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchPrograms($viewValue)" typeahead-on-select="page.addRelation($item, $model, $label, page.tempPrograms, page.programQuery)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                        </div>
+
+                        <div class="classification--list" style="margin-top: 2em;">
+                            <ul>
+                                <li data-ng-repeat="program in page.tempPrograms | orderBy:'properties.name'">
+                                    <i class="material-icons">
+                                        account_balance
+                                    </i>
+                                    <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ program.properties.name }}</span>
+                                    <div class="button--container">
+                                        <button type="button" class="remove-item" data-ng-click="page.removeRelation(program.id, page.tempPrograms)">
+                                            <i class="material-icons">
+                                                remove_circle
+                                            </i>
+                                        </button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <h2>Privacy</h2>
+
+                        <div class="scope--control">
+                            <span>Off</span>
+                            <label class="switch">
+                                <input class="inputdemo" type="checkbox" data-ng-model="page.project.properties.private" data-ng-checked="page.project.properties.private">
+                                <div class="slider round"></div>
+                            </label>
+                            <span data-ng-class="{on: page.site.properties.private}">On</span>
+                        </div>
+
+                        <p data-ng-if="page.project.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This project is <strong>private</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this project <strong>will not</strong> appear on dashboard maps.</p>
+
+                        <p data-ng-if="!page.project.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This project is <strong>public</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this project <strong>will</strong> appear on dashboard maps.</p>
+
+                        <div class="save--action--wrapper save--action--bottom">
+                            <span>Save project</span>
+                            <button type="submit">
+                                <i class="material-icons">
+                                    done
+                                </i>
+                            </button>
+                        </div>
 
                     </form>
-
-                    <div class="save--action--wrapper save--action--bottom">
-                        <span>Save project</span>
-                        <button type="button" data-ng-click="page.saveProject()">
-                            <i class="material-icons">
-                                done
-                            </i>
-                        </button>
-                    </div>
 
                 </div>
 

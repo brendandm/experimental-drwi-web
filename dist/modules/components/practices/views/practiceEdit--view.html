@@ -40,6 +40,21 @@
                             </p>
                         </div>
 
+                        <h2>Privacy</h2>
+
+                        <div class="scope--control">
+                            <span>Off</span>
+                            <label class="switch">
+                                <input class="inputdemo" type="checkbox" data-ng-model="page.practice.properties.private" data-ng-checked="page.practice.properties.private">
+                                <div class="slider round"></div>
+                            </label>
+                            <span>On</span>
+                        </div>
+
+                        <p data-ng-if="page.practice.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This practice is <strong>private</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this practice <strong>will not</strong> appear on dashboard maps.</p>
+
+                        <p data-ng-if="!page.practice.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This practice is <strong>public</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this practice <strong>will</strong> appear on dashboard maps.</p>
+
                         <div class="save--action--wrapper save--action--bottom">
                             <span>Save changes</span>
                             <button type="submit">

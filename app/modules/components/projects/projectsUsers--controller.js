@@ -151,17 +151,21 @@
 
                 };
 
-                self.saveProject = function() {
+                self.scrubProject = function() {
 
-                    self.project.properties.members = self.processOwners(self.tempOwners);
-
-                    // We are simply removing this from the request because we should not
-                    // be saving updates to the Projects Sites at this point, just the Project
                     delete self.project.properties.geographies;
                     delete self.project.properties.practices;
                     delete self.project.properties.programs;
                     delete self.project.properties.sites;
                     delete self.project.properties.tags;
+
+                };
+
+                self.saveProject = function() {
+
+                    self.scrubProject();
+
+                    self.project.properties.members = self.processOwners(self.tempOwners);
 
                     self.project.$update().then(function(response) {
 

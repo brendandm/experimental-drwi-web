@@ -827,3 +827,33 @@ select[disabled="disabled"] {
   }
 
 }
+
+.scope--control {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  position: relative;
+  margin: 2em 0;
+
+  span {
+      display: flex;
+      font-size: 0.8em;
+      font-weight: bold;
+      color: #616161;
+      text-transform: uppercase;
+      transition: all 250ms ease 0s;
+  }
+
+  span:first-of-type {
+    margin-right: 1em;
+  }
+
+  span:last-of-type {
+    margin-left: 1em;
+  }
+
+  .on {
+    color: #2196F3;
+  }
+
+}
