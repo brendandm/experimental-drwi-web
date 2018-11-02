@@ -111,6 +111,7 @@ angular.module('FieldDoc')
                 }, function(errorResponse) {
                     self.status.saving = false;
                 });
+                
             },
             snapshots: function() {
 

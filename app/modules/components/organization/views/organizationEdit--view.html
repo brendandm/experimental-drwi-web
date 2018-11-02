@@ -8,18 +8,9 @@
 
         <h1 class="inset">Organization</h1>
 
-        <div class="main--ui">
+        <div class="main--ui" data-ng-if="page.organization.id">
 
-            <div class="save--action--wrapper save--action--top">
-                <span>Save organization</span>
-                <button type="button" data-ng-click="page.actions.save()">
-                    <i class="material-icons">
-                        done
-                    </i>
-                </button>
-            </div>
-
-            <form role="form" class="form" method="POST" id="form" name="form" data-ng-submit="page.actions.save()">
+            <form role="form" class="form snackbar-container" method="POST" id="form" name="form" data-ng-submit="page.saveOrganization()">
 
                 <div class="form-element">
                     <span class="meta-label"><b>Name</b></span>
@@ -33,41 +24,74 @@
 
                 <div class="form-element">
                     <span class="meta-label"><b>Email</b></span>
-                    <input type="text" class="form-control" id="email" name="email" placeholder="Email" data-ng-model="page.organization.email" required="required" />
+                    <input type="text" class="form-control" id="email" name="email" placeholder="Email" data-ng-model="page.organization.email" required="required" tabindex="3" />
                 </div>
 
                 <div class="form-element">
                     <span class="meta-label"><b>Website</b></span>
-                    <input type="text" class="form-control" id="website" name="website" placeholder="Website" data-ng-model="page.organization.website" required="required" />
+                    <input type="text" class="form-control" id="website" name="website" placeholder="Website" data-ng-model="page.organization.website" tabindex="4" />
                 </div>
 
-                <div class="throbber throbber-small" data-ng-if="page.status.saving">
+                <div class="save--action--wrapper save--action--bottom" style="position: relative; z-index: 9999;">
+                    <span>Save organization</span>
+                    <button type="submit" tabindex="5">
+                        <i class="material-icons" data-ng-if="page.status.processing">
+                            more_horiz
+                        </i>
+                        <i class="material-icons" data-ng-if="!page.status.processing">
+                            done
+                        </i>
+                    </button>
                 </div>
-                <p style="text-align: center;" data-ng-if="page.status.saving">
-                    Saving changes to your account...
-                </p>
+
+                <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+                    <div class="event--container">
+                        <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                            <span class="event--message">{{ alert.msg }}</span>
+                        </div>
+                    </div>
+                </div>
 
             </form>
 
-            <div class="save--action--wrapper save--action--bottom">
-                <span>Save organization</span>
-                <button type="button" data-ng-click="page.actions.save()">
-                    <i class="material-icons">
-                        done
-                    </i>
-                </button>
-            </div>
+        </div>
+
+        <div class="main--ui" data-ng-if="!page.organization.id">
+
+            <form role="form" class="form snackbar-container" method="POST" id="form" name="form" data-ng-submit="page.assignOrganization()">
+
+                <h2>Find an organization</h2>
+
+                <p style="font-style: normal; font-size: 1em; color: #616161; margin: 1em 0;">Join an existing FieldDoc organization or create a new one by typing in the box below. Since organization names are unique, we’ll check for matches to make sure you end up in the right place. If no matches are found, FieldDoc will start a new organization based on the name you enter.</p>
+
+                <div class="classification--search" style="position: relative;">
+                    <input type="search" class="search" value="" placeholder="Search organizations" data-ng-model="page.organizationSelection" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchOrganizations($viewValue)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html" tabindex="1" />
+                </div>
+
+                <div class="save--action--wrapper save--action--bottom">
+                    <span>Save organization</span>
+                    <button type="submit" tabindex="2">
+                        <i class="material-icons" data-ng-if="page.status.processing">
+                            more_horiz
+                        </i>
+                        <i class="material-icons" data-ng-if="!page.status.processing">
+                            done
+                        </i>
+                    </button>
+                </div>
+
+                <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+                    <div class="event--container">
+                        <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                            <span class="event--message">{{ alert.msg }}</span>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
 
         </div>
 
-    </div>
-
-    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
-        <div class="event--container">
-            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
-                <span class="event--message">{{ alert.msg }}</span>
-            </div>
-        </div>
     </div>
 
 </main>
