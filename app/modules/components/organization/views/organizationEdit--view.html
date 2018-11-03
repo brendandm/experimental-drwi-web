@@ -68,7 +68,7 @@
                     <input type="search" class="search" value="" placeholder="Search organizations" data-ng-model="page.organizationSelection" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchOrganizations($viewValue)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html" tabindex="1" />
                 </div>
 
-                <div class="save--action--wrapper save--action--bottom">
+                <div class="save--action--wrapper save--action--bottom" style="position: relative; z-index: 9999;">
                     <span>Save organization</span>
                     <button type="submit" tabindex="2">
                         <i class="material-icons" data-ng-if="page.status.processing">
