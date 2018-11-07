@@ -18,19 +18,23 @@ angular.module('FieldDoc')
 
             $rootScope.page = {};
 
+            self.status = {
+                processing: true
+            };
+
             self.alerts = [];
 
-            function closeAlerts() {
+            self.closeAlerts = function() {
 
                 self.alerts = [];
 
-            }
+            };
 
-            function closeRoute() {
+            self.closeRoute = function() {
 
                 $location.path('/projects');
 
-            }
+            };
 
             self.confirmDelete = function(obj) {
 
@@ -49,11 +53,9 @@ angular.module('FieldDoc')
             //
             project.$promise.then(function(successResponse) {
 
-                self.project = successResponse;
+                self.processFeature(successResponse);
 
-                self.tempPartners = self.project.properties.partners;
-
-                self.tempPrograms = self.project.properties.programs;
+                // self.tempPrograms = self.project.properties.programs;
 
                 $rootScope.page.title = 'Edit Project';
 
@@ -81,6 +83,8 @@ angular.module('FieldDoc')
             }, function(errorResponse) {
 
                 $log.error('Unable to load request project');
+
+                self.status.processing = false;
 
             });
 
@@ -185,10 +189,41 @@ angular.module('FieldDoc')
 
             };
 
+            self.processFeature = function(data) {
+
+                self.project = data;
+
+                if (self.project.properties.program) {
+
+                    self.program = self.project.properties.program.properties;
+
+                }
+
+                self.tempPartners = self.project.properties.partners;
+
+                self.status.processing = false;
+
+            };
+
+            self.setProgram = function(item, model, label) {
+
+                self.project.properties.program_id = item.id;
+
+            };
+
+            self.unsetProgram = function() {
+
+                self.project.properties.program_id = null;
+
+                self.program = null;
+
+            };
+
             self.scrubProject = function() {
 
                 delete self.project.properties.geographies;
                 delete self.project.properties.practices;
+                delete self.project.properties.program;
                 delete self.project.properties.sites;
                 delete self.project.properties.tags;
 
@@ -198,18 +233,38 @@ angular.module('FieldDoc')
 
                 self.scrubProject();
 
-                self.project.properties.programs = self.processRelations(self.tempPrograms);
-
                 self.project.properties.partners = self.processRelations(self.tempPartners);
 
                 self.project.properties.workflow_state = "Draft";
 
-                self.project.$update().then(function(response) {
+                self.project.$update().then(function(successResponse) {
 
-                    $location.path('/projects/' + self.project.id);
+                    self.processFeature(successResponse);
 
-                }).then(function(error) {
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Project changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                }).catch(function(error) {
+
                     // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong and the changes could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
                 });
 
             };
@@ -239,7 +294,7 @@ angular.module('FieldDoc')
                         'prompt': 'OK'
                     });
 
-                    $timeout(closeRoute, 2000);
+                    $timeout(self.closeRoute, 2000);
 
                 }).catch(function(errorResponse) {
 
@@ -274,7 +329,9 @@ angular.module('FieldDoc')
 
                     }
 
-                    $timeout(closeAlerts, 2000);
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
 
                 });
 

@@ -7,7 +7,8 @@
  */
 angular.module('FieldDoc')
     .controller('SnapshotEditCtrl',
-        function($scope, Account, $location, $log, Snapshot, snapshot, $rootScope, $route, user, FilterStore) {
+        function($scope, Account, $location, $log, Snapshot, snapshot,
+            $rootScope, $route, user, FilterStore, $timeout) {
 
             var self = this;
 
@@ -20,6 +21,36 @@ angular.module('FieldDoc')
             };
 
             $rootScope.page = {};
+
+            self.status = {
+                processing: true
+            };
+
+            self.alerts = [];
+
+            self.closeAlerts = function() {
+
+                self.alerts = [];
+
+            };
+
+            self.closeRoute = function() {
+
+                $location.path('/dashboards');
+
+            };
+
+            self.confirmDelete = function(obj) {
+
+                self.deletionTarget = self.deletionTarget ? null : obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
 
             $scope.filterStore = FilterStore;
 
@@ -37,6 +68,8 @@ angular.module('FieldDoc')
                 }, function(errorResponse) {
 
                     $log.error('Unable to load snapshot');
+
+                    self.status.processing = false;
 
                 });
 
@@ -242,6 +275,8 @@ angular.module('FieldDoc')
 
                 });
 
+                self.status.processing = false;
+
             };
 
             self.processRelations = function(arr) {
@@ -256,6 +291,8 @@ angular.module('FieldDoc')
 
             self.saveSnapshot = function() {
 
+                self.status.processing = true;
+
                 self.processRelations(self.activeFilters);
 
                 Snapshot.update({
@@ -264,21 +301,91 @@ angular.module('FieldDoc')
 
                     self.processSnapshot(data.properties);
 
-                }).then(function(error) {
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Dashboard changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                }).catch(function(error) {
+
                     // Do something with the error
+
+                    self.status.processing = false;
+
                 });
 
             };
 
-            self.deleteSnapshot = function() {
+            self.deleteFeature = function() {
 
-                snapshot.$delete().then(function(response) {
+                var targetId;
 
-                    $location.path('/account');
+                if (self.snapshotObject.properties) {
 
-                }).then(function(error) {
-                    // Do something with the error
+                    targetId = self.snapshotObject.properties.id;
+
+                } else {
+
+                    targetId = self.snapshotObject.id;
+
+                }
+
+                Snapshot.delete({
+                    id: +targetId
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this dashboard.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(self.closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.snapshotObject.properties.name + '”. There are pending tasks affecting this dashboard.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this dashboard.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this dashboard.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
                 });
+
             };
 
             $scope.$watch('filterStore.index', function(newVal) {

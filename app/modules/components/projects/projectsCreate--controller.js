@@ -145,11 +145,25 @@ angular.module('FieldDoc')
 
             };
 
+            self.setProgram = function(item, model, label) {
+
+                self.project.program_id = item.id;
+
+            };
+
+            self.unsetProgram = function() {
+
+                self.project.program_id = null;
+
+                self.program = null;
+
+            };
+
             self.saveProject = function() {
 
                 var project = new Project(self.project);
 
-                project.programs = self.processRelations(self.tempPrograms);
+                // project.programs = self.processRelations(self.tempPrograms);
 
                 project.partners = self.processRelations(self.tempPartners);
 

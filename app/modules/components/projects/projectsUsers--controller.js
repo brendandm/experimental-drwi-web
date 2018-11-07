@@ -12,7 +12,7 @@
     angular.module('FieldDoc')
         .controller('ProjectUsersCtrl',
             function(Account, Collaborators, $window, $rootScope, $scope, $route,
-                $location, project, user, members, SearchService) {
+                $location, $timeout, project, user, members, SearchService, Project) {
 
                 var self = this;
 
@@ -24,6 +24,32 @@
 
                 $rootScope.toolbarState = {
                     'users': true
+                };
+
+                self.alerts = [];
+
+                function closeAlerts() {
+
+                    self.alerts = [];
+
+                }
+
+                function closeRoute() {
+
+                    $location.path('/projects/' + self.project.id);
+
+                }
+
+                self.confirmDelete = function(obj) {
+
+                    self.deletionTarget = self.deletionTarget ? null : obj;
+
+                };
+
+                self.cancelDelete = function() {
+
+                    self.deletionTarget = null;
+
                 };
 
                 //
@@ -84,7 +110,7 @@
 
                         });
 
-                        return response.results.slice(0,5);
+                        return response.results.slice(0, 5);
 
                     });
 
@@ -174,6 +200,72 @@
                     }).then(function(error) {
 
                         // Do something with the error
+
+                    });
+
+                };
+
+                self.deleteFeature = function() {
+
+                    var targetId;
+
+                    if (self.project.properties) {
+
+                        targetId = self.project.properties.id;
+
+                    } else {
+
+                        targetId = self.project.id;
+
+                    }
+
+                    Project.delete({
+                        id: +targetId
+                    }).$promise.then(function(data) {
+
+                        self.alerts.push({
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Successfully deleted this project.',
+                            'prompt': 'OK'
+                        });
+
+                        $timeout(closeRoute, 2000);
+
+                    }).catch(function(errorResponse) {
+
+                        console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                        if (errorResponse.status === 409) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Unable to delete “' + self.project.properties.name + '”. There are pending tasks affecting this project.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else if (errorResponse.status === 403) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'You don’t have permission to delete this project.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Something went wrong while attempting to delete this project.',
+                                'prompt': 'OK'
+                            }];
+
+                        }
+
+                        $timeout(closeAlerts, 2000);
 
                     });
 
