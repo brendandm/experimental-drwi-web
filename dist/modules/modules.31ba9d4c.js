@@ -1679,7 +1679,7 @@ angular.module('FieldDoc')
 
         self.loadProjectSites = function(obj) {
 
-            Project.sites({
+            Snapshot.projectSites({
                 id: obj.id
             }).$promise.then(function(successResponse) {
 
@@ -1709,7 +1709,7 @@ angular.module('FieldDoc')
 
         self.loadSitePractices = function(obj) {
 
-            Site.practices({
+            Snapshot.sitePractices({
                 id: obj.id
             }).$promise.then(function(successResponse) {
 
@@ -2547,7 +2547,8 @@ angular.module('FieldDoc')
  */
 angular.module('FieldDoc')
     .controller('SnapshotEditCtrl',
-        function($scope, Account, $location, $log, Snapshot, snapshot, $rootScope, $route, user, FilterStore) {
+        function($scope, Account, $location, $log, Snapshot, snapshot,
+            $rootScope, $route, user, FilterStore, $timeout) {
 
             var self = this;
 
@@ -2560,6 +2561,36 @@ angular.module('FieldDoc')
             };
 
             $rootScope.page = {};
+
+            self.status = {
+                processing: true
+            };
+
+            self.alerts = [];
+
+            self.closeAlerts = function() {
+
+                self.alerts = [];
+
+            };
+
+            self.closeRoute = function() {
+
+                $location.path('/dashboards');
+
+            };
+
+            self.confirmDelete = function(obj) {
+
+                self.deletionTarget = self.deletionTarget ? null : obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
 
             $scope.filterStore = FilterStore;
 
@@ -2577,6 +2608,8 @@ angular.module('FieldDoc')
                 }, function(errorResponse) {
 
                     $log.error('Unable to load snapshot');
+
+                    self.status.processing = false;
 
                 });
 
@@ -2782,6 +2815,8 @@ angular.module('FieldDoc')
 
                 });
 
+                self.status.processing = false;
+
             };
 
             self.processRelations = function(arr) {
@@ -2796,6 +2831,8 @@ angular.module('FieldDoc')
 
             self.saveSnapshot = function() {
 
+                self.status.processing = true;
+
                 self.processRelations(self.activeFilters);
 
                 Snapshot.update({
@@ -2804,21 +2841,91 @@ angular.module('FieldDoc')
 
                     self.processSnapshot(data.properties);
 
-                }).then(function(error) {
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Dashboard changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                }).catch(function(error) {
+
                     // Do something with the error
+
+                    self.status.processing = false;
+
                 });
 
             };
 
-            self.deleteSnapshot = function() {
+            self.deleteFeature = function() {
 
-                snapshot.$delete().then(function(response) {
+                var targetId;
 
-                    $location.path('/account');
+                if (self.snapshotObject.properties) {
 
-                }).then(function(error) {
-                    // Do something with the error
+                    targetId = self.snapshotObject.properties.id;
+
+                } else {
+
+                    targetId = self.snapshotObject.id;
+
+                }
+
+                Snapshot.delete({
+                    id: +targetId
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this dashboard.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(self.closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.snapshotObject.properties.name + '”. There are pending tasks affecting this dashboard.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this dashboard.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this dashboard.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
                 });
+
             };
 
             $scope.$watch('filterStore.index', function(newVal) {
@@ -5765,11 +5872,25 @@ angular.module('FieldDoc')
 
             };
 
+            self.setProgram = function(item, model, label) {
+
+                self.project.program_id = item.id;
+
+            };
+
+            self.unsetProgram = function() {
+
+                self.project.program_id = null;
+
+                self.program = null;
+
+            };
+
             self.saveProject = function() {
 
                 var project = new Project(self.project);
 
-                project.programs = self.processRelations(self.tempPrograms);
+                // project.programs = self.processRelations(self.tempPrograms);
 
                 project.partners = self.processRelations(self.tempPartners);
 
@@ -5808,19 +5929,23 @@ angular.module('FieldDoc')
 
             $rootScope.page = {};
 
+            self.status = {
+                processing: true
+            };
+
             self.alerts = [];
 
-            function closeAlerts() {
+            self.closeAlerts = function() {
 
                 self.alerts = [];
 
-            }
+            };
 
-            function closeRoute() {
+            self.closeRoute = function() {
 
                 $location.path('/projects');
 
-            }
+            };
 
             self.confirmDelete = function(obj) {
 
@@ -5839,11 +5964,9 @@ angular.module('FieldDoc')
             //
             project.$promise.then(function(successResponse) {
 
-                self.project = successResponse;
+                self.processFeature(successResponse);
 
-                self.tempPartners = self.project.properties.partners;
-
-                self.tempPrograms = self.project.properties.programs;
+                // self.tempPrograms = self.project.properties.programs;
 
                 $rootScope.page.title = 'Edit Project';
 
@@ -5871,6 +5994,8 @@ angular.module('FieldDoc')
             }, function(errorResponse) {
 
                 $log.error('Unable to load request project');
+
+                self.status.processing = false;
 
             });
 
@@ -5975,10 +6100,41 @@ angular.module('FieldDoc')
 
             };
 
+            self.processFeature = function(data) {
+
+                self.project = data;
+
+                if (self.project.properties.program) {
+
+                    self.program = self.project.properties.program.properties;
+
+                }
+
+                self.tempPartners = self.project.properties.partners;
+
+                self.status.processing = false;
+
+            };
+
+            self.setProgram = function(item, model, label) {
+
+                self.project.properties.program_id = item.id;
+
+            };
+
+            self.unsetProgram = function() {
+
+                self.project.properties.program_id = null;
+
+                self.program = null;
+
+            };
+
             self.scrubProject = function() {
 
                 delete self.project.properties.geographies;
                 delete self.project.properties.practices;
+                delete self.project.properties.program;
                 delete self.project.properties.sites;
                 delete self.project.properties.tags;
 
@@ -5988,18 +6144,38 @@ angular.module('FieldDoc')
 
                 self.scrubProject();
 
-                self.project.properties.programs = self.processRelations(self.tempPrograms);
-
                 self.project.properties.partners = self.processRelations(self.tempPartners);
 
                 self.project.properties.workflow_state = "Draft";
 
-                self.project.$update().then(function(response) {
+                self.project.$update().then(function(successResponse) {
 
-                    $location.path('/projects/' + self.project.id);
+                    self.processFeature(successResponse);
 
-                }).then(function(error) {
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Project changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                }).catch(function(error) {
+
                     // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong and the changes could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
                 });
 
             };
@@ -6029,7 +6205,7 @@ angular.module('FieldDoc')
                         'prompt': 'OK'
                     });
 
-                    $timeout(closeRoute, 2000);
+                    $timeout(self.closeRoute, 2000);
 
                 }).catch(function(errorResponse) {
 
@@ -6064,7 +6240,9 @@ angular.module('FieldDoc')
 
                     }
 
-                    $timeout(closeAlerts, 2000);
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
 
                 });
 
@@ -6085,7 +6263,7 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('ProjectUsersCtrl',
             function(Account, Collaborators, $window, $rootScope, $scope, $route,
-                $location, project, user, members, SearchService) {
+                $location, $timeout, project, user, members, SearchService, Project) {
 
                 var self = this;
 
@@ -6097,6 +6275,32 @@ angular.module('FieldDoc')
 
                 $rootScope.toolbarState = {
                     'users': true
+                };
+
+                self.alerts = [];
+
+                function closeAlerts() {
+
+                    self.alerts = [];
+
+                }
+
+                function closeRoute() {
+
+                    $location.path('/projects/' + self.project.id);
+
+                }
+
+                self.confirmDelete = function(obj) {
+
+                    self.deletionTarget = self.deletionTarget ? null : obj;
+
+                };
+
+                self.cancelDelete = function() {
+
+                    self.deletionTarget = null;
+
                 };
 
                 //
@@ -6157,7 +6361,7 @@ angular.module('FieldDoc')
 
                         });
 
-                        return response.results.slice(0,5);
+                        return response.results.slice(0, 5);
 
                     });
 
@@ -6247,6 +6451,72 @@ angular.module('FieldDoc')
                     }).then(function(error) {
 
                         // Do something with the error
+
+                    });
+
+                };
+
+                self.deleteFeature = function() {
+
+                    var targetId;
+
+                    if (self.project.properties) {
+
+                        targetId = self.project.properties.id;
+
+                    } else {
+
+                        targetId = self.project.id;
+
+                    }
+
+                    Project.delete({
+                        id: +targetId
+                    }).$promise.then(function(data) {
+
+                        self.alerts.push({
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Successfully deleted this project.',
+                            'prompt': 'OK'
+                        });
+
+                        $timeout(closeRoute, 2000);
+
+                    }).catch(function(errorResponse) {
+
+                        console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                        if (errorResponse.status === 409) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Unable to delete “' + self.project.properties.name + '”. There are pending tasks affecting this project.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else if (errorResponse.status === 403) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'You don’t have permission to delete this project.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Something went wrong while attempting to delete this project.',
+                                'prompt': 'OK'
+                            }];
+
+                        }
+
+                        $timeout(closeAlerts, 2000);
 
                     });
 
@@ -14897,6 +15167,16 @@ angular.module('FieldDoc')
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/snapshot/:id/projects')
+                },
+                projectSites: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/data/snapshot/project/:id/sites')
+                },
+                sitePractices: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/data/snapshot/site/:id/practices')
                 },
                 'update': {
                     method: 'PATCH'

@@ -35,6 +35,16 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/snapshot/:id/projects')
                 },
+                projectSites: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/data/snapshot/project/:id/sites')
+                },
+                sitePractices: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/data/snapshot/site/:id/practices')
+                },
                 'update': {
                     method: 'PATCH'
                 }

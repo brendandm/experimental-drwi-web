@@ -812,7 +812,7 @@ angular.module('FieldDoc')
 
         self.loadProjectSites = function(obj) {
 
-            Project.sites({
+            Snapshot.projectSites({
                 id: obj.id
             }).$promise.then(function(successResponse) {
 
@@ -842,7 +842,7 @@ angular.module('FieldDoc')
 
         self.loadSitePractices = function(obj) {
 
-            Site.practices({
+            Snapshot.sitePractices({
                 id: obj.id
             }).$promise.then(function(successResponse) {
 

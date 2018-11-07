@@ -33,7 +33,7 @@
 
                                 <p>{{ (geography.description || 'No description') | truncate:80 }}</p>
 
-                                <div class="actions">
+                                <!-- <div class="actions">
                                     <a class="snapshot--title" href="/geographies/{{ geography.id }}" title="Geography summary">
                                         <i class="material-icons">
                                             dashboard
@@ -44,7 +44,7 @@
                                             edit
                                         </i>
                                     </a>
-                                </div>
+                                </div> -->
                                 <span><time datetime="{{ geography.created_on }}" title="{{ geography.created_on }}">
                                         Created on {{ geography.created_on | date }}</time></span>
                             </div>
