@@ -33,7 +33,7 @@ angular.module('FieldDoc')
 
                         return Account.userObject;
 
-                    },
+                    }
                 }
             })
             .when('/projects/:projectId', {

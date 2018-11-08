@@ -175,7 +175,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                    $rootScope.user = Account.userObject = self.user = successResponse;
+                    self.user = successResponse;
 
                     if (self.user.properties.organization) {
 

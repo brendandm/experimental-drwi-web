@@ -4513,7 +4513,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                    $rootScope.user = Account.userObject = self.user = successResponse;
+                    self.user = successResponse;
 
                     if (self.user.properties.organization) {
 
@@ -4751,7 +4751,7 @@ angular.module('FieldDoc')
 
                         return Account.userObject;
 
-                    },
+                    }
                 }
             })
             .when('/projects/:projectId', {
