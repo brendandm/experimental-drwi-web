@@ -1271,7 +1271,7 @@ angular.module('FieldDoc')
                 console.log('geographies.successResponse', successResponse);
 
                 if (self.progressValue < 100 &&
-                    self.filteredProjects) {
+                    Array.isArray(self.filteredProjects)) {
 
                     self.showElements();
 
