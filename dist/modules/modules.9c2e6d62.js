@@ -1270,13 +1270,6 @@ angular.module('FieldDoc')
 
                 console.log('geographies.successResponse', successResponse);
 
-                if (self.progressValue < 100 &&
-                    Array.isArray(self.filteredProjects)) {
-
-                    self.showElements();
-
-                }
-
                 self.geographies = successResponse;
 
                 self.map.geojson = {
@@ -1334,6 +1327,8 @@ angular.module('FieldDoc')
                     });
 
                 });
+
+                self.loadBaseProjects();
 
             }, function(errorResponse) {
 
@@ -2049,7 +2044,7 @@ angular.module('FieldDoc')
 
                 self.card = self.cardTpl;
 
-                self.loadBaseProjects();
+                // self.loadBaseProjects();
 
                 self.loadGeographies();
 
@@ -2067,12 +2062,7 @@ angular.module('FieldDoc')
 
                 console.log('self.loadBaseProjects.successResponse', successResponse);
 
-                if (self.progressValue < 100 &&
-                    self.geographies) {
-
-                    self.showElements();
-
-                }
+                self.showElements();
 
                 self.baseProjects = successResponse.features;
 
@@ -15852,7 +15842,7 @@ angular.module('FieldDoc')
 
                                 console.log(response);
 
-                                return response.results;
+                                return response.results.slice(0,5);
 
                             });
 

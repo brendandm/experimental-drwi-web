@@ -4,7 +4,7 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container">
+    <div class="content--container" style="position: relative; overflow: hidden;">
 
         <h1 class="inset">Dashboards</h1>
 
@@ -86,15 +86,23 @@
 
         </div>
 
+        <div class="transient--notification" style="position: absolute;" data-ng-class="{show: page.alerts.length}">
+            <div class="event--container">
+                <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                    <span class="event--message">{{ alert.msg }}</span>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+    <!-- <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">
             <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
                 <span class="event--message">{{ alert.msg }}</span>
             </div>
         </div>
-    </div>
+    </div> -->
 
 </main>
 
