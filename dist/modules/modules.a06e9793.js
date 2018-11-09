@@ -186,10 +186,13 @@ angular.module('FieldDoc')
                 //
                 if (ipCookie('FIELDSTACKIO_SESSION')) {
 
-                    if ($rootScope.targetPath &&
-                        typeof $rootScope.targetPath === 'string') {
+                    var targetPath = $rootScope.targetPath;
 
-                        $location.path($rootScope.targetPath);
+                    $rootScope.targetPath = null;
+
+                    if (targetPath.lastIndexOf('/dashboard', 0) === 0) {
+
+                        $location.path(targetPath);
 
                     } else {
 
@@ -256,7 +259,11 @@ angular.module('FieldDoc')
                                     if ($rootScope.targetPath &&
                                         typeof $rootScope.targetPath === 'string') {
 
-                                        $location.path($rootScope.targetPath);
+                                        var targetPath = $rootScope.targetPath;
+
+                                        $rootScope.targetPath = null;
+
+                                        $location.path(targetPath);
 
                                     } else {
 
@@ -398,7 +405,11 @@ angular.module('FieldDoc')
                                             if ($rootScope.targetPath &&
                                                 typeof $rootScope.targetPath === 'string') {
 
-                                                $location.path($rootScope.targetPath);
+                                                var targetPath = $rootScope.targetPath;
+
+                                                $rootScope.targetPath = null;
+
+                                                $location.path(targetPath);
 
                                             } else {
 
@@ -7779,11 +7790,14 @@ angular.module('FieldDoc')
 
                                 self.progressValue = null;
 
-                                $rootScope.notifications.error('', 'An error occurred and we couldn\'t process your file.');
+                                self.alerts = [{
+                                    'type': 'error',
+                                    'flag': 'Error!',
+                                    'msg': 'The file could not be processed.',
+                                    'prompt': 'OK'
+                                }];
 
-                                $timeout(function() {
-                                    $rootScope.notifications.objects = [];
-                                }, 2000);
+                                $timeout(closeAlerts, 2000);
 
                                 return;
 
@@ -7874,12 +7888,12 @@ angular.module('FieldDoc')
                         id: +self.deletionTarget.id
                     }).$promise.then(function(data) {
 
-                        self.alerts.push({
+                        self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
                             'msg': 'Successfully deleted this site.',
                             'prompt': 'OK'
-                        });
+                        }];
 
                         $timeout(closeRoute, 2000);
 
@@ -8920,7 +8934,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/practices/:practiceId/:reportId/edit', {
+            .when('/reports/:reportId/edit', {
                 templateUrl: '/modules/components/practices/views/edit--view.html',
                 controller: 'CustomFormController',
                 controllerAs: 'page',
@@ -8936,11 +8950,11 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    practice: function(Practice, $route) {
-                        return Practice.get({
-                            id: $route.current.params.practiceId
-                        });
-                    },
+                    // practice: function(Practice, $route) {
+                    //     return Practice.get({
+                    //         id: $route.current.params.practiceId
+                    //     });
+                    // },
                     report: function(PracticeCustom, $route) {
                         return PracticeCustom.get({
                             id: $route.current.params.reportId
@@ -9930,11 +9944,14 @@ angular.module('FieldDoc')
             if (!self.shapefile ||
                 !self.shapefile.length) {
 
-                $rootScope.notifications.warning('Uh-oh!', 'You forgot to add a file.');
+                self.alerts = [{
+                    'type': 'error',
+                    'flag': 'Error!',
+                    'msg': 'Please add a file to upload.',
+                    'prompt': 'OK'
+                }];
 
-                $timeout(function() {
-                    $rootScope.notifications.objects = [];
-                }, 1200);
+                $timeout(closeAlerts, 2000);
 
                 return false;
 
@@ -10019,11 +10036,14 @@ angular.module('FieldDoc')
 
                         self.progressValue = null;
 
-                        $rootScope.notifications.error('', 'An error occurred and we couldn\'t process your file.');
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'The file could not be processed.',
+                            'prompt': 'OK'
+                        }];
 
-                        $timeout(function() {
-                            $rootScope.notifications.objects = [];
-                        }, 2000);
+                        $timeout(closeAlerts, 2000);
 
                         return;
 
@@ -10689,12 +10709,11 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('CustomFormController',
             function(Account, leafletData, $location, metric_types,
-                monitoring_types, practice, PracticeCustom, PracticeCustomReading, PracticeCustomMetric,
+                monitoring_types, Practice, PracticeCustom, PracticeCustomReading, PracticeCustomMetric,
                 PracticeCustomMonitoring, practice_types, report, $rootScope, $route, $scope,
-                unit_types, user, Utility, $timeout, report_metrics) {
+                unit_types, user, Utility, $timeout, report_metrics, $filter) {
 
-                var self = this,
-                    practiceId = $route.current.params.practiceId;
+                var self = this;
 
                 self.measurementPeriods = [{
                         'name': 'Installation',
@@ -10909,6 +10928,50 @@ angular.module('FieldDoc')
                     return new Date(b[0], b[1] - 1, b[2]);
                 }
 
+                function convertPracticeArea(data) {
+
+                    var area = data.properties.area,
+                        acres;
+
+                    if (area !== null &&
+                        area > 0) {
+
+                        acres = $filter('convertArea')(area, 'acre');
+
+                        return Utility.precisionRound(acres, 4);
+
+                    }
+
+                }
+
+                self.loadPractice = function(practiceId) {
+
+                    Practice.get({
+                        id: practiceId
+                    }).$promise.then(function(successResponse) {
+
+                        self.practice = successResponse;
+
+                        if (!successResponse.permissions.read &&
+                            !successResponse.permissions.write) {
+
+                            self.makePrivate = true;
+
+                            return;
+
+                        }
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
+
+                        self.practiceType = Utility.machineName(self.practice.properties.practice_type);
+
+                        self.report.properties.practice_extent = convertPracticeArea(self.practice);
+
+                    });
+
+                };
+
                 //
                 // Verify Account information for proper UI element display
                 //
@@ -10924,69 +10987,50 @@ angular.module('FieldDoc')
                             account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                         };
 
-                        practice.$promise.then(function(successResponse) {
+                        //
+                        // 
+                        //
+                        report.$promise.then(function(successResponse) {
 
-                            self.practice = successResponse;
+                            console.log('self.report', successResponse);
 
-                            if (!successResponse.permissions.read &&
-                                !successResponse.permissions.write) {
+                            self.report = successResponse;
 
-                                self.makePrivate = true;
+                            if (self.report.properties.practice_unit !== null) {
 
-                                return;
+                                var _unit = self.report.properties.practice_unit.properties;
+
+                                _unit.name = _unit.plural;
+
+                                self.report.properties.practice_unit = _unit;
 
                             }
 
-                            self.permissions.can_edit = successResponse.permissions.write;
-                            self.permissions.can_delete = successResponse.permissions.write;
+                            if (self.report.properties.report_date) {
 
-                            self.practiceType = Utility.machineName(self.practice.properties.practice_type);
+                                self.today = parseISOLike(self.report.properties.report_date);
+
+                            }
 
                             //
-                            // 
+                            // Check to see if there is a valid date
                             //
-                            report.$promise.then(function(successResponse) {
+                            self.date = {
+                                month: self.months[self.today.getMonth()],
+                                date: self.today.getDate(),
+                                day: self.days[self.today.getDay()],
+                                year: self.today.getFullYear()
+                            };
 
-                                console.log('self.report', successResponse);
+                            // $rootScope.page.title = "Other Conservation Practice";
 
-                                self.report = successResponse;
+                            $rootScope.page.title = 'Edit measurement data';
 
-                                if (self.report.properties.practice_unit !== null) {
+                            self.loadPractice(self.report.properties.practice.id);
 
-                                    var _unit = self.report.properties.practice_unit.properties;
+                        }, function(errorResponse) {
 
-                                    _unit.name = _unit.plural;
-
-                                    self.report.properties.practice_unit = _unit;
-
-                                }
-
-                                if (self.report.properties.report_date) {
-
-                                    self.today = parseISOLike(self.report.properties.report_date);
-
-                                }
-
-                                //
-                                // Check to see if there is a valid date
-                                //
-                                self.date = {
-                                    month: self.months[self.today.getMonth()],
-                                    date: self.today.getDate(),
-                                    day: self.days[self.today.getDay()],
-                                    year: self.today.getFullYear()
-                                };
-
-                                // $rootScope.page.title = "Other Conservation Practice";
-
-                                $rootScope.page.title = 'Edit measurement data';
-
-
-                            }, function(errorResponse) {
-
-                                console.error('ERROR: ', errorResponse);
-
-                            });
+                            console.error('ERROR: ', errorResponse);
 
                         });
 
@@ -11039,7 +11083,7 @@ angular.module('FieldDoc')
 
                     self.report.$update().then(function(successResponse) {
 
-                        $location.path('/practices/' + practiceId);
+                        $location.path('/practices/' + self.practice.id);
 
                     }, function(errorResponse) {
 
@@ -11338,7 +11382,7 @@ angular.module('FieldDoc')
 
                 function closeRoute() {
 
-                    $location.path('/practices/' + practiceId);
+                    $location.path('/practices/' + self.practice.id);
 
                 }
 
@@ -13097,35 +13141,46 @@ angular
 
 (function() {
 
-  'use strict';
+    'use strict';
 
-  /**
-   * @ngdoc function
-   * @name WaterReporter.report.controller:SingleReportController
-   * @description
-   *     Display a single report based on the current `id` provided in the URL
-   * Controller of the waterReporterApp
-   */
-  angular.module('FieldDoc')
-    .directive('fileUpload', function ($parse) {
-        return {
-            restrict: 'A',
-            link: function(scope, element, attrs) {
-                var model = $parse(attrs.fileModel);
+    /**
+     * @ngdoc function
+     * @name WaterReporter.report.controller:SingleReportController
+     * @description
+     *     Display a single report based on the current `id` provided in the URL
+     * Controller of the waterReporterApp
+     */
+    angular.module('FieldDoc')
+        .directive('fileUpload', function($parse) {
+            return {
+                restrict: 'A',
+                link: function(scope, element, attrs) {
 
-                var modelSetter = model.assign;
+                    var model = $parse(attrs.fileModel);
 
-                element.bind('change', function() {
-                    scope.$apply(function() {
-                        modelSetter(scope, element[0].files);
+                    var modelSetter = model.assign;
+
+                    var handler = $parse(attrs.fileOnChange)
+
+                    element.bind('change', function() {
+
+                        scope.$apply(function() {
+
+                            modelSetter(scope, element[0].files);
+
+                            handler(scope);
+
+                        });
+
                     });
-                });
-            }
-        };
-    });
+
+                }
+
+            };
+
+        });
 
 }());
-
 (function() {
 
     'use strict';
@@ -14766,33 +14821,46 @@ angular
  * Provider in the FieldDoc.
  */
 angular.module('FieldDoc')
-  .service('Utility', function () {
+    .service('Utility', function() {
 
-    return {
-      machineName: function(name) {
-        if (name) {
-          var removeDashes = name.replace(/-/g, ''),
-              removeSpaces = removeDashes.replace(/ /g, '-'),
-              convertLowerCase = removeSpaces.toLowerCase();
+        return {
+            machineName: function(name) {
 
-          return convertLowerCase;
-        }
+                if (name) {
 
-        return null;
-      },
-      camelName: function(name) {
-        if (name) {
-          return name.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
-            return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
-          }).replace(/\s+/g, '');
-        }
+                    var removeDashes = name.replace(/-/g, ''),
+                        removeSpaces = removeDashes.replace(/ /g, '-'),
+                        convertLowerCase = removeSpaces.toLowerCase();
 
-        return null;
-      }
-    };
+                    return convertLowerCase;
+                }
 
-  });
+                return null;
 
+            },
+            camelName: function(name) {
+
+                if (name) {
+
+                    return name.replace(/(?:^\w|[A-Z]|\b\w)/g, function(letter, index) {
+                        return index == 0 ? letter.toLowerCase() : letter.toUpperCase();
+                    }).replace(/\s+/g, '');
+
+                }
+
+                return null;
+
+            },
+            precisionRound: function(value, decimals, base) {
+
+                var pow = Math.pow(base || 10, decimals);
+
+                return Math.round(value * pow) / pow;
+
+            }
+        };
+
+    });
 (function() {
 
     'use strict';

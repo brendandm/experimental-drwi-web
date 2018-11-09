@@ -49,14 +49,16 @@
                             <div class="form-element">
 
                                 <div class="form-element">
-                                    <span class="meta-label"><b>Practice extent</b></span>
-                                    <input class="form-control" data-ng-model="page.report.properties.practice_extent" id="practice_extent" name="practice_extent" step="0.0001" type="number" />
+                                    <span class="meta-label"><b>Practice area</b></span>
+                                    <input class="form-control" data-ng-model="page.report.properties.practice_extent" id="practice_extent" name="practice_extent" step="0.0001" type="number" placeholder="0" />
                                 </div>
 
                                 <div class="form-element">
-                                    <!-- Units -->
-                                    <span class="meta-label"><b>Practice units</b></span>
-                                    <input id="practice_unit_id" name="practice_unit_id" type="text" placeholder="Search units&hellip;" data-ng-model="page.report.properties.practice_unit" uib-typeahead="unit as unit.name for unit in page.unitTypes | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html" required="required">
+                                    <span class="meta-label"><b>Area units</b></span>
+                                    <input type="text" class="form-control" id="email" name="email" disabled="disabled" value="acres" required="required" readonly />
+                                    <p style="color: #9e9e9e; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
+                                        Practice area is standardized to acres.
+                                    </p>
                                 </div>
 
                                 <div class="form-element">
