@@ -9633,8 +9633,7 @@ angular.module('FieldDoc')
 
                     newReading.$save().then(function(successResponse) {
 
-                        $location.path('/practices/' + practiceId +
-                            '/' + successResponse.id + '/edit');
+                        $location.path('/reports/' + successResponse.id + '/edit');
 
                     }, function(errorResponse) {
 
