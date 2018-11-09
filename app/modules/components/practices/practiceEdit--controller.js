@@ -72,6 +72,12 @@ angular.module('FieldDoc')
 
         self.savePractice = function() {
 
+            if (self.practiceCategory) {
+
+                self.practice.properties.category_id = self.practiceCategory.id;
+
+            }
+
             self.practice.$update().then(function(successResponse) {
 
                 $location.path('/practices/' + self.practice.id);

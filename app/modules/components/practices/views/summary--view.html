@@ -46,6 +46,10 @@
                             <strong>Practice Type:</strong> {{ page.practice.properties.category.properties.name }}
                         </p>
 
+                        <p data-ng-if="page.practice.properties.area && page.practice.properties.area > 0">
+                            <strong>Area:</strong> {{ page.practice.properties.area | convertArea:'acre' | number:0 }} acres</a>
+                        </p>
+
                         <p data-ng-if="page.practice.properties.description" data-ng-bind-html="page.practice.properties.description"></p>
 
                         <p data-ng-if="!page.practice.properties.description">{{ page.practice.properties.category.properties.description }}</p>

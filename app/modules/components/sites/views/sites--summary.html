@@ -38,12 +38,16 @@
                             Last modified by {{ page.site.properties.last_modified_by.properties.first_name }} {{ page.site.properties.last_modified_by.properties.last_name }} on {{ page.site.properties.modified_on | date:'medium' }}
                         </p>
 
-                        <p data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">
-                            <strong>Program:</strong> {{ page.project.properties.program_type }}
+                        <p data-ng-if="page.project.id && page.project.properties.program">
+                            <strong>Program:</strong> {{ page.project.properties.program.properties.name }}
                         </p>
 
                         <p>
                             <strong>Project:</strong> <a href="{{ page.site.links.project.html }}">{{ page.project.properties.name }}</a>
+                        </p>
+
+                        <p data-ng-if="page.site.properties.area && page.site.properties.area > 0">
+                            <strong>Area:</strong> {{ page.site.properties.area | convertArea:'acre' | number:0 }} acres</a>
                         </p>
 
                         <p data-ng-if="page.site.properties.description" data-ng-bind-html="page.site.properties.description"></p>

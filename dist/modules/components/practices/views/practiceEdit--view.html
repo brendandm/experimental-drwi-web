@@ -4,7 +4,23 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="page.makePrivate">
+
+        <section class="privacy-message">
+
+            <p>
+                <i class="material-icons">
+                    lock
+                </i>
+            </p>
+
+            <p>This practice is private.</p>
+
+        </section>
+
+    </div>
+
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="!page.makePrivate">
 
         <h1 class="inset">Edit practice</h1>
 
@@ -34,7 +50,7 @@
 
                         <div class="form-element">
                             <span class="meta-label"><b>Practice type</b></span>
-                            <input id="practice_type_id" name="practice_type_id" type="text" placeholder="Search categories" data-ng-model="page.practice.properties.category.properties" uib-typeahead="practiceType as practiceType.name for practiceType in page.practiceTypes | filter:$viewValue | limitTo:5" typeahead-on-select="page.setPracticeType($item,$model,$label)" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
+                            <input id="practice_type_id" name="practice_type_id" type="text" placeholder="Search categories" data-ng-model="page.practiceCategory" uib-typeahead="practiceType as practiceType.name for practiceType in page.practiceTypes | filter:$viewValue | limitTo:5" typeahead-on-select="page.setPracticeType($item,$model,$label)" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
                             <p data-ng-if="page.practice.properties.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
                                 {{ page.practice.properties.category.properties.description }}
                             </p>
@@ -74,7 +90,7 @@
 
     </div>
 
-    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
+    <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li>
                 <a href="/practices/{{ page.practice.properties.id }}">
@@ -90,7 +106,7 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
+            <li data-ng-if="page.permissions.can_edit && page.practice.properties.category" data-ng-class="{active: $root.toolbarState.editLocation}">
                 <a href="/practices/{{ page.practice.properties.id }}/location">
                     <i class="material-icons">
                         location_on

@@ -50,7 +50,7 @@
 
                         <div class="form-element">
                             <span class="meta-label"><b>Practice type</b></span>
-                            <input id="practice_type_id" name="practice_type_id" type="text" placeholder="Search categories" data-ng-model="page.practice.properties.category.properties" uib-typeahead="practiceType as practiceType.name for practiceType in page.practiceTypes | filter:$viewValue | limitTo:5" typeahead-on-select="page.setPracticeType($item,$model,$label)" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
+                            <input id="practice_type_id" name="practice_type_id" type="text" placeholder="Search categories" data-ng-model="page.practiceCategory" uib-typeahead="practiceType as practiceType.name for practiceType in page.practiceTypes | filter:$viewValue | limitTo:5" typeahead-on-select="page.setPracticeType($item,$model,$label)" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
                             <p data-ng-if="page.practice.properties.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
                                 {{ page.practice.properties.category.properties.description }}
                             </p>

@@ -4,7 +4,23 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="page.makePrivate">
+
+        <section class="privacy-message">
+
+            <p>
+                <i class="material-icons">
+                    lock
+                </i>
+            </p>
+
+            <p>This site is private.</p>
+
+        </section>
+
+    </div>
+
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="page.makePrivate !== null && !page.makePrivate">
 
         <div class="main--ui">
 
@@ -22,12 +38,16 @@
                             Last modified by {{ page.site.properties.last_modified_by.properties.first_name }} {{ page.site.properties.last_modified_by.properties.last_name }} on {{ page.site.properties.modified_on | date:'medium' }}
                         </p>
 
-                        <p data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">
-                            <strong>Program:</strong> {{ page.project.properties.program_type }}
+                        <p data-ng-if="page.project.id && page.project.properties.program">
+                            <strong>Program:</strong> {{ page.project.properties.program.properties.name }}
                         </p>
 
                         <p>
                             <strong>Project:</strong> <a href="{{ page.site.links.project.html }}">{{ page.project.properties.name }}</a>
+                        </p>
+
+                        <p data-ng-if="page.site.properties.area && page.site.properties.area > 0">
+                            <strong>Area:</strong> {{ page.site.properties.area | convertArea:'acre' | number:0 }} acres</a>
                         </p>
 
                         <p data-ng-if="page.site.properties.description" data-ng-bind-html="page.site.properties.description"></p>
@@ -38,7 +58,7 @@
 
                     <!-- Map -->
 
-                    <div style="position:relative;">
+                    <div class="shadow" style="position:relative;">
                         <leaflet id="site--map" class="map tall" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds" markers="page.map.markers" geojson="page.map.geojson"></leaflet>
                     </div>
 
@@ -198,17 +218,17 @@
                                             insert_photo
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/edit" title="Edit practice">
+                                    <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/edit" title="Edit practice" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             edit
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/location" title="Edit location">
+                                    <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/location" title="Edit location" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             location_on
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="#" title="Delete practice" data-ng-click="page.confirmDelete(practice, 'practice')">
+                                    <a class="snapshot--title" href="#" title="Delete practice" data-ng-click="page.confirmDelete(practice, 'practice')" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             delete
                                         </i>
@@ -222,7 +242,7 @@
 
                     </li>
 
-                    <li class="card">
+                    <li class="card" data-ng-if="page.permissions.can_edit">
                         <div class="card--content">
                             <div class="body">
                                 <button type="button" class="snapshot--title" data-ng-click="page.createPractice()" title="Create practice">
@@ -242,7 +262,7 @@
 
     </div>
 
-    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
+    <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li class="active">
                 <a href="/sites/{{ page.site.id }}">

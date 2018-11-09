@@ -16,27 +16,23 @@
 
                     <form data-ng-submit="page.saveMetrics()" class="form" role="form">
 
-                        <div class="form-row">
+                        <h2>
+                            Report date and measurement period
+                        </h2>
 
-                            <h2>
-                                Report date and measurement period
-                            </h2>
+                        <div class="form-element">
+                            <span class="meta-label"><b>Month</b></span>
+                            <input id="report_date_month" name="report_date_month" type="text" value="page.date.month" data-ng-model="page.date.month" uib-typeahead="month.name for month in page.months | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html" required="required">
+                        </div>
 
-                            <div class="form-element">
-                                <span class="meta-label"><b>Month</b></span>
-                                <input id="report_date_month" name="report_date_month" type="text" value="page.date.month" data-ng-model="page.date.month" uib-typeahead="month.name for month in page.months | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html" required="required">
-                            </div>
+                        <div class="form-element">
+                            <span class="meta-label"><b>Date</b></span>
+                            <input type="number" min="1" max="31" step="1" id="report_date_date" name="report_date_date" data-ng-model="page.date.date" />
+                        </div>
 
-                            <div class="form-element">
-                                <span class="meta-label"><b>Date</b></span>
-                                <input type="number" min="1" max="31" step="1" id="report_date_date" name="report_date_date" data-ng-model="page.date.date" />
-                            </div>
-
-                            <div class="form-element">
-                                <span class="meta-label"><b>Year</b></span>
-                                <input number type="number" min="1900" step="1" id="report_date_year" name="report_date_year" data-ng-model="page.date.year" />
-                            </div>
-
+                        <div class="form-element">
+                            <span class="meta-label"><b>Year</b></span>
+                            <input number type="number" min="1900" step="1" id="report_date_year" name="report_date_year" data-ng-model="page.date.year" />
                         </div>
 
                         <!-- Measurement Period -->
@@ -48,7 +44,7 @@
 
                         <h2>Load reductions</h2>
 
-                        <div class="form-row" data-ng-if="(page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation') || (page.report.properties.measurement_period.name === 'Planning' || page.report.properties.measurement_period.name === 'Installation')">
+                        <div data-ng-if="(page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation') || (page.report.properties.measurement_period.name === 'Planning' || page.report.properties.measurement_period.name === 'Installation')">
 
                             <div class="form-element">
 
@@ -88,7 +84,7 @@
 
                         <h2>Metric Data</h2>
 
-                        <div class="form-row" data-ng-if="(page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation') || (page.report.properties.measurement_period.name === 'Planning' || page.report.properties.measurement_period.name === 'Installation')">
+                        <div data-ng-if="(page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation') || (page.report.properties.measurement_period.name === 'Planning' || page.report.properties.measurement_period.name === 'Installation')">
                             <div>
                                 <button type="button" data-ng-click="page.addMetric()" class="button button-link button-outline">
                                     + Add metric data
@@ -98,7 +94,7 @@
 
                         <br /><br />
 
-                        <div class="form-row" data-ng-if="(page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation') || (page.report.properties.measurement_period.name === 'Planning' || page.report.properties.measurement_period.name === 'Installation')" data-ng-repeat="reportMetric in page.reportMetrics | orderBy:'id':false track by reportMetric.id">
+                        <div data-ng-if="(page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation') || (page.report.properties.measurement_period.name === 'Planning' || page.report.properties.measurement_period.name === 'Installation')" data-ng-repeat="reportMetric in page.reportMetrics | orderBy:'id':false track by reportMetric.id">
 
                             <p style="font-style: normal; font-size: 1em;">
                                 <strong>Metric #{{ $index+1 }}</strong>
@@ -140,7 +136,7 @@
 
                         </div>
 
-                        <div class="form-row" data-ng-if="page.report.properties.measurement_period === 'Monitoring'" data-ng-repeat="monitoring_ in page.report.properties.monitoring | orderBy:'id':false track by monitoring_.id">
+                        <div data-ng-if="page.report.properties.measurement_period === 'Monitoring'" data-ng-repeat="monitoring_ in page.report.properties.monitoring | orderBy:'id':false track by monitoring_.id">
 
                             <div>
                                 <label for="" class="control-label">
@@ -219,7 +215,7 @@
 
                         </div>
 
-                        <div class="form-row" data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
+                        <div data-ng-if="page.report.properties.measurement_period === 'Monitoring'">
                             <div>
                                 <label class="control-label">
                                     New Custom Monitoring Check
@@ -240,16 +236,16 @@
                             <textarea class="form-control" msd-elastic data-ng-model="page.report.properties.notes">{{ page.report.properties.notes }}</textarea>
                         </div>
 
-                    </form>
+                        <div class="save--action--wrapper save--action--bottom">
+                            <span>Save report</span>
+                            <button type="submit">
+                                <i class="material-icons">
+                                    done
+                                </i>
+                            </button>
+                        </div>
 
-                    <div class="save--action--wrapper save--action--bottom">
-                        <span>Save report</span>
-                        <button type="button" data-ng-click="page.saveMetrics()">
-                            <i class="material-icons">
-                                done
-                            </i>
-                        </button>
-                    </div>
+                    </form>
 
                 </div>
 
