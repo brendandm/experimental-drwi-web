@@ -1919,7 +1919,7 @@ angular.module('FieldDoc')
 
         self.setGeoFilter = function(obj) {
 
-            FilterStore.clearAll();
+            // FilterStore.clearAll();
 
             var _filterObject = {
                 id: obj.id,
@@ -1929,7 +1929,7 @@ angular.module('FieldDoc')
 
             FilterStore.addItem(_filterObject);
 
-            self.filterProjects();
+            // self.filterProjects();
 
         };
 
