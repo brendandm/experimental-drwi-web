@@ -222,6 +222,18 @@
 
                         self.practice = successResponse;
 
+                        if (!successResponse.permissions.read &&
+                            !successResponse.permissions.write) {
+
+                            self.makePrivate = true;
+
+                            return;
+
+                        }
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
+
                         $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
 
                         //
@@ -276,7 +288,7 @@
                             account: ($rootScope.account &&
                                     $rootScope.account.length) ?
                                 $rootScope.account[0] : null,
-                            can_edit: true
+                            can_edit: false
                         };
 
                         self.loadPractice();

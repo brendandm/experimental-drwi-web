@@ -298,13 +298,25 @@
 
                         self.site = successResponse;
 
+                        if (successResponse.permissions.read &&
+                            successResponse.permissions.write) {
+
+                            self.makePrivate = false;
+
+                        } else {
+
+                            self.makePrivate = true;
+
+                        }
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
+
                         if (self.site.geometry !== null) {
 
                             self.site.staticURL = self.buildStaticMapURL(self.site.geometry);
 
                         }
-
-                        self.permissions.can_edit = Account.canEdit(self.site);
 
                         $rootScope.page.title = self.site.properties.name;
 

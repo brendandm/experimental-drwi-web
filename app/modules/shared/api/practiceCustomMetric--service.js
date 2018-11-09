@@ -9,7 +9,7 @@
      */
     angular.module('FieldDoc')
         .service('PracticeCustomMetric', function(environment, Preprocessors, $resource) {
-            return $resource(environment.apiUrl.concat('/v1/data/bmp-custom-metric/:id'), {
+            return $resource(environment.apiUrl.concat('/v1/data/report-metric/:id'), {
                 'id': '@id'
             }, {
                 'query': {

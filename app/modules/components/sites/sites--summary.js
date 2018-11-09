@@ -216,7 +216,19 @@
 
                         self.site = successResponse;
 
-                        self.permissions.can_edit = Account.canEdit(self.site);
+                        if (successResponse.permissions.read &&
+                            successResponse.permissions.write) {
+
+                            self.makePrivate = false;
+
+                        } else {
+
+                            self.makePrivate = true;
+
+                        }
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
 
                         $rootScope.page.title = self.site.properties.name;
 

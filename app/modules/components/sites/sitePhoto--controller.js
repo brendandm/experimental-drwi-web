@@ -30,6 +30,20 @@
 
                     self.site = successResponse;
 
+                    if (successResponse.permissions.read &&
+                        successResponse.permissions.write) {
+
+                        self.makePrivate = false;
+
+                    } else {
+
+                        self.makePrivate = true;
+
+                    }
+
+                    self.permissions.can_edit = successResponse.permissions.write;
+                    self.permissions.can_delete = successResponse.permissions.write;
+
                     $rootScope.page.title = self.site.properties.name;
 
                     //
@@ -53,7 +67,7 @@
                                 isLoggedIn: Account.hasToken(),
                                 role: $rootScope.user.properties.roles[0].properties.name,
                                 account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                                can_edit: Account.canEdit(self.site.properties.project)
+                                can_edit: false
                             };
 
                         });

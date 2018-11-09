@@ -23,7 +23,9 @@ angular.module('FieldDoc')
                         return Snapshot.query();
 
                     },
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
 
                         if (Account.userObject && !Account.userObject.id) {
 
@@ -56,7 +58,9 @@ angular.module('FieldDoc')
                         });
 
                     },
-                    snapshot: function($route, $location, Snapshot) {
+                    snapshot: function($route, $location, Snapshot, $rootScope, $document) {
+
+                        $rootScope.targetPath = '/dashboards';
 
                         return Snapshot.get({
                             id: $route.current.params.snapshotId
@@ -71,7 +75,9 @@ angular.module('FieldDoc')
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
 
                         if (Account.userObject && !Account.userObject.id) {
 
@@ -97,7 +103,9 @@ angular.module('FieldDoc')
                         });
 
                     },
-                    user: function(Account) {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
 
                         if (Account.userObject && !Account.userObject.id) {
 

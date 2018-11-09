@@ -115,16 +115,6 @@ angular.module('FieldDoc')
 
         });
 
-        self.removeImage = function(image) {
-
-            if (self.practice.properties.images.length !== 0) {
-                var _image_index = self.practice.properties.images.indexOf(image);
-                self.practice.properties.images.splice(_image_index, 1);
-            }
-
-            return;
-        };
-
         $rootScope.page = {};
 
         self.loadSite = function() {
@@ -170,6 +160,18 @@ angular.module('FieldDoc')
                 console.log('self.practice', successResponse);
 
                 self.practice = successResponse;
+
+                if (!successResponse.permissions.read &&
+                    !successResponse.permissions.write) {
+
+                    self.makePrivate = true;
+
+                    return;
+
+                }
+
+                self.permissions.can_edit = successResponse.permissions.write;
+                self.permissions.can_delete = successResponse.permissions.write;
 
                 delete self.practice.properties.organization;
                 delete self.practice.properties.project;

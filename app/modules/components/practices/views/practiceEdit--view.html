@@ -4,7 +4,23 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="page.makePrivate">
+
+        <section class="privacy-message">
+
+            <p>
+                <i class="material-icons">
+                    lock
+                </i>
+            </p>
+
+            <p>This practice is private.</p>
+
+        </section>
+
+    </div>
+
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="!page.makePrivate">
 
         <h1 class="inset">Edit practice</h1>
 
@@ -74,7 +90,7 @@
 
     </div>
 
-    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
+    <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li>
                 <a href="/practices/{{ page.practice.properties.id }}">
@@ -90,7 +106,7 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
+            <li data-ng-if="page.permissions.can_edit && page.practice.properties.category" data-ng-class="{active: $root.toolbarState.editLocation}">
                 <a href="/practices/{{ page.practice.properties.id }}/location">
                     <i class="material-icons">
                         location_on

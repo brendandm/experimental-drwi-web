@@ -49,44 +49,58 @@ angular.module('FieldDoc')
             };
 
             //
-            // Assign project to a scoped variable
+            // Verify Account information for proper UI element display
             //
-            project.$promise.then(function(successResponse) {
+            if (Account.userObject && user) {
 
-                self.processFeature(successResponse);
+                user.$promise.then(function(userResponse) {
 
-                // self.tempPrograms = self.project.properties.programs;
+                    $rootScope.user = Account.userObject = userResponse;
 
-                $rootScope.page.title = 'Edit Project';
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0].properties.name,
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false,
+                        can_delete: false
+                    };
 
-                //
-                // Verify Account information for proper UI element display
-                //
-                if (Account.userObject && user) {
+                    //
+                    // Assign project to a scoped variable
+                    //
+                    project.$promise.then(function(successResponse) {
 
-                    user.$promise.then(function(userResponse) {
+                        self.processFeature(successResponse);
 
-                        $rootScope.user = Account.userObject = userResponse;
+                        if (!successResponse.permissions.read &&
+                            !successResponse.permissions.write) {
 
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0].properties.name,
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                            can_edit: Account.canEdit(project),
-                            can_delete: Account.canDelete(project)
-                        };
+                            self.makePrivate = true;
+
+                            return;
+
+                        }
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
+
+                        $rootScope.page.title = 'Edit Project';
+
+                    }, function(errorResponse) {
+
+                        $log.error('Unable to load request project');
+
+                        self.status.processing = false;
 
                     });
 
-                }
+                });
 
-            }, function(errorResponse) {
+            } else {
 
-                $log.error('Unable to load request project');
+                $location.path('/account/login');
 
-                self.status.processing = false;
-
-            });
+            }
 
             self.searchPrograms = function(value) {
 

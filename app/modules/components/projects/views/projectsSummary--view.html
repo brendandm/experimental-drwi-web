@@ -4,7 +4,23 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container geographic--feature" style="border-right: 1px solid #e0e0e0;">
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="page.makePrivate">
+
+        <section class="privacy-message">
+
+            <p>
+                <i class="material-icons">
+                    lock
+                </i>
+            </p>
+
+            <p>This project is private.</p>
+
+        </section>
+
+    </div>
+
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="!page.makePrivate">
 
         <div class="main--ui">
 
@@ -72,7 +88,7 @@
 
                     </article>
 
-                    <div class="map--module" style="position:relative;">
+                    <div class="map--module shadow" style="position:relative;">
                         <leaflet id="project--map" class="map tall" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds" markers="page.map.markers"></leaflet>
                     </div>
 
@@ -223,17 +239,17 @@
                                             dashboard
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/edit" title="Edit site">
+                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/edit" title="Edit site" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             edit
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/location" title="Edit location">
+                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/location" title="Edit location" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             location_on
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="#" title="Delete site" data-ng-click="page.confirmDelete(site, 'site')">
+                                    <a class="snapshot--title" href="#" title="Delete site" data-ng-click="page.confirmDelete(site, 'site')" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             delete
                                         </i>
@@ -246,7 +262,7 @@
 
                     </li>
 
-                    <li class="card">
+                    <li class="card" data-ng-if="page.permissions.can_edit">
                         <div class="card--content">
                             <div class="body">
                                 <button type="button" class="snapshot--title" data-ng-click="page.createSite()" title="Create site">
@@ -266,7 +282,7 @@
 
     </div>
 
-    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
+    <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li data-ng-class="{active: $root.toolbarState.dashboard}">
                 <a href="/projects/{{ page.project.id }}">

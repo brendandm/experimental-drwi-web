@@ -4,7 +4,23 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="page.makePrivate">
+
+        <section class="privacy-message">
+
+            <p>
+                <i class="material-icons">
+                    lock
+                </i>
+            </p>
+
+            <p>This practice is private.</p>
+
+        </section>
+
+    </div>
+
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="!page.makePrivate">
 
         <h1 class="inset">Edit location</h1>
 
@@ -37,33 +53,18 @@
                 </div>
 
                 <!-- Shapefile input -->
-                <div class="form-row">
-                    <div class="form-field">
-                        <label for="shapefile" class="control-label">
-                            Upload an ESRI Shapefile
-                        </label>
-                        <input type="file" class="form-control" id="shapefile" name="shapefile" file-upload file-model="page.shapefile" />
-                    </div>
+                <div class="form-field">
+                    <p style="font-style: normal; font-size: 1em; margin-top: 1em;">
+                        <strong>Upload an ESRI Shapefile</strong>
+                    </p>
+                    <input type="file" class="form-control" id="shapefile" name="shapefile" file-upload file-model="page.shapefile" />
                 </div>
 
-                <div class="form-row">
-                    <div>
-                        <button type="button" id="shapefile--upload" name="shapefile--upload" class="button button--submit button--outline" data-ng-click="page.uploadShapefile()">
-                            Upload
-                        </button>
-                    </div>
+                <div>
+                    <button type="button" id="shapefile--upload" name="shapefile--upload" class="button button--submit button--outline" data-ng-click="page.uploadShapefile()">
+                        Upload
+                    </button>
                 </div>
-
-                <!-- <div class="form-actions">
-                    <div class="form-actions-buttons">
-                        <button type="submit" class="button button-submit" data-ng-if="!page.isSavingChanges">
-                            Save Changes
-                        </button>
-                        <span data-ng-if="page.isSavingChanges">
-                            Saving changes...
-                        </span>
-                    </div>
-                </div> -->
 
                 <div class="save--action--wrapper save--action--bottom">
                     <span>Save location</span>
@@ -80,7 +81,7 @@
 
     </div>
 
-    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
+    <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li>
                 <a href="/practices/{{ page.practice.properties.id }}">

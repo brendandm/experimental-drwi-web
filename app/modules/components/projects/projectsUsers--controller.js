@@ -53,48 +53,63 @@
                 };
 
                 //
-                // Assign project to a scoped variable
+                // Verify Account information for proper UI element display
                 //
-                project.$promise.then(function(successResponse) {
+                if (Account.userObject && user) {
 
-                    console.log('self.project', successResponse);
+                    user.$promise.then(function(userResponse) {
 
-                    self.project = successResponse;
+                        $rootScope.user = Account.userObject = userResponse;
 
-                    $rootScope.page.title = self.project.properties.name;
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0].properties.name,
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                            can_edit: false
+                        };
 
-                    self.tempOwners = self.project.properties.members;
+                        //
+                        // Assign project to a scoped variable
+                        //
+                        project.$promise.then(function(successResponse) {
 
-                    console.log('tempOwners', self.tempOwners);
+                            console.log('self.project', successResponse);
 
-                    // self.project.users = members;
-                    self.project.users_edit = false;
+                            self.project = successResponse;
 
-                    //
-                    // Verify Account information for proper UI element display
-                    //
-                    if (Account.userObject && user) {
+                            if (!successResponse.permissions.read &&
+                                !successResponse.permissions.write) {
 
-                        user.$promise.then(function(userResponse) {
+                                self.makePrivate = true;
 
-                            $rootScope.user = Account.userObject = userResponse;
+                                return;
 
-                            self.permissions = {
-                                isLoggedIn: Account.hasToken(),
-                                role: $rootScope.user.properties.roles[0].properties.name,
-                                account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                                can_edit: Account.canEdit(project)
-                            };
+                            }
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            $rootScope.page.title = self.project.properties.name;
+
+                            self.tempOwners = self.project.properties.members;
+
+                            console.log('tempOwners', self.tempOwners);
+
+                            self.project.users_edit = false;
+
+                        }, function(errorResponse) {
+
+                            console.error('Unable to load request project');
 
                         });
 
-                    }
+                    });
 
-                }, function(errorResponse) {
+                } else {
 
-                    console.error('Unable to load request project');
+                    $location.path('/account/login');
 
-                });
+                }
 
                 self.searchUsers = function(value) {
 

@@ -4,7 +4,23 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="page.makePrivate">
+
+        <section class="privacy-message">
+
+            <p>
+                <i class="material-icons">
+                    lock
+                </i>
+            </p>
+
+            <p>This practice is private.</p>
+
+        </section>
+
+    </div>
+
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="!page.makePrivate">
 
         <div class="main--ui">
 
@@ -38,7 +54,7 @@
 
                     <!-- Map -->
 
-                    <div style="position:relative;">
+                    <div class="shadow" style="position:relative;">
 
                         <leaflet id="practice--map" class="map tall" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers"></leaflet>
 
@@ -168,12 +184,12 @@
                                 </div>
                                 <p>{{ (report.properties.notes || 'No notes recorded for this date') | truncate:80 }}</p>
                                 <div class="actions">
-                                    <a class="snapshot--title" href="/practices/{{ page.practice.id }}/{{ report.properties.id }}/edit" title="Edit report">
+                                    <a class="snapshot--title" href="/practices/{{ page.practice.id }}/{{ report.properties.id }}/edit" title="Edit report" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             edit
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="#" title="Delete report" data-ng-click="page.confirmDelete(report, 'report')">
+                                    <a class="snapshot--title" href="#" title="Delete report" data-ng-click="page.confirmDelete(report, 'report')" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             delete
                                         </i>
@@ -187,7 +203,7 @@
 
                     </li>
 
-                    <li class="card">
+                    <li class="card" data-ng-if="page.permissions.can_edit">
                         <div class="card--content">
                             <div class="body">
                                 <button type="button" class="snapshot--title" data-ng-click="page.addReading('Planning')" title="Create practice">
@@ -207,7 +223,7 @@
 
     </div>
 
-    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
+    <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li data-ng-class="{active: $root.toolbarState.dashboard}">
                 <a href="/practices/{{ page.practice.id }}">
@@ -223,7 +239,7 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
+            <li data-ng-if="page.permissions.can_edit && page.practice.properties.category" data-ng-class="{active: $root.toolbarState.editLocation}">
                 <a href="/practices/{{ page.practice.properties.id }}/location">
                     <i class="material-icons">
                         location_on

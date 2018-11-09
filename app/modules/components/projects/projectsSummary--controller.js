@@ -116,8 +116,17 @@ angular.module('FieldDoc')
 
                     var project_ = successResponse;
 
-                    self.permissions.can_edit = Account.canEdit(project_);
-                    self.permissions.is_manager = (Account.hasRole('manager') || Account.inGroup(project_.properties.organization_id, Account.userObject.properties.account));
+                    if (!successResponse.permissions.read &&
+                        !successResponse.permissions.write) {
+
+                        self.makePrivate = true;
+
+                        return;
+
+                    }
+
+                    self.permissions.can_edit = successResponse.permissions.write;
+                    self.permissions.can_delete = successResponse.permissions.write;
 
                     if (project_.properties.extent) {
 
@@ -507,9 +516,9 @@ angular.module('FieldDoc')
                         isLoggedIn: Account.hasToken(),
                         role: $rootScope.user.properties.roles[0].properties.name,
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        // can_edit: Account.canEdit(self.project),
-                        // is_manager: (Account.hasRole('manager') || Account.inGroup(self.project.properties.organization_id, Account.userObject.properties.account)),
-                        is_admin: Account.hasRole('admin')
+                        can_edit: false,
+                        is_manager: false,
+                        is_admin: false
                     };
 
                     self.loadProject();

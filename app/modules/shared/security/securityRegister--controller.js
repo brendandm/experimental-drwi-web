@@ -11,8 +11,7 @@
         .controller('SecurityRegisterController',
             function(Account, $location, Notifications, Security, ipCookie, $rootScope, $timeout, User) {
 
-                var self = this,
-                    userId = null;
+                var self = this;
 
                 self.cookieOptions = {
                     path: '/',
@@ -113,9 +112,22 @@
                                         });
 
                                         self.newUser.$update().then(function(updateUserSuccessResponse) {
-                                            $location.path('/account');
+
+                                            if ($rootScope.targetPath &&
+                                                typeof $rootScope.targetPath === 'string') {
+
+                                                $location.path($rootScope.targetPath);
+
+                                            } else {
+
+                                                $location.path('/account');
+
+                                            }
+
                                         }, function(updateUserErrorResponse) {
+
                                             console.log('updateUserErrorResponse', updateUserErrorResponse);
+
                                         });
 
                                     });

@@ -43,6 +43,18 @@ angular.module('FieldDoc')
 
                 self.practice = successResponse;
 
+                if (!successResponse.permissions.read &&
+                    !successResponse.permissions.write) {
+
+                    self.makePrivate = true;
+
+                    return;
+
+                }
+
+                self.permissions.can_edit = successResponse.permissions.write;
+                self.permissions.can_delete = successResponse.permissions.write;
+
                 delete self.practice.properties.organization;
                 delete self.practice.properties.project;
                 delete self.practice.properties.site;
@@ -72,7 +84,7 @@ angular.module('FieldDoc')
                     isLoggedIn: Account.hasToken(),
                     role: $rootScope.user.properties.roles[0].properties.name,
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                    can_edit: true
+                    can_edit: false
                 };
 
                 self.loadPractice();

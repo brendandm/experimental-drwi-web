@@ -23,41 +23,55 @@
 
                 $rootScope.page = {};
 
-                site.$promise.then(function(successResponse) {
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
 
-                    console.log('self.site', successResponse);
+                    user.$promise.then(function(userResponse) {
 
-                    self.site = successResponse;
+                        $rootScope.user = Account.userObject = userResponse;
 
-                    $rootScope.page.title = self.site.properties.name;
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0].properties.name,
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                            can_edit: false
+                        };
 
-                    //
-                    // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
-                    // selected their property, so we just need to display it on the map for them again.
-                    //
-                    // if (self.site && self.site.properties && self.site.properties.segment) {
-                    //     self.geolocation.drawSegment(self.site.properties.segment);
-                    // }
+                        site.$promise.then(function(successResponse) {
 
-                    //
-                    // Verify Account information for proper UI element display
-                    //
-                    if (Account.userObject && user) {
-                        user.$promise.then(function(userResponse) {
-                            $rootScope.user = Account.userObject = userResponse;
+                            console.log('self.site', successResponse);
 
-                            self.permissions = {
-                                isLoggedIn: Account.hasToken(),
-                                role: $rootScope.user.properties.roles[0].properties.name,
-                                account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                                can_edit: Account.canEdit(self.site.properties.project)
-                            };
+                            self.site = successResponse;
+
+                            if (successResponse.permissions.read &&
+                                successResponse.permissions.write) {
+
+                                self.makePrivate = false;
+
+                            } else {
+
+                                self.makePrivate = true;
+
+                            }
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            $rootScope.page.title = self.site.properties.name;
+
+                        }, function(errorResponse) {
+
                         });
-                    }
 
-                }, function(errorResponse) {
+                    });
 
-                });
+                } else {
+
+                    $location.path('/account/login');
+
+                }
 
                 self.saveSite = function() {
 

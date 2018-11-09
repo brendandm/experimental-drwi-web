@@ -687,3 +687,18 @@ header .header {
   }
 
 }
+
+.privacy-message {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #424242;
+  text-align: center;
+
+  p {
+    color: #424242;
+  }
+}
