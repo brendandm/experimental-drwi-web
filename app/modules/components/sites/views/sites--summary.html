@@ -47,7 +47,7 @@
                         </p>
 
                         <p data-ng-if="page.site.properties.area && page.site.properties.area > 0">
-                            <strong>Area:</strong> {{ page.site.properties.area | convertArea:'acre' | number:0 }} acres</a>
+                            <strong>Area:</strong> {{ page.site.properties.area | convertArea:'acre' | number:2 }} acres</a>
                         </p>
 
                         <p data-ng-if="page.site.properties.description" data-ng-bind-html="page.site.properties.description"></p>

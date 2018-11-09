@@ -10,12 +10,11 @@
     angular.module('FieldDoc')
         .controller('CustomFormController',
             function(Account, leafletData, $location, metric_types,
-                monitoring_types, practice, PracticeCustom, PracticeCustomReading, PracticeCustomMetric,
+                monitoring_types, Practice, PracticeCustom, PracticeCustomReading, PracticeCustomMetric,
                 PracticeCustomMonitoring, practice_types, report, $rootScope, $route, $scope,
-                unit_types, user, Utility, $timeout, report_metrics) {
+                unit_types, user, Utility, $timeout, report_metrics, $filter) {
 
-                var self = this,
-                    practiceId = $route.current.params.practiceId;
+                var self = this;
 
                 self.measurementPeriods = [{
                         'name': 'Installation',
@@ -230,6 +229,50 @@
                     return new Date(b[0], b[1] - 1, b[2]);
                 }
 
+                function convertPracticeArea(data) {
+
+                    var area = data.properties.area,
+                        acres;
+
+                    if (area !== null &&
+                        area > 0) {
+
+                        acres = $filter('convertArea')(area, 'acre');
+
+                        return Utility.precisionRound(acres, 4);
+
+                    }
+
+                }
+
+                self.loadPractice = function(practiceId) {
+
+                    Practice.get({
+                        id: practiceId
+                    }).$promise.then(function(successResponse) {
+
+                        self.practice = successResponse;
+
+                        if (!successResponse.permissions.read &&
+                            !successResponse.permissions.write) {
+
+                            self.makePrivate = true;
+
+                            return;
+
+                        }
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
+
+                        self.practiceType = Utility.machineName(self.practice.properties.practice_type);
+
+                        self.report.properties.practice_extent = convertPracticeArea(self.practice);
+
+                    });
+
+                };
+
                 //
                 // Verify Account information for proper UI element display
                 //
@@ -245,69 +288,50 @@
                             account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                         };
 
-                        practice.$promise.then(function(successResponse) {
+                        //
+                        // 
+                        //
+                        report.$promise.then(function(successResponse) {
 
-                            self.practice = successResponse;
+                            console.log('self.report', successResponse);
 
-                            if (!successResponse.permissions.read &&
-                                !successResponse.permissions.write) {
+                            self.report = successResponse;
 
-                                self.makePrivate = true;
+                            if (self.report.properties.practice_unit !== null) {
 
-                                return;
+                                var _unit = self.report.properties.practice_unit.properties;
+
+                                _unit.name = _unit.plural;
+
+                                self.report.properties.practice_unit = _unit;
 
                             }
 
-                            self.permissions.can_edit = successResponse.permissions.write;
-                            self.permissions.can_delete = successResponse.permissions.write;
+                            if (self.report.properties.report_date) {
 
-                            self.practiceType = Utility.machineName(self.practice.properties.practice_type);
+                                self.today = parseISOLike(self.report.properties.report_date);
+
+                            }
 
                             //
-                            // 
+                            // Check to see if there is a valid date
                             //
-                            report.$promise.then(function(successResponse) {
+                            self.date = {
+                                month: self.months[self.today.getMonth()],
+                                date: self.today.getDate(),
+                                day: self.days[self.today.getDay()],
+                                year: self.today.getFullYear()
+                            };
 
-                                console.log('self.report', successResponse);
+                            // $rootScope.page.title = "Other Conservation Practice";
 
-                                self.report = successResponse;
+                            $rootScope.page.title = 'Edit measurement data';
 
-                                if (self.report.properties.practice_unit !== null) {
+                            self.loadPractice(self.report.properties.practice.id);
 
-                                    var _unit = self.report.properties.practice_unit.properties;
+                        }, function(errorResponse) {
 
-                                    _unit.name = _unit.plural;
-
-                                    self.report.properties.practice_unit = _unit;
-
-                                }
-
-                                if (self.report.properties.report_date) {
-
-                                    self.today = parseISOLike(self.report.properties.report_date);
-
-                                }
-
-                                //
-                                // Check to see if there is a valid date
-                                //
-                                self.date = {
-                                    month: self.months[self.today.getMonth()],
-                                    date: self.today.getDate(),
-                                    day: self.days[self.today.getDay()],
-                                    year: self.today.getFullYear()
-                                };
-
-                                // $rootScope.page.title = "Other Conservation Practice";
-
-                                $rootScope.page.title = 'Edit measurement data';
-
-
-                            }, function(errorResponse) {
-
-                                console.error('ERROR: ', errorResponse);
-
-                            });
+                            console.error('ERROR: ', errorResponse);
 
                         });
 
@@ -360,7 +384,7 @@
 
                     self.report.$update().then(function(successResponse) {
 
-                        $location.path('/practices/' + practiceId);
+                        $location.path('/practices/' + self.practice.id);
 
                     }, function(errorResponse) {
 
@@ -659,7 +683,7 @@
 
                 function closeRoute() {
 
-                    $location.path('/practices/' + practiceId);
+                    $location.path('/practices/' + self.practice.id);
 
                 }
 

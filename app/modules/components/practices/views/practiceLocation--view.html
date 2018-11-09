@@ -57,14 +57,19 @@
                     <p style="font-style: normal; font-size: 1em; margin-top: 1em;">
                         <strong>Upload an ESRI Shapefile</strong>
                     </p>
-                    <input type="file" class="form-control" id="shapefile" name="shapefile" file-upload file-model="page.shapefile" />
+                    <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">In addition to the mandatory .shp, .shx, and .dbf files, your archive must include a .prj file that describes the coordinate system and projection.</p>
+                    <!-- <input type="file" class="form-control" id="shapefile" name="shapefile" file-upload file-model="page.shapefile" data-ng-model="page.uploadBundle" data-ng-change="page.uploadShapefile()" /> -->
+                    <input type="file" class="form-control" id="shapefile" name="shapefile" file-upload file-model="page.shapefile" file-on-change="page.uploadShapefile()" />
                 </div>
 
-                <div>
-                    <button type="button" id="shapefile--upload" name="shapefile--upload" class="button button--submit button--outline" data-ng-click="page.uploadShapefile()">
-                        Upload
+                <!-- <div class="fab" style="margin-top: 1em;">
+                    <span>Upload shapefile</span>
+                    <button type="button" id="shapefile--upload" name="shapefile--upload" data-ng-click="page.uploadShapefile()">
+                        <i class="material-icons">
+                            cloud_upload
+                        </i>
                     </button>
-                </div>
+                </div> -->
 
                 <div class="save--action--wrapper save--action--bottom">
                     <span>Save location</span>

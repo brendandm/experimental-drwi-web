@@ -254,11 +254,14 @@ angular.module('FieldDoc')
             if (!self.shapefile ||
                 !self.shapefile.length) {
 
-                $rootScope.notifications.warning('Uh-oh!', 'You forgot to add a file.');
+                self.alerts = [{
+                    'type': 'error',
+                    'flag': 'Error!',
+                    'msg': 'Please add a file to upload.',
+                    'prompt': 'OK'
+                }];
 
-                $timeout(function() {
-                    $rootScope.notifications.objects = [];
-                }, 1200);
+                $timeout(closeAlerts, 2000);
 
                 return false;
 
@@ -343,11 +346,14 @@ angular.module('FieldDoc')
 
                         self.progressValue = null;
 
-                        $rootScope.notifications.error('', 'An error occurred and we couldn\'t process your file.');
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'The file could not be processed.',
+                            'prompt': 'OK'
+                        }];
 
-                        $timeout(function() {
-                            $rootScope.notifications.objects = [];
-                        }, 2000);
+                        $timeout(closeAlerts, 2000);
 
                         return;
 

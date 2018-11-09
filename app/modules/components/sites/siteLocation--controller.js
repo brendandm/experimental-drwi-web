@@ -293,11 +293,14 @@
 
                                 self.progressValue = null;
 
-                                $rootScope.notifications.error('', 'An error occurred and we couldn\'t process your file.');
+                                self.alerts = [{
+                                    'type': 'error',
+                                    'flag': 'Error!',
+                                    'msg': 'The file could not be processed.',
+                                    'prompt': 'OK'
+                                }];
 
-                                $timeout(function() {
-                                    $rootScope.notifications.objects = [];
-                                }, 2000);
+                                $timeout(closeAlerts, 2000);
 
                                 return;
 
@@ -388,12 +391,12 @@
                         id: +self.deletionTarget.id
                     }).$promise.then(function(data) {
 
-                        self.alerts.push({
+                        self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
                             'msg': 'Successfully deleted this site.',
                             'prompt': 'OK'
-                        });
+                        }];
 
                         $timeout(closeRoute, 2000);
 

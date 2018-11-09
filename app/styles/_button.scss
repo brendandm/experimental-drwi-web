@@ -234,3 +234,74 @@ a.button-delete.button-outline,
 .button-indent {
   margin-left: 10%;
 }
+
+.fab {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+
+  button {
+    appearance: none;
+    border: 0 none;
+    outline: none;
+    height: 56px;
+    width: 56px;
+    display: flex;
+    flex-flow: column;
+    color: #fff;
+    background: rgb(41,204,130);
+    font-size: 2em;
+    border-radius: 50%;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+    transition: all 250ms ease 0s;
+    cursor: pointer;
+
+    &:hover {
+      background: rgb(37,183,116);
+      color: #fff;
+      outline: 0 none;
+      text-decoration: none;
+    }
+
+  }
+
+  button[disabled] {
+    background: #888;
+
+    &:hover {
+      background: #888;
+    }
+
+  }
+
+  span {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 4px 8px;
+    background: rgba(0,0,0,0.75);
+    border-radius: 4px;
+    font-size: 14px;
+    color: #fff;
+    opacity: 0;
+    visibility: hidden;
+    whitespace: nowrap;
+    transition: all 250ms ease 0s;
+  }
+
+  &:hover {
+
+    span {
+      opacity: 1;
+      visibility: visible;
+    }
+
+  }
+
+}

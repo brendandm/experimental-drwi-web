@@ -45,7 +45,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/practices/:practiceId/:reportId/edit', {
+            .when('/reports/:reportId/edit', {
                 templateUrl: '/modules/components/practices/views/edit--view.html',
                 controller: 'CustomFormController',
                 controllerAs: 'page',
@@ -61,11 +61,11 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    practice: function(Practice, $route) {
-                        return Practice.get({
-                            id: $route.current.params.practiceId
-                        });
-                    },
+                    // practice: function(Practice, $route) {
+                    //     return Practice.get({
+                    //         id: $route.current.params.practiceId
+                    //     });
+                    // },
                     report: function(PracticeCustom, $route) {
                         return PracticeCustom.get({
                             id: $route.current.params.reportId

@@ -116,7 +116,11 @@
                                             if ($rootScope.targetPath &&
                                                 typeof $rootScope.targetPath === 'string') {
 
-                                                $location.path($rootScope.targetPath);
+                                                var targetPath = $rootScope.targetPath;
+
+                                                $rootScope.targetPath = null;
+
+                                                $location.path(targetPath);
 
                                             } else {
 

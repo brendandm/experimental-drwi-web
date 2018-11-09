@@ -47,7 +47,7 @@
                         </p>
 
                         <p data-ng-if="page.practice.properties.area && page.practice.properties.area > 0">
-                            <strong>Area:</strong> {{ page.practice.properties.area | convertArea:'acre' | number:0 }} acres</a>
+                            <strong>Area:</strong> {{ page.practice.properties.area | convertArea:'acre' | number:2 }} acres</a>
                         </p>
 
                         <p data-ng-if="page.practice.properties.description" data-ng-bind-html="page.practice.properties.description"></p>
@@ -188,7 +188,7 @@
                                 </div>
                                 <p>{{ (report.properties.notes || 'No notes recorded for this date') | truncate:80 }}</p>
                                 <div class="actions">
-                                    <a class="snapshot--title" href="/practices/{{ page.practice.id }}/{{ report.properties.id }}/edit" title="Edit report" data-ng-if="page.permissions.can_edit">
+                                    <a class="snapshot--title" href="/reports/{{ report.properties.id }}/edit" title="Edit report" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             edit
                                         </i>
