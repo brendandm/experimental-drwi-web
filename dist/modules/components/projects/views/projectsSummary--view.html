@@ -232,7 +232,7 @@
                                         </a>
                                     </div>
                                 </div>
-                                <p data-ng-if="site.properties.description">{{ site.properties.description | truncate:80 }}</p>
+                                <p>{{ (site.properties.description || 'No description') | truncate:80 }}</p>
                                 <div class="actions">
                                     <a class="snapshot--title" href="/sites/{{ site.properties.id }}" title="Site summary">
                                         <i class="material-icons">

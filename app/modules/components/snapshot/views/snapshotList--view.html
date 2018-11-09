@@ -11,7 +11,7 @@
         <div class="main--ui">
 
             <div class="add--new--wrapper">
-                <span>Create snapshot</span>
+                <span>Create dashboard</span>
                 <a class="add--new--btn" href="dashboards/collection/new">
                     <i class="material-icons">
                     add
@@ -57,7 +57,7 @@
                                         </a>
                                     </div>
                                 </div>
-                                <p>{{ snapshot.description | truncate:80 }}</p>
+                                <p>{{ (snapshot.description || 'No description') | truncate:80 }}</p>
                                 <div class="actions">
                                     <a class="snapshot--title" href="/dashboards/{{ snapshot.id }}" title="View dashboard">
                                         <i class="material-icons">

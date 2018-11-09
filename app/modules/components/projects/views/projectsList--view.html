@@ -38,10 +38,6 @@
 
                         <div class="card--content">
 
-                            <!-- <div class="name">
-                                <span>{{ project.name }}</span>
-                            </div> -->
-
                             <img data-ng-if="project.staticURL" data-ng-src="{{ project.staticURL }}" width="auto" height="auto" />
 
                             <img data-ng-if="!project.extent" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,5/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
@@ -62,7 +58,7 @@
                                         </a>
                                     </div>
                                 </div>
-                                <p>{{ project.description | truncate:80 }}</p>
+                                <p>{{ (project.description || 'No description') | truncate:80 }}</p>
                                 <div class="actions">
                                     <a class="snapshot--title" href="/projects/{{ project.id }}" title="Project summary">
                                         <i class="material-icons">
