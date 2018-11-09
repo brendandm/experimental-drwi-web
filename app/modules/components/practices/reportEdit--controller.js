@@ -267,7 +267,11 @@
 
                         self.practiceType = Utility.machineName(self.practice.properties.practice_type);
 
-                        self.report.properties.practice_extent = convertPracticeArea(self.practice);
+                        if (!self.report.properties.practice_extent) {
+
+                            self.report.properties.practice_extent = convertPracticeArea(self.practice);
+
+                        }
 
                     });
 
