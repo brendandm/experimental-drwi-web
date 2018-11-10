@@ -6,7 +6,7 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <div class="progress--modal" data-ng-if="page.status.loading">
+        <div class="progress--modal" data-ng-if="page.status.loading && page.progressValue">
             <div class="progress--container">
                 <p><strong>Loading project data&hellip;</strong></p>
                 <div class="progress--meter--bar--wrapper">
@@ -28,8 +28,6 @@
         </section>
 
         <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
-
-            <div class="throbber throbber-small" data-ng-if="page.status.loading"></div>
 
             <div class="module--grid">
 

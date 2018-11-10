@@ -11,7 +11,7 @@
         .controller('SiteSummaryCtrl',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
                 $route, nodes, user, Utility, metrics, outcomes, site, Map, mapbox, leafletData,
-                leafletBoundsHelpers, Site, Project, practices) {
+                leafletBoundsHelpers, Site, Project, practices, $interval) {
 
                 var self = this;
 
@@ -24,7 +24,57 @@
                 self.map = JSON.parse(JSON.stringify(Map));
 
                 self.status = {
-                    'loading': true
+                    loading: true
+                };
+
+                self.fillMeter = undefined;
+
+                self.showProgress = function() {
+
+                    self.fillMeter = $interval(function() {
+
+                        var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
+
+                        if (!self.progressValue) {
+
+                            self.progressValue = tempValue;
+
+                        } else if ((100 - tempValue) > self.progressValue) {
+
+                            self.progressValue += tempValue;
+
+                        } else {
+
+                            $interval.cancel(self.fillMeter);
+
+                            self.fillMeter = undefined;
+
+                            self.progressValue = 100;
+
+                            self.showElements(1000, self.site, self.progressValue);
+
+                        }
+
+                        console.log('progressValue', self.progressValue);
+
+                    }, 50);
+
+                };
+
+                self.showElements = function(delay, object, progressValue) {
+
+                    if (object && progressValue > 75) {
+
+                        $timeout(function() {
+
+                            self.status.loading = false;
+
+                            self.progressValue = 0;
+
+                        }, delay);
+
+                    }
+
                 };
 
                 self.alerts = [];
@@ -236,22 +286,6 @@
 
                         console.log('self.project', self.project);
 
-                        self.status.loading = false;
-
-                        //
-                        // Load spatial nodes
-                        //
-
-                        nodes.$promise.then(function(successResponse) {
-
-                            console.log('self.nodes', successResponse);
-
-                            self.nodes = successResponse;
-
-                        }, function(errorResponse) {
-
-                        });
-
                         //
                         // Load practices
                         //
@@ -320,6 +354,8 @@
 
                         }
 
+                        self.showElements(1000, self.site, self.progressValue);
+
                     });
 
                 };
@@ -353,7 +389,7 @@
 
                         successResponse.features.forEach(function(metric) {
 
-                            var _percentComplete = +((metric.installation/metric.planning)*100).toFixed(0);
+                            var _percentComplete = +((metric.installation / metric.planning) * 100).toFixed(0);
 
                             metric.percentComplete = _percentComplete;
 
@@ -389,6 +425,8 @@
                 // Verify Account information for proper UI element display
                 //
                 if (Account.userObject && user) {
+
+                    self.showProgress();
 
                     user.$promise.then(function(userResponse) {
 

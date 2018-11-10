@@ -4,9 +4,18 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="page.makePrivate">
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <section class="privacy-message">
+        <div class="progress--modal" data-ng-if="page.status.loading && page.progressValue">
+            <div class="progress--container">
+                <p><strong>Loading site data&hellip;</strong></p>
+                <div class="progress--meter--bar--wrapper">
+                    <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <section class="privacy-message" data-ng-if="!page.status.loading && page.makePrivate">
 
             <p>
                 <i class="material-icons">
@@ -18,13 +27,7 @@
 
         </section>
 
-    </div>
-
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="page.makePrivate !== null && !page.makePrivate">
-
-        <div class="main--ui">
-
-            <div class="throbber throbber-small" data-ng-if="page.status.loading"></div>
+        <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
 
             <div class="module--grid" data-ng-if="!page.status.loading">
 

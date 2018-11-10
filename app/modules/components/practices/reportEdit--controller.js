@@ -12,7 +12,7 @@
             function(Account, leafletData, $location, metric_types,
                 monitoring_types, Practice, PracticeCustom, PracticeCustomReading, PracticeCustomMetric,
                 PracticeCustomMonitoring, practice_types, report, $rootScope, $route, $scope,
-                unit_types, user, Utility, $timeout, report_metrics, $filter) {
+                unit_types, user, Utility, $timeout, report_metrics, $filter, $interval) {
 
                 var self = this;
 
@@ -43,6 +43,69 @@
                     monitoring: {
                         loading: false
                     }
+                };
+
+                self.fillMeter = undefined;
+
+                self.showProgress = function() {
+
+                    if (!self.fillMeter) {
+
+                        self.fillMeter = $interval(function() {
+
+                            var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
+
+                            if (!self.progressValue) {
+
+                                self.progressValue = tempValue;
+
+                            } else if ((self.progressValue + tempValue) < 85) {
+
+                                self.progressValue += tempValue;
+
+                            } else {
+
+                                $interval.cancel(self.fillMeter);
+
+                                self.fillMeter = undefined;
+
+                                $timeout(function() {
+
+                                    self.progressValue = 100;
+
+                                    self.showElements(1000, self.practice, self.progressValue);
+
+                                }, 1000);
+
+                            }
+
+                            // console.log('tempValue', tempValue);
+                            // console.log('progressValue', self.progressValue);
+
+                        }, 100);
+
+                    }
+
+                };
+
+                self.showElements = function(delay, object, progressValue) {
+
+                    if (object && progressValue > 75) {
+
+                        $timeout(function() {
+
+                            self.status.loading = false;
+
+                            self.progressValue = 0;
+
+                        }, delay);
+
+                    } else {
+
+                        self.showProgress();
+
+                    }
+
                 };
 
                 unit_types.$promise.then(function(successResponse) {
@@ -258,94 +321,30 @@
 
                             self.makePrivate = true;
 
-                            return;
+                        } else {
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            self.practiceType = Utility.machineName(self.practice.properties.practice_type);
+
+                            if (!self.report.properties.practice_extent) {
+
+                                self.report.properties.practice_extent = convertPracticeArea(self.practice);
+
+                            }
 
                         }
 
-                        self.permissions.can_edit = successResponse.permissions.write;
-                        self.permissions.can_delete = successResponse.permissions.write;
+                        // self.showElements(1000, self.practice, self.progressValue);
 
-                        self.practiceType = Utility.machineName(self.practice.properties.practice_type);
+                    }).catch(function(errorResponse) {
 
-                        if (!self.report.properties.practice_extent) {
-
-                            self.report.properties.practice_extent = convertPracticeArea(self.practice);
-
-                        }
+                        // self.showElements(1000, self.practice, self.progressValue);
 
                     });
 
                 };
-
-                //
-                // Verify Account information for proper UI element display
-                //
-                if (Account.userObject && user) {
-
-                    user.$promise.then(function(userResponse) {
-
-                        $rootScope.user = Account.userObject = userResponse;
-
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0].properties.name,
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
-                        };
-
-                        //
-                        // 
-                        //
-                        report.$promise.then(function(successResponse) {
-
-                            console.log('self.report', successResponse);
-
-                            self.report = successResponse;
-
-                            if (self.report.properties.practice_unit !== null) {
-
-                                var _unit = self.report.properties.practice_unit.properties;
-
-                                _unit.name = _unit.plural;
-
-                                self.report.properties.practice_unit = _unit;
-
-                            }
-
-                            if (self.report.properties.report_date) {
-
-                                self.today = parseISOLike(self.report.properties.report_date);
-
-                            }
-
-                            //
-                            // Check to see if there is a valid date
-                            //
-                            self.date = {
-                                month: self.months[self.today.getMonth()],
-                                date: self.today.getDate(),
-                                day: self.days[self.today.getDay()],
-                                year: self.today.getFullYear()
-                            };
-
-                            // $rootScope.page.title = "Other Conservation Practice";
-
-                            $rootScope.page.title = 'Edit measurement data';
-
-                            self.loadPractice(self.report.properties.practice.id);
-
-                        }, function(errorResponse) {
-
-                            console.error('ERROR: ', errorResponse);
-
-                        });
-
-                    });
-
-                } else {
-
-                    $location.path('/account/login');
-
-                }
 
                 $scope.$watch(angular.bind(this, function() {
 
@@ -758,6 +757,78 @@
                     });
 
                 };
+
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+
+                    self.showProgress();
+
+                    user.$promise.then(function(userResponse) {
+
+                        $rootScope.user = Account.userObject = userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0].properties.name,
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                        };
+
+                        //
+                        // 
+                        //
+                        report.$promise.then(function(successResponse) {
+
+                            console.log('self.report', successResponse);
+
+                            self.report = successResponse;
+
+                            if (self.report.properties.practice_unit !== null) {
+
+                                var _unit = self.report.properties.practice_unit.properties;
+
+                                _unit.name = _unit.plural;
+
+                                self.report.properties.practice_unit = _unit;
+
+                            }
+
+                            if (self.report.properties.report_date) {
+
+                                self.today = parseISOLike(self.report.properties.report_date);
+
+                            }
+
+                            //
+                            // Check to see if there is a valid date
+                            //
+                            self.date = {
+                                month: self.months[self.today.getMonth()],
+                                date: self.today.getDate(),
+                                day: self.days[self.today.getDay()],
+                                year: self.today.getFullYear()
+                            };
+
+                            // $rootScope.page.title = "Other Conservation Practice";
+
+                            $rootScope.page.title = 'Edit measurement data';
+
+                            self.loadPractice(self.report.properties.practice.id);
+
+                        }, function(errorResponse) {
+
+                            console.error('ERROR: ', errorResponse);
+
+                        });
+
+                    });
+
+                } else {
+
+                    $location.path('/account/login');
+
+                }
 
             });
 

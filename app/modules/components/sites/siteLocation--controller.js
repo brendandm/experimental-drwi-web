@@ -13,7 +13,7 @@
         .controller('SiteLocationCtrl',
             function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
                 Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, Segment,
-                $timeout, $interval, user, Shapefile) {
+                $timeout, $interval, user, Shapefile, Utility) {
 
                 var self = this;
 
@@ -22,6 +22,60 @@
                 };
 
                 $rootScope.page = {};
+
+                self.status = {
+                    loading: true
+                };
+
+                self.fillMeter = undefined;
+
+                self.showProgress = function() {
+
+                    self.fillMeter = $interval(function() {
+
+                        var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
+
+                        if (!self.progressValue) {
+
+                            self.progressValue = tempValue;
+
+                        } else if ((100 - tempValue) > self.progressValue) {
+
+                            self.progressValue += tempValue;
+
+                        } else {
+
+                            $interval.cancel(self.fillMeter);
+
+                            self.fillMeter = undefined;
+
+                            self.progressValue = 100;
+
+                            self.showElements(1000, self.site, self.progressValue);
+
+                        }
+
+                        console.log('progressValue', self.progressValue);
+
+                    }, 50);
+
+                };
+
+                self.showElements = function(delay, object, progressValue) {
+
+                    if (object && progressValue > 75) {
+
+                        $timeout(function() {
+
+                            self.status.loading = false;
+
+                            self.progressValue = 0;
+
+                        }, delay);
+
+                    }
+
+                };
 
                 self.map = JSON.parse(JSON.stringify(Map));
 
@@ -134,70 +188,6 @@
                     console.log('self.savedObjects', self.savedObjects);
 
                 };
-
-                //
-                // Verify Account information for proper UI element display
-                //
-                if (Account.userObject && user) {
-
-                    user.$promise.then(function(userResponse) {
-
-                        $rootScope.user = Account.userObject = userResponse;
-
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0].properties.name,
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                            can_edit: false
-                        };
-
-                        site.$promise.then(function(successResponse) {
-
-                            console.log('self.site', successResponse);
-
-                            self.site = successResponse;
-
-                            if (successResponse.permissions.read &&
-                                successResponse.permissions.write) {
-
-                                self.makePrivate = false;
-
-                            } else {
-
-                                self.makePrivate = true;
-
-                            }
-
-                            self.permissions.can_edit = successResponse.permissions.write;
-                            self.permissions.can_delete = successResponse.permissions.write;
-
-                            $rootScope.page.title = self.site.properties.name;
-
-                            //
-                            // If a valid site geometry is present, add it to the map
-                            // and track the object in `self.savedObjects`.
-                            //
-
-                            if (self.site.geometry !== null &&
-                                typeof self.site.geometry !== 'undefined') {
-
-                                var geometry = self.site.geometry;
-
-                                self.setGeoJsonLayer(geometry);
-
-                            }
-
-                        }, function(errorResponse) {
-
-                        });
-
-                    });
-
-                } else {
-
-                    $location.path('/account/login');
-
-                }
 
                 self.uploadShapefile = function() {
 
@@ -714,6 +704,76 @@
                     });
 
                 });
+
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+
+                    self.showProgress();
+
+                    user.$promise.then(function(userResponse) {
+
+                        $rootScope.user = Account.userObject = userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0].properties.name,
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                            can_edit: false
+                        };
+
+                        site.$promise.then(function(successResponse) {
+
+                            console.log('self.site', successResponse);
+
+                            self.site = successResponse;
+
+                            if (successResponse.permissions.read &&
+                                successResponse.permissions.write) {
+
+                                self.makePrivate = false;
+
+                            } else {
+
+                                self.makePrivate = true;
+
+                            }
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            $rootScope.page.title = self.site.properties.name;
+
+                            //
+                            // If a valid site geometry is present, add it to the map
+                            // and track the object in `self.savedObjects`.
+                            //
+
+                            if (self.site.geometry !== null &&
+                                typeof self.site.geometry !== 'undefined') {
+
+                                var geometry = self.site.geometry;
+
+                                self.setGeoJsonLayer(geometry);
+
+                            }
+
+                            self.showElements(1000, self.site, self.progressValue);
+
+                        }, function(errorResponse) {
+
+                            self.showElements(1000, self.site, self.progressValue);
+
+                        });
+
+                    });
+
+                } else {
+
+                    $location.path('/account/login');
+
+                }
 
             });
 

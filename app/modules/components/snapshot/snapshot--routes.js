@@ -36,7 +36,9 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     }
+
                 }
+
             })
             .when('/dashboards/:snapshotId', {
                 templateUrl: '/modules/components/snapshot/views/snapshot--view.html',
@@ -66,8 +68,21 @@ angular.module('FieldDoc')
                             id: $route.current.params.snapshotId
                         });
 
+                    },
+                    user: function(Account, $rootScope, $document) {
+
+                        if (Account.userObject && !Account.userObject.id) {
+
+                            return Account.getUser();
+                            
+                        }
+
+                        return Account.userObject;
+
                     }
+
                 }
+
             })
             .when('/dashboards/collection/new', {
                 templateUrl: '/modules/components/snapshot/views/snapshotCreate--view.html',
@@ -88,7 +103,9 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     }
+
                 }
+
             })
             .when('/dashboards/:snapshotId/edit', {
                 templateUrl: '/modules/components/snapshot/views/snapshotEdit--view.html',
@@ -116,7 +133,9 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     }
+
                 }
+                
             });
 
     });

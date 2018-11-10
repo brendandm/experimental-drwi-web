@@ -17,11 +17,6 @@
             <nav class="site-navigation-utility align-right">
 
                 <ul class="utility-navigation">
-                    <li data-ng-if="!$root.user.id">
-                        <a class="button-link" href="/account/register">
-                            Create Account
-                        </a>
-                    </li>
                     <li data-ng-if="$root.user.id">
                         <a href="/account">
                             <i class="material-icons">
@@ -32,6 +27,11 @@
                     <li data-ng-if="$root.user.id">
                         <a href="/logout" class="logout">
                             Logout
+                        </a>
+                    </li>
+                    <li data-ng-if="!$root.user.id">
+                        <a href="/account/login">
+                            Login
                         </a>
                     </li>
                     <li>

@@ -11,7 +11,7 @@
         .controller('SiteGeographyCtrl',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
                 $route, nodes, user, Utility, site, Site, Practice, MapPreview,
-                leafletBoundsHelpers) {
+                leafletBoundsHelpers, $interval) {
 
                 var self = this;
 
@@ -26,7 +26,57 @@
                 console.log('self.map', self.map);
 
                 self.status = {
-                    'loading': true
+                    loading: true
+                };
+
+                self.fillMeter = undefined;
+
+                self.showProgress = function() {
+
+                    self.fillMeter = $interval(function() {
+
+                        var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
+
+                        if (!self.progressValue) {
+
+                            self.progressValue = tempValue;
+
+                        } else if ((100 - tempValue) > self.progressValue) {
+
+                            self.progressValue += tempValue;
+
+                        } else {
+
+                            $interval.cancel(self.fillMeter);
+
+                            self.fillMeter = undefined;
+
+                            self.progressValue = 100;
+
+                            self.showElements(1000, self.nodes, self.progressValue);
+
+                        }
+
+                        console.log('progressValue', self.progressValue);
+
+                    }, 50);
+
+                };
+
+                self.showElements = function(delay, object, progressValue) {
+
+                    if (object && progressValue > 75) {
+
+                        $timeout(function() {
+
+                            self.status.loading = false;
+
+                            self.progressValue = 0;
+
+                        }, delay);
+
+                    }
+
                 };
 
                 self.alerts = [];
@@ -324,8 +374,6 @@
 
                         console.log('self.project', self.project);
 
-                        self.status.loading = false;
-
                         //
                         // Load spatial nodes
                         //
@@ -347,7 +395,11 @@
 
                             console.log('self.nodes', self.nodes);
 
+                            self.showElements(1000, self.nodes, self.progressValue);
+
                         }, function(errorResponse) {
+
+                            self.showElements(1000, self.nodes, self.progressValue);
 
                         });
 
@@ -359,6 +411,8 @@
                 // Verify Account information for proper UI element display
                 //
                 if (Account.userObject && user) {
+
+                    self.showProgress();
 
                     user.$promise.then(function(userResponse) {
 

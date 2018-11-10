@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('PracticeEditController', function(Account, Image, leafletData, $location, $log, Map,
         mapbox, Media, Practice, practice, practice_types, $q, $rootScope, $route,
-        $scope, $timeout, $interval, site, user, Shapefile, leafletBoundsHelpers) {
+        $scope, $timeout, $interval, site, user, Shapefile, leafletBoundsHelpers, Utility) {
 
         var self = this;
 
@@ -17,6 +17,60 @@ angular.module('FieldDoc')
         };
 
         $rootScope.page = {};
+
+        self.status = {
+            loading: true
+        };
+
+        self.fillMeter = undefined;
+
+        self.showProgress = function() {
+
+            self.fillMeter = $interval(function() {
+
+                var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
+
+                if (!self.progressValue) {
+
+                    self.progressValue = tempValue;
+
+                } else if ((100 - tempValue) > self.progressValue) {
+
+                    self.progressValue += tempValue;
+
+                } else {
+
+                    $interval.cancel(self.fillMeter);
+
+                    self.fillMeter = undefined;
+
+                    self.progressValue = 100;
+
+                    self.showElements(1000, self.practiceTypes, self.progressValue);
+
+                }
+
+                console.log('progressValue', self.progressValue);
+
+            }, 50);
+
+        };
+
+        self.showElements = function(delay, object, progressValue) {
+
+            if (object && progressValue > 90) {
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.progressValue = 0;
+
+                }, delay);
+
+            }
+
+        };
 
         self.loadSite = function() {
 
@@ -65,7 +119,35 @@ angular.module('FieldDoc')
                 $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
 
             }, function(errorResponse) {
+
                 //
+
+            });
+
+            //
+            // Load practices
+            //
+
+            practice_types.$promise.then(function(successResponse) {
+
+                console.log('self.practiceTypes', successResponse);
+
+                var _practiceTypes = [];
+
+                successResponse.features.forEach(function(feature) {
+
+                    _practiceTypes.push(feature.properties);
+
+                });
+
+                self.practiceTypes = _practiceTypes;
+
+                self.showElements(1000, self.practiceTypes, self.progressValue);
+
+            }, function(errorResponse) {
+
+                self.showElements(1000, self.practiceTypes, self.progressValue);
+
             });
 
         };
@@ -181,31 +263,11 @@ angular.module('FieldDoc')
         };
 
         //
-        // Load practices
-        //
-
-        practice_types.$promise.then(function(successResponse) {
-
-            console.log('self.practiceTypes', successResponse);
-
-            var _practiceTypes = [];
-
-            successResponse.features.forEach(function(feature) {
-
-                _practiceTypes.push(feature.properties);
-
-            });
-
-            self.practiceTypes = _practiceTypes;
-
-        }, function(errorResponse) {
-
-        });
-
-        //
         // Verify Account information for proper UI element display
         //
         if (Account.userObject && user) {
+
+            self.showProgress();
 
             user.$promise.then(function(userResponse) {
 

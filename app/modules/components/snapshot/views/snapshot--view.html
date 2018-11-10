@@ -2,11 +2,11 @@
 
 <main role="main" class="dashboard main snapshot">
 
-    <div class="snapshot--loader" data-ng-if="page.loading">
+    <div class="snapshot--loader" data-ng-if="page.status.loading && page.progressValue">
 
         <div class="progress--modal">
             <div class="progress--container">
-                <p><strong>Loading dashboard data&hellip;</strong></p>
+                <p><strong>{{ page.progressMessage }}</strong></p>
                 <div class="progress--meter--bar--wrapper">
                     <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
                 </div>
@@ -15,7 +15,7 @@
 
     </div>
 
-    <div class="panel--container" data-ng-if="!page.loading">
+    <div class="panel--container" data-ng-if="!page.status.loading">
 
         <div class="sidebar">
 
@@ -305,14 +305,14 @@
 
     </div>
 
-    <footer class="site--footer--container" data-ng-if="!page.loading">
+    <footer class="site--footer--container" data-ng-if="!page.status.loading">
 
         <div class="site--footer">
 
             <section class="site--footer--content">
 
                 <p>
-                    &copy; 2015-2018 Chesapeake Commons. All rights reserved.
+                    &copy; 2018 Chesapeake Commons. All rights reserved.
                 </p>
 
                 <p>
@@ -326,5 +326,3 @@
     </footer>
 
 </main>
-
-<!-- <div data-ng-include="'/templates/footer--view.html'"></div> -->

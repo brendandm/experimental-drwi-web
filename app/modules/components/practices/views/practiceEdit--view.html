@@ -4,9 +4,18 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="page.makePrivate">
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <section class="privacy-message">
+        <div class="progress--modal" data-ng-if="page.status.loading && page.progressValue">
+            <div class="progress--container">
+                <p><strong>Loading practice data&hellip;</strong></p>
+                <div class="progress--meter--bar--wrapper">
+                    <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <section class="privacy-message" data-ng-if="!page.status.loading && page.makePrivate">
 
             <p>
                 <i class="material-icons">
@@ -18,19 +27,15 @@
 
         </section>
 
-    </div>
+        <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">Edit practice</h1>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="!page.makePrivate">
-
-        <h1 class="inset">Edit practice</h1>
-
-        <div class="main--ui" data-ng-if="page.practiceTypes">
+        <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
 
             <article class="feature-detail">
 
                 <div class="feature-detail-content">
 
-                    <form role="form" class="form" style="position:relative;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePractice();page.isSavingChanges =! page.isSavingChanges;">
+                    <form role="form" class="form" style="position:relative;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePractice()">
 
                         <!-- Practice Name -->
 

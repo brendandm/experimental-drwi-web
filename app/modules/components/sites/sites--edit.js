@@ -13,7 +13,7 @@
         .controller('SiteEditCtrl',
             function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
                 Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, Segment,
-                $timeout, $interval, user, Shapefile) {
+                $timeout, $interval, user, Shapefile, Utility) {
 
                 var self = this;
 
@@ -23,55 +23,59 @@
 
                 $rootScope.page = {};
 
-                //
-                // Verify Account information for proper UI element display
-                //
-                if (Account.userObject && user) {
+                self.status = {
+                    loading: true
+                };
 
-                    user.$promise.then(function(userResponse) {
+                self.fillMeter = undefined;
 
-                        $rootScope.user = Account.userObject = userResponse;
+                self.showProgress = function() {
 
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0].properties.name,
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                            can_edit: false
-                        };
+                    self.fillMeter = $interval(function() {
 
-                        site.$promise.then(function(successResponse) {
+                        var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
 
-                            console.log('self.site', successResponse);
+                        if (!self.progressValue) {
 
-                            self.site = successResponse;
+                            self.progressValue = tempValue;
 
-                            if (successResponse.permissions.read &&
-                                successResponse.permissions.write) {
+                        } else if ((100 - tempValue) > self.progressValue) {
 
-                                self.makePrivate = false;
+                            self.progressValue += tempValue;
 
-                            } else {
+                        } else {
 
-                                self.makePrivate = true;
+                            $interval.cancel(self.fillMeter);
 
-                            }
+                            self.fillMeter = undefined;
 
-                            self.permissions.can_edit = successResponse.permissions.write;
-                            self.permissions.can_delete = successResponse.permissions.write;
+                            self.progressValue = 100;
 
-                            $rootScope.page.title = self.site.properties.name;
+                            self.showElements(1000, self.site, self.progressValue);
 
-                        }, function(errorResponse) {
+                        }
 
-                        });
+                        console.log('progressValue', self.progressValue);
 
-                    });
+                    }, 50);
 
-                } else {
+                };
 
-                    $location.path('/account/login');
+                self.showElements = function(delay, object, progressValue) {
 
-                }
+                    if (object && progressValue > 75) {
+
+                        $timeout(function() {
+
+                            self.status.loading = false;
+
+                            self.progressValue = 0;
+
+                        }, delay);
+
+                    }
+
+                };
 
                 self.saveSite = function() {
 
@@ -166,6 +170,62 @@
                     });
 
                 };
+
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+
+                    self.showProgress();
+
+                    user.$promise.then(function(userResponse) {
+
+                        $rootScope.user = Account.userObject = userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0].properties.name,
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                            can_edit: false
+                        };
+
+                        site.$promise.then(function(successResponse) {
+
+                            console.log('self.site', successResponse);
+
+                            self.site = successResponse;
+
+                            if (successResponse.permissions.read &&
+                                successResponse.permissions.write) {
+
+                                self.makePrivate = false;
+
+                            } else {
+
+                                self.makePrivate = true;
+
+                            }
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            $rootScope.page.title = self.site.properties.name;
+
+                            self.showElements(1000, self.site, self.progressValue);
+
+                        }, function(errorResponse) {
+
+                            self.showElements(1000, self.site, self.progressValue);
+
+                        });
+
+                    });
+
+                } else {
+
+                    $location.path('/account/login');
+
+                }
 
             });
 

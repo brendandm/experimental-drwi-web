@@ -26,7 +26,7 @@ angular.module('FieldDoc')
 
             self.fillMeter = undefined;
 
-            self.showProgress = function(coefficient) {
+            self.showProgress = function() {
 
                 self.fillMeter = $interval(function() {
 
@@ -40,29 +40,37 @@ angular.module('FieldDoc')
 
                         self.progressValue += tempValue;
 
+                    } else {
+
+                        $interval.cancel(self.fillMeter);
+
+                        self.fillMeter = undefined;
+
+                        self.progressValue = 100;
+
+                        self.showElements(1000, self.project, self.progressValue);
+
                     }
 
                     console.log('progressValue', self.progressValue);
 
-                }, 100);
+                }, 50);
 
             };
 
-            self.showElements = function(delay) {
+            self.showElements = function(delay, object, progressValue) {
 
-                $interval.cancel(self.fillMeter);
+                if (object && progressValue > 75) {
 
-                self.fillMeter = undefined;
+                    $timeout(function() {
 
-                self.progressValue = 100;
+                        self.status.loading = false;
 
-                $timeout(function() {
+                        self.progressValue = 0;
 
-                    self.status.loading = false;
+                    }, delay);
 
-                    self.progressValue = 0;
-
-                }, delay);
+                }
 
             };
 
@@ -132,7 +140,7 @@ angular.module('FieldDoc')
 
                         }
 
-                        self.showElements(1000);
+                        self.showElements(1000, self.project, self.progressValue);
 
                     }, function(errorResponse) {
 
@@ -140,7 +148,7 @@ angular.module('FieldDoc')
 
                         self.status.processing = false;
 
-                        self.showElements(1000);
+                        self.showElements(1000, self.project, self.progressValue);
 
                     });
 

@@ -6,9 +6,30 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <h1 class="inset">Edit report</h1>
+        <div class="progress--modal" data-ng-if="page.status.loading && page.progressValue">
+            <div class="progress--container">
+                <p><strong>Loading report data&hellip;</strong></p>
+                <div class="progress--meter--bar--wrapper">
+                    <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+                </div>
+            </div>
+        </div>
 
-        <div class="main--ui">
+        <section class="privacy-message" data-ng-if="!page.status.loading && page.makePrivate">
+
+            <p>
+                <i class="material-icons">
+                    lock
+                </i>
+            </p>
+
+            <p>This practice is private.</p>
+
+        </section>
+
+        <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">Edit report</h1>
+
+        <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
 
             <article class="feature-detail">
 

@@ -4,9 +4,9 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="page.makePrivate">
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <section class="privacy-message">
+        <section class="privacy-message" data-ng-if="!page.status.loading && page.makePrivate">
 
             <p>
                 <i class="material-icons">
@@ -18,13 +18,9 @@
 
         </section>
 
-    </div>
+        <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">Practice photos</h1>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="!page.makePrivate">
-
-        <h1 class="inset">Practice photos</h1>
-
-        <div class="main--ui">
+        <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
 
             <form role="form" class="form" style="position:relative;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePractice()">
 
@@ -105,7 +101,7 @@
 
                 </ul>
 
-                <div class="progress--modal" style="align-items: flex-start;" data-ng-if="page.loading">
+                <div class="progress--modal" style="align-items: flex-start;" data-ng-if="page.status.loading">
                     <div class="progress--container">
                         <p><strong>Loading photos&hellip;</strong></p>
                         <div class="progress--meter--bar--wrapper">

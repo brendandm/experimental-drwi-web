@@ -9,7 +9,7 @@ angular.module('FieldDoc')
     .controller('SnapshotCtrl', function(Account, $location, $log, $interval, $timeout, Project, Map,
         baseProjects, $rootScope, $scope, Site, leafletData, leafletBoundsHelpers,
         MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox,
-        Practice, snapshot, $routeParams, Snapshot) {
+        Practice, snapshot, $routeParams, Snapshot, Utility, user) {
 
         $scope.filterStore = FilterStore;
 
@@ -19,37 +19,61 @@ angular.module('FieldDoc')
 
         var self = this;
 
-        self.loading = true;
+        self.status = {
+            loading: true
+        };
 
-        self.fillMeter = $interval(function() {
+        self.fillMeter = undefined;
 
-            var tempValue = (self.progressValue || 10) * 0.1;
+        self.showProgress = function() {
 
-            if (!self.progressValue) {
+            self.progressMessage = 'Loading dashboard data\u2026';
 
-                self.progressValue = tempValue;
+            self.fillMeter = $interval(function() {
 
-            } else if ((100 - tempValue) > self.progressValue) {
+                var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
 
-                self.progressValue += tempValue;
+                if (!self.progressValue) {
+
+                    self.progressValue = tempValue;
+
+                } else if ((100 - tempValue) > self.progressValue) {
+
+                    self.progressValue += tempValue;
+
+                } else {
+
+                    $interval.cancel(self.fillMeter);
+
+                    self.fillMeter = undefined;
+
+                    self.progressValue = 100;
+
+                    self.showElements(1000, self.filteredProjects, self.progressValue);
+
+                }
+
+                console.log('progressValue', self.progressValue);
+
+            }, 50);
+
+        };
+
+        self.showElements = function(delay, object, progressValue) {
+
+            if (object && progressValue > 90) {
+
+                self.progressMessage = 'Rendering\u2026';
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.progressValue = 0;
+
+                }, delay);
 
             }
-
-            console.log('progressValue', self.progressValue);
-
-        }, 100);
-
-        self.showElements = function() {
-
-            $interval.cancel(self.fillMeter);
-
-            self.progressValue = 100;
-
-            $timeout(function() {
-
-                self.loading = false;
-
-            }, 800);
 
         };
 
@@ -1156,6 +1180,8 @@ angular.module('FieldDoc')
 
         self.loadSnapshot = function() {
 
+            self.showProgress();
+
             snapshot.$promise.then(function(successResponse) {
 
                 console.log('self.loadSnapshot.successResponse', successResponse);
@@ -1195,15 +1221,17 @@ angular.module('FieldDoc')
 
                 console.log('self.loadBaseProjects.successResponse', successResponse);
 
-                self.showElements();
-
                 self.baseProjects = successResponse.features;
 
                 self.processProjectData(successResponse);
 
+                self.showElements(1000, self.filteredProjects, self.progressValue);
+
             }, function(errorResponse) {
 
                 console.log('self.loadBaseProjects.errorResponse', errorResponse);
+
+                self.showElements(1000, self.filteredProjects, self.progressValue);
 
             });
 
@@ -1372,20 +1400,20 @@ angular.module('FieldDoc')
         //
         // Verify Account information for proper UI element display
         //
-        // if (Account.userObject && user) {
+        if (Account.userObject && user) {
 
-        //     user.$promise.then(function(userResponse) {
+            user.$promise.then(function(userResponse) {
 
-        //         $rootScope.user = Account.userObject = userResponse;
+                $rootScope.user = Account.userObject = userResponse;
 
-        //         self.permissions = {
-        //             isLoggedIn: Account.hasToken(),
-        //             isAdmin: Account.hasRole('admin')
-        //         };
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    isAdmin: Account.hasRole('admin')
+                };
 
-        //     });
+            });
 
-        // }
+        }
 
         self.loadSnapshot();
 
