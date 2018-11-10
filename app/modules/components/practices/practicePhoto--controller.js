@@ -21,47 +21,69 @@ angular.module('FieldDoc')
 
         $rootScope.page = {};
 
-        self.loading = true;
+        self.status = {
+            loading: true
+        };
 
         self.fillMeter = undefined;
 
-        self.showProgress = function(coefficient) {
+        self.showProgress = function() {
 
-            self.fillMeter = $interval(function() {
+            if (!self.fillMeter) {
 
-                var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
+                self.fillMeter = $interval(function() {
 
-                if (!self.progressValue) {
+                    var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
 
-                    self.progressValue = tempValue;
+                    if (!self.progressValue) {
 
-                } else if ((100 - tempValue) > self.progressValue) {
+                        self.progressValue = tempValue;
 
-                    self.progressValue += tempValue;
+                    } else if ((self.progressValue + tempValue) < 85) {
 
-                }
+                        self.progressValue += tempValue;
 
-                console.log('progressValue', self.progressValue);
+                    } else {
 
-            }, 100);
+                        $interval.cancel(self.fillMeter);
+
+                        self.fillMeter = undefined;
+
+                        $timeout(function() {
+
+                            self.progressValue = 100;
+
+                            self.showElements(1000, self.practice, self.progressValue);
+
+                        }, 1000);
+
+                    }
+
+                }, 100);
+
+            }
 
         };
 
-        self.showElements = function(delay) {
+        self.showElements = function(delay, object, progressValue) {
 
-            $interval.cancel(self.fillMeter);
+            if (object && progressValue > 75) {
 
-            self.fillMeter = undefined;
+                $timeout(function() {
 
-            self.progressValue = 100;
+                    self.practiceLoaded = true;
 
-            $timeout(function() {
+                    self.status.loading = false;
 
-                self.loading = false;
+                    self.progressValue = 0;
 
-                self.progressValue = 0;
+                }, delay);
 
-            }, delay);
+            } else {
+
+                self.showProgress();
+
+            }
 
         };
 
@@ -89,8 +111,6 @@ angular.module('FieldDoc')
                     !data.permissions.write) {
 
                     self.makePrivate = true;
-
-                    return;
 
                 }
 
@@ -123,13 +143,9 @@ angular.module('FieldDoc')
 
                 self.processPractice(successResponse);
 
-                self.showElements(1000);
-
             }, function(errorResponse) {
 
                 //
-
-                self.showElements();
 
             });
 
@@ -140,7 +156,7 @@ angular.module('FieldDoc')
         //
         if (Account.userObject && user) {
 
-            self.showProgress(0.2);
+            self.showProgress();
 
             user.$promise.then(function(userResponse) {
 
@@ -165,9 +181,9 @@ angular.module('FieldDoc')
 
         self.savePractice = function() {
 
-            self.loading = true;
+            self.status.loading = true;
 
-            self.showProgress(0.1);
+            // self.showProgress();
 
             var _images = [];
 
@@ -205,8 +221,6 @@ angular.module('FieldDoc')
 
                         self.processPractice(successResponse);
 
-                        self.showElements(1000);
-
                         self.files.images = [];
 
                         self.alerts = [{
@@ -218,11 +232,13 @@ angular.module('FieldDoc')
 
                         $timeout(self.closeAlerts, 2000);
 
+                        self.status.loading = false;
+
                     }, function(errorResponse) {
 
                         // Error message
 
-                        self.showElements(1000);
+                        self.status.loading = false;
 
                     });
 
@@ -230,7 +246,7 @@ angular.module('FieldDoc')
 
                     $log.log('errorResponse', errorResponse);
 
-                    self.showElements(1000);
+                    self.status.loading = false;
 
                 });
 
@@ -239,8 +255,6 @@ angular.module('FieldDoc')
                 self.practice.$update().then(function(successResponse) {
 
                     self.processPractice(successResponse);
-
-                    self.showElements(1000);
 
                     self.files.images = [];
 
@@ -253,11 +267,13 @@ angular.module('FieldDoc')
 
                     $timeout(self.closeAlerts, 2000);
 
+                    self.status.loading = false;
+
                 }, function(errorResponse) {
 
                     // Error message
 
-                    self.showElements(1000);
+                    self.status.loading = false;
 
                 });
 
