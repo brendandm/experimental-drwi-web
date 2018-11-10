@@ -86,23 +86,15 @@
 
         </div>
 
-        <div class="transient--notification" style="position: absolute;" data-ng-class="{show: page.alerts.length}">
-            <div class="event--container">
-                <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
-                    <span class="event--message">{{ alert.msg }}</span>
-                </div>
-            </div>
-        </div>
-
     </div>
 
-    <!-- <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">
             <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
                 <span class="event--message">{{ alert.msg }}</span>
             </div>
         </div>
-    </div> -->
+    </div>
 
 </main>
 

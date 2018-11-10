@@ -54,7 +54,7 @@ angular.module('FieldDoc')
 
                     console.log('progressValue', self.progressValue);
 
-                }, 50);
+                }, 100);
 
             };
 
@@ -302,6 +302,8 @@ angular.module('FieldDoc')
             };
 
             self.saveProject = function() {
+
+                self.status.processing = true;
 
                 self.scrubProject();
 

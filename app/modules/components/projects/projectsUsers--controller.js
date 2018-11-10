@@ -271,7 +271,27 @@
 
                     self.project.$update().then(function(response) {
 
-                        $location.path('/projects/' + self.project.id);
+                        if (self.project.properties.members.length) {
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Collaborators added to project.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else {
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'All collaborators removed from project.',
+                                'prompt': 'OK'
+                            }];
+
+                        }
+
+                        $timeout(closeAlerts, 2000);
 
                     }).then(function(error) {
 

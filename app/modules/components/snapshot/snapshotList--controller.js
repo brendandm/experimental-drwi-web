@@ -73,7 +73,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Successfully deleted this snapshot.',
+                        'msg': 'Successfully deleted this dashboard.',
                         'prompt': 'OK'
                     }];
 
