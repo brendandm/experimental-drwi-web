@@ -326,16 +326,28 @@
   #sidebar {
     position: relative;
     display: flex;
-    flex-grow: 1;
+    flex-grow: 0;
     flex-shrink: 0;
     flex-direction: column;
     //width: 24%;
-    min-width: 200px;
+    //min-width: 200px;
     max-width: 240px;
+    padding-left: 2em;
     padding-top: 2em;
     height: 100%;
     left: 0;
     //background-color: rgb(70,168,223);
+  }
+
+  /* Larger than Desktop HD */
+  @media (min-width: 1200px) {
+
+    #sidebar {
+      flex-grow: 1;
+      padding-left: 0;
+      max-width: 240px;
+    }
+
   }
 
   #sidebar nav {
@@ -4167,6 +4179,17 @@
   width: 100%;
 
   .card {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .image-card {
+    min-width: 100%;
+    max-width: 100%;
+  }
+
+  .card,
+  .image-card {
     //width: 31%;
     //width: 33.33333333%;
     //min-width: 33.33333333%;
@@ -4174,8 +4197,8 @@
     //padding-bottom: 3.5%;
     //max-width: 33.3333%;
     //min-width: 33%;
-    max-width: 25%;
-    min-width: 24.9%;
+    //max-width: 44.9%;
+    //min-width: 50%;
     min-height: 240px;
     flex-basis: 0;
     flex-grow: 1;
@@ -4350,6 +4373,56 @@
 
       }
 
+    }
+
+  }
+
+}
+
+/* Larger than tablet */
+@media (min-width: 750px) {
+  .snapshot--cards {
+
+    .card {
+      min-width: 44.9999%;
+      max-width: 50%;
+    }
+
+    .image-card {
+      min-width: 44.9999%;
+      max-width: 50%;
+    }
+
+  }
+
+}
+
+/* Larger than tablet */
+@media (min-width: 1000px) {
+  .snapshot--cards {
+
+    .card {
+      min-width: 33%;
+      max-width: 33.3333%;
+    }
+
+  }
+
+}
+
+/* Larger than Desktop HD */
+@media (min-width: 1200px) {
+
+  .snapshot--cards {
+
+    .card {
+      min-width: 24.9%;
+      max-width: 25%;
+    }
+
+    .image-card {
+      min-width: 33%;
+      max-width: 33.3333%;
     }
 
   }

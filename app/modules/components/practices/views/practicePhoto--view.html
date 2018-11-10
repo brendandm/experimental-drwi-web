@@ -26,7 +26,7 @@
 
         <div class="main--ui">
 
-            <form role="form" class="form" style="position:relative;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePractice();page.isSavingChanges =! page.isSavingChanges;">
+            <form role="form" class="form" style="position:relative;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePractice()">
 
                 <h2>Add photo</h2>
 
@@ -34,17 +34,35 @@
                     <input type="file" class="form-control" id="images" name="images" file-upload file-model="page.files.images" multiple="multiple" />
                 </div>
 
-                <h2 data-ng-if="page.practice.properties.images.length">Library</h2>
+                <div class="save--action--wrapper save--action--bottom">
+                    <span>Save changes</span>
+                    <button type="submit">
+                        <i class="material-icons">
+                            done
+                        </i>
+                    </button>
+                </div>
+
+            </form>
+
+            <div style="position: relative; min-height: 640px; width: 100%;">
+
+                <!-- <div class="progress--modal" data-ng-if="page.loading">
+                    <div class="progress--container">
+                        <p><strong>Loading photos&hellip;</strong></p>
+                        <div class="progress--meter--bar--wrapper">
+                            <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+                        </div>
+                    </div>
+                </div> -->
 
                 <ul class="snapshot--cards list-unstyled" data-ng-if="page.practice.properties.images.length">
 
-                    <li class="card" style="min-width: 33%; max-width: 33.3333%;" data-ng-repeat="image in page.practice.properties.images track by $index">
+                    <li class="image-card" data-ng-repeat="image in page.practice.properties.images track by $index">
 
                         <div class="card--content">
 
                             <div style="width: 100%; height: 200px; min-height: 200px; background: #f5f5f5 url('{{ image.properties.original }}') center center / cover no-repeat;"></div>
-
-                            <!-- <img style="width: auto;" data-ng-src="{{ image.properties.original }}" height="200" width="auto" alt="" /> -->
 
                             <img height="0" width="auto" />
 
@@ -85,32 +103,18 @@
 
                     </li>
 
-                    <!-- MAKE THIS A DROPZONE -->
-
-                    <!-- <li class="card" style="min-width: 33%; max-width: 33.3333%;">
-                        <div class="card--content">
-                            <div class="body">
-                                <button type="button" class="snapshot--title" data-ng-click="page.addReading('Planning')" title="Add photo">
-                                    <i class="material-icons">
-                                        add
-                                    </i>
-                                </button>
-                            </div>
-                        </div>
-                    </li> -->
-
                 </ul>
 
-                <div class="save--action--wrapper save--action--bottom">
-                    <span>Save changes</span>
-                    <button type="submit">
-                        <i class="material-icons">
-                            done
-                        </i>
-                    </button>
+                <div class="progress--modal" style="align-items: flex-start;" data-ng-if="page.loading">
+                    <div class="progress--container">
+                        <p><strong>Loading photos&hellip;</strong></p>
+                        <div class="progress--meter--bar--wrapper">
+                            <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+                        </div>
+                    </div>
                 </div>
 
-            </form>
+            </div>
 
         </div>
 

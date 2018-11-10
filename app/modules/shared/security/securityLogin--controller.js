@@ -33,7 +33,8 @@
 
                     $rootScope.targetPath = null;
 
-                    if (targetPath.lastIndexOf('/dashboard', 0) === 0) {
+                    if (targetPath &&
+                        targetPath.lastIndexOf('/dashboard', 0) === 0) {
 
                         $location.path(targetPath);
 

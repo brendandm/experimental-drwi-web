@@ -21,6 +21,69 @@ angular.module('FieldDoc')
 
         $rootScope.page = {};
 
+        self.loading = true;
+
+        self.fillMeter = undefined;
+
+        self.randomCoefficient = function() {
+
+            var range = [
+                0.04,
+                0.08,
+                0.12,
+                0.16,
+                0.20,
+                0.24,
+                0.28,
+                0.32,
+                0.36,
+                0.40
+            ];
+
+            return range[Math.floor(Math.random() * range.length)];
+
+        };
+
+        self.showProgress = function(coefficient) {
+
+            self.fillMeter = $interval(function() {
+
+                var tempValue = (self.progressValue || 10) * self.randomCoefficient();
+
+                if (!self.progressValue) {
+
+                    self.progressValue = tempValue;
+
+                } else if ((100 - tempValue) > self.progressValue) {
+
+                    self.progressValue += tempValue;
+
+                }
+
+                console.log('progressValue', self.progressValue);
+
+            }, 100);
+
+        };
+
+        self.showElements = function(delay) {
+
+            $interval.cancel(self.fillMeter);
+
+            self.fillMeter = undefined;
+
+            self.progressValue = 100;
+
+            $timeout(function() {
+
+                self.loading = false;
+
+                self.progressValue = 0;
+
+            }, delay);
+
+        };
+
         self.alerts = [];
 
         self.closeAlerts = function() {
@@ -35,16 +98,14 @@ angular.module('FieldDoc')
 
         };
 
-        self.loadPractice = function() {
+        self.processPractice = function(data) {
 
-            practice.$promise.then(function(successResponse) {
+            self.practice = data;
 
-                console.log('self.practice', successResponse);
+            if (data.permissions) {
 
-                self.practice = successResponse;
-
-                if (!successResponse.permissions.read &&
-                    !successResponse.permissions.write) {
+                if (!data.permissions.read &&
+                    !data.permissions.write) {
 
                     self.makePrivate = true;
 
@@ -52,20 +113,42 @@ angular.module('FieldDoc')
 
                 }
 
-                self.permissions.can_edit = successResponse.permissions.write;
-                self.permissions.can_delete = successResponse.permissions.write;
+                self.permissions.can_edit = data.permissions.write;
+                self.permissions.can_delete = data.permissions.write;
 
-                delete self.practice.properties.organization;
-                delete self.practice.properties.project;
-                delete self.practice.properties.site;
+            }
 
-                self.practiceType = successResponse.properties.category;
+            delete self.practice.properties.organization;
+            delete self.practice.properties.project;
+            delete self.practice.properties.site;
 
-                $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
+            self.practiceType = data.properties.category;
+
+            $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
+
+            self.practice.properties.images.sort(function(a, b) {
+
+                return a.id < b.id;
+
+            });
+
+        };
+
+        self.loadPractice = function() {
+
+            practice.$promise.then(function(successResponse) {
+
+                console.log('self.practice', successResponse);
+
+                self.processPractice(successResponse);
+
+                self.showElements(1000);
 
             }, function(errorResponse) {
 
                 //
+
+                self.showElements();
 
             });
 
@@ -75,6 +158,8 @@ angular.module('FieldDoc')
         // Verify Account information for proper UI element display
         //
         if (Account.userObject && user) {
+
+            self.showProgress(0.2);
 
             user.$promise.then(function(userResponse) {
 
@@ -91,9 +176,17 @@ angular.module('FieldDoc')
 
             });
 
+        } else {
+
+            $location.path('/account/login');
+
         }
 
         self.savePractice = function() {
+
+            self.loading = true;
+
+            self.showProgress(0.1);
 
             var _images = [];
 
@@ -129,7 +222,9 @@ angular.module('FieldDoc')
 
                     self.practice.$update().then(function(successResponse) {
 
-                        self.practice = successResponse;
+                        self.processPractice(successResponse);
+
+                        self.showElements(1000);
 
                         self.files.images = [];
 
@@ -146,11 +241,15 @@ angular.module('FieldDoc')
 
                         // Error message
 
+                        self.showElements(1000);
+
                     });
 
                 }, function(errorResponse) {
 
                     $log.log('errorResponse', errorResponse);
+
+                    self.showElements(1000);
 
                 });
 
@@ -158,7 +257,9 @@ angular.module('FieldDoc')
 
                 self.practice.$update().then(function(successResponse) {
 
-                    self.practice = successResponse;
+                    self.processPractice(successResponse);
+
+                    self.showElements(1000);
 
                     self.files.images = [];
 
@@ -174,6 +275,8 @@ angular.module('FieldDoc')
                 }, function(errorResponse) {
 
                     // Error message
+
+                    self.showElements(1000);
 
                 });
 
@@ -217,6 +320,10 @@ angular.module('FieldDoc')
 
                 self.practice.properties.images.splice(index, 1);
 
+                self.cancelDelete();
+
+                self.savePractice();
+
                 return;
 
             }
@@ -248,27 +355,7 @@ angular.module('FieldDoc')
                     'prompt': 'OK'
                 }];
 
-                if (index !== null &&
-                    typeof index === 'number' &&
-                    featureType === 'image') {
-
-                    self.practice.properties.images.splice(index, 1);
-
-                    self.cancelDelete();
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    if (index === 0) {
-
-                        $route.reload();
-
-                    }
-
-                } else {
-
-                    $timeout(self.closeRoute, 2000);
-
-                }
+                $timeout(self.closeRoute, 2000);
 
             }).catch(function(errorResponse) {
 
