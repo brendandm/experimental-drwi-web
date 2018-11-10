@@ -12,7 +12,7 @@ angular.module('FieldDoc')
         function(Account, Notifications, $rootScope, Project, $routeParams,
             $scope, $location, Map, mapbox, Site, user, $window,
             leafletData, leafletBoundsHelpers, $timeout, Practice, project,
-            metrics, outcomes, sites) {
+            metrics, outcomes, sites, Utility, $interval) {
 
             //controller is set to self
             var self = this;
@@ -47,7 +47,49 @@ angular.module('FieldDoc')
             console.log('self.map', self.map);
 
             self.status = {
-                "loading": true
+                loading: true
+            };
+
+            self.fillMeter = undefined;
+
+            self.showProgress = function(coefficient) {
+
+                self.fillMeter = $interval(function() {
+
+                    var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
+
+                    if (!self.progressValue) {
+
+                        self.progressValue = tempValue;
+
+                    } else if ((100 - tempValue) > self.progressValue) {
+
+                        self.progressValue += tempValue;
+
+                    }
+
+                    console.log('progressValue', self.progressValue);
+
+                }, 100);
+
+            };
+
+            self.showElements = function(delay) {
+
+                $interval.cancel(self.fillMeter);
+
+                self.fillMeter = undefined;
+
+                self.progressValue = 100;
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.progressValue = 0;
+
+                }, delay);
+
             };
 
             //draw tools
@@ -121,52 +163,58 @@ angular.module('FieldDoc')
 
                         self.makePrivate = true;
 
-                        return;
+                    } else {
 
-                    }
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
 
-                    self.permissions.can_edit = successResponse.permissions.write;
-                    self.permissions.can_delete = successResponse.permissions.write;
+                        if (project_.properties.extent) {
 
-                    if (project_.properties.extent) {
-
-                        project_.staticURL = self.buildStaticMapURL(project_.properties.extent);
-
-                    }
-
-                    self.project = project_;
-
-                    self.status.loading = false;
-
-                    $rootScope.page.title = 'Project Summary';
-
-                    leafletData.getMap('project--map').then(function(map) {
-
-                        var southWest = L.latLng(25.837377, -124.211606),
-                            northEast = L.latLng(49.384359, -67.158958),
-                            bounds = L.latLngBounds(southWest, northEast);
-
-                        self.projectExtent = new L.FeatureGroup();
-
-                        if (self.project.properties.extent) {
-
-                            self.setGeoJsonLayer(self.project.properties.extent, self.projectExtent);
-
-                            map.fitBounds(self.projectExtent.getBounds(), {
-                                maxZoom: 18
-                            });
-
-                        } else {
-
-                            map.fitBounds(bounds, {
-                                maxZoom: 18
-                            });
+                            project_.staticURL = self.buildStaticMapURL(project_.properties.extent);
 
                         }
 
-                    });
+                        self.project = project_;
 
-                    self.loadSites();
+                        $rootScope.page.title = 'Project Summary';
+
+                        leafletData.getMap('project--map').then(function(map) {
+
+                            var southWest = L.latLng(25.837377, -124.211606),
+                                northEast = L.latLng(49.384359, -67.158958),
+                                bounds = L.latLngBounds(southWest, northEast);
+
+                            self.projectExtent = new L.FeatureGroup();
+
+                            if (self.project.properties.extent) {
+
+                                self.setGeoJsonLayer(self.project.properties.extent, self.projectExtent);
+
+                                map.fitBounds(self.projectExtent.getBounds(), {
+                                    maxZoom: 18
+                                });
+
+                            } else {
+
+                                map.fitBounds(bounds, {
+                                    maxZoom: 18
+                                });
+
+                            }
+
+                        });
+
+                        self.loadSites();
+
+                    }
+
+                    self.showElements(1000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('loadProject.errorResponse', errorResponse);
+
+                    self.showElements(1000);
 
                 });
 
@@ -456,7 +504,7 @@ angular.module('FieldDoc')
 
                 }, function(errorResponse) {
 
-                    console.log('errorResponse', errorResponse);
+                    console.log('loadSites.errorResponse', errorResponse);
 
                 });
 
@@ -507,6 +555,8 @@ angular.module('FieldDoc')
             //
 
             if (Account.userObject && user) {
+
+                self.showProgress();
 
                 user.$promise.then(function(userResponse) {
 

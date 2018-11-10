@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('PracticePhotoController', function(Account, Image, leafletData, $location, $log, Map,
         mapbox, Media, Practice, practice, practice_types, $q, $rootScope, $route,
-        $scope, $timeout, $interval, site, user) {
+        $scope, $timeout, $interval, site, user, Utility) {
 
         var self = this;
 
@@ -25,30 +25,11 @@ angular.module('FieldDoc')
 
         self.fillMeter = undefined;
 
-        self.randomCoefficient = function() {
-
-            var range = [
-                0.04,
-                0.08,
-                0.12,
-                0.16,
-                0.20,
-                0.24,
-                0.28,
-                0.32,
-                0.36,
-                0.40
-            ];
-
-            return range[Math.floor(Math.random() * range.length)];
-
-        };
-
         self.showProgress = function(coefficient) {
 
             self.fillMeter = $interval(function() {
 
-                var tempValue = (self.progressValue || 10) * self.randomCoefficient();
+                var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
 
                 if (!self.progressValue) {
 

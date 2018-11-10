@@ -8,7 +8,8 @@
 angular.module('FieldDoc')
     .controller('ProjectEditCtrl',
         function(Account, $location, $log, Project, project,
-            $rootScope, $route, user, SearchService, $timeout) {
+            $rootScope, $route, user, SearchService, $timeout,
+            Utility, $interval) {
 
             var self = this;
 
@@ -19,7 +20,50 @@ angular.module('FieldDoc')
             $rootScope.page = {};
 
             self.status = {
+                loading: true,
                 processing: true
+            };
+
+            self.fillMeter = undefined;
+
+            self.showProgress = function(coefficient) {
+
+                self.fillMeter = $interval(function() {
+
+                    var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
+
+                    if (!self.progressValue) {
+
+                        self.progressValue = tempValue;
+
+                    } else if ((100 - tempValue) > self.progressValue) {
+
+                        self.progressValue += tempValue;
+
+                    }
+
+                    console.log('progressValue', self.progressValue);
+
+                }, 100);
+
+            };
+
+            self.showElements = function(delay) {
+
+                $interval.cancel(self.fillMeter);
+
+                self.fillMeter = undefined;
+
+                self.progressValue = 100;
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.progressValue = 0;
+
+                }, delay);
+
             };
 
             self.alerts = [];
@@ -53,6 +97,8 @@ angular.module('FieldDoc')
             //
             if (Account.userObject && user) {
 
+                self.showProgress();
+
                 user.$promise.then(function(userResponse) {
 
                     $rootScope.user = Account.userObject = userResponse;
@@ -70,27 +116,31 @@ angular.module('FieldDoc')
                     //
                     project.$promise.then(function(successResponse) {
 
-                        self.processFeature(successResponse);
-
                         if (!successResponse.permissions.read &&
                             !successResponse.permissions.write) {
 
                             self.makePrivate = true;
 
-                            return;
+                        } else {
+
+                            self.processFeature(successResponse);
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            $rootScope.page.title = 'Edit Project';
 
                         }
 
-                        self.permissions.can_edit = successResponse.permissions.write;
-                        self.permissions.can_delete = successResponse.permissions.write;
-
-                        $rootScope.page.title = 'Edit Project';
+                        self.showElements(1000);
 
                     }, function(errorResponse) {
 
                         $log.error('Unable to load request project');
 
                         self.status.processing = false;
+
+                        self.showElements(1000);
 
                     });
 

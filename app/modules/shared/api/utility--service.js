@@ -44,6 +44,24 @@ angular.module('FieldDoc')
 
                 return Math.round(value * pow) / pow;
 
+            },
+            meterCoefficient: function() {
+
+                var range = [
+                    0.04,
+                    0.08,
+                    0.12,
+                    0.16,
+                    0.20,
+                    0.24,
+                    0.28,
+                    0.32,
+                    0.36,
+                    0.40
+                ];
+
+                return range[Math.floor(Math.random() * range.length)];
+
             }
         };
 

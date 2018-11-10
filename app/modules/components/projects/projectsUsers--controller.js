@@ -12,7 +12,8 @@
     angular.module('FieldDoc')
         .controller('ProjectUsersCtrl',
             function(Account, Collaborators, $window, $rootScope, $scope, $route,
-                $location, $timeout, project, user, members, SearchService, Project) {
+                $location, $timeout, project, user, members, SearchService, Project,
+                Utility, $interval) {
 
                 var self = this;
 
@@ -24,6 +25,52 @@
 
                 $rootScope.toolbarState = {
                     'users': true
+                };
+
+                self.status = {
+                    loading: true
+                };
+
+                self.fillMeter = undefined;
+
+                self.showProgress = function(coefficient) {
+
+                    self.fillMeter = $interval(function() {
+
+                        var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
+
+                        if (!self.progressValue) {
+
+                            self.progressValue = tempValue;
+
+                        } else if ((100 - tempValue) > self.progressValue) {
+
+                            self.progressValue += tempValue;
+
+                        }
+
+                        console.log('progressValue', self.progressValue);
+
+                    }, 100);
+
+                };
+
+                self.showElements = function(delay) {
+
+                    $interval.cancel(self.fillMeter);
+
+                    self.fillMeter = undefined;
+
+                    self.progressValue = 100;
+
+                    $timeout(function() {
+
+                        self.status.loading = false;
+
+                        self.progressValue = 0;
+
+                    }, delay);
+
                 };
 
                 self.alerts = [];
@@ -57,6 +104,8 @@
                 //
                 if (Account.userObject && user) {
 
+                    self.showProgress();
+
                     user.$promise.then(function(userResponse) {
 
                         $rootScope.user = Account.userObject = userResponse;
@@ -82,24 +131,28 @@
 
                                 self.makePrivate = true;
 
-                                return;
+                            } else {
+
+                                self.permissions.can_edit = successResponse.permissions.write;
+                                self.permissions.can_delete = successResponse.permissions.write;
+
+                                $rootScope.page.title = self.project.properties.name;
+
+                                self.tempOwners = self.project.properties.members;
+
+                                console.log('tempOwners', self.tempOwners);
+
+                                self.project.users_edit = false;
 
                             }
 
-                            self.permissions.can_edit = successResponse.permissions.write;
-                            self.permissions.can_delete = successResponse.permissions.write;
-
-                            $rootScope.page.title = self.project.properties.name;
-
-                            self.tempOwners = self.project.properties.members;
-
-                            console.log('tempOwners', self.tempOwners);
-
-                            self.project.users_edit = false;
+                            self.showElements(1000);
 
                         }, function(errorResponse) {
 
                             console.error('Unable to load request project');
+
+                            self.showElements(1000);
 
                         });
 
