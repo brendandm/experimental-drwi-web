@@ -57,7 +57,7 @@
 
                 <ul class="snapshot--cards list-unstyled" data-ng-if="page.practice.properties.images.length">
 
-                    <li class="image-card" data-ng-repeat="image in page.practice.properties.images track by $index">
+                    <li class="image-card reveal fade-in" style="animation-delay: {{ $index * 250 }}ms;" data-ng-repeat="image in page.practice.properties.images track by $index">
 
                         <div class="card--content">
 

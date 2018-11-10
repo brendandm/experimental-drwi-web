@@ -19,7 +19,7 @@
                 </a>
             </div>
 
-            <div style="position: relative;" class="progress--modal" data-ng-if="page.loading">
+            <div class="progress--modal" data-ng-if="page.loading">
                 <div class="progress--container">
                     <p><strong>Loading your projects&hellip;</strong></p>
                     <div class="progress--meter--bar--wrapper">
@@ -34,7 +34,7 @@
 
                 <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
-                    <li class="card" data-ng-repeat="project in page.filteredProjects | orderBy:'-modified_on' | filter: page.q">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 250 }}ms;" data-ng-repeat="project in page.filteredProjects | orderBy:'-modified_on' | filter: page.q">
 
                         <div class="card--content">
 

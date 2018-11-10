@@ -6,7 +6,7 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <div class="progress--modal" data-ng-if="page.status.loading && page.progressValue">
+        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading && page.progressValue">
             <div class="progress--container">
                 <p><strong>Loading site data&hellip;</strong></p>
                 <div class="progress--meter--bar--wrapper">
@@ -33,7 +33,7 @@
 
                 <div class="group">
 
-                    <article class="pad space-right shadow">
+                    <article class="pad space-right shadow reveal fade-in t0">
 
                         <h1>{{ page.site.properties.name }}</h1>
 
@@ -61,13 +61,13 @@
 
                     <!-- Map -->
 
-                    <div class="shadow" style="position:relative;">
+                    <div class="shadow reveal fade-in t1" style="position:relative;">
                         <leaflet id="site--map" class="map tall" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds" markers="page.map.markers" geojson="page.map.geojson"></leaflet>
                     </div>
 
                 </div>
 
-                <div class="group">
+                <div class="group reveal fade-in t2">
 
                     <section class="pad shadow">
 
@@ -172,7 +172,7 @@
 
             </div>
 
-            <section style="padding: 0;">
+            <section class="reveal fade-in t3" style="padding: 0;">
 
                 <h2>Practices</h2>
 

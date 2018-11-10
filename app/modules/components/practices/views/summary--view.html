@@ -6,7 +6,7 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <div class="progress--modal" data-ng-if="page.status.loading && page.progressValue">
+        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading && page.progressValue">
             <div class="progress--container">
                 <p><strong>Loading practice data&hellip;</strong></p>
                 <div class="progress--meter--bar--wrapper">
@@ -35,7 +35,7 @@
 
                     <!-- Descriptors -->
 
-                    <article class="pad space-right shadow">
+                    <article class="pad space-right shadow reveal fade-in t0">
 
                         <h1>{{ page.practice.properties.name || 'Un-named' }}</h1>
 
@@ -63,7 +63,7 @@
 
                     <!-- Map -->
 
-                    <div class="shadow" style="position:relative;">
+                    <div class="shadow reveal fade-in t1" style="position:relative;">
 
                         <leaflet id="practice--map" class="map tall" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers"></leaflet>
 
@@ -71,7 +71,7 @@
 
                 </div>
 
-                <div class="group">
+                <div class="group reveal fade-in t2">
 
                     <section class="pad shadow">
 
@@ -164,7 +164,7 @@
 
             </div>
 
-            <section style="padding: 0;">
+            <section class="reveal fade-in t3" style="padding: 0;">
 
                 <h2>Reports</h2>
 
