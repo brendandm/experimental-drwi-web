@@ -28,33 +28,41 @@ angular.module('FieldDoc')
 
             self.showProgress = function() {
 
-                self.fillMeter = $interval(function() {
+                if (!self.fillMeter) {
 
-                    var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
+                    self.fillMeter = $interval(function() {
 
-                    if (!self.progressValue) {
+                        var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
 
-                        self.progressValue = tempValue;
+                        if (!self.progressValue) {
 
-                    } else if ((100 - tempValue) > self.progressValue) {
+                            self.progressValue = tempValue;
 
-                        self.progressValue += tempValue;
+                        } else if ((100 - tempValue) > self.progressValue) {
 
-                    } else {
+                            self.progressValue += tempValue;
 
-                        $interval.cancel(self.fillMeter);
+                        } else {
 
-                        self.fillMeter = undefined;
+                            $interval.cancel(self.fillMeter);
 
-                        self.progressValue = 100;
+                            self.fillMeter = undefined;
 
-                        self.showElements(1000, self.project, self.progressValue);
+                            $timeout(function() {
 
-                    }
+                                self.progressValue = 100;
 
-                    console.log('progressValue', self.progressValue);
+                                self.showElements(1000, self.project, self.progressValue);
 
-                }, 100);
+                            }, 1000);
+
+                        }
+
+                        console.log('progressValue', self.progressValue);
+
+                    }, 50);
+
+                }
 
             };
 
@@ -69,6 +77,10 @@ angular.module('FieldDoc')
                         self.progressValue = 0;
 
                     }, delay);
+
+                } else {
+
+                    self.showProgress();
 
                 }
 

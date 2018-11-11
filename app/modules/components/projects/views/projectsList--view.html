@@ -6,6 +6,15 @@
 
     <div class="content--container">
 
+        <div class="progress--modal" data-ng-if="page.status.loading">
+            <div class="progress--container">
+                <p><strong>Loading your projects&hellip;</strong></p>
+                <div class="progress--meter--bar--wrapper">
+                    <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
+                </div>
+            </div>
+        </div>
+
         <h1 class="inset">Projects</h1>
 
         <div class="main--ui">
@@ -19,22 +28,22 @@
                 </a>
             </div>
 
-            <div class="progress--modal" data-ng-if="page.loading">
+            <!-- <div class="progress--modal" data-ng-if="page.status.loading">
                 <div class="progress--container">
                     <p><strong>Loading your projects&hellip;</strong></p>
                     <div class="progress--meter--bar--wrapper">
                         <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
-            <p data-ng-if="!page.loading">You have <strong>{{ (page.filteredProjects.length | number) || 0 }}</strong> <ng-pluralize count="page.filteredProjects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
+            <p data-ng-if="!page.status.loading">You have <strong>{{ (page.filteredProjects.length | number) || 0 }}</strong> <ng-pluralize count="page.filteredProjects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
 
-            <div class="features--container" data-ng-if="!page.loading">
+            <div class="features--container" data-ng-if="!page.status.loading">
 
                 <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
-                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 250 }}ms;" data-ng-repeat="project in page.filteredProjects | orderBy:'-modified_on' | filter: page.q">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="project in page.filteredProjects | orderBy:'-modified_on' | filter: page.q">
 
                         <div class="card--content">
 

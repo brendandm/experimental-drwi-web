@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <section class="privacy-message" data-ng-if="!page.status.loading && page.makePrivate">
+        <section class="privacy-message reveal fade-in t0" data-ng-if="!page.status.loading && page.makePrivate">
 
             <p>
                 <i class="material-icons">
@@ -37,50 +37,58 @@
 
                     <form role="form" class="row form" id="form--ProjectEdit" name="form--ProjectEdit" data-ng-submit="page.saveProject()">
 
-                        <h2>Profile</h2>
+                        <section class="reveal fade-in t0">
 
-                        <div class="form-element">
-                            <span class="meta-label"><b>Name</b></span>
-                            <input type="text" data-ng-model="page.project.properties.name" class="form-control animate" id="name" name="name" placeholder="Project name" />
-                        </div>
+                            <h2>Profile</h2>
 
-                        <div class="form-element">
-                            <span class="meta-label"><b>Description</b></span>
-                            <textarea class="form-control animate" data-ng-model="page.project.properties.description" msd-elastic id="description" name="description" rows="4">{{ page.project.properties.description }}</textarea>
-                        </div>
+                            <div class="form-element">
+                                <span class="meta-label"><b>Name</b></span>
+                                <input type="text" data-ng-model="page.project.properties.name" class="form-control animate" id="name" name="name" placeholder="Project name" />
+                            </div>
 
-                        <div class="form-element">
-                            <span class="meta-label"><b>Organization</b></span>
-                            <input type="text" class="form-control" id="email" name="email" disabled="disabled" data-ng-model="page.project.properties.organization.properties.name" readonly />
-                            <p style="color: #9e9e9e; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
-                                The project’s organization cannot be changed.
-                            </p>
-                        </div>
+                            <div class="form-element">
+                                <span class="meta-label"><b>Description</b></span>
+                                <textarea class="form-control animate" data-ng-model="page.project.properties.description" msd-elastic id="description" name="description" rows="4">{{ page.project.properties.description }}</textarea>
+                            </div>
 
-                        <h2>Partners</h2>
+                            <div class="form-element">
+                                <span class="meta-label"><b>Organization</b></span>
+                                <input type="text" class="form-control" id="email" name="email" disabled="disabled" data-ng-model="page.project.properties.organization.properties.name" readonly />
+                                <p style="color: #9e9e9e; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
+                                    The project’s organization cannot be changed.
+                                </p>
+                            </div>
 
-                        <div class="classification--search" style="position: relative;">
-                            <p style="font-style: normal; color: #616161; font-size: 1em; margin-bottom: 2em;">Add or remove partner organizations here.</p>
-                            <input type="search" class="search" value="" placeholder="Search organizations" data-ng-model="page.partnerQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchOrganizations($viewValue)" typeahead-on-select="page.addRelation($item, $model, $label, page.tempPartners, page.partnerQuery)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
-                        </div>
+                        </section>
 
-                        <div class="classification--list" style="margin-top: 2em;">
-                            <ul>
-                                <li data-ng-repeat="partner in page.tempPartners | orderBy:'properties.name'">
-                                    <i class="material-icons">
-                                        group_work
-                                    </i>
-                                    <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ partner.properties.name }}</span>
-                                    <div class="button--container">
-                                        <button type="button" class="remove-item" data-ng-click="page.removeRelation(partner.id, page.tempPartners)">
-                                            <i class="material-icons">
-                                                remove_circle
-                                            </i>
-                                        </button>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                        <section class="reveal fade-in t1">
+
+                            <h2>Partners</h2>
+
+                            <div class="classification--search" style="position: relative;">
+                                <p style="font-style: normal; color: #616161; font-size: 1em; margin-bottom: 2em;">Add or remove partner organizations here.</p>
+                                <input type="search" class="search" value="" placeholder="Search organizations" data-ng-model="page.partnerQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchOrganizations($viewValue)" typeahead-on-select="page.addRelation($item, $model, $label, page.tempPartners, page.partnerQuery)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                            </div>
+
+                            <div class="classification--list" style="margin-top: 2em;">
+                                <ul>
+                                    <li data-ng-repeat="partner in page.tempPartners | orderBy:'properties.name'">
+                                        <i class="material-icons">
+                                            group_work
+                                        </i>
+                                        <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ partner.properties.name }}</span>
+                                        <div class="button--container">
+                                            <button type="button" class="remove-item" data-ng-click="page.removeRelation(partner.id, page.tempPartners)">
+                                                <i class="material-icons">
+                                                    remove_circle
+                                                </i>
+                                            </button>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        </section>
 
                         <h2>Grant Program</h2>
 

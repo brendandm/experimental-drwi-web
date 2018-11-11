@@ -663,19 +663,19 @@ header .header {
 
   .save--action--wrapper {
     position: relative;
-    z-index: 9999;
+    z-index: 99999999;
   }
 
-  .transient--notification {
-    position: absolute;
-    bottom: 0;
-    opacity: 0;
-    z-index: 0;
-  }
+  //.transient--notification {
+    //position: absolute;
+    //bottom: 0;
+    //opacity: 0;
+    //z-index: 0;
+  //}
 
-  .show {
-    opacity: 1;
-  }
+  //.show {
+    //opacity: 1;
+  //}
 
   .transient--notification .event--container {
     background: #2a333d;

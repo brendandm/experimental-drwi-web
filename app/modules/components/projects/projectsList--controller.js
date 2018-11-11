@@ -9,7 +9,7 @@ angular.module('FieldDoc')
     .controller('ProjectsCtrl',
         function(Account, $location, $log, Project,
             projects, $rootScope, $scope, Site, user,
-            ProjectStore, FilterStore, $interval, $timeout) {
+            ProjectStore, FilterStore, $interval, $timeout, Utility) {
 
             $scope.filterStore = FilterStore;
 
@@ -35,37 +35,57 @@ angular.module('FieldDoc')
                 actions: []
             };
 
-            self.loading = true;
+            self.status = {
+                loading: true
+            };
 
-            self.fillMeter = $interval(function() {
+            self.fillMeter = undefined;
 
-                var tempValue = (self.progressValue || 10) * 0.2;
+            self.showProgress = function() {
 
-                if (!self.progressValue) {
+                self.fillMeter = $interval(function() {
 
-                    self.progressValue = tempValue;
+                    var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
 
-                } else if ((100 - tempValue) > self.progressValue) {
+                    if (!self.progressValue) {
 
-                    self.progressValue += tempValue;
+                        self.progressValue = tempValue;
+
+                    } else if ((100 - tempValue) > self.progressValue) {
+
+                        self.progressValue += tempValue;
+
+                    } else {
+
+                        $interval.cancel(self.fillMeter);
+
+                        self.fillMeter = undefined;
+
+                        self.progressValue = 100;
+
+                        self.showElements(1000, self.filteredProjects, self.progressValue);
+
+                    }
+
+                    console.log('progressValue', self.progressValue);
+
+                }, 50);
+
+            };
+
+            self.showElements = function(delay, object, progressValue) {
+
+                if (object && progressValue > 75) {
+
+                    $timeout(function() {
+
+                        self.status.loading = false;
+
+                        self.progressValue = 0;
+
+                    }, delay);
 
                 }
-
-                console.log('progressValue', self.progressValue);
-
-            }, 100);
-
-            self.showElements = function() {
-
-                $interval.cancel(self.fillMeter);
-
-                self.progressValue = 100;
-
-                $timeout(function() {
-
-                    self.loading = false;
-
-                }, 1000);
 
             };
 
@@ -239,6 +259,8 @@ angular.module('FieldDoc')
             //
             if (Account.userObject && user) {
 
+                self.showProgress();
+
                 user.$promise.then(function(userResponse) {
                     $rootScope.user = Account.userObject = userResponse;
                     self.permissions = {
@@ -292,8 +314,6 @@ angular.module('FieldDoc')
 
                     self.filteredProjects = $scope.projectStore.filteredProjects;
 
-                    self.showElements();
-
                 }, function(errorResponse) {
 
                     console.log('errorResponse', errorResponse);
@@ -302,7 +322,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/user/logout');
+                $location.path('/account/login');
 
             }
 

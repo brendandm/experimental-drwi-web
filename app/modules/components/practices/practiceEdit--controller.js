@@ -24,49 +24,65 @@ angular.module('FieldDoc')
 
         self.fillMeter = undefined;
 
-        self.showProgress = function() {
+        self.showProgress = function(meterCoefficient) {
 
-            self.fillMeter = $interval(function() {
+            if (!self.fillMeter) {
 
-                var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
+                self.fillMeter = $interval(function() {
 
-                if (!self.progressValue) {
+                    var tempValue = (self.progressValue || 10) * (meterCoefficient || Utility.meterCoefficient());
 
-                    self.progressValue = tempValue;
+                    if (!self.progressValue) {
 
-                } else if ((100 - tempValue) > self.progressValue) {
+                        self.progressValue = tempValue;
 
-                    self.progressValue += tempValue;
+                    } else if ((self.progressValue + tempValue) < 100) {
 
-                } else {
+                        self.progressValue += tempValue;
 
-                    $interval.cancel(self.fillMeter);
+                    } else {
 
-                    self.fillMeter = undefined;
+                        $interval.cancel(self.fillMeter);
 
-                    self.progressValue = 100;
+                        self.fillMeter = undefined;
 
-                    self.showElements(1000, self.practiceTypes, self.progressValue);
+                        $timeout(function() {
 
-                }
+                            // self.progressValue = 100;
 
-                console.log('progressValue', self.progressValue);
+                            self.showElements(1000, self.practiceTypes, self.progressValue);
 
-            }, 50);
+                        }, 1000);
+
+                    }
+
+                    console.log('progressValue', self.progressValue);
+
+                }, 50);
+
+            }
 
         };
 
         self.showElements = function(delay, object, progressValue) {
 
-            if (object && progressValue > 90) {
+            if (object && progressValue > 80) {
 
                 $timeout(function() {
+
+                    self.progressValue = 100;
 
                     self.status.loading = false;
 
                     self.progressValue = 0;
 
                 }, delay);
+
+            } else {
+
+                var meterCoefficient = Utility.meterCoefficient();
+
+                self.showProgress(meterCoefficient);
 
             }
 
