@@ -21,7 +21,7 @@
 
                 <div class="form-element">
                     <span class="meta-label"><b>Description</b></span>
-                    <textarea class="form-control animate" data-ng-model="page.project.description" msd-elastic id="description" name="description" rows="4" maxlength="1000">{{ page.project.description }}</textarea>
+                    <textarea class="form-control animate" data-ng-model="page.project.description" msd-elastic id="description" name="description" rows="10" maxlength="1000">{{ page.project.description }}</textarea>
                     <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
                         Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.project.description.length || 0) | number }} used)</strong>
                     </p>
@@ -42,7 +42,7 @@
                     <input type="search" class="search" value="" placeholder="Search organizations" data-ng-model="page.partnerQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchOrganizations($viewValue)" typeahead-on-select="page.addRelation($item, $model, $label, page.tempPartners, page.partnerQuery)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
                 </div>
 
-                <div class="classification--list" style="margin-top: 2em;">
+                <div class="classification--list reveal fade-in t0" style="margin-top: 2em;" data-ng-if="page.tempPartners && page.tempPartners.length">
                     <ul>
                         <li data-ng-repeat="partner in page.tempPartners | orderBy:'properties.name'">
                             <i class="material-icons">
@@ -67,7 +67,7 @@
                     <input type="search" class="search" value="" placeholder="Search programs" data-ng-model="page.program" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchPrograms($viewValue)" typeahead-on-select="page.setProgram($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
                 </div>
 
-                <div class="classification--list" style="margin-top: 2em;" data-ng-if="page.program && page.program.name">
+                <div class="classification--list reveal fade-in t0" style="margin-top: 2em;" data-ng-if="page.program && page.program.name">
                     <ul>
                         <li>
                             <i class="material-icons">
