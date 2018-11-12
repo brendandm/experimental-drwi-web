@@ -9386,6 +9386,8 @@ angular.module('FieldDoc')
 
             console.log('self.practiceType', $item);
 
+            self.practiceType = $item;
+
             self.practice.properties.category_id = $item.id;
 
         };
