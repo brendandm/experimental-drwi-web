@@ -6318,7 +6318,7 @@ angular.module('FieldDoc')
 
                 function closeRoute() {
 
-                    $location.path('/projects/' + self.project.id);
+                    $location.path('/projects');
 
                 }
 
