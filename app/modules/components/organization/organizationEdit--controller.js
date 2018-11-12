@@ -16,6 +16,11 @@ angular.module('FieldDoc')
                 'organization': true
             };
 
+            self.status = {
+                loading: true,
+                processing: false
+            };
+
             self.alerts = [];
 
             function closeAlerts() {
@@ -63,22 +68,10 @@ angular.module('FieldDoc')
 
 
             } else {
-                //
-                // If there is not Account.userObject and no user object, then the
-                // user is not properly authenticated and we should send them, at
-                // minimum, back to the projects page, and have them attempt to
-                // come back to this page again.
-                //
+
                 $location.path('/account/login');
 
             }
-
-            //
-            //
-            //
-            self.status = {
-                'processing': false
-            };
 
             self.saveOrganization = function() {
 
@@ -93,7 +86,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Successfully updated your organization profile.',
+                        'msg': 'Organization profile updated.',
                         'prompt': 'OK'
                     }];
 
@@ -108,7 +101,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Unable to update your organization profile.',
+                        'msg': 'Unable to update organization profile.',
                         'prompt': 'OK'
                     }];
 
@@ -154,9 +147,13 @@ angular.module('FieldDoc')
 
                     }
 
+                    self.status.loading = false;
+
                 }, function(errorResponse) {
 
                     console.error('Unable to load organization.');
+
+                    self.status.loading = false;
 
                 });
 

@@ -28,56 +28,19 @@
                 };
 
                 self.status = {
-                    loading: true
+                    loading: true,
+                    processing: false
                 };
 
-                self.fillMeter = undefined;
+                self.showElements = function() {
 
-                self.showProgress = function() {
+                    $timeout(function() {
 
-                    self.fillMeter = $interval(function() {
+                        self.status.loading = false;
 
-                        var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
+                        self.status.processing = false;
 
-                        if (!self.progressValue) {
-
-                            self.progressValue = tempValue;
-
-                        } else if ((100 - tempValue) > self.progressValue) {
-
-                            self.progressValue += tempValue;
-
-                        } else {
-
-                            $interval.cancel(self.fillMeter);
-
-                            self.fillMeter = undefined;
-
-                            self.progressValue = 100;
-
-                            self.showElements(1000, self.project, self.progressValue);
-
-                        }
-
-                        console.log('progressValue', self.progressValue);
-
-                    }, 50);
-
-                };
-
-                self.showElements = function(delay, object, progressValue) {
-
-                    if (object && progressValue > 75) {
-
-                        $timeout(function() {
-
-                            self.status.loading = false;
-
-                            self.progressValue = 0;
-
-                        }, delay);
-
-                    }
+                    }, 1000);
 
                 };
 
@@ -154,13 +117,13 @@
 
                             }
 
-                            self.showElements(1000, self.project, self.progressValue);
+                            self.showElements();
 
                         }, function(errorResponse) {
 
                             console.error('Unable to load request project');
 
-                            self.showElements(1000, self.project, self.progressValue);
+                            self.showElements();
 
                         });
 
@@ -265,6 +228,8 @@
 
                 self.saveProject = function() {
 
+                    self.status.processing = true;
+
                     self.scrubProject();
 
                     self.project.properties.members = self.processOwners(self.tempOwners);
@@ -293,9 +258,11 @@
 
                         $timeout(closeAlerts, 2000);
 
+                        self.status.processing = false;
+
                     }).then(function(error) {
 
-                        // Do something with the error
+                        self.status.processing = false;
 
                     });
 

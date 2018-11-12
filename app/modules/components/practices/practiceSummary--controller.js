@@ -266,7 +266,7 @@
 
                     }, function(errorResponse) {
 
-
+                        self.status.loading = false;
 
                     });
 

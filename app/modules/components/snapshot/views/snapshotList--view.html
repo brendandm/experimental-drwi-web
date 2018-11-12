@@ -6,6 +6,12 @@
 
     <div class="content--container" style="position: relative; overflow: hidden;">
 
+        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
+            <div class="progress--container">
+                <p style="font-weight: bold;" class="color-pulse">Loading your dashboards&hellip;</p>
+            </div>
+        </div>
+
         <h1 class="inset">Dashboards</h1>
 
         <div class="main--ui">
@@ -19,22 +25,13 @@
                 </a>
             </div>
 
-            <div class="progress--modal" data-ng-if="page.loading">
-                <div class="progress--container">
-                    <p><strong>Loading your dashboards&hellip;</strong></p>
-                    <div class="progress--meter--bar--wrapper">
-                        <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
-                    </div>
-                </div>
-            </div>
+            <p class="reveal fade-in t0">You have <strong>{{ (page.snapshots.length | number) || 0 }}</strong> <ng-pluralize count="page.snapshots.length" when="{'one': 'dashboard','other': 'dashboards'}"></ng-pluralize>.</p>
 
-            <p data-ng-if="!page.loading">You have <strong>{{ (page.snapshots.length | number) || 0 }}</strong> <ng-pluralize count="page.snapshots.length" when="{'one': 'dashboard','other': 'dashboards'}"></ng-pluralize>.</p>
-
-            <div class="features--container" data-ng-if="!page.loading">
+            <div class="features--container">
 
                 <input type="text" class="search-bar list-filter" data-ng-model="page.q" placeholder="Search dashboards">
 
-                <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
+                <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;" data-ng-if="!page.status.loading">
 
                     <li class="card reveal fade-in" style="animation-delay: {{ $index * 250 }}ms;" data-ng-repeat="snapshot in page.snapshots | orderBy:'-modified_on' | filter: page.q">
 

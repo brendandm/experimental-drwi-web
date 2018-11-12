@@ -52,9 +52,11 @@
 
   button[disabled] {
     background: #888;
+    cursor: not-allowed;
 
     &:hover {
       background: #888;
+      cursor: not-allowed;
     }
 
   }
@@ -2873,9 +2875,10 @@
     left: 0;
     right: 0;
     bottom: 0;
-    padding: 0 0 10em;
+    padding-bottom: 10em;
     //transition: all 400ms ease 0s;
     z-index: 99;
+    visibility: hidden;
   }
 
   .transient--notification .event--container {
@@ -2900,7 +2903,8 @@
   }
 
   .show {
-    bottom: 0;
+    visibility: visible !important;
+    //padding-bottom: 10em;
 
     .event--container {
       transform: scale(1);

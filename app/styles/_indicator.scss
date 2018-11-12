@@ -17,7 +17,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(255,255,255,0.75);
+  //background: rgba(255,255,255,0.75);
 
   .progress--container {
     //padding: 2em;
@@ -34,6 +34,8 @@
       //text-transform: uppercase;
       //letter-spacing: 0.05em;
       font-size: 0.875em;
+      text-align: center;
+      width: 100%;
     }
 
     .progress--meter--bar--wrapper {
@@ -79,6 +81,7 @@
         letter-spacing: 0.05em;
         color: #f9f9f9;
         opacity: 0.7;
+        text-align: left;
       }
 
       .progress--meter--bar--wrapper {
@@ -209,4 +212,79 @@
     -moz-transform: rotateZ(0deg);
     -o-transform: rotateZ(0deg);
   }
+}
+
+//
+// Color pulse
+//
+
+@-webkit-keyframes colorPulse {
+
+    0% {
+        color: #212121;
+    }
+
+    50% {
+        color: #bdbdbd;
+    }
+
+    100% {
+        color: #212121;
+    }
+
+}
+
+@-moz-keyframes colorPulse {
+
+    0% {
+        color: #212121;
+    }
+
+    50% {
+        color: #bdbdbd;
+    }
+
+    100% {
+        color: #212121;
+    }
+
+}
+
+@-o-keyframes colorPulse {
+
+    0% {
+        color: #212121;
+    }
+
+    50% {
+        color: #bdbdbd;
+    }
+
+    100% {
+        color: #212121;
+    }
+
+}
+
+@keyframes colorPulse {
+
+    0% {
+        color: #212121;
+    }
+
+    50% {
+        color: #bdbdbd;
+    }
+
+    100% {
+        color: #212121;
+    }
+
+}
+
+.color-pulse {
+  -webkit-animation: colorPulse 1s infinite alternate;
+  -moz-animation: colorPulse 1s infinite alternate;
+  -o-animation: colorPulse 1s infinite alternate;
+  animation: colorPulse 1s infinite alternate;
 }

@@ -4,18 +4,15 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
+    <div class="content--container reveal fade-in t0" style="border-right: 1px solid #e0e0e0;">
 
-        <div class="progress--modal" data-ng-if="page.status.loading && page.progressValue">
+        <div class="progress--modal" data-ng-if="page.status.loading">
             <div class="progress--container">
-                <p><strong>Loading geography data&hellip;</strong></p>
-                <div class="progress--meter--bar--wrapper">
-                    <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
-                </div>
+                <p style="font-weight: bold;" class="color-pulse">Loading geography data&hellip;</p>
             </div>
         </div>
 
-        <section class="privacy-message" data-ng-if="!page.status.loading && page.makePrivate">
+        <section class="privacy-message reveal fade-in t0" data-ng-if="!page.status.loading && page.makePrivate">
 
             <p>
                 <i class="material-icons">
@@ -35,7 +32,7 @@
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="geography in page.nodes.geographies | orderBy: 'name'">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="geography in page.nodes.geographies | orderBy: 'name'">
 
                         <div class="card--content">
 
@@ -94,7 +91,7 @@
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="geography in page.nodes.watersheds | orderBy: 'classification'">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="geography in page.nodes.watersheds | orderBy: 'classification'">
 
                         <div class="card--content">
 
@@ -121,7 +118,7 @@
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="geography in page.nodes.counties | orderBy: 'name'">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="geography in page.nodes.counties | orderBy: 'name'">
 
                         <div class="card--content">
 

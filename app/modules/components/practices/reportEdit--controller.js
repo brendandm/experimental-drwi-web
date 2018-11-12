@@ -34,6 +34,7 @@
 
                 self.status = {
                     loading: true,
+                    processing: true,
                     readings: {
                         loading: false
                     },
@@ -45,66 +46,43 @@
                     }
                 };
 
-                self.fillMeter = undefined;
+                self.alerts = [];
 
-                self.showProgress = function() {
+                function closeAlerts() {
 
-                    if (!self.fillMeter) {
+                    self.alerts = [];
 
-                        self.fillMeter = $interval(function() {
+                }
 
-                            var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
+                function closeRoute() {
 
-                            if (!self.progressValue) {
+                    $location.path('/practices/' + self.practice.id);
 
-                                self.progressValue = tempValue;
+                }
 
-                            } else if ((self.progressValue + tempValue) < 85) {
+                self.confirmDelete = function(obj) {
 
-                                self.progressValue += tempValue;
+                    console.log('self.confirmDelete', obj);
 
-                            } else {
-
-                                $interval.cancel(self.fillMeter);
-
-                                self.fillMeter = undefined;
-
-                                $timeout(function() {
-
-                                    self.progressValue = 100;
-
-                                    self.showElements(1000, self.practice, self.progressValue);
-
-                                }, 1000);
-
-                            }
-
-                            // console.log('tempValue', tempValue);
-                            // console.log('progressValue', self.progressValue);
-
-                        }, 100);
-
-                    }
+                    self.deletionTarget = self.deletionTarget ? null : obj;
 
                 };
 
-                self.showElements = function(delay, object, progressValue) {
+                self.cancelDelete = function() {
 
-                    if (object && progressValue > 75) {
+                    self.deletionTarget = null;
 
-                        $timeout(function() {
+                };
 
-                            self.status.loading = false;
+                self.showElements = function() {
 
-                            self.progressValue = 0;
+                    $timeout(function() {
 
-                        }, delay);
+                        self.status.loading = false;
 
-                    } else {
+                        self.status.processing = false;
 
-                        self.showProgress();
-
-                    }
+                    }, 1000);
 
                 };
 
@@ -114,9 +92,7 @@
 
                     var _unitTypes = [];
 
-                    successResponse.features.forEach(function(unit) {
-
-                        var datum = unit.properties;
+                    successResponse.features.forEach(function(datum) {
 
                         datum.name = datum.plural;
 
@@ -132,13 +108,59 @@
 
                 });
 
+                self.loadMetrics = function() {
+
+                    PracticeCustom.metrics({
+                        id: $route.current.params.reportId
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Report metrics', successResponse);
+
+                        var _reportMetrics = [];
+
+                        successResponse.features.forEach(function(metric) {
+
+                            var datum = self.processMetric(metric);
+
+                            _reportMetrics.push(datum);
+
+                        });
+
+                        self.reportMetrics = _reportMetrics;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+                self.processReport = function(data) {
+
+                    self.report = data;
+
+                    if (self.report.properties.practice_unit !== null) {
+
+                        var _unit = self.report.properties.practice_unit.properties;
+
+                        _unit.name = _unit.plural;
+
+                        self.report.properties.practice_unit = _unit;
+
+                    }
+
+                    self.loadMetrics();
+
+                };
+
                 self.processMetric = function(metric) {
 
-                    var datum = metric.properties;
+                    var datum = metric.properties || metric;
 
-                    if (metric.properties.metric_type !== null) {
+                    if (datum.metric_type !== null) {
 
-                        datum.metric_type = metric.properties.metric_type.properties;
+                        datum.metric_type = datum.metric_type.properties;
 
                     } else {
 
@@ -146,9 +168,9 @@
 
                     }
 
-                    if (metric.properties.metric_unit !== null) {
+                    if (datum.metric_unit !== null) {
 
-                        datum.metric_unit = metric.properties.metric_unit.properties;
+                        datum.metric_unit = datum.metric_unit.properties;
 
                         datum.metric_unit.name = datum.metric_unit.plural;
 
@@ -166,43 +188,15 @@
 
                     console.log('Metric types', successResponse);
 
-                    var _metricTypes = [];
+                    self.metricTypes = successResponse.features;
 
-                    successResponse.features.forEach(function(metric) {
-
-                        var datum = metric.properties;
-
-                        _metricTypes.push(datum);
-
-                    });
-
-                    self.metricTypes = _metricTypes;
+                    self.showElements();
 
                 }, function(errorResponse) {
 
                     console.log('errorResponse', errorResponse);
 
-                });
-
-                report_metrics.$promise.then(function(successResponse) {
-
-                    console.log('Report metrics', successResponse);
-
-                    var _reportMetrics = [];
-
-                    successResponse.features.forEach(function(metric) {
-
-                        var datum = self.processMetric(metric);
-
-                        _reportMetrics.push(datum);
-
-                    });
-
-                    self.reportMetrics = _reportMetrics;
-
-                }, function(errorResponse) {
-
-                    console.log('errorResponse', errorResponse);
+                    self.showElements();
 
                 });
 
@@ -336,11 +330,9 @@
 
                         }
 
-                        // self.showElements(1000, self.practice, self.progressValue);
-
                     }).catch(function(errorResponse) {
 
-                        // self.showElements(1000, self.practice, self.progressValue);
+                        //
 
                     });
 
@@ -363,6 +355,8 @@
                 }, true);
 
                 self.saveReport = function(metricArray) {
+
+                    self.status.processing = true;
 
                     console.log('self.saveReport.metricArray', metricArray);
 
@@ -387,11 +381,33 @@
 
                     self.report.$update().then(function(successResponse) {
 
-                        $location.path('/practices/' + self.practice.id);
+                        self.processReport(successResponse);
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Report changes saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        self.showElements();
 
                     }, function(errorResponse) {
 
                         console.error('ERROR: ', errorResponse);
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Report changes could not be saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        self.showElements();
 
                     });
 
@@ -676,34 +692,6 @@
 
                 };
 
-                self.alerts = [];
-
-                function closeAlerts() {
-
-                    self.alerts = [];
-
-                }
-
-                function closeRoute() {
-
-                    $location.path('/practices/' + self.practice.id);
-
-                }
-
-                self.confirmDelete = function(obj) {
-
-                    console.log('self.confirmDelete', obj);
-
-                    self.deletionTarget = self.deletionTarget ? null : obj;
-
-                };
-
-                self.cancelDelete = function() {
-
-                    self.deletionTarget = null;
-
-                };
-
                 self.deleteFeature = function() {
 
                     PracticeCustom.delete({
@@ -763,8 +751,6 @@
                 //
                 if (Account.userObject && user) {
 
-                    self.showProgress();
-
                     user.$promise.then(function(userResponse) {
 
                         $rootScope.user = Account.userObject = userResponse;
@@ -782,17 +768,7 @@
 
                             console.log('self.report', successResponse);
 
-                            self.report = successResponse;
-
-                            if (self.report.properties.practice_unit !== null) {
-
-                                var _unit = self.report.properties.practice_unit.properties;
-
-                                _unit.name = _unit.plural;
-
-                                self.report.properties.practice_unit = _unit;
-
-                            }
+                            self.processReport(successResponse);
 
                             if (self.report.properties.report_date) {
 

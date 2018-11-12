@@ -6,16 +6,13 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <div class="progress--modal" data-ng-if="page.status.loading">
+        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
             <div class="progress--container">
-                <p><strong>Loading project data&hellip;</strong></p>
-                <div class="progress--meter--bar--wrapper">
-                    <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
-                </div>
+                <p style="font-weight: bold;" class="color-pulse">Loading project data&hellip;</p>
             </div>
         </div>
 
-        <section class="privacy-message" data-ng-if="!page.status.loading && page.makePrivate">
+        <section class="privacy-message reveal fade-in t0" data-ng-if="!page.status.loading && page.makePrivate">
 
             <p>
                 <i class="material-icons">
@@ -29,13 +26,11 @@
 
         <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
 
-            <div class="throbber throbber-small" data-ng-if="page.status.loading"></div>
-
             <div class="module--grid">
 
                 <div class="group">
 
-                    <article class="pad space-right shadow">
+                    <article class="pad space-right shadow reveal fade-in t0">
 
                         <h1>{{ page.project.properties.name }}</h1>
 
@@ -93,13 +88,13 @@
 
                     </article>
 
-                    <div class="map--module shadow" style="position:relative;">
+                    <div class="map--module shadow reveal fade-in t1" style="position:relative;">
                         <leaflet id="project--map" class="map tall" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds" markers="page.map.markers"></leaflet>
                     </div>
 
                 </div>
 
-                <div class="group">
+                <div class="group reveal fade-in t2">
 
                     <section class="pad shadow">
 
@@ -204,7 +199,7 @@
 
             </div>
 
-            <section style="padding: 0;">
+            <section class="reveal fade-in t3" style="padding: 0;">
 
                 <h2>Sites</h2>
 

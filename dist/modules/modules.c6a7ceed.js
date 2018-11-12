@@ -813,7 +813,9 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     }
+
                 }
+
             })
             .when('/dashboards/:snapshotId', {
                 templateUrl: '/modules/components/snapshot/views/snapshot--view.html',
@@ -843,8 +845,21 @@ angular.module('FieldDoc')
                             id: $route.current.params.snapshotId
                         });
 
+                    },
+                    user: function(Account, $rootScope, $document) {
+
+                        if (Account.userObject && !Account.userObject.id) {
+
+                            return Account.getUser();
+                            
+                        }
+
+                        return Account.userObject;
+
                     }
+
                 }
+
             })
             .when('/dashboards/collection/new', {
                 templateUrl: '/modules/components/snapshot/views/snapshotCreate--view.html',
@@ -865,7 +880,9 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     }
+
                 }
+
             })
             .when('/dashboards/:snapshotId/edit', {
                 templateUrl: '/modules/components/snapshot/views/snapshotEdit--view.html',
@@ -893,7 +910,9 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     }
+
                 }
+                
             });
 
     });
@@ -908,7 +927,7 @@ angular.module('FieldDoc')
     .controller('SnapshotCtrl', function(Account, $location, $log, $interval, $timeout, Project, Map,
         baseProjects, $rootScope, $scope, Site, leafletData, leafletBoundsHelpers,
         MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox,
-        Practice, snapshot, $routeParams, Snapshot) {
+        Practice, snapshot, $routeParams, Snapshot, Utility, user) {
 
         $scope.filterStore = FilterStore;
 
@@ -918,37 +937,61 @@ angular.module('FieldDoc')
 
         var self = this;
 
-        self.loading = true;
+        self.status = {
+            loading: true
+        };
 
-        self.fillMeter = $interval(function() {
+        self.fillMeter = undefined;
 
-            var tempValue = (self.progressValue || 10) * 0.1;
+        self.showProgress = function() {
 
-            if (!self.progressValue) {
+            self.progressMessage = 'Loading dashboard data\u2026';
 
-                self.progressValue = tempValue;
+            self.fillMeter = $interval(function() {
 
-            } else if ((100 - tempValue) > self.progressValue) {
+                var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
 
-                self.progressValue += tempValue;
+                if (!self.progressValue) {
+
+                    self.progressValue = tempValue;
+
+                } else if ((100 - tempValue) > self.progressValue) {
+
+                    self.progressValue += tempValue;
+
+                } else {
+
+                    $interval.cancel(self.fillMeter);
+
+                    self.fillMeter = undefined;
+
+                    self.progressValue = 100;
+
+                    self.showElements(1000, self.filteredProjects, self.progressValue);
+
+                }
+
+                console.log('progressValue', self.progressValue);
+
+            }, 50);
+
+        };
+
+        self.showElements = function(delay, object, progressValue) {
+
+            if (object && progressValue > 90) {
+
+                self.progressMessage = 'Rendering\u2026';
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.progressValue = 0;
+
+                }, delay);
 
             }
-
-            console.log('progressValue', self.progressValue);
-
-        }, 100);
-
-        self.showElements = function() {
-
-            $interval.cancel(self.fillMeter);
-
-            self.progressValue = 100;
-
-            $timeout(function() {
-
-                self.loading = false;
-
-            }, 800);
 
         };
 
@@ -2055,6 +2098,8 @@ angular.module('FieldDoc')
 
         self.loadSnapshot = function() {
 
+            self.showProgress();
+
             snapshot.$promise.then(function(successResponse) {
 
                 console.log('self.loadSnapshot.successResponse', successResponse);
@@ -2094,15 +2139,17 @@ angular.module('FieldDoc')
 
                 console.log('self.loadBaseProjects.successResponse', successResponse);
 
-                self.showElements();
-
                 self.baseProjects = successResponse.features;
 
                 self.processProjectData(successResponse);
 
+                self.showElements(1000, self.filteredProjects, self.progressValue);
+
             }, function(errorResponse) {
 
                 console.log('self.loadBaseProjects.errorResponse', errorResponse);
+
+                self.showElements(1000, self.filteredProjects, self.progressValue);
 
             });
 
@@ -2271,20 +2318,20 @@ angular.module('FieldDoc')
         //
         // Verify Account information for proper UI element display
         //
-        // if (Account.userObject && user) {
+        if (Account.userObject && user) {
 
-        //     user.$promise.then(function(userResponse) {
+            user.$promise.then(function(userResponse) {
 
-        //         $rootScope.user = Account.userObject = userResponse;
+                $rootScope.user = Account.userObject = userResponse;
 
-        //         self.permissions = {
-        //             isLoggedIn: Account.hasToken(),
-        //             isAdmin: Account.hasRole('admin')
-        //         };
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    isAdmin: Account.hasRole('admin')
+                };
 
-        //     });
+            });
 
-        // }
+        }
 
         self.loadSnapshot();
 
@@ -2307,35 +2354,15 @@ angular.module('FieldDoc')
                 'snapshot': true
             };
 
-            self.loading = true;
-
-            self.fillMeter = $interval(function() {
-
-                var tempValue = (self.progressValue || 10) * 0.2;
-
-                if (!self.progressValue) {
-
-                    self.progressValue = tempValue;
-
-                } else if ((100 - tempValue) > self.progressValue) {
-
-                    self.progressValue += tempValue;
-
-                }
-
-                console.log('progressValue', self.progressValue);
-
-            }, 100);
+            self.status = {
+                loading: true
+            };
 
             self.showElements = function() {
 
-                $interval.cancel(self.fillMeter);
-
-                self.progressValue = 100;
-
                 $timeout(function() {
 
-                    self.loading = false;
+                    self.status.loading = false;
 
                 }, 1000);
 
@@ -2364,11 +2391,11 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Successfully deleted this snapshot.',
+                        'msg': 'Successfully deleted this dashboard.',
                         'prompt': 'OK'
                     }];
 
-                    $timeout(function(){
+                    $timeout(function() {
 
                         self.alerts = [];
 
@@ -2415,13 +2442,8 @@ angular.module('FieldDoc')
 
 
             } else {
-                //
-                // If there is not Account.userObject and no user object, then the
-                // user is not properly authenticated and we should send them, at
-                // minimum, back to the projects page, and have them attempt to
-                // come back to this page again.
-                //
-                self.actions.exit();
+
+                $location.path('/account/login');
 
             }
 
@@ -2431,57 +2453,7 @@ angular.module('FieldDoc')
 
             };
 
-            //
-            //
-            //
-            self.status = {
-                'saving': false
-            };
-
             self.actions = {
-                organizations: function() {
-
-                    var _organizations = [];
-
-                    angular.forEach(self.user.properties.organizations, function(_organization, _index) {
-                        if (_organization.id) {
-                            _organizations.push({
-                                'id': _organization.id
-                            });
-                        } else {
-                            _organizations.push({
-                                'name': _organization.properties.name
-                            });
-                        }
-                    });
-
-                    return _organizations;
-                },
-                save: function() {
-
-                    self.status.saving = true;
-
-                    var _organizations = self.actions.organizations();
-
-                    var _user = new User({
-                        'id': self.user.id,
-                        'first_name': self.user.properties.first_name,
-                        'last_name': self.user.properties.last_name,
-                        'organizations': _organizations
-                    });
-
-                    _user.$update(function(successResponse) {
-
-                        self.status.saving = false;
-
-                        $rootScope.notifications.success('Great!', 'Your account changes were saved');
-
-                        $location.path('/account/');
-
-                    }, function(errorResponse) {
-                        self.status.saving = false;
-                    });
-                },
                 snapshots: function() {
 
                     snapshots.$promise.then(function(snapshotResponse) {
@@ -2492,9 +2464,6 @@ angular.module('FieldDoc')
 
                     });
 
-                },
-                exit: function() {
-                    $location.path('/projects');
                 }
             };
 
@@ -4386,6 +4355,11 @@ angular.module('FieldDoc')
                 'organization': true
             };
 
+            self.status = {
+                loading: true,
+                processing: false
+            };
+
             self.alerts = [];
 
             function closeAlerts() {
@@ -4433,22 +4407,10 @@ angular.module('FieldDoc')
 
 
             } else {
-                //
-                // If there is not Account.userObject and no user object, then the
-                // user is not properly authenticated and we should send them, at
-                // minimum, back to the projects page, and have them attempt to
-                // come back to this page again.
-                //
+
                 $location.path('/account/login');
 
             }
-
-            //
-            //
-            //
-            self.status = {
-                'processing': false
-            };
 
             self.saveOrganization = function() {
 
@@ -4463,7 +4425,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Successfully updated your organization profile.',
+                        'msg': 'Organization profile updated.',
                         'prompt': 'OK'
                     }];
 
@@ -4478,7 +4440,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Unable to update your organization profile.',
+                        'msg': 'Unable to update organization profile.',
                         'prompt': 'OK'
                     }];
 
@@ -4524,9 +4486,13 @@ angular.module('FieldDoc')
 
                     }
 
+                    self.status.loading = false;
+
                 }, function(errorResponse) {
 
                     console.error('Unable to load organization.');
+
+                    self.status.loading = false;
 
                 });
 
@@ -4916,7 +4882,7 @@ angular.module('FieldDoc')
     .controller('ProjectsCtrl',
         function(Account, $location, $log, Project,
             projects, $rootScope, $scope, Site, user,
-            ProjectStore, FilterStore, $interval, $timeout) {
+            ProjectStore, FilterStore, $interval, $timeout, Utility) {
 
             $scope.filterStore = FilterStore;
 
@@ -4942,37 +4908,57 @@ angular.module('FieldDoc')
                 actions: []
             };
 
-            self.loading = true;
+            self.status = {
+                loading: true
+            };
 
-            self.fillMeter = $interval(function() {
+            self.fillMeter = undefined;
 
-                var tempValue = (self.progressValue || 10) * 0.2;
+            self.showProgress = function() {
 
-                if (!self.progressValue) {
+                self.fillMeter = $interval(function() {
 
-                    self.progressValue = tempValue;
+                    var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
 
-                } else if ((100 - tempValue) > self.progressValue) {
+                    if (!self.progressValue) {
 
-                    self.progressValue += tempValue;
+                        self.progressValue = tempValue;
+
+                    } else if ((100 - tempValue) > self.progressValue) {
+
+                        self.progressValue += tempValue;
+
+                    } else {
+
+                        $interval.cancel(self.fillMeter);
+
+                        self.fillMeter = undefined;
+
+                        self.progressValue = 100;
+
+                        self.showElements(1000, self.filteredProjects, self.progressValue);
+
+                    }
+
+                    console.log('progressValue', self.progressValue);
+
+                }, 50);
+
+            };
+
+            self.showElements = function(delay, object, progressValue) {
+
+                if (object && progressValue > 75) {
+
+                    $timeout(function() {
+
+                        self.status.loading = false;
+
+                        self.progressValue = 0;
+
+                    }, delay);
 
                 }
-
-                console.log('progressValue', self.progressValue);
-
-            }, 100);
-
-            self.showElements = function() {
-
-                $interval.cancel(self.fillMeter);
-
-                self.progressValue = 100;
-
-                $timeout(function() {
-
-                    self.loading = false;
-
-                }, 1000);
 
             };
 
@@ -5146,6 +5132,8 @@ angular.module('FieldDoc')
             //
             if (Account.userObject && user) {
 
+                self.showProgress();
+
                 user.$promise.then(function(userResponse) {
                     $rootScope.user = Account.userObject = userResponse;
                     self.permissions = {
@@ -5199,8 +5187,6 @@ angular.module('FieldDoc')
 
                     self.filteredProjects = $scope.projectStore.filteredProjects;
 
-                    self.showElements();
-
                 }, function(errorResponse) {
 
                     console.log('errorResponse', errorResponse);
@@ -5209,7 +5195,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/user/logout');
+                $location.path('/account/login');
 
             }
 
@@ -5274,45 +5260,15 @@ angular.module('FieldDoc')
                 loading: true
             };
 
-            self.fillMeter = undefined;
-
-            self.showProgress = function(coefficient) {
-
-                self.fillMeter = $interval(function() {
-
-                    var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
-
-                    if (!self.progressValue) {
-
-                        self.progressValue = tempValue;
-
-                    } else if ((100 - tempValue) > self.progressValue) {
-
-                        self.progressValue += tempValue;
-
-                    }
-
-                    console.log('progressValue', self.progressValue);
-
-                }, 100);
-
-            };
-
-            self.showElements = function(delay) {
-
-                $interval.cancel(self.fillMeter);
-
-                self.fillMeter = undefined;
-
-                self.progressValue = 100;
+            self.showElements = function() {
 
                 $timeout(function() {
 
                     self.status.loading = false;
 
-                    self.progressValue = 0;
+                    self.status.processing = false;
 
-                }, delay);
+                }, 1000);
 
             };
 
@@ -5432,13 +5388,13 @@ angular.module('FieldDoc')
 
                     }
 
-                    self.showElements(1000);
+                    self.showElements();
 
                 }).catch(function(errorResponse) {
 
                     console.log('loadProject.errorResponse', errorResponse);
 
-                    self.showElements(1000);
+                    self.showElements();
 
                 });
 
@@ -5780,8 +5736,6 @@ angular.module('FieldDoc')
 
             if (Account.userObject && user) {
 
-                self.showProgress();
-
                 user.$promise.then(function(userResponse) {
 
                     $rootScope.user = Account.userObject = userResponse;
@@ -6016,45 +5970,15 @@ angular.module('FieldDoc')
                 processing: true
             };
 
-            self.fillMeter = undefined;
-
-            self.showProgress = function(coefficient) {
-
-                self.fillMeter = $interval(function() {
-
-                    var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
-
-                    if (!self.progressValue) {
-
-                        self.progressValue = tempValue;
-
-                    } else if ((100 - tempValue) > self.progressValue) {
-
-                        self.progressValue += tempValue;
-
-                    }
-
-                    console.log('progressValue', self.progressValue);
-
-                }, 100);
-
-            };
-
-            self.showElements = function(delay) {
-
-                $interval.cancel(self.fillMeter);
-
-                self.fillMeter = undefined;
-
-                self.progressValue = 100;
+            self.showElements = function() {
 
                 $timeout(function() {
 
                     self.status.loading = false;
 
-                    self.progressValue = 0;
+                    self.status.processing = false;
 
-                }, delay);
+                }, 1000);
 
             };
 
@@ -6089,8 +6013,6 @@ angular.module('FieldDoc')
             //
             if (Account.userObject && user) {
 
-                self.showProgress();
-
                 user.$promise.then(function(userResponse) {
 
                     $rootScope.user = Account.userObject = userResponse;
@@ -6124,15 +6046,13 @@ angular.module('FieldDoc')
 
                         }
 
-                        self.showElements(1000);
+                        self.showElements();
 
                     }, function(errorResponse) {
 
                         $log.error('Unable to load request project');
 
-                        self.status.processing = false;
-
-                        self.showElements(1000);
+                        self.showElements();
 
                     });
 
@@ -6287,6 +6207,8 @@ angular.module('FieldDoc')
 
             self.saveProject = function() {
 
+                self.status.processing = true;
+
                 self.scrubProject();
 
                 self.project.properties.partners = self.processRelations(self.tempPartners);
@@ -6387,8 +6309,6 @@ angular.module('FieldDoc')
 
                     $timeout(self.closeAlerts, 2000);
 
-                    self.status.processing = false;
-
                 });
 
             };
@@ -6424,48 +6344,19 @@ angular.module('FieldDoc')
                 };
 
                 self.status = {
-                    loading: true
+                    loading: true,
+                    processing: false
                 };
 
-                self.fillMeter = undefined;
-
-                self.showProgress = function(coefficient) {
-
-                    self.fillMeter = $interval(function() {
-
-                        var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
-
-                        if (!self.progressValue) {
-
-                            self.progressValue = tempValue;
-
-                        } else if ((100 - tempValue) > self.progressValue) {
-
-                            self.progressValue += tempValue;
-
-                        }
-
-                        console.log('progressValue', self.progressValue);
-
-                    }, 100);
-
-                };
-
-                self.showElements = function(delay) {
-
-                    $interval.cancel(self.fillMeter);
-
-                    self.fillMeter = undefined;
-
-                    self.progressValue = 100;
+                self.showElements = function() {
 
                     $timeout(function() {
 
                         self.status.loading = false;
 
-                        self.progressValue = 0;
+                        self.status.processing = false;
 
-                    }, delay);
+                    }, 1000);
 
                 };
 
@@ -6542,13 +6433,13 @@ angular.module('FieldDoc')
 
                             }
 
-                            self.showElements(1000);
+                            self.showElements();
 
                         }, function(errorResponse) {
 
                             console.error('Unable to load request project');
 
-                            self.showElements(1000);
+                            self.showElements();
 
                         });
 
@@ -6653,17 +6544,41 @@ angular.module('FieldDoc')
 
                 self.saveProject = function() {
 
+                    self.status.processing = true;
+
                     self.scrubProject();
 
                     self.project.properties.members = self.processOwners(self.tempOwners);
 
                     self.project.$update().then(function(response) {
 
-                        $location.path('/projects/' + self.project.id);
+                        if (self.project.properties.members.length) {
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Collaborators added to project.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else {
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'All collaborators removed from project.',
+                                'prompt': 'OK'
+                            }];
+
+                        }
+
+                        $timeout(closeAlerts, 2000);
+
+                        self.status.processing = false;
 
                     }).then(function(error) {
 
-                        // Do something with the error
+                        self.status.processing = false;
 
                     });
 
@@ -6782,127 +6697,109 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('AccountEditViewController',
         function(Account, $location, $log, Notifications, $rootScope,
-            $route, user, User, snapshots) {
+            $route, user, User, snapshots, $timeout) {
 
-        var self = this;
+            var self = this;
 
-        $rootScope.viewState = {
-            'profile': true
-        };
+            $rootScope.viewState = {
+                'profile': true
+            };
 
-        //
-        // Assign project to a scoped variable
-        //
-        //
-        // Verify Account information for proper UI element display
-        //
-        if (Account.userObject && user) {
+            self.status = {
+                loading: true,
+                processing: false
+            };
 
-            user.$promise.then(function(userResponse) {
+            self.alerts = [];
 
-                $rootScope.user = Account.userObject = self.user = userResponse;
+            function closeAlerts() {
 
-                self.permissions = {
-                    isLoggedIn: Account.hasToken(),
-                    role: $rootScope.user.properties.roles[0].properties.name,
-                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
-                };
+                self.alerts = [];
 
-                //
-                // Setup page meta data
-                //
-                $rootScope.page = {
-                    'title': 'Profile'
-                };
-
-                //
-                // Load snapshot data
-                //
-
-                self.actions.snapshots();
-
-            });
-
-
-        } else {
-            //
-            // If there is not Account.userObject and no user object, then the
-            // user is not properly authenticated and we should send them, at
-            // minimum, back to the projects page, and have them attempt to
-            // come back to this page again.
-            //
-            self.actions.exit();
-
-        }
-
-        //
-        //
-        //
-        self.status = {
-            'saving': false
-        };
-
-        self.actions = {
-            organizations: function() {
-
-                var _organizations = [];
-
-                angular.forEach(self.user.properties.organizations, function(_organization, _index) {
-                    if (_organization.id) {
-                        _organizations.push({
-                            'id': _organization.id
-                        });
-                    } else {
-                        _organizations.push({
-                            'name': _organization.properties.name
-                        });
-                    }
-                });
-
-                return _organizations;
-            },
-            save: function() {
-
-                self.status.saving = true;
-
-                var _organizations = self.actions.organizations();
-
-                var _user = new User({
-                    'id': self.user.id,
-                    'first_name': self.user.properties.first_name,
-                    'last_name': self.user.properties.last_name,
-                    'organizations': _organizations
-                });
-
-                _user.$update(function(successResponse) {
-
-                    self.status.saving = false;
-
-                    $rootScope.notifications.success('Great!', 'Your account changes were saved');
-
-                    $location.path('/account/');
-
-                }, function(errorResponse) {
-                    self.status.saving = false;
-                });
-                
-            },
-            snapshots: function() {
-
-                snapshots.$promise.then(function(snapshotResponse) {
-
-                    self.snapshots = snapshotResponse.features;
-
-
-                });
-
-            },
-            exit: function() {
-                $location.path('/projects');
             }
-        };
 
-    });
+            //
+            // Assign project to a scoped variable
+            //
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = self.user = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0].properties.name,
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                    };
+
+                    //
+                    // Setup page meta data
+                    //
+                    $rootScope.page = {
+                        'title': 'Profile'
+                    };
+
+                });
+
+
+            } else {
+                //
+                // If there is not Account.userObject and no user object, then the
+                // user is not properly authenticated and we should send them, at
+                // minimum, back to the projects page, and have them attempt to
+                // come back to this page again.
+                //
+                self.actions.exit();
+
+            }
+
+            self.actions = {
+                save: function() {
+
+                    self.status.processing = true;
+
+                    var _user = new User({
+                        'id': self.user.id,
+                        'first_name': self.user.properties.first_name,
+                        'last_name': self.user.properties.last_name
+                    });
+
+                    _user.$update(function(successResponse) {
+
+                        self.status.processing = false;
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Profile updated.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                    }, function(errorResponse) {
+
+                        self.status.processing = false;
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Your profile could not be updated.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                    });
+
+                }
+            };
+
+        });
 'use strict';
 
 /**
@@ -7075,7 +6972,7 @@ angular.module('FieldDoc')
         .controller('SiteSummaryCtrl',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
                 $route, nodes, user, Utility, metrics, outcomes, site, Map, mapbox, leafletData,
-                leafletBoundsHelpers, Site, Project, practices) {
+                leafletBoundsHelpers, Site, Project, practices, $interval) {
 
                 var self = this;
 
@@ -7088,7 +6985,20 @@ angular.module('FieldDoc')
                 self.map = JSON.parse(JSON.stringify(Map));
 
                 self.status = {
-                    'loading': true
+                    loading: true,
+                    processing: false
+                };
+
+                self.showElements = function() {
+
+                    $timeout(function() {
+
+                        self.status.loading = false;
+
+                        self.status.processing = false;
+
+                    }, 1000);
+
                 };
 
                 self.alerts = [];
@@ -7300,22 +7210,6 @@ angular.module('FieldDoc')
 
                         console.log('self.project', self.project);
 
-                        self.status.loading = false;
-
-                        //
-                        // Load spatial nodes
-                        //
-
-                        nodes.$promise.then(function(successResponse) {
-
-                            console.log('self.nodes', successResponse);
-
-                            self.nodes = successResponse;
-
-                        }, function(errorResponse) {
-
-                        });
-
                         //
                         // Load practices
                         //
@@ -7384,6 +7278,8 @@ angular.module('FieldDoc')
 
                         }
 
+                        self.showElements();
+
                     });
 
                 };
@@ -7417,7 +7313,7 @@ angular.module('FieldDoc')
 
                         successResponse.features.forEach(function(metric) {
 
-                            var _percentComplete = +((metric.installation/metric.planning)*100).toFixed(0);
+                            var _percentComplete = +((metric.installation / metric.planning) * 100).toFixed(0);
 
                             metric.percentComplete = _percentComplete;
 
@@ -7492,7 +7388,7 @@ angular.module('FieldDoc')
         .controller('SiteEditCtrl',
             function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
                 Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, Segment,
-                $timeout, $interval, user, Shapefile) {
+                $timeout, $interval, user, Shapefile, Utility) {
 
                 var self = this;
 
@@ -7502,63 +7398,50 @@ angular.module('FieldDoc')
 
                 $rootScope.page = {};
 
-                //
-                // Verify Account information for proper UI element display
-                //
-                if (Account.userObject && user) {
+                self.status = {
+                    loading: true,
+                    processing: false
+                };
 
-                    user.$promise.then(function(userResponse) {
+                self.showElements = function() {
 
-                        $rootScope.user = Account.userObject = userResponse;
+                    $timeout(function() {
 
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0].properties.name,
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                            can_edit: false
-                        };
+                        self.status.loading = false;
 
-                        site.$promise.then(function(successResponse) {
+                        self.status.processing = false;
 
-                            console.log('self.site', successResponse);
+                    }, 1000);
 
-                            self.site = successResponse;
-
-                            if (successResponse.permissions.read &&
-                                successResponse.permissions.write) {
-
-                                self.makePrivate = false;
-
-                            } else {
-
-                                self.makePrivate = true;
-
-                            }
-
-                            self.permissions.can_edit = successResponse.permissions.write;
-                            self.permissions.can_delete = successResponse.permissions.write;
-
-                            $rootScope.page.title = self.site.properties.name;
-
-                        }, function(errorResponse) {
-
-                        });
-
-                    });
-
-                } else {
-
-                    $location.path('/account/login');
-
-                }
+                };
 
                 self.saveSite = function() {
 
+                    self.status.processing = true;
+
                     self.site.$update().then(function(successResponse) {
 
-                        $location.path('/sites/' + $route.current.params.siteId);
+                        self.site = successResponse;
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Site changes saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
 
                     }, function(errorResponse) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong and the changes could not be saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
 
                     });
 
@@ -7569,6 +7452,8 @@ angular.module('FieldDoc')
                 function closeAlerts() {
 
                     self.alerts = [];
+
+                    self.status.processing = false;
 
                 }
 
@@ -7646,6 +7531,60 @@ angular.module('FieldDoc')
 
                 };
 
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+
+                    user.$promise.then(function(userResponse) {
+
+                        $rootScope.user = Account.userObject = userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0].properties.name,
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                            can_edit: false
+                        };
+
+                        site.$promise.then(function(successResponse) {
+
+                            console.log('self.site', successResponse);
+
+                            self.site = successResponse;
+
+                            if (successResponse.permissions.read &&
+                                successResponse.permissions.write) {
+
+                                self.makePrivate = false;
+
+                            } else {
+
+                                self.makePrivate = true;
+
+                            }
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            $rootScope.page.title = self.site.properties.name;
+
+                            self.showElements();
+
+                        }, function(errorResponse) {
+
+                            self.showElements();
+
+                        });
+
+                    });
+
+                } else {
+
+                    $location.path('/account/login');
+
+                }
+
             });
 
 }());
@@ -7664,7 +7603,7 @@ angular.module('FieldDoc')
         .controller('SiteLocationCtrl',
             function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
                 Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, Segment,
-                $timeout, $interval, user, Shapefile) {
+                $timeout, $interval, user, Shapefile, Utility) {
 
                 var self = this;
 
@@ -7673,6 +7612,23 @@ angular.module('FieldDoc')
                 };
 
                 $rootScope.page = {};
+
+                self.status = {
+                    loading: true,
+                    processing: false
+                };
+
+                self.showElements = function() {
+
+                    $timeout(function() {
+
+                        self.status.loading = false;
+
+                        self.status.processing = false;
+
+                    }, 1000);
+
+                };
 
                 self.map = JSON.parse(JSON.stringify(Map));
 
@@ -7786,70 +7742,6 @@ angular.module('FieldDoc')
 
                 };
 
-                //
-                // Verify Account information for proper UI element display
-                //
-                if (Account.userObject && user) {
-
-                    user.$promise.then(function(userResponse) {
-
-                        $rootScope.user = Account.userObject = userResponse;
-
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0].properties.name,
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                            can_edit: false
-                        };
-
-                        site.$promise.then(function(successResponse) {
-
-                            console.log('self.site', successResponse);
-
-                            self.site = successResponse;
-
-                            if (successResponse.permissions.read &&
-                                successResponse.permissions.write) {
-
-                                self.makePrivate = false;
-
-                            } else {
-
-                                self.makePrivate = true;
-
-                            }
-
-                            self.permissions.can_edit = successResponse.permissions.write;
-                            self.permissions.can_delete = successResponse.permissions.write;
-
-                            $rootScope.page.title = self.site.properties.name;
-
-                            //
-                            // If a valid site geometry is present, add it to the map
-                            // and track the object in `self.savedObjects`.
-                            //
-
-                            if (self.site.geometry !== null &&
-                                typeof self.site.geometry !== 'undefined') {
-
-                                var geometry = self.site.geometry;
-
-                                self.setGeoJsonLayer(geometry);
-
-                            }
-
-                        }, function(errorResponse) {
-
-                        });
-
-                    });
-
-                } else {
-
-                    $location.path('/account/login');
-
-                }
-
                 self.uploadShapefile = function() {
 
                     if (!self.shapefile ||
@@ -7864,8 +7756,6 @@ angular.module('FieldDoc')
                         return false;
 
                     }
-
-                    // self.status.saving.action = true;
 
                     if (self.shapefile) {
 
@@ -7999,11 +7889,17 @@ angular.module('FieldDoc')
 
                     }
 
+                    self.status.processing = true;
+
                     self.site.$update().then(function(successResponse) {
 
-                        $location.path('/sites/' + $route.current.params.siteId);
+                        self.status.processing = false;
+
+                        self.site = successResponse;
 
                     }, function(errorResponse) {
+
+                        self.status.processing = false;
 
                     });
                 };
@@ -8366,6 +8262,74 @@ angular.module('FieldDoc')
 
                 });
 
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+
+                    user.$promise.then(function(userResponse) {
+
+                        $rootScope.user = Account.userObject = userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0].properties.name,
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                            can_edit: false
+                        };
+
+                        site.$promise.then(function(successResponse) {
+
+                            console.log('self.site', successResponse);
+
+                            self.site = successResponse;
+
+                            if (successResponse.permissions.read &&
+                                successResponse.permissions.write) {
+
+                                self.makePrivate = false;
+
+                            } else {
+
+                                self.makePrivate = true;
+
+                            }
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            $rootScope.page.title = self.site.properties.name;
+
+                            //
+                            // If a valid site geometry is present, add it to the map
+                            // and track the object in `self.savedObjects`.
+                            //
+
+                            if (self.site.geometry !== null &&
+                                typeof self.site.geometry !== 'undefined') {
+
+                                var geometry = self.site.geometry;
+
+                                self.setGeoJsonLayer(geometry);
+
+                            }
+
+                            self.showElements();
+
+                        }, function(errorResponse) {
+
+                            self.showElements();
+
+                        });
+
+                    });
+
+                } else {
+
+                    $location.path('/account/login');
+
+                }
+
             });
 
 }());
@@ -8673,7 +8637,7 @@ angular.module('FieldDoc')
         .controller('SiteGeographyCtrl',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
                 $route, nodes, user, Utility, site, Site, Practice, MapPreview,
-                leafletBoundsHelpers) {
+                leafletBoundsHelpers, $interval) {
 
                 var self = this;
 
@@ -8688,7 +8652,20 @@ angular.module('FieldDoc')
                 console.log('self.map', self.map);
 
                 self.status = {
-                    'loading': true
+                    loading: true,
+                    processing: false
+                };
+
+                self.showElements = function() {
+
+                    $timeout(function() {
+
+                        self.status.loading = false;
+
+                        self.status.processing = false;
+
+                    }, 1000);
+
                 };
 
                 self.alerts = [];
@@ -8986,8 +8963,6 @@ angular.module('FieldDoc')
 
                         console.log('self.project', self.project);
 
-                        self.status.loading = false;
-
                         //
                         // Load spatial nodes
                         //
@@ -9009,7 +8984,11 @@ angular.module('FieldDoc')
 
                             console.log('self.nodes', self.nodes);
 
+                            self.showElements();
+
                         }, function(errorResponse) {
+
+                            self.showElements();
 
                         });
 
@@ -9196,11 +9175,6 @@ angular.module('FieldDoc')
                             id: $route.current.params.practiceId
                         });
                     },
-                    practice_types: function(PracticeType, $route) {
-                        return PracticeType.query({
-                            results_per_page: 500
-                        });
-                    },
                     practice: function(Practice, $route) {
                         return Practice.get({
                             id: $route.current.params.practiceId
@@ -9253,7 +9227,7 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('PracticeEditController', function(Account, Image, leafletData, $location, $log, Map,
         mapbox, Media, Practice, practice, practice_types, $q, $rootScope, $route,
-        $scope, $timeout, $interval, site, user, Shapefile, leafletBoundsHelpers) {
+        $scope, $timeout, $interval, site, user, Shapefile, leafletBoundsHelpers, Utility) {
 
         var self = this;
 
@@ -9262,6 +9236,51 @@ angular.module('FieldDoc')
         };
 
         $rootScope.page = {};
+
+        self.status = {
+            loading: true,
+            processing: true
+        };
+
+        self.alerts = [];
+
+        function closeAlerts() {
+
+            self.alerts = [];
+
+        }
+
+        function closeRoute() {
+
+            $location.path(self.practice.links.site.html);
+
+        }
+
+        self.confirmDelete = function(obj) {
+
+            console.log('self.confirmDelete', obj);
+
+            self.deletionTarget = self.deletionTarget ? null : obj;
+
+        };
+
+        self.cancelDelete = function() {
+
+            self.deletionTarget = null;
+
+        };
+
+        self.showElements = function() {
+
+            $timeout(function() {
+
+                self.status.loading = false;
+
+                self.status.processing = false;
+
+            }, 1000);
+
+        };
 
         self.loadSite = function() {
 
@@ -9305,61 +9324,95 @@ angular.module('FieldDoc')
                 delete self.practice.properties.project;
                 delete self.practice.properties.site;
 
-                self.practiceType = successResponse.properties.category;
+                if (successResponse.properties.category) {
+
+                    self.practiceType = successResponse.properties.category.properties;
+
+                }
 
                 $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
 
             }, function(errorResponse) {
+
                 //
+
             });
+
+            //
+            // Load practices
+            //
+
+            practice_types.$promise.then(function(successResponse) {
+
+                console.log('self.practiceTypes', successResponse);
+
+                self.practiceTypes = successResponse.features;
+
+                self.showElements();
+
+            }, function(errorResponse) {
+
+                //
+
+                self.showElements();
+
+            });
+
+        };
+
+        self.scrubFeature = function() {
+
+            delete self.practice.geometry;
+            delete self.practice.properties.site;
+            delete self.practice.properties.project;
+            delete self.practice.properties.program;
+            delete self.practice.properties.organization;
+            delete self.practice.properties.creator;
+            delete self.practice.properties.last_modified_by;
 
         };
 
         self.savePractice = function() {
 
-            if (self.practiceCategory) {
+            self.status.processing = true;
 
-                self.practice.properties.category_id = self.practiceCategory.id;
+            self.scrubFeature();
+
+            if (self.practiceType) {
+
+                self.practice.properties.category_id = self.practiceType.id;
 
             }
 
             self.practice.$update().then(function(successResponse) {
 
-                $location.path('/practices/' + self.practice.id);
+                self.alerts = [{
+                    'type': 'success',
+                    'flag': 'Success!',
+                    'msg': 'Practice changes saved.',
+                    'prompt': 'OK'
+                }];
+
+                $timeout(closeAlerts, 2000);
+
+                self.showElements();
 
             }, function(errorResponse) {
 
                 // Error message
 
+                self.alerts = [{
+                    'type': 'success',
+                    'flag': 'Success!',
+                    'msg': 'Practice changes could not be saved.',
+                    'prompt': 'OK'
+                }];
+
+                $timeout(closeAlerts, 2000);
+
+                self.showElements();
+
             });
-
-        };
-
-        self.alerts = [];
-
-        function closeAlerts() {
-
-            self.alerts = [];
-
-        }
-
-        function closeRoute() {
-
-            $location.path(self.practice.links.site.html);
-
-        }
-
-        self.confirmDelete = function(obj) {
-
-            console.log('self.confirmDelete', obj);
-
-            self.deletionTarget = self.deletionTarget ? null : obj;
-
-        };
-
-        self.cancelDelete = function() {
-
-            self.deletionTarget = null;
 
         };
 
@@ -9424,28 +9477,6 @@ angular.module('FieldDoc')
             self.practice.properties.category_id = $item.id;
 
         };
-
-        //
-        // Load practices
-        //
-
-        practice_types.$promise.then(function(successResponse) {
-
-            console.log('self.practiceTypes', successResponse);
-
-            var _practiceTypes = [];
-
-            successResponse.features.forEach(function(feature) {
-
-                _practiceTypes.push(feature.properties);
-
-            });
-
-            self.practiceTypes = _practiceTypes;
-
-        }, function(errorResponse) {
-
-        });
 
         //
         // Verify Account information for proper UI element display
@@ -9742,7 +9773,7 @@ angular.module('FieldDoc')
 
                     }, function(errorResponse) {
 
-
+                        self.status.loading = false;
 
                     });
 
@@ -9849,695 +9880,687 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-    .controller('PracticeLocationController', function(Account, Image, leafletData, $location, $log, Map,
-        mapbox, Media, Practice, practice, practice_types, $q, $rootScope, $route,
-        $scope, $timeout, $interval, site, user, Shapefile, leafletBoundsHelpers) {
+    .controller('PracticeLocationController',
+        function(Account, Image, leafletData, $location, $log, Map,
+            mapbox, Media, Practice, practice, $q, $rootScope, $route,
+            $scope, $timeout, $interval, site, user, Shapefile,
+            leafletBoundsHelpers, Utility) {
 
-        var self = this;
+            var self = this;
 
-        $rootScope.toolbarState = {
-            'editLocation': true
-        };
-
-        self.map = JSON.parse(JSON.stringify(Map));
-
-        self.savedObjects = [];
-
-        self.editableLayers = new L.FeatureGroup();
-
-        //
-        // Set default image path for Leaflet iconography
-        //
-
-        L.Icon.Default.imagePath = '/images/leaflet';
-
-        function addNonGroupLayers(sourceLayer, targetGroup) {
-            if (sourceLayer instanceof L.LayerGroup) {
-                sourceLayer.eachLayer(function(layer) {
-                    addNonGroupLayers(layer, targetGroup);
-                });
-            } else {
-                targetGroup.addLayer(sourceLayer);
-            }
-        }
-
-        self.setGeoJsonLayer = function(data) {
-
-            self.editableLayers.clearLayers();
-
-            var siteGeometry = L.geoJson(data, {});
-
-            addNonGroupLayers(siteGeometry, self.editableLayers);
-
-            self.savedObjects = [{
-                id: self.editableLayers._leaflet_id,
-                geoJson: data
-            }];
-
-            console.log('self.savedObjects', self.savedObjects);
-
-        };
-
-        //
-        // We use this function for handle any type of geographic change, whether
-        // through the map or through the fields
-        //
-
-        self.processPin = function(coordinates, zoom) {
-
-            if (coordinates.lat === null || coordinates.lat === undefined || coordinates.lng === null || coordinates.lng === undefined) {
-                return;
-            }
-
-            self.map.center = {
-                lat: coordinates.lat,
-                lng: coordinates.lng,
-                zoom: (zoom < 10) ? 10 : zoom
+            $rootScope.toolbarState = {
+                'editLocation': true
             };
 
-            self.showGeocoder = false;
-        };
+            self.status = {
+                loading: true
+            };
 
-        //
-        // Empty Geocode object
-        //
-        // We need to have an empty geocode object so that we can fill it in later
-        // in the address geocoding process. This allows us to pass the results along
-        // to the Form Submit function we have in place below.
-        //
-        self.geocode = {};
+            self.showElements = function() {
 
-        //
-        // When the user has selected a response, we need to perform a few extra
-        // tasks so that our scope is updated properly.
-        //
+                $timeout(function() {
 
-        $scope.$watch(angular.bind(this, function() {
-            return this.geocode.response;
-        }), function(response) {
+                    self.status.loading = false;
+
+                    self.status.processing = false;
+
+                }, 1000);
+
+            };
+
+            self.map = JSON.parse(JSON.stringify(Map));
+
+            self.savedObjects = [];
+
+            self.editableLayers = new L.FeatureGroup();
 
             //
-            // Only execute the following block of code if the user has geocoded an
-            // address. This block of code expects this to be a single feature from a
-            // Carmen GeoJSON object.
+            // Set default image path for Leaflet iconography
             //
-            // @see https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
-            //
-            if (response) {
 
-                self.processPin({
-                    lat: response.geometry.coordinates[1],
-                    lng: response.geometry.coordinates[0]
-                }, 16);
+            L.Icon.Default.imagePath = '/images/leaflet';
 
-                self.geocode = {
-                    query: null,
-                    response: null
-                };
+            function addNonGroupLayers(sourceLayer, targetGroup) {
+                if (sourceLayer instanceof L.LayerGroup) {
+                    sourceLayer.eachLayer(function(layer) {
+                        addNonGroupLayers(layer, targetGroup);
+                    });
+                } else {
+                    targetGroup.addLayer(sourceLayer);
+                }
             }
 
-        });
+            self.setGeoJsonLayer = function(data) {
 
-        $rootScope.page = {};
+                self.editableLayers.clearLayers();
 
-        self.loadSite = function() {
+                var siteGeometry = L.geoJson(data, {});
 
-            site.$promise.then(function(successResponse) {
+                addNonGroupLayers(siteGeometry, self.editableLayers);
 
-                console.log('self.site', successResponse);
-
-                self.site = successResponse;
-
-                if (self.site.geometry) {
-
-                    leafletData.getMap('practice--map').then(function(map) {
-
-                        var siteExtent = new L.FeatureGroup();
-
-                        var siteGeometry = L.geoJson(successResponse, {});
-
-                        siteExtent.addLayer(siteGeometry);
-
-                        map.fitBounds(siteExtent.getBounds(), {
-                            maxZoom: 18
-                        });
-
-                    });
-
-                }
-
-                self.loadPractice();
-
-            }, function(errorResponse) {
-
-                //
-
-            });
-
-        };
-
-        self.loadPractice = function() {
-
-            practice.$promise.then(function(successResponse) {
-
-                console.log('self.practice', successResponse);
-
-                self.practice = successResponse;
-
-                if (!successResponse.permissions.read &&
-                    !successResponse.permissions.write) {
-
-                    self.makePrivate = true;
-
-                    return;
-
-                }
-
-                self.permissions.can_edit = successResponse.permissions.write;
-                self.permissions.can_delete = successResponse.permissions.write;
-
-                delete self.practice.properties.organization;
-                delete self.practice.properties.project;
-                delete self.practice.properties.site;
-
-                self.practiceType = successResponse.properties.category;
-
-                $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
-
-                //
-                // If a valid practice geometry is present, add it to the map
-                // and track the object in `self.savedObjects`.
-                //
-
-                if (self.practice.geometry !== null &&
-                    typeof self.practice.geometry !== 'undefined') {
-
-                    //Added by Lin 
-                    leafletData.getMap('practice--map').then(function(map) {
-
-                        self.practiceExtent = new L.FeatureGroup();
-
-                        self.setGeoJsonLayer(self.practice.geometry);
-
-                        map.fitBounds(self.editableLayers.getBounds(), {
-                            maxZoom: 18
-                        });
-
-                    });
-
-                    self.map.geojson = {
-                        data: self.practice.geometry
-                    };
-
-                    self.savedObjects = [{
-                        id: self.editableLayers._leaflet_id,
-                        geoJson: self.practice.geometry
-                    }];
-
-                    console.log('self.practice.geometry', self.practice.geometry);
-
-                    console.log('self.savedObjects', self.savedObjects);
-
-                    var rawGeometry = self.practice.geometry;
-
-                    console.log('rawGeometry', rawGeometry);
-
-                }
-
-            }, function(errorResponse) {
-                //
-            });
-
-        };
-
-        //
-        // Verify Account information for proper UI element display
-        //
-        if (Account.userObject && user) {
-
-            user.$promise.then(function(userResponse) {
-
-                $rootScope.user = Account.userObject = userResponse;
-
-                self.permissions = {
-                    isLoggedIn: Account.hasToken(),
-                    role: $rootScope.user.properties.roles[0].properties.name,
-                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                    can_edit: true
-                };
-
-                self.loadSite();
-
-            });
-
-        }
-
-        self.uploadShapefile = function() {
-
-            if (!self.shapefile ||
-                !self.shapefile.length) {
-
-                self.alerts = [{
-                    'type': 'error',
-                    'flag': 'Error!',
-                    'msg': 'Please add a file to upload.',
-                    'prompt': 'OK'
+                self.savedObjects = [{
+                    id: self.editableLayers._leaflet_id,
+                    geoJson: data
                 }];
 
-                $timeout(closeAlerts, 2000);
+                console.log('self.savedObjects', self.savedObjects);
 
-                return false;
+            };
 
-            }
+            //
+            // We use this function for handle any type of geographic change, whether
+            // through the map or through the fields
+            //
 
-            // self.status.saving.action = true;
+            self.processPin = function(coordinates, zoom) {
 
-            if (self.shapefile) {
+                if (coordinates.lat === null || coordinates.lat === undefined || coordinates.lng === null || coordinates.lng === undefined) {
+                    return;
+                }
 
-                self.progressMessage = 'Uploading your file...';
+                self.map.center = {
+                    lat: coordinates.lat,
+                    lng: coordinates.lng,
+                    zoom: (zoom < 10) ? 10 : zoom
+                };
 
-                var fileData = new FormData();
+                self.showGeocoder = false;
+            };
 
-                fileData.append('file', self.shapefile[0]);
+            //
+            // Empty Geocode object
+            //
+            // We need to have an empty geocode object so that we can fill it in later
+            // in the address geocoding process. This allows us to pass the results along
+            // to the Form Submit function we have in place below.
+            //
+            self.geocode = {};
 
-                console.log('fileData', fileData);
+            //
+            // When the user has selected a response, we need to perform a few extra
+            // tasks so that our scope is updated properly.
+            //
 
-                self.fillMeter = $interval(function() {
+            $scope.$watch(angular.bind(this, function() {
+                return this.geocode.response;
+            }), function(response) {
 
-                    var tempValue = (self.progressValue || 10) * 0.50;
+                //
+                // Only execute the following block of code if the user has geocoded an
+                // address. This block of code expects this to be a single feature from a
+                // Carmen GeoJSON object.
+                //
+                // @see https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+                //
+                if (response) {
 
-                    if (!self.progressValue) {
+                    self.processPin({
+                        lat: response.geometry.coordinates[1],
+                        lng: response.geometry.coordinates[0]
+                    }, 16);
 
-                        self.progressValue = tempValue;
+                    self.geocode = {
+                        query: null,
+                        response: null
+                    };
+                }
 
-                    } else if ((100 - tempValue) > self.progressValue) {
+            });
 
-                        self.progressValue += tempValue;
+            $rootScope.page = {};
+
+            self.loadSite = function() {
+
+                site.$promise.then(function(successResponse) {
+
+                    console.log('self.site', successResponse);
+
+                    self.site = successResponse;
+
+                    if (self.site.geometry) {
+
+                        leafletData.getMap('practice--map').then(function(map) {
+
+                            var siteExtent = new L.FeatureGroup();
+
+                            var siteGeometry = L.geoJson(successResponse, {});
+
+                            siteExtent.addLayer(siteGeometry);
+
+                            map.fitBounds(siteExtent.getBounds(), {
+                                maxZoom: 18
+                            });
+
+                        });
 
                     }
 
-                    console.log('progressValue', self.progressValue);
+                    self.loadPractice();
 
-                    if (self.progressValue > 75) {
+                }, function(errorResponse) {
 
-                        self.progressMessage = 'Analyzing data...';
+                    //
+
+                });
+
+            };
+
+            self.loadPractice = function() {
+
+                practice.$promise.then(function(successResponse) {
+
+                    console.log('self.practice', successResponse);
+
+                    self.practice = successResponse;
+
+                    if (!successResponse.permissions.read &&
+                        !successResponse.permissions.write) {
+
+                        self.makePrivate = true;
+
+                        return;
 
                     }
 
-                }, 100);
+                    self.permissions.can_edit = successResponse.permissions.write;
+                    self.permissions.can_delete = successResponse.permissions.write;
 
-                console.log('Shapefile', Shapefile);
+                    delete self.practice.properties.organization;
+                    delete self.practice.properties.project;
+                    delete self.practice.properties.site;
 
-                try {
+                    self.practiceType = successResponse.properties.category;
 
-                    Shapefile.upload({}, fileData, function(shapefileResponse) {
+                    $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
 
-                        console.log('shapefileResponse', shapefileResponse);
+                    //
+                    // If a valid practice geometry is present, add it to the map
+                    // and track the object in `self.savedObjects`.
+                    //
 
-                        self.progressValue = 100;
+                    if (self.practice.geometry !== null &&
+                        typeof self.practice.geometry !== 'undefined') {
 
-                        self.progressMessage = 'Upload successful, rendering shape...';
+                        //Added by Lin 
+                        leafletData.getMap('practice--map').then(function(map) {
 
-                        $interval.cancel(self.fillMeter);
+                            self.practiceExtent = new L.FeatureGroup();
 
-                        $timeout(function() {
+                            self.setGeoJsonLayer(self.practice.geometry);
 
-                            self.progressValue = null;
+                            map.fitBounds(self.editableLayers.getBounds(), {
+                                maxZoom: 18
+                            });
 
-                            if (shapefileResponse.msg.length) {
+                        });
 
-                                console.log('Shapefile --> GeoJSON', shapefileResponse.msg[0]);
+                        self.map.geojson = {
+                            data: self.practice.geometry
+                        };
 
-                                if (shapefileResponse.msg[0] !== null &&
-                                    typeof shapefileResponse.msg[0].geometry !== 'undefined') {
+                        self.savedObjects = [{
+                            id: self.editableLayers._leaflet_id,
+                            geoJson: self.practice.geometry
+                        }];
 
-                                    self.setGeoJsonLayer(shapefileResponse.msg[0]);
+                        console.log('self.practice.geometry', self.practice.geometry);
+
+                        console.log('self.savedObjects', self.savedObjects);
+
+                        var rawGeometry = self.practice.geometry;
+
+                        console.log('rawGeometry', rawGeometry);
+
+                    }
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.uploadShapefile = function() {
+
+                if (!self.shapefile ||
+                    !self.shapefile.length) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Please add a file to upload.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(closeAlerts, 2000);
+
+                    return false;
+
+                }
+
+                if (self.shapefile) {
+
+                    self.progressMessage = 'Uploading your file...';
+
+                    var fileData = new FormData();
+
+                    fileData.append('file', self.shapefile[0]);
+
+                    console.log('fileData', fileData);
+
+                    self.fillMeter = $interval(function() {
+
+                        var tempValue = (self.progressValue || 10) * 0.50;
+
+                        if (!self.progressValue) {
+
+                            self.progressValue = tempValue;
+
+                        } else if ((100 - tempValue) > self.progressValue) {
+
+                            self.progressValue += tempValue;
+
+                        }
+
+                        console.log('progressValue', self.progressValue);
+
+                        if (self.progressValue > 75) {
+
+                            self.progressMessage = 'Analyzing data...';
+
+                        }
+
+                    }, 100);
+
+                    console.log('Shapefile', Shapefile);
+
+                    try {
+
+                        Shapefile.upload({}, fileData, function(shapefileResponse) {
+
+                            console.log('shapefileResponse', shapefileResponse);
+
+                            self.progressValue = 100;
+
+                            self.progressMessage = 'Upload successful, rendering shape...';
+
+                            $interval.cancel(self.fillMeter);
+
+                            $timeout(function() {
+
+                                self.progressValue = null;
+
+                                if (shapefileResponse.msg.length) {
+
+                                    console.log('Shapefile --> GeoJSON', shapefileResponse.msg[0]);
+
+                                    if (shapefileResponse.msg[0] !== null &&
+                                        typeof shapefileResponse.msg[0].geometry !== 'undefined') {
+
+                                        self.setGeoJsonLayer(shapefileResponse.msg[0]);
+
+                                    }
 
                                 }
 
-                            }
+                            }, 1600);
 
-                        }, 1600);
+                            self.error = null;
 
-                        self.error = null;
+                        }, function(errorResponse) {
 
-                    }, function(errorResponse) {
+                            console.log(errorResponse);
 
-                        console.log(errorResponse);
+                            $interval.cancel(self.fillMeter);
 
-                        $interval.cancel(self.fillMeter);
+                            self.progressValue = null;
 
-                        self.progressValue = null;
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'The file could not be processed.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                            return;
+
+                        });
+
+                    } catch (error) {
+
+                        console.log('Shapefile upload error', error);
+
+                    }
+
+                }
+
+            };
+
+            self.savePractice = function() {
+
+                self.status.processing = true;
+
+                if (self.savedObjects.length) {
+
+                    self.savedObjects.forEach(function(object) {
+
+                        console.log('Iterating self.savedObjects', object);
+
+                        if (object.geoJson.geometry) {
+
+                            self.practice.geometry = object.geoJson.geometry;
+
+                        } else {
+
+                            self.practice.geometry = object.geoJson;
+
+                        }
+
+                    });
+
+                }
+
+                self.practice.$update().then(function(successResponse) {
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.alerts = [];
+
+            function closeAlerts() {
+
+                self.alerts = [];
+
+            }
+
+            function closeRoute() {
+
+                $location.path(self.practice.links.site.html);
+
+            }
+
+            self.confirmDelete = function(obj) {
+
+                console.log('self.confirmDelete', obj);
+
+                self.deletionTarget = self.deletionTarget ? null : obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.deleteFeature = function() {
+
+                Practice.delete({
+                    id: +self.deletionTarget.id
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this practice.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
 
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'The file could not be processed.',
+                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this practice.',
                             'prompt': 'OK'
                         }];
 
-                        $timeout(closeAlerts, 2000);
+                    } else if (errorResponse.status === 403) {
 
-                        return;
-
-                    });
-
-                } catch (error) {
-
-                    console.log('Shapefile upload error', error);
-
-                }
-
-            }
-
-        };
-
-        self.savePractice = function() {
-
-            if (self.savedObjects.length) {
-
-                self.savedObjects.forEach(function(object) {
-
-                    console.log('Iterating self.savedObjects', object);
-
-                    if (object.geoJson.geometry) {
-
-                        self.practice.geometry = object.geoJson.geometry;
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this practice.',
+                            'prompt': 'OK'
+                        }];
 
                     } else {
 
-                        self.practice.geometry = object.geoJson;
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this practice.',
+                            'prompt': 'OK'
+                        }];
 
                     }
 
+                    $timeout(closeAlerts, 2000);
+
                 });
 
-            }
-
-            self.practice.$update().then(function(successResponse) {
-
-                $location.path('/practices/' + self.practice.id);
-
-            }, function(errorResponse) {
-
-                // Error message
-
-            });
-
-        };
-
-        self.alerts = [];
-
-        function closeAlerts() {
-
-            self.alerts = [];
-
-        }
-
-        function closeRoute() {
-
-            $location.path(self.practice.links.site.html);
-
-        }
-
-        self.confirmDelete = function(obj) {
-
-            console.log('self.confirmDelete', obj);
-
-            self.deletionTarget = self.deletionTarget ? null : obj;
-
-        };
-
-        self.cancelDelete = function() {
-
-            self.deletionTarget = null;
-
-        };
-
-        self.deleteFeature = function() {
-
-            Practice.delete({
-                id: +self.deletionTarget.id
-            }).$promise.then(function(data) {
-
-                self.alerts.push({
-                    'type': 'success',
-                    'flag': 'Success!',
-                    'msg': 'Successfully deleted this practice.',
-                    'prompt': 'OK'
-                });
-
-                $timeout(closeRoute, 2000);
-
-            }).catch(function(errorResponse) {
-
-                console.log('self.deleteFeature.errorResponse', errorResponse);
-
-                if (errorResponse.status === 409) {
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this practice.',
-                        'prompt': 'OK'
-                    }];
-
-                } else if (errorResponse.status === 403) {
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'You don’t have permission to delete this practice.',
-                        'prompt': 'OK'
-                    }];
-
-                } else {
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Something went wrong while attempting to delete this practice.',
-                        'prompt': 'OK'
-                    }];
-
-                }
-
-                $timeout(closeAlerts, 2000);
-
-            });
-
-        };
-
-        //
-        // Define a layer to add geometries to later
-        //
-        var featureGroup = new L.FeatureGroup();
-
-        //
-        // Convert a GeoJSON Feature Collection to a valid Leaflet Layer
-        //
-        self.geojsonToLayer = function(geojson, layer) {
-            layer.clearLayers();
-
-            function add(l) {
-                l.addTo(layer);
-            }
-
-            //
-            // Make sure the GeoJSON object is added to the layer with appropriate styles
-            //
-            L.geoJson(geojson, {
-                style: {
-                    stroke: true,
-                    fill: false,
-                    weight: 2,
-                    opacity: 1,
-                    color: 'rgb(255,255,255)',
-                    lineCap: 'square'
-                }
-            }).eachLayer(add);
-        };
-
-        //
-        // Define our map interactions via the Angular Leaflet Directive
-        //
-        leafletData.getMap('practice--map').then(function(map) {
-
-            //
-            // Add draw toolbar
-            //
-
-            var drawControls = new L.Control.Draw({
-                draw: {
-                    circle: false,
-                    circlemarker: false,
-                    rectangle: false
-                },
-                edit: {
-                    featureGroup: self.editableLayers
-                }
-            });
-
-            console.log('drawControls', drawControls);
-
-            map.addControl(drawControls);
-
-            var drawnItems = drawControls.options.edit.featureGroup;
-
-            // map.fitBounds(self.editableLayers.getBounds());
-
-            // if (drawnItems.getLayers().length > 1) {
-
-            //     map.fitBounds(drawnItems.getBounds());
-
-            // }
-
-            // Init the map with the saved elements
-            var printLayers = function() {
-                // console.log("After: ");
-                map.eachLayer(function(layer) {
-                    console.log('Existing layer', layer);
-                });
             };
 
-            drawnItems.addTo(map);
-            printLayers();
+            //
+            // Define a layer to add geometries to later
+            //
+            var featureGroup = new L.FeatureGroup();
 
-            map.on('draw:created', function(e) {
+            //
+            // Convert a GeoJSON Feature Collection to a valid Leaflet Layer
+            //
+            self.geojsonToLayer = function(geojson, layer) {
+                layer.clearLayers();
 
-                var layer = e.layer;
+                function add(l) {
+                    l.addTo(layer);
+                }
 
                 //
-                // Sites must only have one geometry feature
+                // Make sure the GeoJSON object is added to the layer with appropriate styles
+                //
+                L.geoJson(geojson, {
+                    style: {
+                        stroke: true,
+                        fill: false,
+                        weight: 2,
+                        opacity: 1,
+                        color: 'rgb(255,255,255)',
+                        lineCap: 'square'
+                    }
+                }).eachLayer(add);
+            };
+
+            //
+            // Define our map interactions via the Angular Leaflet Directive
+            //
+            leafletData.getMap('practice--map').then(function(map) {
+
+                //
+                // Add draw toolbar
                 //
 
-                drawnItems.clearLayers();
-                drawnItems.addLayer(layer);
-                console.log('Layer added', JSON.stringify(layer.toGeoJSON()));
+                var drawControls = new L.Control.Draw({
+                    draw: {
+                        circle: false,
+                        circlemarker: false,
+                        rectangle: false
+                    },
+                    edit: {
+                        featureGroup: self.editableLayers
+                    }
+                });
 
-                self.savedObjects = [{
-                    id: layer._leaflet_id,
-                    geoJson: layer.toGeoJSON()
-                }];
+                console.log('drawControls', drawControls);
 
-            });
+                map.addControl(drawControls);
 
-            map.on('draw:edited', function(e) {
+                var drawnItems = drawControls.options.edit.featureGroup;
 
-                var layers = e.layers;
+                // map.fitBounds(self.editableLayers.getBounds());
 
-                console.log('map.draw:edited', layers);
+                // if (drawnItems.getLayers().length > 1) {
 
-                layers.eachLayer(function(layer) {
+                //     map.fitBounds(drawnItems.getBounds());
+
+                // }
+
+                // Init the map with the saved elements
+                var printLayers = function() {
+                    // console.log("After: ");
+                    map.eachLayer(function(layer) {
+                        console.log('Existing layer', layer);
+                    });
+                };
+
+                drawnItems.addTo(map);
+                printLayers();
+
+                map.on('draw:created', function(e) {
+
+                    var layer = e.layer;
+
+                    //
+                    // Sites must only have one geometry feature
+                    //
+
+                    drawnItems.clearLayers();
+                    drawnItems.addLayer(layer);
+                    console.log('Layer added', JSON.stringify(layer.toGeoJSON()));
 
                     self.savedObjects = [{
                         id: layer._leaflet_id,
                         geoJson: layer.toGeoJSON()
                     }];
 
-                    console.log('Layer changed', layer._leaflet_id, JSON.stringify(layer.toGeoJSON()));
-
                 });
 
-            });
+                map.on('draw:edited', function(e) {
 
-            map.on('draw:deleted', function(e) {
+                    var layers = e.layers;
 
-                var layers = e.layers;
+                    console.log('map.draw:edited', layers);
 
-                layers.eachLayer(function(layer) {
+                    layers.eachLayer(function(layer) {
 
-                    for (var i = 0; i < self.savedObjects.length; i++) {
-                        if (self.savedObjects[i].id == layer._leaflet_id) {
-                            self.savedObjects.splice(i, 1);
-                        }
-                    }
+                        self.savedObjects = [{
+                            id: layer._leaflet_id,
+                            geoJson: layer.toGeoJSON()
+                        }];
 
-                    console.log('Layer removed', JSON.stringify(layer.toGeoJSON()));
+                        console.log('Layer changed', layer._leaflet_id, JSON.stringify(layer.toGeoJSON()));
 
-                });
-
-                self.savedObjects = [];
-
-                console.log('Saved objects', self.savedObjects);
-
-            });
-
-            map.on('layeradd', function(e) {
-
-                console.log('map:layeradd', e);
-
-                if (e.layer.getBounds) {
-
-                    map.fitBounds(e.layer.getBounds(), {
-                        padding: [20, 20],
-                        maxZoom: 18
                     });
 
-                }
+                });
 
-            });
+                map.on('draw:deleted', function(e) {
 
-            map.on('zoomend', function(e) {
+                    var layers = e.layers;
 
-                console.log('map:zoomend', map.getZoom());
+                    layers.eachLayer(function(layer) {
+
+                        for (var i = 0; i < self.savedObjects.length; i++) {
+                            if (self.savedObjects[i].id == layer._leaflet_id) {
+                                self.savedObjects.splice(i, 1);
+                            }
+                        }
+
+                        console.log('Layer removed', JSON.stringify(layer.toGeoJSON()));
+
+                    });
+
+                    self.savedObjects = [];
+
+                    console.log('Saved objects', self.savedObjects);
+
+                });
+
+                map.on('layeradd', function(e) {
+
+                    console.log('map:layeradd', e);
+
+                    if (e.layer.getBounds) {
+
+                        map.fitBounds(e.layer.getBounds(), {
+                            padding: [20, 20],
+                            maxZoom: 18
+                        });
+
+                    }
+
+                });
+
+                map.on('zoomend', function(e) {
+
+                    console.log('map:zoomend', map.getZoom());
+
+                });
+
+                //
+                // Update the pin and segment information when the user clicks on the map
+                // or drags the pin to a new location
+                //
+                $scope.$on('leafletDirectiveMap.click', function(event, args) {
+                    self.processPin(args.leafletEvent.latlng, map._zoom);
+                });
+
+                $scope.$on('leafletDirectiveMap.dblclick', function(event, args) {
+                    self.processPin(args.leafletEvent.latlng, map._zoom + 1);
+                });
+
+                $scope.$on('leafletDirectiveMarker.dragend', function(event, args) {
+                    self.processPin(args.leafletEvent.target._latlng, map._zoom);
+                });
+
+                $scope.$on('leafletDirectiveMarker.dblclick', function(event, args) {
+                    var zoom = map._zoom + 1;
+                    map.setZoom(zoom);
+                });
 
             });
 
             //
-            // Update the pin and segment information when the user clicks on the map
-            // or drags the pin to a new location
+            // Verify Account information for proper UI element display
             //
-            $scope.$on('leafletDirectiveMap.click', function(event, args) {
-                self.processPin(args.leafletEvent.latlng, map._zoom);
-            });
+            if (Account.userObject && user) {
 
-            $scope.$on('leafletDirectiveMap.dblclick', function(event, args) {
-                self.processPin(args.leafletEvent.latlng, map._zoom + 1);
-            });
+                user.$promise.then(function(userResponse) {
 
-            $scope.$on('leafletDirectiveMarker.dragend', function(event, args) {
-                self.processPin(args.leafletEvent.target._latlng, map._zoom);
-            });
+                    $rootScope.user = Account.userObject = userResponse;
 
-            $scope.$on('leafletDirectiveMarker.dblclick', function(event, args) {
-                var zoom = map._zoom + 1;
-                map.setZoom(zoom);
-            });
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0].properties.name,
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: true
+                    };
 
-        });
+                    self.loadSite();
 
-        self.setPracticeType = function($item, $model, $label) {
+                });
 
-            console.log('self.practiceType', $item);
-
-            self.practice.properties.category_id = $item.id;
-
-        };
-
-        //
-        // Load practices
-        //
-
-        practice_types.$promise.then(function(successResponse) {
-
-            console.log('self.practiceTypes', successResponse);
-
-            var _practiceTypes = [];
-
-            successResponse.features.forEach(function(feature) {
-
-                _practiceTypes.push(feature.properties);
-
-            });
-
-            self.practiceTypes = _practiceTypes;
-
-        }, function(errorResponse) {
+            }
 
         });
-
-    });
 'use strict';
 
 /**
@@ -10561,47 +10584,20 @@ angular.module('FieldDoc')
 
         $rootScope.page = {};
 
-        self.loading = true;
-
-        self.fillMeter = undefined;
-
-        self.showProgress = function(coefficient) {
-
-            self.fillMeter = $interval(function() {
-
-                var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
-
-                if (!self.progressValue) {
-
-                    self.progressValue = tempValue;
-
-                } else if ((100 - tempValue) > self.progressValue) {
-
-                    self.progressValue += tempValue;
-
-                }
-
-                console.log('progressValue', self.progressValue);
-
-            }, 100);
-
+        self.status = {
+            loading: true,
+            processing: true
         };
 
-        self.showElements = function(delay) {
-
-            $interval.cancel(self.fillMeter);
-
-            self.fillMeter = undefined;
-
-            self.progressValue = 100;
+        self.showElements = function() {
 
             $timeout(function() {
 
-                self.loading = false;
+                self.status.loading = false;
 
-                self.progressValue = 0;
+                self.status.processing = false;
 
-            }, delay);
+            }, 1000);
 
         };
 
@@ -10629,8 +10625,6 @@ angular.module('FieldDoc')
                     !data.permissions.write) {
 
                     self.makePrivate = true;
-
-                    return;
 
                 }
 
@@ -10663,13 +10657,9 @@ angular.module('FieldDoc')
 
                 self.processPractice(successResponse);
 
-                self.showElements(1000);
-
             }, function(errorResponse) {
 
                 //
-
-                self.showElements();
 
             });
 
@@ -10679,8 +10669,6 @@ angular.module('FieldDoc')
         // Verify Account information for proper UI element display
         //
         if (Account.userObject && user) {
-
-            self.showProgress(0.2);
 
             user.$promise.then(function(userResponse) {
 
@@ -10705,9 +10693,7 @@ angular.module('FieldDoc')
 
         self.savePractice = function() {
 
-            self.loading = true;
-
-            self.showProgress(0.1);
+            self.status.loading = true;
 
             var _images = [];
 
@@ -10745,8 +10731,6 @@ angular.module('FieldDoc')
 
                         self.processPractice(successResponse);
 
-                        self.showElements(1000);
-
                         self.files.images = [];
 
                         self.alerts = [{
@@ -10758,11 +10742,11 @@ angular.module('FieldDoc')
 
                         $timeout(self.closeAlerts, 2000);
 
+                        self.showElements();
+
                     }, function(errorResponse) {
 
-                        // Error message
-
-                        self.showElements(1000);
+                        self.showElements();
 
                     });
 
@@ -10770,7 +10754,7 @@ angular.module('FieldDoc')
 
                     $log.log('errorResponse', errorResponse);
 
-                    self.showElements(1000);
+                    self.showElements();
 
                 });
 
@@ -10779,8 +10763,6 @@ angular.module('FieldDoc')
                 self.practice.$update().then(function(successResponse) {
 
                     self.processPractice(successResponse);
-
-                    self.showElements(1000);
 
                     self.files.images = [];
 
@@ -10793,11 +10775,11 @@ angular.module('FieldDoc')
 
                     $timeout(self.closeAlerts, 2000);
 
+                    self.showElements();
+
                 }, function(errorResponse) {
 
-                    // Error message
-
-                    self.showElements(1000);
+                    self.showElements();
 
                 });
 
@@ -10932,7 +10914,7 @@ angular.module('FieldDoc')
             function(Account, leafletData, $location, metric_types,
                 monitoring_types, Practice, PracticeCustom, PracticeCustomReading, PracticeCustomMetric,
                 PracticeCustomMonitoring, practice_types, report, $rootScope, $route, $scope,
-                unit_types, user, Utility, $timeout, report_metrics, $filter) {
+                unit_types, user, Utility, $timeout, report_metrics, $filter, $interval) {
 
                 var self = this;
 
@@ -10954,6 +10936,7 @@ angular.module('FieldDoc')
 
                 self.status = {
                     loading: true,
+                    processing: true,
                     readings: {
                         loading: false
                     },
@@ -10965,15 +10948,53 @@ angular.module('FieldDoc')
                     }
                 };
 
+                self.alerts = [];
+
+                function closeAlerts() {
+
+                    self.alerts = [];
+
+                }
+
+                function closeRoute() {
+
+                    $location.path('/practices/' + self.practice.id);
+
+                }
+
+                self.confirmDelete = function(obj) {
+
+                    console.log('self.confirmDelete', obj);
+
+                    self.deletionTarget = self.deletionTarget ? null : obj;
+
+                };
+
+                self.cancelDelete = function() {
+
+                    self.deletionTarget = null;
+
+                };
+
+                self.showElements = function() {
+
+                    $timeout(function() {
+
+                        self.status.loading = false;
+
+                        self.status.processing = false;
+
+                    }, 1000);
+
+                };
+
                 unit_types.$promise.then(function(successResponse) {
 
                     console.log('Unit types', successResponse);
 
                     var _unitTypes = [];
 
-                    successResponse.features.forEach(function(unit) {
-
-                        var datum = unit.properties;
+                    successResponse.features.forEach(function(datum) {
 
                         datum.name = datum.plural;
 
@@ -10989,13 +11010,59 @@ angular.module('FieldDoc')
 
                 });
 
+                self.loadMetrics = function() {
+
+                    PracticeCustom.metrics({
+                        id: $route.current.params.reportId
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Report metrics', successResponse);
+
+                        var _reportMetrics = [];
+
+                        successResponse.features.forEach(function(metric) {
+
+                            var datum = self.processMetric(metric);
+
+                            _reportMetrics.push(datum);
+
+                        });
+
+                        self.reportMetrics = _reportMetrics;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+                self.processReport = function(data) {
+
+                    self.report = data;
+
+                    if (self.report.properties.practice_unit !== null) {
+
+                        var _unit = self.report.properties.practice_unit.properties;
+
+                        _unit.name = _unit.plural;
+
+                        self.report.properties.practice_unit = _unit;
+
+                    }
+
+                    self.loadMetrics();
+
+                };
+
                 self.processMetric = function(metric) {
 
-                    var datum = metric.properties;
+                    var datum = metric.properties || metric;
 
-                    if (metric.properties.metric_type !== null) {
+                    if (datum.metric_type !== null) {
 
-                        datum.metric_type = metric.properties.metric_type.properties;
+                        datum.metric_type = datum.metric_type.properties;
 
                     } else {
 
@@ -11003,9 +11070,9 @@ angular.module('FieldDoc')
 
                     }
 
-                    if (metric.properties.metric_unit !== null) {
+                    if (datum.metric_unit !== null) {
 
-                        datum.metric_unit = metric.properties.metric_unit.properties;
+                        datum.metric_unit = datum.metric_unit.properties;
 
                         datum.metric_unit.name = datum.metric_unit.plural;
 
@@ -11023,43 +11090,15 @@ angular.module('FieldDoc')
 
                     console.log('Metric types', successResponse);
 
-                    var _metricTypes = [];
+                    self.metricTypes = successResponse.features;
 
-                    successResponse.features.forEach(function(metric) {
-
-                        var datum = metric.properties;
-
-                        _metricTypes.push(datum);
-
-                    });
-
-                    self.metricTypes = _metricTypes;
+                    self.showElements();
 
                 }, function(errorResponse) {
 
                     console.log('errorResponse', errorResponse);
 
-                });
-
-                report_metrics.$promise.then(function(successResponse) {
-
-                    console.log('Report metrics', successResponse);
-
-                    var _reportMetrics = [];
-
-                    successResponse.features.forEach(function(metric) {
-
-                        var datum = self.processMetric(metric);
-
-                        _reportMetrics.push(datum);
-
-                    });
-
-                    self.reportMetrics = _reportMetrics;
-
-                }, function(errorResponse) {
-
-                    console.log('errorResponse', errorResponse);
+                    self.showElements();
 
                 });
 
@@ -11178,94 +11217,28 @@ angular.module('FieldDoc')
 
                             self.makePrivate = true;
 
-                            return;
+                        } else {
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            self.practiceType = Utility.machineName(self.practice.properties.practice_type);
+
+                            if (!self.report.properties.practice_extent) {
+
+                                self.report.properties.practice_extent = convertPracticeArea(self.practice);
+
+                            }
 
                         }
 
-                        self.permissions.can_edit = successResponse.permissions.write;
-                        self.permissions.can_delete = successResponse.permissions.write;
+                    }).catch(function(errorResponse) {
 
-                        self.practiceType = Utility.machineName(self.practice.properties.practice_type);
-
-                        if (!self.report.properties.practice_extent) {
-
-                            self.report.properties.practice_extent = convertPracticeArea(self.practice);
-
-                        }
+                        //
 
                     });
 
                 };
-
-                //
-                // Verify Account information for proper UI element display
-                //
-                if (Account.userObject && user) {
-
-                    user.$promise.then(function(userResponse) {
-
-                        $rootScope.user = Account.userObject = userResponse;
-
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0].properties.name,
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
-                        };
-
-                        //
-                        // 
-                        //
-                        report.$promise.then(function(successResponse) {
-
-                            console.log('self.report', successResponse);
-
-                            self.report = successResponse;
-
-                            if (self.report.properties.practice_unit !== null) {
-
-                                var _unit = self.report.properties.practice_unit.properties;
-
-                                _unit.name = _unit.plural;
-
-                                self.report.properties.practice_unit = _unit;
-
-                            }
-
-                            if (self.report.properties.report_date) {
-
-                                self.today = parseISOLike(self.report.properties.report_date);
-
-                            }
-
-                            //
-                            // Check to see if there is a valid date
-                            //
-                            self.date = {
-                                month: self.months[self.today.getMonth()],
-                                date: self.today.getDate(),
-                                day: self.days[self.today.getDay()],
-                                year: self.today.getFullYear()
-                            };
-
-                            // $rootScope.page.title = "Other Conservation Practice";
-
-                            $rootScope.page.title = 'Edit measurement data';
-
-                            self.loadPractice(self.report.properties.practice.id);
-
-                        }, function(errorResponse) {
-
-                            console.error('ERROR: ', errorResponse);
-
-                        });
-
-                    });
-
-                } else {
-
-                    $location.path('/account/login');
-
-                }
 
                 $scope.$watch(angular.bind(this, function() {
 
@@ -11284,6 +11257,8 @@ angular.module('FieldDoc')
                 }, true);
 
                 self.saveReport = function(metricArray) {
+
+                    self.status.processing = true;
 
                     console.log('self.saveReport.metricArray', metricArray);
 
@@ -11308,11 +11283,33 @@ angular.module('FieldDoc')
 
                     self.report.$update().then(function(successResponse) {
 
-                        $location.path('/practices/' + self.practice.id);
+                        self.processReport(successResponse);
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Report changes saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        self.showElements();
 
                     }, function(errorResponse) {
 
                         console.error('ERROR: ', errorResponse);
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Report changes could not be saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        self.showElements();
 
                     });
 
@@ -11597,34 +11594,6 @@ angular.module('FieldDoc')
 
                 };
 
-                self.alerts = [];
-
-                function closeAlerts() {
-
-                    self.alerts = [];
-
-                }
-
-                function closeRoute() {
-
-                    $location.path('/practices/' + self.practice.id);
-
-                }
-
-                self.confirmDelete = function(obj) {
-
-                    console.log('self.confirmDelete', obj);
-
-                    self.deletionTarget = self.deletionTarget ? null : obj;
-
-                };
-
-                self.cancelDelete = function() {
-
-                    self.deletionTarget = null;
-
-                };
-
                 self.deleteFeature = function() {
 
                     PracticeCustom.delete({
@@ -11678,6 +11647,66 @@ angular.module('FieldDoc')
                     });
 
                 };
+
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+
+                    user.$promise.then(function(userResponse) {
+
+                        $rootScope.user = Account.userObject = userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0].properties.name,
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                        };
+
+                        //
+                        // 
+                        //
+                        report.$promise.then(function(successResponse) {
+
+                            console.log('self.report', successResponse);
+
+                            self.processReport(successResponse);
+
+                            if (self.report.properties.report_date) {
+
+                                self.today = parseISOLike(self.report.properties.report_date);
+
+                            }
+
+                            //
+                            // Check to see if there is a valid date
+                            //
+                            self.date = {
+                                month: self.months[self.today.getMonth()],
+                                date: self.today.getDate(),
+                                day: self.days[self.today.getDay()],
+                                year: self.today.getFullYear()
+                            };
+
+                            // $rootScope.page.title = "Other Conservation Practice";
+
+                            $rootScope.page.title = 'Edit measurement data';
+
+                            self.loadPractice(self.report.properties.practice.id);
+
+                        }, function(errorResponse) {
+
+                            console.error('ERROR: ', errorResponse);
+
+                        });
+
+                    });
+
+                } else {
+
+                    $location.path('/account/login');
+
+                }
 
             });
 
@@ -13929,33 +13958,32 @@ angular
 }());
 (function() {
 
-  'use strict';
+    'use strict';
 
-  /**
-   * @ngdoc service
-   * @name
-   * @description
-   */
-  angular.module('FieldDoc')
-    .service('MetricType', function (environment, Preprocessors, $resource) {
-      return $resource(environment.apiUrl.concat('/v1/data/metric-type/:id'), {
-        'id': '@id'
-      }, {
-        'query': {
-          'isArray': false
-        },
-        'update': {
-          'method': 'PATCH',
-          transformRequest: function(data) {
-            var feature = Preprocessors.geojson(data);
-            return angular.toJson(feature);
-          }
-        }
-      });
-    });
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('MetricType', function(environment, Preprocessors, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/metric-type/:id'), {
+                'id': '@id'
+            }, {
+                'query': {
+                    'isArray': false
+                },
+                'update': {
+                    'method': 'PATCH',
+                    transformRequest: function(data) {
+                        var feature = Preprocessors.geojson(data);
+                        return angular.toJson(feature);
+                    }
+                }
+            });
+        });
 
 }());
-
 (function() {
 
   'use strict';
@@ -14719,33 +14747,32 @@ angular
 
 (function() {
 
-  'use strict';
+    'use strict';
 
-  /**
-   * @ngdoc service
-   * @name
-   * @description
-   */
-  angular.module('FieldDoc')
-    .service('PracticeType', function (environment, Preprocessors, $resource) {
-      return $resource(environment.apiUrl.concat('/v1/data/practice-type/:id'), {
-        'id': '@id'
-      }, {
-        'query': {
-          'isArray': false
-        },
-        'update': {
-          'method': 'PATCH',
-          transformRequest: function(data) {
-            var feature = Preprocessors.geojson(data);
-            return angular.toJson(feature);
-          }
-        }
-      });
-    });
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('PracticeType', function(environment, Preprocessors, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/practice-type/:id'), {
+                'id': '@id'
+            }, {
+                'query': {
+                    'isArray': false
+                },
+                'update': {
+                    'method': 'PATCH',
+                    transformRequest: function(data) {
+                        var feature = Preprocessors.geojson(data);
+                        return angular.toJson(feature);
+                    }
+                }
+            });
+        });
 
 }());
-
 (function() {
 
     'use strict';
@@ -15009,33 +15036,32 @@ angular
 
 (function() {
 
-  'use strict';
+    'use strict';
 
-  /**
-   * @ngdoc service
-   * @name
-   * @description
-   */
-  angular.module('FieldDoc')
-    .service('UnitType', function (environment, Preprocessors, $resource) {
-      return $resource(environment.apiUrl.concat('/v1/data/unit-type/:id'), {
-        'id': '@id'
-      }, {
-        'query': {
-          'isArray': false
-        },
-        'update': {
-          'method': 'PATCH',
-          transformRequest: function(data) {
-            var feature = Preprocessors.geojson(data);
-            return angular.toJson(feature);
-          }
-        }
-      });
-    });
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('UnitType', function(environment, Preprocessors, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/unit/:id'), {
+                'id': '@id'
+            }, {
+                'query': {
+                    'isArray': false
+                },
+                'update': {
+                    'method': 'PATCH',
+                    transformRequest: function(data) {
+                        var feature = Preprocessors.geojson(data);
+                        return angular.toJson(feature);
+                    }
+                }
+            });
+        });
 
 }());
-
 'use strict';
 
 /**

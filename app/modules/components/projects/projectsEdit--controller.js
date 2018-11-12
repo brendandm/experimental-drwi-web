@@ -24,65 +24,15 @@ angular.module('FieldDoc')
                 processing: true
             };
 
-            self.fillMeter = undefined;
+            self.showElements = function() {
 
-            self.showProgress = function() {
+                $timeout(function() {
 
-                if (!self.fillMeter) {
+                    self.status.loading = false;
 
-                    self.fillMeter = $interval(function() {
+                    self.status.processing = false;
 
-                        var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
-
-                        if (!self.progressValue) {
-
-                            self.progressValue = tempValue;
-
-                        } else if ((100 - tempValue) > self.progressValue) {
-
-                            self.progressValue += tempValue;
-
-                        } else {
-
-                            $interval.cancel(self.fillMeter);
-
-                            self.fillMeter = undefined;
-
-                            $timeout(function() {
-
-                                self.progressValue = 100;
-
-                                self.showElements(1000, self.project, self.progressValue);
-
-                            }, 1000);
-
-                        }
-
-                        console.log('progressValue', self.progressValue);
-
-                    }, 50);
-
-                }
-
-            };
-
-            self.showElements = function(delay, object, progressValue) {
-
-                if (object && progressValue > 75) {
-
-                    $timeout(function() {
-
-                        self.status.loading = false;
-
-                        self.progressValue = 0;
-
-                    }, delay);
-
-                } else {
-
-                    self.showProgress();
-
-                }
+                }, 1000);
 
             };
 
@@ -117,8 +67,6 @@ angular.module('FieldDoc')
             //
             if (Account.userObject && user) {
 
-                self.showProgress();
-
                 user.$promise.then(function(userResponse) {
 
                     $rootScope.user = Account.userObject = userResponse;
@@ -152,15 +100,13 @@ angular.module('FieldDoc')
 
                         }
 
-                        self.showElements(1000, self.project, self.progressValue);
+                        self.showElements();
 
                     }, function(errorResponse) {
 
                         $log.error('Unable to load request project');
 
-                        self.status.processing = false;
-
-                        self.showElements(1000, self.project, self.progressValue);
+                        self.showElements();
 
                     });
 
@@ -416,8 +362,6 @@ angular.module('FieldDoc')
                     }
 
                     $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
 
                 });
 

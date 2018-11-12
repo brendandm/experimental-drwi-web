@@ -6,16 +6,13 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <div class="progress--modal" data-ng-if="page.status.loading && page.progressValue && !page.practiceLoaded">
+        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading && !page.practiceLoaded">
             <div class="progress--container">
-                <p><strong>Loading photo collection&hellip;</strong></p>
-                <div class="progress--meter--bar--wrapper">
-                    <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
-                </div>
+                <p style="font-weight: bold;" class="color-pulse">Loading photo collection&hellip;</p>
             </div>
         </div>
 
-        <section class="privacy-message" data-ng-if="!page.status.loading && page.makePrivate">
+        <section class="privacy-message reveal fade-in t0" data-ng-if="!page.status.loading && page.makePrivate">
 
             <p>
                 <i class="material-icons">

@@ -8,7 +8,7 @@
 
         <h1 class="inset">Edit dashboard</h1>
 
-        <div class="main--ui">
+        <div class="main--ui reveal fade-in t0">
 
             <form role="form" class="form" style="overflow: visible; margin-bottom: 24em;" id="form--ProjectEdit" name="form--ProjectEdit" data-ng-submit-"page.saveSnapshot()">
 
@@ -74,14 +74,6 @@
                     </button>
                 </div>
 
-                <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
-                    <div class="event--container">
-                        <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
-                            <span class="event--message">{{ alert.msg }}</span>
-                        </div>
-                    </div>
-                </div>
-
             </form>
 
         </div>
@@ -124,6 +116,14 @@
             </li>
         </ul>
     </nav>
+
+    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+        <div class="event--container">
+            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                <span class="event--message">{{ alert.msg }}</span>
+            </div>
+        </div>
+    </div>
 
 </main>
 

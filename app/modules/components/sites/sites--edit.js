@@ -24,66 +24,49 @@
                 $rootScope.page = {};
 
                 self.status = {
-                    loading: true
+                    loading: true,
+                    processing: false
                 };
 
-                self.fillMeter = undefined;
+                self.showElements = function() {
 
-                self.showProgress = function() {
+                    $timeout(function() {
 
-                    self.fillMeter = $interval(function() {
+                        self.status.loading = false;
 
-                        var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
+                        self.status.processing = false;
 
-                        if (!self.progressValue) {
-
-                            self.progressValue = tempValue;
-
-                        } else if ((100 - tempValue) > self.progressValue) {
-
-                            self.progressValue += tempValue;
-
-                        } else {
-
-                            $interval.cancel(self.fillMeter);
-
-                            self.fillMeter = undefined;
-
-                            self.progressValue = 100;
-
-                            self.showElements(1000, self.site, self.progressValue);
-
-                        }
-
-                        console.log('progressValue', self.progressValue);
-
-                    }, 50);
-
-                };
-
-                self.showElements = function(delay, object, progressValue) {
-
-                    if (object && progressValue > 75) {
-
-                        $timeout(function() {
-
-                            self.status.loading = false;
-
-                            self.progressValue = 0;
-
-                        }, delay);
-
-                    }
+                    }, 1000);
 
                 };
 
                 self.saveSite = function() {
 
+                    self.status.processing = true;
+
                     self.site.$update().then(function(successResponse) {
 
-                        $location.path('/sites/' + $route.current.params.siteId);
+                        self.site = successResponse;
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Site changes saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
 
                     }, function(errorResponse) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong and the changes could not be saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
 
                     });
 
@@ -94,6 +77,8 @@
                 function closeAlerts() {
 
                     self.alerts = [];
+
+                    self.status.processing = false;
 
                 }
 
@@ -176,8 +161,6 @@
                 //
                 if (Account.userObject && user) {
 
-                    self.showProgress();
-
                     user.$promise.then(function(userResponse) {
 
                         $rootScope.user = Account.userObject = userResponse;
@@ -211,11 +194,11 @@
 
                             $rootScope.page.title = self.site.properties.name;
 
-                            self.showElements(1000, self.site, self.progressValue);
+                            self.showElements();
 
                         }, function(errorResponse) {
 
-                            self.showElements(1000, self.site, self.progressValue);
+                            self.showElements();
 
                         });
 

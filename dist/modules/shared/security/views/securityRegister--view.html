@@ -45,7 +45,7 @@
             </div>
 
             <div class="save--action--wrapper save--action--bottom">
-                <span>Create account</span>
+                <!-- <span>Create account</span> -->
                 <button type="submit" data-ng-disabled="page.register.processing || page.register.processingLogin || !page.register.data.password || page.register.data.password !== page.register.data.confirm_password">
                     <i class="material-icons" data-ng-if="page.register.processing || page.register.processingLogin">
                         more_horiz
@@ -56,18 +56,26 @@
                 </button>
             </div>
 
-            <div class="transient--notification" data-ng-class="{show: $root.alerts.length}">
+            <!-- <div class="transient--notification" data-ng-class="{show: $root.alerts.length}">
                 <div class="event--container">
                     <div data-ng-repeat="alert in $root.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
                         <span class="event--message">{{ alert.msg }}</span>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </form>
 
     </div>
 
+    <div class="transient--notification" data-ng-class="{show: $root.alerts.length}">
+        <div class="event--container">
+            <div data-ng-repeat="alert in $root.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                <span class="event--message">{{ alert.msg }}</span>
+            </div>
+        </div>
+    </div>
+
 </main>
 
-<div data-ng-include="'/templates/footer--view.html'"></div>
+<div class="dark-footer" style="padding-bottom: 2em; background-color: #252f3a;" data-ng-include="'/templates/footer--view.html'"></div>

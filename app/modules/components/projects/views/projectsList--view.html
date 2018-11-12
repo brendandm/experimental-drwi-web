@@ -6,12 +6,9 @@
 
     <div class="content--container">
 
-        <div class="progress--modal" data-ng-if="page.status.loading">
+        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
             <div class="progress--container">
-                <p><strong>Loading your projects&hellip;</strong></p>
-                <div class="progress--meter--bar--wrapper">
-                    <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
-                </div>
+                <p style="font-weight: bold;" class="color-pulse">Loading your projects&hellip;</p>
             </div>
         </div>
 
@@ -27,15 +24,6 @@
                     </i>
                 </a>
             </div>
-
-            <!-- <div class="progress--modal" data-ng-if="page.status.loading">
-                <div class="progress--container">
-                    <p><strong>Loading your projects&hellip;</strong></p>
-                    <div class="progress--meter--bar--wrapper">
-                        <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
-                    </div>
-                </div>
-            </div> -->
 
             <p data-ng-if="!page.status.loading">You have <strong>{{ (page.filteredProjects.length | number) || 0 }}</strong> <ng-pluralize count="page.filteredProjects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
 

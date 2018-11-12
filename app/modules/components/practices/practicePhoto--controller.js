@@ -22,68 +22,19 @@ angular.module('FieldDoc')
         $rootScope.page = {};
 
         self.status = {
-            loading: true
+            loading: true,
+            processing: true
         };
 
-        self.fillMeter = undefined;
+        self.showElements = function() {
 
-        self.showProgress = function() {
+            $timeout(function() {
 
-            if (!self.fillMeter) {
+                self.status.loading = false;
 
-                self.fillMeter = $interval(function() {
+                self.status.processing = false;
 
-                    var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
-
-                    if (!self.progressValue) {
-
-                        self.progressValue = tempValue;
-
-                    } else if ((self.progressValue + tempValue) < 85) {
-
-                        self.progressValue += tempValue;
-
-                    } else {
-
-                        $interval.cancel(self.fillMeter);
-
-                        self.fillMeter = undefined;
-
-                        $timeout(function() {
-
-                            self.progressValue = 100;
-
-                            self.showElements(1000, self.practice, self.progressValue);
-
-                        }, 1000);
-
-                    }
-
-                }, 100);
-
-            }
-
-        };
-
-        self.showElements = function(delay, object, progressValue) {
-
-            if (object && progressValue > 75) {
-
-                $timeout(function() {
-
-                    self.practiceLoaded = true;
-
-                    self.status.loading = false;
-
-                    self.progressValue = 0;
-
-                }, delay);
-
-            } else {
-
-                self.showProgress();
-
-            }
+            }, 1000);
 
         };
 
@@ -156,8 +107,6 @@ angular.module('FieldDoc')
         //
         if (Account.userObject && user) {
 
-            self.showProgress();
-
             user.$promise.then(function(userResponse) {
 
                 $rootScope.user = Account.userObject = userResponse;
@@ -182,8 +131,6 @@ angular.module('FieldDoc')
         self.savePractice = function() {
 
             self.status.loading = true;
-
-            // self.showProgress();
 
             var _images = [];
 
@@ -232,13 +179,11 @@ angular.module('FieldDoc')
 
                         $timeout(self.closeAlerts, 2000);
 
-                        self.status.loading = false;
+                        self.showElements();
 
                     }, function(errorResponse) {
 
-                        // Error message
-
-                        self.status.loading = false;
+                        self.showElements();
 
                     });
 
@@ -246,7 +191,7 @@ angular.module('FieldDoc')
 
                     $log.log('errorResponse', errorResponse);
 
-                    self.status.loading = false;
+                    self.showElements();
 
                 });
 
@@ -267,13 +212,11 @@ angular.module('FieldDoc')
 
                     $timeout(self.closeAlerts, 2000);
 
-                    self.status.loading = false;
+                    self.showElements();
 
                 }, function(errorResponse) {
 
-                    // Error message
-
-                    self.status.loading = false;
+                    self.showElements();
 
                 });
 

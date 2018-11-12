@@ -4,9 +4,15 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="page.makePrivate">
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <section class="privacy-message">
+        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
+            <div class="progress--container">
+                <p style="font-weight: bold;" class="color-pulse">Loading practice data&hellip;</p>
+            </div>
+        </div>
+
+        <section class="privacy-message reveal fade-in t0" data-ng-if="!page.status.loading && page.makePrivate">
 
             <p>
                 <i class="material-icons">
@@ -18,19 +24,15 @@
 
         </section>
 
-    </div>
+        <h1 class="inset reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">Edit practice</h1>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="!page.makePrivate">
-
-        <h1 class="inset">Edit practice</h1>
-
-        <div class="main--ui" data-ng-if="page.practiceTypes">
+        <div class="main--ui reveal fade-in t1" data-ng-if="!page.status.loading && !page.makePrivate">
 
             <article class="feature-detail">
 
                 <div class="feature-detail-content">
 
-                    <form role="form" class="form" style="position:relative;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePractice();page.isSavingChanges =! page.isSavingChanges;">
+                    <form role="form" class="form" style="position:relative;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePractice()">
 
                         <!-- Practice Name -->
 
@@ -50,13 +52,13 @@
 
                         <div class="form-element">
                             <span class="meta-label"><b>Practice type</b></span>
-                            <input id="practice_type_id" name="practice_type_id" type="text" placeholder="Search categories" data-ng-model="page.practiceCategory" uib-typeahead="practiceType as practiceType.name for practiceType in page.practiceTypes | filter:$viewValue | limitTo:5" typeahead-on-select="page.setPracticeType($item,$model,$label)" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
+                            <input id="practice_type_id" name="practice_type_id" type="text" placeholder="Search categories" data-ng-model="page.practiceType" uib-typeahead="practiceType as practiceType.name for practiceType in page.practiceTypes | filter:$viewValue | limitTo:5" typeahead-on-select="page.setPracticeType($item,$model,$label)" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
                             <p data-ng-if="page.practice.properties.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
                                 {{ page.practice.properties.category.properties.description }}
                             </p>
                         </div>
 
-                        <h2>Privacy</h2>
+                        <h2 class="">Privacy</h2>
 
                         <div class="scope--control">
                             <span>Off</span>
@@ -67,14 +69,16 @@
                             <span>On</span>
                         </div>
 
-                        <p data-ng-if="page.practice.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This practice is <strong>private</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this practice <strong>will not</strong> appear on dashboard maps.</p>
+                        <p class="" data-ng-if="page.practice.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This practice is <strong>private</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this practice <strong>will not</strong> appear on dashboard maps.</p>
 
-                        <p data-ng-if="!page.practice.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This practice is <strong>public</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this practice <strong>will</strong> appear on dashboard maps.</p>
+                        <p class="" data-ng-if="!page.practice.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This practice is <strong>public</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this practice <strong>will</strong> appear on dashboard maps.</p>
 
                         <div class="save--action--wrapper save--action--bottom">
-                            <span>Save changes</span>
-                            <button type="submit">
-                                <i class="material-icons">
+                            <button type="submit" data-ng-disabled="page.status.processing">
+                                <i class="material-icons" data-ng-if="page.status.processing">
+                                    more_horiz
+                                </i>
+                                <i class="material-icons" data-ng-if="!page.status.processing">
                                     done
                                 </i>
                             </button>

@@ -4,9 +4,15 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="page.makePrivate">
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <section class="privacy-message">
+        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading && !page.practiceLoaded">
+            <div class="progress--container">
+                <p style="font-weight: bold;" class="color-pulse">Loading photo collection&hellip;</p>
+            </div>
+        </div>
+
+        <section class="privacy-message reveal fade-in t0" data-ng-if="!page.status.loading && page.makePrivate">
 
             <p>
                 <i class="material-icons">
@@ -18,13 +24,9 @@
 
         </section>
 
-    </div>
+        <h1 class="inset" data-ng-if="page.practiceLoaded && !page.makePrivate">Practice photos</h1>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="!page.makePrivate">
-
-        <h1 class="inset">Practice photos</h1>
-
-        <div class="main--ui">
+        <div class="main--ui" data-ng-if="page.practiceLoaded && !page.makePrivate">
 
             <form role="form" class="form" style="position:relative;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePractice()">
 
@@ -37,7 +39,10 @@
                 <div class="save--action--wrapper save--action--bottom">
                     <span>Save changes</span>
                     <button type="submit">
-                        <i class="material-icons">
+                        <i class="material-icons" data-ng-if="page.status.loading">
+                            more_horiz
+                        </i>
+                        <i class="material-icons" data-ng-if="!page.status.loading">
                             done
                         </i>
                     </button>
@@ -47,18 +52,9 @@
 
             <div style="position: relative; min-height: 640px; width: 100%;">
 
-                <!-- <div class="progress--modal" data-ng-if="page.loading">
-                    <div class="progress--container">
-                        <p><strong>Loading photos&hellip;</strong></p>
-                        <div class="progress--meter--bar--wrapper">
-                            <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
-                        </div>
-                    </div>
-                </div> -->
-
                 <ul class="snapshot--cards list-unstyled" data-ng-if="page.practice.properties.images.length">
 
-                    <li class="image-card" data-ng-repeat="image in page.practice.properties.images track by $index">
+                    <li class="image-card reveal fade-in" style="animation-delay: {{ $index * 250 }}ms;" data-ng-repeat="image in page.practice.properties.images track by $index">
 
                         <div class="card--content">
 
@@ -105,9 +101,9 @@
 
                 </ul>
 
-                <div class="progress--modal" style="align-items: flex-start;" data-ng-if="page.loading">
+                <div class="progress--modal" style="align-items: flex-start;" data-ng-if="page.status.loading && page.progressValue">
                     <div class="progress--container">
-                        <p><strong>Loading photos&hellip;</strong></p>
+                        <p><strong>Updating photos&hellip;</strong></p>
                         <div class="progress--meter--bar--wrapper">
                             <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
                         </div>

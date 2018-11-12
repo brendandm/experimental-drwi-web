@@ -6,12 +6,9 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading && page.progressValue">
+        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
             <div class="progress--container">
-                <p><strong>Loading project data&hellip;</strong></p>
-                <div class="progress--meter--bar--wrapper">
-                    <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
-                </div>
+                <p style="font-weight: bold;" class="color-pulse">Loading project data&hellip;</p>
             </div>
         </div>
 

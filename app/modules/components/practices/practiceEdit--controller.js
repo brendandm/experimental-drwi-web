@@ -19,72 +19,47 @@ angular.module('FieldDoc')
         $rootScope.page = {};
 
         self.status = {
-            loading: true
+            loading: true,
+            processing: true
         };
 
-        self.fillMeter = undefined;
+        self.alerts = [];
 
-        self.showProgress = function(meterCoefficient) {
+        function closeAlerts() {
 
-            if (!self.fillMeter) {
+            self.alerts = [];
 
-                self.fillMeter = $interval(function() {
+        }
 
-                    var tempValue = (self.progressValue || 10) * (meterCoefficient || Utility.meterCoefficient());
+        function closeRoute() {
 
-                    if (!self.progressValue) {
+            $location.path(self.practice.links.site.html);
 
-                        self.progressValue = tempValue;
+        }
 
-                    } else if ((self.progressValue + tempValue) < 100) {
+        self.confirmDelete = function(obj) {
 
-                        self.progressValue += tempValue;
+            console.log('self.confirmDelete', obj);
 
-                    } else {
-
-                        $interval.cancel(self.fillMeter);
-
-                        self.fillMeter = undefined;
-
-                        $timeout(function() {
-
-                            // self.progressValue = 100;
-
-                            self.showElements(1000, self.practiceTypes, self.progressValue);
-
-                        }, 1000);
-
-                    }
-
-                    console.log('progressValue', self.progressValue);
-
-                }, 50);
-
-            }
+            self.deletionTarget = self.deletionTarget ? null : obj;
 
         };
 
-        self.showElements = function(delay, object, progressValue) {
+        self.cancelDelete = function() {
 
-            if (object && progressValue > 80) {
+            self.deletionTarget = null;
 
-                $timeout(function() {
+        };
 
-                    self.progressValue = 100;
+        self.showElements = function() {
 
-                    self.status.loading = false;
+            $timeout(function() {
 
-                    self.progressValue = 0;
+                self.status.loading = false;
 
-                }, delay);
+                self.status.processing = false;
 
-            } else {
-
-                var meterCoefficient = Utility.meterCoefficient();
-
-                self.showProgress(meterCoefficient);
-
-            }
+            }, 1000);
 
         };
 
@@ -130,7 +105,11 @@ angular.module('FieldDoc')
                 delete self.practice.properties.project;
                 delete self.practice.properties.site;
 
-                self.practiceType = successResponse.properties.category;
+                if (successResponse.properties.category) {
+
+                    self.practiceType = successResponse.properties.category.properties;
+
+                }
 
                 $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
 
@@ -148,71 +127,73 @@ angular.module('FieldDoc')
 
                 console.log('self.practiceTypes', successResponse);
 
-                var _practiceTypes = [];
+                self.practiceTypes = successResponse.features;
 
-                successResponse.features.forEach(function(feature) {
-
-                    _practiceTypes.push(feature.properties);
-
-                });
-
-                self.practiceTypes = _practiceTypes;
-
-                self.showElements(1000, self.practiceTypes, self.progressValue);
+                self.showElements();
 
             }, function(errorResponse) {
 
-                self.showElements(1000, self.practiceTypes, self.progressValue);
+                //
+
+                self.showElements();
 
             });
+
+        };
+
+        self.scrubFeature = function() {
+
+            delete self.practice.geometry;
+            delete self.practice.properties.site;
+            delete self.practice.properties.project;
+            delete self.practice.properties.program;
+            delete self.practice.properties.organization;
+            delete self.practice.properties.creator;
+            delete self.practice.properties.last_modified_by;
 
         };
 
         self.savePractice = function() {
 
-            if (self.practiceCategory) {
+            self.status.processing = true;
 
-                self.practice.properties.category_id = self.practiceCategory.id;
+            self.scrubFeature();
+
+            if (self.practiceType) {
+
+                self.practice.properties.category_id = self.practiceType.id;
 
             }
 
             self.practice.$update().then(function(successResponse) {
 
-                $location.path('/practices/' + self.practice.id);
+                self.alerts = [{
+                    'type': 'success',
+                    'flag': 'Success!',
+                    'msg': 'Practice changes saved.',
+                    'prompt': 'OK'
+                }];
+
+                $timeout(closeAlerts, 2000);
+
+                self.showElements();
 
             }, function(errorResponse) {
 
                 // Error message
 
+                self.alerts = [{
+                    'type': 'success',
+                    'flag': 'Success!',
+                    'msg': 'Practice changes could not be saved.',
+                    'prompt': 'OK'
+                }];
+
+                $timeout(closeAlerts, 2000);
+
+                self.showElements();
+
             });
-
-        };
-
-        self.alerts = [];
-
-        function closeAlerts() {
-
-            self.alerts = [];
-
-        }
-
-        function closeRoute() {
-
-            $location.path(self.practice.links.site.html);
-
-        }
-
-        self.confirmDelete = function(obj) {
-
-            console.log('self.confirmDelete', obj);
-
-            self.deletionTarget = self.deletionTarget ? null : obj;
-
-        };
-
-        self.cancelDelete = function() {
-
-            self.deletionTarget = null;
 
         };
 
@@ -282,8 +263,6 @@ angular.module('FieldDoc')
         // Verify Account information for proper UI element display
         //
         if (Account.userObject && user) {
-
-            self.showProgress();
 
             user.$promise.then(function(userResponse) {
 
