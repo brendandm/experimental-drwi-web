@@ -42,7 +42,7 @@
 
                     <leaflet id="site--map" class="map tall" style="border-radius: 4px; overflow: hidden;" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
 
-                    <div class="progress--modal" data-ng-if="page.progressValue && page.progressValue > 0">
+                    <div style="background: rgba(255,255,255,0.9);" class="progress--modal" data-ng-if="page.progressValue && page.progressValue > 0">
                         <div class="progress--container">
                             <p><strong>{{ page.progressMessage }}</strong></p>
                             <div class="progress--meter--bar--wrapper">

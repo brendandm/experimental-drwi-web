@@ -7897,11 +7897,30 @@ angular.module('FieldDoc')
 
                         self.site = successResponse;
 
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Site location saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
                     }, function(errorResponse) {
 
                         self.status.processing = false;
 
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong and the location could not be saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
                     });
+                    
                 };
 
                 self.alerts = [];
