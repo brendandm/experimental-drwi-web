@@ -42,10 +42,11 @@
 
                     <leaflet id="practice--map" class="map tall" style="border-radius: 4px; overflow: hidden;" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
 
-                    <div style="background: rgba(255,255,255,0.9);" class="progress--modal" data-ng-if="page.progressValue && page.progressValue > 0">
+                    <div style="background: #fff;" class="progress--modal" data-ng-if="page.progressValue && page.progressValue > 0">
                         <div class="progress--container">
-                            <p><strong>{{ page.progressMessage }}
-                                </strong></p>
+                            <p style="text-align: left;">
+                                <strong>{{ page.progressMessage }}</strong>
+                            </p>
                             <div class="progress--meter--bar--wrapper">
                                 <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
                             </div>

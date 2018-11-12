@@ -393,9 +393,27 @@ angular.module('FieldDoc')
 
                 self.practice.$update().then(function(successResponse) {
 
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Practice location saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(closeAlerts, 2000);
+
                     self.showElements();
 
                 }, function(errorResponse) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong and the location could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(closeAlerts, 2000);
 
                     self.showElements();
 
