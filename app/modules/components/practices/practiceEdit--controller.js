@@ -155,8 +155,6 @@ angular.module('FieldDoc')
 
         self.savePractice = function() {
 
-            window.scrollTo(0,0);
-
             self.status.processing = true;
 
             self.scrubFeature();

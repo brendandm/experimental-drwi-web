@@ -179,7 +179,7 @@
 
                         self.fillMeter = $interval(function() {
 
-                            var tempValue = (self.progressValue || 10) * 0.50;
+                            var tempValue = (self.progressValue || 10) * 0.20;
 
                             if (!self.progressValue) {
 
@@ -199,7 +199,7 @@
 
                             }
 
-                        }, 100);
+                        }, 50);
 
                         console.log('Shapefile', Shapefile);
 
@@ -268,8 +268,6 @@
                 };
 
                 self.saveSite = function() {
-
-                    window.scrollTo(0,0);
 
                     delete self.site.properties.counties;
                     delete self.site.properties.geographies;

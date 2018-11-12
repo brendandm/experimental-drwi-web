@@ -279,7 +279,7 @@ angular.module('FieldDoc')
 
                     self.fillMeter = $interval(function() {
 
-                        var tempValue = (self.progressValue || 10) * 0.50;
+                        var tempValue = (self.progressValue || 10) * 0.20;
 
                         if (!self.progressValue) {
 
@@ -299,7 +299,7 @@ angular.module('FieldDoc')
 
                         }
 
-                    }, 100);
+                    }, 50);
 
                     console.log('Shapefile', Shapefile);
 
@@ -368,8 +368,6 @@ angular.module('FieldDoc')
             };
 
             self.savePractice = function() {
-
-                window.scrollTo(0,0);
 
                 self.status.processing = true;
 

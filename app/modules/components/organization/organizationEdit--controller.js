@@ -75,8 +75,6 @@ angular.module('FieldDoc')
 
             self.saveOrganization = function() {
 
-                window.scrollTo(0,0);
-
                 self.status.processing = true;
 
                 Organization.update({

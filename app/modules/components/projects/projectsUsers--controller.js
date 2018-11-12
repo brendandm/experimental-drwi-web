@@ -70,71 +70,6 @@
 
                 };
 
-                //
-                // Verify Account information for proper UI element display
-                //
-                if (Account.userObject && user) {
-
-                    self.showProgress();
-
-                    user.$promise.then(function(userResponse) {
-
-                        $rootScope.user = Account.userObject = userResponse;
-
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0].properties.name,
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                            can_edit: false
-                        };
-
-                        //
-                        // Assign project to a scoped variable
-                        //
-                        project.$promise.then(function(successResponse) {
-
-                            console.log('self.project', successResponse);
-
-                            self.project = successResponse;
-
-                            if (!successResponse.permissions.read &&
-                                !successResponse.permissions.write) {
-
-                                self.makePrivate = true;
-
-                            } else {
-
-                                self.permissions.can_edit = successResponse.permissions.write;
-                                self.permissions.can_delete = successResponse.permissions.write;
-
-                                $rootScope.page.title = self.project.properties.name;
-
-                                self.tempOwners = self.project.properties.members;
-
-                                console.log('tempOwners', self.tempOwners);
-
-                                self.project.users_edit = false;
-
-                            }
-
-                            self.showElements();
-
-                        }, function(errorResponse) {
-
-                            console.error('Unable to load request project');
-
-                            self.showElements();
-
-                        });
-
-                    });
-
-                } else {
-
-                    $location.path('/account/login');
-
-                }
-
                 self.searchUsers = function(value) {
 
                     return SearchService.users({
@@ -227,8 +162,6 @@
                 };
 
                 self.saveProject = function() {
-
-                    window.scrollTo(0,0);
 
                     self.status.processing = true;
 
@@ -335,6 +268,69 @@
                     });
 
                 };
+
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+
+                    user.$promise.then(function(userResponse) {
+
+                        $rootScope.user = Account.userObject = userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0].properties.name,
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                            can_edit: false
+                        };
+
+                        //
+                        // Assign project to a scoped variable
+                        //
+                        project.$promise.then(function(successResponse) {
+
+                            console.log('self.project', successResponse);
+
+                            self.project = successResponse;
+
+                            if (!successResponse.permissions.read &&
+                                !successResponse.permissions.write) {
+
+                                self.makePrivate = true;
+
+                            } else {
+
+                                self.permissions.can_edit = successResponse.permissions.write;
+                                self.permissions.can_delete = successResponse.permissions.write;
+
+                                $rootScope.page.title = self.project.properties.name;
+
+                                self.tempOwners = self.project.properties.members;
+
+                                console.log('tempOwners', self.tempOwners);
+
+                                self.project.users_edit = false;
+
+                            }
+
+                            self.showElements();
+
+                        }, function(errorResponse) {
+
+                            console.error('Unable to load request project');
+
+                            self.showElements();
+
+                        });
+
+                    });
+
+                } else {
+
+                    $location.path('/account/login');
+
+                }
 
             });
 

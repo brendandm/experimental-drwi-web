@@ -14,21 +14,7 @@ angular.module('FieldDoc')
             leafletData, leafletBoundsHelpers, $timeout, Practice, project,
             metrics, outcomes, sites, Utility, $interval) {
 
-            //controller is set to self
             var self = this;
-
-            self.actions = {
-                print: function() {
-
-                    $window.print();
-
-                },
-                saveToPdf: function() {
-
-                    $scope.$emit('saveToPdf');
-
-                }
-            };
 
             $rootScope.viewState = {
                 'project': true
