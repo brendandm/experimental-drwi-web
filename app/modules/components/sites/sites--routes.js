@@ -9,14 +9,14 @@
  * Main module of the application.
  */
 angular.module('FieldDoc')
-    .config(['$routeProvider', 'commonscloud', function($routeProvider, commonscloud) {
+    .config([
+        '$routeProvider',
+        'environment',
+        function($routeProvider, environment) {
 
         $routeProvider
-            // .when('/sites', {
-            //     redirectTo: '/projects/:projectId'
-            // })
             .when('/sites/:siteId', {
-                templateUrl: '/modules/components/sites/views/sites--summary.html',
+                templateUrl: '/modules/components/sites/views/sites--summary.html?t=' + environment.version,
                 controller: 'SiteSummaryCtrl',
                 controllerAs: 'page',
                 resolve: {
@@ -59,7 +59,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/sites/:siteId/geographies', {
-                templateUrl: '/modules/components/sites/views/siteGeography--view.html',
+                templateUrl: '/modules/components/sites/views/siteGeography--view.html?t=' + environment.version,
                 controller: 'SiteGeographyCtrl',
                 controllerAs: 'page',
                 resolve: {
@@ -87,7 +87,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/sites/:siteId/edit', {
-                templateUrl: '/modules/components/sites/views/sites--edit.html',
+                templateUrl: '/modules/components/sites/views/sites--edit.html?t=' + environment.version,
                 controller: 'SiteEditCtrl',
                 controllerAs: 'page',
                 resolve: {
@@ -110,7 +110,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/sites/:siteId/location', {
-                templateUrl: '/modules/components/sites/views/siteLocation--view.html',
+                templateUrl: '/modules/components/sites/views/siteLocation--view.html?t=' + environment.version,
                 controller: 'SiteLocationCtrl',
                 controllerAs: 'page',
                 resolve: {
@@ -133,7 +133,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/sites/:siteId/photos', {
-                templateUrl: '/modules/components/sites/views/sitePhoto--view.html',
+                templateUrl: '/modules/components/sites/views/sitePhoto--view.html?t=' + environment.version,
                 controller: 'SitePhotoCtrl',
                 controllerAs: 'page',
                 resolve: {

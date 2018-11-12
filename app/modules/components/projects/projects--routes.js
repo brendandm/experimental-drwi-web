@@ -9,11 +9,11 @@
  * Main module of the application.
  */
 angular.module('FieldDoc')
-    .config(function($routeProvider, commonscloud) {
+    .config(function($routeProvider, environment) {
 
         $routeProvider
             .when('/projects', {
-                templateUrl: '/modules/components/projects/views/projectsList--view.html',
+                templateUrl: '/modules/components/projects/views/projectsList--view.html?t=' + environment.version,
                 controller: 'ProjectsCtrl',
                 controllerAs: 'page',
                 reloadOnSearch: false,
@@ -37,7 +37,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/projects/:projectId', {
-                templateUrl: '/modules/components/projects/views/projectsSummary--view.html',
+                templateUrl: '/modules/components/projects/views/projectsSummary--view.html?t=' + environment.version,
                 controller: 'ProjectSummaryCtrl',
                 controllerAs: 'page',
                 resolve: {
@@ -85,7 +85,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/projects/collection/new', {
-                templateUrl: '/modules/components/projects/views/projectsCreate--view.html',
+                templateUrl: '/modules/components/projects/views/projectsCreate--view.html?t=' + environment.version,
                 controller: 'ProjectCreateCtrl',
                 controllerAs: 'page',
                 resolve: {
@@ -103,7 +103,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/projects/:projectId/edit', {
-                templateUrl: '/modules/components/projects/views/projectsEdit--view.html',
+                templateUrl: '/modules/components/projects/views/projectsEdit--view.html?t=' + environment.version,
                 controller: 'ProjectEditCtrl',
                 controllerAs: 'page',
                 resolve: {
@@ -126,7 +126,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/projects/:projectId/users', {
-                templateUrl: '/modules/components/projects/views/projectsUsers--view.html',
+                templateUrl: '/modules/components/projects/views/projectsUsers--view.html?t=' + environment.version,
                 controller: 'ProjectUsersCtrl',
                 controllerAs: 'page',
                 resolve: {

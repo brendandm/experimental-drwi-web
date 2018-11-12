@@ -9,11 +9,11 @@
  * Main module of the application.
  */
 angular.module('FieldDoc')
-    .config(function($routeProvider) {
+    .config(function($routeProvider, environment) {
 
         $routeProvider
             .when('/practices/:practiceId', {
-                templateUrl: '/modules/components/practices/views/summary--view.html',
+                templateUrl: '/modules/components/practices/views/summary--view.html?t=' + environment.version,
                 controller: 'CustomSummaryController',
                 controllerAs: 'page',
                 resolve: {
@@ -46,7 +46,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/reports/:reportId/edit', {
-                templateUrl: '/modules/components/practices/views/edit--view.html',
+                templateUrl: '/modules/components/practices/views/edit--view.html?t=' + environment.version,
                 controller: 'CustomFormController',
                 controllerAs: 'page',
                 resolve: {
@@ -100,7 +100,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/practices/:practiceId/edit', {
-                templateUrl: '/modules/components/practices/views/practiceEdit--view.html',
+                templateUrl: '/modules/components/practices/views/practiceEdit--view.html?t=' + environment.version,
                 controller: 'PracticeEditController',
                 controllerAs: 'page',
                 resolve: {
@@ -133,7 +133,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/practices/:practiceId/location', {
-                templateUrl: '/modules/components/practices/views/practiceLocation--view.html',
+                templateUrl: '/modules/components/practices/views/practiceLocation--view.html?t=' + environment.version,
                 controller: 'PracticeLocationController',
                 controllerAs: 'page',
                 resolve: {
@@ -161,7 +161,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/practices/:practiceId/photos', {
-                templateUrl: '/modules/components/practices/views/practicePhoto--view.html',
+                templateUrl: '/modules/components/practices/views/practicePhoto--view.html?t=' + environment.version,
                 controller: 'PracticePhotoController',
                 controllerAs: 'page',
                 resolve: {

@@ -20,6 +20,9 @@
                 <div class="form-element">
                     <span class="meta-label"><b>Description</b></span>
                     <textarea rows="4" data-ng-model="page.snapshotObject.description" class="form-control animate" msd-elastic id="description" name="description" placeholder="Dashboard description" maxlength-"500">{{ page.snapshotObject.description }}</textarea>
+                    <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
+                        Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.snapshotObject.description.length || 0) | number }} used)</strong>
+                    </p>
                 </div>
 
                 <!-- Filter Tools -->

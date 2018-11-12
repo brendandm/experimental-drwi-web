@@ -9,11 +9,11 @@
  * Main module of the application.
  */
 angular.module('FieldDoc')
-    .config(function($routeProvider, commonscloud) {
+    .config(function($routeProvider, environment) {
 
         $routeProvider
             .when('/dashboards', {
-                templateUrl: '/modules/components/snapshot/views/snapshotList--view.html',
+                templateUrl: '/modules/components/snapshot/views/snapshotList--view.html?t=' + environment.version,
                 controller: 'SnapshotListCtrl',
                 controllerAs: 'page',
                 reloadOnSearch: false,
@@ -41,7 +41,7 @@ angular.module('FieldDoc')
 
             })
             .when('/dashboards/:snapshotId', {
-                templateUrl: '/modules/components/snapshot/views/snapshot--view.html',
+                templateUrl: '/modules/components/snapshot/views/snapshot--view.html?t=' + environment.version,
                 controller: 'SnapshotCtrl',
                 controllerAs: 'page',
                 reloadOnSearch: false,
@@ -85,7 +85,7 @@ angular.module('FieldDoc')
 
             })
             .when('/dashboards/collection/new', {
-                templateUrl: '/modules/components/snapshot/views/snapshotCreate--view.html',
+                templateUrl: '/modules/components/snapshot/views/snapshotCreate--view.html?t=' + environment.version,
                 controller: 'SnapshotCreateCtrl',
                 controllerAs: 'page',
                 reloadOnSearch: false,
@@ -108,7 +108,7 @@ angular.module('FieldDoc')
 
             })
             .when('/dashboards/:snapshotId/edit', {
-                templateUrl: '/modules/components/snapshot/views/snapshotEdit--view.html',
+                templateUrl: '/modules/components/snapshot/views/snapshotEdit--view.html?t=' + environment.version,
                 controller: 'SnapshotEditCtrl',
                 controllerAs: 'page',
                 reloadOnSearch: false,
