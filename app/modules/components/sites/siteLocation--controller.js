@@ -269,6 +269,8 @@
 
                 self.saveSite = function() {
 
+                    window.scrollTo(0,0);
+
                     delete self.site.properties.counties;
                     delete self.site.properties.geographies;
                     delete self.site.properties.watersheds;

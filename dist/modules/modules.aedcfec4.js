@@ -2822,6 +2822,8 @@ angular.module('FieldDoc')
 
             self.saveSnapshot = function() {
 
+                window.scrollTo(0,0);
+
                 self.status.processing = true;
 
                 self.processRelations(self.activeFilters);
@@ -4413,6 +4415,8 @@ angular.module('FieldDoc')
             }
 
             self.saveOrganization = function() {
+
+                window.scrollTo(0,0);
 
                 self.status.processing = true;
 
@@ -6169,6 +6173,8 @@ angular.module('FieldDoc')
 
             self.saveProject = function() {
 
+                window.scrollTo(0,0);
+
                 self.status.processing = true;
 
                 self.scrubProject();
@@ -6505,6 +6511,8 @@ angular.module('FieldDoc')
                 };
 
                 self.saveProject = function() {
+
+                    window.scrollTo(0,0);
 
                     self.status.processing = true;
 
@@ -7379,6 +7387,8 @@ angular.module('FieldDoc')
 
                 self.saveSite = function() {
 
+                    window.scrollTo(0,0);
+
                     self.status.processing = true;
 
                     self.site.$update().then(function(successResponse) {
@@ -7820,6 +7830,8 @@ angular.module('FieldDoc')
                 };
 
                 self.saveSite = function() {
+
+                    window.scrollTo(0,0);
 
                     delete self.site.properties.counties;
                     delete self.site.properties.geographies;
@@ -9302,6 +9314,8 @@ angular.module('FieldDoc')
 
         self.savePractice = function() {
 
+            window.scrollTo(0,0);
+
             self.status.processing = true;
 
             self.scrubFeature();
@@ -10171,6 +10185,8 @@ angular.module('FieldDoc')
 
             self.savePractice = function() {
 
+                window.scrollTo(0,0);
+
                 self.status.processing = true;
 
                 if (self.savedObjects.length) {
@@ -10642,6 +10658,8 @@ angular.module('FieldDoc')
         }
 
         self.savePractice = function() {
+
+            window.scrollTo(0,0);
 
             self.status.processing = true;
 

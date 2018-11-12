@@ -42,6 +42,8 @@
 
                 self.saveSite = function() {
 
+                    window.scrollTo(0,0);
+
                     self.status.processing = true;
 
                     self.site.$update().then(function(successResponse) {

@@ -291,6 +291,8 @@ angular.module('FieldDoc')
 
             self.saveSnapshot = function() {
 
+                window.scrollTo(0,0);
+
                 self.status.processing = true;
 
                 self.processRelations(self.activeFilters);
