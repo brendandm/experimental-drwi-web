@@ -39,53 +39,13 @@ angular.module('FieldDoc')
                 loading: true
             };
 
-            self.fillMeter = undefined;
+            self.showElements = function() {
 
-            self.showProgress = function() {
+                $timeout(function() {
 
-                self.fillMeter = $interval(function() {
+                    self.status.loading = false;
 
-                    var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
-
-                    if (!self.progressValue) {
-
-                        self.progressValue = tempValue;
-
-                    } else if ((100 - tempValue) > self.progressValue) {
-
-                        self.progressValue += tempValue;
-
-                    } else {
-
-                        $interval.cancel(self.fillMeter);
-
-                        self.fillMeter = undefined;
-
-                        self.progressValue = 100;
-
-                        self.showElements(1000, self.filteredProjects, self.progressValue);
-
-                    }
-
-                    console.log('progressValue', self.progressValue);
-
-                }, 50);
-
-            };
-
-            self.showElements = function(delay, object, progressValue) {
-
-                if (object && progressValue > 75) {
-
-                    $timeout(function() {
-
-                        self.status.loading = false;
-
-                        self.progressValue = 0;
-
-                    }, delay);
-
-                }
+                }, 1000);
 
             };
 
@@ -259,8 +219,6 @@ angular.module('FieldDoc')
             //
             if (Account.userObject && user) {
 
-                self.showProgress();
-
                 user.$promise.then(function(userResponse) {
                     $rootScope.user = Account.userObject = userResponse;
                     self.permissions = {
@@ -314,9 +272,13 @@ angular.module('FieldDoc')
 
                     self.filteredProjects = $scope.projectStore.filteredProjects;
 
+                    self.showElements();
+
                 }, function(errorResponse) {
 
                     console.log('errorResponse', errorResponse);
+
+                    self.showElements();
 
                 });
 

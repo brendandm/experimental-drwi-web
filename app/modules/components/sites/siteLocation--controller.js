@@ -12,8 +12,8 @@
     angular.module('FieldDoc')
         .controller('SiteLocationCtrl',
             function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
-                Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, Segment,
-                $timeout, $interval, user, Shapefile, Utility) {
+                Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, $timeout,
+                $interval, user, Shapefile, Utility) {
 
                 var self = this;
 
@@ -330,7 +330,7 @@
                         $timeout(closeAlerts, 2000);
 
                     });
-                    
+
                 };
 
                 self.alerts = [];
@@ -426,14 +426,10 @@
                  */
 
                 //
-                // Define a layer to add geometries to later
-                //
-                var featureGroup = new L.FeatureGroup();
-
-                //
                 // Convert a GeoJSON Feature Collection to a valid Leaflet Layer
                 //
                 self.geojsonToLayer = function(geojson, layer) {
+
                     layer.clearLayers();
 
                     function add(l) {
@@ -453,68 +449,7 @@
                             lineCap: 'square'
                         }
                     }).eachLayer(add);
-                };
 
-                self.geolocation = {
-                    drawSegment: function(geojson) {
-
-                        leafletData.getMap().then(function(map) {
-                            //
-                            // Reset the FeatureGroup because we don't want multiple parcels drawn on the map
-                            //
-                            map.removeLayer(featureGroup);
-
-                            //
-                            // Convert the GeoJSON to a layer and add it to our FeatureGroup
-                            //
-                            self.geojsonToLayer(geojson, featureGroup);
-
-                            //
-                            // Add the FeatureGroup to the map
-                            //
-                            map.addLayer(featureGroup);
-                        });
-
-                    },
-                    getSegment: function(coordinates) {
-
-                        leafletData.getMap().then(function(map) {
-
-                            Segment.query({
-                                q: {
-                                    filters: [{
-                                        name: 'geometry',
-                                        op: 'intersects',
-                                        val: 'SRID=4326;POINT(' + coordinates.lng + ' ' + coordinates.lat + ')'
-                                    }]
-                                }
-                            }).$promise.then(function(successResponse) {
-
-                                var segments = successResponse;
-
-                                if (segments.features.length) {
-                                    self.geolocation.drawSegment(segments);
-
-                                    if (segments.features.length) {
-                                        self.site.properties.segment_id = segments.features[0].id;
-                                        self.site.properties.segment = segments.features[0];
-                                    }
-                                } else {
-                                    $rootScope.notifications.error('Outside Chesapeake Bay Watershed', 'Please select a project site that falls within the Chesapeake Bay Watershed');
-
-                                    $timeout(function() {
-                                        $rootScope.notifications.objects = [];
-                                    }, 3500);
-                                }
-
-
-                            }, function(errorResponse) {
-                                console.error('Error', errorResponse);
-                            });
-
-                        });
-
-                    }
                 };
 
                 //
@@ -737,9 +672,21 @@
                             if (self.site.geometry !== null &&
                                 typeof self.site.geometry !== 'undefined') {
 
-                                var geometry = self.site.geometry;
+                                leafletData.getMap('site--map').then(function(map) {
 
-                                self.setGeoJsonLayer(geometry);
+                                    var siteExtent = new L.FeatureGroup();
+
+                                    var siteGeometry = L.geoJson(successResponse, {});
+
+                                    siteExtent.addLayer(siteGeometry);
+
+                                    map.fitBounds(siteExtent.getBounds(), {
+                                        maxZoom: 18
+                                    });
+
+                                    self.setGeoJsonLayer(self.site.geometry);
+
+                                });
 
                             }
 

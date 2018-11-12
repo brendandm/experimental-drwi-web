@@ -23,10 +23,12 @@ angular.module('FieldDoc')
 
         self.status = {
             loading: true,
-            processing: true
+            processing: false
         };
 
-        self.showElements = function() {
+        self.showElements = function(delay) {
+
+            var ms = delay || 1000;
 
             $timeout(function() {
 
@@ -34,7 +36,7 @@ angular.module('FieldDoc')
 
                 self.status.processing = false;
 
-            }, 1000);
+            }, ms);
 
         };
 
@@ -94,9 +96,11 @@ angular.module('FieldDoc')
 
                 self.processPractice(successResponse);
 
+                self.showElements();
+
             }, function(errorResponse) {
 
-                //
+                self.showElements();
 
             });
 
@@ -130,7 +134,7 @@ angular.module('FieldDoc')
 
         self.savePractice = function() {
 
-            self.status.loading = true;
+            self.status.processing = true;
 
             var _images = [];
 
@@ -179,11 +183,11 @@ angular.module('FieldDoc')
 
                         $timeout(self.closeAlerts, 2000);
 
-                        self.showElements();
+                        self.showElements(0);
 
                     }, function(errorResponse) {
 
-                        self.showElements();
+                        self.showElements(0);
 
                     });
 

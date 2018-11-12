@@ -4912,53 +4912,13 @@ angular.module('FieldDoc')
                 loading: true
             };
 
-            self.fillMeter = undefined;
+            self.showElements = function() {
 
-            self.showProgress = function() {
+                $timeout(function() {
 
-                self.fillMeter = $interval(function() {
+                    self.status.loading = false;
 
-                    var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
-
-                    if (!self.progressValue) {
-
-                        self.progressValue = tempValue;
-
-                    } else if ((100 - tempValue) > self.progressValue) {
-
-                        self.progressValue += tempValue;
-
-                    } else {
-
-                        $interval.cancel(self.fillMeter);
-
-                        self.fillMeter = undefined;
-
-                        self.progressValue = 100;
-
-                        self.showElements(1000, self.filteredProjects, self.progressValue);
-
-                    }
-
-                    console.log('progressValue', self.progressValue);
-
-                }, 50);
-
-            };
-
-            self.showElements = function(delay, object, progressValue) {
-
-                if (object && progressValue > 75) {
-
-                    $timeout(function() {
-
-                        self.status.loading = false;
-
-                        self.progressValue = 0;
-
-                    }, delay);
-
-                }
+                }, 1000);
 
             };
 
@@ -5132,8 +5092,6 @@ angular.module('FieldDoc')
             //
             if (Account.userObject && user) {
 
-                self.showProgress();
-
                 user.$promise.then(function(userResponse) {
                     $rootScope.user = Account.userObject = userResponse;
                     self.permissions = {
@@ -5187,9 +5145,13 @@ angular.module('FieldDoc')
 
                     self.filteredProjects = $scope.projectStore.filteredProjects;
 
+                    self.showElements();
+
                 }, function(errorResponse) {
 
                     console.log('errorResponse', errorResponse);
+
+                    self.showElements();
 
                 });
 
@@ -7602,8 +7564,8 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('SiteLocationCtrl',
             function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
-                Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, Segment,
-                $timeout, $interval, user, Shapefile, Utility) {
+                Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, $timeout,
+                $interval, user, Shapefile, Utility) {
 
                 var self = this;
 
@@ -7920,7 +7882,7 @@ angular.module('FieldDoc')
                         $timeout(closeAlerts, 2000);
 
                     });
-                    
+
                 };
 
                 self.alerts = [];
@@ -8016,14 +7978,10 @@ angular.module('FieldDoc')
                  */
 
                 //
-                // Define a layer to add geometries to later
-                //
-                var featureGroup = new L.FeatureGroup();
-
-                //
                 // Convert a GeoJSON Feature Collection to a valid Leaflet Layer
                 //
                 self.geojsonToLayer = function(geojson, layer) {
+
                     layer.clearLayers();
 
                     function add(l) {
@@ -8043,68 +8001,7 @@ angular.module('FieldDoc')
                             lineCap: 'square'
                         }
                     }).eachLayer(add);
-                };
 
-                self.geolocation = {
-                    drawSegment: function(geojson) {
-
-                        leafletData.getMap().then(function(map) {
-                            //
-                            // Reset the FeatureGroup because we don't want multiple parcels drawn on the map
-                            //
-                            map.removeLayer(featureGroup);
-
-                            //
-                            // Convert the GeoJSON to a layer and add it to our FeatureGroup
-                            //
-                            self.geojsonToLayer(geojson, featureGroup);
-
-                            //
-                            // Add the FeatureGroup to the map
-                            //
-                            map.addLayer(featureGroup);
-                        });
-
-                    },
-                    getSegment: function(coordinates) {
-
-                        leafletData.getMap().then(function(map) {
-
-                            Segment.query({
-                                q: {
-                                    filters: [{
-                                        name: 'geometry',
-                                        op: 'intersects',
-                                        val: 'SRID=4326;POINT(' + coordinates.lng + ' ' + coordinates.lat + ')'
-                                    }]
-                                }
-                            }).$promise.then(function(successResponse) {
-
-                                var segments = successResponse;
-
-                                if (segments.features.length) {
-                                    self.geolocation.drawSegment(segments);
-
-                                    if (segments.features.length) {
-                                        self.site.properties.segment_id = segments.features[0].id;
-                                        self.site.properties.segment = segments.features[0];
-                                    }
-                                } else {
-                                    $rootScope.notifications.error('Outside Chesapeake Bay Watershed', 'Please select a project site that falls within the Chesapeake Bay Watershed');
-
-                                    $timeout(function() {
-                                        $rootScope.notifications.objects = [];
-                                    }, 3500);
-                                }
-
-
-                            }, function(errorResponse) {
-                                console.error('Error', errorResponse);
-                            });
-
-                        });
-
-                    }
                 };
 
                 //
@@ -8327,9 +8224,21 @@ angular.module('FieldDoc')
                             if (self.site.geometry !== null &&
                                 typeof self.site.geometry !== 'undefined') {
 
-                                var geometry = self.site.geometry;
+                                leafletData.getMap('site--map').then(function(map) {
 
-                                self.setGeoJsonLayer(geometry);
+                                    var siteExtent = new L.FeatureGroup();
+
+                                    var siteGeometry = L.geoJson(successResponse, {});
+
+                                    siteExtent.addLayer(siteGeometry);
+
+                                    map.fitBounds(siteExtent.getBounds(), {
+                                        maxZoom: 18
+                                    });
+
+                                    self.setGeoJsonLayer(self.site.geometry);
+
+                                });
 
                             }
 
@@ -10623,10 +10532,12 @@ angular.module('FieldDoc')
 
         self.status = {
             loading: true,
-            processing: true
+            processing: false
         };
 
-        self.showElements = function() {
+        self.showElements = function(delay) {
+
+            var ms = delay || 1000;
 
             $timeout(function() {
 
@@ -10634,7 +10545,7 @@ angular.module('FieldDoc')
 
                 self.status.processing = false;
 
-            }, 1000);
+            }, ms);
 
         };
 
@@ -10694,9 +10605,11 @@ angular.module('FieldDoc')
 
                 self.processPractice(successResponse);
 
+                self.showElements();
+
             }, function(errorResponse) {
 
-                //
+                self.showElements();
 
             });
 
@@ -10730,7 +10643,7 @@ angular.module('FieldDoc')
 
         self.savePractice = function() {
 
-            self.status.loading = true;
+            self.status.processing = true;
 
             var _images = [];
 
@@ -10779,11 +10692,11 @@ angular.module('FieldDoc')
 
                         $timeout(self.closeAlerts, 2000);
 
-                        self.showElements();
+                        self.showElements(0);
 
                     }, function(errorResponse) {
 
-                        self.showElements();
+                        self.showElements(0);
 
                     });
 
