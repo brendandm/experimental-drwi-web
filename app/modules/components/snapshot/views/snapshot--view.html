@@ -216,7 +216,7 @@
                                     {{ page.outcomes.installation.nitrogen | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.nitrogen | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
                                     <span class="statistic--title">Nitrogen</span>
                                 </p>
-                                <div class="statistic--chart" style="color: #e0e0e0; background: #161c22;">
+                                <div class="statistic--chart" style="color: #e0e0e0; background: rgba(0,0,0,0.2);">
                                     <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.nitrogen/page.outcomes.planning.nitrogen)*100) + '%' }" style="background: #2196F3;">
                                     </div>
                                 </div>
@@ -227,7 +227,7 @@
                                     {{ page.outcomes.installation.phosphorus | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.phosphorus | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
                                     <span class="statistic--title">Phosphorus</span>
                                 </p>
-                                <div class="statistic--chart" style="color: #e0e0e0; background: #161c22;">
+                                <div class="statistic--chart" style="color: #e0e0e0; background: rgba(0,0,0,0.2);">
                                     <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.phosphorus/page.outcomes.planning.phosphorus)*100) + '%' }" style="background: #2196F3;">
                                     </div>
                                 </div>
@@ -238,7 +238,7 @@
                                     {{ page.outcomes.installation.sediment | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.sediment | number:2 }} <span class="statistic--valueLabel">tons/yr</span><br />
                                     <span class="statistic--title">Sediment</span>
                                 </p>
-                                <div class="statistic--chart" style="color: #e0e0e0; background: #161c22;">
+                                <div class="statistic--chart" style="color: #e0e0e0; background: rgba(0,0,0,0.2);">
                                     <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.sediment/page.outcomes.planning.sediment)*100) + '%' }" style="background: #2196F3;">
                                     </div>
                                 </div>
@@ -273,12 +273,20 @@
                                         </strong>
                                     </td>
                                     <td>
-                                        <div class="donut-chart chart{{ (metric.installation/metric.planning)*100 | number:0 }}">
+                                        <progress-arc
+                                            size="32"
+                                            stroke="#2196F3"
+                                            stroke-width="4"
+                                            complete="(metric.installation/metric.planning)"
+                                            counter-clockwise="false"
+                                            background="#204866">
+                                        </progress-arc>
+                                        <!-- <div class="donut-chart chart{{ (metric.installation/metric.planning)*100 | number:0 }}">
                                             <div class="slice one" style="background: #161c22;"></div>
                                             <div class="slice two" style="background: #161c22;"></div>
                                             <div class="chart-center" style="background: #252f3a;">
                                             </div>
-                                        </div>
+                                        </div> -->
                                     </td>
                                 </tr>
                             </tbody>

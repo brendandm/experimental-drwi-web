@@ -20,7 +20,8 @@
     "angular-aria": "1.3.0",
     "angular-moment": "0.8.2",
     "angular-save2pdf": "*",
-    "leaflet-draw": ">=1.0.2"
+    "leaflet-draw": ">=1.0.2",
+    "angular-progress-arc": "^1.0.0"
   },
   "devDependencies": {},
   "appPath": "app",
