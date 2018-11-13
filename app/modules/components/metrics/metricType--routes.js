@@ -13,7 +13,7 @@ angular.module('FieldDoc')
 
         $routeProvider
             .when('/metrics', {
-                templateUrl: '/modules/components/metrics/views/metricList--view.html?t=' + environment.version,
+                templateUrl: '/modules/components/metrics/views/metricTypeList--view.html?t=' + environment.version,
                 controller: 'MetricTypeListController',
                 controllerAs: 'page',
                 resolve: {
@@ -36,7 +36,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/metrics/:metricId', {
-                templateUrl: '/modules/components/metrics/views/metricSummary--view.html?t=' + environment.version,
+                templateUrl: '/modules/components/metrics/views/metricTypeSummary--view.html?t=' + environment.version,
                 controller: 'MetricSummaryController',
                 controllerAs: 'page',
                 resolve: {
@@ -69,7 +69,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/metrics/:metricId/edit', {
-                templateUrl: '/modules/components/metrics/views/metricEdit--view.html?t=' + environment.version,
+                templateUrl: '/modules/components/metrics/views/metricTypeEdit--view.html?t=' + environment.version,
                 controller: 'MetricTypeEditController',
                 controllerAs: 'page',
                 resolve: {

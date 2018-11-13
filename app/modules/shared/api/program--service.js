@@ -15,6 +15,11 @@
                 query: {
                     isArray: false
                 },
+                collection: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/programs')
+                },
                 geographies: {
                     method: 'GET',
                     isArray: false,
