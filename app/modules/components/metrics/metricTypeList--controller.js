@@ -8,13 +8,13 @@
 angular.module('FieldDoc')
     .controller('MetricTypeListController',
         function(Account, $location, $log, MetricType,
-            metrics, $rootScope, $scope, user,
+            metricTypes, $rootScope, $scope, user,
             $interval, $timeout, Utility) {
 
             var self = this;
 
             $rootScope.viewState = {
-                'metric': true
+                'metricType': true
             };
 
             //
@@ -135,7 +135,7 @@ angular.module('FieldDoc')
                         isLoggedIn: Account.hasToken()
                     };
 
-                    metrics.$promise.then(function(successResponse) {
+                    metricTypes.$promise.then(function(successResponse) {
 
                         console.log('successResponse', successResponse);
 

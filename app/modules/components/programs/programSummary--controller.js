@@ -8,33 +8,34 @@
      * @description
      */
     angular.module('FieldDoc')
-        .controller('CustomSummaryController', [
+        .controller('ProgramSummaryController', [
             'Account',
             '$location',
             '$timeout',
             '$log',
-            'Report',
             '$rootScope',
             '$route',
             'Utility',
             'user',
-            'Project',
-            'Site',
             '$window',
             'Map',
             'mapbox',
             'leafletData',
             'leafletBoundsHelpers',
-            'Practice',
+            'Program',
             'metrics',
             'outcomes',
-            'practice',
-            function(Account, $location, $timeout, $log, Report, $rootScope,
-                $route, Utility, user, Project, Site, $window, Map, mapbox,
-                leafletData, leafletBoundsHelpers, Practice, metrics, outcomes, practice) {
+            'program',
+            function(Account, $location, $timeout, $log, $rootScope,
+                $route, Utility, user, $window, Map, mapbox, leafletData,
+                leafletBoundsHelpers, Program, metrics, outcomes, program) {
 
                 var self = this,
-                    practiceId = $route.current.params.practiceId;
+                    programId = $route.current.params.programId;
+
+                $rootScope.viewState = {
+                    'program': true
+                };
 
                 $rootScope.toolbarState = {
                     'dashboard': true
@@ -58,7 +59,7 @@
 
                 function closeRoute() {
 
-                    $location.path(self.practice.links.site.html);
+                    $location.path(self.program.links.site.html);
 
                 }
 
@@ -67,7 +68,7 @@
                     console.log('self.confirmDelete', obj, targetCollection);
 
                     if (self.deletionTarget &&
-                        self.deletionTarget.collection === 'practice') {
+                        self.deletionTarget.collection === 'program') {
 
                         self.cancelDelete();
 
@@ -104,7 +105,7 @@
 
                         default:
 
-                            targetCollection = Practice;
+                            targetCollection = Program;
 
                             break;
 
@@ -125,7 +126,7 @@
                             typeof index === 'number' &&
                             featureType === 'report') {
 
-                            self.practice.properties.readings_custom.splice(index, 1);
+                            self.program.properties.readings_custom.splice(index, 1);
 
                             self.cancelDelete();
 
@@ -214,41 +215,17 @@
 
                 };
 
-                self.loadPractice = function() {
+                self.loadProgram = function() {
 
-                    practice.$promise.then(function(successResponse) {
+                    program.$promise.then(function(successResponse) {
 
-                        console.log('self.practice', successResponse);
+                        console.log('self.program', successResponse);
 
-                        self.practice = successResponse;
+                        self.program = successResponse;
 
-                        $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
+                        $rootScope.program = successResponse;
 
-                        //
-                        // If a valid practice geometry is present, add it to the map
-                        // and track the object in `self.savedObjects`.
-                        //
-
-                        if (self.practice.geometry !== null &&
-                            typeof self.practice.geometry !== 'undefined') {
-
-                            leafletData.getMap('practice--map').then(function(map) {
-
-                                self.practiceExtent = new L.FeatureGroup();
-
-                                self.setGeoJsonLayer(self.practice.geometry, self.practiceExtent);
-
-                                map.fitBounds(self.practiceExtent.getBounds(), {
-                                    maxZoom: 18
-                                });
-
-                            });
-
-                            self.map.geojson = {
-                                data: self.practice.geometry
-                            };
-
-                        }
+                        $rootScope.page.title = self.program.properties.name ? self.program.properties.name : 'Un-named Program';
 
                         self.status.loading = false;
 
@@ -271,15 +248,12 @@
 
                         self.permissions = {
                             isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[
-                                0].properties.name,
-                            account: ($rootScope.account &&
-                                    $rootScope.account.length) ?
-                                $rootScope.account[0] : null,
+                            role: $rootScope.user.properties.roles[0],
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
                             can_edit: true
                         };
 
-                        self.loadPractice();
+                        self.loadProgram();
 
                         self.loadMetrics();
 
@@ -287,28 +261,6 @@
 
                     });
                 }
-
-                self.addReading = function(measurementPeriod) {
-
-                    var newReading = new Report({
-                        'measurement_period': 'Planning',
-                        'report_date': new Date(),
-                        'practice_id': practiceId,
-                        'organization_id': self.practice.properties.organization_id
-                    });
-
-                    newReading.$save().then(function(successResponse) {
-
-                        $location.path('/practices/' + practiceId +
-                            '/' + successResponse.id + '/edit');
-
-                    }, function(errorResponse) {
-
-                        console.error('ERROR: ', errorResponse);
-
-                    });
-
-                };
 
                 self.loadMetrics = function() {
 

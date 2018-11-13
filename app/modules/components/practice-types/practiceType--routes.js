@@ -12,7 +12,7 @@ angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
 
         $routeProvider
-            .when('/practice-types', {
+            .when('/programs/:programId/practice-types', {
                 templateUrl: '/modules/components/practice-types/views/practiceTypeList--view.html?t=' + environment.version,
                 controller: 'PracticeTypeListController',
                 controllerAs: 'page',
@@ -28,9 +28,11 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    programs: function(PracticeType, $route) {
+                    practiceTypes: function(Program, $route) {
 
-                        return PracticeType.collection({});
+                        return Program.practiceTypes({
+                            id: $route.current.params.programId
+                        });
 
                     }
                 }

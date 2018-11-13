@@ -8,10 +8,12 @@
 angular.module('FieldDoc')
     .controller('PracticeTypeListController',
         function(Account, $location, $log, PracticeType,
-            practices, $rootScope, $scope, user,
+            practiceTypes, $rootScope, $route, $scope, user,
             $interval, $timeout, Utility) {
 
             var self = this;
+
+            self.programId = $route.current.params.programId;
 
             $rootScope.viewState = {
                 'practice': true
@@ -135,7 +137,7 @@ angular.module('FieldDoc')
                         isLoggedIn: Account.hasToken()
                     };
 
-                    practices.$promise.then(function(successResponse) {
+                    practiceTypes.$promise.then(function(successResponse) {
 
                         console.log('successResponse', successResponse);
 

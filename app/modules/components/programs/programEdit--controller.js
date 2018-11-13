@@ -1,147 +1,147 @@
-'use strict';
+// 'use strict';
 
-/**
- * @ngdoc function
- * @name
- * @description
- */
-angular.module('FieldDoc')
-    .controller('ProgramSummaryController',
-        function(Account, $location, $log, Program, program,
-            $rootScope, $route, $scope, $timeout, user) {
+// /**
+//  * @ngdoc function
+//  * @name
+//  * @description
+//  */
+// angular.module('FieldDoc')
+//     .controller('ProgramSummaryController',
+//         function(Account, $location, $log, Program, program,
+//             $rootScope, $route, $scope, $timeout, user) {
 
-            var self = this;
+//             var self = this;
 
-            $rootScope.viewState = {
-                'program': true
-            };
+//             $rootScope.viewState = {
+//                 'program': true
+//             };
 
-            $rootScope.toolBarState = {
-                'summary': true
-            };
+//             $rootScope.toolBarState = {
+//                 'summary': true
+//             };
 
-            $rootScope.page = {};
+//             $rootScope.page = {};
 
-            self.alerts = [];
+//             self.alerts = [];
 
-            function closeAlerts() {
+//             function closeAlerts() {
 
-                self.alerts = [];
+//                 self.alerts = [];
 
-            }
+//             }
 
-            function closeRoute() {
+//             function closeRoute() {
 
-                $location.path('/programs');
+//                 $location.path('/programs');
 
-            }
+//             }
 
-            self.confirmDelete = function(obj) {
+//             self.confirmDelete = function(obj) {
 
-                console.log('self.confirmDelete', obj);
+//                 console.log('self.confirmDelete', obj);
 
-                self.deletionTarget = self.deletionTarget ? null : obj;
+//                 self.deletionTarget = self.deletionTarget ? null : obj;
 
-            };
+//             };
 
-            self.cancelDelete = function() {
+//             self.cancelDelete = function() {
 
-                self.deletionTarget = null;
+//                 self.deletionTarget = null;
 
-            };
+//             };
 
-            self.deleteFeature = function() {
+//             self.deleteFeature = function() {
 
-                Program.delete({
-                    id: +self.deletionTarget.id
-                }).$promise.then(function(data) {
+//                 Program.delete({
+//                     id: +self.deletionTarget.id
+//                 }).$promise.then(function(data) {
 
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully deleted this program.',
-                        'prompt': 'OK'
-                    });
+//                     self.alerts.push({
+//                         'type': 'success',
+//                         'flag': 'Success!',
+//                         'msg': 'Successfully deleted this program.',
+//                         'prompt': 'OK'
+//                     });
 
-                    $timeout(closeRoute, 2000);
+//                     $timeout(closeRoute, 2000);
 
-                }).catch(function(errorResponse) {
+//                 }).catch(function(errorResponse) {
 
-                    console.log('self.deleteFeature.errorResponse', errorResponse);
+//                     console.log('self.deleteFeature.errorResponse', errorResponse);
 
-                    if (errorResponse.status === 409) {
+//                     if (errorResponse.status === 409) {
 
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this program.',
-                            'prompt': 'OK'
-                        }];
+//                         self.alerts = [{
+//                             'type': 'error',
+//                             'flag': 'Error!',
+//                             'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this program.',
+//                             'prompt': 'OK'
+//                         }];
 
-                    } else if (errorResponse.status === 403) {
+//                     } else if (errorResponse.status === 403) {
 
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this program.',
-                            'prompt': 'OK'
-                        }];
+//                         self.alerts = [{
+//                             'type': 'error',
+//                             'flag': 'Error!',
+//                             'msg': 'You don’t have permission to delete this program.',
+//                             'prompt': 'OK'
+//                         }];
 
-                    } else {
+//                     } else {
 
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this program.',
-                            'prompt': 'OK'
-                        }];
+//                         self.alerts = [{
+//                             'type': 'error',
+//                             'flag': 'Error!',
+//                             'msg': 'Something went wrong while attempting to delete this program.',
+//                             'prompt': 'OK'
+//                         }];
 
-                    }
+//                     }
 
-                    $timeout(closeAlerts, 2000);
+//                     $timeout(closeAlerts, 2000);
 
-                });
+//                 });
 
-            };
+//             };
 
-            self.loadProgram = function() {
+//             self.loadProgram = function() {
 
-                program.$promise.then(function(successResponse) {
+//                 program.$promise.then(function(successResponse) {
 
-                    console.log('self.program', successResponse);
+//                     console.log('self.program', successResponse);
 
-                    self.program = successResponse;
+//                     self.program = successResponse;
 
-                    $rootScope.page.title = self.program.properties.name ? self.program.properties.name : 'Un-named Program';
+//                     $rootScope.page.title = self.program.properties.name ? self.program.properties.name : 'Un-named Program';
 
-                }, function(errorResponse) {
+//                 }, function(errorResponse) {
 
-                    //
+//                     //
 
-                });
+//                 });
 
-            };
+//             };
 
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
+//             //
+//             // Verify Account information for proper UI element display
+//             //
+//             if (Account.userObject && user) {
 
-                user.$promise.then(function(userResponse) {
+//                 user.$promise.then(function(userResponse) {
 
-                    $rootScope.user = Account.userObject = userResponse;
+//                     $rootScope.user = Account.userObject = userResponse;
 
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        can_edit: true
-                    };
+//                     self.permissions = {
+//                         isLoggedIn: Account.hasToken(),
+//                         role: $rootScope.user.properties.roles[0],
+//                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+//                         can_edit: true
+//                     };
 
-                    self.loadProgram();
+//                     self.loadProgram();
 
-                });
+//                 });
 
-            }
+//             }
 
-        });
+//         });

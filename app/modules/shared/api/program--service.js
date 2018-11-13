@@ -9,7 +9,7 @@
      */
     angular.module('FieldDoc')
         .service('Program', function(environment, Preprocessors, $resource) {
-            return $resource(environment.apiUrl.concat('/v1/program/:id'), {
+            return $resource(environment.apiUrl.concat('/v1/data/program/:id'), {
                 id: '@id'
             }, {
                 query: {
@@ -30,25 +30,25 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/program/:id/metrics')
                 },
+                metricTypes: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/program/:id/metric-type')
+                },
                 outcomes: {
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/program/:id/outcomes')
                 },
+                practiceTypes: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/program/:id/practice-type')
+                },
                 projects: {
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/program/:id/projects')
-                },
-                projectSites: {
-                    method: 'GET',
-                    isArray: false,
-                    url: environment.apiUrl.concat('/v1/data/program/project/:id/sites')
-                },
-                sitePractices: {
-                    method: 'GET',
-                    isArray: false,
-                    url: environment.apiUrl.concat('/v1/data/program/site/:id/practices')
                 },
                 'update': {
                     method: 'PATCH'

@@ -12,7 +12,7 @@ angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
 
         $routeProvider
-            .when('/metrics', {
+            .when('/programs/:programId/metric-types', {
                 templateUrl: '/modules/components/metrics/views/metricTypeList--view.html?t=' + environment.version,
                 controller: 'MetricTypeListController',
                 controllerAs: 'page',
@@ -28,14 +28,16 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    metrics: function(MetricType, $route) {
+                    metricTypes: function(Program, $route) {
 
-                        return MetricType.collection({});
+                        return Program.metricTypes({
+                            id: $route.current.params.programId
+                        });
 
                     }
                 }
             })
-            .when('/metrics/:metricId', {
+            .when('/metric-types/:metricId', {
                 templateUrl: '/modules/components/metrics/views/metricTypeSummary--view.html?t=' + environment.version,
                 controller: 'MetricSummaryController',
                 controllerAs: 'page',
@@ -68,7 +70,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/metrics/:metricId/edit', {
+            .when('/metric-types/:metricId/edit', {
                 templateUrl: '/modules/components/metrics/views/metricTypeEdit--view.html?t=' + environment.version,
                 controller: 'MetricTypeEditController',
                 controllerAs: 'page',
@@ -84,20 +86,12 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    site: function(MetricType, $route) {
-                        return MetricType.site({
-                            id: $route.current.params.metricId
-                        });
-                    },
-                    metric_types: function(MetricTypeType, $route) {
-                        return MetricTypeType.query({
-                            results_per_page: 500
-                        });
-                    },
                     metric: function(MetricType, $route) {
+
                         return MetricType.get({
                             id: $route.current.params.metricId
                         });
+                        
                     }
                 }
             });
