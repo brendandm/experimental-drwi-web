@@ -9,12 +9,12 @@
  * Main module of the application.
  */
 angular.module('FieldDoc')
-    .config(function($routeProvider) {
+    .config(function($routeProvider, environment) {
 
         $routeProvider
-            .when('/practices/:practiceId', {
-                templateUrl: '/modules/components/practices/views/summary--view.html',
-                controller: 'CustomSummaryController',
+            .when('/programs', {
+                templateUrl: '/modules/components/programs/views/programList--view.html?t=' + environment.version,
+                controller: 'ProgramListController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -28,26 +28,49 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    metrics: function(Practice, $route) {
-                        return Practice.metrics({
-                            id: $route.current.params.practiceId
+                    programs: function(Program, $route) {
+
+                        return Program.collection({});
+
+                    }
+                }
+            })
+            .when('/programs/:programId', {
+                templateUrl: '/modules/components/programs/views/programSummary--view.html?t=' + environment.version,
+                controller: 'ProgramSummaryController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    metrics: function(Program, $route) {
+                        return Program.metrics({
+                            id: $route.current.params.programId
                         });
                     },
-                    outcomes: function(Practice, $route) {
-                        return Practice.outcomes({
-                            id: $route.current.params.practiceId
+                    outcomes: function(Program, $route) {
+                        return Program.outcomes({
+                            id: $route.current.params.programId
                         });
                     },
-                    practice: function(Practice, $route) {
-                        return Practice.get({
-                            id: $route.current.params.practiceId
+                    program: function(Program, $route) {
+                        return Program.get({
+                            id: $route.current.params.programId
                         });
                     }
                 }
             })
-            .when('/practices/:practiceId/:reportId/edit', {
-                templateUrl: '/modules/components/practices/views/edit--view.html',
-                controller: 'CustomFormController',
+            .when('/programs/:programId/edit', {
+                templateUrl: '/modules/components/programs/views/programEdit--view.html?t=' + environment.version,
+                controller: 'ProgramEditController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -61,139 +84,9 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    practice: function(Practice, $route) {
-                        return Practice.get({
-                            id: $route.current.params.practiceId
-                        });
-                    },
-                    report: function(PracticeCustom, $route) {
-                        return PracticeCustom.get({
-                            id: $route.current.params.reportId
-                        });
-                    },
-                    report_metrics: function(PracticeCustom, $route) {
-                        return PracticeCustom.metrics({
-                            id: $route.current.params.reportId
-                        });
-                    },
-                    practice_types: function(PracticeType, $route) {
-                        return PracticeType.query({
-                            results_per_page: 500
-                        });
-                    },
-                    metric_types: function(MetricType, $route) {
-                        return MetricType.query({
-                            results_per_page: 500
-                        });
-                    },
-                    monitoring_types: function(MonitoringType, $route) {
-                        return MonitoringType.query({
-                            results_per_page: 500
-                        });
-                    },
-                    unit_types: function(UnitType, $route) {
-                        return UnitType.query({
-                            results_per_page: 500
-                        });
-                    }
-
-                }
-            })
-            .when('/practices/:practiceId/edit', {
-                templateUrl: '/modules/components/practices/views/practiceEdit--view.html',
-                controller: 'PracticeEditController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account, $rootScope, $document) {
-
-                        $rootScope.targetPath = document.location.pathname;
-
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
-
-                        return Account.userObject;
-
-                    },
-                    site: function(Practice, $route) {
-                        return Practice.site({
-                            id: $route.current.params.practiceId
-                        });
-                    },
-                    practice_types: function(PracticeType, $route) {
-                        return PracticeType.query({
-                            results_per_page: 500
-                        });
-                    },
-                    practice: function(Practice, $route) {
-                        return Practice.get({
-                            id: $route.current.params.practiceId
-                        });
-                    }
-                }
-            })
-            .when('/practices/:practiceId/location', {
-                templateUrl: '/modules/components/practices/views/practiceLocation--view.html',
-                controller: 'PracticeLocationController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account, $rootScope, $document) {
-
-                        $rootScope.targetPath = document.location.pathname;
-
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
-
-                        return Account.userObject;
-
-                    },
-                    site: function(Practice, $route) {
-                        return Practice.site({
-                            id: $route.current.params.practiceId
-                        });
-                    },
-                    practice_types: function(PracticeType, $route) {
-                        return PracticeType.query({
-                            results_per_page: 500
-                        });
-                    },
-                    practice: function(Practice, $route) {
-                        return Practice.get({
-                            id: $route.current.params.practiceId
-                        });
-                    }
-                }
-            })
-            .when('/practices/:practiceId/photos', {
-                templateUrl: '/modules/components/practices/views/practicePhoto--view.html',
-                controller: 'PracticePhotoController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account, $rootScope, $document) {
-
-                        $rootScope.targetPath = document.location.pathname;
-
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
-
-                        return Account.userObject;
-
-                    },
-                    site: function(Practice, $route) {
-                        return Practice.site({
-                            id: $route.current.params.practiceId
-                        });
-                    },
-                    practice_types: function(PracticeType, $route) {
-                        return PracticeType.query({
-                            results_per_page: 500
-                        });
-                    },
-                    practice: function(Practice, $route) {
-                        return Practice.get({
-                            id: $route.current.params.practiceId
+                    program: function(Program, $route) {
+                        return Program.get({
+                            id: $route.current.params.programId
                         });
                     }
                 }

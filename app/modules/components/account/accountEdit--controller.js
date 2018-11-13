@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('AccountEditViewController',
         function(Account, $location, $log, Notifications, $rootScope,
-            $route, user, User, snapshots, $timeout) {
+            $route, user, User, $timeout) {
 
             var self = this;
 
@@ -43,7 +43,7 @@ angular.module('FieldDoc')
 
                     self.permissions = {
                         isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0].properties.name,
+                        role: $rootScope.user.properties.roles[0],
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                     };
 

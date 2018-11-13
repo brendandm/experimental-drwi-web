@@ -66,13 +66,13 @@ angular.module('FieldDoc')
                     //         id: $route.current.params.practiceId
                     //     });
                     // },
-                    report: function(PracticeCustom, $route) {
-                        return PracticeCustom.get({
+                    report: function(Report, $route) {
+                        return Report.get({
                             id: $route.current.params.reportId
                         });
                     },
-                    report_metrics: function(PracticeCustom, $route) {
-                        return PracticeCustom.metrics({
+                    report_metrics: function(Report, $route) {
+                        return Report.metrics({
                             id: $route.current.params.reportId
                         });
                     },

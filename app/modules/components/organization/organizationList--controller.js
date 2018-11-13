@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('OrganizationListViewController', function(Account, $location, $log, Notifications, $rootScope, $route, user, User, snapshots) {
+    .controller('OrganizationListViewController', function(Account, $location, $log, Notifications, $rootScope, $route, user, User, dashboards) {
 
         var self = this;
 
@@ -24,7 +24,7 @@ angular.module('FieldDoc')
 
                 self.permissions = {
                     isLoggedIn: Account.hasToken(),
-                    role: $rootScope.user.properties.roles[0].properties.name,
+                    role: $rootScope.user.properties.roles[0],
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                 };
 
@@ -37,10 +37,10 @@ angular.module('FieldDoc')
                 };
 
                 //
-                // Load snapshot data
+                // Load dashboard data
                 //
 
-                self.actions.snapshots();
+                self.actions.dashboards();
 
             });
 
@@ -107,11 +107,11 @@ angular.module('FieldDoc')
                     self.status.saving = false;
                 });
             },
-            snapshots: function() {
+            dashboards: function() {
 
-                snapshots.$promise.then(function(snapshotResponse) {
+                dashboards.$promise.then(function(dashboardResponse) {
 
-                    self.snapshots = snapshotResponse.features;
+                    self.dashboards = dashboardResponse.features;
 
 
                 });

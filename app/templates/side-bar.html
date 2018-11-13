@@ -1,13 +1,37 @@
 <div data-ng-if="$root.user.id">
-    <nav role="navigation">
+    <nav role="navigation" data-ng-if="!$root.user.properties.is_admin && !$root.user.properties.is_manager">
         <ul class="list-unstyled">
             <li>
                 <a href="/projects" data-ng-class="{viewing: $root.viewState.project}">
                     Projects
                 </a>
             </li>
-            <li class="active">
-                <a href="/dashboards" data-ng-class="{viewing: $root.viewState.snapshot}">
+            <li>
+                <a href="/dashboards" data-ng-class="{viewing: $root.viewState.dashboard}">
+                    Dashboards
+                </a>
+            </li>
+            <li>
+                <a href="/organization" data-ng-class="{viewing: $root.viewState.organization}">
+                    Organization
+                </a>
+            </li>
+            <li>
+                <a href="/account" data-ng-class="{viewing: $root.viewState.profile}">
+                    Profile
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <nav role="navigation" data-ng-if="$root.user.properties.is_admin || $root.user.properties.is_manager">
+        <ul class="list-unstyled">
+            <li>
+                <a href="/programs" data-ng-class="{viewing: $root.viewState.program}">
+                    Programs
+                </a>
+            </li>
+            <li>
+                <a href="/dashboards" data-ng-class="{viewing: $root.viewState.dashboard}">
                     Dashboards
                 </a>
             </li>

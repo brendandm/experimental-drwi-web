@@ -6,16 +6,76 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('DashboardCtrl', function(Account, $location, $log, Project, Map,
-        projects, $rootScope, $scope, Site, user, leafletData, leafletBoundsHelpers,
+    .controller('DashboardCtrl', function(Account, $location, $log, $interval, $timeout, Project, Map,
+        baseProjects, $rootScope, $scope, Site, leafletData, leafletBoundsHelpers,
         MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox,
-        Practice) {
+        Practice, dashboard, $routeParams, Dashboard, Utility, user) {
 
         $scope.filterStore = FilterStore;
+
+        FilterStore.clearAll();
 
         // $scope.projectStore = ProjectStore;
 
         var self = this;
+
+        self.status = {
+            loading: true
+        };
+
+        self.fillMeter = undefined;
+
+        self.showProgress = function() {
+
+            self.progressMessage = 'Loading dashboard data\u2026';
+
+            self.fillMeter = $interval(function() {
+
+                var tempValue = (self.progressValue || 10) * Utility.meterCoefficient();
+
+                if (!self.progressValue) {
+
+                    self.progressValue = tempValue;
+
+                } else if ((100 - tempValue) > self.progressValue) {
+
+                    self.progressValue += tempValue;
+
+                } else {
+
+                    $interval.cancel(self.fillMeter);
+
+                    self.fillMeter = undefined;
+
+                    self.progressValue = 100;
+
+                    self.showElements(1000, self.filteredProjects, self.progressValue);
+
+                }
+
+                console.log('progressValue', self.progressValue);
+
+            }, 50);
+
+        };
+
+        self.showElements = function(delay, object, progressValue) {
+
+            if (object && progressValue > 90) {
+
+                self.progressMessage = 'Rendering\u2026';
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.progressValue = 0;
+
+                }, delay);
+
+            }
+
+        };
 
         //
         // Setup basic page variables
@@ -28,20 +88,24 @@ angular.module('FieldDoc')
             collection: 'metric'
         };
 
-        self.cardTpl = {
-            featureType: 'program',
-            featureTabLabel: 'Projects',
-            feature: null,
-            heading: 'Delaware River Watershed Initiative',
-            yearsActive: '2013 - 2018',
-            funding: '$2.65 million',
-            url: 'https://4states1source.org',
-            resourceUrl: null,
-            linkTarget: '_blank',
-            description: 'The Delaware River Watershed Initiative is a cross-cutting collaboration working to conserve and restore the streams that supply drinking water to 15 million people in New York, New Jersey, Pennsylvania and Delaware.',
-        };
+        self.cardTpl = {};
 
-        self.card = self.cardTpl;
+        self.card = {};
+
+        // self.cardTpl = {
+        //     featureType: 'program',
+        //     featureTabLabel: 'Projects',
+        //     feature: null,
+        //     heading: 'Delaware River Watershed Initiative',
+        //     yearsActive: '2013 - 2018',
+        //     funding: '$2.65 million',
+        //     url: 'https://4states1source.org',
+        //     resourceUrl: null,
+        //     linkTarget: '_blank',
+        //     description: 'The Delaware River Watershed Initiative is a cross-cutting collaboration working to conserve and restore the streams that supply drinking water to 15 million people in New York, New Jersey, Pennsylvania and Delaware.',
+        // };
+
+        // self.card = self.cardTpl;
 
         self.historyItem = null;
 
@@ -49,7 +113,7 @@ angular.module('FieldDoc')
 
         self.project = {};
 
-        self.map = Object.assign({}, Map);
+        self.map = JSON.parse(JSON.stringify(Map));
 
         self.map.layers = {
             baselayers: {
@@ -152,7 +216,7 @@ angular.module('FieldDoc')
 
         self.resetMapExtent = function() {
 
-            self.map.geojson.data = self.programGeographies;
+            self.map.geojson.data = self.geographies;
 
             leafletData.getMap('dashboard--map').then(function(map) {
 
@@ -229,7 +293,7 @@ angular.module('FieldDoc')
                             heading: feature.properties.name,
                             yearsActive: '2018',
                             funding: '$100k',
-                            url: 'projects/' + self.activeProject.properties.id + '/sites/' + feature.properties.id,
+                            url: '/sites/' + feature.properties.id,
                             description: feature.properties.description,
                             linkTarget: '_self'
                         };
@@ -292,7 +356,7 @@ angular.module('FieldDoc')
                             heading: feature.properties.name,
                             yearsActive: null,
                             funding: null,
-                            url: 'projects/' + self.activeProject.properties.id + '/sites/' + self.activeSite.properties.id + '/practices/' + feature.properties.id,
+                            url: '/practices/' + feature.properties.id,
                             description: feature.properties.description,
                             linkTarget: '_self'
                         };
@@ -357,73 +421,79 @@ angular.module('FieldDoc')
             });
         }
 
-        geographies.$promise.then(function(successResponse) {
+        self.loadGeographies = function() {
 
-            console.log('geographies.successResponse', successResponse);
+            geographies.$promise.then(function(successResponse) {
 
-            self.programGeographies = successResponse;
+                console.log('geographies.successResponse', successResponse);
 
-            self.map.geojson = {
-                data: successResponse,
-                onEachFeature: onEachFeature,
-                style: {
-                    color: '#00D',
-                    fillColor: 'red',
-                    weight: 2.0,
-                    opacity: 0.6,
-                    fillOpacity: 0.2
-                }
-            };
+                self.geographies = successResponse;
 
-            //
-            // Fit map bounds to GeoJSON
-            //
+                self.map.geojson = {
+                    data: successResponse,
+                    onEachFeature: onEachFeature,
+                    style: {
+                        color: '#00D',
+                        fillColor: 'red',
+                        weight: 2.0,
+                        opacity: 0.6,
+                        fillOpacity: 0.2
+                    }
+                };
 
-            self.resetMapExtent();
+                //
+                // Fit map bounds to GeoJSON
+                //
 
-            //
-            // Set up layer visibility logic
-            //
+                self.resetMapExtent();
 
-            leafletData.getMap('dashboard--map').then(function(map) {
+                //
+                // Set up layer visibility logic
+                //
 
-                map.on('zoomend', function(event) {
+                leafletData.getMap('dashboard--map').then(function(map) {
 
-                    var zoomLevel = map.getZoom();
+                    map.on('zoomend', function(event) {
 
-                    leafletData.getLayers('dashboard--map').then(function(layers) {
+                        var zoomLevel = map.getZoom();
 
-                        console.log('leafletData.getLayers', layers);
+                        leafletData.getLayers('dashboard--map').then(function(layers) {
 
-                        if (zoomLevel > 15) {
+                            console.log('leafletData.getLayers', layers);
 
-                            map.removeLayer(layers.baselayers.streets);
+                            if (zoomLevel > 15) {
 
-                            map.removeLayer(layers.baselayers.terrain);
+                                map.removeLayer(layers.baselayers.streets);
 
-                            map.addLayer(layers.baselayers.satellite);
+                                map.removeLayer(layers.baselayers.terrain);
 
-                        } else {
+                                map.addLayer(layers.baselayers.satellite);
 
-                            map.removeLayer(layers.baselayers.satellite);
+                            } else {
 
-                            map.removeLayer(layers.baselayers.terrain);
+                                map.removeLayer(layers.baselayers.satellite);
 
-                            map.addLayer(layers.baselayers.streets);
+                                map.removeLayer(layers.baselayers.terrain);
 
-                        }
+                                map.addLayer(layers.baselayers.streets);
+
+                            }
+
+                        });
 
                     });
 
                 });
 
+                self.loadBaseProjects();
+
+            }, function(errorResponse) {
+
+                console.log('errorResponse', errorResponse);
+
             });
 
-        }, function(errorResponse) {
-
-            console.log('errorResponse', errorResponse);
-
-        });
+        };
 
         self.extractIds = function(arr) {
 
@@ -484,9 +554,7 @@ angular.module('FieldDoc')
                 // is required by default.
                 //
 
-                var params = {
-                    id: 3
-                };
+                var params = {};
 
                 //
                 // If the `arr` parameter is valid,
@@ -500,7 +568,9 @@ angular.module('FieldDoc')
 
                 }
 
-                MetricService.query(params).$promise.then(function(successResponse) {
+                Dashboard.metrics({
+                    id: $routeParams.dashboardId
+                }).$promise.then(function(successResponse) {
 
                     console.log('granteeResponse', successResponse);
 
@@ -561,9 +631,7 @@ angular.module('FieldDoc')
                 // is required by default.
                 //
 
-                var params = {
-                    id: 3
-                };
+                var params = {};
 
                 //
                 // If the `arr` parameter is valid,
@@ -577,7 +645,9 @@ angular.module('FieldDoc')
 
                 }
 
-                OutcomeService.query(params).$promise.then(function(successResponse) {
+                Dashboard.outcomes({
+                    id: $routeParams.dashboardId
+                }).$promise.then(function(successResponse) {
 
                     console.log('granteeResponse', successResponse);
 
@@ -761,7 +831,7 @@ angular.module('FieldDoc')
 
         self.loadProjectSites = function(obj) {
 
-            Project.sites({
+            Dashboard.projectSites({
                 id: obj.id
             }).$promise.then(function(successResponse) {
 
@@ -791,7 +861,7 @@ angular.module('FieldDoc')
 
         self.loadSitePractices = function(obj) {
 
-            Site.practices({
+            Dashboard.sitePractices({
                 id: obj.id
             }).$promise.then(function(successResponse) {
 
@@ -831,7 +901,7 @@ angular.module('FieldDoc')
 
             var historyType = self.historyItem.type;
 
-            switch(historyType) {
+            switch (historyType) {
 
                 case 'program':
 
@@ -876,7 +946,7 @@ angular.module('FieldDoc')
                         heading: self.activeSite.properties.name,
                         yearsActive: '2018',
                         funding: '$10k',
-                        url: 'projects/' + self.activeProject.properties.id + '/sites/' + self.activeSite.properties.id,
+                        url: '/sites/' + self.activeSite.properties.id,
                         description: self.activeSite.properties.description,
                         linkTarget: '_self'
                     };
@@ -945,7 +1015,7 @@ angular.module('FieldDoc')
             self.historyItem = {
                 feature: null,
                 label: 'All projects',
-                geoJson: self.programGeographies,
+                geoJson: self.geographies,
                 type: 'program'
             };
 
@@ -975,7 +1045,7 @@ angular.module('FieldDoc')
 
         self.setGeoFilter = function(obj) {
 
-            FilterStore.clearAll();
+            // FilterStore.clearAll();
 
             var _filterObject = {
                 id: obj.id,
@@ -985,7 +1055,7 @@ angular.module('FieldDoc')
 
             FilterStore.addItem(_filterObject);
 
-            self.filterProjects();
+            // self.filterProjects();
 
         };
 
@@ -1065,9 +1135,9 @@ angular.module('FieldDoc')
 
             if (reload) {
 
-                self.loadProjects({
-                    id: 3
-                }, false);
+                // self.loadProjects({}, false);
+
+                self.loadBaseProjects();
 
             }
 
@@ -1094,33 +1164,86 @@ angular.module('FieldDoc')
 
         };
 
-        self.loadProjects = function(params, trackIds) {
+        self.processProjectData = function(data) {
+
+            self.filteredProjects = data.features;
+
+            self.processLocations(data.features);
+
+            self.loadOutcomes(self.filteredProjects);
+
+            self.loadMetrics(self.filteredProjects);
+
+            self.zoomToProjects();
+
+        };
+
+        self.loadDashboard = function() {
+
+            self.showProgress();
+
+            dashboard.$promise.then(function(successResponse) {
+
+                console.log('self.loadDashboard.successResponse', successResponse);
+
+                self.dashboardObject = successResponse;
+
+                self.cardTpl = {
+                    featureType: 'dashboard',
+                    featureTabLabel: 'Projects',
+                    feature: null,
+                    heading: self.dashboardObject.name,
+                    // yearsActive: '2013 - 2018',
+                    // funding: '$2.65 million',
+                    // url: 'https://4states1source.org',
+                    // resourceUrl: null,
+                    // linkTarget: '_blank',
+                    description: self.dashboardObject.description
+                };
+
+                self.card = self.cardTpl;
+
+                // self.loadBaseProjects();
+
+                self.loadGeographies();
+
+            }, function(errorResponse) {
+
+                console.log('self.loadDashboard.errorResponse', errorResponse);
+
+            });
+
+        };
+
+        self.loadBaseProjects = function() {
+
+            baseProjects.$promise.then(function(successResponse) {
+
+                console.log('self.loadBaseProjects.successResponse', successResponse);
+
+                self.baseProjects = successResponse.features;
+
+                self.processProjectData(successResponse);
+
+                self.showElements(1000, self.filteredProjects, self.progressValue);
+
+            }, function(errorResponse) {
+
+                console.log('self.loadBaseProjects.errorResponse', errorResponse);
+
+                self.showElements(1000, self.filteredProjects, self.progressValue);
+
+            });
+
+        };
+
+        self.loadProjects = function(params) {
 
             Project.collection(params).$promise.then(function(successResponse) {
 
                 console.log('self.filterProjects.successResponse', successResponse);
 
-                // $scope.projectStore.setProjects(successResponse.features);
-
-                self.filteredProjects = successResponse.features;
-
-                self.processLocations(successResponse.features);
-
-                if (!trackIds) {
-
-                    self.loadOutcomes();
-
-                    self.loadMetrics();
-
-                } else {
-
-                    self.loadOutcomes(self.filteredProjects);
-
-                    self.loadMetrics(self.filteredProjects);
-
-                    self.zoomToProjects();
-
-                }
+                self.processProjectData(successResponse);
 
             }, function(errorResponse) {
 
@@ -1142,13 +1265,11 @@ angular.module('FieldDoc')
             // Extract feature identifiers from active filters
             //
 
-            var params = {
-                id: 3
-            };
+            var params = {};
 
             if (self.limitScope) {
 
-                params.user = $rootScope.user.id
+                params.user = $rootScope.user.id;
 
             }
 
@@ -1196,7 +1317,7 @@ angular.module('FieldDoc')
             // Execute API request
             //
 
-            self.loadProjects(params, true);
+            self.loadProjects(params);
 
         };
 
@@ -1246,7 +1367,7 @@ angular.module('FieldDoc')
             // Reset map extent
             //
 
-            self.resetMapExtent()
+            self.resetMapExtent();
 
             //
             // Reset dashboard state
@@ -1261,15 +1382,16 @@ angular.module('FieldDoc')
             if (self.limitScope) {
 
                 self.loadProjects({
-                    id: 3,
                     user: $rootScope.user.id
-                }, true);
+                });
 
             } else {
 
-                self.loadProjects({
-                    id: 3
-                }, false);
+                // self.loadProjects({});
+
+                // self.loadBaseProjects();
+
+                self.loadDashboard();
 
             }
 
@@ -1289,22 +1411,10 @@ angular.module('FieldDoc')
                     isAdmin: Account.hasRole('admin')
                 };
 
-                if (!self.permissions.isAdmin) {
-
-                    self.limitScope = true;
-
-                }
-
-                self.loadProjects({
-                    id: 3
-                }, false);
-
             });
 
-        } else {
-
-            $location.path('/user/login');
-
         }
+
+        self.loadDashboard();
 
     });

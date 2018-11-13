@@ -26,7 +26,7 @@
 
         <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
 
-            <section style="padding: 0;" data-ng-if="!page.status.loading && page.nodes.geographies">
+            <section style="padding: 0;" data-ng-if="!page.status.loading && page.nodes.geographies.length">
 
                 <h2>Target Areas</h2>
 
@@ -61,6 +61,7 @@
                                         </i>
                                     </a>
                                 </div> -->
+                                
                                 <span><time datetime="{{ geography.created_on }}" title="{{ geography.created_on }}">
                                         Created on {{ geography.created_on | date }}</time></span>
                             </div>

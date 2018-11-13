@@ -9,53 +9,23 @@
  * Main module of the application.
  */
 angular.module('FieldDoc')
-    .config(function($routeProvider, commonscloud) {
+    .config(function($routeProvider, environment) {
 
         $routeProvider
-            .when('/dashboard', {
-                templateUrl: '/modules/components/dashboard/views/dashboard--view.html',
-                controller: 'DashboardCtrl',
+            .when('/dashboards', {
+                templateUrl: '/modules/components/dashboard/views/dashboardList--view.html?t=' + environment.version,
+                controller: 'DashboardListCtrl',
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
-                    geographies: function($location, GeographyService) {
+                    dashboards: function($route, $location, Dashboard) {
 
-                        return GeographyService.query({
-                            id: 3
-                        });
+                        return Dashboard.query();
 
                     },
-                    projects: function($location, Project) {
+                    user: function(Account, $rootScope, $document) {
 
-                        //
-                        // Get all of our existing URL Parameters so that we can
-                        // modify them to meet our goals
-                        //
-
-                        var search_params = $location.search();
-
-                        //
-                        // Prepare any pre-filters to append to any of our user-defined
-                        // filters in the browser address bar
-                        //
-
-                        search_params.q = (search_params.q) ? angular.fromJson(search_params.q) : {};
-
-                        search_params.q.filters = (search_params.q.filters) ? search_params.q.filters : [];
-
-                        search_params.q.order_by = [{
-                            field: 'created_on',
-                            direction: 'desc'
-                        }];
-
-                        //
-                        // Execute our query so that we can get the Reports back
-                        //
-
-                        return Project.collection();
-
-                    },
-                    user: function(Account) {
+                        $rootScope.targetPath = document.location.pathname;
 
                         if (Account.userObject && !Account.userObject.id) {
 
@@ -66,7 +36,106 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     }
+
                 }
+
+            })
+            .when('/dashboards/:dashboardId', {
+                templateUrl: '/modules/components/dashboard/views/dashboard--view.html?t=' + environment.version,
+                controller: 'DashboardCtrl',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    geographies: function($route, $location, Dashboard) {
+
+                        return Dashboard.geographies({
+                            id: $route.current.params.dashboardId
+                        });
+
+                    },
+                    baseProjects: function($route, $location, Dashboard) {
+
+                        return Dashboard.projects({
+                            id: $route.current.params.dashboardId
+                        });
+
+                    },
+                    dashboard: function($route, $location, Dashboard, $rootScope, $document) {
+
+                        $rootScope.targetPath = '/dashboards';
+
+                        return Dashboard.get({
+                            id: $route.current.params.dashboardId
+                        });
+
+                    },
+                    user: function(Account, $rootScope, $document) {
+
+                        if (Account.userObject && !Account.userObject.id) {
+
+                            return Account.getUser();
+                            
+                        }
+
+                        return Account.userObject;
+
+                    }
+
+                }
+
+            })
+            .when('/dashboards/collection/new', {
+                templateUrl: '/modules/components/dashboard/views/dashboardCreate--view.html?t=' + environment.version,
+                controller: 'DashboardCreateCtrl',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+
+                            return Account.getUser();
+                            
+                        }
+
+                        return Account.userObject;
+
+                    }
+
+                }
+
+            })
+            .when('/dashboards/:dashboardId/edit', {
+                templateUrl: '/modules/components/dashboard/views/dashboardEdit--view.html?t=' + environment.version,
+                controller: 'DashboardEditCtrl',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    dashboard: function($route, $location, Dashboard) {
+
+                        return Dashboard.get({
+                            id: $route.current.params.dashboardId
+                        });
+
+                    },
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+
+                            return Account.getUser();
+                            
+                        }
+
+                        return Account.userObject;
+
+                    }
+
+                }
+                
             });
 
     });

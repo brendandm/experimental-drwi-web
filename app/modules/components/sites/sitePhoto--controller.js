@@ -12,7 +12,7 @@
     angular.module('FieldDoc')
         .controller('SitePhotoCtrl',
             function(Account, environment, $http, $location, Notifications, 
-                Site, site, $rootScope, $route, $scope, Segment,
+                Site, site, $rootScope, $route, $scope,
                 $timeout, $interval, user, Shapefile) {
 
                 var self = this,
@@ -65,7 +65,7 @@
 
                             self.permissions = {
                                 isLoggedIn: Account.hasToken(),
-                                role: $rootScope.user.properties.roles[0].properties.name,
+                                role: $rootScope.user.properties.roles[0],
                                 account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
                                 can_edit: false
                             };

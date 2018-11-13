@@ -10,8 +10,8 @@
     angular.module('FieldDoc')
         .controller('CustomFormController',
             function(Account, leafletData, $location, metric_types,
-                monitoring_types, Practice, PracticeCustom, PracticeCustomReading, PracticeCustomMetric,
-                PracticeCustomMonitoring, practice_types, report, $rootScope, $route, $scope,
+                monitoring_types, Practice, Report, ReportReading, ReportMetric,
+                ReportMonitoring, practice_types, report, $rootScope, $route, $scope,
                 unit_types, user, Utility, $timeout, report_metrics, $filter, $interval) {
 
                 var self = this;
@@ -110,7 +110,7 @@
 
                 self.loadMetrics = function() {
 
-                    PracticeCustom.metrics({
+                    Report.metrics({
                         id: $route.current.params.reportId
                     }).$promise.then(function(successResponse) {
 
@@ -443,7 +443,7 @@
                             delete datum.metric_type;
                             delete datum.metric_unit;
 
-                            PracticeCustomMetric.update({
+                            ReportMetric.update({
                                 id: metric.id
                             }, datum).$promise.then(function(successResponse) {
 
@@ -482,7 +482,7 @@
                     //
                     // Step 2: Create empty Reading to post to the system
                     //
-                    var newReading = new PracticeCustomReading({
+                    var newReading = new ReportReading({
                         "geometry": null,
                         "properties": {
                             "bmp_custom_id": self.report.id,
@@ -502,7 +502,7 @@
                     });
 
                     //
-                    // Step 3: POST this empty reading to the `/v1/data/bmp-custom-readings` endpoint
+                    // Step 3: POST this empty reading to the `/v1/data/report-readings` endpoint
                     //
                     newReading.$save().then(function(successResponse) {
 
@@ -549,7 +549,7 @@
                     //
                     // Step 2: Create empty Reading to post to the system
                     //
-                    var newMetric = new PracticeCustomMetric({
+                    var newMetric = new ReportMetric({
                         "geometry": null,
                         "properties": {
                             "metric_type_id": null,
@@ -560,7 +560,7 @@
                     });
 
                     //
-                    // Step 3: POST this empty reading to the `/v1/data/bmp-custom-readings` endpoint
+                    // Step 3: POST this empty reading to the `/v1/data/report-readings` endpoint
                     //
                     newMetric.$save().then(function(successResponse) {
 
@@ -607,7 +607,7 @@
                     //
                     // Step 2: Create empty Reading to post to the system
                     //
-                    var newMetric = new PracticeCustomMonitoring({
+                    var newMetric = new ReportMonitoring({
                         "geometry": null,
                         "properties": {
                             "monitoring_type_id": null,
@@ -618,7 +618,7 @@
                     });
 
                     //
-                    // Step 3: POST this empty reading to the `/v1/data/bmp-custom-readings` endpoint
+                    // Step 3: POST this empty reading to the `/v1/data/report-readings` endpoint
                     //
                     newMetric.$save().then(function(successResponse) {
 
@@ -694,7 +694,7 @@
 
                 self.deleteFeature = function() {
 
-                    PracticeCustom.delete({
+                    Report.delete({
                         id: +self.deletionTarget.id
                     }).$promise.then(function(data) {
 
@@ -757,7 +757,7 @@
 
                         self.permissions = {
                             isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0].properties.name,
+                            role: $rootScope.user.properties.roles[0],
                             account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                         };
 

@@ -12,7 +12,7 @@
     angular.module('FieldDoc')
         .controller('SiteEditCtrl',
             function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
-                Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, Segment,
+                Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope,
                 $timeout, $interval, user, Shapefile, Utility) {
 
                 var self = this;
@@ -167,7 +167,7 @@
 
                         self.permissions = {
                             isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0].properties.name,
+                            role: $rootScope.user.properties.roles[0],
                             account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
                             can_edit: false
                         };

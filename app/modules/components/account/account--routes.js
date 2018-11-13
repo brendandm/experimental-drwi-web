@@ -22,9 +22,6 @@
 
                             return Account.getUser();
 
-                        },
-                        snapshots: function(Snapshot) {
-                            return Snapshot.query();
                         }
                     }
                 });

@@ -13,7 +13,7 @@
             '$location',
             '$timeout',
             '$log',
-            'PracticeCustom',
+            'Report',
             '$rootScope',
             '$route',
             'Utility',
@@ -29,7 +29,7 @@
             'metrics',
             'outcomes',
             'practice',
-            function(Account, $location, $timeout, $log, PracticeCustom, $rootScope,
+            function(Account, $location, $timeout, $log, Report, $rootScope,
                 $route, Utility, user, Project, Site, $window, Map, mapbox,
                 leafletData, leafletBoundsHelpers, Practice, metrics, outcomes, practice) {
 
@@ -98,7 +98,7 @@
 
                         case 'report':
 
-                            targetCollection = PracticeCustom;
+                            targetCollection = Report;
 
                             break;
 
@@ -290,7 +290,7 @@
 
                 self.addReading = function(measurementPeriod) {
 
-                    var newReading = new PracticeCustom({
+                    var newReading = new Report({
                         'measurement_period': 'Planning',
                         'report_date': new Date(),
                         'practice_id': practiceId,
