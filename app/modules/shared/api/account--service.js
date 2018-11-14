@@ -60,7 +60,7 @@
                 }
 
                 for (var index = 0; index < roles.length; index++) {
-                    if (roleNeeded === roles[index].properties.name) {
+                    if (roleNeeded === roles[index]) {
                         return true;
                     }
                 }

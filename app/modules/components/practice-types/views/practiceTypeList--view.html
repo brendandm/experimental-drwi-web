@@ -33,7 +33,7 @@
 
                 <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;" data-ng-if="!page.status.loading">
 
-                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 250 }}ms;" data-ng-repeat="practice in page.practices | orderBy:'-modified_on' | filter: page.q">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="practice in page.practices | orderBy:'-modified_on' | filter: page.q">
 
                         <div class="card--content">
 

@@ -7,7 +7,7 @@
  */
 angular.module('FieldDoc')
     .controller('GeographySummaryController',
-        function(Account, $location, $log, Geography, geography,
+        function(Account, $location, $log, GeographyService, geography,
             $rootScope, $route, $scope, $timeout, user) {
 
             var self = this;

@@ -12,7 +12,7 @@ angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
 
         $routeProvider
-            .when('/geographies', {
+            .when('/programs/:programId/geographies', {
                 templateUrl: '/modules/components/geographies/views/geographyList--view.html?t=' + environment.version,
                 controller: 'GeographyListController',
                 controllerAs: 'page',
@@ -28,9 +28,11 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    geographies: function(Geography, $route) {
+                    geographies: function(Program, $route) {
 
-                        return Geography.collection({});
+                        return Program.geographies({
+                            id: $route.current.params.programId
+                        });
 
                     }
                 }
@@ -51,17 +53,17 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    metrics: function(Geography, $route) {
+                    metrics: function(GeographyService, $route) {
                         return Geography.metrics({
                             id: $route.current.params.geographyId
                         });
                     },
-                    outcomes: function(Geography, $route) {
+                    outcomes: function(GeographyService, $route) {
                         return Geography.outcomes({
                             id: $route.current.params.geographyId
                         });
                     },
-                    geography: function(Geography, $route) {
+                    geography: function(GeographyService, $route) {
                         return Geography.get({
                             id: $route.current.params.geographyId
                         });
@@ -84,7 +86,7 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    geography: function(Geography, $route) {
+                    geography: function(GeographyService, $route) {
                         return Geography.get({
                             id: $route.current.params.geographyId
                         });
@@ -107,7 +109,7 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    geography: function(Geography, $route) {
+                    geography: function(GeographyService, $route) {
                         return Geography.get({
                             id: $route.current.params.geographyId
                         });

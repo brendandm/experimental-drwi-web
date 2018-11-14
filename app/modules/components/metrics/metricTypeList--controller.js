@@ -8,10 +8,12 @@
 angular.module('FieldDoc')
     .controller('MetricTypeListController',
         function(Account, $location, $log, MetricType,
-            metricTypes, $rootScope, $scope, user,
+            metricTypes, $rootScope, $route, $scope, user,
             $interval, $timeout, Utility) {
 
             var self = this;
+
+            self.programId = $route.current.params.programId;
 
             $rootScope.viewState = {
                 'metricType': true
