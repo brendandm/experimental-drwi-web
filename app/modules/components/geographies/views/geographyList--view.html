@@ -25,13 +25,13 @@
                 </a>
             </div>
 
-            <p class="reveal fade-in t0">This program has <strong>{{ (page.geographies.length | number) || 0 }}</strong> <ng-pluralize count="page.geographies.length" when="{'one': 'geography','other': 'geographies'}"></ng-pluralize>.</p>
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && page.geographies.length">This program has <strong>{{ (page.geographies.length | number) || 0 }}</strong> <ng-pluralize count="page.geographies.length" when="{'one': 'geography','other': 'geographies'}"></ng-pluralize>.</p>
 
             <section style="padding: 1em 0 0;" data-ng-if="!page.status.loading && page.geographies.length">
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="geography in page.geographies | orderBy: 'name'">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 50 }}ms;" data-ng-repeat="geography in page.geographies | orderBy: 'name'">
 
                         <div class="card--content">
 

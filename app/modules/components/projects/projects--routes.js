@@ -12,6 +12,32 @@ angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
 
         $routeProvider
+            .when('/programs/:programId/projects', {
+                templateUrl: '/modules/components/projects/views/projectsList--view.html?t=' + environment.version,
+                controller: 'ProjectsCtrl',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    projects: function(Project, $route) {
+
+                        return Project.collection({
+                            program: $route.current.params.programId
+                        });
+
+                    },
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    }
+                }
+            })
             .when('/projects', {
                 templateUrl: '/modules/components/projects/views/projectsList--view.html?t=' + environment.version,
                 controller: 'ProjectsCtrl',

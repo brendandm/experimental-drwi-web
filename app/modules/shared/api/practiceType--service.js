@@ -9,7 +9,7 @@
      */
     angular.module('FieldDoc')
         .service('PracticeType', function(environment, Preprocessors, $resource) {
-            return $resource(environment.apiUrl.concat('/v1/practice-type/:id'), {
+            return $resource(environment.apiUrl.concat('/v1/data/practice-type/:id'), {
                 'id': '@id'
             }, {
                 'query': {
