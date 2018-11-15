@@ -120,7 +120,20 @@ angular.module('FieldDoc')
 
             self.createPracticeType = function() {
 
-                $location.path('/practices/collection/new');
+                self.practiceType = new PracticeType({
+                    'program_id': self.programId,
+                    'organization_id': $rootScope.user.properties.organization_id
+                });
+
+                self.practiceType.$save(function(successResponse) {
+
+                    $location.path('/practice-types/' + successResponse.id + '/edit');
+
+                }, function(errorResponse) {
+
+                    console.error('Unable to create a new metric type, please try again later.');
+
+                });
 
             };
 

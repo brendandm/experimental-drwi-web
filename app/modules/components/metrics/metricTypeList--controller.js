@@ -120,7 +120,20 @@ angular.module('FieldDoc')
 
             self.createMetricType = function() {
 
-                $location.path('/metrics/collection/new');
+                self.metricType = new MetricType({
+                    'program_id': self.programId,
+                    'organization_id': $rootScope.user.properties.organization_id
+                });
+
+                self.metricType.$save(function(successResponse) {
+
+                    $location.path('/metric-types/' + successResponse.id + '/edit');
+
+                }, function(errorResponse) {
+
+                    console.error('Unable to create a new metric type, please try again later.');
+
+                });
 
             };
 
