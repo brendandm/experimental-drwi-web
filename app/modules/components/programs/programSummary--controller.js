@@ -30,8 +30,9 @@
                 $route, Utility, user, $window, Map, mapbox, leafletData,
                 leafletBoundsHelpers, Program, metrics, outcomes, program) {
 
-                var self = this,
-                    programId = $route.current.params.programId;
+                var self = this;
+                
+                self.programId = $route.current.params.programId;
 
                 $rootScope.viewState = {
                     'program': true

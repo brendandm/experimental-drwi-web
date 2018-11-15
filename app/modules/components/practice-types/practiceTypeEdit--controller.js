@@ -11,8 +11,6 @@ angular.module('FieldDoc')
 
         var self = this;
 
-        self.programId = $route.current.params.programId;
-
         $rootScope.toolbarState = {
             'edit': true
         };
@@ -72,6 +70,8 @@ angular.module('FieldDoc')
 
                 self.practiceType = successResponse;
 
+                self.programId = self.practiceType.properties.program_id;
+
                 if (!successResponse.permissions.read &&
                     !successResponse.permissions.write) {
 
@@ -84,17 +84,9 @@ angular.module('FieldDoc')
                 self.permissions.can_edit = successResponse.permissions.write;
                 self.permissions.can_delete = successResponse.permissions.write;
 
-                delete self.practiceType.properties.organization;
-                delete self.practiceType.properties.project;
-                delete self.practiceType.properties.site;
+                $rootScope.page.title = self.practiceType.properties.name ? self.practiceType.properties.name : 'Un-named Practice Type';
 
-                if (successResponse.properties.category) {
-
-                    self.practiceType = successResponse.properties.category.properties;
-
-                }
-
-                $rootScope.page.title = self.practiceType.properties.name ? self.practiceType.properties.name : 'Un-named PracticeType';
+                self.scrubFeature();
 
                 self.showElements();
 
@@ -112,6 +104,7 @@ angular.module('FieldDoc')
             delete self.practiceType.properties.organization;
             delete self.practiceType.properties.creator;
             delete self.practiceType.properties.last_modified_by;
+            delete self.practiceType.properties.program;
 
         };
 
@@ -122,6 +115,8 @@ angular.module('FieldDoc')
             self.scrubFeature();
 
             self.practiceType.$update().then(function(successResponse) {
+
+                self.practiceType = successResponse;
 
                 self.alerts = [{
                     'type': 'success',

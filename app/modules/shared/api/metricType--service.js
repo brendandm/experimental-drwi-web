@@ -9,7 +9,7 @@
      */
     angular.module('FieldDoc')
         .service('MetricType', function(environment, Preprocessors, $resource) {
-            return $resource(environment.apiUrl.concat('/v1/metric-type/:id'), {
+            return $resource(environment.apiUrl.concat('/v1/data/metric-type/:id'), {
                 'id': '@id'
             }, {
                 'query': {

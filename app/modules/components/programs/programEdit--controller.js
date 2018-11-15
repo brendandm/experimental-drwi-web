@@ -12,6 +12,8 @@ angular.module('FieldDoc')
 
         var self = this;
 
+        self.programId = $route.current.params.programId;
+
         $rootScope.viewState = {
             'program': true
         };

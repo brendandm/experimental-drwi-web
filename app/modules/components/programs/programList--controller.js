@@ -9,9 +9,11 @@ angular.module('FieldDoc')
     .controller('ProgramListController',
         function(Account, $location, $log, Program,
             programs, $rootScope, $scope, user,
-            $interval, $timeout, Utility) {
+            $interval, $timeout, Utility, $route) {
 
             var self = this;
+
+            self.programId = $route.current.params.programId;
 
             $rootScope.viewState = {
                 'program': true

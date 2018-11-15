@@ -63,7 +63,7 @@ angular.module('FieldDoc')
                             id: $route.current.params.metricId
                         });
                     },
-                    metric: function(MetricType, $route) {
+                    metricType: function(MetricType, $route) {
                         return MetricType.get({
                             id: $route.current.params.metricId
                         });
@@ -86,12 +86,17 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    metric: function(MetricType, $route) {
+                    metricType: function(MetricType, $route) {
 
                         return MetricType.get({
                             id: $route.current.params.metricId
                         });
                         
+                    },
+                    unitTypes: function(UnitType, $route) {
+                        return UnitType.query({
+                            results_per_page: 500
+                        });
                     }
                 }
             });

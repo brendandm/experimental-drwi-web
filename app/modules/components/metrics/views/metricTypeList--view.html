@@ -38,7 +38,9 @@
                         <div class="card--content">
 
                             <div class="name">
-                                <span>{{ metric.name }}</span>
+                                <span>{{ metric.name || 'Un-named' }}</span>
+                                <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="metric.unit">{{ metric.unit.symbol }} &middot; {{ metric.unit.plural }}</span>
+                                <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="!metric.unit">Unit-less</span>
                             </div>
 
                             <div class="body">
