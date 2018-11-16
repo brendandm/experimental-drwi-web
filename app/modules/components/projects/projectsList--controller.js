@@ -250,18 +250,33 @@ angular.module('FieldDoc')
 
             };
 
-            self.filterProjects = function() {
+            self.buildFilter = function() {
 
                 var params = {};
 
                 if (self.selectedProgram &&
-                    typeof self.selectedProgram.id !== 'undefined') {
+                    typeof self.selectedProgram.id !== 'undefined' &&
+                    self.selectedProgram.id > 0) {
 
                     params.program = self.selectedProgram.id;
 
                     $location.search('program', self.selectedProgram.id);
 
+                } else {
+
+                    // self.filteredProjects = $scope.projectStore.projects;
+
+                    $location.search({});
+
                 }
+
+                return params;
+
+            }
+
+            self.loadProjects = function() {
+
+                var params = self.buildFilter();
 
                 Project.collection(params).$promise.then(function(successResponse) {
 
@@ -277,9 +292,15 @@ angular.module('FieldDoc')
 
                     });
 
-                    $scope.projectStore.setProjects(successResponse.features);
+                    self.projects = successResponse.features;
 
-                    self.filteredProjects = $scope.projectStore.filteredProjects;
+                    if (!$scope.projectStore.projects.length) {
+
+                        $scope.projectStore.setProjects(successResponse.features);
+
+                    }
+
+                    // self.filteredProjects = $scope.projectStore.filteredProjects;
 
                     self.showElements();
 
@@ -293,16 +314,11 @@ angular.module('FieldDoc')
 
             };
 
-            self.setProgramFilter = function() {
+            // self.setProgramFilter = function() {
 
-                if (self.selectedProgram &&
-                    typeof self.selectedProgram.id !== 'undefined') {
+            //     self.filterProjects();
 
-                    self.filterProjects();
-
-                }
-
-            };
+            // };
 
             //
             // Verify Account information for proper UI element display
@@ -317,43 +333,26 @@ angular.module('FieldDoc')
                         isLoggedIn: Account.hasToken()
                     };
 
-                    if ($rootScope.user.properties.programs.length) {
+                    // if ($rootScope.user.properties.programs.length) {
 
-                        self.selectedProgram = $rootScope.user.properties.programs[0];
+                    //     self.selectedProgram = $rootScope.user.properties.programs[0];
 
-                    }
+                    // }
+
+                    self.selectedProgram = {
+                        id: 0,
+                        properties: {
+                            name: '--Select a program--'
+                        }
+                    };
+
+                    $rootScope.user.properties.programs.unshift(self.selectedProgram);
 
                     //
                     // Project functionality
                     //
 
-                    projects.$promise.then(function(successResponse) {
-
-                        console.log('successResponse', successResponse);
-
-                        successResponse.features.forEach(function(feature) {
-
-                            if (feature.extent) {
-
-                                feature.staticURL = self.buildStaticMapURL(feature.extent);
-
-                            }
-
-                        });
-
-                        $scope.projectStore.setProjects(successResponse.features);
-
-                        self.filteredProjects = $scope.projectStore.filteredProjects;
-
-                        self.showElements();
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                        self.showElements();
-
-                    });
+                    self.loadProjects();
 
                 });
 

@@ -25,9 +25,11 @@
                 </a>
             </div>
 
-            <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">You have <strong>{{ (page.filteredProjects.length | number) || 0 }}</strong> <ng-pluralize count="page.filteredProjects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
+            <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">You have <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
 
-            <p data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There are <strong>{{ (page.filteredProjects.length | number) || 0 }}</strong> <ng-pluralize count="page.filteredProjects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize> in this program.</p>
+            <p data-ng-if="!page.status.loading && !page.selectedProgram.id && ($root.user.properties.is_admin || $root.user.properties.is_manager)">You have <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
+
+            <p data-ng-if="!page.status.loading && page.selectedProgram.id > 0 && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There are <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize> in this program.</p>
 
             <div class="collection-filter" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">
                 <form name="myForm">
@@ -35,7 +37,7 @@
                     <select name="programFilter" id="programFilter"
                       data-ng-options="program.properties.name for program in $root.user.properties.programs track by program.id"
                       data-ng-model="page.selectedProgram"
-                      data-ng-change="page.setProgramFilter()"></select>
+                      data-ng-change="page.loadProjects()"></select>
                 </form>
             </div>
 
@@ -43,7 +45,7 @@
 
                 <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
-                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="project in page.filteredProjects | orderBy:'-modified_on' | filter: page.q">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="project in page.projects | orderBy:'-modified_on' | filter: page.q">
 
                         <div class="card--content">
 
