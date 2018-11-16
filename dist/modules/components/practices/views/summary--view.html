@@ -167,7 +167,7 @@
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="report in page.practice.properties.readings_custom | orderBy:'properties.report_date':false">
+                    <li class="card" data-ng-repeat="report in page.practice.properties.reports | orderBy:'properties.report_date':false">
 
                         <div class="card--content">
 
@@ -256,6 +256,13 @@
                 <a href="/practices/{{ page.practice.properties.id }}/photos">
                     <i class="material-icons">
                         insert_photo
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
+                <a href="/practices/{{ page.practice.properties.id }}/tags">
+                    <i class="material-icons">
+                        local_offer
                     </i>
                 </a>
             </li>

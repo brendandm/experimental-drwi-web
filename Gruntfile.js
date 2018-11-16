@@ -66,9 +66,9 @@ module.exports = function(grunt) {
                 constants: {
                     environment: {
                         name: 'development',
-                        apiUrl: 'https://api.drwi.chesapeakecommons.org',
-                        siteUrl: 'http://127.0.0.1:9000',
-                        clientId: 'sL3yMmmnSNszktuQGVBCasZ6mCy7DahS',
+                        apiUrl: 'https://dev.api.fielddoc.chesapeakecommons.org',
+                        siteUrl: 'https://dev.fielddoc.chesapeakecommons.org',
+                        clientId: '2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',
                         version: version
                     }
                 }

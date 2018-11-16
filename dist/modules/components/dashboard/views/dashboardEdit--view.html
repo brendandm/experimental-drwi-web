@@ -14,12 +14,15 @@
 
                 <div class="form-element">
                     <span class="meta-label"><b>Name</b></span>
-                    <input type="text" data-ng-model="page.snapshotObject.name" class="form-control animate" id="name" name="name" placeholder="Dashboard name" />
+                    <input type="text" data-ng-model="page.dashboardObject.name" class="form-control animate" id="name" name="name" placeholder="Dashboard name" />
                 </div>
 
                 <div class="form-element">
                     <span class="meta-label"><b>Description</b></span>
-                    <textarea rows="4" data-ng-model="page.snapshotObject.description" class="form-control animate" msd-elastic id="description" name="description" placeholder="Dashboard description" maxlength-"500">{{ page.snapshotObject.description }}</textarea>
+                    <textarea rows="10" data-ng-model="page.dashboardObject.description" class="form-control animate" msd-elastic id="description" name="description" placeholder="Dashboard description" maxlength-"500">{{ page.dashboardObject.description }}</textarea>
+                    <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
+                        Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.dashboardObject.description.length || 0) | number }} used)</strong>
+                    </p>
                 </div>
 
                 <!-- Filter Tools -->
@@ -83,14 +86,14 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
         <ul>
             <li>
-                <a href="/dashboards/{{ page.snapshotObject.id }}">
+                <a href="/dashboards/{{ page.dashboardObject.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/dashboards/{{ page.snapshotObject.id }}/edit">
+                <a href="/dashboards/{{ page.dashboardObject.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>
@@ -108,7 +111,7 @@
                         </a>
                     </div>
                 </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.snapshotObject)">
+                <a href="#" data-ng-click="page.confirmDelete(page.dashboardObject)">
                     <i class="material-icons">
                         delete
                     </i>

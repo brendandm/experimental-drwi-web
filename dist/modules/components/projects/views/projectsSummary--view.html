@@ -1,6 +1,6 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main class="site--content--flow fluid-content clearfix distinguish" save2pdf>
+<main class="site--content--flow fluid-content clearfix distinguish">
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
@@ -302,6 +302,13 @@
                 <a href="/projects/{{ page.project.id }}/edit">
                     <i class="material-icons">
                         edit
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
+                <a href="/projects/{{ page.project.id }}/tags">
+                    <i class="material-icons">
+                        local_offer
                     </i>
                 </a>
             </li>

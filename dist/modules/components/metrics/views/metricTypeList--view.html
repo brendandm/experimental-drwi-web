@@ -1,0 +1,100 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="site--content--flow fluid-content clearfix distinguish">
+
+    <div id="sidebar" data-ng-include="'/templates/program-navigation--view.html'"></div>
+
+    <div class="content--container" style="position: relative; overflow: hidden;">
+
+        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
+            <div class="progress--container">
+                <p style="font-weight: bold;" class="color-pulse">Loading metrics&hellip;</p>
+            </div>
+        </div>
+
+        <h1 class="inset">Metrics</h1>
+
+        <div class="main--ui">
+
+            <div class="add--new--wrapper">
+                <span>Create metric</span>
+                <a class="add--new--btn" href="#" data-ng-click="page.createMetricType()">
+                    <i class="material-icons">
+                    add
+                    </i>
+                </a>
+            </div>
+
+            <p class="reveal fade-in t0">This program has <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize>.</p>
+
+            <div class="features--container">
+
+                <input type="text" class="search-bar list-filter" data-ng-model="page.q" placeholder="Search metrics">
+
+                <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;" data-ng-if="!page.status.loading">
+
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="metric in page.metrics | orderBy:'-modified_on' | filter: page.q">
+
+                        <div class="card--content">
+
+                            <div class="name">
+                                <span>{{ metric.name || 'Un-named' }}</span>
+                                <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="metric.unit">{{ metric.unit.symbol }} &middot; {{ metric.unit.plural }}</span>
+                                <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="!metric.unit">Unit-less</span>
+                            </div>
+
+                            <div class="body">
+
+                                <div class="confirm--delete" data-ng-if="page.deletionTarget.id === metric.id">
+                                    <p>Do you want to delete this metric?</p>
+                                    <div class="actions" style="flex: 0;">
+                                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature(metric, $index)">
+                                            Yes
+                                        </a>
+                                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                                            Cancel
+                                        </a>
+                                    </div>
+                                </div>
+                                <p>{{ (metric.description || 'No description') | truncate:80 }}</p>
+                                <div class="actions">
+                                    <a class="snapshot--title" href="/metric-types/{{ metric.id }}" title="View metric">
+                                        <i class="material-icons">
+                                        metric
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="/metric-types/{{ metric.id }}/edit" title="Edit metric">
+                                        <i class="material-icons">
+                                        edit
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="#" title="Delete metric" data-ng-click="page.confirmDelete(metric)">
+                                        <i class="material-icons">
+                                        delete
+                                        </i>
+                                    </a>
+                                </div>
+                                <span><time datetime="{{ metric.modified_on }}" title="{{ metric.modified_on }}">Last updated {{ metric.modified_on | date : 'mediumDate' }}</time></span>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+        <div class="event--container">
+            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                <span class="event--message">{{ alert.msg }}</span>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>

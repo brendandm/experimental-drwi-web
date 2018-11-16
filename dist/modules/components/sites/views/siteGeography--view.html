@@ -26,7 +26,7 @@
 
         <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
 
-            <section style="padding: 0;" data-ng-if="!page.status.loading">
+            <section style="padding: 0;" data-ng-if="!page.status.loading && page.nodes.geographies.length">
 
                 <h2>Target Areas</h2>
 
@@ -61,6 +61,7 @@
                                         </i>
                                     </a>
                                 </div> -->
+                                
                                 <span><time datetime="{{ geography.created_on }}" title="{{ geography.created_on }}">
                                         Created on {{ geography.created_on | date }}</time></span>
                             </div>
@@ -69,7 +70,7 @@
 
                     </li>
 
-                    <li class="card">
+                    <li class="card" data-ng-if="page.permissions.can_edit">
                         <div class="card--content">
                             <div class="body">
                                 <button type="button" class="snapshot--title" data-ng-click="page.createGeography()" title="Create geography">
@@ -169,6 +170,13 @@
                 <a href="/sites/{{ page.site.id }}/geographies">
                     <i class="material-icons">
                         public
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
+                <a href="/sites/{{ page.site.id }}/tags">
+                    <i class="material-icons">
+                        local_offer
                     </i>
                 </a>
             </li>

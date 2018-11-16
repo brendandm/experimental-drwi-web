@@ -45,7 +45,10 @@
 
                             <div class="form-element">
                                 <span class="meta-label"><b>Description</b></span>
-                                <textarea class="form-control animate" data-ng-model="page.project.properties.description" msd-elastic id="description" name="description" rows="4">{{ page.project.properties.description }}</textarea>
+                                <textarea class="form-control animate" data-ng-model="page.project.properties.description" msd-elastic id="description" name="description" rows="10" maxlength="1000">{{ page.project.properties.description }}</textarea>
+                                <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
+                                    Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.project.properties.description.length || 0) | number }} used)</strong>
+                                </p>
                             </div>
 
                             <div class="form-element">
@@ -168,6 +171,13 @@
                 <a href="/projects/{{ page.project.id }}/edit">
                     <i class="material-icons">
                         edit
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
+                <a href="/projects/{{ page.project.id }}/tags">
+                    <i class="material-icons">
+                        local_offer
                     </i>
                 </a>
             </li>

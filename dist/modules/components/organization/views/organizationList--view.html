@@ -48,7 +48,7 @@
 
                     <h2>Snapshots</h2>
 
-                    <article class="row list-item" data-ng-if="page.snapshots && !page.snapshots.length">
+                    <article class="row list-item" data-ng-if="page.dashboards && !page.dashboards.length">
                         <div class="column-16 list-item-content align-center empty-data">
                             <div class="icon retinaicon-file-096"></div>
                             <p>
@@ -65,7 +65,7 @@
 
                     <div class="row list-item">
                         <div class="responsive-table">
-                            <table class="table" data-ng-if="page.snapshots && page.snapshots.length">
+                            <table class="table" data-ng-if="page.dashboards && page.dashboards.length">
                                 <thead>
                                     <tr>
                                         <td class="align-left column--vertialCenter">
@@ -81,7 +81,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr data-ng-repeat="snapshot in page.snapshots track by $index">
+                                    <tr data-ng-repeat="snapshot in page.dashboards track by $index">
                                         <td class="column--titleDescription align-left">
                                             <a class="snapshot--title" href="/snapshot/{{ snapshot.id }}" title="View {{ snapshot.name }}">
                                                 {{ snapshot.name }}
