@@ -25,7 +25,19 @@
                 </a>
             </div>
 
-            <p data-ng-if="!page.status.loading">You have <strong>{{ (page.filteredProjects.length | number) || 0 }}</strong> <ng-pluralize count="page.filteredProjects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
+            <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">You have <strong>{{ (page.filteredProjects.length | number) || 0 }}</strong> <ng-pluralize count="page.filteredProjects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
+
+            <p data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There are <strong>{{ (page.filteredProjects.length | number) || 0 }}</strong> <ng-pluralize count="page.filteredProjects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize> in this program.</p>
+
+            <div class="collection-filter" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">
+                <form name="myForm">
+                    <label for="programFilter"><strong>Filter by program:</strong></label>
+                    <select name="programFilter" id="programFilter"
+                      data-ng-options="program.properties.name for program in $root.user.properties.programs track by program.id"
+                      data-ng-model="page.selectedProgram"
+                      data-ng-change="page.setProgramFilter()"></select>
+                </form>
+            </div>
 
             <div class="features--container" data-ng-if="!page.status.loading">
 

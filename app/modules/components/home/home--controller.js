@@ -165,31 +165,31 @@
 
                 self.buildStaticMapURL = function(geometry) {
 
-                var styledFeature = {
-                    "type": "Feature",
-                    "geometry": geometry,
-                    "properties": {
-                        "marker-size": "small",
-                        "marker-color": "#2196F3",
-                        "stroke": "#2196F3",
-                        "stroke-opacity": 1.0,
-                        "stroke-width": 2,
-                        "fill": "#2196F3",
-                        "fill-opacity": 0.5
-                    }
+                    var styledFeature = {
+                        "type": "Feature",
+                        "geometry": geometry,
+                        "properties": {
+                            "marker-size": "small",
+                            "marker-color": "#2196F3",
+                            "stroke": "#2196F3",
+                            "stroke-opacity": 1.0,
+                            "stroke-width": 2,
+                            "fill": "#2196F3",
+                            "fill-opacity": 0.5
+                        }
+                    };
+
+                    // Build static map URL for Mapbox API
+
+                    return [
+                        'https://api.mapbox.com/styles/v1',
+                        '/mapbox/streets-v10/static/geojson(',
+                        encodeURIComponent(JSON.stringify(styledFeature)),
+                        ')/auto/400x200@2x?access_token=',
+                        'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                    ].join('');
+
                 };
-
-                // Build static map URL for Mapbox API
-
-                return [
-                    'https://api.mapbox.com/styles/v1',
-                    '/mapbox/streets-v10/static/geojson(',
-                    encodeURIComponent(JSON.stringify(styledFeature)),
-                    ')/auto/400x200@2x?access_token=',
-                    'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                ].join('');
-
-            };
 
                 self.loadPrograms = function() {
 

@@ -214,27 +214,56 @@ angular.module('FieldDoc')
 
             };
 
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
+            self.buildStaticMapURL = function(geometry) {
 
-                user.$promise.then(function(userResponse) {
-                    $rootScope.user = Account.userObject = userResponse;
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken()
-                    };
-                });
+                var styledFeature = {
+                    "type": "Feature",
+                    "geometry": geometry,
+                    "properties": {
+                        "marker-size": "small",
+                        "marker-color": "#2196F3",
+                        "stroke": "#2196F3",
+                        "stroke-opacity": 1.0,
+                        "stroke-width": 2,
+                        "fill": "#2196F3",
+                        "fill-opacity": 0.5
+                    }
+                };
 
-                //
-                // Project functionality
-                //
+                // Build static map URL for Mapbox API
 
-                self.projects = projects;
+                return [
+                    'https://api.mapbox.com/styles/v1',
+                    '/mapbox/streets-v10/static/geojson(',
+                    encodeURIComponent(JSON.stringify(styledFeature)),
+                    ')/auto/400x200@2x?access_token=',
+                    'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                ].join('');
 
-                console.log('self.projects', self.projects);
+            };
 
-                projects.$promise.then(function(successResponse) {
+            self.clearFilter = function(obj) {
+
+                // ProjectStore.reset();
+
+                FilterStore.clearItem(obj);
+
+            };
+
+            self.filterProjects = function() {
+
+                var params = {};
+
+                if (self.selectedProgram &&
+                    typeof self.selectedProgram.id !== 'undefined') {
+
+                    params.program = self.selectedProgram.id;
+
+                    $location.search('program', self.selectedProgram.id);
+
+                }
+
+                Project.collection(params).$promise.then(function(successResponse) {
 
                     console.log('successResponse', successResponse);
 
@@ -242,27 +271,7 @@ angular.module('FieldDoc')
 
                         if (feature.extent) {
 
-                            var styledFeature = {
-                                "type": "Feature",
-                                "geometry": feature.extent,
-                                "properties": {
-                                    "marker-size": "small",
-                                    "marker-color": "#2196F3",
-                                    "stroke": "#2196F3",
-                                    "stroke-opacity": 1.0,
-                                    "stroke-width": 2,
-                                    "fill": "#2196F3",
-                                    "fill-opacity": 0.5
-                                }
-                            };
-
-                            feature.geometry = styledFeature;
-
-                            // Build static map URL for Mapbox API
-
-                            var staticURL = 'https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
-
-                            feature.staticURL = staticURL;
+                            feature.staticURL = self.buildStaticMapURL(feature.extent);
 
                         }
 
@@ -282,18 +291,76 @@ angular.module('FieldDoc')
 
                 });
 
+            };
+
+            self.setProgramFilter = function() {
+
+                if (self.selectedProgram &&
+                    typeof self.selectedProgram.id !== 'undefined') {
+
+                    self.filterProjects();
+
+                }
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken()
+                    };
+
+                    if ($rootScope.user.properties.programs.length) {
+
+                        self.selectedProgram = $rootScope.user.properties.programs[0];
+
+                    }
+
+                    //
+                    // Project functionality
+                    //
+
+                    projects.$promise.then(function(successResponse) {
+
+                        console.log('successResponse', successResponse);
+
+                        successResponse.features.forEach(function(feature) {
+
+                            if (feature.extent) {
+
+                                feature.staticURL = self.buildStaticMapURL(feature.extent);
+
+                            }
+
+                        });
+
+                        $scope.projectStore.setProjects(successResponse.features);
+
+                        self.filteredProjects = $scope.projectStore.filteredProjects;
+
+                        self.showElements();
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                        self.showElements();
+
+                    });
+
+                });
+
             } else {
 
                 $location.path('/account/login');
 
             }
-
-            self.clearFilter = function(obj) {
-
-                // ProjectStore.reset();
-
-                FilterStore.clearItem(obj);
-
-            };
 
         });
