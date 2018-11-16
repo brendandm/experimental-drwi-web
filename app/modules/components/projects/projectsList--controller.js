@@ -300,8 +300,6 @@ angular.module('FieldDoc')
 
                     }
 
-                    // self.filteredProjects = $scope.projectStore.filteredProjects;
-
                     self.showElements();
 
                 }, function(errorResponse) {
@@ -313,12 +311,6 @@ angular.module('FieldDoc')
                 });
 
             };
-
-            // self.setProgramFilter = function() {
-
-            //     self.filterProjects();
-
-            // };
 
             //
             // Verify Account information for proper UI element display
@@ -332,21 +324,6 @@ angular.module('FieldDoc')
                     self.permissions = {
                         isLoggedIn: Account.hasToken()
                     };
-
-                    // if ($rootScope.user.properties.programs.length) {
-
-                    //     self.selectedProgram = $rootScope.user.properties.programs[0];
-
-                    // }
-
-                    self.selectedProgram = {
-                        id: 0,
-                        properties: {
-                            name: '--Select a program--'
-                        }
-                    };
-
-                    $rootScope.user.properties.programs.unshift(self.selectedProgram);
 
                     //
                     // Project functionality
