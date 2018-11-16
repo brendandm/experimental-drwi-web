@@ -8,11 +8,11 @@
      * @description
      */
     angular.module('FieldDoc')
-        .controller('CustomFormController',
-            function(Account, leafletData, $location, metric_types,
-                monitoring_types, Practice, Report, ReportReading, ReportMetric,
-                ReportMonitoring, practice_types, report, $rootScope, $route, $scope,
-                unit_types, user, Utility, $timeout, report_metrics, $filter, $interval) {
+        .controller('ReportEditController',
+            function(Account, $location, MetricType, monitoring_types,
+                Practice, Report, ReportMetric, ReportMonitoring, report,
+                $rootScope, $route, $scope, unit_types, user, Utility,
+                $timeout, report_metrics, $filter, $interval, Program) {
 
                 var self = this;
 
@@ -140,16 +140,6 @@
 
                     self.report = data;
 
-                    if (self.report.properties.practice_unit !== null) {
-
-                        var _unit = self.report.properties.practice_unit.properties;
-
-                        _unit.name = _unit.plural;
-
-                        self.report.properties.practice_unit = _unit;
-
-                    }
-
                     self.loadMetrics();
 
                 };
@@ -158,47 +148,53 @@
 
                     var datum = metric.properties || metric;
 
-                    if (datum.metric_type !== null) {
+                    if (datum.category !== null) {
 
-                        datum.metric_type = datum.metric_type.properties;
-
-                    } else {
-
-                        datum.metric_type = null;
-
-                    }
-
-                    if (datum.metric_unit !== null) {
-
-                        datum.metric_unit = datum.metric_unit.properties;
-
-                        datum.metric_unit.name = datum.metric_unit.plural;
+                        datum.category = datum.category.properties;
 
                     } else {
 
-                        datum.metric_unit = null;
+                        datum.category = null;
 
                     }
+
+                    // if (datum.metric_unit !== null) {
+
+                    //     datum.metric_unit = datum.metric_unit.properties;
+
+                    //     datum.metric_unit.name = datum.metric_unit.plural;
+
+                    // } else {
+
+                    //     datum.metric_unit = null;
+
+                    // }
 
                     return datum;
 
                 };
 
-                metric_types.$promise.then(function(successResponse) {
+                self.loadMetricTypes = function(datum) {
 
-                    console.log('Metric types', successResponse);
+                    Program.metricTypes({
+                        id: datum.properties.program_id
+                    }).$promise.then(function(successResponse) {
 
-                    self.metricTypes = successResponse.features;
+                        console.log('Metric types', successResponse);
 
-                    self.showElements();
+                        self.metricTypes = successResponse.features;
 
-                }, function(errorResponse) {
+                        self.showElements();
 
-                    console.log('errorResponse', errorResponse);
+                    }, function(errorResponse) {
 
-                    self.showElements();
+                        console.log('errorResponse', errorResponse);
 
-                });
+                        self.showElements();
+
+                    });
+
+                };
 
                 self.monitoringType = null;
                 self.monitoringTypes = monitoring_types;
@@ -308,6 +304,8 @@
                         id: practiceId
                     }).$promise.then(function(successResponse) {
 
+                        console.log('loadPractice.successResponse', successResponse);
+
                         self.practice = successResponse;
 
                         if (!successResponse.permissions.read &&
@@ -320,8 +318,6 @@
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
 
-                            self.practiceType = Utility.machineName(self.practice.properties.practice_type);
-
                             if (!self.report.properties.practice_extent) {
 
                                 self.report.properties.practice_extent = convertPracticeArea(self.practice);
@@ -329,6 +325,8 @@
                             }
 
                         }
+
+                        self.loadMetricTypes(self.practice.properties.project);
 
                     }).catch(function(errorResponse) {
 
@@ -392,6 +390,8 @@
 
                         $timeout(closeAlerts, 2000);
 
+                        self.loadMetrics();
+
                         self.showElements();
 
                     }, function(errorResponse) {
@@ -427,20 +427,20 @@
 
                             var datum = metric;
 
-                            if (datum.metric_type !== null) {
+                            if (datum.category !== null) {
 
-                                datum.metric_type_id = datum.metric_type.id;
-
-                            }
-
-                            if (datum.metric_unit !== null) {
-
-                                datum.metric_unit_id = datum.metric_unit.id;
+                                datum.category_id = datum.category.id;
 
                             }
+
+                            // if (datum.metric_unit !== null) {
+
+                            //     datum.metric_unit_id = datum.metric_unit.id;
+
+                            // }
 
                             // delete datum.id;
-                            delete datum.metric_type;
+                            delete datum.category;
                             delete datum.metric_unit;
 
                             ReportMetric.update({
@@ -532,32 +532,24 @@
 
                 self.addMetric = function() {
 
+                    console.log('addMetric');
+
                     //
                     // Step 1: Show a new row with a "loading" indiciator
                     //
                     self.status.metrics.loading = true;
 
-                    // var datum = {
-                    //     "metric_type_id": null,
-                    //     "metric_value": 0,
-                    //     "metric_unit_id": null,
-                    //     "metric_description": ""
-                    // };
-
-                    // self.reportMetrics.push(datum);
-
                     //
                     // Step 2: Create empty Reading to post to the system
                     //
                     var newMetric = new ReportMetric({
-                        "geometry": null,
-                        "properties": {
-                            "metric_type_id": null,
-                            "metric_value": 0,
-                            "metric_unit_id": null,
-                            "metric_description": ""
-                        }
+                        "category_id": null,
+                        "value": null,
+                        "description": null,
+                        "report_id": self.report.id
                     });
+
+                    console.log('addMetric', newMetric);
 
                     //
                     // Step 3: POST this empty reading to the `/v1/data/report-readings` endpoint
@@ -571,12 +563,13 @@
                         //
                         // self.reportMetrics.push(metric_);
 
-                        if (successResponse.properties.metric_type !== null) {
-                            successResponse.properties.metric_type.properties = successResponse.properties.metric_type;
+                        if (successResponse.properties.category !== null) {
+                            successResponse.properties.category.properties = successResponse.properties.category;
                         }
-                        if (successResponse.properties.metric_unit !== null) {
-                            successResponse.properties.metric_unit.properties = successResponse.properties.metric_unit;
-                        }
+
+                        // if (successResponse.properties.metric_unit !== null) {
+                        //     successResponse.properties.metric_unit.properties = successResponse.properties.metric_unit;
+                        // }
 
                         var datum = self.processMetric(successResponse);
 

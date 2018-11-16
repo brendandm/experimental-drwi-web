@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('DashboardCtrl', function(Account, $location, $log, $interval, $timeout, Project, Map,
+    .controller('DashboardController', function(Account, $location, $log, $interval, $timeout, Project, Map,
         baseProjects, $rootScope, $scope, Site, leafletData, leafletBoundsHelpers,
         MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox,
         Practice, dashboard, $routeParams, Dashboard, Utility, user) {

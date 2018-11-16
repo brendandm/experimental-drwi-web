@@ -18,7 +18,7 @@
                 'metrics': {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/data/report/:id/metrics')
+                    url: environment.apiUrl.concat('/v1/report/:id/metrics')
                 },
                 'summary': {
                     isArray: false,

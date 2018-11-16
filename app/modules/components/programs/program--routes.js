@@ -90,6 +90,40 @@ angular.module('FieldDoc')
                         });
                     }
                 }
+            })
+            .when('/programs/:programId/tags', {
+                templateUrl: '/templates/featureTag--view.html?t=' + environment.version,
+                controller: 'FeatureTagController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    featureCollection: function(Program) {
+
+                        return {
+                            name: 'program',
+                            path: '/programs',
+                            cls: Program
+                        }
+
+                    },
+                    feature: function(Program, $route) {
+
+                        return Program.get({
+                            id: $route.current.params.programId
+                        });
+
+                    }
+                }
             });
 
     });

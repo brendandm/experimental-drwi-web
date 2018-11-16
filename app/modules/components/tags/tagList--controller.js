@@ -6,24 +6,22 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('PracticeTypeListController',
-        function(Account, $location, $log, PracticeType,
-            practiceTypes, $rootScope, $route, $scope, user,
+    .controller('TagListController',
+        function(Account, $location, $log, Tag,
+            tags, $rootScope, $route, $scope, user,
             $interval, $timeout, Utility) {
 
             var self = this;
 
-            self.programId = $route.current.params.programId;
-
             $rootScope.viewState = {
-                'practice': true
+                'tag': true
             };
 
             //
             // Setup basic page variables
             //
             $rootScope.page = {
-                title: 'Practices'
+                title: 'Tags'
             };
 
             self.status = {
@@ -62,7 +60,7 @@ angular.module('FieldDoc')
 
             self.deleteFeature = function(obj, index) {
 
-                PracticeType.delete({
+                Tag.delete({
                     id: obj.id
                 }).$promise.then(function(data) {
 
@@ -71,11 +69,11 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Successfully deleted this practice.',
+                        'msg': 'Successfully deleted this tag.',
                         'prompt': 'OK'
                     }];
 
-                    self.practices.splice(index, 1);
+                    self.tags.splice(index, 1);
 
                     $timeout(closeAlerts, 2000);
 
@@ -88,7 +86,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Unable to delete “' + obj.name + '”. There are pending tasks affecting this practice.',
+                            'msg': 'Unable to delete “' + obj.name + '”. There are pending tasks affecting this tag.',
                             'prompt': 'OK'
                         }];
 
@@ -97,7 +95,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this practice.',
+                            'msg': 'You don’t have permission to delete this tag.',
                             'prompt': 'OK'
                         }];
 
@@ -106,7 +104,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this practice.',
+                            'msg': 'Something went wrong while attempting to delete this tag.',
                             'prompt': 'OK'
                         }];
 
@@ -118,20 +116,19 @@ angular.module('FieldDoc')
 
             };
 
-            self.createPracticeType = function() {
+            self.createTag = function() {
 
-                self.practiceType = new PracticeType({
-                    'program_id': self.programId,
-                    'organization_id': $rootScope.user.properties.organization_id
+                self.tag = new Tag({
+                    'creator_id': $rootScope.user.id
                 });
 
-                self.practiceType.$save(function(successResponse) {
+                self.tag.$save(function(successResponse) {
 
-                    $location.path('/practice-types/' + successResponse.id + '/edit');
+                    $location.path('/tags/' + successResponse.id + '/edit');
 
                 }, function(errorResponse) {
 
-                    console.error('Unable to create a new practice type, please try again later.');
+                    console.error('Unable to create a new tag, please try again later.');
 
                 });
 
@@ -150,11 +147,11 @@ angular.module('FieldDoc')
                         isLoggedIn: Account.hasToken()
                     };
 
-                    practiceTypes.$promise.then(function(successResponse) {
+                    tags.$promise.then(function(successResponse) {
 
                         console.log('successResponse', successResponse);
 
-                        self.practices = successResponse.features;
+                        self.tags = successResponse.features;
 
                         self.showElements();
 

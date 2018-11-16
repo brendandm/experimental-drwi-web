@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProjectsCtrl',
+    .controller('ProjectsController',
         function(Account, $location, $log, Project,
             projects, $rootScope, $scope, Site, user,
             ProjectStore, FilterStore, $interval, $timeout, Utility) {

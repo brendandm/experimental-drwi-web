@@ -4,11 +4,11 @@
 
     /**
      * @ngdoc function
-     * @name FieldDoc.controller:SiteSummaryCtrl
+     * @name FieldDoc.controller:SiteSummaryController
      * @description
      */
     angular.module('FieldDoc')
-        .controller('SiteSummaryCtrl',
+        .controller('SiteSummaryController',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
                 $route, nodes, user, Utility, metrics, outcomes, site, Map, mapbox, leafletData,
                 leafletBoundsHelpers, Site, Project, practices, $interval) {

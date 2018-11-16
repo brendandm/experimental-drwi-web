@@ -16,19 +16,31 @@
                     isArray: false,
                     cache: true
                 },
-                organizations: {
+                organization: {
                     method: 'GET',
                     isArray: false,
                     cache: true,
                     url: environment.apiUrl.concat('/v1/data/search/organization')
                 },
-                programs: {
+                program: {
                     method: 'GET',
                     isArray: false,
                     cache: true,
                     url: environment.apiUrl.concat('/v1/data/search/program')
                 },
-                users: {
+                tag: {
+                    method: 'GET',
+                    isArray: false,
+                    cache: true,
+                    url: environment.apiUrl.concat('/v1/data/search/tag')
+                },
+                tagGroup: {
+                    method: 'GET',
+                    isArray: false,
+                    cache: true,
+                    url: environment.apiUrl.concat('/v1/data/search/tag-group')
+                },
+                user: {
                     method: 'GET',
                     isArray: false,
                     cache: true,

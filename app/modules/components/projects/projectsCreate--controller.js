@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProjectCreateCtrl',
+    .controller('ProjectCreateController',
         function(Account, $location, $log, Project, $rootScope, $route, user, SearchService) {
 
             var self = this;
@@ -46,11 +46,11 @@ angular.module('FieldDoc')
 
             self.searchPrograms = function(value) {
 
-                return SearchService.programs({
+                return SearchService.program({
                     q: value
                 }).$promise.then(function(response) {
 
-                    console.log('SearchService.programs response', response);
+                    console.log('SearchService.program response', response);
 
                     response.results.forEach(function(result) {
 
@@ -66,11 +66,11 @@ angular.module('FieldDoc')
 
             self.searchOrganizations = function(value) {
 
-                return SearchService.organizations({
+                return SearchService.organization({
                     q: value
                 }).$promise.then(function(response) {
 
-                    console.log('SearchService.organizations response', response);
+                    console.log('SearchService.organization response', response);
 
                     response.results.forEach(function(result) {
 

@@ -14,7 +14,7 @@ angular.module('FieldDoc')
         $routeProvider
             .when('/programs/:programId/projects', {
                 templateUrl: '/modules/components/projects/views/projectsList--view.html?t=' + environment.version,
-                controller: 'ProjectsCtrl',
+                controller: 'ProjectsController',
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
@@ -40,7 +40,7 @@ angular.module('FieldDoc')
             })
             .when('/projects', {
                 templateUrl: '/modules/components/projects/views/projectsList--view.html?t=' + environment.version,
-                controller: 'ProjectsCtrl',
+                controller: 'ProjectsController',
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
@@ -64,7 +64,7 @@ angular.module('FieldDoc')
             })
             .when('/projects/:projectId', {
                 templateUrl: '/modules/components/projects/views/projectsSummary--view.html?t=' + environment.version,
-                controller: 'ProjectSummaryCtrl',
+                controller: 'ProjectSummaryController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -112,7 +112,7 @@ angular.module('FieldDoc')
             })
             .when('/projects/collection/new', {
                 templateUrl: '/modules/components/projects/views/projectsCreate--view.html?t=' + environment.version,
-                controller: 'ProjectCreateCtrl',
+                controller: 'ProjectCreateController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -130,7 +130,7 @@ angular.module('FieldDoc')
             })
             .when('/projects/:projectId/edit', {
                 templateUrl: '/modules/components/projects/views/projectsEdit--view.html?t=' + environment.version,
-                controller: 'ProjectEditCtrl',
+                controller: 'ProjectEditController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -153,7 +153,7 @@ angular.module('FieldDoc')
             })
             .when('/projects/:projectId/users', {
                 templateUrl: '/modules/components/projects/views/projectsUsers--view.html?t=' + environment.version,
-                controller: 'ProjectUsersCtrl',
+                controller: 'ProjectUsersController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -176,6 +176,40 @@ angular.module('FieldDoc')
                         return Project.members({
                             'id': $route.current.params.projectId
                         });
+                    }
+                }
+            })
+            .when('/projects/:projectId/tags', {
+                templateUrl: '/templates/featureTag--view.html?t=' + environment.version,
+                controller: 'FeatureTagController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    featureCollection: function(Project) {
+
+                        return {
+                            name: 'project',
+                            path: '/projects',
+                            cls: Project
+                        }
+
+                    },
+                    feature: function(Project, $route) {
+
+                        return Project.get({
+                            id: $route.current.params.projectId
+                        });
+
                     }
                 }
             });

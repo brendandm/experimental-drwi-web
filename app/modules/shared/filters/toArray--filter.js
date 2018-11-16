@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc function
- * @name FieldDoc.controller:MainCtrl
+ * @name FieldDoc.controller:MainController
  * @description
- * # MainCtrl
+ * # MainController
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')

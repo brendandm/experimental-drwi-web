@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('DashboardListCtrl',
+    .controller('DashboardListController',
         function(Account, $location, $log, Notifications, $rootScope,
             $route, user, User, dashboards, $interval, $timeout, Dashboard) {
 

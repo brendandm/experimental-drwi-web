@@ -14,7 +14,7 @@ angular.module('FieldDoc')
         $routeProvider
             .when('/dashboards', {
                 templateUrl: '/modules/components/dashboard/views/dashboardList--view.html?t=' + environment.version,
-                controller: 'DashboardListCtrl',
+                controller: 'DashboardListController',
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
@@ -42,7 +42,7 @@ angular.module('FieldDoc')
             })
             .when('/dashboards/:dashboardId', {
                 templateUrl: '/modules/components/dashboard/views/dashboard--view.html?t=' + environment.version,
-                controller: 'DashboardCtrl',
+                controller: 'DashboardController',
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
@@ -86,7 +86,7 @@ angular.module('FieldDoc')
             })
             .when('/dashboards/collection/new', {
                 templateUrl: '/modules/components/dashboard/views/dashboardCreate--view.html?t=' + environment.version,
-                controller: 'DashboardCreateCtrl',
+                controller: 'DashboardCreateController',
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
@@ -109,7 +109,7 @@ angular.module('FieldDoc')
             })
             .when('/dashboards/:dashboardId/edit', {
                 templateUrl: '/modules/components/dashboard/views/dashboardEdit--view.html?t=' + environment.version,
-                controller: 'DashboardEditCtrl',
+                controller: 'DashboardEditController',
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {

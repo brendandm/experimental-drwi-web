@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('DashboardEditCtrl',
+    .controller('DashboardEditController',
         function($scope, Account, $location, $log, Dashboard, dashboard,
             $rootScope, $route, user, FilterStore, $timeout) {
 

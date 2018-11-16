@@ -4,13 +4,13 @@
 
     /**
      * @ngdoc function
-     * @name FieldDoc.controller:SiteEditCtrl
+     * @name FieldDoc.controller:SiteEditController
      * @description
-     * # SiteEditCtrl
+     * # SiteEditController
      * Controller of the FieldDoc
      */
     angular.module('FieldDoc')
-        .controller('SitePhotoCtrl',
+        .controller('SitePhotoController',
             function(Account, environment, $http, $location, Notifications, 
                 Site, site, $rootScope, $route, $scope,
                 $timeout, $interval, user, Shapefile) {

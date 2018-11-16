@@ -115,6 +115,40 @@ angular.module('FieldDoc')
                         });
                     }
                 }
+            })
+            .when('/geographies/:geographyId/tags', {
+                templateUrl: '/templates/featureTag--view.html?t=' + environment.version,
+                controller: 'FeatureTagController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    featureCollection: function(GeographyService) {
+
+                        return {
+                            name: 'geography',
+                            path: '/geographies',
+                            cls: GeographyService
+                        }
+
+                    },
+                    feature: function(GeographyService, $route) {
+
+                        return GeographyService.get({
+                            id: $route.current.params.geographyId
+                        });
+
+                    }
+                }
             });
 
     });

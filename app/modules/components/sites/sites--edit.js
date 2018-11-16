@@ -4,13 +4,13 @@
 
     /**
      * @ngdoc function
-     * @name FieldDoc.controller:SiteEditCtrl
+     * @name FieldDoc.controller:SiteEditController
      * @description
-     * # SiteEditCtrl
+     * # SiteEditController
      * Controller of the FieldDoc
      */
     angular.module('FieldDoc')
-        .controller('SiteEditCtrl',
+        .controller('SiteEditController',
             function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
                 Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope,
                 $timeout, $interval, user, Shapefile, Utility) {

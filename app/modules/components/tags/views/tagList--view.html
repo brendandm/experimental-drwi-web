@@ -1,0 +1,93 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="site--content--flow fluid-content clearfix distinguish">
+
+    <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
+
+    <div class="content--container" style="position: relative; overflow: hidden;">
+
+        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
+            <div class="progress--container">
+                <p style="font-weight: bold;" class="color-pulse">Loading tags&hellip;</p>
+            </div>
+        </div>
+
+        <h1 class="inset">Tags</h1>
+
+        <div class="main--ui">
+
+            <div class="add--new--wrapper">
+                <span>Create tags</span>
+                <a class="add--new--btn" href="#" data-ng-click="page.createTag()">
+                    <i class="material-icons">
+                    add
+                    </i>
+                </a>
+            </div>
+
+            <p class="reveal fade-in t0">You have <strong>{{ (page.tags.length | number) || 0 }}</strong> <ng-pluralize count="page.tags.length" when="{'one': 'tag','other': 'tags'}"></ng-pluralize>.</p>
+
+            <div class="features--container">
+
+                <input type="text" class="search-bar list-filter" data-ng-model="page.q" placeholder="Search tags">
+
+                <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;" data-ng-if="!page.status.loading">
+
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="tag in page.tags | orderBy:'-modified_on' | filter: page.q">
+
+                        <div class="card--content">
+
+                            <div class="name">
+                                <span>{{ tag.name }}</span>
+                            </div>
+
+                            <div class="body">
+
+                                <div class="confirm--delete" data-ng-if="page.deletionTarget.id === tag.id">
+                                    <p>Do you want to delete this tag?</p>
+                                    <div class="actions" style="flex: 0;">
+                                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature(tag, $index)">
+                                            Yes
+                                        </a>
+                                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                                            Cancel
+                                        </a>
+                                    </div>
+                                </div>
+                                <p>{{ (tag.description || 'No description') | truncate:80 }}</p>
+                                <div class="actions">
+                                    <a class="snapshot--title" href="/tags/{{ tag.id }}/edit" title="Edit tag">
+                                        <i class="material-icons">
+                                        edit
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="#" title="Delete tag" data-ng-click="page.confirmDelete(tag)">
+                                        <i class="material-icons">
+                                        delete
+                                        </i>
+                                    </a>
+                                </div>
+                                <span><time datetime="{{ tag.modified_on }}" title="{{ tag.modified_on }}">Last updated {{ tag.modified_on | date : 'mediumDate' }}</time></span>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+        <div class="event--container">
+            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                <span class="event--message">{{ alert.msg }}</span>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>

@@ -2,13 +2,13 @@
 
 /**
  * @ngdoc function
- * @name FieldDoc.controller:ProjectviewCtrl
+ * @name FieldDoc.controller:ProjectviewController
  * @description
- * # ProjectviewCtrl
+ * # ProjectviewController
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-    .controller('ProjectSummaryCtrl',
+    .controller('ProjectSummaryController',
         function(Account, Notifications, $rootScope, Project, $routeParams,
             $scope, $location, Map, mapbox, Site, user, $window,
             leafletData, leafletBoundsHelpers, $timeout, Practice, project,

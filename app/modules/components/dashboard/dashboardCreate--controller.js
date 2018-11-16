@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('DashboardCreateCtrl', function(Account, $location, $log, Dashboard, $rootScope, $route, user) {
+    .controller('DashboardCreateController', function(Account, $location, $log, Dashboard, $rootScope, $route, user) {
 
         var self = this;
 

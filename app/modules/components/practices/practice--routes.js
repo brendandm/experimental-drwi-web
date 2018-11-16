@@ -47,7 +47,7 @@ angular.module('FieldDoc')
             })
             .when('/reports/:reportId/edit', {
                 templateUrl: '/modules/components/practices/views/edit--view.html?t=' + environment.version,
-                controller: 'CustomFormController',
+                controller: 'ReportEditController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -76,16 +76,11 @@ angular.module('FieldDoc')
                             id: $route.current.params.reportId
                         });
                     },
-                    practice_types: function(PracticeType, $route) {
-                        return PracticeType.query({
-                            results_per_page: 500
-                        });
-                    },
-                    metric_types: function(MetricType, $route) {
-                        return MetricType.query({
-                            results_per_page: 500
-                        });
-                    },
+                    // metric_types: function(MetricType, $route) {
+                    //     return MetricType.query({
+                    //         results_per_page: 500
+                    //     });
+                    // },
                     monitoring_types: function(MonitoringType, $route) {
                         return MonitoringType.query({
                             results_per_page: 500
@@ -190,6 +185,40 @@ angular.module('FieldDoc')
                         return Practice.get({
                             id: $route.current.params.practiceId
                         });
+                    }
+                }
+            })
+            .when('/practices/:practiceId/tags', {
+                templateUrl: '/templates/featureTag--view.html?t=' + environment.version,
+                controller: 'FeatureTagController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    featureCollection: function(Practice) {
+
+                        return {
+                            name: 'practice',
+                            path: '/practices',
+                            cls: Practice
+                        }
+
+                    },
+                    feature: function(Practice, $route) {
+
+                        return Practice.get({
+                            id: $route.current.params.practiceId
+                        });
+
                     }
                 }
             });
