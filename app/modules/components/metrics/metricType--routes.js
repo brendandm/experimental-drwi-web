@@ -12,7 +12,7 @@ angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
 
         $routeProvider
-            .when('/programs/:programId/metric-types', {
+            .when('/metric-types', {
                 templateUrl: '/modules/components/metrics/views/metricTypeList--view.html?t=' + environment.version,
                 controller: 'MetricTypeListController',
                 controllerAs: 'page',
@@ -28,11 +28,28 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    metricTypes: function(Program, $route) {
+                    metricTypes: function(Program, $route, $rootScope, $location) {
 
-                        return Program.metricTypes({
-                            id: $route.current.params.programId
-                        });
+                        var params = $location.search(),
+                            data = {};
+
+                        if ($rootScope.programContext !== null &&
+                            typeof $rootScope.programContext !== 'undefined') {
+
+                            data.id = $rootScope.programContext;
+
+                            $location.search('program', $rootScope.programContext);
+
+                        } else if (params.program !== null &&
+                            typeof params.program !== 'undefined') {
+
+                            data.id = params.program;
+
+                            $rootScope.programContext = params.program;
+
+                        }
+
+                        return Program.metricTypes(data);
 
                     }
                 }

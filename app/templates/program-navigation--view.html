@@ -2,27 +2,27 @@
     <nav role="navigation" data-ng-if="$root.user.properties.is_admin || $root.user.properties.is_manager">
         <ul class="list-unstyled">
             <li>
-                <a href="/programs">
-                    &larr; Programs
+                <a href="/">
+                    &larr; Home
                 </a>
             </li>
             <li>
-                <a href="/programs/{{ page.program.id || page.programId }}/projects" data-ng-class="{viewing: $root.viewState.project}">
+                <a href="/projects" data-ng-class="{viewing: $root.viewState.project}">
                     Projects
                 </a>
             </li>
             <li>
-                <a href="/programs/{{ page.program.id || page.programId }}/practice-types" data-ng-class="{viewing: $root.viewState.practiceType}">
+                <a href="/practice-types" data-ng-class="{viewing: $root.viewState.practiceType}">
                     Practices
                 </a>
             </li>
             <li>
-                <a href="/programs/{{ page.program.id || page.programId }}/metric-types" data-ng-class="{viewing: $root.viewState.metricType}">
+                <a href="/metric-types" data-ng-class="{viewing: $root.viewState.metricType}">
                     Metrics
                 </a>
             </li>
             <li>
-                <a href="/programs/{{ page.program.id || page.programId }}/geographies" data-ng-class="{viewing: $root.viewState.geography}">
+                <a href="/geographies" data-ng-class="{viewing: $root.viewState.geography}">
                     Geographies
                 </a>
             </li>

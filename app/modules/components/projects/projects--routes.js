@@ -44,9 +44,28 @@ angular.module('FieldDoc')
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
-                    projects: function($location, Project) {
+                    projects: function($location, Project, $rootScope) {
 
-                        return Project.collection({});
+                        var params = $location.search(),
+                            data = {};
+
+                        if ($rootScope.programContext !== null &&
+                            typeof $rootScope.programContext !== 'undefined') {
+
+                            data.program = $rootScope.programContext;
+
+                            $location.search('program', $rootScope.programContext);
+
+                        } else if (params.program !== null &&
+                            typeof params.program !== 'undefined') {
+
+                            data.program = params.program;
+
+                            $rootScope.programContext = params.program;
+
+                        }
+
+                        return Project.collection(data);
 
                     },
                     user: function(Account, $rootScope, $document) {

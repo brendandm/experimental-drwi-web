@@ -40,9 +40,11 @@ angular.module('FieldDoc')
                 controller: 'ProgramSummaryController',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account, $rootScope, $document) {
+                    user: function(Account, $route, $rootScope, $document) {
 
                         $rootScope.targetPath = document.location.pathname;
+
+                        $rootScope.programContext = $route.current.params.programId;
 
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
@@ -73,9 +75,11 @@ angular.module('FieldDoc')
                 controller: 'ProgramEditController',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account, $rootScope, $document) {
+                    user: function(Account, $route, $rootScope, $document) {
 
                         $rootScope.targetPath = document.location.pathname;
+
+                        $rootScope.programContext = $route.current.params.programId;
 
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
@@ -96,9 +100,11 @@ angular.module('FieldDoc')
                 controller: 'FeatureTagController',
                 controllerAs: 'page',
                 resolve: {
-                    user: function(Account, $rootScope, $document) {
+                    user: function(Account, $route, $rootScope, $document) {
 
                         $rootScope.targetPath = document.location.pathname;
+
+                        $rootScope.programContext = $route.current.params.programId;
 
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();

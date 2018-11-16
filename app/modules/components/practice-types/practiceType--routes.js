@@ -12,7 +12,7 @@ angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
 
         $routeProvider
-            .when('/programs/:programId/practice-types', {
+            .when('/practice-types', {
                 templateUrl: '/modules/components/practice-types/views/practiceTypeList--view.html?t=' + environment.version,
                 controller: 'PracticeTypeListController',
                 controllerAs: 'page',
@@ -28,11 +28,28 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    practiceTypes: function(Program, $route) {
+                    practiceTypes: function(Program, $route, $rootScope, $location) {
 
-                        return Program.practiceTypes({
-                            id: $route.current.params.programId
-                        });
+                        var params = $location.search(),
+                            data = {};
+
+                        if ($rootScope.programContext !== null &&
+                            typeof $rootScope.programContext !== 'undefined') {
+
+                            data.id = $rootScope.programContext;
+
+                            $location.search('program', $rootScope.programContext);
+
+                        } else if (params.program !== null &&
+                            typeof params.program !== 'undefined') {
+
+                            data.id = params.program;
+
+                            $rootScope.programContext = params.program;
+
+                        }
+
+                        return Program.practiceTypes(data);
 
                     }
                 }

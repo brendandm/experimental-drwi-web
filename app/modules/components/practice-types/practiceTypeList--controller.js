@@ -23,7 +23,7 @@ angular.module('FieldDoc')
             // Setup basic page variables
             //
             $rootScope.page = {
-                title: 'Practices'
+                title: 'Practice Types'
             };
 
             self.status = {

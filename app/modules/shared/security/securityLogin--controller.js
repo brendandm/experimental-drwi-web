@@ -40,15 +40,7 @@
 
                     } else {
 
-                        if ($rootScope.isAdmin) {
-
-                            $location.path('/programs');
-
-                        } else {
-
-                            $location.path('/projects');
-
-                        }
+                        $location.path('/');
 
                     }
 
@@ -119,15 +111,7 @@
 
                                     } else {
 
-                                        if ($rootScope.isAdmin) {
-
-                                            $location.path('/programs');
-
-                                        } else {
-
-                                            $location.path('/projects');
-
-                                        }
+                                        $location.path('/');
 
                                     }
 
