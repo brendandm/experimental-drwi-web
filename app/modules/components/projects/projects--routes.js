@@ -164,11 +164,6 @@ angular.module('FieldDoc')
                         return Project.get({
                             'id': $route.current.params.projectId
                         });
-                    },
-                    members: function(Project, $route) {
-                        return Project.members({
-                            'id': $route.current.params.projectId
-                        });
                     }
                 }
             })

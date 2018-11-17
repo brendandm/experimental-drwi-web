@@ -12,7 +12,7 @@
     angular.module('FieldDoc')
         .controller('ProjectUsersController',
             function(Account, Collaborators, $window, $rootScope, $scope, $route,
-                $location, $timeout, project, user, members, SearchService, Project,
+                $location, $timeout, project, user, SearchService, Project,
                 Utility, $interval) {
 
                 var self = this;
@@ -328,7 +328,7 @@
 
                 } else {
 
-                    $location.path('/account/login');
+                    $location.path('/login');
 
                 }
 

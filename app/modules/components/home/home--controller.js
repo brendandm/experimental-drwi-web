@@ -257,7 +257,16 @@
 
                         self.loadProjects();
 
+                    }).catch(function(errorResponse) {
+
+                        $location.path('/login');
+
                     });
+
+                } else {
+
+                    $location.path('/login');
+
                 }
 
             }

@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1542417568542})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1542419539948})
 
 ;
 /**
@@ -121,31 +121,22 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .config(function($routeProvider, environment) {
             $routeProvider
-                .when('/user', {
-                    redirectTo: '/account/login'
-                })
-                .when('/user/login', {
-                    redirectTo: '/account/login'
-                })
-                .when('/account/login', {
+                .when('/login', {
                     templateUrl: '/modules/shared/security/views/securityLogin--view.html?t=' + environment.version,
                     controller: 'SecurityController',
                     controllerAs: 'page'
                 })
-                .when('/account/register', {
+                .when('/register', {
                     templateUrl: '/modules/shared/security/views/securityRegister--view.html?t=' + environment.version,
                     controller: 'SecurityRegisterController',
                     controllerAs: 'page'
                 })
-                .when('/account/reset', {
+                .when('/reset', {
                     templateUrl: '/modules/shared/security/views/securityResetPassword--view.html?t=' + environment.version,
                     controller: 'SecurityResetPasswordController',
                     controllerAs: 'page'
                 })
                 .when('/logout', {
-                    redirectTo: '/user/logout'
-                })
-                .when('/user/logout', {
                     template: 'Logging out ...',
                     controller: 'SecurityLogoutController',
                     controllerAs: 'page'
@@ -671,8 +662,8 @@ angular.module('FieldDoc')
                         config.headers.Authorization = 'Bearer ' + sessionCookie;
 
                     } else if (!sessionCookie &&
-                        $location.path() !== '/account/register' &&
-                        $location.path() !== '/account/reset' &&
+                        $location.path() !== '/register' &&
+                        $location.path() !== '/reset' &&
                         $location.path().lastIndexOf('/dashboard', 0) !== 0) {
                         /**
                          * Remove all cookies present for authentication
@@ -687,7 +678,7 @@ angular.module('FieldDoc')
                             path: '/'
                         });
 
-                        $location.path('/account/login').search('');
+                        $location.path('/login').search('');
 
                     }
 
@@ -2441,7 +2432,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/account/login');
+                $location.path('/login');
 
             }
 
@@ -3024,7 +3015,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/account/login');
+                $location.path('/login');
 
             }
 
@@ -3495,11 +3486,6 @@ angular.module('FieldDoc')
                         return Project.get({
                             'id': $route.current.params.projectId
                         });
-                    },
-                    members: function(Project, $route) {
-                        return Project.members({
-                            'id': $route.current.params.projectId
-                        });
                     }
                 }
             })
@@ -3876,7 +3862,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/account/login');
+                $location.path('/login');
 
             }
 
@@ -4719,7 +4705,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/account/login');
+                $location.path('/login');
 
             }
 
@@ -4987,7 +4973,7 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('ProjectUsersController',
             function(Account, Collaborators, $window, $rootScope, $scope, $route,
-                $location, $timeout, project, user, members, SearchService, Project,
+                $location, $timeout, project, user, SearchService, Project,
                 Utility, $interval) {
 
                 var self = this;
@@ -5303,7 +5289,7 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    $location.path('/account/login');
+                    $location.path('/login');
 
                 }
 
@@ -5616,7 +5602,16 @@ angular.module('FieldDoc')
 
                         self.loadProjects();
 
+                    }).catch(function(errorResponse) {
+
+                        $location.path('/login');
+
                     });
+
+                } else {
+
+                    $location.path('/login');
+
                 }
 
             }
@@ -6583,7 +6578,7 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    $location.path('/account/login');
+                    $location.path('/login');
 
                 }
 
@@ -7294,7 +7289,7 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    $location.path('/account/login');
+                    $location.path('/login');
 
                 }
 
@@ -8499,7 +8494,7 @@ angular.module('FieldDoc')
 
         } else {
 
-            $location.path('/account/login');
+            $location.path('/login');
 
         }
 
@@ -9705,7 +9700,7 @@ angular.module('FieldDoc')
 
         } else {
 
-            $location.path('/account/login');
+            $location.path('/login');
 
         }
 
@@ -10715,7 +10710,7 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    $location.path('/account/login');
+                    $location.path('/login');
 
                 }
 
@@ -11062,7 +11057,7 @@ angular.module('FieldDoc')
 
         } else {
 
-            $location.path('/account/login');
+            $location.path('/login');
 
         }
 
@@ -11388,7 +11383,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/account/login');
+                $location.path('/login');
 
             }
 
@@ -11799,7 +11794,7 @@ angular.module('FieldDoc')
 
         } else {
 
-            $location.path('/account/login');
+            $location.path('/login');
 
         }
 
@@ -12132,7 +12127,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/account/login');
+                $location.path('/login');
 
             }
 
@@ -13871,7 +13866,7 @@ angular.module('FieldDoc')
 
         } else {
 
-            $location.path('/account/login');
+            $location.path('/login');
 
         }
 
@@ -14344,7 +14339,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/account/login');
+                $location.path('/login');
 
             }
 
@@ -14690,7 +14685,7 @@ angular.module('FieldDoc')
 
         } else {
 
-            $location.path('/account/login');
+            $location.path('/login');
 
         }
 
@@ -15013,7 +15008,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/account/login');
+                $location.path('/login');
 
             }
 
@@ -15370,7 +15365,7 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    $location.path('/account/login');
+                    $location.path('/login');
 
                 }
 
@@ -18020,47 +18015,46 @@ angular
 }());
 (function() {
 
-  'use strict';
+    'use strict';
 
-  /**
-   * @ngdoc service
-   * @name
-   * @description
-   */
-  angular.module('FieldDoc')
-    .service('Security', function(environment, ipCookie, $http, $resource) {
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('Security', function(environment, ipCookie, $http, $resource) {
 
-      var Security = $resource(environment.apiUrl.concat('/v1/auth/account/login'), {}, {
-        save: {
-          method: 'POST',
-          url: environment.apiUrl.concat('/v1/auth/remote'),
-          params: {
-            response_type: 'token',
-            client_id: environment.clientId,
-            redirect_uri: environment.siteUrl.concat('/authorize'),
-            scope: 'user',
-            state: 'json'
-          }
-        },
-        register: {
-          method: 'POST',
-          url: environment.apiUrl.concat('/v1/auth/account/register')
-        },
-        reset: {
-          method: 'POST',
-          url: environment.apiUrl.concat('/v1/auth/password/reset')
-        }
-      });
+            var Security = $resource(environment.apiUrl.concat('/v1/auth/account/login'), {}, {
+                save: {
+                    method: 'POST',
+                    url: environment.apiUrl.concat('/v1/auth/remote'),
+                    params: {
+                        response_type: 'token',
+                        client_id: environment.clientId,
+                        redirect_uri: environment.siteUrl.concat('/authorize'),
+                        scope: 'user',
+                        state: 'json'
+                    }
+                },
+                register: {
+                    method: 'POST',
+                    url: environment.apiUrl.concat('/v1/auth/account/register')
+                },
+                reset: {
+                    method: 'POST',
+                    url: environment.apiUrl.concat('/v1/auth/password/reset')
+                }
+            });
 
-      Security.has_token = function() {
-        return (ipCookie('FIELDSTACKIO_SESSION')) ? true: false;
-      };
+            Security.has_token = function() {
+                return (ipCookie('FIELDSTACKIO_SESSION')) ? true : false;
+            };
 
-      return Security;
-    });
+            return Security;
+        });
 
 }());
-
 (function() {
 
     'use strict';

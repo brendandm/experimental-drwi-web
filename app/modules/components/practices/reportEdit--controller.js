@@ -795,7 +795,7 @@
 
                 } else {
 
-                    $location.path('/account/login');
+                    $location.path('/login');
 
                 }
 
