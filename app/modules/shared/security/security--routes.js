@@ -13,9 +13,6 @@
     angular.module('FieldDoc')
         .config(function($routeProvider, environment) {
             $routeProvider
-                .when('/', {
-                    redirectTo: '/account/login'
-                })
                 .when('/user', {
                     redirectTo: '/account/login'
                 })

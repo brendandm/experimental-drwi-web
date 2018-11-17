@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1542412359108})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1542417568542})
 
 ;
 /**
@@ -121,9 +121,6 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .config(function($routeProvider, environment) {
             $routeProvider
-                .when('/', {
-                    redirectTo: '/account/login'
-                })
                 .when('/user', {
                     redirectTo: '/account/login'
                 })
