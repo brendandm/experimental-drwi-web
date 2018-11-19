@@ -13,7 +13,7 @@
             '$location',
             '$timeout',
             '$log',
-            'PracticeCustom',
+            'Report',
             '$rootScope',
             '$route',
             'Utility',
@@ -29,7 +29,7 @@
             'metrics',
             'outcomes',
             'practice',
-            function(Account, $location, $timeout, $log, PracticeCustom, $rootScope,
+            function(Account, $location, $timeout, $log, Report, $rootScope,
                 $route, Utility, user, Project, Site, $window, Map, mapbox,
                 leafletData, leafletBoundsHelpers, Practice, metrics, outcomes, practice) {
 
@@ -98,7 +98,7 @@
 
                         case 'report':
 
-                            targetCollection = PracticeCustom;
+                            targetCollection = Report;
 
                             break;
 
@@ -222,6 +222,18 @@
 
                         self.practice = successResponse;
 
+                        if (!successResponse.permissions.read &&
+                            !successResponse.permissions.write) {
+
+                            self.makePrivate = true;
+
+                            return;
+
+                        }
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
+
                         $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
 
                         //
@@ -254,7 +266,7 @@
 
                     }, function(errorResponse) {
 
-
+                        self.status.loading = false;
 
                     });
 
@@ -271,12 +283,9 @@
 
                         self.permissions = {
                             isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[
-                                0].properties.name,
-                            account: ($rootScope.account &&
-                                    $rootScope.account.length) ?
-                                $rootScope.account[0] : null,
-                            can_edit: true
+                            role: $rootScope.user.properties.roles[0],
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                            can_edit: false
                         };
 
                         self.loadPractice();
@@ -290,7 +299,7 @@
 
                 self.addReading = function(measurementPeriod) {
 
-                    var newReading = new PracticeCustom({
+                    var newReading = new Report({
                         'measurement_period': 'Planning',
                         'report_date': new Date(),
                         'practice_id': practiceId,
@@ -299,8 +308,7 @@
 
                     newReading.$save().then(function(successResponse) {
 
-                        $location.path('/practices/' + practiceId +
-                            '/' + successResponse.id + '/edit');
+                        $location.path('/reports/' + successResponse.id + '/edit');
 
                     }, function(errorResponse) {
 

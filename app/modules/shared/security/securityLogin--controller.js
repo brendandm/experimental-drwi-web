@@ -29,14 +29,18 @@
                 //
                 if (ipCookie('FIELDSTACKIO_SESSION')) {
 
-                    if ($rootScope.targetPath &&
-                        typeof $rootScope.targetPath === 'string') {
+                    var targetPath = $rootScope.targetPath;
 
-                        $location.path($rootScope.targetPath);
+                    $rootScope.targetPath = null;
+
+                    if (targetPath &&
+                        targetPath.lastIndexOf('/dashboard', 0) === 0) {
+
+                        $location.path(targetPath);
 
                     } else {
 
-                        $location.path('/projects');
+                        $location.path('/');
 
                     }
 
@@ -99,11 +103,15 @@
                                     if ($rootScope.targetPath &&
                                         typeof $rootScope.targetPath === 'string') {
 
-                                        $location.path($rootScope.targetPath);
+                                        var targetPath = $rootScope.targetPath;
+
+                                        $rootScope.targetPath = null;
+
+                                        $location.path(targetPath);
 
                                     } else {
 
-                                        $location.path('/projects');
+                                        $location.path('/');
 
                                     }
 

@@ -57,7 +57,7 @@
 
                                 console.log(response);
 
-                                return response.results;
+                                return response.results.slice(0,5);
 
                             });
 

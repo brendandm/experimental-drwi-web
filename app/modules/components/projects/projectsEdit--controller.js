@@ -6,9 +6,10 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProjectEditCtrl',
+    .controller('ProjectEditController',
         function(Account, $location, $log, Project, project,
-            $rootScope, $route, user, SearchService, $timeout) {
+            $rootScope, $route, user, SearchService, $timeout,
+            Utility, $interval) {
 
             var self = this;
 
@@ -18,19 +19,36 @@ angular.module('FieldDoc')
 
             $rootScope.page = {};
 
+            self.status = {
+                loading: true,
+                processing: true
+            };
+
+            self.showElements = function() {
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.status.processing = false;
+
+                }, 1000);
+
+            };
+
             self.alerts = [];
 
-            function closeAlerts() {
+            self.closeAlerts = function() {
 
                 self.alerts = [];
 
-            }
+            };
 
-            function closeRoute() {
+            self.closeRoute = function() {
 
                 $location.path('/projects');
 
-            }
+            };
 
             self.confirmDelete = function(obj) {
 
@@ -45,52 +63,68 @@ angular.module('FieldDoc')
             };
 
             //
-            // Assign project to a scoped variable
+            // Verify Account information for proper UI element display
             //
-            project.$promise.then(function(successResponse) {
+            if (Account.userObject && user) {
 
-                self.project = successResponse;
+                user.$promise.then(function(userResponse) {
 
-                self.tempPartners = self.project.properties.partners;
+                    $rootScope.user = Account.userObject = userResponse;
 
-                self.tempPrograms = self.project.properties.programs;
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false,
+                        can_delete: false
+                    };
 
-                $rootScope.page.title = 'Edit Project';
+                    //
+                    // Assign project to a scoped variable
+                    //
+                    project.$promise.then(function(successResponse) {
 
-                //
-                // Verify Account information for proper UI element display
-                //
-                if (Account.userObject && user) {
+                        if (!successResponse.permissions.read &&
+                            !successResponse.permissions.write) {
 
-                    user.$promise.then(function(userResponse) {
+                            self.makePrivate = true;
 
-                        $rootScope.user = Account.userObject = userResponse;
+                        } else {
 
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0].properties.name,
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                            can_edit: Account.canEdit(project),
-                            can_delete: Account.canDelete(project)
-                        };
+                            self.processFeature(successResponse);
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            $rootScope.page.title = 'Edit Project';
+
+                        }
+
+                        self.showElements();
+
+                    }, function(errorResponse) {
+
+                        $log.error('Unable to load request project');
+
+                        self.showElements();
 
                     });
 
-                }
+                });
 
-            }, function(errorResponse) {
+            } else {
 
-                $log.error('Unable to load request project');
+                $location.path('/login');
 
-            });
+            }
 
             self.searchPrograms = function(value) {
 
-                return SearchService.programs({
+                return SearchService.program({
                     q: value
                 }).$promise.then(function(response) {
 
-                    console.log('SearchService.programs response', response);
+                    console.log('SearchService.program response', response);
 
                     response.results.forEach(function(result) {
 
@@ -106,11 +140,11 @@ angular.module('FieldDoc')
 
             self.searchOrganizations = function(value) {
 
-                return SearchService.organizations({
+                return SearchService.organization({
                     q: value
                 }).$promise.then(function(response) {
 
-                    console.log('SearchService.organizations response', response);
+                    console.log('SearchService.organization response', response);
 
                     response.results.forEach(function(result) {
 
@@ -185,10 +219,41 @@ angular.module('FieldDoc')
 
             };
 
+            self.processFeature = function(data) {
+
+                self.project = data;
+
+                if (self.project.properties.program) {
+
+                    self.program = self.project.properties.program.properties;
+
+                }
+
+                self.tempPartners = self.project.properties.partners;
+
+                self.status.processing = false;
+
+            };
+
+            self.setProgram = function(item, model, label) {
+
+                self.project.properties.program_id = item.id;
+
+            };
+
+            self.unsetProgram = function() {
+
+                self.project.properties.program_id = null;
+
+                self.program = null;
+
+            };
+
             self.scrubProject = function() {
 
                 delete self.project.properties.geographies;
                 delete self.project.properties.practices;
+                delete self.project.properties.program;
                 delete self.project.properties.sites;
                 delete self.project.properties.tags;
 
@@ -196,20 +261,42 @@ angular.module('FieldDoc')
 
             self.saveProject = function() {
 
-                self.scrubProject();
+                self.status.processing = true;
 
-                self.project.properties.programs = self.processRelations(self.tempPrograms);
+                self.scrubProject();
 
                 self.project.properties.partners = self.processRelations(self.tempPartners);
 
                 self.project.properties.workflow_state = "Draft";
 
-                self.project.$update().then(function(response) {
+                self.project.$update().then(function(successResponse) {
 
-                    $location.path('/projects/' + self.project.id);
+                    self.processFeature(successResponse);
 
-                }).then(function(error) {
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Project changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                }).catch(function(error) {
+
                     // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong and the changes could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
                 });
 
             };
@@ -239,7 +326,7 @@ angular.module('FieldDoc')
                         'prompt': 'OK'
                     });
 
-                    $timeout(closeRoute, 2000);
+                    $timeout(self.closeRoute, 2000);
 
                 }).catch(function(errorResponse) {
 
@@ -274,7 +361,7 @@ angular.module('FieldDoc')
 
                     }
 
-                    $timeout(closeAlerts, 2000);
+                    $timeout(self.closeAlerts, 2000);
 
                 });
 

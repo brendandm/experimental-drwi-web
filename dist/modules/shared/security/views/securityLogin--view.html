@@ -14,7 +14,7 @@
                 <span class="meta-label">Email</span>
                 <input type="text" class="form-control" id="email" name="email" placeholder="&hellip;" data-ng-model="page.login.email" required="required" tabindex="1" autofocus />
                 <p style="margin-top: 0.5em;">
-                    <a href="/account/register" tabindex="2">
+                    <a href="/register" tabindex="2">
                         Need an account?
                     </a>
                 </p>
@@ -24,14 +24,14 @@
                 <span class="meta-label">Password</span>
                 <input type="password" class="form-control" id="password" name="password" placeholder="&hellip;" data-ng-model="page.login.password" required="required" tabindex="3" />
                 <p style="margin-top: 0.5em;">
-                    <a href="/account/reset" tabindex="4">
+                    <a href="/reset" tabindex="4">
                         Forgot your password?
                     </a>
                 </p>
             </div>
 
             <div class="save--action--wrapper save--action--bottom">
-                <span>Log in</span>
+                <!-- <span>Log in</span> -->
                 <button type="submit" data-ng-disabled="page.login.processing || !page.login.email || !page.login.password" tabindex="5">
                     <i class="material-icons" data-ng-if="page.login.processing">
                         more_horiz
@@ -42,18 +42,26 @@
                 </button>
             </div>
 
-            <div class="transient--notification" data-ng-class="{show: $root.alerts.length}">
+            <!-- <div class="transient--notification" data-ng-class="{show: $root.alerts.length}">
                 <div class="event--container">
                     <div data-ng-repeat="alert in $root.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
                         <span class="event--message">{{ alert.msg }}</span>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </form>
 
     </div>
 
+    <div class="transient--notification" data-ng-class="{show: $root.alerts.length}">
+        <div class="event--container">
+            <div data-ng-repeat="alert in $root.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                <span class="event--message">{{ alert.msg }}</span>
+            </div>
+        </div>
+    </div>
+
 </main>
 
-<div data-ng-include="'/templates/footer--view.html'"></div>
+<div class="dark-footer" style="padding-bottom: 2em; background-color: #252f3a;" data-ng-include="'/templates/footer--view.html'"></div>

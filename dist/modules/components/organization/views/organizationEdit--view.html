@@ -8,7 +8,7 @@
 
         <h1 class="inset">Organization</h1>
 
-        <div class="main--ui" data-ng-if="page.organization.id">
+        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && page.organization.id">
 
             <form role="form" class="form snackbar-container" method="POST" id="form" name="form" data-ng-submit="page.saveOrganization()">
 
@@ -20,6 +20,9 @@
                 <div class="form-element">
                     <span class="meta-label"><b>Description</b></span>
                     <textarea rows="10" data-ng-model="page.organization.description" class="form-control animate" msd-elastic id="description" name="description" placeholder="Description" maxlength="500" tabindex="2">{{ page.organization.description }}</textarea>
+                    <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
+                        Descriptions may contain up to 500 characters, including spaces and punctuation. <strong>({{ (page.organization.description.length || 0) | number }} used)</strong>
+                    </p>
                 </div>
 
                 <div class="form-element">
@@ -33,8 +36,7 @@
                 </div>
 
                 <div class="save--action--wrapper save--action--bottom" style="position: relative; z-index: 9999;">
-                    <span>Save organization</span>
-                    <button type="submit" tabindex="5">
+                    <button type="submit" data-ng-disabled="page.status.processing" tabindex="5">
                         <i class="material-icons" data-ng-if="page.status.processing">
                             more_horiz
                         </i>
@@ -44,19 +46,11 @@
                     </button>
                 </div>
 
-                <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
-                    <div class="event--container">
-                        <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
-                            <span class="event--message">{{ alert.msg }}</span>
-                        </div>
-                    </div>
-                </div>
-
             </form>
 
         </div>
 
-        <div class="main--ui" data-ng-if="!page.organization.id">
+        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.organization.id">
 
             <form role="form" class="form snackbar-container" method="POST" id="form" name="form" data-ng-submit="page.assignOrganization()">
 
@@ -69,8 +63,7 @@
                 </div>
 
                 <div class="save--action--wrapper save--action--bottom" style="position: relative; z-index: 9999;">
-                    <span>Save organization</span>
-                    <button type="submit" tabindex="2">
+                    <button type="submit" data-ng-disabled="page.status.processing" tabindex="2">
                         <i class="material-icons" data-ng-if="page.status.processing">
                             more_horiz
                         </i>
@@ -92,6 +85,14 @@
 
         </div>
 
+    </div>
+
+    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+        <div class="event--container">
+            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                <span class="event--message">{{ alert.msg }}</span>
+            </div>
+        </div>
     </div>
 
 </main>

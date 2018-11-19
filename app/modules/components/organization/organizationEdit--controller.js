@@ -16,6 +16,11 @@ angular.module('FieldDoc')
                 'organization': true
             };
 
+            self.status = {
+                loading: true,
+                processing: false
+            };
+
             self.alerts = [];
 
             function closeAlerts() {
@@ -38,7 +43,7 @@ angular.module('FieldDoc')
 
                     self.permissions = {
                         isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0].properties.name,
+                        role: $rootScope.user.properties.roles[0],
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                     };
 
@@ -63,22 +68,10 @@ angular.module('FieldDoc')
 
 
             } else {
-                //
-                // If there is not Account.userObject and no user object, then the
-                // user is not properly authenticated and we should send them, at
-                // minimum, back to the projects page, and have them attempt to
-                // come back to this page again.
-                //
-                $location.path('/account/login');
+
+                $location.path('/login');
 
             }
-
-            //
-            //
-            //
-            self.status = {
-                'processing': false
-            };
 
             self.saveOrganization = function() {
 
@@ -93,7 +86,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Successfully updated your organization profile.',
+                        'msg': 'Organization profile updated.',
                         'prompt': 'OK'
                     }];
 
@@ -108,7 +101,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Unable to update your organization profile.',
+                        'msg': 'Unable to update organization profile.',
                         'prompt': 'OK'
                     }];
 
@@ -124,8 +117,7 @@ angular.module('FieldDoc')
 
                 delete self.organization.creator;
                 delete self.organization.last_modified_by;
-                delete self.organization.project;
-                delete self.organization.snapshots;
+                delete self.organization.dashboards;
 
                 console.log('self.organization', self.organization);
 
@@ -154,9 +146,13 @@ angular.module('FieldDoc')
 
                     }
 
+                    self.status.loading = false;
+
                 }, function(errorResponse) {
 
                     console.error('Unable to load organization.');
+
+                    self.status.loading = false;
 
                 });
 
@@ -175,7 +171,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                    $rootScope.user = Account.userObject = self.user = successResponse;
+                    self.user = successResponse;
 
                     if (self.user.properties.organization) {
 
@@ -234,11 +230,11 @@ angular.module('FieldDoc')
 
             self.searchOrganizations = function(value) {
 
-                return SearchService.organizations({
+                return SearchService.organization({
                     q: value
                 }).$promise.then(function(response) {
 
-                    console.log('SearchService.organizations response', response);
+                    console.log('SearchService.organization response', response);
 
                     response.results.forEach(function(result) {
 

@@ -89,11 +89,12 @@ h6.rule-above.statistics--header {
 
   .statistic--chart {
     //background-color: #535A63;
-    background-color: #e0e0e0;
+    background-color: rgba(0,0,0,0.2);
     border-radius: 6px;
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
-    height: 12px;
+    height: 8px;
+    margin-top: 1em;
 
     .statistic--chart--value {
       background-color: #00DBB0;
@@ -101,9 +102,9 @@ h6.rule-above.statistics--header {
       -webkit-border-radius: 6px;
       -moz-border-radius: 6px;
       -webkit-transition: width 2s;
-      height: 12px;
-      min-width: 12px;
-      width: 12px;
+      height: 8px;
+      //min-width: 8px;
+      width: 8px;
       max-width: 100%;
     }
   }

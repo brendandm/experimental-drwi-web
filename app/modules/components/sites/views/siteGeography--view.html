@@ -1,22 +1,38 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main class="site--content--flow fluid-content clearfix distinguish" save2pdf>
+<main class="site--content--flow fluid-content clearfix distinguish">
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
+    <div class="content--container reveal fade-in t0" style="border-right: 1px solid #e0e0e0;">
 
-        <div class="main--ui">
+        <div class="progress--modal" data-ng-if="page.status.loading">
+            <div class="progress--container">
+                <p style="font-weight: bold;" class="color-pulse">Loading geography data&hellip;</p>
+            </div>
+        </div>
 
-            <div class="throbber throbber-small" data-ng-if="page.status.loading"></div>
+        <section class="privacy-message reveal fade-in t0" data-ng-if="!page.status.loading && page.makePrivate">
 
-            <section style="padding: 0;" data-ng-if="!page.status.loading">
+            <p>
+                <i class="material-icons">
+                    lock
+                </i>
+            </p>
+
+            <p>This site is private.</p>
+
+        </section>
+
+        <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
+
+            <section style="padding: 0;" data-ng-if="!page.status.loading && page.nodes.geographies.length">
 
                 <h2>Target Areas</h2>
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="geography in page.nodes.geographies | orderBy: 'name'">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="geography in page.nodes.geographies | orderBy: 'name'">
 
                         <div class="card--content">
 
@@ -33,7 +49,7 @@
 
                                 <p>{{ (geography.description || 'No description') | truncate:80 }}</p>
 
-                                <div class="actions">
+                                <!-- <div class="actions">
                                     <a class="snapshot--title" href="/geographies/{{ geography.id }}" title="Geography summary">
                                         <i class="material-icons">
                                             dashboard
@@ -44,7 +60,8 @@
                                             edit
                                         </i>
                                     </a>
-                                </div>
+                                </div> -->
+                                
                                 <span><time datetime="{{ geography.created_on }}" title="{{ geography.created_on }}">
                                         Created on {{ geography.created_on | date }}</time></span>
                             </div>
@@ -53,7 +70,7 @@
 
                     </li>
 
-                    <li class="card">
+                    <li class="card" data-ng-if="page.permissions.can_edit">
                         <div class="card--content">
                             <div class="body">
                                 <button type="button" class="snapshot--title" data-ng-click="page.createGeography()" title="Create geography">
@@ -69,13 +86,13 @@
 
             </section>
 
-            <section style="padding: 0;" data-ng-if="!page.status.loading">
+            <section style="padding: 0;" data-ng-if="!page.status.loading && page.nodes.watersheds.length">
 
                 <h2>Watersheds</h2>
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="geography in page.nodes.watersheds | orderBy: 'classification'">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="geography in page.nodes.watersheds | orderBy: 'classification'">
 
                         <div class="card--content">
 
@@ -96,13 +113,13 @@
 
             </section>
 
-            <section style="padding: 0;" data-ng-if="!page.status.loading">
+            <section style="padding: 0;" data-ng-if="!page.status.loading && page.nodes.counties.length">
 
                 <h2>Counties</h2>
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="geography in page.nodes.counties | orderBy: 'name'">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="geography in page.nodes.counties | orderBy: 'name'">
 
                         <div class="card--content">
 
@@ -126,7 +143,7 @@
 
     </div>
 
-    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
+    <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li>
                 <a href="/sites/{{ page.site.id }}">
@@ -153,6 +170,13 @@
                 <a href="/sites/{{ page.site.id }}/geographies">
                     <i class="material-icons">
                         public
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
+                <a href="/sites/{{ page.site.id }}/tags">
+                    <i class="material-icons">
+                        local_offer
                     </i>
                 </a>
             </li>

@@ -6,6 +6,12 @@
 
     <div class="content--container">
 
+        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
+            <div class="progress--container">
+                <p style="font-weight: bold;" class="color-pulse">Loading your projects&hellip;</p>
+            </div>
+        </div>
+
         <h1 class="inset">Projects</h1>
 
         <div class="main--ui">
@@ -19,28 +25,31 @@
                 </a>
             </div>
 
-            <div style="position: relative;" class="progress--modal" data-ng-if="page.loading">
-                <div class="progress--container">
-                    <p><strong>Loading your projects&hellip;</strong></p>
-                    <div class="progress--meter--bar--wrapper">
-                        <div class="progress--meter--bar" style="width: {{ page.progressValue }}%;"></div>
-                    </div>
-                </div>
+            <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">You have <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
+
+            <p data-ng-if="!page.status.loading && !page.selectedProgram.id && ($root.user.properties.is_admin || $root.user.properties.is_manager)">You have <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
+
+            <p data-ng-if="!page.status.loading && page.selectedProgram.id > 0 && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There are <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize> in this program.</p>
+
+            <div class="collection-filter" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">
+                <form name="myForm">
+                    <label for="programFilter"><strong>Filter by program:</strong></label>
+                    <select name="programFilter" id="programFilter"
+                        data-ng-options="program.properties.name for program in $root.user.properties.programs track by program.id"
+                        data-ng-model="page.selectedProgram"
+                        data-ng-change="page.loadProjects()">
+                        <option value="">All programs</option>
+                    </select>
+                </form>
             </div>
 
-            <p data-ng-if="!page.loading">You have <strong>{{ (page.filteredProjects.length | number) || 0 }}</strong> <ng-pluralize count="page.filteredProjects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
-
-            <div class="features--container" data-ng-if="!page.loading">
+            <div class="features--container" data-ng-if="!page.status.loading">
 
                 <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
-                    <li class="card" data-ng-repeat="project in page.filteredProjects | orderBy:'-modified_on' | filter: page.q">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="project in page.projects | orderBy:'-modified_on' | filter: page.q">
 
                         <div class="card--content">
-
-                            <!-- <div class="name">
-                                <span>{{ project.name }}</span>
-                            </div> -->
 
                             <img data-ng-if="project.staticURL" data-ng-src="{{ project.staticURL }}" width="auto" height="auto" />
 
@@ -62,7 +71,7 @@
                                         </a>
                                     </div>
                                 </div>
-                                <p>{{ project.description | truncate:80 }}</p>
+                                <p>{{ (project.description || 'No description') | truncate:80 }}</p>
                                 <div class="actions">
                                     <a class="snapshot--title" href="/projects/{{ project.id }}" title="Project summary">
                                         <i class="material-icons">
@@ -86,18 +95,6 @@
                         </div>
                         
                     </li>
-
-                    <!-- <li class="card">
-                        <div class="card--content">
-                            <div class="body">
-                                <button type="button" class="snapshot--title" data-ng-click="page.createSite()" title="Create site">
-                                    <i class="material-icons">
-                                        add
-                                    </i>
-                                </button>
-                            </div>
-                        </div>
-                    </li> -->
 
                 </ul>
 

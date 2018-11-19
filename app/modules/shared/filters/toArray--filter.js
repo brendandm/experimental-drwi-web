@@ -2,28 +2,28 @@
 
 /**
  * @ngdoc function
- * @name FieldDoc.controller:MainCtrl
+ * @name FieldDoc.controller:MainController
  * @description
- * # MainCtrl
+ * # MainController
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-  .filter('toArray', function(){
+    .filter('toArray', function() {
 
-    //
-    // This function transforms a dictionary or object into an array
-    // so that we can use Filters, OrderBy, and other repeater functionality
-    // with structured objects.
-    //
-    return  function(object) {
-      
-      var result = [];
+        //
+        // This function transforms a dictionary or object into an array
+        // so that we can use Filters, OrderBy, and other repeater functionality
+        // with structured objects.
+        //
+        return function(object) {
 
-      angular.forEach(object, function(value) {
-        result.push(value);
-      });
-      
-      return result;
-    };
+            var result = [];
 
-  });
+            angular.forEach(object, function(value) {
+                result.push(value);
+            });
+
+            return result;
+        };
+
+    });

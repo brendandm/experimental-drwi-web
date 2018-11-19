@@ -8,11 +8,11 @@
      * @description
      */
     angular.module('FieldDoc')
-        .config(function($routeProvider, commonscloud) {
+        .config(function($routeProvider, environment) {
 
             $routeProvider
                 .when('/account', {
-                    templateUrl: '/modules/components/account/views/accountEdit--view.html',
+                    templateUrl: '/modules/components/account/views/accountEdit--view.html?t=' + environment.version,
                     controller: 'AccountEditViewController',
                     controllerAs: 'page',
                     resolve: {
@@ -22,9 +22,6 @@
 
                             return Account.getUser();
 
-                        },
-                        snapshots: function(Snapshot) {
-                            return Snapshot.query();
                         }
                     }
                 });

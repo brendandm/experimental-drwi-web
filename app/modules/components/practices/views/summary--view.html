@@ -6,7 +6,25 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <div class="main--ui">
+        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
+            <div class="progress--container">
+                <p style="font-weight: bold;" class="color-pulse">Loading practice data&hellip;</p>
+            </div>
+        </div>
+
+        <section class="privacy-message reveal fade-in t0" data-ng-if="!page.status.loading && page.makePrivate">
+
+            <p>
+                <i class="material-icons">
+                    lock
+                </i>
+            </p>
+
+            <p>This practice is private.</p>
+
+        </section>
+
+        <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
 
             <div class="module--grid">
 
@@ -14,7 +32,7 @@
 
                     <!-- Descriptors -->
 
-                    <article class="pad space-right shadow">
+                    <article class="pad space-right shadow reveal fade-in t0">
 
                         <h1>{{ page.practice.properties.name || 'Un-named' }}</h1>
 
@@ -30,6 +48,10 @@
                             <strong>Practice Type:</strong> {{ page.practice.properties.category.properties.name }}
                         </p>
 
+                        <p data-ng-if="page.practice.properties.area && page.practice.properties.area > 0">
+                            <strong>Area:</strong> {{ page.practice.properties.area | convertArea:'acre' | number:2 }} acres</a>
+                        </p>
+
                         <p data-ng-if="page.practice.properties.description" data-ng-bind-html="page.practice.properties.description"></p>
 
                         <p data-ng-if="!page.practice.properties.description">{{ page.practice.properties.category.properties.description }}</p>
@@ -38,7 +60,7 @@
 
                     <!-- Map -->
 
-                    <div style="position:relative;">
+                    <div class="shadow reveal fade-in t1" style="position:relative;">
 
                         <leaflet id="practice--map" class="map tall" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers"></leaflet>
 
@@ -46,7 +68,7 @@
 
                 </div>
 
-                <div class="group">
+                <div class="group reveal fade-in t2">
 
                     <section class="pad shadow">
 
@@ -139,13 +161,13 @@
 
             </div>
 
-            <section style="padding: 0;">
+            <section class="reveal fade-in t3" style="padding: 0;">
 
                 <h2>Reports</h2>
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="report in page.practice.properties.readings_custom | orderBy:'properties.report_date':false">
+                    <li class="card" data-ng-repeat="report in page.practice.properties.reports | orderBy:'properties.report_date':false">
 
                         <div class="card--content">
 
@@ -168,12 +190,12 @@
                                 </div>
                                 <p>{{ (report.properties.notes || 'No notes recorded for this date') | truncate:80 }}</p>
                                 <div class="actions">
-                                    <a class="snapshot--title" href="/practices/{{ page.practice.id }}/{{ report.properties.id }}/edit" title="Edit report">
+                                    <a class="snapshot--title" href="/reports/{{ report.properties.id }}/edit" title="Edit report" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             edit
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="#" title="Delete report" data-ng-click="page.confirmDelete(report, 'report')">
+                                    <a class="snapshot--title" href="#" title="Delete report" data-ng-click="page.confirmDelete(report, 'report')" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             delete
                                         </i>
@@ -187,7 +209,7 @@
 
                     </li>
 
-                    <li class="card">
+                    <li class="card" data-ng-if="page.permissions.can_edit">
                         <div class="card--content">
                             <div class="body">
                                 <button type="button" class="snapshot--title" data-ng-click="page.addReading('Planning')" title="Create practice">
@@ -207,7 +229,7 @@
 
     </div>
 
-    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
+    <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li data-ng-class="{active: $root.toolbarState.dashboard}">
                 <a href="/practices/{{ page.practice.id }}">
@@ -223,7 +245,7 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
+            <li data-ng-if="page.permissions.can_edit && page.practice.properties.category" data-ng-class="{active: $root.toolbarState.editLocation}">
                 <a href="/practices/{{ page.practice.properties.id }}/location">
                     <i class="material-icons">
                         location_on
@@ -234,6 +256,13 @@
                 <a href="/practices/{{ page.practice.properties.id }}/photos">
                     <i class="material-icons">
                         insert_photo
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
+                <a href="/practices/{{ page.practice.properties.id }}/tags">
+                    <i class="material-icons">
+                        local_offer
                     </i>
                 </a>
             </li>

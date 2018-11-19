@@ -4,16 +4,16 @@
 
     /**
      * @ngdoc function
-     * @name FieldDoc.controller:SiteEditCtrl
+     * @name FieldDoc.controller:SiteEditController
      * @description
-     * # SiteEditCtrl
+     * # SiteEditController
      * Controller of the FieldDoc
      */
     angular.module('FieldDoc')
-        .controller('SiteEditCtrl',
+        .controller('SiteEditController',
             function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
-                Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, Segment,
-                $timeout, $interval, user, Shapefile) {
+                Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope,
+                $timeout, $interval, user, Shapefile, Utility) {
 
                 var self = this;
 
@@ -23,49 +23,50 @@
 
                 $rootScope.page = {};
 
-                site.$promise.then(function(successResponse) {
+                self.status = {
+                    loading: true,
+                    processing: false
+                };
 
-                    console.log('self.site', successResponse);
+                self.showElements = function() {
 
-                    self.site = successResponse;
+                    $timeout(function() {
 
-                    $rootScope.page.title = self.site.properties.name;
+                        self.status.loading = false;
 
-                    //
-                    // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
-                    // selected their property, so we just need to display it on the map for them again.
-                    //
-                    // if (self.site && self.site.properties && self.site.properties.segment) {
-                    //     self.geolocation.drawSegment(self.site.properties.segment);
-                    // }
+                        self.status.processing = false;
 
-                    //
-                    // Verify Account information for proper UI element display
-                    //
-                    if (Account.userObject && user) {
-                        user.$promise.then(function(userResponse) {
-                            $rootScope.user = Account.userObject = userResponse;
+                    }, 1000);
 
-                            self.permissions = {
-                                isLoggedIn: Account.hasToken(),
-                                role: $rootScope.user.properties.roles[0].properties.name,
-                                account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                                can_edit: Account.canEdit(self.site.properties.project)
-                            };
-                        });
-                    }
-
-                }, function(errorResponse) {
-
-                });
+                };
 
                 self.saveSite = function() {
 
+                    self.status.processing = true;
+
                     self.site.$update().then(function(successResponse) {
 
-                        $location.path('/sites/' + $route.current.params.siteId);
+                        self.site = successResponse;
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Site changes saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
 
                     }, function(errorResponse) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong and the changes could not be saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
 
                     });
 
@@ -76,6 +77,8 @@
                 function closeAlerts() {
 
                     self.alerts = [];
+
+                    self.status.processing = false;
 
                 }
 
@@ -152,6 +155,60 @@
                     });
 
                 };
+
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+
+                    user.$promise.then(function(userResponse) {
+
+                        $rootScope.user = Account.userObject = userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0],
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                            can_edit: false
+                        };
+
+                        site.$promise.then(function(successResponse) {
+
+                            console.log('self.site', successResponse);
+
+                            self.site = successResponse;
+
+                            if (successResponse.permissions.read &&
+                                successResponse.permissions.write) {
+
+                                self.makePrivate = false;
+
+                            } else {
+
+                                self.makePrivate = true;
+
+                            }
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            $rootScope.page.title = self.site.properties.name;
+
+                            self.showElements();
+
+                        }, function(errorResponse) {
+
+                            self.showElements();
+
+                        });
+
+                    });
+
+                } else {
+
+                    $location.path('/login');
+
+                }
 
             });
 

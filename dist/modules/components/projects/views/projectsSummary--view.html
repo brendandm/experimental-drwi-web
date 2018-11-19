@@ -1,20 +1,36 @@
 <div data-ng-include="'/templates/header--view.html'"></div>
 
-<main class="site--content--flow fluid-content clearfix distinguish" save2pdf>
+<main class="site--content--flow fluid-content clearfix distinguish">
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container geographic--feature" style="border-right: 1px solid #e0e0e0;">
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <div class="main--ui">
+        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
+            <div class="progress--container">
+                <p style="font-weight: bold;" class="color-pulse">Loading project data&hellip;</p>
+            </div>
+        </div>
 
-            <div class="throbber throbber-small" data-ng-if="page.status.loading"></div>
+        <section class="privacy-message reveal fade-in t0" data-ng-if="!page.status.loading && page.makePrivate">
 
-            <div class="module--grid" data-ng-if="!page.status.loading">
+            <p>
+                <i class="material-icons">
+                    lock
+                </i>
+            </p>
+
+            <p>This project is private.</p>
+
+        </section>
+
+        <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
+
+            <div class="module--grid">
 
                 <div class="group">
 
-                    <article class="pad space-right shadow">
+                    <article class="pad space-right shadow reveal fade-in t0">
 
                         <h1>{{ page.project.properties.name }}</h1>
 
@@ -72,13 +88,13 @@
 
                     </article>
 
-                    <div class="map--module" style="position:relative;">
+                    <div class="map--module shadow reveal fade-in t1" style="position:relative;">
                         <leaflet id="project--map" class="map tall" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds" markers="page.map.markers"></leaflet>
                     </div>
 
                 </div>
 
-                <div class="group">
+                <div class="group reveal fade-in t2">
 
                     <section class="pad shadow">
 
@@ -183,7 +199,7 @@
 
             </div>
 
-            <section style="padding: 0;">
+            <section class="reveal fade-in t3" style="padding: 0;">
 
                 <h2>Sites</h2>
 
@@ -216,24 +232,24 @@
                                         </a>
                                     </div>
                                 </div>
-                                <p data-ng-if="site.properties.description">{{ site.properties.description | truncate:80 }}</p>
+                                <p>{{ (site.properties.description || 'No description') | truncate:80 }}</p>
                                 <div class="actions">
                                     <a class="snapshot--title" href="/sites/{{ site.properties.id }}" title="Site summary">
                                         <i class="material-icons">
                                             dashboard
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/edit" title="Edit site">
+                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/edit" title="Edit site" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             edit
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/location" title="Edit location">
+                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/location" title="Edit location" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             location_on
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="#" title="Delete site" data-ng-click="page.confirmDelete(site, 'site')">
+                                    <a class="snapshot--title" href="#" title="Delete site" data-ng-click="page.confirmDelete(site, 'site')" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             delete
                                         </i>
@@ -246,7 +262,7 @@
 
                     </li>
 
-                    <li class="card">
+                    <li class="card" data-ng-if="page.permissions.can_edit">
                         <div class="card--content">
                             <div class="body">
                                 <button type="button" class="snapshot--title" data-ng-click="page.createSite()" title="Create site">
@@ -266,7 +282,7 @@
 
     </div>
 
-    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
+    <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li data-ng-class="{active: $root.toolbarState.dashboard}">
                 <a href="/projects/{{ page.project.id }}">
@@ -286,6 +302,13 @@
                 <a href="/projects/{{ page.project.id }}/edit">
                     <i class="material-icons">
                         edit
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
+                <a href="/projects/{{ page.project.id }}/tags">
+                    <i class="material-icons">
+                        local_offer
                     </i>
                 </a>
             </li>

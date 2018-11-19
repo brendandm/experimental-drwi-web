@@ -23,5 +23,6 @@ angular
     'Mapbox',
     'save2pdf',
     'collaborator',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'angular-progress-arc'
   ]);

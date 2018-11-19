@@ -1,0 +1,105 @@
+//
+// Loading behavior
+//
+
+.t0 {
+    animation-delay: 0s;
+}
+
+.t1 {
+    animation-delay: 0.25s;
+}
+
+.t2 {
+    animation-delay: 0.5s;
+}
+
+.t3 {
+    animation-delay: 1s;
+}
+
+.t4 {
+    animation-delay: 1.25s;
+}
+
+.t5 {
+    animation-delay: 1.5s;
+}
+
+.t6 {
+    animation-delay: 1.75s;
+}
+
+.t7 {
+    animation-delay: 2s;
+}
+
+.t8 {
+    animation-delay: 2.25s;
+}
+
+.t9 {
+    animation-delay: 2.5s;
+}
+
+.t10 {
+    animation-delay: 3s;
+}
+
+.reveal {
+    -webkit-animation-fill-mode: both;
+    -moz-animation-fill-mode: both;
+    -ms-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-duration: 1s;
+    -moz-animation-duration: 1s;
+    -ms-animation-duration: 1s;
+    animation-duration: 1s;
+    opacity: 0;
+}
+
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@-o-keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    -webkit-animation-name: fadeIn;
+    -moz-animation-name: fadeIn;
+    animation-name: fadeIn;
+}

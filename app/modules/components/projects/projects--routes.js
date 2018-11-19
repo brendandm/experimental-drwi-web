@@ -9,18 +9,37 @@
  * Main module of the application.
  */
 angular.module('FieldDoc')
-    .config(function($routeProvider, commonscloud) {
+    .config(function($routeProvider, environment) {
 
         $routeProvider
             .when('/projects', {
-                templateUrl: '/modules/components/projects/views/projectsList--view.html',
-                controller: 'ProjectsCtrl',
+                templateUrl: '/modules/components/projects/views/projectsList--view.html?t=' + environment.version,
+                controller: 'ProjectsController',
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
-                    projects: function($location, Project) {
+                    projects: function($location, Project, $rootScope) {
 
-                        return Project.collection({});
+                        var params = $location.search(),
+                            data = {};
+
+                        if ($rootScope.programContext !== null &&
+                            typeof $rootScope.programContext !== 'undefined') {
+
+                            data.program = $rootScope.programContext;
+
+                            $location.search('program', $rootScope.programContext);
+
+                        } else if (params.program !== null &&
+                            typeof params.program !== 'undefined') {
+
+                            data.program = params.program;
+
+                            $rootScope.programContext = params.program;
+
+                        }
+
+                        return Project.collection(data);
 
                     },
                     user: function(Account, $rootScope, $document) {
@@ -33,12 +52,12 @@ angular.module('FieldDoc')
 
                         return Account.userObject;
 
-                    },
+                    }
                 }
             })
             .when('/projects/:projectId', {
-                templateUrl: '/modules/components/projects/views/projectsSummary--view.html',
-                controller: 'ProjectSummaryCtrl',
+                templateUrl: '/modules/components/projects/views/projectsSummary--view.html?t=' + environment.version,
+                controller: 'ProjectSummaryController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -85,8 +104,8 @@ angular.module('FieldDoc')
                 }
             })
             .when('/projects/collection/new', {
-                templateUrl: '/modules/components/projects/views/projectsCreate--view.html',
-                controller: 'ProjectCreateCtrl',
+                templateUrl: '/modules/components/projects/views/projectsCreate--view.html?t=' + environment.version,
+                controller: 'ProjectCreateController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -103,8 +122,8 @@ angular.module('FieldDoc')
                 }
             })
             .when('/projects/:projectId/edit', {
-                templateUrl: '/modules/components/projects/views/projectsEdit--view.html',
-                controller: 'ProjectEditCtrl',
+                templateUrl: '/modules/components/projects/views/projectsEdit--view.html?t=' + environment.version,
+                controller: 'ProjectEditController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -126,8 +145,8 @@ angular.module('FieldDoc')
                 }
             })
             .when('/projects/:projectId/users', {
-                templateUrl: '/modules/components/projects/views/projectsUsers--view.html',
-                controller: 'ProjectUsersCtrl',
+                templateUrl: '/modules/components/projects/views/projectsUsers--view.html?t=' + environment.version,
+                controller: 'ProjectUsersController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -145,11 +164,40 @@ angular.module('FieldDoc')
                         return Project.get({
                             'id': $route.current.params.projectId
                         });
+                    }
+                }
+            })
+            .when('/projects/:projectId/tags', {
+                templateUrl: '/templates/featureTag--view.html?t=' + environment.version,
+                controller: 'FeatureTagController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
                     },
-                    members: function(Project, $route) {
-                        return Project.members({
-                            'id': $route.current.params.projectId
+                    featureCollection: function(Project) {
+
+                        return {
+                            name: 'project',
+                            path: '/projects',
+                            cls: Project
+                        }
+
+                    },
+                    feature: function(Project, $route) {
+
+                        return Project.get({
+                            id: $route.current.params.projectId
                         });
+
                     }
                 }
             });

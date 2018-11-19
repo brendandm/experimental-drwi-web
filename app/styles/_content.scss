@@ -322,28 +322,31 @@
 
 .site--footer--container {
   //background-color: $color-black-light;
-  background-color: #252f3a;
+  //background-color: #252f3a;
+  background-color: #fafafa;
   margin: 0;
   width: 100%;
+  border-top: 1px solid #e0e0e0;
 }
 
 .site--footer {
   box-sizing: border-box;
   margin: 0 auto;
   max-width: 80em;
-  padding: 4em;
+  padding: 2em 0;
 
   p {
     margin: 0;
     margin-bottom: 0.5em;
     padding: 0;
     text-align: center;
+    color: #424242;
 
     a {
-      color: #21cbf3;
+      //color: #21cbf3;
 
       &:hover {
-        color: #6adcf7;
+        //color: #6adcf7;
       }
 
     }
@@ -356,15 +359,22 @@
 
 }
 
-.snapshot {
+.snapshot,
+.dark-footer {
+
+  .site--footer--container {
+    background-color: #252f3a;
+    border-top: 0 none;
+  }
 
   .site--footer {
-    padding: 2em 4em;
+    padding: 2em 0;
 
     p {
       margin: 0;
       padding: 0;
       text-align: center;
+      color: #fafafa;
 
       a {
         color: #21cbf3;

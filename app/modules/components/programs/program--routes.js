@@ -1,0 +1,135 @@
+'use strict';
+
+/**
+ * @ngdoc overview
+ * @name FieldDoc
+ * @description
+ * # FieldDoc
+ *
+ * Main module of the application.
+ */
+angular.module('FieldDoc')
+    .config(function($routeProvider, environment) {
+
+        $routeProvider
+            .when('/programs', {
+                templateUrl: '/modules/components/programs/views/programList--view.html?t=' + environment.version,
+                controller: 'ProgramListController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    programs: function(Program, $route) {
+
+                        return Program.collection({});
+
+                    }
+                }
+            })
+            .when('/programs/:programId', {
+                templateUrl: '/modules/components/programs/views/programSummary--view.html?t=' + environment.version,
+                controller: 'ProgramSummaryController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $route, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        $rootScope.programContext = $route.current.params.programId;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    metrics: function(Program, $route) {
+                        return Program.metrics({
+                            id: $route.current.params.programId
+                        });
+                    },
+                    outcomes: function(Program, $route) {
+                        return Program.outcomes({
+                            id: $route.current.params.programId
+                        });
+                    },
+                    program: function(Program, $route) {
+                        return Program.get({
+                            id: $route.current.params.programId
+                        });
+                    }
+                }
+            })
+            .when('/programs/:programId/edit', {
+                templateUrl: '/modules/components/programs/views/programEdit--view.html?t=' + environment.version,
+                controller: 'ProgramEditController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $route, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        $rootScope.programContext = $route.current.params.programId;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    program: function(Program, $route) {
+                        return Program.get({
+                            id: $route.current.params.programId
+                        });
+                    }
+                }
+            })
+            .when('/programs/:programId/tags', {
+                templateUrl: '/templates/featureTag--view.html?t=' + environment.version,
+                controller: 'FeatureTagController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $route, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        $rootScope.programContext = $route.current.params.programId;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    featureCollection: function(Program) {
+
+                        return {
+                            name: 'program',
+                            path: '/programs',
+                            cls: Program
+                        }
+
+                    },
+                    feature: function(Program, $route) {
+
+                        return Program.get({
+                            id: $route.current.params.programId
+                        });
+
+                    }
+                }
+            });
+
+    });

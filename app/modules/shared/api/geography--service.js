@@ -9,7 +9,7 @@
      */
     angular.module('FieldDoc')
         .service('GeographyService', function(environment, Preprocessors, $resource) {
-            return $resource(environment.apiUrl.concat('/v1/data/program/:id/geographies'), {
+            return $resource(environment.apiUrl.concat('/v1/data/geography/:id'), {
                 id: '@id'
             }, {
                 query: {

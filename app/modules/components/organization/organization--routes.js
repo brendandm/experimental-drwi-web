@@ -8,11 +8,11 @@
      * @description
      */
     angular.module('FieldDoc')
-        .config(function($routeProvider, commonscloud) {
+        .config(function($routeProvider, environment) {
 
             $routeProvider
                 .when('/organization', {
-                    templateUrl: '/modules/components/organization/views/organizationEdit--view.html',
+                    templateUrl: '/modules/components/organization/views/organizationEdit--view.html?t=' + environment.version,
                     controller: 'OrganizationEditViewController',
                     controllerAs: 'page',
                     resolve: {

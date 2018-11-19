@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProjectCreateCtrl',
+    .controller('ProjectCreateController',
         function(Account, $location, $log, Project, $rootScope, $route, user, SearchService) {
 
             var self = this;
@@ -32,7 +32,7 @@ angular.module('FieldDoc')
 
                     self.permissions = {
                         isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0].properties.name,
+                        role: $rootScope.user.properties.roles[0],
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                     };
 
@@ -46,11 +46,11 @@ angular.module('FieldDoc')
 
             self.searchPrograms = function(value) {
 
-                return SearchService.programs({
+                return SearchService.program({
                     q: value
                 }).$promise.then(function(response) {
 
-                    console.log('SearchService.programs response', response);
+                    console.log('SearchService.program response', response);
 
                     response.results.forEach(function(result) {
 
@@ -66,11 +66,11 @@ angular.module('FieldDoc')
 
             self.searchOrganizations = function(value) {
 
-                return SearchService.organizations({
+                return SearchService.organization({
                     q: value
                 }).$promise.then(function(response) {
 
-                    console.log('SearchService.organizations response', response);
+                    console.log('SearchService.organization response', response);
 
                     response.results.forEach(function(result) {
 
@@ -145,11 +145,25 @@ angular.module('FieldDoc')
 
             };
 
+            self.setProgram = function(item, model, label) {
+
+                self.project.program_id = item.id;
+
+            };
+
+            self.unsetProgram = function() {
+
+                self.project.program_id = null;
+
+                self.program = null;
+
+            };
+
             self.saveProject = function() {
 
                 var project = new Project(self.project);
 
-                project.programs = self.processRelations(self.tempPrograms);
+                // project.programs = self.processRelations(self.tempPrograms);
 
                 project.partners = self.processRelations(self.tempPartners);
 

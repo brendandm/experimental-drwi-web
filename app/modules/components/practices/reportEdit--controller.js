@@ -8,14 +8,13 @@
      * @description
      */
     angular.module('FieldDoc')
-        .controller('CustomFormController',
-            function(Account, leafletData, $location, metric_types,
-                monitoring_types, practice, PracticeCustom, PracticeCustomReading, PracticeCustomMetric,
-                PracticeCustomMonitoring, practice_types, report, $rootScope, $route, $scope,
-                unit_types, user, Utility, $timeout, report_metrics) {
+        .controller('ReportEditController',
+            function(Account, $location, MetricType, monitoring_types,
+                Practice, Report, ReportMetric, ReportMonitoring, report,
+                $rootScope, $route, $scope, unit_types, user, Utility,
+                $timeout, report_metrics, $filter, $interval, Program) {
 
-                var self = this,
-                    practiceId = $route.current.params.practiceId;
+                var self = this;
 
                 self.measurementPeriods = [{
                         'name': 'Installation',
@@ -35,6 +34,7 @@
 
                 self.status = {
                     loading: true,
+                    processing: true,
                     readings: {
                         loading: false
                     },
@@ -46,15 +46,53 @@
                     }
                 };
 
+                self.alerts = [];
+
+                function closeAlerts() {
+
+                    self.alerts = [];
+
+                }
+
+                function closeRoute() {
+
+                    $location.path('/practices/' + self.practice.id);
+
+                }
+
+                self.confirmDelete = function(obj) {
+
+                    console.log('self.confirmDelete', obj);
+
+                    self.deletionTarget = self.deletionTarget ? null : obj;
+
+                };
+
+                self.cancelDelete = function() {
+
+                    self.deletionTarget = null;
+
+                };
+
+                self.showElements = function() {
+
+                    $timeout(function() {
+
+                        self.status.loading = false;
+
+                        self.status.processing = false;
+
+                    }, 1000);
+
+                };
+
                 unit_types.$promise.then(function(successResponse) {
 
                     console.log('Unit types', successResponse);
 
                     var _unitTypes = [];
 
-                    successResponse.features.forEach(function(unit) {
-
-                        var datum = unit.properties;
+                    successResponse.features.forEach(function(datum) {
 
                         datum.name = datum.plural;
 
@@ -70,79 +108,93 @@
 
                 });
 
+                self.loadMetrics = function() {
+
+                    Report.metrics({
+                        id: $route.current.params.reportId
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Report metrics', successResponse);
+
+                        var _reportMetrics = [];
+
+                        successResponse.features.forEach(function(metric) {
+
+                            var datum = self.processMetric(metric);
+
+                            _reportMetrics.push(datum);
+
+                        });
+
+                        self.reportMetrics = _reportMetrics;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+                self.processReport = function(data) {
+
+                    self.report = data;
+
+                    self.loadMetrics();
+
+                };
+
                 self.processMetric = function(metric) {
 
-                    var datum = metric.properties;
+                    var datum = metric.properties || metric;
 
-                    if (metric.properties.metric_type !== null) {
+                    if (datum.category !== null) {
 
-                        datum.metric_type = metric.properties.metric_type.properties;
-
-                    } else {
-
-                        datum.metric_type = null;
-
-                    }
-
-                    if (metric.properties.metric_unit !== null) {
-
-                        datum.metric_unit = metric.properties.metric_unit.properties;
-
-                        datum.metric_unit.name = datum.metric_unit.plural;
+                        datum.category = datum.category.properties;
 
                     } else {
 
-                        datum.metric_unit = null;
+                        datum.category = null;
 
                     }
+
+                    // if (datum.metric_unit !== null) {
+
+                    //     datum.metric_unit = datum.metric_unit.properties;
+
+                    //     datum.metric_unit.name = datum.metric_unit.plural;
+
+                    // } else {
+
+                    //     datum.metric_unit = null;
+
+                    // }
 
                     return datum;
 
                 };
 
-                metric_types.$promise.then(function(successResponse) {
+                self.loadMetricTypes = function(datum) {
 
-                    console.log('Metric types', successResponse);
+                    Program.metricTypes({
+                        id: datum.properties.program_id
+                    }).$promise.then(function(successResponse) {
 
-                    var _metricTypes = [];
+                        console.log('Metric types', successResponse);
 
-                    successResponse.features.forEach(function(metric) {
+                        self.metricTypes = successResponse.features;
 
-                        var datum = metric.properties;
+                        self.showElements();
 
-                        _metricTypes.push(datum);
+                    }, function(errorResponse) {
 
-                    });
+                        console.log('errorResponse', errorResponse);
 
-                    self.metricTypes = _metricTypes;
-
-                }, function(errorResponse) {
-
-                    console.log('errorResponse', errorResponse);
-
-                });
-
-                report_metrics.$promise.then(function(successResponse) {
-
-                    console.log('Report metrics', successResponse);
-
-                    var _reportMetrics = [];
-
-                    successResponse.features.forEach(function(metric) {
-
-                        var datum = self.processMetric(metric);
-
-                        _reportMetrics.push(datum);
+                        self.showElements();
 
                     });
 
-                    self.reportMetrics = _reportMetrics;
-
-                }, function(errorResponse) {
-
-                    console.log('errorResponse', errorResponse);
-
-                });
+                };
 
                 self.monitoringType = null;
                 self.monitoringTypes = monitoring_types;
@@ -230,78 +282,59 @@
                     return new Date(b[0], b[1] - 1, b[2]);
                 }
 
-                practice.$promise.then(function(successResponse) {
+                function convertPracticeArea(data) {
 
-                    self.practice = successResponse;
+                    var area = data.properties.area,
+                        acres;
 
-                    self.practiceType = Utility.machineName(self.practice.properties.practice_type);
+                    if (area !== null &&
+                        area > 0) {
 
-                    //
-                    // 
-                    //
-                    report.$promise.then(function(successResponse) {
+                        acres = $filter('convertArea')(area, 'acre');
 
-                        console.log('self.report', successResponse);
-
-                        self.report = successResponse;
-
-                        if (self.report.properties.practice_unit !== null) {
-
-                            var _unit = self.report.properties.practice_unit.properties;
-
-                            _unit.name = _unit.plural;
-
-                            self.report.properties.practice_unit = _unit;
-
-                        }
-
-                        if (self.report.properties.report_date) {
-
-                            self.today = parseISOLike(self.report.properties.report_date);
-
-                        }
-
-                        //
-                        // Check to see if there is a valid date
-                        //
-                        self.date = {
-                            month: self.months[self.today.getMonth()],
-                            date: self.today.getDate(),
-                            day: self.days[self.today.getDay()],
-                            year: self.today.getFullYear()
-                        };
-
-                        // $rootScope.page.title = "Other Conservation Practice";
-
-                        $rootScope.page.title = 'Edit measurement data';
-
-
-                    }, function(errorResponse) {
-
-                        console.error('ERROR: ', errorResponse);
-
-                    });
-
-                    //
-                    // Verify Account information for proper UI element display
-                    //
-                    if (Account.userObject && user) {
-
-                        user.$promise.then(function(userResponse) {
-
-                            $rootScope.user = Account.userObject = userResponse;
-
-                            self.permissions = {
-                                isLoggedIn: Account.hasToken(),
-                                role: $rootScope.user.properties.roles[0].properties.name,
-                                account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
-                            };
-
-                        });
+                        return Utility.precisionRound(acres, 4);
 
                     }
 
-                });
+                }
+
+                self.loadPractice = function(practiceId) {
+
+                    Practice.get({
+                        id: practiceId
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('loadPractice.successResponse', successResponse);
+
+                        self.practice = successResponse;
+
+                        if (!successResponse.permissions.read &&
+                            !successResponse.permissions.write) {
+
+                            self.makePrivate = true;
+
+                        } else {
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            if (!self.report.properties.practice_extent) {
+
+                                self.report.properties.practice_extent = convertPracticeArea(self.practice);
+
+                            }
+
+                        }
+
+                        self.loadMetricTypes(self.practice.properties.project);
+
+                    }).catch(function(errorResponse) {
+
+                        //
+
+                    });
+
+                };
 
                 $scope.$watch(angular.bind(this, function() {
 
@@ -320,6 +353,8 @@
                 }, true);
 
                 self.saveReport = function(metricArray) {
+
+                    self.status.processing = true;
 
                     console.log('self.saveReport.metricArray', metricArray);
 
@@ -344,11 +379,35 @@
 
                     self.report.$update().then(function(successResponse) {
 
-                        $location.path('/practices/' + practiceId);
+                        self.processReport(successResponse);
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Report changes saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        self.loadMetrics();
+
+                        self.showElements();
 
                     }, function(errorResponse) {
 
                         console.error('ERROR: ', errorResponse);
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Report changes could not be saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        self.showElements();
 
                     });
 
@@ -360,47 +419,55 @@
 
                     var _modifiedMetrics = [];
 
-                    self.reportMetrics.forEach(function(metric) {
+                    if (self.reportMetrics.length) {
 
-                        console.log('Updating metric...', metric);
+                        self.reportMetrics.forEach(function(metric) {
 
-                        var datum = metric;
+                            console.log('Updating metric...', metric);
 
-                        if (datum.metric_type !== null) {
+                            var datum = metric;
 
-                            datum.metric_type_id = datum.metric_type.id;
+                            if (datum.category !== null) {
 
-                        }
-
-                        if (datum.metric_unit !== null) {
-
-                            datum.metric_unit_id = datum.metric_unit.id;
-
-                        }
-
-                        // delete datum.id;
-                        delete datum.metric_type;
-                        delete datum.metric_unit;
-
-                        PracticeCustomMetric.update({
-                            id: metric.id
-                        }, datum).$promise.then(function(successResponse) {
-
-                            _modifiedMetrics.push(successResponse.properties);
-
-                            if (_modifiedMetrics.length === self.reportMetrics.length) {
-
-                                self.saveReport(_modifiedMetrics);
+                                datum.category_id = datum.category.id;
 
                             }
 
-                        }, function(errorResponse) {
+                            // if (datum.metric_unit !== null) {
 
-                            console.error('ERROR: ', errorResponse);
+                            //     datum.metric_unit_id = datum.metric_unit.id;
+
+                            // }
+
+                            // delete datum.id;
+                            delete datum.category;
+                            delete datum.metric_unit;
+
+                            ReportMetric.update({
+                                id: metric.id
+                            }, datum).$promise.then(function(successResponse) {
+
+                                _modifiedMetrics.push(successResponse.properties);
+
+                                if (_modifiedMetrics.length === self.reportMetrics.length) {
+
+                                    self.saveReport(_modifiedMetrics);
+
+                                }
+
+                            }, function(errorResponse) {
+
+                                console.error('ERROR: ', errorResponse);
+
+                            });
 
                         });
 
-                    });
+                    } else {
+
+                        self.saveReport(_modifiedMetrics);
+
+                    }
 
                 };
 
@@ -415,7 +482,7 @@
                     //
                     // Step 2: Create empty Reading to post to the system
                     //
-                    var newReading = new PracticeCustomReading({
+                    var newReading = new ReportReading({
                         "geometry": null,
                         "properties": {
                             "bmp_custom_id": self.report.id,
@@ -435,7 +502,7 @@
                     });
 
                     //
-                    // Step 3: POST this empty reading to the `/v1/data/bmp-custom-readings` endpoint
+                    // Step 3: POST this empty reading to the `/v1/data/report-readings` endpoint
                     //
                     newReading.$save().then(function(successResponse) {
 
@@ -465,35 +532,27 @@
 
                 self.addMetric = function() {
 
+                    console.log('addMetric');
+
                     //
                     // Step 1: Show a new row with a "loading" indiciator
                     //
                     self.status.metrics.loading = true;
 
-                    // var datum = {
-                    //     "metric_type_id": null,
-                    //     "metric_value": 0,
-                    //     "metric_unit_id": null,
-                    //     "metric_description": ""
-                    // };
-
-                    // self.reportMetrics.push(datum);
-
                     //
                     // Step 2: Create empty Reading to post to the system
                     //
-                    var newMetric = new PracticeCustomMetric({
-                        "geometry": null,
-                        "properties": {
-                            "metric_type_id": null,
-                            "metric_value": 0,
-                            "metric_unit_id": null,
-                            "metric_description": ""
-                        }
+                    var newMetric = new ReportMetric({
+                        "category_id": null,
+                        "value": null,
+                        "description": null,
+                        "report_id": self.report.id
                     });
 
+                    console.log('addMetric', newMetric);
+
                     //
-                    // Step 3: POST this empty reading to the `/v1/data/bmp-custom-readings` endpoint
+                    // Step 3: POST this empty reading to the `/v1/data/report-readings` endpoint
                     //
                     newMetric.$save().then(function(successResponse) {
 
@@ -504,12 +563,13 @@
                         //
                         // self.reportMetrics.push(metric_);
 
-                        if (successResponse.properties.metric_type !== null) {
-                            successResponse.properties.metric_type.properties = successResponse.properties.metric_type;
+                        if (successResponse.properties.category !== null) {
+                            successResponse.properties.category.properties = successResponse.properties.category;
                         }
-                        if (successResponse.properties.metric_unit !== null) {
-                            successResponse.properties.metric_unit.properties = successResponse.properties.metric_unit;
-                        }
+
+                        // if (successResponse.properties.metric_unit !== null) {
+                        //     successResponse.properties.metric_unit.properties = successResponse.properties.metric_unit;
+                        // }
 
                         var datum = self.processMetric(successResponse);
 
@@ -540,7 +600,7 @@
                     //
                     // Step 2: Create empty Reading to post to the system
                     //
-                    var newMetric = new PracticeCustomMonitoring({
+                    var newMetric = new ReportMonitoring({
                         "geometry": null,
                         "properties": {
                             "monitoring_type_id": null,
@@ -551,7 +611,7 @@
                     });
 
                     //
-                    // Step 3: POST this empty reading to the `/v1/data/bmp-custom-readings` endpoint
+                    // Step 3: POST this empty reading to the `/v1/data/report-readings` endpoint
                     //
                     newMetric.$save().then(function(successResponse) {
 
@@ -625,37 +685,9 @@
 
                 };
 
-                self.alerts = [];
-
-                function closeAlerts() {
-
-                    self.alerts = [];
-
-                }
-
-                function closeRoute() {
-
-                    $location.path('/practices/' + practiceId);
-
-                }
-
-                self.confirmDelete = function(obj) {
-
-                    console.log('self.confirmDelete', obj);
-
-                    self.deletionTarget = self.deletionTarget ? null : obj;
-
-                };
-
-                self.cancelDelete = function() {
-
-                    self.deletionTarget = null;
-
-                };
-
                 self.deleteFeature = function() {
 
-                    PracticeCustom.delete({
+                    Report.delete({
                         id: +self.deletionTarget.id
                     }).$promise.then(function(data) {
 
@@ -706,6 +738,66 @@
                     });
 
                 };
+
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+
+                    user.$promise.then(function(userResponse) {
+
+                        $rootScope.user = Account.userObject = userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0],
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                        };
+
+                        //
+                        // 
+                        //
+                        report.$promise.then(function(successResponse) {
+
+                            console.log('self.report', successResponse);
+
+                            self.processReport(successResponse);
+
+                            if (self.report.properties.report_date) {
+
+                                self.today = parseISOLike(self.report.properties.report_date);
+
+                            }
+
+                            //
+                            // Check to see if there is a valid date
+                            //
+                            self.date = {
+                                month: self.months[self.today.getMonth()],
+                                date: self.today.getDate(),
+                                day: self.days[self.today.getDay()],
+                                year: self.today.getFullYear()
+                            };
+
+                            // $rootScope.page.title = "Other Conservation Practice";
+
+                            $rootScope.page.title = 'Edit measurement data';
+
+                            self.loadPractice(self.report.properties.practice.id);
+
+                        }, function(errorResponse) {
+
+                            console.error('ERROR: ', errorResponse);
+
+                        });
+
+                    });
+
+                } else {
+
+                    $location.path('/login');
+
+                }
 
             });
 

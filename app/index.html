@@ -94,6 +94,7 @@
     <script src="bower_components/html2canvas/build/html2canvas.js"></script>
     <script src="bower_components/angular-save2pdf/angular-save2pdf.js"></script>
     <script src="bower_components/leaflet-draw/dist/leaflet.draw.js"></script>
+    <script src="bower_components/angular-progress-arc/angular-progress-arc.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -116,16 +117,12 @@
             <script src="modules/shared/security/security--interceptor.js"></script>
             <script src="modules/shared/security/token--service.js"></script>
 
-            <!-- Snapshot Module -->
-            <script src="modules/components/snapshot/snapshot--routes.js"></script>
-            <script src="modules/components/snapshot/snapshot--controller.js"></script>
-            <script src="modules/components/snapshot/snapshotList--controller.js"></script>
-            <script src="modules/components/snapshot/snapshotCreate--controller.js"></script>
-            <script src="modules/components/snapshot/snapshotEdit--controller.js"></script>
-
             <!-- Dashboard Module -->
             <script src="modules/components/dashboard/dashboard--routes.js"></script>
             <script src="modules/components/dashboard/dashboard--controller.js"></script>
+            <script src="modules/components/dashboard/dashboardList--controller.js"></script>
+            <script src="modules/components/dashboard/dashboardCreate--controller.js"></script>
+            <script src="modules/components/dashboard/dashboardEdit--controller.js"></script>
 
             <!-- Organization Module -->
             <script src="modules/components/organization/organization--routes.js"></script>
@@ -139,6 +136,10 @@
             <script src="modules/components/projects/projectsCreate--controller.js"></script>
             <script src="modules/components/projects/projectsEdit--controller.js"></script>
             <script src="modules/components/projects/projectsUsers--controller.js"></script>
+
+            <!-- Home Module -->
+            <script src="modules/components/home/home--routes.js"></script>
+            <script src="modules/components/home/home--controller.js"></script>
 
             <!-- Account Module -->
             <script src="modules/components/account/account--routes.js"></script>
@@ -159,6 +160,38 @@
             <script src="modules/components/practices/practiceLocation--controller.js"></script>
             <script src="modules/components/practices/practicePhoto--controller.js"></script>
             <script src="modules/components/practices/reportEdit--controller.js"></script>
+
+            <!-- PracticeType Module -->
+            <script src="modules/components/practice-types/practiceType--routes.js"></script>
+            <script src="modules/components/practice-types/practiceTypeEdit--controller.js"></script>
+            <script src="modules/components/practice-types/practiceTypeSummary--controller.js"></script>
+            <script src="modules/components/practice-types/practiceTypeList--controller.js"></script>
+
+            <!-- MetricType Module -->
+            <script src="modules/components/metrics/metricType--routes.js"></script>
+            <script src="modules/components/metrics/metricTypeEdit--controller.js"></script>
+            <script src="modules/components/metrics/metricTypeSummary--controller.js"></script>
+            <script src="modules/components/metrics/metricTypeList--controller.js"></script>
+
+            <!-- Geography Module -->
+            <script src="modules/components/geographies/geography--routes.js"></script>
+            <script src="modules/components/geographies/geographyEdit--controller.js"></script>
+            <script src="modules/components/geographies/geographySummary--controller.js"></script>
+            <script src="modules/components/geographies/geographyList--controller.js"></script>
+
+            <!-- Program Module -->
+            <script src="modules/components/programs/program--routes.js"></script>
+            <script src="modules/components/programs/programEdit--controller.js"></script>
+            <script src="modules/components/programs/programSummary--controller.js"></script>
+            <script src="modules/components/programs/programList--controller.js"></script>
+
+            <!-- Tag Module -->
+            <script src="modules/components/tags/tag--routes.js"></script>
+            <script src="modules/components/tags/tagEdit--controller.js"></script>
+            <script src="modules/components/tags/tagSummary--controller.js"></script>
+            <script src="modules/components/tags/tagList--controller.js"></script>
+
+            <script src="modules/shared/tags/featureTag--controller.js"></script>
 
             <!-- CommonsCloud Module -->
             <script src="modules/shared/commons-cloud/configuration--constant.js"></script>
@@ -197,50 +230,32 @@
 
             <!-- Providers -->
             <script src="modules/shared/api/account--service.js"></script>
-            <script src="modules/shared/api/animalManure--service.js"></script>
-            <script src="modules/shared/api/efficiency--service.js"></script>
-            <script src="modules/shared/api/efficiencyAgricultureGeneric--service.js"></script>
             <script src="modules/shared/api/file--service.js"></script>
             <script src="modules/shared/api/filter--service.js"></script>
             <script src="modules/shared/api/geography--service.js"></script>
             <script src="modules/shared/api/image--service.js"></script>
-            <script src="modules/shared/api/landuse--service.js"></script>
             <script src="modules/shared/api/media--service.js"></script>
             <script src="modules/shared/api/shapefile--service.js"></script>
-            <script src="modules/shared/api/loaddata--service.js"></script>
             <script src="modules/shared/api/metric--service.js"></script>
             <script src="modules/shared/api/metricType--service.js"></script>
             <script src="modules/shared/api/monitoringType--service.js"></script>
-            <script src="modules/shared/api/nutrient--service.js"></script>
             <script src="modules/shared/api/organization--service.js"></script>
             <script src="modules/shared/api/outcome--service.js"></script>
             <script src="modules/shared/api/practice--service.js"></script>
-            <script src="modules/shared/api/practiceCustom--service.js"></script>
-            <script src="modules/shared/api/practiceCustomReading--service.js"></script>
-            <script src="modules/shared/api/practiceCustomMetric--service.js"></script>
-            <script src="modules/shared/api/practiceCustomMonitoring--service.js"></script>
-            <script src="modules/shared/api/practiceAgricultureGeneric--service.js"></script>
-            <script src="modules/shared/api/practiceUrbanHomeowner--service.js"></script>
-            <script src="modules/shared/api/practiceBioretention--service.js"></script>
-            <script src="modules/shared/api/practiceBankStabilization--service.js"></script>
-            <script src="modules/shared/api/practiceEnhancedStreamRestoration--service.js"></script>
-            <script src="modules/shared/api/practiceForestBuffer--service.js"></script>
-            <script src="modules/shared/api/practiceGrassBuffer--service.js"></script>
-            <script src="modules/shared/api/practiceInstreamHabitat--service.js"></script>
-            <script src="modules/shared/api/practiceLivestockExclusion--service.js"></script>
-            <script src="modules/shared/api/practiceWetlandsNonTidal--service.js"></script>
-            <script src="modules/shared/api/practiceShorelineManagement--service.js"></script>
-            <script src="modules/shared/api/practiceStormwater--service.js"></script>
+            <script src="modules/shared/api/report--service.js"></script>
+            <script src="modules/shared/api/reportMetric--service.js"></script>
+            <script src="modules/shared/api/reportMonitoring--service.js"></script>
             <script src="modules/shared/api/practiceType--service.js"></script>
+            <script src="modules/shared/api/program--service.js"></script>
             <script src="modules/shared/api/project--service.js"></script>
             <script src="modules/shared/api/search--service.js"></script>
             <script src="modules/shared/api/security--service.js"></script>
             <script src="modules/shared/api/site--service.js"></script>
-            <script src="modules/shared/api/segment--service.js"></script>
-            <script src="modules/shared/api/stateLoad--service.js"></script>
             <script src="modules/shared/api/unitType--service.js"></script>
             <script src="modules/shared/api/utility--service.js"></script>
-            <script src="modules/shared/api/snapshot--service.js"></script>
+            <script src="modules/shared/api/dashboard--service.js"></script>
+            <script src="modules/shared/api/tag--service.js"></script>
+            <script src="modules/shared/api/tagGroup--service.js"></script>
 
             <script src="modules/shared/api/preprocessors--service.js"></script>
             <script src="modules/shared/api/user--service.js"></script>
@@ -264,6 +279,7 @@
             <script src="modules/shared/filters/toArray--filter.js"></script>
             <script src="modules/shared/filters/isArray--filter.js"></script>
             <script src="modules/shared/filters/truncate--filter.js"></script>
+            <script src="modules/shared/filters/areaConversion--filter.js"></script>
             <!-- endbuild -->
 
   </body>

@@ -2,33 +2,19 @@
 
 /**
  * @ngdoc function
- * @name FieldDoc.controller:ProjectviewCtrl
+ * @name FieldDoc.controller:ProjectviewController
  * @description
- * # ProjectviewCtrl
+ * # ProjectviewController
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-    .controller('ProjectSummaryCtrl',
+    .controller('ProjectSummaryController',
         function(Account, Notifications, $rootScope, Project, $routeParams,
             $scope, $location, Map, mapbox, Site, user, $window,
             leafletData, leafletBoundsHelpers, $timeout, Practice, project,
-            metrics, outcomes, sites) {
+            metrics, outcomes, sites, Utility, $interval) {
 
-            //controller is set to self
             var self = this;
-
-            self.actions = {
-                print: function() {
-
-                    $window.print();
-
-                },
-                saveToPdf: function() {
-
-                    $scope.$emit('saveToPdf');
-
-                }
-            };
 
             $rootScope.viewState = {
                 'project': true
@@ -47,7 +33,19 @@ angular.module('FieldDoc')
             console.log('self.map', self.map);
 
             self.status = {
-                "loading": true
+                loading: true
+            };
+
+            self.showElements = function() {
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.status.processing = false;
+
+                }, 1000);
+
             };
 
             //draw tools
@@ -116,48 +114,63 @@ angular.module('FieldDoc')
 
                     var project_ = successResponse;
 
-                    self.permissions.can_edit = Account.canEdit(project_);
-                    self.permissions.is_manager = (Account.hasRole('manager') || Account.inGroup(project_.properties.organization_id, Account.userObject.properties.account));
+                    if (!successResponse.permissions.read &&
+                        !successResponse.permissions.write) {
 
-                    if (project_.properties.extent) {
+                        self.makePrivate = true;
 
-                        project_.staticURL = self.buildStaticMapURL(project_.properties.extent);
+                    } else {
 
-                    }
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
 
-                    self.project = project_;
+                        if (project_.properties.extent) {
 
-                    self.status.loading = false;
-
-                    $rootScope.page.title = 'Project Summary';
-
-                    leafletData.getMap('project--map').then(function(map) {
-
-                        var southWest = L.latLng(25.837377, -124.211606),
-                            northEast = L.latLng(49.384359, -67.158958),
-                            bounds = L.latLngBounds(southWest, northEast);
-
-                        self.projectExtent = new L.FeatureGroup();
-
-                        if (self.project.properties.extent) {
-
-                            self.setGeoJsonLayer(self.project.properties.extent, self.projectExtent);
-
-                            map.fitBounds(self.projectExtent.getBounds(), {
-                                maxZoom: 18
-                            });
-
-                        } else {
-
-                            map.fitBounds(bounds, {
-                                maxZoom: 18
-                            });
+                            project_.staticURL = self.buildStaticMapURL(project_.properties.extent);
 
                         }
 
-                    });
+                        self.project = project_;
 
-                    self.loadSites();
+                        $rootScope.page.title = 'Project Summary';
+
+                        leafletData.getMap('project--map').then(function(map) {
+
+                            var southWest = L.latLng(25.837377, -124.211606),
+                                northEast = L.latLng(49.384359, -67.158958),
+                                bounds = L.latLngBounds(southWest, northEast);
+
+                            self.projectExtent = new L.FeatureGroup();
+
+                            if (self.project.properties.extent) {
+
+                                self.setGeoJsonLayer(self.project.properties.extent, self.projectExtent);
+
+                                map.fitBounds(self.projectExtent.getBounds(), {
+                                    maxZoom: 18
+                                });
+
+                            } else {
+
+                                map.fitBounds(bounds, {
+                                    maxZoom: 18
+                                });
+
+                            }
+
+                        });
+
+                        self.loadSites();
+
+                    }
+
+                    self.showElements();
+
+                }).catch(function(errorResponse) {
+
+                    console.log('loadProject.errorResponse', errorResponse);
+
+                    self.showElements();
 
                 });
 
@@ -447,7 +460,7 @@ angular.module('FieldDoc')
 
                 }, function(errorResponse) {
 
-                    console.log('errorResponse', errorResponse);
+                    console.log('loadSites.errorResponse', errorResponse);
 
                 });
 
@@ -505,11 +518,11 @@ angular.module('FieldDoc')
 
                     self.permissions = {
                         isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0].properties.name,
+                        role: $rootScope.user.properties.roles[0],
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        // can_edit: Account.canEdit(self.project),
-                        // is_manager: (Account.hasRole('manager') || Account.inGroup(self.project.properties.organization_id, Account.userObject.properties.account)),
-                        is_admin: Account.hasRole('admin')
+                        can_edit: false,
+                        is_manager: false,
+                        is_admin: false
                     };
 
                     self.loadProject();

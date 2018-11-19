@@ -6,10 +6,10 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProjectsCtrl',
+    .controller('ProjectsController',
         function(Account, $location, $log, Project,
             projects, $rootScope, $scope, Site, user,
-            ProjectStore, FilterStore, $interval, $timeout) {
+            ProjectStore, FilterStore, $interval, $timeout, Utility) {
 
             $scope.filterStore = FilterStore;
 
@@ -35,35 +35,15 @@ angular.module('FieldDoc')
                 actions: []
             };
 
-            self.loading = true;
-
-            self.fillMeter = $interval(function() {
-
-                var tempValue = (self.progressValue || 10) * 0.2;
-
-                if (!self.progressValue) {
-
-                    self.progressValue = tempValue;
-
-                } else if ((100 - tempValue) > self.progressValue) {
-
-                    self.progressValue += tempValue;
-
-                }
-
-                console.log('progressValue', self.progressValue);
-
-            }, 100);
+            self.status = {
+                loading: true
+            };
 
             self.showElements = function() {
 
-                $interval.cancel(self.fillMeter);
-
-                self.progressValue = 100;
-
                 $timeout(function() {
 
-                    self.loading = false;
+                    self.status.loading = false;
 
                 }, 1000);
 
@@ -234,77 +214,33 @@ angular.module('FieldDoc')
 
             };
 
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
+            self.buildStaticMapURL = function(geometry) {
 
-                user.$promise.then(function(userResponse) {
-                    $rootScope.user = Account.userObject = userResponse;
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken()
-                    };
-                });
+                var styledFeature = {
+                    "type": "Feature",
+                    "geometry": geometry,
+                    "properties": {
+                        "marker-size": "small",
+                        "marker-color": "#2196F3",
+                        "stroke": "#2196F3",
+                        "stroke-opacity": 1.0,
+                        "stroke-width": 2,
+                        "fill": "#2196F3",
+                        "fill-opacity": 0.5
+                    }
+                };
 
-                //
-                // Project functionality
-                //
+                // Build static map URL for Mapbox API
 
-                self.projects = projects;
+                return [
+                    'https://api.mapbox.com/styles/v1',
+                    '/mapbox/streets-v10/static/geojson(',
+                    encodeURIComponent(JSON.stringify(styledFeature)),
+                    ')/auto/400x200@2x?access_token=',
+                    'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                ].join('');
 
-                console.log('self.projects', self.projects);
-
-                projects.$promise.then(function(successResponse) {
-
-                    console.log('successResponse', successResponse);
-
-                    successResponse.features.forEach(function(feature) {
-
-                        if (feature.extent) {
-
-                            var styledFeature = {
-                                "type": "Feature",
-                                "geometry": feature.extent,
-                                "properties": {
-                                    "marker-size": "small",
-                                    "marker-color": "#2196F3",
-                                    "stroke": "#2196F3",
-                                    "stroke-opacity": 1.0,
-                                    "stroke-width": 2,
-                                    "fill": "#2196F3",
-                                    "fill-opacity": 0.5
-                                }
-                            };
-
-                            feature.geometry = styledFeature;
-
-                            // Build static map URL for Mapbox API
-
-                            var staticURL = 'https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
-
-                            feature.staticURL = staticURL;
-
-                        }
-
-                    });
-
-                    $scope.projectStore.setProjects(successResponse.features);
-
-                    self.filteredProjects = $scope.projectStore.filteredProjects;
-
-                    self.showElements();
-
-                }, function(errorResponse) {
-
-                    console.log('errorResponse', errorResponse);
-
-                });
-
-            } else {
-
-                $location.path('/user/logout');
-
-            }
+            };
 
             self.clearFilter = function(obj) {
 
@@ -313,5 +249,94 @@ angular.module('FieldDoc')
                 FilterStore.clearItem(obj);
 
             };
+
+            self.buildFilter = function() {
+
+                var params = {};
+
+                if (self.selectedProgram &&
+                    typeof self.selectedProgram.id !== 'undefined' &&
+                    self.selectedProgram.id > 0) {
+
+                    params.program = self.selectedProgram.id;
+
+                    $location.search('program', self.selectedProgram.id);
+
+                } else {
+
+                    // self.filteredProjects = $scope.projectStore.projects;
+
+                    $location.search({});
+
+                }
+
+                return params;
+
+            }
+
+            self.loadProjects = function() {
+
+                var params = self.buildFilter();
+
+                Project.collection(params).$promise.then(function(successResponse) {
+
+                    console.log('successResponse', successResponse);
+
+                    successResponse.features.forEach(function(feature) {
+
+                        if (feature.extent) {
+
+                            feature.staticURL = self.buildStaticMapURL(feature.extent);
+
+                        }
+
+                    });
+
+                    self.projects = successResponse.features;
+
+                    if (!$scope.projectStore.projects.length) {
+
+                        $scope.projectStore.setProjects(successResponse.features);
+
+                    }
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                    self.showElements();
+
+                });
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken()
+                    };
+
+                    //
+                    // Project functionality
+                    //
+
+                    self.loadProjects();
+
+                });
+
+            } else {
+
+                $location.path('/login');
+
+            }
 
         });

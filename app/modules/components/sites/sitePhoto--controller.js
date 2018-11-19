@@ -4,15 +4,15 @@
 
     /**
      * @ngdoc function
-     * @name FieldDoc.controller:SiteEditCtrl
+     * @name FieldDoc.controller:SiteEditController
      * @description
-     * # SiteEditCtrl
+     * # SiteEditController
      * Controller of the FieldDoc
      */
     angular.module('FieldDoc')
-        .controller('SitePhotoCtrl',
+        .controller('SitePhotoController',
             function(Account, environment, $http, $location, Notifications, 
-                Site, site, $rootScope, $route, $scope, Segment,
+                Site, site, $rootScope, $route, $scope,
                 $timeout, $interval, user, Shapefile) {
 
                 var self = this,
@@ -29,6 +29,20 @@
                     console.log('self.site', successResponse);
 
                     self.site = successResponse;
+
+                    if (successResponse.permissions.read &&
+                        successResponse.permissions.write) {
+
+                        self.makePrivate = false;
+
+                    } else {
+
+                        self.makePrivate = true;
+
+                    }
+
+                    self.permissions.can_edit = successResponse.permissions.write;
+                    self.permissions.can_delete = successResponse.permissions.write;
 
                     $rootScope.page.title = self.site.properties.name;
 
@@ -51,9 +65,9 @@
 
                             self.permissions = {
                                 isLoggedIn: Account.hasToken(),
-                                role: $rootScope.user.properties.roles[0].properties.name,
+                                role: $rootScope.user.properties.roles[0],
                                 account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                                can_edit: Account.canEdit(self.site.properties.project)
+                                can_edit: false
                             };
 
                         });

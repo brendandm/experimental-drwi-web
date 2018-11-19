@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('PracticePhotoController', function(Account, Image, leafletData, $location, $log, Map,
         mapbox, Media, Practice, practice, practice_types, $q, $rootScope, $route,
-        $scope, $timeout, $interval, site, user) {
+        $scope, $timeout, $interval, site, user, Utility) {
 
         var self = this;
 
@@ -20,6 +20,25 @@ angular.module('FieldDoc')
         self.files.images = [];
 
         $rootScope.page = {};
+
+        self.status = {
+            loading: true,
+            processing: false
+        };
+
+        self.showElements = function(delay) {
+
+            var ms = delay || 1000;
+
+            $timeout(function() {
+
+                self.status.loading = false;
+
+                self.status.processing = false;
+
+            }, ms);
+
+        };
 
         self.alerts = [];
 
@@ -35,25 +54,53 @@ angular.module('FieldDoc')
 
         };
 
+        self.processPractice = function(data) {
+
+            self.practice = data;
+
+            if (data.permissions) {
+
+                if (!data.permissions.read &&
+                    !data.permissions.write) {
+
+                    self.makePrivate = true;
+
+                }
+
+                self.permissions.can_edit = data.permissions.write;
+                self.permissions.can_delete = data.permissions.write;
+
+            }
+
+            delete self.practice.properties.organization;
+            delete self.practice.properties.project;
+            delete self.practice.properties.site;
+
+            self.practiceType = data.properties.category;
+
+            $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
+
+            self.practice.properties.images.sort(function(a, b) {
+
+                return a.id < b.id;
+
+            });
+
+        };
+
         self.loadPractice = function() {
 
             practice.$promise.then(function(successResponse) {
 
                 console.log('self.practice', successResponse);
 
-                self.practice = successResponse;
+                self.processPractice(successResponse);
 
-                delete self.practice.properties.organization;
-                delete self.practice.properties.project;
-                delete self.practice.properties.site;
-
-                self.practiceType = successResponse.properties.category;
-
-                $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
+                self.showElements();
 
             }, function(errorResponse) {
 
-                //
+                self.showElements();
 
             });
 
@@ -70,18 +117,24 @@ angular.module('FieldDoc')
 
                 self.permissions = {
                     isLoggedIn: Account.hasToken(),
-                    role: $rootScope.user.properties.roles[0].properties.name,
+                    role: $rootScope.user.properties.roles[0],
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                    can_edit: true
+                    can_edit: false
                 };
 
                 self.loadPractice();
 
             });
 
+        } else {
+
+            $location.path('/login');
+
         }
 
         self.savePractice = function() {
+
+            self.status.processing = true;
 
             var _images = [];
 
@@ -117,7 +170,7 @@ angular.module('FieldDoc')
 
                     self.practice.$update().then(function(successResponse) {
 
-                        self.practice = successResponse;
+                        self.processPractice(successResponse);
 
                         self.files.images = [];
 
@@ -130,9 +183,11 @@ angular.module('FieldDoc')
 
                         $timeout(self.closeAlerts, 2000);
 
+                        self.showElements(0);
+
                     }, function(errorResponse) {
 
-                        // Error message
+                        self.showElements(0);
 
                     });
 
@@ -140,13 +195,15 @@ angular.module('FieldDoc')
 
                     $log.log('errorResponse', errorResponse);
 
+                    self.showElements();
+
                 });
 
             } else {
 
                 self.practice.$update().then(function(successResponse) {
 
-                    self.practice = successResponse;
+                    self.processPractice(successResponse);
 
                     self.files.images = [];
 
@@ -159,9 +216,11 @@ angular.module('FieldDoc')
 
                     $timeout(self.closeAlerts, 2000);
 
+                    self.showElements();
+
                 }, function(errorResponse) {
 
-                    // Error message
+                    self.showElements();
 
                 });
 
@@ -205,6 +264,10 @@ angular.module('FieldDoc')
 
                 self.practice.properties.images.splice(index, 1);
 
+                self.cancelDelete();
+
+                self.savePractice();
+
                 return;
 
             }
@@ -236,27 +299,7 @@ angular.module('FieldDoc')
                     'prompt': 'OK'
                 }];
 
-                if (index !== null &&
-                    typeof index === 'number' &&
-                    featureType === 'image') {
-
-                    self.practice.properties.images.splice(index, 1);
-
-                    self.cancelDelete();
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    if (index === 0) {
-
-                        $route.reload();
-
-                    }
-
-                } else {
-
-                    $timeout(self.closeRoute, 2000);
-
-                }
+                $timeout(self.closeRoute, 2000);
 
             }).catch(function(errorResponse) {
 

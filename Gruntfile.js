@@ -31,6 +31,8 @@ module.exports = function(grunt) {
 
     var environment = grunt.option('environment') || 'local';
 
+    var version = Date.now();
+
     // Define the configuration for all the tasks
     grunt.initConfig({
 
@@ -52,7 +54,8 @@ module.exports = function(grunt) {
                         name: 'local',
                         apiUrl: 'http://127.0.0.1:5000',
                         siteUrl: 'http://127.0.0.1:9000',
-                        clientId: 'sL3yMmmnSNszktuQGVBCasZ6mCy7DahS'
+                        clientId: 'sL3yMmmnSNszktuQGVBCasZ6mCy7DahS',
+                        version: version
                     }
                 }
             },
@@ -63,9 +66,10 @@ module.exports = function(grunt) {
                 constants: {
                     environment: {
                         name: 'development',
-                        apiUrl: 'https://api.drwi.chesapeakecommons.org',
-                        siteUrl: 'http://127.0.0.1:9000',
-                        clientId: 'sL3yMmmnSNszktuQGVBCasZ6mCy7DahS'
+                        apiUrl: 'https://dev.api.fielddoc.chesapeakecommons.org',
+                        siteUrl: 'https://dev.fielddoc.chesapeakecommons.org',
+                        clientId: '2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',
+                        version: version
                     }
                 }
             },
@@ -78,7 +82,8 @@ module.exports = function(grunt) {
                         name: 'staging',
                         apiUrl: 'https://api.drwi.chesapeakecommons.org',
                         siteUrl: 'https://drwi.chesapeakecommons.org',
-                        clientId: 'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'
+                        clientId: 'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',
+                        version: version
                     }
                 }
             },
@@ -91,7 +96,8 @@ module.exports = function(grunt) {
                         name: 'production',
                         apiUrl: 'https://api.fielddoc.org',
                         siteUrl: 'https://www.fielddoc.org',
-                        clientId: 'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1'
+                        clientId: 'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',
+                        version: version
                     }
                 }
             }

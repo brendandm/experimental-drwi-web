@@ -4,15 +4,16 @@
 
     /**
      * @ngdoc function
-     * @name FieldDoc.controller:ProjectUsersCtrl
+     * @name FieldDoc.controller:ProjectUsersController
      * @description
-     * # ProjectUsersCtrl
+     * # ProjectUsersController
      * Controller of the FieldDoc
      */
     angular.module('FieldDoc')
-        .controller('ProjectUsersCtrl',
+        .controller('ProjectUsersController',
             function(Account, Collaborators, $window, $rootScope, $scope, $route,
-                $location, project, user, members, SearchService) {
+                $location, $timeout, project, user, SearchService, Project,
+                Utility, $interval) {
 
                 var self = this;
 
@@ -26,53 +27,52 @@
                     'users': true
                 };
 
-                //
-                // Assign project to a scoped variable
-                //
-                project.$promise.then(function(successResponse) {
+                self.status = {
+                    loading: true,
+                    processing: false
+                };
 
-                    console.log('self.project', successResponse);
+                self.showElements = function() {
 
-                    self.project = successResponse;
+                    $timeout(function() {
 
-                    $rootScope.page.title = self.project.properties.name;
+                        self.status.loading = false;
 
-                    self.tempOwners = self.project.properties.members;
+                        self.status.processing = false;
 
-                    console.log('tempOwners', self.tempOwners);
+                    }, 1000);
 
-                    // self.project.users = members;
-                    self.project.users_edit = false;
+                };
 
-                    //
-                    // Verify Account information for proper UI element display
-                    //
-                    if (Account.userObject && user) {
+                self.alerts = [];
 
-                        user.$promise.then(function(userResponse) {
+                function closeAlerts() {
 
-                            $rootScope.user = Account.userObject = userResponse;
+                    self.alerts = [];
 
-                            self.permissions = {
-                                isLoggedIn: Account.hasToken(),
-                                role: $rootScope.user.properties.roles[0].properties.name,
-                                account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                                can_edit: Account.canEdit(project)
-                            };
+                }
 
-                        });
+                function closeRoute() {
 
-                    }
+                    $location.path('/projects');
 
-                }, function(errorResponse) {
+                }
 
-                    console.error('Unable to load request project');
+                self.confirmDelete = function(obj) {
 
-                });
+                    self.deletionTarget = self.deletionTarget ? null : obj;
+
+                };
+
+                self.cancelDelete = function() {
+
+                    self.deletionTarget = null;
+
+                };
 
                 self.searchUsers = function(value) {
 
-                    return SearchService.users({
+                    return SearchService.user({
                         q: value
                     }).$promise.then(function(response) {
 
@@ -84,7 +84,7 @@
 
                         });
 
-                        return response.results.slice(0,5);
+                        return response.results.slice(0, 5);
 
                     });
 
@@ -163,21 +163,174 @@
 
                 self.saveProject = function() {
 
+                    self.status.processing = true;
+
                     self.scrubProject();
 
                     self.project.properties.members = self.processOwners(self.tempOwners);
 
                     self.project.$update().then(function(response) {
 
-                        $location.path('/projects/' + self.project.id);
+                        if (self.project.properties.members.length) {
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Collaborators added to project.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else {
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'All collaborators removed from project.',
+                                'prompt': 'OK'
+                            }];
+
+                        }
+
+                        $timeout(closeAlerts, 2000);
+
+                        self.status.processing = false;
 
                     }).then(function(error) {
 
-                        // Do something with the error
+                        self.status.processing = false;
 
                     });
 
                 };
+
+                self.deleteFeature = function() {
+
+                    var targetId;
+
+                    if (self.project.properties) {
+
+                        targetId = self.project.properties.id;
+
+                    } else {
+
+                        targetId = self.project.id;
+
+                    }
+
+                    Project.delete({
+                        id: +targetId
+                    }).$promise.then(function(data) {
+
+                        self.alerts.push({
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Successfully deleted this project.',
+                            'prompt': 'OK'
+                        });
+
+                        $timeout(closeRoute, 2000);
+
+                    }).catch(function(errorResponse) {
+
+                        console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                        if (errorResponse.status === 409) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Unable to delete “' + self.project.properties.name + '”. There are pending tasks affecting this project.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else if (errorResponse.status === 403) {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'You don’t have permission to delete this project.',
+                                'prompt': 'OK'
+                            }];
+
+                        } else {
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Something went wrong while attempting to delete this project.',
+                                'prompt': 'OK'
+                            }];
+
+                        }
+
+                        $timeout(closeAlerts, 2000);
+
+                    });
+
+                };
+
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+
+                    user.$promise.then(function(userResponse) {
+
+                        $rootScope.user = Account.userObject = userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0],
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                            can_edit: false
+                        };
+
+                        //
+                        // Assign project to a scoped variable
+                        //
+                        project.$promise.then(function(successResponse) {
+
+                            console.log('self.project', successResponse);
+
+                            self.project = successResponse;
+
+                            if (!successResponse.permissions.read &&
+                                !successResponse.permissions.write) {
+
+                                self.makePrivate = true;
+
+                            } else {
+
+                                self.permissions.can_edit = successResponse.permissions.write;
+                                self.permissions.can_delete = successResponse.permissions.write;
+
+                                $rootScope.page.title = self.project.properties.name;
+
+                                self.tempOwners = self.project.properties.members;
+
+                                console.log('tempOwners', self.tempOwners);
+
+                                self.project.users_edit = false;
+
+                            }
+
+                            self.showElements();
+
+                        }, function(errorResponse) {
+
+                            console.error('Unable to load request project');
+
+                            self.showElements();
+
+                        });
+
+                    });
+
+                } else {
+
+                    $location.path('/login');
+
+                }
 
             });
 

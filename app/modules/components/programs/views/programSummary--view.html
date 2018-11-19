@@ -1,0 +1,193 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="site--content--flow fluid-content clearfix distinguish">
+
+    <div id="sidebar" data-ng-include="'/templates/program-navigation--view.html'"></div>
+
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
+
+        <div class="main--ui">
+
+            <div class="module--grid">
+
+                <div class="group">
+
+                    <!-- Descriptors -->
+
+                    <article class="pad space-right shadow">
+
+                        <h1>{{ page.program.properties.name || 'Un-named' }}</h1>
+
+                        <p data-ng-if="page.program.properties.description" data-ng-bind-html="page.program.properties.description"></p>
+
+                        <p data-ng-if="page.program.properties.website" style="display: flex; flex-flow: row nowrap; align-items: center;">
+                            <i class="material-icons">
+                            open_in_new
+                            </i>
+                            <a href="{{ page.program.properties.website }}" target="_blank">&nbsp;View website</a>
+                        </p>
+
+                    </article>
+
+                    <!-- Map -->
+
+                    <div style="position:relative;">
+
+                        <leaflet id="program--map" class="map tall" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers"></leaflet>
+
+                    </div>
+
+                </div>
+
+                <div class="group">
+
+                    <section class="pad shadow">
+
+                        <h2>Metrics</h2>
+
+                        <article class="statistics project--summary">
+
+                            <div class="statistics--statistic">
+                                <p class="statistic--value">
+                                    {{ page.outcomes.installation.nitrogen | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.nitrogen | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
+                                    <span class="statistic--title">Nitrogen</span>
+                                </p>
+                                <div class="statistic--chart">
+                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.nitrogen/page.outcomes.planning.nitrogen)*100) + '%' }" style="background-color: #2196F3;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="statistics--statistic">
+                                <p class="statistic--value">
+                                    {{ page.outcomes.installation.phosphorus | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.phosphorus | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
+                                    <span class="statistic--title">Phosphorus</span>
+                                </p>
+                                <div class="statistic--chart">
+                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.phosphorus/page.outcomes.planning.phosphorus)*100) + '%' }" style="background-color: #2196F3;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="statistics--statistic">
+                                <p class="statistic--value">
+                                    {{ page.outcomes.installation.sediment | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.sediment | number:2 }} <span class="statistic--valueLabel">tons/yr</span><br />
+                                    <span class="statistic--title">Sediment</span>
+                                </p>
+                                <div class="statistic--chart">
+                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.sediment/page.outcomes.planning.sediment)*100) + '%' }" style="background-color: #2196F3;">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </article>
+
+                        <table class="table table-programs with-metrics" data-ng-if="page.metrics">
+
+                            <thead>
+                                <tr>
+                                    <th class="table-column-wide table-metrics-header">&nbsp;</th>
+                                    <th class="table-metrics-header">Installed To-Date</th>
+                                    <th class="table-metrics-header">% Installed</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="metrics">
+                                <tr class="metrics--metric" data-ng-repeat="metric in page.metrics track by $index">
+                                    <td class="table-column-wide">
+                                        <p class="metric--title">
+                                            {{ metric.name }}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <strong class="metrics--metric--rollup--small">{{ metric.installation | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit }}<br />
+                                            of {{ metric.planning | number:2 }}</span>
+                                    </td>
+                                    <td>
+                                        <strong class="metrics--metric--percentage">
+                                            {{ metric.percentComplete }}%
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <div class="donut-chart chart{{ metric.percentComplete }}" data-ng-if="metric.percentComplete < 100">
+                                            <div class="slice one"></div>
+                                            <div class="slice two"></div>
+                                            <div class="chart-center"></div>
+                                        </div>
+                                        <div class="donut-chart chart100" data-ng-if="metric.percentComplete >= 100">
+                                            <div class="slice one"></div>
+                                            <div class="slice two"></div>
+                                            <div class="chart-center"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+
+                    </section>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
+        <ul>
+            <li data-ng-class="{active: $root.toolbarState.dashboard}">
+                <a href="/programs/{{ page.program.id }}">
+                    <i class="material-icons">
+                        dashboard
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="/programs/{{ page.program.id }}/edit">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
+                <a href="/programs/{{ page.program.properties.id }}/tags">
+                    <i class="material-icons">
+                        local_offer
+                    </i>
+                </a>
+            </li>
+            <!-- <li data-ng-if="page.permissions.can_edit">
+                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.program.id && page.deletionTarget.collection === 'program'">
+                    <p>Do you want to delete this program?</p>
+                    <div class="actions">
+                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('program')">
+                            Yes
+                        </a>
+                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+                <a href="#" data-ng-click="page.confirmDelete(page.program, 'program')">
+                    <i class="material-icons">
+                        delete
+                    </i>
+                </a>
+            </li> -->
+        </ul>
+    </nav>
+
+    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+        <div class="event--container">
+            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                <span class="event--message">{{ alert.msg }}</span>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>

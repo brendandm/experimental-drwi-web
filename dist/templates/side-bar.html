@@ -1,14 +1,24 @@
-<div>
+<div data-ng-if="$root.user.id">
     <nav role="navigation">
         <ul class="list-unstyled">
+            <li>
+                <a href="/" data-ng-class="{viewing: $root.viewState.home}">
+                    Home
+                </a>
+            </li>
             <li>
                 <a href="/projects" data-ng-class="{viewing: $root.viewState.project}">
                     Projects
                 </a>
             </li>
-            <li class="active">
-                <a href="/dashboards" data-ng-class="{viewing: $root.viewState.snapshot}">
+            <li>
+                <a href="/dashboards" data-ng-class="{viewing: $root.viewState.dashboard}">
                     Dashboards
+                </a>
+            </li>
+            <li>
+                <a href="/tags" data-ng-class="{viewing: $root.viewState.tag}">
+                    Tags
                 </a>
             </li>
             <li>

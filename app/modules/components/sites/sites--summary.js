@@ -4,14 +4,14 @@
 
     /**
      * @ngdoc function
-     * @name FieldDoc.controller:SiteSummaryCtrl
+     * @name FieldDoc.controller:SiteSummaryController
      * @description
      */
     angular.module('FieldDoc')
-        .controller('SiteSummaryCtrl',
+        .controller('SiteSummaryController',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
                 $route, nodes, user, Utility, metrics, outcomes, site, Map, mapbox, leafletData,
-                leafletBoundsHelpers, Site, Project, practices) {
+                leafletBoundsHelpers, Site, Project, practices, $interval) {
 
                 var self = this;
 
@@ -24,7 +24,20 @@
                 self.map = JSON.parse(JSON.stringify(Map));
 
                 self.status = {
-                    'loading': true
+                    loading: true,
+                    processing: false
+                };
+
+                self.showElements = function() {
+
+                    $timeout(function() {
+
+                        self.status.loading = false;
+
+                        self.status.processing = false;
+
+                    }, 1000);
+
                 };
 
                 self.alerts = [];
@@ -216,29 +229,25 @@
 
                         self.site = successResponse;
 
-                        self.permissions.can_edit = Account.canEdit(self.site);
+                        if (successResponse.permissions.read &&
+                            successResponse.permissions.write) {
+
+                            self.makePrivate = false;
+
+                        } else {
+
+                            self.makePrivate = true;
+
+                        }
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
 
                         $rootScope.page.title = self.site.properties.name;
 
                         self.project = successResponse.properties.project;
 
                         console.log('self.project', self.project);
-
-                        self.status.loading = false;
-
-                        //
-                        // Load spatial nodes
-                        //
-
-                        nodes.$promise.then(function(successResponse) {
-
-                            console.log('self.nodes', successResponse);
-
-                            self.nodes = successResponse;
-
-                        }, function(errorResponse) {
-
-                        });
 
                         //
                         // Load practices
@@ -308,6 +317,8 @@
 
                         }
 
+                        self.showElements();
+
                     });
 
                 };
@@ -341,7 +352,7 @@
 
                         successResponse.features.forEach(function(metric) {
 
-                            var _percentComplete = +((metric.installation/metric.planning)*100).toFixed(0);
+                            var _percentComplete = +((metric.installation / metric.planning) * 100).toFixed(0);
 
                             metric.percentComplete = _percentComplete;
 
@@ -384,7 +395,7 @@
 
                         self.permissions = {
                             isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0].properties.name,
+                            role: $rootScope.user.properties.roles[0],
                             account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                         };
 

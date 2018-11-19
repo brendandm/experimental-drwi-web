@@ -201,3 +201,38 @@
   width: 100%;
   z-index: 0;
 }
+
+.leaflet-draw-actions {
+  //display: flex !important;
+  //flex-flow: row nowrap;
+  //align-items: center;
+  left: 28px;
+}
+
+.leaflet-draw-actions li {
+  display: inline-block !important;
+}
+
+.leaflet-draw-actions a,
+.leaflet-draw-actions a:hover {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  border-left: 1px solid #AAA;
+  color: #212121 !important;
+  font: inherit;
+  font-size: 10px;
+  font-family: inherit;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.leaflet-draw-actions a {
+  background-color: #fafafa;
+}
+
+.leaflet-draw-actions a:hover {
+  background-color: #eeeeee;
+}

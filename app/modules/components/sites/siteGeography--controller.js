@@ -4,14 +4,14 @@
 
     /**
      * @ngdoc function
-     * @name FieldDoc.controller:SiteSummaryCtrl
+     * @name FieldDoc.controller:SiteSummaryController
      * @description
      */
     angular.module('FieldDoc')
-        .controller('SiteGeographyCtrl',
+        .controller('SiteGeographyController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
                 $route, nodes, user, Utility, site, Site, Practice, MapPreview,
-                leafletBoundsHelpers) {
+                leafletBoundsHelpers, $interval) {
 
                 var self = this;
 
@@ -26,7 +26,20 @@
                 console.log('self.map', self.map);
 
                 self.status = {
-                    'loading': true
+                    loading: true,
+                    processing: false
+                };
+
+                self.showElements = function() {
+
+                    $timeout(function() {
+
+                        self.status.loading = false;
+
+                        self.status.processing = false;
+
+                    }, 1000);
+
                 };
 
                 self.alerts = [];
@@ -298,21 +311,31 @@
 
                         self.site = successResponse;
 
+                        if (successResponse.permissions.read &&
+                            successResponse.permissions.write) {
+
+                            self.makePrivate = false;
+
+                        } else {
+
+                            self.makePrivate = true;
+
+                        }
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
+
                         if (self.site.geometry !== null) {
 
                             self.site.staticURL = self.buildStaticMapURL(self.site.geometry);
 
                         }
 
-                        self.permissions.can_edit = Account.canEdit(self.site);
-
                         $rootScope.page.title = self.site.properties.name;
 
                         self.project = successResponse.properties.project;
 
                         console.log('self.project', self.project);
-
-                        self.status.loading = false;
 
                         //
                         // Load spatial nodes
@@ -335,7 +358,11 @@
 
                             console.log('self.nodes', self.nodes);
 
+                            self.showElements();
+
                         }, function(errorResponse) {
+
+                            self.showElements();
 
                         });
 
@@ -354,7 +381,7 @@
 
                         self.permissions = {
                             isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0].properties.name,
+                            role: $rootScope.user.properties.roles[0],
                             account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                         };
 
