@@ -71,17 +71,17 @@ angular.module('FieldDoc')
 
                     },
                     metrics: function(GeographyService, $route) {
-                        return Geography.metrics({
+                        return GeographyService.metrics({
                             id: $route.current.params.geographyId
                         });
                     },
                     outcomes: function(GeographyService, $route) {
-                        return Geography.outcomes({
+                        return GeographyService.outcomes({
                             id: $route.current.params.geographyId
                         });
                     },
                     geography: function(GeographyService, $route) {
-                        return Geography.get({
+                        return GeographyService.get({
                             id: $route.current.params.geographyId
                         });
                     }
@@ -104,7 +104,7 @@ angular.module('FieldDoc')
 
                     },
                     geography: function(GeographyService, $route) {
-                        return Geography.get({
+                        return GeographyService.get({
                             id: $route.current.params.geographyId
                         });
                     }
@@ -127,7 +127,7 @@ angular.module('FieldDoc')
 
                     },
                     geography: function(GeographyService, $route) {
-                        return Geography.get({
+                        return GeographyService.get({
                             id: $route.current.params.geographyId
                         });
                     }

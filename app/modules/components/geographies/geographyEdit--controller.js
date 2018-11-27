@@ -6,427 +6,283 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('PracticeEditController', function(Account, Image, leafletData, $location, $log, Map,
-        mapbox, Media, Practice, practice, practice_types, $q, $rootScope, $route,
-        $scope, $timeout, $interval, site, user, Shapefile, leafletBoundsHelpers) {
+    .controller('GeographyEditController',
+        function(Account, leafletData, $location, $log, Map,
+            mapbox, GeographyService, geography, $q, $rootScope, $route,
+            $scope, $timeout, $interval, user, Shapefile,
+            leafletBoundsHelpers) {
 
-        var self = this;
+            var self = this;
 
-        $rootScope.toolbarState = {
-            'edit': true
-        };
-
-        // self.practiceTypes = practice_types;
-
-        self.files = Media;
-        self.files.images = [];
-
-        self.map = JSON.parse(JSON.stringify(Map));
-
-        self.savedObjects = [];
-
-        self.editableLayers = new L.FeatureGroup();
-
-        //
-        // Set default image path for Leaflet iconography
-        //
-
-        L.Icon.Default.imagePath = '/images/leaflet';
-
-        function addNonGroupLayers(sourceLayer, targetGroup) {
-            if (sourceLayer instanceof L.LayerGroup) {
-                sourceLayer.eachLayer(function(layer) {
-                    addNonGroupLayers(layer, targetGroup);
-                });
-            } else {
-                targetGroup.addLayer(sourceLayer);
-            }
-        }
-
-        self.setGeoJsonLayer = function(data) {
-
-            self.editableLayers.clearLayers();
-
-            var siteGeometry = L.geoJson(data, {});
-
-            addNonGroupLayers(siteGeometry, self.editableLayers);
-
-            self.savedObjects = [{
-                id: self.editableLayers._leaflet_id,
-                geoJson: data
-            }];
-
-            console.log('self.savedObjects', self.savedObjects);
-
-        };
-
-        //
-        // We use this function for handle any type of geographic change, whether
-        // through the map or through the fields
-        //
-
-        self.processPin = function(coordinates, zoom) {
-
-            if (coordinates.lat === null || coordinates.lat === undefined || coordinates.lng === null || coordinates.lng === undefined) {
-                return;
-            }
-
-            self.map.center = {
-                lat: coordinates.lat,
-                lng: coordinates.lng,
-                zoom: (zoom < 10) ? 10 : zoom
+            $rootScope.toolbarState = {
+                'edit': true
             };
 
-            self.showGeocoder = false;
-        };
+            self.map = JSON.parse(JSON.stringify(Map));
 
-        //
-        // Empty Geocode object
-        //
-        // We need to have an empty geocode object so that we can fill it in later
-        // in the address geocoding process. This allows us to pass the results along
-        // to the Form Submit function we have in place below.
-        //
-        self.geocode = {};
+            self.savedObjects = [];
 
-        //
-        // When the user has selected a response, we need to perform a few extra
-        // tasks so that our scope is updated properly.
-        //
-
-        $scope.$watch(angular.bind(this, function() {
-            return this.geocode.response;
-        }), function(response) {
+            self.editableLayers = new L.FeatureGroup();
 
             //
-            // Only execute the following block of code if the user has geocoded an
-            // address. This block of code expects this to be a single feature from a
-            // Carmen GeoJSON object.
+            // Set default image path for Leaflet iconography
             //
-            // @see https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
-            //
-            if (response) {
 
-                self.processPin({
-                    lat: response.geometry.coordinates[1],
-                    lng: response.geometry.coordinates[0]
-                }, 16);
+            L.Icon.Default.imagePath = '/images/leaflet';
 
-                self.geocode = {
-                    query: null,
-                    response: null
-                };
-            }
-
-        });
-
-        self.removeImage = function(image) {
-
-            if (self.practice.properties.images.length !== 0) {
-                var _image_index = self.practice.properties.images.indexOf(image);
-                self.practice.properties.images.splice(_image_index, 1);
-            }
-
-            return;
-        };
-
-        $rootScope.page = {};
-
-        self.loadSite = function() {
-
-            site.$promise.then(function(successResponse) {
-
-                console.log('self.site', successResponse);
-
-                self.site = successResponse;
-
-                if (self.site.geometry) {
-
-                    leafletData.getMap('practice--map').then(function(map) {
-
-                        var siteExtent = new L.FeatureGroup();
-
-                        var siteGeometry = L.geoJson(successResponse, {});
-
-                        siteExtent.addLayer(siteGeometry);
-
-                        map.fitBounds(siteExtent.getBounds(), {
-                            maxZoom: 18
-                        });
-
+            function addNonGroupLayers(sourceLayer, targetGroup) {
+                if (sourceLayer instanceof L.LayerGroup) {
+                    sourceLayer.eachLayer(function(layer) {
+                        addNonGroupLayers(layer, targetGroup);
                     });
-
+                } else {
+                    targetGroup.addLayer(sourceLayer);
                 }
+            }
 
-                self.loadPractice();
+            self.setGeoJsonLayer = function(data) {
 
-            }, function(errorResponse) {
+                self.editableLayers.clearLayers();
 
-                //
+                var siteGeometry = L.geoJson(data, {});
 
-            });
+                addNonGroupLayers(siteGeometry, self.editableLayers);
 
-        };
+                self.savedObjects = [{
+                    id: self.editableLayers._leaflet_id,
+                    geoJson: data
+                }];
 
-        self.loadPractice = function() {
+                console.log('self.savedObjects', self.savedObjects);
 
-            practice.$promise.then(function(successResponse) {
+            };
 
-                console.log('self.practice', successResponse);
+            $rootScope.page = {};
 
-                self.practice = successResponse;
+            self.loadGeography = function() {
 
-                delete self.practice.properties.organization;
-                delete self.practice.properties.project;
-                delete self.practice.properties.site;
+                geography.$promise.then(function(successResponse) {
 
-                self.practiceType = successResponse.properties.category;
+                    console.log('self.geography', successResponse);
 
-                $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
+                    self.geography = successResponse;
 
-                //
-                // If a valid practice geometry is present, add it to the map
-                // and track the object in `self.savedObjects`.
-                //
+                    delete self.geography.properties.organization;
+                    delete self.geography.properties.program;
 
-                if (self.practice.geometry !== null &&
-                    typeof self.practice.geometry !== 'undefined') {
+                    $rootScope.page.title = self.geography.properties.name ? self.geography.properties.name : 'Un-named Geography';
 
-                    //Added by Lin 
-                    leafletData.getMap('practice--map').then(function(map) {
+                    //
+                    // If a valid geography geometry is present, add it to the map
+                    // and track the object in `self.savedObjects`.
+                    //
 
-                        self.practiceExtent = new L.FeatureGroup();
+                    if (self.geography.geometry !== null &&
+                        typeof self.geography.geometry !== 'undefined') {
 
-                        self.setGeoJsonLayer(self.practice.geometry);
+                        //Added by Lin 
+                        leafletData.getMap('geography--map').then(function(map) {
 
-                        map.fitBounds(self.editableLayers.getBounds(), {
-                            // padding: [20, 20],
-                            maxZoom: 18
+                            self.geographyExtent = new L.FeatureGroup();
+
+                            self.setGeoJsonLayer(self.geography.geometry);
+
+                            map.fitBounds(self.editableLayers.getBounds(), {
+                                // padding: [20, 20],
+                                maxZoom: 18
+                            });
+
                         });
 
-                    });
+                        self.map.geojson = {
+                            data: self.geography.geometry
+                        };
+                        //existing
+                        // var geographyGeometry = L.geoJson(self.geography.geometry, {});
 
-                    self.map.geojson = {
-                        data: self.practice.geometry
+                        // addNonGroupLayers(geographyGeometry, self.editableLayers);
+
+                        self.savedObjects = [{
+                            id: self.editableLayers._leaflet_id,
+                            geoJson: self.geography.geometry
+                        }];
+                        console.log('self.geography.geometry', self.geography.geometry);
+
+                        console.log('self.savedObjects', self.savedObjects);
+
+                        var rawGeometry = self.geography.geometry;
+
+                        console.log('rawGeometry', rawGeometry);
+
+                    }
+
+                }, function(errorResponse) {
+                    //
+                });
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: true
                     };
-                    //existing
-                    // var practiceGeometry = L.geoJson(self.practice.geometry, {});
 
-                    // addNonGroupLayers(practiceGeometry, self.editableLayers);
+                    self.loadGeography();
 
-                    self.savedObjects = [{
-                        id: self.editableLayers._leaflet_id,
-                        geoJson: self.practice.geometry
-                    }];
-                    console.log('self.practice.geometry', self.practice.geometry);
-
-                    console.log('self.savedObjects', self.savedObjects);
-
-                    var rawGeometry = self.practice.geometry;
-
-                    console.log('rawGeometry', rawGeometry);
-
-                }
-
-            }, function(errorResponse) {
-                //
-            });
-
-        };
-
-        //
-        // Verify Account information for proper UI element display
-        //
-        if (Account.userObject && user) {
-
-            user.$promise.then(function(userResponse) {
-
-                $rootScope.user = Account.userObject = userResponse;
-
-                self.permissions = {
-                    isLoggedIn: Account.hasToken(),
-                    role: $rootScope.user.properties.roles[0],
-                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                    can_edit: true
-                };
-
-                self.loadSite();
-
-            });
-
-        }
-
-        self.uploadShapefile = function() {
-
-            if (!self.shapefile ||
-                !self.shapefile.length) {
-
-                $rootScope.notifications.warning('Uh-oh!', 'You forgot to add a file.');
-
-                $timeout(function() {
-                    $rootScope.notifications.objects = [];
-                }, 1200);
-
-                return false;
+                });
 
             }
 
-            // self.status.saving.action = true;
+            self.uploadShapefile = function() {
 
-            if (self.shapefile) {
+                if (!self.shapefile ||
+                    !self.shapefile.length) {
 
-                self.progressMessage = 'Uploading your file...';
+                    $rootScope.notifications.warning('Uh-oh!', 'You forgot to add a file.');
 
-                var fileData = new FormData();
+                    $timeout(function() {
+                        $rootScope.notifications.objects = [];
+                    }, 1200);
 
-                fileData.append('file', self.shapefile[0]);
+                    return false;
 
-                console.log('fileData', fileData);
+                }
 
-                self.fillMeter = $interval(function() {
+                // self.status.saving.action = true;
 
-                    var tempValue = (self.progressValue || 10) * 0.50;
+                if (self.shapefile) {
 
-                    if (!self.progressValue) {
+                    self.progressMessage = 'Uploading your file...';
 
-                        self.progressValue = tempValue;
+                    var fileData = new FormData();
 
-                    } else if ((100 - tempValue) > self.progressValue) {
+                    fileData.append('file', self.shapefile[0]);
 
-                        self.progressValue += tempValue;
+                    console.log('fileData', fileData);
 
-                    }
+                    self.fillMeter = $interval(function() {
 
-                    console.log('progressValue', self.progressValue);
+                        var tempValue = (self.progressValue || 10) * 0.50;
 
-                    if (self.progressValue > 75) {
+                        if (!self.progressValue) {
 
-                        self.progressMessage = 'Analyzing data...';
+                            self.progressValue = tempValue;
 
-                    }
+                        } else if ((100 - tempValue) > self.progressValue) {
 
-                }, 100);
+                            self.progressValue += tempValue;
 
-                console.log('Shapefile', Shapefile);
+                        }
 
-                try {
+                        console.log('progressValue', self.progressValue);
 
-                    Shapefile.upload({}, fileData, function(shapefileResponse) {
+                        if (self.progressValue > 75) {
 
-                        console.log('shapefileResponse', shapefileResponse);
+                            self.progressMessage = 'Analyzing data...';
 
-                        self.progressValue = 100;
+                        }
 
-                        self.progressMessage = 'Upload successful, rendering shape...';
+                    }, 100);
 
-                        $interval.cancel(self.fillMeter);
+                    console.log('Shapefile', Shapefile);
 
-                        $timeout(function() {
+                    try {
 
-                            self.progressValue = null;
+                        Shapefile.upload({}, fileData, function(shapefileResponse) {
 
-                            if (shapefileResponse.msg.length) {
+                            console.log('shapefileResponse', shapefileResponse);
 
-                                console.log('Shapefile --> GeoJSON', shapefileResponse.msg[0]);
+                            self.progressValue = 100;
 
-                                if (shapefileResponse.msg[0] !== null &&
-                                    typeof shapefileResponse.msg[0].geometry !== 'undefined') {
+                            self.progressMessage = 'Upload successful, rendering shape...';
 
-                                    self.setGeoJsonLayer(shapefileResponse.msg[0]);
+                            $interval.cancel(self.fillMeter);
+
+                            $timeout(function() {
+
+                                self.progressValue = null;
+
+                                if (shapefileResponse.msg.length) {
+
+                                    console.log('Shapefile --> GeoJSON', shapefileResponse.msg[0]);
+
+                                    if (shapefileResponse.msg[0] !== null &&
+                                        typeof shapefileResponse.msg[0].geometry !== 'undefined') {
+
+                                        self.setGeoJsonLayer(shapefileResponse.msg[0]);
+
+                                    }
 
                                 }
 
-                            }
+                            }, 1600);
 
-                        }, 1600);
+                            self.error = null;
 
-                        self.error = null;
+                        }, function(errorResponse) {
 
-                    }, function(errorResponse) {
+                            console.log(errorResponse);
 
-                        console.log(errorResponse);
+                            $interval.cancel(self.fillMeter);
 
-                        $interval.cancel(self.fillMeter);
+                            self.progressValue = null;
 
-                        self.progressValue = null;
+                            $rootScope.notifications.error('', 'An error occurred and we couldn\'t process your file.');
 
-                        $rootScope.notifications.error('', 'An error occurred and we couldn\'t process your file.');
+                            $timeout(function() {
+                                $rootScope.notifications.objects = [];
+                            }, 2000);
 
-                        $timeout(function() {
-                            $rootScope.notifications.objects = [];
-                        }, 2000);
+                            return;
 
-                        return;
+                        });
 
-                    });
+                    } catch (error) {
 
-                } catch (error) {
-
-                    console.log('Shapefile upload error', error);
-
-                }
-
-            }
-
-        };
-
-        self.savePractice = function() {
-
-            if (self.savedObjects.length) {
-
-                self.savedObjects.forEach(function(object) {
-
-                    console.log('Iterating self.savedObjects', object);
-
-                    if (object.geoJson.geometry) {
-
-                        self.practice.geometry = object.geoJson.geometry;
-
-                    } else {
-
-                        self.practice.geometry = object.geoJson;
+                        console.log('Shapefile upload error', error);
 
                     }
 
-                });
+                }
 
-            }
+            };
 
-            if (self.files.images.length) {
+            self.saveGeography = function() {
 
-                var savedQueries = self.files.preupload(self.files.images);
+                if (self.savedObjects.length) {
 
-                $q.all(savedQueries).then(function(successResponse) {
+                    self.savedObjects.forEach(function(object) {
 
-                    $log.log('Images::successResponse', successResponse);
+                        console.log('Iterating self.savedObjects', object);
 
-                    angular.forEach(successResponse, function(image) {
-                        self.practice.properties.images.push({
-                            id: image.id
-                        });
-                    });
+                        if (object.geoJson.geometry) {
 
-                    self.practice.$update().then(function(successResponse) {
+                            self.geography.geometry = object.geoJson.geometry;
 
-                        $location.path('/practices/' + self.practice.id);
+                        } else {
 
-                    }, function(errorResponse) {
+                            self.geography.geometry = object.geoJson;
 
-                        // Error message
+                        }
 
                     });
 
-                }, function(errorResponse) {
+                }
 
-                    $log.log('errorResponse', errorResponse);
+                self.geography.$update().then(function(successResponse) {
 
-                });
-
-            } else {
-
-                self.practice.$update().then(function(successResponse) {
-
-                    $location.path('/practices/' + self.practice.id);
+                    //
 
                 }, function(errorResponse) {
 
@@ -434,299 +290,119 @@ angular.module('FieldDoc')
 
                 });
 
-            }
-
-        };
-
-        self.alerts = [];
-
-        function closeAlerts() {
+            };
 
             self.alerts = [];
 
-        }
+            function closeAlerts() {
 
-        function closeRoute() {
+                self.alerts = [];
 
-            $location.path(self.practice.links.site.html);
-
-        }
-
-        self.confirmDelete = function(obj) {
-
-            console.log('self.confirmDelete', obj);
-
-            self.deletionTarget = self.deletionTarget ? null : obj;
-
-        };
-
-        self.cancelDelete = function() {
-
-            self.deletionTarget = null;
-
-        };
-
-        self.deleteFeature = function() {
-
-            Practice.delete({
-                id: +self.deletionTarget.id
-            }).$promise.then(function(data) {
-
-                self.alerts.push({
-                    'type': 'success',
-                    'flag': 'Success!',
-                    'msg': 'Successfully deleted this practice.',
-                    'prompt': 'OK'
-                });
-
-                $timeout(closeRoute, 2000);
-
-            }).catch(function(errorResponse) {
-
-                console.log('self.deleteFeature.errorResponse', errorResponse);
-
-                if (errorResponse.status === 409) {
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this practice.',
-                        'prompt': 'OK'
-                    }];
-
-                } else if (errorResponse.status === 403) {
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'You don’t have permission to delete this practice.',
-                        'prompt': 'OK'
-                    }];
-
-                } else {
-
-                    self.alerts = [{
-                        'type': 'error',
-                        'flag': 'Error!',
-                        'msg': 'Something went wrong while attempting to delete this practice.',
-                        'prompt': 'OK'
-                    }];
-
-                }
-
-                $timeout(closeAlerts, 2000);
-
-            });
-
-        };
-
-        //
-        // Define a layer to add geometries to later
-        //
-        var featureGroup = new L.FeatureGroup();
-
-        //
-        // Convert a GeoJSON Feature Collection to a valid Leaflet Layer
-        //
-        self.geojsonToLayer = function(geojson, layer) {
-            layer.clearLayers();
-
-            function add(l) {
-                l.addTo(layer);
             }
 
-            //
-            // Make sure the GeoJSON object is added to the layer with appropriate styles
-            //
-            L.geoJson(geojson, {
-                style: {
-                    stroke: true,
-                    fill: false,
-                    weight: 2,
-                    opacity: 1,
-                    color: 'rgb(255,255,255)',
-                    lineCap: 'square'
-                }
-            }).eachLayer(add);
-        };
+            function closeRoute() {
 
-        //
-        // Define our map interactions via the Angular Leaflet Directive
-        //
-        leafletData.getMap('practice--map').then(function(map) {
+                $location.path('/geographies');
 
-            //
-            // Add draw toolbar
-            //
+            }
 
-            var drawControls = new L.Control.Draw({
-                draw: {
-                    circle: false,
-                    circlemarker: false,
-                    rectangle: false
-                },
-                edit: {
-                    featureGroup: self.editableLayers
-                }
-            });
+            self.confirmDelete = function(obj) {
 
-            console.log('drawControls', drawControls);
+                console.log('self.confirmDelete', obj);
 
-            map.addControl(drawControls);
+                self.deletionTarget = self.deletionTarget ? null : obj;
 
-            var drawnItems = drawControls.options.edit.featureGroup;
-
-            // map.fitBounds(self.editableLayers.getBounds());
-
-            // if (drawnItems.getLayers().length > 1) {
-
-            //     map.fitBounds(drawnItems.getBounds());
-
-            // }
-
-            // Init the map with the saved elements
-            var printLayers = function() {
-                // console.log("After: ");
-                map.eachLayer(function(layer) {
-                    console.log('Existing layer', layer);
-                });
             };
 
-            drawnItems.addTo(map);
-            printLayers();
+            self.cancelDelete = function() {
 
-            map.on('draw:created', function(e) {
+                self.deletionTarget = null;
 
-                var layer = e.layer;
+            };
 
-                //
-                // Sites must only have one geometry feature
-                //
+            self.deleteFeature = function() {
 
-                drawnItems.clearLayers();
-                drawnItems.addLayer(layer);
-                console.log('Layer added', JSON.stringify(layer.toGeoJSON()));
+                GeographyService.delete({
+                    id: +self.deletionTarget.id
+                }).$promise.then(function(data) {
 
-                self.savedObjects = [{
-                    id: layer._leaflet_id,
-                    geoJson: layer.toGeoJSON()
-                }];
-
-            });
-
-            map.on('draw:edited', function(e) {
-
-                var layers = e.layers;
-
-                console.log('map.draw:edited', layers);
-
-                layers.eachLayer(function(layer) {
-
-                    self.savedObjects = [{
-                        id: layer._leaflet_id,
-                        geoJson: layer.toGeoJSON()
-                    }];
-
-                    console.log('Layer changed', layer._leaflet_id, JSON.stringify(layer.toGeoJSON()));
-
-                });
-
-            });
-
-            map.on('draw:deleted', function(e) {
-
-                var layers = e.layers;
-
-                layers.eachLayer(function(layer) {
-
-                    for (var i = 0; i < self.savedObjects.length; i++) {
-                        if (self.savedObjects[i].id == layer._leaflet_id) {
-                            self.savedObjects.splice(i, 1);
-                        }
-                    }
-
-                    console.log('Layer removed', JSON.stringify(layer.toGeoJSON()));
-
-                });
-
-                self.savedObjects = [];
-
-                console.log('Saved objects', self.savedObjects);
-
-            });
-
-            map.on('layeradd', function(e) {
-
-                console.log('map:layeradd', e);
-
-                if (e.layer.getBounds) {
-
-                    map.fitBounds(e.layer.getBounds(), {
-                        padding: [20, 20],
-                        maxZoom: 18
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this geography.',
+                        'prompt': 'OK'
                     });
 
+                    $timeout(closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this geography.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this geography.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this geography.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
+
+                });
+
+            };
+
+            //
+            // Define a layer to add geometries to later
+            //
+            var featureGroup = new L.FeatureGroup();
+
+            //
+            // Convert a GeoJSON Feature Collection to a valid Leaflet Layer
+            //
+            self.geojsonToLayer = function(geojson, layer) {
+                layer.clearLayers();
+
+                function add(l) {
+                    l.addTo(layer);
                 }
 
-            });
+                //
+                // Make sure the GeoJSON object is added to the layer with appropriate styles
+                //
+                L.geoJson(geojson, {
+                    style: {
+                        stroke: true,
+                        fill: false,
+                        weight: 2,
+                        opacity: 1,
+                        color: 'rgb(255,255,255)',
+                        lineCap: 'square'
+                    }
+                }).eachLayer(add);
 
-            map.on('zoomend', function(e) {
-
-                console.log('map:zoomend', map.getZoom());
-
-            });
-
-            //
-            // Update the pin and segment information when the user clicks on the map
-            // or drags the pin to a new location
-            //
-            $scope.$on('leafletDirectiveMap.click', function(event, args) {
-                self.processPin(args.leafletEvent.latlng, map._zoom);
-            });
-
-            $scope.$on('leafletDirectiveMap.dblclick', function(event, args) {
-                self.processPin(args.leafletEvent.latlng, map._zoom + 1);
-            });
-
-            $scope.$on('leafletDirectiveMarker.dragend', function(event, args) {
-                self.processPin(args.leafletEvent.target._latlng, map._zoom);
-            });
-
-            $scope.$on('leafletDirectiveMarker.dblclick', function(event, args) {
-                var zoom = map._zoom + 1;
-                map.setZoom(zoom);
-            });
+            };
 
         });
-
-        self.setPracticeType = function($item,$model,$label) {
-
-            console.log('self.practiceType', $item);
-
-            self.practice.properties.category_id = $item.id;
-
-        };
-
-        //
-        // Load practices
-        //
-
-        practice_types.$promise.then(function(successResponse) {
-
-            console.log('self.practiceTypes', successResponse);
-
-            var _practiceTypes = [];
-
-            successResponse.features.forEach(function(feature) {
-
-                _practiceTypes.push(feature.properties);
-
-            });
-
-            self.practiceTypes = _practiceTypes;
-
-        }, function(errorResponse) {
-
-        });
-
-    });

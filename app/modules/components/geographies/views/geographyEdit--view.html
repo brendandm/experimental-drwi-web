@@ -2,42 +2,32 @@
 
 <main class="site--content--flow fluid-content clearfix distinguish">
 
-    <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
+    <div id="sidebar" data-ng-include="'/templates/program-navigation--view.html'"></div>
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <h1 class="inset">Edit practice</h1>
+        <h1 class="inset">Edit geography</h1>
 
-        <div class="main--ui" data-ng-if="page.practiceTypes">
+        <div class="main--ui">
 
             <article class="feature-detail">
 
                 <div class="feature-detail-content">
 
-                    <form role="form" class="form" style="position:relative;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePractice();page.isSavingChanges =! page.isSavingChanges;">
+                    <form role="form" class="form" style="position:relative;" id="form--GeographyEdit" name="form--GeographyEdit" data-ng-submit="page.saveGeography()">
 
-                        <!-- Practice Name -->
+                        <!-- Geography Name -->
 
                         <div class="form-element">
                             <span class="meta-label"><b>Name</b></span>
-                            <input type="text" data-ng-model="page.practice.properties.name" class="form-control animate" id="name" name="name" placeholder="Practice name" />
+                            <input type="text" data-ng-model="page.geography.properties.name" class="form-control animate" id="name" name="name" placeholder="Geography name" />
                         </div>
 
-                        <!-- Practice Description -->
+                        <!-- Geography Description -->
 
                         <div class="form-element">
                             <span class="meta-label"><b>Description</b></span>
-                            <textarea class="form-control" msd-elastic data-ng-model="page.practice.properties.description">{{ page.practice.properties.description }}</textarea>
-                        </div>
-
-                        <!-- Practice Type -->
-
-                        <div class="form-element">
-                            <span class="meta-label"><b>Practice type</b></span>
-                            <input id="practice_type_id" name="practice_type_id" type="text" placeholder="Search categories" data-ng-model="page.practice.properties.category.properties" uib-typeahead="practiceType as practiceType.name for practiceType in page.practiceTypes | filter:$viewValue | limitTo:5" typeahead-on-select="page.setPracticeType($item,$model,$label)" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
-                            <p data-ng-if="page.practice.properties.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
-                                {{ page.practice.properties.category.properties.description }}
-                            </p>
+                            <textarea class="form-control" msd-elastic data-ng-model="page.geography.properties.description">{{ page.geography.properties.description }}</textarea>
                         </div>
 
                         <h2>Privacy</h2>
@@ -45,15 +35,15 @@
                         <div class="scope--control">
                             <span>Off</span>
                             <label class="switch">
-                                <input class="inputdemo" type="checkbox" data-ng-model="page.practice.properties.private" data-ng-checked="page.practice.properties.private">
+                                <input class="inputdemo" type="checkbox" data-ng-model="page.geography.properties.private" data-ng-checked="page.geography.properties.private">
                                 <div class="slider round"></div>
                             </label>
                             <span>On</span>
                         </div>
 
-                        <p data-ng-if="page.practice.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This practice is <strong>private</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this practice <strong>will not</strong> appear on dashboard maps.</p>
+                        <p data-ng-if="page.geography.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This geography is <strong>private</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this geography <strong>will not</strong> appear on dashboard maps.</p>
 
-                        <p data-ng-if="!page.practice.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This practice is <strong>public</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this practice <strong>will</strong> appear on dashboard maps.</p>
+                        <p data-ng-if="!page.geography.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This geography is <strong>public</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this geography <strong>will</strong> appear on dashboard maps.</p>
 
                         <div class="save--action--wrapper save--action--bottom">
                             <span>Save changes</span>
@@ -77,28 +67,28 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
         <ul>
             <li>
-                <a href="/practices/{{ page.practice.properties.id }}">
+                <a href="/geographys/{{ page.geography.properties.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/practices/{{ page.practice.properties.id }}/edit">
+                <a href="/geographys/{{ page.geography.properties.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
-                <a href="/practices/{{ page.practice.properties.id }}/location">
+                <a href="/geographys/{{ page.geography.properties.id }}/location">
                     <i class="material-icons">
                         location_on
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
-                <a href="/practices/{{ page.practice.properties.id }}/tags">
+                <a href="/geographys/{{ page.geography.properties.id }}/tags">
                     <i class="material-icons">
                         local_offer
                     </i>
@@ -106,7 +96,7 @@
             </li>
             <li data-ng-if="page.permissions.can_edit">
                 <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
-                    <p>Do you want to delete this practice?</p>
+                    <p>Do you want to delete this geography?</p>
                     <div class="actions">
                         <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature()">
                             Yes
@@ -116,7 +106,7 @@
                         </a>
                     </div>
                 </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.practice)">
+                <a href="#" data-ng-click="page.confirmDelete(page.geography)">
                     <i class="material-icons">
                         delete
                     </i>
