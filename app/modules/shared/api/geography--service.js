@@ -15,6 +15,9 @@
                 query: {
                     isArray: false,
                     cache: true
+                },
+                'update': {
+                    method: 'PATCH'
                 }
             });
         });

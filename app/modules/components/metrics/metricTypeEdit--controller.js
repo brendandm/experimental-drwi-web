@@ -98,8 +98,6 @@ angular.module('FieldDoc')
 
                     self.makePrivate = true;
 
-                    return;
-
                 }
 
                 self.permissions.can_edit = successResponse.permissions.write;

@@ -6,9 +6,15 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <h1 class="inset">Edit geography</h1>
+        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
+            <div class="progress--container">
+                <p style="font-weight: bold;" class="color-pulse">Loading geography data&hellip;</p>
+            </div>
+        </div>
 
-        <div class="main--ui">
+        <h1 class="inset reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">Edit geography</h1>
+
+        <div class="main--ui reveal fade-in t1" data-ng-if="!page.status.loading && !page.makePrivate">
 
             <article class="feature-detail">
 
@@ -41,9 +47,9 @@
                             <span>On</span>
                         </div>
 
-                        <p data-ng-if="page.geography.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This geography is <strong>private</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this geography <strong>will not</strong> appear on dashboard maps.</p>
+                        <p data-ng-if="page.geography.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This geography is <strong>private</strong>. It can only be viewed and edited by program managers. Spatial data related to this geography <strong>will not</strong> appear on dashboard maps.</p>
 
-                        <p data-ng-if="!page.geography.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This geography is <strong>public</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this geography <strong>will</strong> appear on dashboard maps.</p>
+                        <p data-ng-if="!page.geography.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This geography is <strong>public</strong>. It can only be viewed and edited by program managers. Spatial data related to this geography <strong>will</strong> appear on dashboard maps.</p>
 
                         <div class="save--action--wrapper save--action--bottom">
                             <span>Save changes</span>
@@ -67,28 +73,28 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
         <ul>
             <li>
-                <a href="/geographys/{{ page.geography.properties.id }}">
+                <a href="/geographies/{{ page.geography.properties.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/geographys/{{ page.geography.properties.id }}/edit">
+                <a href="/geographies/{{ page.geography.properties.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
-                <a href="/geographys/{{ page.geography.properties.id }}/location">
+                <a href="/geographies/{{ page.geography.properties.id }}/location">
                     <i class="material-icons">
                         location_on
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
-                <a href="/geographys/{{ page.geography.properties.id }}/tags">
+                <a href="/geographies/{{ page.geography.properties.id }}/tags">
                     <i class="material-icons">
                         local_offer
                     </i>
