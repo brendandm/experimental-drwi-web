@@ -143,7 +143,32 @@ angular.module('FieldDoc')
                         return GeographyService.get({
                             id: $route.current.params.geographyId
                         });
-                        
+
+                    }
+                }
+            })
+            .when('/geographies/:geographyId/location', {
+                templateUrl: '/modules/components/geographies/views/geographyLocation--view.html?t=' + environment.version,
+                controller: 'GeographyLocationController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    geography: function(GeographyService, $route) {
+
+                        return GeographyService.get({
+                            id: $route.current.params.geographyId
+                        });
+
                     }
                 }
             })
