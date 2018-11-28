@@ -57,8 +57,12 @@ angular.module('FieldDoc')
 
                     self.geography = successResponse;
 
-                    delete self.geography.properties.organization;
-                    delete self.geography.properties.program;
+                    if (self.geography.properties.program &&
+                        typeof self.geography.properties.program !== 'undefined') {
+
+                        self.geography.properties.program = self.geography.properties.program.properties;
+
+                    }
 
                     $rootScope.page.title = self.geography.properties.name ? self.geography.properties.name : 'Un-named Geography';
 
@@ -93,33 +97,34 @@ angular.module('FieldDoc')
 
             };
 
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
+            self.scrubFeature = function() {
 
-                user.$promise.then(function(userResponse) {
+                delete self.geography.properties.counties;
+                delete self.geography.properties.creator;
+                delete self.geography.properties.dashboards;
+                delete self.geography.properties.last_modified_by;
+                delete self.geography.properties.organization;
+                delete self.geography.properties.sites;
+                delete self.geography.properties.watersheds;
 
-                    $rootScope.user = Account.userObject = userResponse;
-
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        can_edit: false
-                    };
-
-                    self.loadGeography();
-
-                });
-
-            }
+            };
 
             self.saveGeography = function() {
 
-                self.geography.$update().then(function(successResponse) {
+                self.scrubFeature();
+
+                GeographyService.update({
+                    id: self.geography.id
+                }, self.geography.properties).$promise.then(function(successResponse) {
 
                     self.geography = successResponse;
+
+                    if (self.geography.properties.program &&
+                        typeof self.geography.properties.program !== 'undefined') {
+
+                        self.geography.properties.program = self.geography.properties.program.properties;
+
+                    }
 
                     self.alerts = [{
                         'type': 'success',
@@ -132,7 +137,7 @@ angular.module('FieldDoc')
 
                     self.showElements();
 
-                }, function(errorResponse) {
+                }).catch(function(errorResponse) {
 
                     // Error message
 
@@ -218,5 +223,43 @@ angular.module('FieldDoc')
                 });
 
             };
+
+            self.extractPrograms = function(user) {
+
+                var _programs = [];
+
+                user.properties.programs.forEach(function(program) {
+
+                    _programs.push(program.properties);
+
+                });
+
+                return _programs;
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false
+                    };
+
+                    self.programs = self.extractPrograms($rootScope.user);
+
+                    self.loadGeography();
+
+                });
+
+            }
 
         });

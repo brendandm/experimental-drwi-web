@@ -179,12 +179,6 @@
 
                 };
 
-                //             var southWest = L.latLng(40.712, -74.227),
-                // northEast = L.latLng(40.774, -74.125),
-                // bounds = L.latLngBounds(southWest, northEast);
-
-                // Math.max.apply(null, numbers)
-
                 self.transformBounds = function(obj) {
 
                     var xRange = [],
@@ -273,6 +267,25 @@
                     }, function(errorResponse) {
 
                         self.showElements();
+
+                    });
+
+                };
+
+                self.createGeography = function() {
+
+                    self.geography = new GeographyService({
+                        'program_id': self.programId,
+                        'organization_id': $rootScope.user.properties.organization_id
+                    });
+
+                    self.geography.$save(function(successResponse) {
+
+                        $location.path('/geographies/' + successResponse.id + '/edit');
+
+                    }, function(errorResponse) {
+
+                        console.error('Unable to create a new geography, please try again later.');
 
                     });
 

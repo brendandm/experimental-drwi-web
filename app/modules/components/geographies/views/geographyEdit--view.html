@@ -36,6 +36,13 @@
                             <textarea class="form-control" msd-elastic data-ng-model="page.geography.properties.description">{{ page.geography.properties.description }}</textarea>
                         </div>
 
+                        <!-- Program -->
+
+                        <div class="form-element">
+                            <span class="meta-label"><b>Program</b></span>
+                            <input id="geography_program_id" name="geography_program_id" type="text" placeholder="Search programs&hellip;" data-ng-model="page.geography.properties.program" uib-typeahead="program as program.name for program in page.programs | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
+                        </div>
+
                         <h2>Privacy</h2>
 
                         <div class="scope--control">
