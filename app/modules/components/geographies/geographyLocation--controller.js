@@ -42,6 +42,22 @@
 
                 self.map = JSON.parse(JSON.stringify(Map));
 
+                self.map.layers = {
+                    baselayers: {
+                        streets: {
+                            name: 'Streets',
+                            type: 'xyz',
+                            url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                            layerOptions: {
+                                apikey: mapbox.access_token,
+                                mapid: 'mapbox.streets',
+                                attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>',
+                                showOnSelector: false
+                            }
+                        }
+                    }
+                };
+
                 self.savedObjects = [];
 
                 self.editableLayers = new L.FeatureGroup();
@@ -198,10 +214,6 @@
 
                 self.saveGeography = function() {
 
-                    delete self.geography.properties.counties;
-                    delete self.geography.properties.geographies;
-                    delete self.geography.properties.watersheds;
-
                     if (self.savedObjects.length) {
 
                         self.savedObjects.forEach(function(object) {
@@ -225,7 +237,11 @@
 
                     self.status.processing = true;
 
-                    self.geography.$update().then(function(successResponse) {
+                    GeographyService.update({
+                        id: self.geography.id
+                    }, {
+                        geometry: self.geography.geometry
+                    }).$promise.then(function(successResponse) {
 
                         self.status.processing = false;
 
@@ -240,7 +256,7 @@
 
                         $timeout(closeAlerts, 2000);
 
-                    }, function(errorResponse) {
+                    }).catch(function(errorResponse) {
 
                         self.status.processing = false;
 
@@ -394,10 +410,6 @@
                                     self.setGeoJsonLayer(self.geography.properties.extent, self.geographyExtent);
 
                                     console.log('self.geographyExtent', self.geographyExtent.getBounds());
-
-                                    // map.fitBounds(self.geographyExtent.getBounds(), {
-                                    //     maxZoom: 18
-                                    // });
 
                                     self.map.bounds = Utility.transformBounds(self.geography.properties.extent);
 
