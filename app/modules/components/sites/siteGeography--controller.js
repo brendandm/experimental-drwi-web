@@ -232,12 +232,6 @@
 
                 };
 
-                //             var southWest = L.latLng(40.712, -74.227),
-                // northEast = L.latLng(40.774, -74.125),
-                // bounds = L.latLngBounds(southWest, northEast);
-
-                // Math.max.apply(null, numbers)
-
                 self.transformBounds = function(obj) {
 
                     var xRange = [],
@@ -270,11 +264,6 @@
                     ]);
 
                     return bounds;
-
-                    //         var bounds = leafletBoundsHelpers.createBoundsFromArray([
-                    //     [ 51.508742458803326, -0.087890625 ],
-                    //     [ 51.508742458803326, -0.087890625 ]
-                    // ]);
 
                 };
 

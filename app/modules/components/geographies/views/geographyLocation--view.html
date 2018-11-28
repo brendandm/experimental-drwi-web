@@ -28,19 +28,19 @@
 
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
 
-            <form role="form" class="form" id="form--SiteLocation" name="form--SiteLocation" style="position: relative;" data-ng-submit="page.saveSite()">
+            <form role="form" class="form" id="form--GeographyLocation" name="form--GeographyLocation" style="position: relative;" data-ng-submit="page.saveGeography()">
 
-                <div class="form-element">
+                <!-- <div class="form-element">
 
                     <span class="meta-label"><b>Address</b></span>
 
                     <input type="text" id="address" name="address" data-ng-model="page.geocode.query" class="form-control" placeholder="Type in an address&hellip;" mapbox-geocoder mapbox-geocoder-direction="forward" mapbox-geocoder-query="page.geocode.query" mapbox-geocoder-response="page.geocode.response" autofocus="autofocus" />
 
-                </div>
+                </div> -->
 
                 <div style="position:relative; border-radius: 4px; overflow: hidden;">
 
-                    <leaflet id="geography--map" class="map tall" style="border-radius: 4px; overflow: hidden;" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
+                    <leaflet id="geography--map" class="map tall" style="border-radius: 4px; overflow: hidden;" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds" geojson="page.map.geojson"></leaflet>
 
                     <div style="background: #fff;" class="progress--modal" data-ng-if="page.progressValue && page.progressValue > 0">
                         <div class="progress--container">
@@ -58,9 +58,9 @@
                 <!-- Shapefile input -->
                 <div class="form-field">
                     <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
-                        <strong>Upload an ESRI Shapefile</strong>
+                        <strong>Upload GeoJSON or an ESRI Shapefile</strong>
                     </p>
-                    <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">In addition to the mandatory .shp, .shx, and .dbf files, your archive must include a .prj file that describes the coordinate system and projection.</p>
+                    <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">In addition to the mandatory .shp, .shx, and .dbf files, shapefile archives must include a .prj file that describes the coordinate system and projection. GeoJSON files must use the .json file extension and follow the format described in <a href="https://tools.ietf.org/html/rfc7946" target="_blank">this specification</a>. See <a href="https://www.mapbox.com/help/define-geojson/" target="_blank">here</a> for more help with the GeoJSON format.</p>
                     <input type="file" class="form-control" id="shapefile" name="shapefile" file-upload file-model="page.shapefile" file-on-change="page.uploadShapefile()" />
                 </div>
 

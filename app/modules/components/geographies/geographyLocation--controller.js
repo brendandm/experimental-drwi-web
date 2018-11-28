@@ -46,11 +46,6 @@
 
                 self.editableLayers = new L.FeatureGroup();
 
-                //
-                // Set default image path for Leaflet iconography
-                //
-                L.Icon.Default.imagePath = '/images/leaflet';
-
                 function addNonGroupLayers(sourceLayer, targetGroup) {
 
                     if (sourceLayer instanceof L.LayerGroup) {
@@ -68,72 +63,6 @@
                     }
 
                 }
-
-                //
-                // We use this function for handle any type of geographic change, whether
-                // through the map or through the fields
-                //
-                self.processPin = function(coordinates, zoom) {
-
-                    if (coordinates.lat === null ||
-                        coordinates.lat === undefined ||
-                        coordinates.lng === null ||
-                        coordinates.lng === undefined) {
-                        return;
-                    }
-
-                    //
-                    // Update the visible pin on the map
-                    //
-
-                    self.map.center = {
-                        lat: coordinates.lat,
-                        lng: coordinates.lng,
-                        zoom: (zoom < 10) ? 10 : zoom
-                    };
-
-                    self.showGeocoder = false;
-
-                };
-
-                //
-                // Empty Geocode object
-                //
-                // We need to have an empty geocode object so that we can fill it in later
-                // in the address geocoding process. This allows us to pass the results along
-                // to the Form Submit function we have in place below.
-                //
-                self.geocode = {};
-
-                //
-                // When the user has selected a response, we need to perform a few extra
-                // tasks so that our scope is updated properly.
-                //
-                $scope.$watch(angular.bind(this, function() {
-                    return this.geocode.response;
-                }), function(response) {
-
-                    //
-                    // Only execute the following block of code if the user has geocoded an
-                    // address. This block of code expects this to be a single feature from a
-                    // Carmen GeoJSON object.
-                    //
-                    // @see https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
-                    //
-                    if (response) {
-
-                        self.processPin({
-                            lat: response.geometry.coordinates[1],
-                            lng: response.geometry.coordinates[0]
-                        }, 16);
-
-                        self.geocode = {
-                            query: null,
-                            response: null
-                        };
-                    }
-
-                });
 
                 self.setGeoJsonLayer = function(data) {
 
@@ -290,12 +219,7 @@
 
                     } else {
 
-                        self.geography.geometry = {
-                            type: 'Point',
-                            coordinates: [-98.5795,
-                                39.828175
-                            ]
-                        };
+                        self.geography.geometry = null;
 
                     }
 
@@ -415,172 +339,6 @@
 
                 };
 
-                /**
-                 * Mapping functionality
-                 *
-                 *
-                 *
-                 *
-                 *
-                 *
-                 */
-
-                //
-                // Convert a GeoJSON Feature Collection to a valid Leaflet Layer
-                //
-                self.geojsonToLayer = function(geojson, layer) {
-
-                    layer.clearLayers();
-
-                    function add(l) {
-                        l.addTo(layer);
-                    }
-
-                    //
-                    // Make sure the GeoJSON object is added to the layer with appropriate styles
-                    //
-                    L.geoJson(geojson, {
-                        style: {
-                            stroke: true,
-                            fill: false,
-                            weight: 2,
-                            opacity: 1,
-                            color: 'rgb(255,255,255)',
-                            lineCap: 'square'
-                        }
-                    }).eachLayer(add);
-
-                };
-
-                //
-                // Define our map interactions via the Angular Leaflet Directive
-                //
-                leafletData.getMap('geography--map').then(function(map) {
-
-                    //
-                    // Add draw toolbar
-                    //
-
-                    var drawControls = new L.Control.Draw({
-                        draw: {
-                            circle: false,
-                            circlemarker: false,
-                            rectangle: false
-                        },
-                        edit: {
-                            featureGroup: self.editableLayers
-                        }
-                    });
-
-                    console.log('drawControls', drawControls);
-
-                    // map.addControl(drawControls);
-
-                    var drawnItems = drawControls.options.edit.featureGroup;
-
-                    drawnItems.addTo(map);
-
-                    map.on('draw:created', function(e) {
-
-                        var layer = e.layer;
-
-                        drawnItems.clearLayers();
-                        drawnItems.addLayer(layer);
-                        console.log('Layer added', JSON.stringify(layer.toGeoJSON()));
-
-                        self.savedObjects = [{
-                            id: layer._leaflet_id,
-                            geoJson: layer.toGeoJSON()
-                        }];
-
-                    });
-
-                    map.on('draw:edited', function(e) {
-
-                        var layers = e.layers;
-
-                        console.log('map.draw:edited', layers);
-
-                        layers.eachLayer(function(layer) {
-
-                            self.savedObjects = [{
-                                id: layer._leaflet_id,
-                                geoJson: layer.toGeoJSON()
-                            }];
-
-                            console.log('Layer changed', layer._leaflet_id, JSON.stringify(layer.toGeoJSON()));
-
-                        });
-
-                    });
-
-                    map.on('draw:deleted', function(e) {
-
-                        var layers = e.layers;
-
-                        layers.eachLayer(function(layer) {
-
-                            for (var i = 0; i < self.savedObjects.length; i++) {
-                                if (self.savedObjects[i].id == layer._leaflet_id) {
-                                    self.savedObjects.splice(i, 1);
-                                }
-                            }
-
-                            console.log('Layer removed', JSON.stringify(layer.toGeoJSON()));
-
-                        });
-
-                        self.savedObjects = [];
-
-                        console.log('Saved objects', self.savedObjects);
-
-                    });
-
-                    map.on('layeradd', function(e) {
-
-                        console.log('map:layeradd', e);
-
-                        if (e.layer.getBounds) {
-
-                            map.fitBounds(e.layer.getBounds(), {
-                                padding: [20, 20],
-                                maxZoom: 18
-                            });
-
-                        }
-
-                    });
-
-                    map.on('zoomend', function(e) {
-
-                        console.log('map:zoomend', map.getZoom());
-
-                    });
-
-                    //
-                    // Update the pin and segment information when the user clicks on the map
-                    // or drags the pin to a new location
-                    //
-
-                    $scope.$on('leafletDirectiveMap.click', function(event, args) {
-                        self.processPin(args.leafletEvent.latlng, map._zoom);
-                    });
-
-                    $scope.$on('leafletDirectiveMap.dblclick', function(event, args) {
-                        self.processPin(args.leafletEvent.latlng, map._zoom + 1);
-                    });
-
-                    $scope.$on('leafletDirectiveMarker.dragend', function(event, args) {
-                        self.processPin(args.leafletEvent.target._latlng, map._zoom);
-                    });
-
-                    $scope.$on('leafletDirectiveMarker.dblclick', function(event, args) {
-                        var zoom = map._zoom + 1;
-                        map.setZoom(zoom);
-                    });
-
-                });
-
                 //
                 // Verify Account information for proper UI element display
                 //
@@ -603,6 +361,8 @@
 
                             self.geography = successResponse;
 
+                            console.log(JSON.stringify(successResponse.properties.extent));
+
                             if (successResponse.permissions.read &&
                                 successResponse.permissions.write) {
 
@@ -624,26 +384,30 @@
                             // and track the object in `self.savedObjects`.
                             //
 
-                            if (self.geography.geometry !== null &&
-                                typeof self.geography.geometry !== 'undefined') {
+                            if (self.geography.properties.extent !== null &&
+                                typeof self.geography.properties.extent !== 'undefined') {
 
                                 leafletData.getMap('geography--map').then(function(map) {
 
-                                    var geographyExtent = new L.FeatureGroup();
+                                    self.geographyExtent = new L.FeatureGroup();
 
-                                    var geographyGeometry = L.geoJson(successResponse, {});
+                                    self.setGeoJsonLayer(self.geography.properties.extent, self.geographyExtent);
 
-                                    geographyExtent.addLayer(geographyGeometry);
+                                    console.log('self.geographyExtent', self.geographyExtent.getBounds());
 
-                                    map.fitBounds(geographyExtent.getBounds(), {
-                                        maxZoom: 18
-                                    });
+                                    // map.fitBounds(self.geographyExtent.getBounds(), {
+                                    //     maxZoom: 18
+                                    // });
 
-                                    self.setGeoJsonLayer(self.geography.geometry);
+                                    self.map.bounds = Utility.transformBounds(self.geography.properties.extent);
 
                                 });
 
                             }
+
+                            self.map.geojson = {
+                                data: self.geography.geometry
+                            };
 
                             self.showElements();
 

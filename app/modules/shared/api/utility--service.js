@@ -8,7 +8,7 @@
  * Provider in the FieldDoc.
  */
 angular.module('FieldDoc')
-    .service('Utility', function() {
+    .service('Utility', function(leafletBoundsHelpers) {
 
         return {
             machineName: function(name) {
@@ -61,6 +61,40 @@ angular.module('FieldDoc')
                 ];
 
                 return range[Math.floor(Math.random() * range.length)];
+
+            },
+            transformBounds: function(obj) {
+
+                var xRange = [],
+                    yRange = [],
+                    southWest,
+                    northEast,
+                    bounds;
+
+                obj.coordinates[0].forEach(function(coords) {
+
+                    xRange.push(coords[0]);
+
+                    yRange.push(coords[1]);
+
+                });
+
+                southWest = [
+                    Math.min.apply(null, yRange),
+                    Math.min.apply(null, xRange)
+                ];
+
+                northEast = [
+                    Math.max.apply(null, yRange),
+                    Math.max.apply(null, xRange)
+                ];
+
+                bounds = leafletBoundsHelpers.createBoundsFromArray([
+                    southWest,
+                    northEast
+                ]);
+
+                return bounds;
 
             }
         };
