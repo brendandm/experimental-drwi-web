@@ -30,26 +30,7 @@ angular.module('FieldDoc')
                     },
                     practiceTypes: function(Program, $route, $rootScope, $location) {
 
-                        var params = $location.search(),
-                            data = {};
-
-                        if ($rootScope.programContext !== null &&
-                            typeof $rootScope.programContext !== 'undefined') {
-
-                            data.id = $rootScope.programContext;
-
-                            $location.search('program', $rootScope.programContext);
-
-                        } else if (params.program !== null &&
-                            typeof params.program !== 'undefined') {
-
-                            data.id = params.program;
-
-                            $rootScope.programContext = params.program;
-
-                        }
-
-                        return Program.practiceTypes(data);
+                        return [];
 
                     }
                 }

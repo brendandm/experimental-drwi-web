@@ -8,7 +8,7 @@
  * Provider in the FieldDoc.
  */
 angular.module('FieldDoc')
-    .service('Utility', function(leafletBoundsHelpers) {
+    .service('Utility', function(leafletBoundsHelpers, Map) {
 
         return {
             machineName: function(name) {
@@ -71,28 +71,38 @@ angular.module('FieldDoc')
                     northEast,
                     bounds;
 
-                obj.coordinates[0].forEach(function(coords) {
+                if (obj &&
+                    obj.coordinates &&
+                    Array.isArray(obj.coordinates)) {
 
-                    xRange.push(coords[0]);
+                    obj.coordinates[0].forEach(function(coords) {
 
-                    yRange.push(coords[1]);
+                        xRange.push(coords[0]);
 
-                });
+                        yRange.push(coords[1]);
 
-                southWest = [
-                    Math.min.apply(null, yRange),
-                    Math.min.apply(null, xRange)
-                ];
+                    });
 
-                northEast = [
-                    Math.max.apply(null, yRange),
-                    Math.max.apply(null, xRange)
-                ];
+                    southWest = [
+                        Math.min.apply(null, yRange),
+                        Math.min.apply(null, xRange)
+                    ];
 
-                bounds = leafletBoundsHelpers.createBoundsFromArray([
-                    southWest,
-                    northEast
-                ]);
+                    northEast = [
+                        Math.max.apply(null, yRange),
+                        Math.max.apply(null, xRange)
+                    ];
+
+                    bounds = leafletBoundsHelpers.createBoundsFromArray([
+                        southWest,
+                        northEast
+                    ]);
+
+                } else {
+
+                    bounds = Map.bounds;
+
+                }
 
                 return bounds;
 

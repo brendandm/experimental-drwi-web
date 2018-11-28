@@ -173,41 +173,6 @@
 
                 };
 
-                self.transformBounds = function(obj) {
-
-                    var xRange = [],
-                        yRange = [],
-                        southWest,
-                        northEast,
-                        bounds;
-
-                    obj.bounds.coordinates[0].forEach(function(coords) {
-
-                        xRange.push(coords[0]);
-
-                        yRange.push(coords[1]);
-
-                    });
-
-                    southWest = [
-                        Math.min.apply(null, yRange),
-                        Math.min.apply(null, xRange)
-                    ];
-
-                    northEast = [
-                        Math.max.apply(null, yRange),
-                        Math.max.apply(null, xRange)
-                    ];
-
-                    bounds = leafletBoundsHelpers.createBoundsFromArray([
-                        southWest,
-                        northEast
-                    ]);
-
-                    return bounds;
-
-                };
-
                 self.processCollection = function(arr) {
 
                     arr.forEach(function(feature) {
@@ -218,9 +183,9 @@
 
                             feature.geojson = self.buildFeature(feature.geometry);
 
-                            feature.bounds = self.transformBounds(feature);
-
                         }
+
+                        feature.bounds = Utility.transformBounds(feature.bounds);
 
                         if (feature.code !== null &&
                             typeof feature.code === 'string') {
@@ -228,6 +193,8 @@
                             feature.classification = feature.code.length;
 
                         }
+
+                        console.log('feature', feature);
 
                     });
 
@@ -257,7 +224,17 @@
                     var params = $location.search(),
                         data = {};
 
-                    if ($rootScope.programContext !== null &&
+                    if (self.selectedProgram &&
+                        typeof self.selectedProgram.id !== 'undefined' &&
+                        self.selectedProgram.id > 0) {
+
+                        data.program = self.selectedProgram.id;
+
+                        $rootScope.programContext = self.selectedProgram.id;
+
+                        $location.search('program', self.selectedProgram.id);
+
+                    } else if ($rootScope.programContext !== null &&
                         typeof $rootScope.programContext !== 'undefined') {
 
                         data.program = $rootScope.programContext;
@@ -270,14 +247,6 @@
                         data.program = params.program;
 
                         $rootScope.programContext = params.program;
-
-                    } else if (self.selectedProgram &&
-                        typeof self.selectedProgram.id !== 'undefined' &&
-                        self.selectedProgram.id > 0) {
-
-                        data.program = self.selectedProgram.id;
-
-                        $location.search('program', self.selectedProgram.id);
 
                     } else {
 

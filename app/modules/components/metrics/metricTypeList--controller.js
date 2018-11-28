@@ -142,7 +142,17 @@ angular.module('FieldDoc')
                 var params = $location.search(),
                     data = {};
 
-                if ($rootScope.programContext !== null &&
+                if (self.selectedProgram &&
+                    typeof self.selectedProgram.id !== 'undefined' &&
+                    self.selectedProgram.id > 0) {
+
+                    data.program = self.selectedProgram.id;
+
+                    $rootScope.programContext = self.selectedProgram.id;
+
+                    $location.search('program', self.selectedProgram.id);
+
+                } else if ($rootScope.programContext !== null &&
                     typeof $rootScope.programContext !== 'undefined') {
 
                     data.program = $rootScope.programContext;
@@ -155,14 +165,6 @@ angular.module('FieldDoc')
                     data.program = params.program;
 
                     $rootScope.programContext = params.program;
-
-                } else if (self.selectedProgram &&
-                    typeof self.selectedProgram.id !== 'undefined' &&
-                    self.selectedProgram.id > 0) {
-
-                    data.program = self.selectedProgram.id;
-
-                    $location.search('program', self.selectedProgram.id);
 
                 } else {
 
