@@ -16,6 +16,11 @@
                     isArray: false,
                     cache: true
                 },
+                collection: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/geographies')
+                },
                 'update': {
                     method: 'PATCH'
                 }

@@ -62,6 +62,10 @@ angular.module('FieldDoc')
 
                         self.loadOrganization(self.user.properties.organization_id);
 
+                    } else {
+
+                        self.status.loading = false;
+
                     }
 
                 });

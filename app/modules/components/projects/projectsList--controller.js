@@ -214,37 +214,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.buildStaticMapURL = function(geometry) {
-
-                var styledFeature = {
-                    "type": "Feature",
-                    "geometry": geometry,
-                    "properties": {
-                        "marker-size": "small",
-                        "marker-color": "#2196F3",
-                        "stroke": "#2196F3",
-                        "stroke-opacity": 1.0,
-                        "stroke-width": 2,
-                        "fill": "#2196F3",
-                        "fill-opacity": 0.5
-                    }
-                };
-
-                // Build static map URL for Mapbox API
-
-                return [
-                    'https://api.mapbox.com/styles/v1',
-                    '/mapbox/streets-v10/static/geojson(',
-                    encodeURIComponent(JSON.stringify(styledFeature)),
-                    ')/auto/400x200@2x?access_token=',
-                    'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                ].join('');
-
-            };
-
             self.clearFilter = function(obj) {
-
-                // ProjectStore.reset();
 
                 FilterStore.clearItem(obj);
 
@@ -252,27 +222,40 @@ angular.module('FieldDoc')
 
             self.buildFilter = function() {
 
-                var params = {};
+                var params = $location.search(),
+                    data = {};
 
-                if (self.selectedProgram &&
+                if ($rootScope.programContext !== null &&
+                    typeof $rootScope.programContext !== 'undefined') {
+
+                    data.program = $rootScope.programContext;
+
+                    $location.search('program', $rootScope.programContext);
+
+                } else if (params.program !== null &&
+                    typeof params.program !== 'undefined') {
+
+                    data.program = params.program;
+
+                    $rootScope.programContext = params.program;
+
+                } else if (self.selectedProgram &&
                     typeof self.selectedProgram.id !== 'undefined' &&
                     self.selectedProgram.id > 0) {
 
-                    params.program = self.selectedProgram.id;
+                    data.program = self.selectedProgram.id;
 
                     $location.search('program', self.selectedProgram.id);
 
                 } else {
 
-                    // self.filteredProjects = $scope.projectStore.projects;
-
                     $location.search({});
 
                 }
 
-                return params;
+                return data;
 
-            }
+            };
 
             self.loadProjects = function() {
 
@@ -286,7 +269,7 @@ angular.module('FieldDoc')
 
                         if (feature.extent) {
 
-                            feature.staticURL = self.buildStaticMapURL(feature.extent);
+                            feature.staticURL = Utility.buildStaticMapURL(feature.extent);
 
                         }
 

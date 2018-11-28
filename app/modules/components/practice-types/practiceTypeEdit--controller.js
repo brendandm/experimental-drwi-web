@@ -62,15 +62,28 @@ angular.module('FieldDoc')
 
         };
 
+        self.parseFeature = function(data) {
+
+            if (data.properties.program &&
+                typeof data.properties.program !== 'undefined') {
+
+                data.properties.program = data.properties.program.properties;
+
+                self.programId = data.properties.program_id;
+
+            }
+
+            return data;
+
+        };
+
         self.loadPracticeType = function() {
 
             practiceType.$promise.then(function(successResponse) {
 
                 console.log('self.practiceType', successResponse);
 
-                self.practiceType = successResponse;
-
-                self.programId = self.practiceType.properties.program_id;
+                self.practiceType = self.parseFeature(successResponse);
 
                 if (!successResponse.permissions.read &&
                     !successResponse.permissions.write) {
@@ -101,10 +114,9 @@ angular.module('FieldDoc')
         self.scrubFeature = function() {
 
             delete self.practiceType.geometry;
-            delete self.practiceType.properties.organization;
             delete self.practiceType.properties.creator;
             delete self.practiceType.properties.last_modified_by;
-            delete self.practiceType.properties.program;
+            delete self.practiceType.properties.organization;
 
         };
 
@@ -114,9 +126,11 @@ angular.module('FieldDoc')
 
             self.scrubFeature();
 
-            self.practiceType.$update().then(function(successResponse) {
+            PracticeType.update({
+                id: self.practiceType.id
+            }, self.practiceType.properties).$promise.then(function(successResponse) {
 
-                self.practiceType = successResponse;
+                self.practiceType = self.parseFeature(successResponse);
 
                 self.alerts = [{
                     'type': 'success',
@@ -129,7 +143,7 @@ angular.module('FieldDoc')
 
                 self.showElements();
 
-            }, function(errorResponse) {
+            }).catch(function(errorResponse) {
 
                 // Error message
 
@@ -202,6 +216,20 @@ angular.module('FieldDoc')
 
         };
 
+        self.extractPrograms = function(user) {
+
+            var _programs = [];
+
+            user.properties.programs.forEach(function(program) {
+
+                _programs.push(program.properties);
+
+            });
+
+            return _programs;
+
+        };
+
         //
         // Verify Account information for proper UI element display
         //
@@ -217,6 +245,8 @@ angular.module('FieldDoc')
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
                     can_edit: false
                 };
+
+                self.programs = self.extractPrograms($rootScope.user);
 
                 self.loadPracticeType();
 

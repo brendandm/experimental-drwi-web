@@ -83,6 +83,13 @@ angular.module('FieldDoc')
 
             }
 
+            if (self.metricType.properties.program &&
+                typeof self.metricType.properties.program !== 'undefined') {
+
+                self.metricType.properties.program = self.metricType.properties.program.properties;
+
+            }
+
         };
 
         self.loadMetricType = function() {
@@ -143,7 +150,6 @@ angular.module('FieldDoc')
             delete self.metricType.properties.organization;
             delete self.metricType.properties.creator;
             delete self.metricType.properties.last_modified_by;
-            delete self.metricType.properties.program;
             delete self.metricType.properties.unit;
 
         };
@@ -161,7 +167,9 @@ angular.module('FieldDoc')
 
             }
 
-            self.metricType.$update().then(function(successResponse) {
+            MetricType.update({
+                id: self.metricType.id
+            }, self.metricType.properties).$promise.then(function(successResponse) {
 
                 self.parseFeature(successResponse);
 
@@ -176,7 +184,7 @@ angular.module('FieldDoc')
 
                 self.showElements();
 
-            }, function(errorResponse) {
+            }).catch(function(errorResponse) {
 
                 // Error message
 
@@ -259,6 +267,20 @@ angular.module('FieldDoc')
 
         };
 
+        self.extractPrograms = function(user) {
+
+            var _programs = [];
+
+            user.properties.programs.forEach(function(program) {
+
+                _programs.push(program.properties);
+
+            });
+
+            return _programs;
+
+        };
+
         //
         // Verify Account information for proper UI element display
         //
@@ -274,6 +296,8 @@ angular.module('FieldDoc')
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
                     can_edit: false
                 };
+
+                self.programs = self.extractPrograms($rootScope.user);
 
                 self.loadMetricType();
 

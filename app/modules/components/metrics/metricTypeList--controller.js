@@ -137,6 +137,65 @@ angular.module('FieldDoc')
 
             };
 
+            self.buildFilter = function() {
+
+                var params = $location.search(),
+                    data = {};
+
+                if ($rootScope.programContext !== null &&
+                    typeof $rootScope.programContext !== 'undefined') {
+
+                    data.program = $rootScope.programContext;
+
+                    $location.search('program', $rootScope.programContext);
+
+                } else if (params.program !== null &&
+                    typeof params.program !== 'undefined') {
+
+                    data.program = params.program;
+
+                    $rootScope.programContext = params.program;
+
+                } else if (self.selectedProgram &&
+                    typeof self.selectedProgram.id !== 'undefined' &&
+                    self.selectedProgram.id > 0) {
+
+                    data.program = self.selectedProgram.id;
+
+                    $location.search('program', self.selectedProgram.id);
+
+                } else {
+
+                    $location.search({});
+
+                }
+
+                return data;
+
+            };
+
+            self.loadFeatures = function() {
+
+                var params = self.buildFilter();
+
+                MetricType.collection(params).$promise.then(function(successResponse) {
+
+                    console.log('successResponse', successResponse);
+
+                    self.metrics = successResponse.features;
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                    self.showElements();
+
+                });
+
+            };
+
             //
             // Verify Account information for proper UI element display
             //
@@ -159,21 +218,7 @@ angular.module('FieldDoc')
 
                     }
 
-                    metricTypes.$promise.then(function(successResponse) {
-
-                        console.log('successResponse', successResponse);
-
-                        self.metrics = successResponse.features;
-
-                        self.showElements();
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                        self.showElements();
-
-                    });
+                    self.loadFeatures();
 
                 });
 

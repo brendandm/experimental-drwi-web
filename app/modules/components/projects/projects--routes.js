@@ -76,11 +76,6 @@ angular.module('FieldDoc')
                             'id': $route.current.params.projectId
                         });
                     },
-                    // summary: function(Project, $route) {
-                    //     return Project.summary({
-                    //         'id': $route.current.params.projectId
-                    //     });
-                    // },
                     metrics: function(Project, $route) {
                         return Project.metrics({
                             id: $route.current.params.projectId

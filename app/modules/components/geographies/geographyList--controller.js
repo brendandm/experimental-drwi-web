@@ -52,12 +52,6 @@
 
                 }
 
-                function closeRoute() {
-
-                    $location.path(self.site.links.project.html);
-
-                }
-
                 self.confirmDelete = function(obj) {
 
                     self.deletionTarget = obj;
@@ -239,13 +233,69 @@
 
                 };
 
-                self.loadGeographies = function() {
+                self.createGeography = function() {
 
-                    //
-                    // Load spatial geographies
-                    //
+                    self.geography = new GeographyService({
+                        'program_id': self.programId,
+                        'organization_id': $rootScope.user.properties.organization_id
+                    });
 
-                    geographies.$promise.then(function(successResponse) {
+                    self.geography.$save(function(successResponse) {
+
+                        $location.path('/geographies/' + successResponse.id + '/edit');
+
+                    }, function(errorResponse) {
+
+                        console.error('Unable to create a new geography, please try again later.');
+
+                    });
+
+                };
+
+                self.buildFilter = function() {
+
+                    var params = $location.search(),
+                        data = {};
+
+                    if ($rootScope.programContext !== null &&
+                        typeof $rootScope.programContext !== 'undefined') {
+
+                        data.program = $rootScope.programContext;
+
+                        $location.search('program', $rootScope.programContext);
+
+                    } else if (params.program !== null &&
+                        typeof params.program !== 'undefined') {
+
+                        data.program = params.program;
+
+                        $rootScope.programContext = params.program;
+
+                    } else if (self.selectedProgram &&
+                        typeof self.selectedProgram.id !== 'undefined' &&
+                        self.selectedProgram.id > 0) {
+
+                        data.program = self.selectedProgram.id;
+
+                        $location.search('program', self.selectedProgram.id);
+
+                    } else {
+
+                        $location.search({});
+
+                    }
+
+                    return data;
+
+                };
+
+                self.loadFeatures = function() {
+
+                    var params = self.buildFilter();
+
+                    GeographyService.collection(params).$promise.then(function(successResponse) {
+
+                        console.log('successResponse', successResponse);
 
                         for (var collection in successResponse) {
 
@@ -266,26 +316,9 @@
 
                     }, function(errorResponse) {
 
+                        console.log('errorResponse', errorResponse);
+
                         self.showElements();
-
-                    });
-
-                };
-
-                self.createGeography = function() {
-
-                    self.geography = new GeographyService({
-                        'program_id': self.programId,
-                        'organization_id': $rootScope.user.properties.organization_id
-                    });
-
-                    self.geography.$save(function(successResponse) {
-
-                        $location.path('/geographies/' + successResponse.id + '/edit');
-
-                    }, function(errorResponse) {
-
-                        console.error('Unable to create a new geography, please try again later.');
 
                     });
 
@@ -306,7 +339,7 @@
                             account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                         };
 
-                        self.loadGeographies();
+                        self.loadFeatures();
 
                     });
 
