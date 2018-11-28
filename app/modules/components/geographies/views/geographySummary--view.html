@@ -36,7 +36,7 @@
 
                     <div style="position:relative;">
 
-                        <leaflet id="geography--map" class="map tall" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers"></leaflet>
+                        <leaflet id="geography--map" class="map tall" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
 
                     </div>
 
@@ -222,7 +222,7 @@
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
                 <a href="/geographies/{{ page.geography.properties.id }}/location">
                     <i class="material-icons">
-                        location_on
+                        map
                     </i>
                 </a>
             </li>

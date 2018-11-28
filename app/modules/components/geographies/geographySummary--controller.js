@@ -23,6 +23,22 @@
 
                 self.map = JSON.parse(JSON.stringify(Map));
 
+                self.map.layers = {
+                    baselayers: {
+                        streets: {
+                            name: 'Streets',
+                            type: 'xyz',
+                            url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                            layerOptions: {
+                                apikey: mapbox.access_token,
+                                mapid: 'mapbox.streets',
+                                attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>',
+                                showOnSelector: false
+                            }
+                        }
+                    }
+                };
+
                 self.status = {
                     loading: true,
                     processing: false
@@ -222,9 +238,7 @@
 
                                 self.setGeoJsonLayer(self.geography.geometry, self.geographyExtent);
 
-                                map.fitBounds(self.geographyExtent.getBounds(), {
-                                    maxZoom: 18
-                                });
+                                self.map.bounds = Utility.transformBounds(self.geography.properties.extent);
 
                             });
 

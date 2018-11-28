@@ -17,6 +17,10 @@
 
                 var self = this;
 
+                $rootScope.viewState = {
+                    'geography': true
+                };
+
                 $rootScope.toolbarState = {
                     'editLocation': true
                 };
