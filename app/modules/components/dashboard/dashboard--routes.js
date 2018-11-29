@@ -136,6 +136,96 @@ angular.module('FieldDoc')
 
                 }
                 
+            })
+            .when('/dashboards/:dashboardId/filters', {
+                templateUrl: '/modules/components/dashboard/views/dashboardFilter--view.html?t=' + environment.version,
+                controller: 'DashboardFilterController',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    dashboard: function($route, $location, Dashboard) {
+
+                        return Dashboard.get({
+                            id: $route.current.params.dashboardId
+                        });
+
+                    },
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+
+                            return Account.getUser();
+                            
+                        }
+
+                        return Account.userObject;
+
+                    }
+
+                }
+                
+            })
+            .when('/dashboards/:dashboardId/geographies', {
+                templateUrl: '/modules/components/dashboard/views/dashboardGeography--view.html?t=' + environment.version,
+                controller: 'DashboardGeographyController',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    dashboard: function($route, $location, Dashboard) {
+
+                        return Dashboard.get({
+                            id: $route.current.params.dashboardId
+                        });
+
+                    },
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+
+                            return Account.getUser();
+                            
+                        }
+
+                        return Account.userObject;
+
+                    }
+
+                }
+                
+            })
+            .when('/dashboards/:dashboardId/metrics', {
+                templateUrl: '/modules/components/dashboard/views/dashboardMetric--view.html?t=' + environment.version,
+                controller: 'DashboardMetricController',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    dashboard: function($route, $location, Dashboard) {
+
+                        return Dashboard.get({
+                            id: $route.current.params.dashboardId
+                        });
+
+                    },
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+
+                            return Account.getUser();
+                            
+                        }
+
+                        return Account.userObject;
+
+                    }
+
+                }
+                
             });
 
     });

@@ -6,7 +6,7 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <h1 class="inset">Edit dashboard</h1>
+        <h1 class="inset">Edit dashboard filters</h1>
 
         <div class="main--ui reveal fade-in t0">
 
@@ -14,15 +14,7 @@
 
                 <div class="form-element">
                     <span class="meta-label"><b>Name</b></span>
-                    <input type="text" data-ng-model="page.dashboardObject.name" class="form-control animate" id="name" name="name" placeholder="Dashboard name" />
-                </div>
-
-                <div class="form-element">
-                    <span class="meta-label"><b>Description</b></span>
-                    <textarea rows="10" data-ng-model="page.dashboardObject.description" class="form-control animate" msd-elastic id="description" name="description" placeholder="Dashboard description" maxlength-"500">{{ page.dashboardObject.description }}</textarea>
-                    <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
-                        Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.dashboardObject.description.length || 0) | number }} used)</strong>
-                    </p>
+                    <input type="text" data-ng-model="page.dashboardObject.name" class="form-control animate" id="name" name="name" placeholder="Dashboard name" disabled="disabled" readonly />
                 </div>
 
                 <!-- Filter Tools -->
