@@ -23,7 +23,7 @@
             return json_;
           }
         },
-        'update': {
+        update: {
           method: 'PATCH',
           transformRequest: function(data) {
             var feature = Preprocessors.geojson(data),

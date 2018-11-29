@@ -15,7 +15,7 @@
                 'query': {
                     'isArray': false
                 },
-                'update': {
+                update: {
                     'method': 'PATCH',
                     transformRequest: function(data) {
                         var feature = Preprocessors.geojson(data);

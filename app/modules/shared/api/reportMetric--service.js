@@ -23,7 +23,7 @@
                         return json_;
                     }
                 },
-                'update': {
+                update: {
                     method: 'PATCH'
                 }
             });

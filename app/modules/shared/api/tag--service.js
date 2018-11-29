@@ -20,7 +20,7 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/tags')
                 },
-                'update': {
+                update: {
                     'method': 'PATCH',
                     transformRequest: function(data) {
                         var feature = Preprocessors.geojson(data);

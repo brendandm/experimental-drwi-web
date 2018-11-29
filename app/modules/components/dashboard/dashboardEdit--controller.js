@@ -61,11 +61,13 @@ angular.module('FieldDoc')
                 //
                 // Assign dashboard to a scoped variable
                 //
-                dashboard.$promise.then(function(successResponse) {
+                Dashboard.get({
+                    id: $route.current.params.dashboardId
+                }).$promise.then(function(successResponse) {
 
                     self.processDashboard(successResponse);
 
-                }, function(errorResponse) {
+                }).catch(function(errorResponse) {
 
                     $log.error('Unable to load dashboard');
 
@@ -74,38 +76,6 @@ angular.module('FieldDoc')
                 });
 
             };
-
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
-
-                user.$promise.then(function(userResponse) {
-
-                    $rootScope.user = Account.userObject = userResponse;
-
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
-                    };
-
-                    self.loadDashboard();
-
-                    //
-                    // Setup page meta data
-                    //
-                    $rootScope.page = {
-                        'title': 'Edit Dashboard'
-                    };
-
-                });
-
-            } else {
-
-                $location.path('/user/login');
-
-            }
 
             self.clearFilter = function(obj) {
 
@@ -253,17 +223,20 @@ angular.module('FieldDoc')
                     'practices',
                     'programs',
                     'projects',
-                    'statuses',
                     'tags'
                 ];
 
-                self.dashboardObject = data;
+                self.dashboardObject = data.properties || data;
+
+                console.log('self.processDashboard.dashboardObject', self.dashboardObject);
 
                 relations.forEach(function(relation) {
 
-                    if (Array.isArray(self.dashboardObject[relation])) {
+                    var collection = self.dashboardObject[relation];
 
-                        self.extractFilter(relation, self.dashboardObject[relation]);
+                    if (Array.isArray(collection)) {
+
+                        self.extractFilter(relation, collection);
 
                         self.dashboardObject[relation] = [];
 
@@ -289,17 +262,56 @@ angular.module('FieldDoc')
 
             };
 
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [];
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
+
+            };
+
             self.saveDashboard = function() {
 
                 self.status.processing = true;
 
+                self.scrubFeature(self.dashboardObject);
+
                 self.processRelations(self.activeFilters);
+
+                console.log('self.saveDashboard.dashboardObject', self.dashboardObject);
+
+                console.log('self.saveDashboard.Dashboard', Dashboard);
 
                 Dashboard.update({
                     id: +self.dashboardObject.id
-                }, self.dashboardObject).$promise.then(function(data) {
+                }, self.dashboardObject).then(function(successResponse) {
 
-                    self.processDashboard(data.properties);
+                    self.processDashboard(successResponse);
 
                     self.alerts = [{
                         'type': 'success',
@@ -310,7 +322,11 @@ angular.module('FieldDoc')
 
                     $timeout(self.closeAlerts, 2000);
 
+                    self.status.processing = false;
+
                 }).catch(function(error) {
+
+                    console.log('saveDashboard.error', error);
 
                     // Do something with the error
 
@@ -395,5 +411,37 @@ angular.module('FieldDoc')
                 self.activeFilters = newVal;
 
             });
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                    };
+
+                    self.loadDashboard();
+
+                    //
+                    // Setup page meta data
+                    //
+                    $rootScope.page = {
+                        'title': 'Edit dashboard'
+                    };
+
+                });
+
+            } else {
+
+                $location.path('/user/login');
+
+            }
 
         });

@@ -50,7 +50,7 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/program/:id/projects')
                 },
-                'update': {
+                update: {
                     method: 'PATCH'
                 }
             });

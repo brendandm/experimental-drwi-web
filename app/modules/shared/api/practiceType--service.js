@@ -20,7 +20,7 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice-type')
                 },
-                'update': {
+                update: {
                     'method': 'PATCH'
                 }
             });

@@ -45,7 +45,7 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/data/dashboard/site/:id/practices')
                 },
-                'update': {
+                update: {
                     method: 'PATCH'
                 }
             });

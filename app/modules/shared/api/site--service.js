@@ -25,7 +25,7 @@
                     method: 'GET',
                     url: environment.apiUrl.concat('/v1/data/site/:id/nodes')
                 },
-                'update': {
+                update: {
                     method: 'PATCH',
                     transformRequest: function(data) {
                         var feature = Preprocessors.geojson(data);

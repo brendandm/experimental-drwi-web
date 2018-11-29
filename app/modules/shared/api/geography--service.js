@@ -21,7 +21,7 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/geographies')
                 },
-                'update': {
+                update: {
                     method: 'PATCH'
                 }
             });
