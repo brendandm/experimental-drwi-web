@@ -75,13 +75,23 @@ angular.module('FieldDoc')
                     obj.coordinates &&
                     Array.isArray(obj.coordinates)) {
 
-                    obj.coordinates[0].forEach(function(coords) {
+                    try {
 
-                        xRange.push(coords[0]);
+                        obj.coordinates[0].forEach(function(coords) {
 
-                        yRange.push(coords[1]);
+                            xRange.push(coords[0]);
 
-                    });
+                            yRange.push(coords[1]);
+
+                        });
+
+                    } catch (error) {
+
+                        xRange.push(obj.coordinates[0]);
+
+                        yRange.push(obj.coordinates[1]);
+
+                    }
 
                     southWest = [
                         Math.min.apply(null, yRange),

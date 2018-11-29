@@ -16,7 +16,7 @@ angular.module('FieldDoc')
             self.programId = $route.current.params.programId;
 
             $rootScope.viewState = {
-                'practice': true
+                'practiceType': true
             };
 
             //

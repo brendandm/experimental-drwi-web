@@ -12,6 +12,10 @@ angular.module('FieldDoc')
 
         var self = this;
 
+        $rootScope.viewState = {
+            'metricType': true
+        };
+
         $rootScope.toolbarState = {
             'edit': true
         };

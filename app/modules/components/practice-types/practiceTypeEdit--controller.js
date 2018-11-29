@@ -11,6 +11,10 @@ angular.module('FieldDoc')
 
         var self = this;
 
+        $rootScope.viewState = {
+            'practiceType': true
+        };
+
         $rootScope.toolbarState = {
             'edit': true
         };

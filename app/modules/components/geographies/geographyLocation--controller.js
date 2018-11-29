@@ -156,7 +156,7 @@
 
                             Shapefile.upload({}, fileData, function(shapefileResponse) {
 
-                                console.log('shapefileResponse', shapefileResponse);
+                                console.log('shapefileResponse', shapefileResponse.msg);
 
                                 self.progressValue = 100;
 
@@ -168,16 +168,48 @@
 
                                     self.progressValue = null;
 
-                                    if (shapefileResponse.msg.length) {
+                                    if (shapefileResponse.msg !== null) {
 
-                                        console.log('Shapefile --> GeoJSON', shapefileResponse.msg[0]);
-
-                                        if (shapefileResponse.msg[0] !== null &&
-                                            typeof shapefileResponse.msg[0].geometry !== 'undefined') {
+                                        if (Array.isArray(shapefileResponse.msg)) {
 
                                             self.setGeoJsonLayer(shapefileResponse.msg[0]);
 
+                                            self.map.geojson = {
+                                                data: shapefileResponse.msg[0]
+                                            };
+
+                                        } else {
+
+                                            if (shapefileResponse.msg.type &&
+                                                shapefileResponse.msg.type === 'FeatureCollection') {
+
+                                                self.setGeoJsonLayer(shapefileResponse.msg.features[0]);
+
+                                                self.map.geojson = {
+                                                    data: shapefileResponse.msg.features[0]
+                                                };
+
+                                            } else {
+
+                                                self.setGeoJsonLayer(shapefileResponse.msg);
+
+                                                self.map.geojson = {
+                                                    data: shapefileResponse.msg
+                                                };
+
+                                            }
+
                                         }
+
+                                        console.log('self.editableLayers', self.editableLayers);
+
+                                        leafletData.getMap('geography--map').then(function(map) {
+
+                                            map.fitBounds(self.editableLayers.getBounds(), {
+                                                maxZoom: 18
+                                            });
+
+                                        });
 
                                     }
 
@@ -409,11 +441,11 @@
 
                                 leafletData.getMap('geography--map').then(function(map) {
 
-                                    self.geographyExtent = new L.FeatureGroup();
+                                    // self.geographyExtent = new L.FeatureGroup();
 
-                                    self.setGeoJsonLayer(self.geography.properties.extent, self.geographyExtent);
+                                    // self.setGeoJsonLayer(self.geography.properties.extent, self.geographyExtent);
 
-                                    console.log('self.geographyExtent', self.geographyExtent.getBounds());
+                                    // console.log('self.geographyExtent', self.geographyExtent.getBounds());
 
                                     self.map.bounds = Utility.transformBounds(self.geography.properties.extent);
 
