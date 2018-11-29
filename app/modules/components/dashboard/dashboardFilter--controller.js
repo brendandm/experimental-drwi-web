@@ -259,6 +259,8 @@ angular.module('FieldDoc')
 
             self.saveDashboard = function() {
 
+                console.log('self.saveDashboard...', Date.now());
+
                 self.status.processing = true;
 
                 self.processRelations(self.activeFilters);
@@ -279,6 +281,8 @@ angular.module('FieldDoc')
                     $timeout(self.closeAlerts, 2000);
 
                 }).catch(function(error) {
+
+                    console.log('saveDashboard.error', error);
 
                     // Do something with the error
 

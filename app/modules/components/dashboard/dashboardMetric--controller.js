@@ -280,6 +280,8 @@ angular.module('FieldDoc')
 
                 }).catch(function(error) {
 
+                    console.log('saveDashboard.error', error);
+
                     // Do something with the error
 
                     self.status.processing = false;
