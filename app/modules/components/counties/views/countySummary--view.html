@@ -8,23 +8,11 @@
 
         <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
             <div class="progress--container">
-                <p style="font-weight: bold;" class="color-pulse">Loading geography data&hellip;</p>
+                <p style="font-weight: bold;" class="color-pulse">Loading county data&hellip;</p>
             </div>
         </div>
 
-        <section class="privacy-message reveal fade-in t0" data-ng-if="!page.status.loading && page.makePrivate">
-
-            <p>
-                <i class="material-icons">
-                    lock
-                </i>
-            </p>
-
-            <p>This geography is private.</p>
-
-        </section>
-
-        <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
+        <div class="main--ui" data-ng-if="!page.status.loading">
 
             <div class="module--grid">
 
@@ -34,19 +22,11 @@
 
                     <article class="pad space-right shadow reveal fade-in t0">
 
-                        <h1>{{ page.geography.properties.name || 'Un-named' }}</h1>
+                        <h1>{{ page.county.properties.name || 'Un-named' }}</h1>
 
-                        <p>
-                            <strong>Program:</strong> <a href="{{ page.geography.links.program.html }}">{{ page.geography.properties.program.properties.name }}</a>
-                        </p>
+                        <p data-ng-if="page.county.properties.description" data-ng-bind-html="page.county.properties.description"></p>
 
-                        <p>
-                            <strong>Category:</strong> {{ page.geography.properties.category.properties.name }}
-                        </p>
-
-                        <p data-ng-if="page.geography.properties.description" data-ng-bind-html="page.geography.properties.description"></p>
-
-                        <p data-ng-if="!page.geography.properties.description">{{ page.geography.properties.description }}</p>
+                        <p data-ng-if="!page.county.properties.description">{{ page.county.properties.description }}</p>
 
                     </article>
 
@@ -54,7 +34,7 @@
 
                     <div class="map--module shadow reveal fade-in t1" style="position:relative;">
 
-                        <leaflet id="geography--map" class="map tall" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
+                        <leaflet id="county--map" class="map tall" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
 
                     </div>
 
@@ -159,7 +139,7 @@
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="report in page.geography.properties.reports | orderBy:'properties.report_date':false">
+                    <li class="card" data-ng-repeat="report in page.county.properties.reports | orderBy:'properties.report_date':false">
 
                         <div class="card--content">
 
@@ -182,7 +162,7 @@
                                 </div>
                                 <p>{{ (report.properties.notes || 'No notes recorded for this date') | truncate:80 }}</p>
                                 <div class="actions">
-                                    <a class="snapshot--title" href="/geographies/{{ page.geography.id }}/{{ report.properties.id }}/edit" title="Edit report">
+                                    <a class="snapshot--title" href="/geographies/{{ page.county.id }}/{{ report.properties.id }}/edit" title="Edit report">
                                         <i class="material-icons">
                                             edit
                                         </i>
@@ -204,7 +184,7 @@
                     <li class="card">
                         <div class="card--content">
                             <div class="body">
-                                <button type="button" class="snapshot--title" data-ng-click="page.addReading('Planning')" title="Create geography">
+                                <button type="button" class="snapshot--title" data-ng-click="page.addReading('Planning')" title="Create county">
                                     <i class="material-icons">
                                         add
                                     </i>
@@ -220,57 +200,6 @@
         </div>
 
     </div>
-
-    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
-        <ul>
-            <li data-ng-class="{active: $root.toolbarState.dashboard}">
-                <a href="/geographies/{{ page.geography.id }}">
-                    <i class="material-icons">
-                        dashboard
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="/geographies/{{ page.geography.id }}/edit">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
-                <a href="/geographies/{{ page.geography.properties.id }}/location">
-                    <i class="material-icons">
-                        map
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/geographies/{{ page.geography.properties.id }}/tags">
-                    <i class="material-icons">
-                        local_offer
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.geography.id && page.deletionTarget.collection === 'geography'">
-                    <p>Do you want to delete this geography?</p>
-                    <div class="actions">
-                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('geography')">
-                            Yes
-                        </a>
-                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
-                            Cancel
-                        </a>
-                    </div>
-                </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.geography, 'geography')">
-                    <i class="material-icons">
-                        delete
-                    </i>
-                </a>
-            </li>
-        </ul>
-    </nav>
 
     <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">
