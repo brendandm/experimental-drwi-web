@@ -248,7 +248,23 @@
 
                 };
 
+                self.scrubFeature = function() {
+
+                    delete self.geography.properties.counties;
+                    delete self.geography.properties.creator;
+                    delete self.geography.properties.dashboards;
+                    delete self.geography.properties.extent;
+                    delete self.geography.properties.last_modified_by;
+                    delete self.geography.properties.organization;
+                    delete self.geography.properties.program;
+                    delete self.geography.properties.sites;
+                    delete self.geography.properties.watersheds;
+
+                };
+
                 self.saveGeography = function() {
+
+                    self.scrubFeature();
 
                     if (self.savedObjects.length) {
 
@@ -265,19 +281,17 @@
 
                         });
 
-                    } else {
-
-                        self.geography.geometry = null;
-
                     }
 
                     self.status.processing = true;
 
+                    var data = self.geography.properties;
+
+                    data.geometry = self.geography.geometry;
+
                     GeographyService.update({
                         id: self.geography.id
-                    }, {
-                        geometry: self.geography.geometry
-                    }).$promise.then(function(successResponse) {
+                    }, data).$promise.then(function(successResponse) {
 
                         self.status.processing = false;
 
