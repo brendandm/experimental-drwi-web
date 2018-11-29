@@ -8,7 +8,7 @@
 
         <h1 class="inset">Organization</h1>
 
-        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && page.organization.id">
+        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && page.organization">
 
             <form role="form" class="form snackbar-container" method="POST" id="form" name="form" data-ng-submit="page.saveOrganization()">
 
@@ -50,7 +50,7 @@
 
         </div>
 
-        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.organization.id">
+        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.organization">
 
             <form role="form" class="form snackbar-container" method="POST" id="form" name="form" data-ng-submit="page.assignOrganization()">
 

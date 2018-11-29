@@ -86,7 +86,7 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.users}">
+            <li data-ng-if="page.permissions.can_edit && page.showUserItem" data-ng-class="{active: $root.toolbarState.users}">
                 <a href="{{ page.featureCollection.path }}/{{ page.feature.id }}/users">
                     <i class="material-icons">
                         group
@@ -97,6 +97,13 @@
                 <a href="{{ page.featureCollection.path }}/{{ page.feature.id }}/edit">
                     <i class="material-icons">
                         edit
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit && page.showLocationItem" data-ng-class="{active: $root.toolbarState.editTag}">
+                <a href="{{ page.featureCollection.path }}/{{ page.feature.id }}/tags">
+                    <i class="material-icons">
+                        map
                     </i>
                 </a>
             </li>

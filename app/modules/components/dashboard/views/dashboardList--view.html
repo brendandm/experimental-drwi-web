@@ -14,7 +14,7 @@
 
         <h1 class="inset">Dashboards</h1>
 
-        <div class="main--ui">
+        <div class="main--ui" data-ng-if="!page.status.loading">
 
             <div class="add--new--wrapper">
                 <span>Create dashboard</span>
@@ -25,13 +25,13 @@
                 </a>
             </div>
 
+            <input type="text" class="search-bar list-filter reveal fade-in t0" data-ng-model="page.q" data-ng-if="page.dashboards && page.dashboards.length > 5" placeholder="Search your dashboards">
+
             <p class="reveal fade-in t0">You have <strong>{{ (page.dashboards.length | number) || 0 }}</strong> <ng-pluralize count="page.dashboards.length" when="{'one': 'dashboard','other': 'dashboards'}"></ng-pluralize>.</p>
 
             <div class="features--container">
 
-                <input type="text" class="search-bar list-filter" data-ng-model="page.q" placeholder="Search dashboards">
-
-                <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;" data-ng-if="!page.status.loading">
+                <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
                     <li class="card reveal fade-in" style="animation-delay: {{ $index * 250 }}ms;" data-ng-repeat="snapshot in page.dashboards | orderBy:'-modified_on' | filter: page.q">
 

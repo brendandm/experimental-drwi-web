@@ -2,7 +2,7 @@
 
 <main class="site--content--flow fluid-content clearfix distinguish">
 
-    <div id="sidebar" data-ng-include="'/templates/program-navigation--view.html'"></div>
+    <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
@@ -57,6 +57,13 @@
                             <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
                                 Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.metricType.properties.description.length || 0) | number }} used)</strong>
                             </p>
+                        </div>
+
+                        <!-- Program -->
+
+                        <div class="form-element">
+                            <span class="meta-label"><b>Program</b></span>
+                            <input id="metric_type_program_id" name="metric_type_program_id" type="text" placeholder="Search programs&hellip;" data-ng-model="page.metricType.properties.program" uib-typeahead="program as program.name for program in page.programs | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
                         </div>
 
                         <div class="save--action--wrapper save--action--bottom">

@@ -1,4 +1,5 @@
 <div data-ng-if="$root.user.id">
+
     <nav role="navigation">
         <ul class="list-unstyled">
             <li>
@@ -7,6 +8,16 @@
                 </a>
             </li>
             <li>
+                <a href="/organization" data-ng-class="{viewing: $root.viewState.organization}">
+                    Organization
+                </a>
+            </li>
+            <li>
+                <a href="/account" data-ng-class="{viewing: $root.viewState.profile}">
+                    Profile
+                </a>
+            </li>
+            <li style="border-top: 1px solid #e0e0e0;">
                 <a href="/projects" data-ng-class="{viewing: $root.viewState.project}">
                     Projects
                 </a>
@@ -21,16 +32,27 @@
                     Tags
                 </a>
             </li>
+        </ul>
+    </nav>
+
+    <nav role="navigation" data-ng-if="$root.user.properties.is_admin || $root.user.properties.is_manager">
+        <ul class="list-unstyled">
             <li>
-                <a href="/organization" data-ng-class="{viewing: $root.viewState.organization}">
-                    Organization
+                <a href="/practice-types" data-ng-class="{viewing: $root.viewState.practiceType}">
+                    Practice Types
                 </a>
             </li>
             <li>
-                <a href="/account" data-ng-class="{viewing: $root.viewState.profile}">
-                    Profile
+                <a href="/metric-types" data-ng-class="{viewing: $root.viewState.metricType}">
+                    Metric Types
+                </a>
+            </li>
+            <li>
+                <a href="/geographies" data-ng-class="{viewing: $root.viewState.geography}">
+                    Geographies
                 </a>
             </li>
         </ul>
     </nav>
+
 </div>

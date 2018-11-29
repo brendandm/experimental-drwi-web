@@ -6,23 +6,55 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <h1 class="inset">Edit dashboard</h1>
+        <h1 class="inset">Edit dashboard filters</h1>
 
         <div class="main--ui reveal fade-in t0">
 
-            <form role="form" class="form"style="overflow: visible; margin-bottom: 2em;" id="form--dashboard-edit" name="form--dashboard-edit" data-ng-submit="page.saveDashboard()">
+            <form role="form" class="form"style="overflow: visible; margin-bottom: 24em;" id="form--dashboard-filter" name="form--dashboard-filter" data-ng-submit="page.saveDashboard()">
 
                 <div class="form-element">
                     <span class="meta-label"><b>Name</b></span>
-                    <input type="text" data-ng-model="page.dashboardObject.name" class="form-control animate" id="name" name="name" placeholder="Dashboard name" />
+                    <input type="text" data-ng-model="page.dashboardObject.name" class="form-control animate" id="name" name="name" placeholder="Dashboard name" disabled="disabled" readonly />
                 </div>
 
-                <div class="form-element">
-                    <span class="meta-label"><b>Description</b></span>
-                    <textarea rows="10" data-ng-model="page.dashboardObject.description" class="form-control animate" msd-elastic id="description" name="description" placeholder="Dashboard description" maxlength-"500">{{ page.dashboardObject.description }}</textarea>
-                    <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
-                        Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.dashboardObject.description.length || 0) | number }} used)</strong>
-                    </p>
+                <!-- Filter Tools -->
+
+                <h2>Filters</h2>
+
+                <div class="filter--ui">
+
+                    <p style="font-style: normal; font-size: 1em; color: #616161;">Search for projects by conservation practice, geographic area, grant program, name, or organization.<p>
+
+                    <div class="filter--controls">
+
+                        <div class="search--group">
+                            <div global-search class="global--search" style="width: 100%; max-width: none;" filter-projects="page.filterProjects">
+                                <input type="search" class="search" style="color: #212121;" value="" placeholder="Search&hellip;" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue)" typeahead-on-select="setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                            </div>
+                        </div>
+
+                        <div class="filter--group">
+                            <div class="filter--pill" data-ng-repeat="filter in page.activeFilters">
+                                <div>
+                                    <span class="category {{ filter.category }}">{{ filter.category }}</span>
+                                    <span>{{ filter.name }}</span>
+                                </div>
+                                <div data-ng-click="page.clearFilter(filter)">
+                                    <i class="material-icons">
+                                        remove_circle
+                                    </i>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="filter--actions" data-ng-if="page.activeFilters && page.activeFilters.length">
+                        <button class="clear" type="button" data-ng-click="page.clearAllFilters()" title="Clear all filters">
+                            Clear all
+                        </button>
+                    </div>
+
                 </div>
 
                 <div class="save--action--wrapper save--action--bottom" style="position: relative; z-index: 9999;">

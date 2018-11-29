@@ -2,7 +2,7 @@
 
 <main class="site--content--flow fluid-content clearfix distinguish">
 
-    <div id="sidebar" data-ng-include="'/templates/program-navigation--view.html'"></div>
+    <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
     <div class="content--container" style="position: relative; overflow: hidden;">
 
@@ -25,7 +25,25 @@
                 </a>
             </div>
 
-            <p class="reveal fade-in t0">This program has <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize>.</p>
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">You have <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize>.</p>
+
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && !page.selectedProgram.id && ($root.user.properties.is_admin || $root.user.properties.is_manager)">You have <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize>.</p>
+
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && page.selectedProgram.id > 0 && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There are <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize> in this program.</p>
+
+            <div class="collection-filter" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">
+                <form name="myForm">
+                    <label for="programFilter"><strong>Filter by program:</strong></label>
+                    <select name="programFilter" id="programFilter"
+                        data-ng-options="program.properties.name for program in $root.user.properties.programs track by program.id"
+                        data-ng-model="page.selectedProgram"
+                        data-ng-change="page.loadFeatures()">
+                        <option value="">All programs</option>
+                    </select>
+                </form>
+            </div>
+
+            <!-- <p class="reveal fade-in t0">This program has <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize>.</p> -->
 
             <div class="features--container">
 
