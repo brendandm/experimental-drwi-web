@@ -168,9 +168,22 @@
                         'users'
                     ];
 
+                    var reservedProperties = [
+                        'links',
+                        'permissions',
+                        '$promise',
+                        '$resolved'
+                    ];
+
                     excludedKeys.forEach(function(key) {
 
                         delete feature.properties[key];
+
+                    });
+
+                    reservedProperties.forEach(function(key) {
+
+                        delete feature[key];
 
                     });
 
@@ -184,11 +197,15 @@
 
                     feature.properties.tags = self.processTags(self.tempTags);
 
-                    feature.$update().then(function(successResponse) {
+                    var data = feature.properties;
 
-                    // self.featureCollection.cls.update({
-                    //     id: self.feature.id
-                    // }, data).$promise.then(function(successResponse) {
+                    data.geometry = self.feature.geometry;
+
+                    // feature.$update().then(function(successResponse) {
+
+                    self.featureCollection.cls.update({
+                        id: self.feature.id
+                    }, data).$promise.then(function(successResponse) {
 
                         console.log('saveFeature.successResponse', successResponse);
 
