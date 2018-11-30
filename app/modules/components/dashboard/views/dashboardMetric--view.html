@@ -25,15 +25,26 @@
 
                     <p style="font-style: normal; font-size: 1em; color: #616161;">Search for metrics by name or conservation program. If you select a conservation program, all of that program’s associated metrics will appear in the dashboard.<p>
 
+                    <div class="search-options-radio">
+                        <label for="search-metric">
+                            Search metrics
+                            <input type="radio" id="search-metric" name="search-metric" data-ng-model="page.searchScope.target" value="metric" />
+                        </label>
+                        <label for="search-program">
+                            Search programs
+                            <input type="radio" id="search-program" name="search-program" data-ng-model="page.searchScope.target" value="program" />
+                        </label>
+                    </div>
+
                     <div class="filter--controls">
 
                         <div class="search--group">
                             <div global-search class="global--search" style="width: 100%; max-width: none;" filter-projects="page.filterProjects">
-                                <input type="search" class="search" style="color: #212121;" value="" placeholder="Search&hellip;" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue)" typeahead-on-select="setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                                <input type="search" class="search" style="color: #212121;" value="" placeholder="Search&hellip;" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in page.search($viewValue)" typeahead-on-select="page.addMetric($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
                             </div>
                         </div>
 
-                        <div class="filter--group">
+                        <!-- <div class="filter--group">
                             <div class="filter--pill" data-ng-repeat="filter in page.activeFilters">
                                 <div>
                                     <span class="category {{ filter.category }}">{{ filter.category }}</span>
@@ -45,8 +56,26 @@
                                     </i>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
+                    </div>
+
+                    <div class="classification--list" style="margin-top: 2em;">
+                        <ul>
+                            <li data-ng-repeat="metric in page.tempMetrics">
+                                <i class="material-icons">
+                                    timeline
+                                </i>
+                                <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ metric.properties.name }}</span>
+                                <div class="button--container">
+                                    <button type="button" class="remove-item" data-ng-click="page.removeMetric(metric.id)">
+                                        <i class="material-icons">
+                                            remove_circle
+                                        </i>
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
 
                     <div class="filter--actions" data-ng-if="page.activeFilters && page.activeFilters.length">

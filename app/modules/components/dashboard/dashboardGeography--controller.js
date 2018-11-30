@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('DashboardGeographyController',
         function($scope, Account, $location, $log, Dashboard, dashboard,
-            $rootScope, $route, user, FilterStore, $timeout) {
+            $rootScope, $route, user, FilterStore, $timeout, SearchService) {
 
             var self = this;
 
@@ -21,6 +21,10 @@ angular.module('FieldDoc')
             };
 
             $rootScope.page = {};
+
+            self.searchScope = {
+                target: 'geography'
+            };
 
             self.status = {
                 processing: true
@@ -72,6 +76,26 @@ angular.module('FieldDoc')
                     $log.error('Unable to load dashboard');
 
                     self.status.processing = false;
+
+                });
+
+            };
+
+            self.search = function(value) {
+
+                return SearchService.geography({
+                    q: value
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService response', response);
+
+                    response.results.forEach(function(result) {
+
+                        result.category = null;
+
+                    });
+
+                    return response.results.slice(0, 5);
 
                 });
 

@@ -23,13 +23,24 @@
 
                 <div class="filter--ui">
 
-                    <p style="font-style: normal; font-size: 1em; color: #616161;">Search for geographies by name or conservation program. If you select a conservation program, all of that program’s associated geographies will appear on the dashboard map. Where programs have categorized geographies, you’ll have the option to filter your selection by category.<p>
+                    <p style="font-style: normal; font-size: 1em; color: #616161;">Search for geographies by name or conservation program. If you select a conservation program, all of that program’s associated geographies will appear on the dashboard map. Where programs have categorized geographies, you’ll have the option to filter your selection by category.</p>
+
+                    <div class="search-options-radio">
+                        <label for="search-geography">
+                            Search geographies
+                            <input type="radio" id="search-geography" name="search-geography" data-ng-model="page.searchScope.target" value="geography" />
+                        </label>
+                        <label for="search-program">
+                            Search programs
+                            <input type="radio" id="search-program" name="search-program" data-ng-model="page.searchScope.target" value="program" />
+                        </label>
+                    </div>
 
                     <div class="filter--controls">
 
                         <div class="search--group">
-                            <div global-search class="global--search" style="width: 100%; max-width: none;" filter-projects="page.filterProjects">
-                                <input type="search" class="search" style="color: #212121;" value="" placeholder="Search&hellip;" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue)" typeahead-on-select="setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                            <div global-search class="global--search" style="width: 100%; max-width: none;">
+                                <input type="search" class="search" style="color: #212121;" value="" placeholder="Search&hellip;" data-ng-model="page.query" uib-typeahead="suggestion as suggestion.name for suggestion in page.search($viewValue)" typeahead-on-select="page.addGeography($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
                             </div>
                         </div>
 

@@ -16,6 +16,12 @@
                     isArray: false,
                     cache: true
                 },
+                geography: {
+                    method: 'GET',
+                    isArray: false,
+                    cache: true,
+                    url: environment.apiUrl.concat('/v1/data/search/geography')
+                },
                 organization: {
                     method: 'GET',
                     isArray: false,
