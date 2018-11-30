@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1543525370868})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1543598819462})
 
 ;
 /**
@@ -3490,7 +3490,7 @@ angular.module('FieldDoc')
                     // Setup page meta data
                     //
                     $rootScope.page = {
-                        'title': 'Edit dashboard'
+                        'title': 'Edit dashboard filters'
                     };
 
                 });
@@ -3512,7 +3512,8 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('DashboardGeographyController',
         function($scope, Account, $location, $log, Dashboard, dashboard,
-            $rootScope, $route, user, FilterStore, $timeout) {
+            $rootScope, $route, user, FilterStore, $timeout, SearchService,
+            GeographyService) {
 
             var self = this;
 
@@ -3525,6 +3526,10 @@ angular.module('FieldDoc')
             };
 
             $rootScope.page = {};
+
+            self.searchScope = {
+                target: 'geography'
+            };
 
             self.status = {
                 processing: true
@@ -3556,10 +3561,6 @@ angular.module('FieldDoc')
 
             };
 
-            $scope.filterStore = FilterStore;
-
-            console.log('self.filterStore', self.filterStore);
-
             self.loadDashboard = function() {
 
                 //
@@ -3581,146 +3582,165 @@ angular.module('FieldDoc')
 
             };
 
-            self.clearFilter = function(obj) {
+            self.search = function(value) {
 
-                FilterStore.clearItem(obj);
+                if (self.searchScope.target === 'geography') {
 
-            };
+                    return SearchService.geography({
+                        q: value
+                    }).$promise.then(function(response) {
 
-            self.clearAllFilters = function(reload) {
+                        console.log('SearchService response', response);
 
-                //
-                // Remove all stored filter objects
-                //
+                        response.results.forEach(function(result) {
 
-                FilterStore.clearAll();
+                            result.category = null;
 
-            };
+                        });
 
-            self.updateCollection = function(obj, collection) {
+                        return response.results.slice(0, 5);
 
-                self.dashboardObject[collection].push({
-                    id: obj.id
-                });
-
-            };
-
-            self.transformRelation = function(obj, category) {
-
-                switch (category) {
-
-                    case 'geography':
-
-                        self.updateCollection(obj, 'geographies');
-
-                        break;
-
-                    case 'organization':
-
-                        self.updateCollection(obj, 'organizations');
-
-                        break;
-
-                    case 'practice':
-
-                        self.updateCollection(obj, 'practices');
-
-                        break;
-
-                    case 'program':
-
-                        self.updateCollection(obj, 'programs');
-
-                        break;
-
-                    case 'project':
-
-                        self.updateCollection(obj, 'projects');
-
-                        break;
-
-                    case 'status':
-
-                        self.updateCollection(obj, 'statuses');
-
-                        break;
-
-                    case 'tag':
-
-                        self.updateCollection(obj, 'tags');
-
-                        break;
-
-                    default:
-
-                        self.updateCollection(obj, category);
-
-                        break;
-
-                }
-
-            };
-
-            self.extractFilter = function(key, data) {
-
-                data.forEach(function(datum) {
-
-                    FilterStore.addItem({
-                        id: datum.id,
-                        name: datum.name || datum.properties.name,
-                        category: self.parseKey(key)
                     });
 
-                });
+                } else {
 
-            };
+                    return SearchService.program({
+                        q: value
+                    }).$promise.then(function(response) {
 
-            self.parseKey = function(obj, pluralize) {
+                        console.log('SearchService response', response);
 
-                var keyMap = {
-                    plural: {
-                        'geography': 'geographies',
-                        'organization': 'organizations',
-                        'practice': 'practices',
-                        'program': 'programs',
-                        'project': 'projects',
-                        'status': 'statuses',
-                        'tag': 'tags'
-                    },
-                    single: {
-                        'geographies': 'geography',
-                        'organizations': 'organization',
-                        'practices': 'practice',
-                        'programs': 'program',
-                        'projects': 'project',
-                        'statuses': 'status',
-                        'tags': 'tag'
-                    }
-                };
+                        response.results.forEach(function(result) {
 
-                if (pluralize) {
+                            result.category = null;
 
-                    return keyMap.plural[obj];
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
 
                 }
 
-                console.log('keyMap.single', obj, keyMap.single[obj]);
+            };
 
-                return keyMap.single[obj];
+            self.directQuery = function(item, model, label) {
+
+                if (self.searchScope.target === 'program') {
+
+                    self.loadFeatures(item.id);
+
+                } else {
+
+                    self.addGeography(item);
+
+                }
+
+            };
+
+            self.addGeography = function(item) {
+
+                var _datum = {
+                    id: item.id,
+                    properties: item
+                };
+
+                self.tempGeographies.push(_datum);
+
+                self.geographyQuery = null;
+
+                console.log('Updated geographies (addition)', self.tempGeographies);
+
+            };
+
+            self.removeGeography = function(id) {
+
+                var _index;
+
+                self.tempGeographies.forEach(function(item, idx) {
+
+                    if (item.id === id) {
+
+                        _index = idx;
+
+                    }
+
+                });
+
+                console.log('Remove geography at index', _index);
+
+                if (typeof _index === 'number') {
+
+                    self.tempGeographies.splice(_index, 1);
+
+                }
+
+                console.log('Updated geographies (removal)', self.tempGeographies);
+
+            };
+
+            self.processGeographies = function(list) {
+
+                var _list = [];
+
+                angular.forEach(list, function(item) {
+
+                    var _datum = {};
+
+                    if (item && item.id) {
+                        _datum.id = item.id;
+                    }
+
+                    _list.push(_datum);
+
+                });
+
+                return _list;
+
+            };
+
+            self.loadFeatures = function(programId) {
+
+                var params = {
+                    program: programId,
+                    exclude_geometry: true
+                };
+
+                GeographyService.collection(params).$promise.then(function(successResponse) {
+
+                    console.log('successResponse', successResponse);
+
+                    successResponse.features.forEach(function(feature) {
+
+                        self.addGeography(feature);
+
+                    });
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                    self.showElements();
+
+                });
 
             };
 
             self.processDashboard = function(data) {
 
-                //
-                // Reset filters
-                //
+                self.dashboardObject = data.properties || data;
 
-                self.clearAllFilters();
+                self.tempGeographies = self.dashboardObject.geographies;
 
-                var relations = [
+                self.status.processing = false;
+
+            };
+
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [
                     'creator',
-                    'geographies',
+                    'metrics',
                     'last_modified_by',
                     'organizations',
                     'organization',
@@ -3729,46 +3749,6 @@ angular.module('FieldDoc')
                     'projects',
                     'tags'
                 ];
-
-                self.dashboardObject = data.properties || data;
-
-                console.log('self.processDashboard.dashboardObject', self.dashboardObject);
-
-                relations.forEach(function(relation) {
-
-                    var collection = self.dashboardObject[relation];
-
-                    if (Array.isArray(collection)) {
-
-                        self.extractFilter(relation, collection);
-
-                        self.dashboardObject[relation] = [];
-
-                    } else {
-
-                        delete self.dashboardObject[relation];
-
-                    }
-
-                });
-
-                self.status.processing = false;
-
-            };
-
-            self.processRelations = function(arr) {
-
-                arr.forEach(function(filter) {
-
-                    self.transformRelation(filter, filter.category);
-
-                });
-
-            };
-
-            self.scrubFeature = function(feature) {
-
-                var excludedKeys = [];
 
                 var reservedProperties = [
                     'links',
@@ -3805,7 +3785,7 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.dashboardObject);
 
-                self.processRelations(self.activeFilters);
+                self.dashboardObject.geographies = self.processGeographies(self.tempGeographies);
 
                 console.log('self.saveDashboard.dashboardObject', self.dashboardObject);
 
@@ -3908,14 +3888,6 @@ angular.module('FieldDoc')
 
             };
 
-            $scope.$watch('filterStore.index', function(newVal) {
-
-                console.log('Updated filterStore', newVal);
-
-                self.activeFilters = newVal;
-
-            });
-
             //
             // Verify Account information for proper UI element display
             //
@@ -3937,7 +3909,7 @@ angular.module('FieldDoc')
                     // Setup page meta data
                     //
                     $rootScope.page = {
-                        'title': 'Edit dashboard'
+                        'title': 'Edit dashboard geographies'
                     };
 
                 });
@@ -3959,7 +3931,8 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('DashboardMetricController',
         function($scope, Account, $location, $log, Dashboard, dashboard,
-            $rootScope, $route, user, FilterStore, $timeout) {
+            $rootScope, $route, user, FilterStore, $timeout, SearchService,
+            MetricType) {
 
             var self = this;
 
@@ -3972,6 +3945,10 @@ angular.module('FieldDoc')
             };
 
             $rootScope.page = {};
+
+            self.searchScope = {
+                target: 'metric'
+            };
 
             self.status = {
                 processing: true
@@ -4003,10 +3980,6 @@ angular.module('FieldDoc')
 
             };
 
-            $scope.filterStore = FilterStore;
-
-            console.log('self.filterStore', self.filterStore);
-
             self.loadDashboard = function() {
 
                 //
@@ -4028,144 +4001,162 @@ angular.module('FieldDoc')
 
             };
 
-            self.clearFilter = function(obj) {
+            self.search = function(value) {
 
-                FilterStore.clearItem(obj);
+                if (self.searchScope.target === 'metric') {
 
-            };
+                    return SearchService.metric({
+                        q: value
+                    }).$promise.then(function(response) {
 
-            self.clearAllFilters = function(reload) {
+                        console.log('SearchService response', response);
 
-                //
-                // Remove all stored filter objects
-                //
+                        response.results.forEach(function(result) {
 
-                FilterStore.clearAll();
+                            result.category = null;
 
-            };
+                        });
 
-            self.updateCollection = function(obj, collection) {
+                        return response.results.slice(0, 5);
 
-                self.dashboardObject[collection].push({
-                    id: obj.id
-                });
-
-            };
-
-            self.transformRelation = function(obj, category) {
-
-                switch (category) {
-
-                    case 'geography':
-
-                        self.updateCollection(obj, 'geographies');
-
-                        break;
-
-                    case 'organization':
-
-                        self.updateCollection(obj, 'organizations');
-
-                        break;
-
-                    case 'practice':
-
-                        self.updateCollection(obj, 'practices');
-
-                        break;
-
-                    case 'program':
-
-                        self.updateCollection(obj, 'programs');
-
-                        break;
-
-                    case 'project':
-
-                        self.updateCollection(obj, 'projects');
-
-                        break;
-
-                    case 'status':
-
-                        self.updateCollection(obj, 'statuses');
-
-                        break;
-
-                    case 'tag':
-
-                        self.updateCollection(obj, 'tags');
-
-                        break;
-
-                    default:
-
-                        self.updateCollection(obj, category);
-
-                        break;
-
-                }
-
-            };
-
-            self.extractFilter = function(key, data) {
-
-                data.forEach(function(datum) {
-
-                    FilterStore.addItem({
-                        id: datum.id,
-                        name: datum.name || datum.properties.name,
-                        category: self.parseKey(key)
                     });
 
-                });
+                } else {
 
-            };
+                    return SearchService.program({
+                        q: value
+                    }).$promise.then(function(response) {
 
-            self.parseKey = function(obj, pluralize) {
+                        console.log('SearchService response', response);
 
-                var keyMap = {
-                    plural: {
-                        'geography': 'geographies',
-                        'organization': 'organizations',
-                        'practice': 'practices',
-                        'program': 'programs',
-                        'project': 'projects',
-                        'status': 'statuses',
-                        'tag': 'tags'
-                    },
-                    single: {
-                        'geographies': 'geography',
-                        'organizations': 'organization',
-                        'practices': 'practice',
-                        'programs': 'program',
-                        'projects': 'project',
-                        'statuses': 'status',
-                        'tags': 'tag'
-                    }
-                };
+                        response.results.forEach(function(result) {
 
-                if (pluralize) {
+                            result.category = null;
 
-                    return keyMap.plural[obj];
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
 
                 }
 
-                console.log('keyMap.single', obj, keyMap.single[obj]);
+            };
 
-                return keyMap.single[obj];
+            self.directQuery = function(item, model, label) {
+
+                if (self.searchScope.target === 'program') {
+
+                    self.loadFeatures(item.id);
+
+                } else {
+
+                    self.addMetric(item);
+
+                }
+
+            };
+
+            self.addMetric = function(item) {
+
+                var _datum = {
+                    id: item.id,
+                    properties: item
+                };
+
+                self.tempMetrics.push(_datum);
+
+                self.metricQuery = null;
+
+                console.log('Updated metrics (addition)', self.tempMetrics);
+
+            };
+
+            self.removeMetric = function(id) {
+
+                var _index;
+
+                self.tempMetrics.forEach(function(item, idx) {
+
+                    if (item.id === id) {
+
+                        _index = idx;
+
+                    }
+
+                });
+
+                console.log('Remove metric at index', _index);
+
+                if (typeof _index === 'number') {
+
+                    self.tempMetrics.splice(_index, 1);
+
+                }
+
+                console.log('Updated metrics (removal)', self.tempMetrics);
+
+            };
+
+            self.processMetrics = function(list) {
+
+                var _list = [];
+
+                angular.forEach(list, function(item) {
+
+                    var _datum = {};
+
+                    if (item && item.id) {
+                        _datum.id = item.id;
+                    }
+
+                    _list.push(_datum);
+
+                });
+
+                return _list;
+
+            };
+
+            self.loadFeatures = function(programId) {
+
+                var params = {
+                    program: programId
+                };
+
+                MetricType.collection(params).$promise.then(function(successResponse) {
+
+                    console.log('successResponse', successResponse);
+
+                    successResponse.features.forEach(function(feature) {
+
+                        self.addMetric(feature);
+
+                    });
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                    self.showElements();
+
+                });
 
             };
 
             self.processDashboard = function(data) {
 
-                //
-                // Reset filters
-                //
+                self.dashboardObject = data.properties || data;
 
-                self.clearAllFilters();
+                self.tempMetrics = self.dashboardObject.metrics;
 
-                var relations = [
+                self.status.processing = false;
+
+            };
+
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [
                     'creator',
                     'geographies',
                     'last_modified_by',
@@ -4176,46 +4167,6 @@ angular.module('FieldDoc')
                     'projects',
                     'tags'
                 ];
-
-                self.dashboardObject = data.properties || data;
-
-                console.log('self.processDashboard.dashboardObject', self.dashboardObject);
-
-                relations.forEach(function(relation) {
-
-                    var collection = self.dashboardObject[relation];
-
-                    if (Array.isArray(collection)) {
-
-                        self.extractFilter(relation, collection);
-
-                        self.dashboardObject[relation] = [];
-
-                    } else {
-
-                        delete self.dashboardObject[relation];
-
-                    }
-
-                });
-
-                self.status.processing = false;
-
-            };
-
-            self.processRelations = function(arr) {
-
-                arr.forEach(function(filter) {
-
-                    self.transformRelation(filter, filter.category);
-
-                });
-
-            };
-
-            self.scrubFeature = function(feature) {
-
-                var excludedKeys = [];
 
                 var reservedProperties = [
                     'links',
@@ -4252,7 +4203,7 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.dashboardObject);
 
-                self.processRelations(self.activeFilters);
+                self.dashboardObject.metrics = self.processMetrics(self.tempMetrics);
 
                 console.log('self.saveDashboard.dashboardObject', self.dashboardObject);
 
@@ -4355,14 +4306,6 @@ angular.module('FieldDoc')
 
             };
 
-            $scope.$watch('filterStore.index', function(newVal) {
-
-                console.log('Updated filterStore', newVal);
-
-                self.activeFilters = newVal;
-
-            });
-
             //
             // Verify Account information for proper UI element display
             //
@@ -4384,7 +4327,7 @@ angular.module('FieldDoc')
                     // Setup page meta data
                     //
                     $rootScope.page = {
-                        'title': 'Edit dashboard'
+                        'title': 'Edit dashboard metrics'
                     };
 
                 });
@@ -20314,6 +20257,18 @@ angular
                     isArray: false,
                     cache: true
                 },
+                geography: {
+                    method: 'GET',
+                    isArray: false,
+                    cache: true,
+                    url: environment.apiUrl.concat('/v1/data/search/geography')
+                },
+                metric: {
+                    method: 'GET',
+                    isArray: false,
+                    cache: true,
+                    url: environment.apiUrl.concat('/v1/data/search/metric')
+                },
                 organization: {
                     method: 'GET',
                     isArray: false,
@@ -20783,6 +20738,35 @@ angular.module('FieldDoc')
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/watersheds')
+                }
+            });
+        });
+
+}());
+(function() {
+
+    'use strict';
+
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('GeographyType', function(environment, Preprocessors, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/data/geography-type/:id'), {
+                'id': '@id'
+            }, {
+                'query': {
+                    'isArray': false
+                },
+                collection: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/geography-type')
+                },
+                update: {
+                    'method': 'PATCH'
                 }
             });
         });
