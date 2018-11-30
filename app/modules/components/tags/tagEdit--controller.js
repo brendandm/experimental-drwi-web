@@ -107,9 +107,9 @@ angular.module('FieldDoc')
                 self.permissions.can_edit = successResponse.permissions.write;
                 self.permissions.can_delete = successResponse.permissions.write;
 
-                $rootScope.page.title = self.tag.properties.name ? self.tag.properties.name : 'Un-named Tag';
+                $rootScope.page.title = self.tag.name ? self.tag.name : 'Un-named Tag';
 
-                self.scrubFeature();
+                self.scrubFeature(self.tag);
 
                 self.showElements();
 
@@ -121,11 +121,40 @@ angular.module('FieldDoc')
 
         };
 
-        self.scrubFeature = function() {
+        self.scrubFeature = function(feature) {
 
-            delete self.tag.geometry;
-            delete self.tag.properties.creator;
-            delete self.tag.properties.last_modified_by;
+            var excludedKeys = [
+                'creator',
+                'geometry',
+                'last_modified_by'
+            ];
+
+            var reservedProperties = [
+                'links',
+                'permissions',
+                '$promise',
+                '$resolved'
+            ];
+
+            excludedKeys.forEach(function(key) {
+
+                if (feature.properties) {
+
+                    delete feature.properties[key];
+
+                } else {
+
+                    delete feature[key];
+
+                }
+
+            });
+
+            reservedProperties.forEach(function(key) {
+
+                delete feature[key];
+
+            });
 
         };
 
@@ -135,16 +164,11 @@ angular.module('FieldDoc')
 
             self.status.processing = true;
 
-            self.scrubFeature();
+            self.scrubFeature(self.tag);
 
-            if (typeof self.tag.properties.group !== 'string' &&
-                self.tag.properties.group.name) {
-
-                self.tag.properties.group = self.tag.properties.group.name;
-
-            }
-
-            self.tag.$update().then(function(successResponse) {
+            Tag.update({
+                id: self.tag.id
+            }, self.tag).then(function(successResponse) {
 
                 self.tag = successResponse;
 
@@ -159,7 +183,7 @@ angular.module('FieldDoc')
 
                 self.showElements();
 
-            }, function(errorResponse) {
+            }).catch(function(errorResponse) {
 
                 // Error message
 
