@@ -8,7 +8,8 @@
 angular.module('FieldDoc')
     .controller('DashboardGeographyController',
         function($scope, Account, $location, $log, Dashboard, dashboard,
-            $rootScope, $route, user, FilterStore, $timeout, SearchService) {
+            $rootScope, $route, user, FilterStore, $timeout, SearchService,
+            GeographyService) {
 
             var self = this;
 
@@ -56,10 +57,6 @@ angular.module('FieldDoc')
 
             };
 
-            $scope.filterStore = FilterStore;
-
-            console.log('self.filterStore', self.filterStore);
-
             self.loadDashboard = function() {
 
                 //
@@ -83,164 +80,162 @@ angular.module('FieldDoc')
 
             self.search = function(value) {
 
-                return SearchService.geography({
-                    q: value
-                }).$promise.then(function(response) {
+                if (self.searchScope.target === 'geography') {
 
-                    console.log('SearchService response', response);
+                    return SearchService.geography({
+                        q: value
+                    }).$promise.then(function(response) {
 
-                    response.results.forEach(function(result) {
+                        console.log('SearchService response', response);
 
-                        result.category = null;
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
 
                     });
 
-                    return response.results.slice(0, 5);
+                } else {
 
-                });
+                    return SearchService.program({
+                        q: value
+                    }).$promise.then(function(response) {
 
-            };
+                        console.log('SearchService response', response);
 
-            self.clearFilter = function(obj) {
+                        response.results.forEach(function(result) {
 
-                FilterStore.clearItem(obj);
+                            result.category = null;
 
-            };
+                        });
 
-            self.clearAllFilters = function(reload) {
+                        return response.results.slice(0, 5);
 
-                //
-                // Remove all stored filter objects
-                //
-
-                FilterStore.clearAll();
-
-            };
-
-            self.updateCollection = function(obj, collection) {
-
-                self.dashboardObject[collection].push({
-                    id: obj.id
-                });
-
-            };
-
-            self.transformRelation = function(obj, category) {
-
-                switch (category) {
-
-                    case 'geography':
-
-                        self.updateCollection(obj, 'geographies');
-
-                        break;
-
-                    case 'organization':
-
-                        self.updateCollection(obj, 'organizations');
-
-                        break;
-
-                    case 'practice':
-
-                        self.updateCollection(obj, 'practices');
-
-                        break;
-
-                    case 'program':
-
-                        self.updateCollection(obj, 'programs');
-
-                        break;
-
-                    case 'project':
-
-                        self.updateCollection(obj, 'projects');
-
-                        break;
-
-                    case 'status':
-
-                        self.updateCollection(obj, 'statuses');
-
-                        break;
-
-                    case 'tag':
-
-                        self.updateCollection(obj, 'tags');
-
-                        break;
-
-                    default:
-
-                        self.updateCollection(obj, category);
-
-                        break;
+                    });
 
                 }
 
             };
 
-            self.extractFilter = function(key, data) {
+            self.directQuery = function(item, model, label) {
 
-                data.forEach(function(datum) {
+                if (self.searchScope.target === 'program') {
 
-                    FilterStore.addItem({
-                        id: datum.id,
-                        name: datum.name || datum.properties.name,
-                        category: self.parseKey(key)
-                    });
+                    self.loadFeatures(item.id);
 
-                });
+                } else {
+
+                    self.addGeography(item);
+
+                }
 
             };
 
-            self.parseKey = function(obj, pluralize) {
+            self.addGeography = function(item) {
 
-                var keyMap = {
-                    plural: {
-                        'geography': 'geographies',
-                        'organization': 'organizations',
-                        'practice': 'practices',
-                        'program': 'programs',
-                        'project': 'projects',
-                        'status': 'statuses',
-                        'tag': 'tags'
-                    },
-                    single: {
-                        'geographies': 'geography',
-                        'organizations': 'organization',
-                        'practices': 'practice',
-                        'programs': 'program',
-                        'projects': 'project',
-                        'statuses': 'status',
-                        'tags': 'tag'
-                    }
+                var _datum = {
+                    id: item.id,
+                    properties: item
                 };
 
-                if (pluralize) {
+                self.tempGeographies.push(_datum);
 
-                    return keyMap.plural[obj];
+                self.geographyQuery = null;
+
+                console.log('Updated geographies (addition)', self.tempGeographies);
+
+            };
+
+            self.removeGeography = function(id) {
+
+                var _index;
+
+                self.tempGeographies.forEach(function(item, idx) {
+
+                    if (item.id === id) {
+
+                        _index = idx;
+
+                    }
+
+                });
+
+                console.log('Remove geography at index', _index);
+
+                if (typeof _index === 'number') {
+
+                    self.tempGeographies.splice(_index, 1);
 
                 }
 
-                console.log('keyMap.single', obj, keyMap.single[obj]);
+                console.log('Updated geographies (removal)', self.tempGeographies);
 
-                return keyMap.single[obj];
+            };
+
+            self.processGeographies = function(list) {
+
+                var _list = [];
+
+                angular.forEach(list, function(item) {
+
+                    var _datum = {};
+
+                    if (item && item.id) {
+                        _datum.id = item.id;
+                    }
+
+                    _list.push(_datum);
+
+                });
+
+                return _list;
+
+            };
+
+            self.loadFeatures = function(programId) {
+
+                var params = {
+                    program: programId
+                };
+
+                GeographyService.collection(params).$promise.then(function(successResponse) {
+
+                    console.log('successResponse', successResponse);
+
+                    successResponse.features.forEach(function(feature) {
+
+                        self.addGeography(feature);
+
+                    });
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                    self.showElements();
+
+                });
 
             };
 
             self.processDashboard = function(data) {
 
-                //
-                // Reset filters
-                //
+                self.dashboardObject = data.properties || data;
 
-                self.clearAllFilters();
+                self.tempGeographies = self.dashboardObject.geographies;
 
-                var relations = [
+                self.status.processing = false;
+
+            };
+
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [
                     'creator',
-                    'geographies',
+                    'metrics',
                     'last_modified_by',
                     'organizations',
                     'organization',
@@ -249,46 +244,6 @@ angular.module('FieldDoc')
                     'projects',
                     'tags'
                 ];
-
-                self.dashboardObject = data.properties || data;
-
-                console.log('self.processDashboard.dashboardObject', self.dashboardObject);
-
-                relations.forEach(function(relation) {
-
-                    var collection = self.dashboardObject[relation];
-
-                    if (Array.isArray(collection)) {
-
-                        self.extractFilter(relation, collection);
-
-                        self.dashboardObject[relation] = [];
-
-                    } else {
-
-                        delete self.dashboardObject[relation];
-
-                    }
-
-                });
-
-                self.status.processing = false;
-
-            };
-
-            self.processRelations = function(arr) {
-
-                arr.forEach(function(filter) {
-
-                    self.transformRelation(filter, filter.category);
-
-                });
-
-            };
-
-            self.scrubFeature = function(feature) {
-
-                var excludedKeys = [];
 
                 var reservedProperties = [
                     'links',
@@ -325,7 +280,7 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.dashboardObject);
 
-                self.processRelations(self.activeFilters);
+                self.dashboardObject.geographies = self.processGeographies(self.tempGeographies);
 
                 console.log('self.saveDashboard.dashboardObject', self.dashboardObject);
 
@@ -427,14 +382,6 @@ angular.module('FieldDoc')
                 });
 
             };
-
-            $scope.$watch('filterStore.index', function(newVal) {
-
-                console.log('Updated filterStore', newVal);
-
-                self.activeFilters = newVal;
-
-            });
 
             //
             // Verify Account information for proper UI element display
