@@ -198,7 +198,8 @@ angular.module('FieldDoc')
             self.loadFeatures = function(programId) {
 
                 var params = {
-                    program: programId
+                    program: programId,
+                    exclude_geometry: true
                 };
 
                 GeographyService.collection(params).$promise.then(function(successResponse) {
