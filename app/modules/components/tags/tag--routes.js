@@ -30,7 +30,9 @@ angular.module('FieldDoc')
                     },
                     tags: function(Tag, $route) {
 
-                        return Tag.collection({});
+                        return Tag.collection({
+                            group: true
+                        });
 
                     }
                 }

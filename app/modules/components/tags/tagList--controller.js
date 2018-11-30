@@ -151,7 +151,7 @@ angular.module('FieldDoc')
 
                         console.log('successResponse', successResponse);
 
-                        self.tags = successResponse.features;
+                        self.tags = successResponse;
 
                         self.showElements();
 
