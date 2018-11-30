@@ -40,7 +40,7 @@
 
                         <div class="search--group">
                             <div global-search class="global--search" style="width: 100%; max-width: none;">
-                                <input type="search" class="search" style="color: #212121;" value="" placeholder="Search&hellip;" data-ng-model="page.query" uib-typeahead="suggestion as suggestion.name for suggestion in page.search($viewValue)" typeahead-on-select="page.addGeography($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                                <input type="search" class="search" style="color: #212121;" value="" placeholder="Search&hellip;" data-ng-model="page.geographyQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.search($viewValue)" typeahead-on-select="page.addGeography($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
                             </div>
                         </div>
 

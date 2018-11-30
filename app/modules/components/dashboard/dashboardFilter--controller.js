@@ -433,7 +433,7 @@ angular.module('FieldDoc')
                     // Setup page meta data
                     //
                     $rootScope.page = {
-                        'title': 'Edit dashboard'
+                        'title': 'Edit dashboard filters'
                     };
 
                 });

@@ -40,7 +40,7 @@
 
                         <div class="search--group">
                             <div global-search class="global--search" style="width: 100%; max-width: none;" filter-projects="page.filterProjects">
-                                <input type="search" class="search" style="color: #212121;" value="" placeholder="Search&hellip;" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in page.search($viewValue)" typeahead-on-select="page.addMetric($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                                <input type="search" class="search" style="color: #212121;" value="" placeholder="Search&hellip;" data-ng-model="page.metricQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.search($viewValue)" typeahead-on-select="page.directQuery($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
                             </div>
                         </div>
 
@@ -62,11 +62,11 @@
 
                     <div class="classification--list" style="margin-top: 2em;">
                         <ul>
-                            <li data-ng-repeat="metric in page.tempMetrics">
+                            <li class="reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="metric in page.tempMetrics">
                                 <i class="material-icons">
                                     timeline
                                 </i>
-                                <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ metric.properties.name }}</span>
+                                <span style="flex-grow: 1; padding-left: 2em;">{{ metric.properties.name || metric.name }}</span>
                                 <div class="button--container">
                                     <button type="button" class="remove-item" data-ng-click="page.removeMetric(metric.id)">
                                         <i class="material-icons">
