@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1543652453361})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1543653332684})
 
 ;
 /**
@@ -17315,7 +17315,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.deleteFeature = function(obj, index) {
+            self.deleteFeature = function(obj, group, index) {
 
                 Tag.delete({
                     id: obj.id
@@ -17330,7 +17330,7 @@ angular.module('FieldDoc')
                         'prompt': 'OK'
                     }];
 
-                    self.tags.splice(index, 1);
+                    self.tags[group].splice(index, 1);
 
                     $timeout(closeAlerts, 2000);
 
