@@ -73,7 +73,7 @@ angular.module('FieldDoc')
                         'prompt': 'OK'
                     }];
 
-                    self.tags[group].splice(index, 1);
+                    self.tags.features[group].splice(index, 1);
 
                     $timeout(closeAlerts, 2000);
 

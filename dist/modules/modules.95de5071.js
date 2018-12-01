@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1543653332684})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1543653670115})
 
 ;
 /**
@@ -17330,7 +17330,7 @@ angular.module('FieldDoc')
                         'prompt': 'OK'
                     }];
 
-                    self.tags[group].splice(index, 1);
+                    self.tags.features[group].splice(index, 1);
 
                     $timeout(closeAlerts, 2000);
 
