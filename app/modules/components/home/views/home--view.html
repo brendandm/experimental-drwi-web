@@ -87,8 +87,6 @@
 
         <div class="main--ui">
 
-            <h2>Recent projects</h2>
-
             <div class="add--new--wrapper">
                 <span>Create project</span>
                 <a class="add--new--btn" href="projects/collection/new">
@@ -97,6 +95,8 @@
                     </i>
                 </a>
             </div>
+
+            <h2 data-ng-if="page.projects && page.projects.length">Recent projects</h2>
 
             <div class="features--container" data-ng-if="!page.status.loading">
 

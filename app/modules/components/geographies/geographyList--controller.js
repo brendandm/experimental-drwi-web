@@ -11,7 +11,7 @@
         .controller('GeographyListController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
                 $route, geographies, user, Utility, GeographyService,
-                MapPreview, leafletBoundsHelpers, $interval) {
+                MapPreview, leafletBoundsHelpers, $interval, Shapefile, GeographyType) {
 
                 var self = this;
 
@@ -290,6 +290,105 @@
                         self.showElements();
 
                     });
+
+                };
+
+                self.searchGroups = function(value) {
+
+                    return GeographyType.collection({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService response', response);
+
+                        response.features.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.features.slice(0, 5);
+
+                    });
+
+                };
+
+                self.uploadCollection = function() {
+
+                    if (!self.fileImport ||
+                        !self.fileImport.length) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Please select a file.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        return false;
+
+                    }
+
+                    if (self.fileImport) {
+
+                        var fileData = new FormData();
+
+                        fileData.append('file', self.fileImport[0]);
+
+                        console.log('fileData', fileData);
+
+                        console.log('Shapefile', Shapefile);
+
+                        try {
+
+                            Shapefile.upload({}, fileData, function(shapefileResponse) {
+
+                                console.log('shapefileResponse', shapefileResponse.msg);
+
+                                self.error = null;
+
+                                self.alerts = [{
+                                    'type': 'error',
+                                    'flag': 'Error!',
+                                    'msg': 'Upload successful! Creating geographies...',
+                                    'prompt': 'OK'
+                                }];
+
+                                $timeout(closeAlerts, 2000);
+
+                            }).catch(function(errorResponse) {
+
+                                console.log('Upload error', errorResponse);
+
+                                self.alerts = [{
+                                    'type': 'error',
+                                    'flag': 'Error!',
+                                    'msg': 'The file could not be processed.',
+                                    'prompt': 'OK'
+                                }];
+
+                                $timeout(closeAlerts, 2000);
+
+                            });
+
+                        } catch (error) {
+
+                            console.log('Upload error', error);
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'The file could not be processed.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                        }
+
+                    }
 
                 };
 

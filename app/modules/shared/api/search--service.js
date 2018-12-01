@@ -22,6 +22,12 @@
                     cache: true,
                     url: environment.apiUrl.concat('/v1/data/search/geography')
                 },
+                geographyGroup: {
+                    method: 'GET',
+                    isArray: false,
+                    cache: true,
+                    url: environment.apiUrl.concat('/v1/data/search/geography-group')
+                },
                 metric: {
                     method: 'GET',
                     isArray: false,
