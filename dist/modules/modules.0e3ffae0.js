@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1543598819462})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1543652453361})
 
 ;
 /**
@@ -3638,6 +3638,12 @@ angular.module('FieldDoc')
 
             };
 
+            self.clearAll = function() {
+
+                self.tempGeographies = [];
+
+            };
+
             self.addGeography = function(item) {
 
                 var _datum = {
@@ -3703,7 +3709,8 @@ angular.module('FieldDoc')
 
                 var params = {
                     program: programId,
-                    exclude_geometry: true
+                    exclude_geometry: true,
+                    scope: 'all'
                 };
 
                 GeographyService.collection(params).$promise.then(function(successResponse) {
@@ -14955,7 +14962,7 @@ angular.module('FieldDoc')
         .controller('GeographyListController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
                 $route, geographies, user, Utility, GeographyService,
-                MapPreview, leafletBoundsHelpers, $interval) {
+                MapPreview, leafletBoundsHelpers, $interval, Shapefile, GeographyType) {
 
                 var self = this;
 
@@ -15237,6 +15244,120 @@ angular.module('FieldDoc')
 
                 };
 
+                self.searchGroups = function(value) {
+
+                    return GeographyType.collection({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService response', response);
+
+                        response.features.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.features.slice(0, 5);
+
+                    });
+
+                };
+
+                self.uploadCollection = function() {
+
+                    if (!self.fileImport ||
+                        !self.fileImport.length) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Please select a file.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        return false;
+
+                    }
+
+                    if (self.fileImport) {
+
+                        var fileData = new FormData();
+
+                        fileData.append('file', self.fileImport[0]);
+
+                        if (self.group) {
+
+                            if (self.group.id) {
+
+                                fileData.append('group', self.group.id);
+
+                            } else if (typeof self.group === 'string') {
+
+                                fileData.append('group', self.group);
+
+                            }
+
+                        }
+
+                        if (self.program && self.program.id) {
+
+                            fileData.append('program', self.program.id);
+
+                        }
+
+                        fileData.append('persist', true);
+
+                        console.log('fileData', fileData);
+
+                        Shapefile.upload({}, fileData, function(successResponse) {
+
+                            console.log('successResponse', successResponse.msg);
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Upload successful! Creating geographies...',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                        }, function(errorResponse) {
+
+                            console.log('Upload error', errorResponse);
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'The file could not be processed.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                        });
+
+                    }
+
+                };
+
+                self.extractPrograms = function(user) {
+
+                    var _programs = [];
+
+                    user.properties.programs.forEach(function(program) {
+
+                        _programs.push(program.properties);
+
+                    });
+
+                    return _programs;
+
+                };
+
                 //
                 // Verify Account information for proper UI element display
                 //
@@ -15251,6 +15372,8 @@ angular.module('FieldDoc')
                             role: $rootScope.user.properties.roles[0],
                             account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                         };
+
+                        self.programs = self.extractPrograms($rootScope.user);
 
                         self.loadFeatures();
 
@@ -16643,7 +16766,9 @@ angular.module('FieldDoc')
                     },
                     tags: function(Tag, $route) {
 
-                        return Tag.collection({});
+                        return Tag.collection({
+                            group: true
+                        });
 
                     }
                 }
@@ -16805,9 +16930,9 @@ angular.module('FieldDoc')
                 self.permissions.can_edit = successResponse.permissions.write;
                 self.permissions.can_delete = successResponse.permissions.write;
 
-                $rootScope.page.title = self.tag.properties.name ? self.tag.properties.name : 'Un-named Tag';
+                $rootScope.page.title = self.tag.name ? self.tag.name : 'Un-named Tag';
 
-                self.scrubFeature();
+                self.scrubFeature(self.tag);
 
                 self.showElements();
 
@@ -16819,11 +16944,40 @@ angular.module('FieldDoc')
 
         };
 
-        self.scrubFeature = function() {
+        self.scrubFeature = function(feature) {
 
-            delete self.tag.geometry;
-            delete self.tag.properties.creator;
-            delete self.tag.properties.last_modified_by;
+            var excludedKeys = [
+                'creator',
+                'geometry',
+                'last_modified_by'
+            ];
+
+            var reservedProperties = [
+                'links',
+                'permissions',
+                '$promise',
+                '$resolved'
+            ];
+
+            excludedKeys.forEach(function(key) {
+
+                if (feature.properties) {
+
+                    delete feature.properties[key];
+
+                } else {
+
+                    delete feature[key];
+
+                }
+
+            });
+
+            reservedProperties.forEach(function(key) {
+
+                delete feature[key];
+
+            });
 
         };
 
@@ -16833,16 +16987,11 @@ angular.module('FieldDoc')
 
             self.status.processing = true;
 
-            self.scrubFeature();
+            self.scrubFeature(self.tag);
 
-            if (typeof self.tag.properties.group !== 'string' &&
-                self.tag.properties.group.name) {
-
-                self.tag.properties.group = self.tag.properties.group.name;
-
-            }
-
-            self.tag.$update().then(function(successResponse) {
+            Tag.update({
+                id: self.tag.id
+            }, self.tag).then(function(successResponse) {
 
                 self.tag = successResponse;
 
@@ -16857,7 +17006,7 @@ angular.module('FieldDoc')
 
                 self.showElements();
 
-            }, function(errorResponse) {
+            }).catch(function(errorResponse) {
 
                 // Error message
 
@@ -17259,7 +17408,7 @@ angular.module('FieldDoc')
 
                         console.log('successResponse', successResponse);
 
-                        self.tags = successResponse.features;
+                        self.tags = successResponse;
 
                         self.showElements();
 
@@ -20263,6 +20412,12 @@ angular
                     cache: true,
                     url: environment.apiUrl.concat('/v1/data/search/geography')
                 },
+                geographyGroup: {
+                    method: 'GET',
+                    isArray: false,
+                    cache: true,
+                    url: environment.apiUrl.concat('/v1/data/search/geography-group')
+                },
                 metric: {
                     method: 'GET',
                     isArray: false,
@@ -20658,11 +20813,7 @@ angular.module('FieldDoc')
                     url: environment.apiUrl.concat('/v1/tags')
                 },
                 update: {
-                    'method': 'PATCH',
-                    transformRequest: function(data) {
-                        var feature = Preprocessors.geojson(data);
-                        return angular.toJson(feature);
-                    }
+                    'method': 'PATCH'
                 }
             });
         });

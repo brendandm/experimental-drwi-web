@@ -46,7 +46,16 @@
 
                     </div>
 
-                    <div class="classification--list" style="margin-top: 2em;">
+                    <div class="save--action--wrapper save--action--bottom" style="padding: 0; margin: 1em 0 0;" data-ng-if="page.tempGeographies && page.tempGeographies.length">
+                        <span>Remove all</span>
+                        <button type="reset" data-ng-click="page.clearAll()">
+                            <i class="material-icons">
+                                delete_sweep
+                            </i>
+                        </button>
+                    </div>
+
+                    <div class="classification--list" style="margin-top: 1em;">
                         <ul>
                             <li class="reveal fade-in" style="animation-delay: {{ $index * 75 }}ms;" data-ng-repeat="geography in page.tempGeographies">
                                 <i class="material-icons">

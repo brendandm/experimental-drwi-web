@@ -25,54 +25,60 @@
                 </a>
             </div>
 
-            <p class="reveal fade-in t0">You have <strong>{{ (page.tags.length | number) || 0 }}</strong> <ng-pluralize count="page.tags.length" when="{'one': 'tag','other': 'tags'}"></ng-pluralize>.</p>
+            <input type="text" class="search-bar list-filter reveal fade-in t0" data-ng-if="!page.status.loading && page.tags.count > 10" data-ng-model="page.q" placeholder="Search your tags">
 
-            <div class="features--container">
+            <p class="reveal fade-in t0">You have <strong>{{ (page.tags.count | number) || 0 }}</strong> <ng-pluralize count="page.tags.count" when="{'one': 'tag','other': 'tags'}"></ng-pluralize>.</p>
 
-                <input type="text" class="search-bar list-filter" data-ng-model="page.q" placeholder="Search tags">
+            <div class="features--container" data-ng-if="!page.status.loading">
 
-                <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;" data-ng-if="!page.status.loading">
+                <div data-ng-repeat="(group, features) in page.tags.features" style="width: 100%;">
 
-                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="tag in page.tags | orderBy:'-modified_on' | filter: page.q">
+                    <h2>{{ group }}</h2>
 
-                        <div class="card--content">
+                    <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
-                            <div class="name">
-                                <span>{{ tag.name }}</span>
-                            </div>
+                        <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="tag in features | orderBy:'-modified_on' | filter: page.q">
 
-                            <div class="body">
+                            <div class="card--content">
 
-                                <div class="confirm--delete" data-ng-if="page.deletionTarget.id === tag.id">
-                                    <p>Do you want to delete this tag?</p>
-                                    <div class="actions" style="flex: 0;">
-                                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature(tag, $index)">
-                                            Yes
+                                <div class="name">
+                                    <span>{{ tag.name }}</span>
+                                </div>
+
+                                <div class="body">
+
+                                    <div class="confirm--delete" data-ng-if="page.deletionTarget.id === tag.id">
+                                        <p>Do you want to delete this tag?</p>
+                                        <div class="actions" style="flex: 0;">
+                                            <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature(tag, $index)">
+                                                Yes
+                                            </a>
+                                            <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                                                Cancel
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <p>{{ (tag.description || 'No description') | truncate:80 }}</p>
+                                    <div class="actions">
+                                        <a class="snapshot--title" href="/tags/{{ tag.id }}/edit" title="Edit tag">
+                                            <i class="material-icons">
+                                            edit
+                                            </i>
                                         </a>
-                                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
-                                            Cancel
+                                        <a class="snapshot--title" href="#" title="Delete tag" data-ng-click="page.confirmDelete(tag)">
+                                            <i class="material-icons">
+                                            delete
+                                            </i>
                                         </a>
                                     </div>
+                                    <span><time datetime="{{ tag.modified_on }}" title="{{ tag.modified_on }}">Last updated {{ tag.modified_on | date : 'mediumDate' }}</time></span>
                                 </div>
-                                <p>{{ (tag.description || 'No description') | truncate:80 }}</p>
-                                <div class="actions">
-                                    <a class="snapshot--title" href="/tags/{{ tag.id }}/edit" title="Edit tag">
-                                        <i class="material-icons">
-                                        edit
-                                        </i>
-                                    </a>
-                                    <a class="snapshot--title" href="#" title="Delete tag" data-ng-click="page.confirmDelete(tag)">
-                                        <i class="material-icons">
-                                        delete
-                                        </i>
-                                    </a>
-                                </div>
-                                <span><time datetime="{{ tag.modified_on }}" title="{{ tag.modified_on }}">Last updated {{ tag.modified_on | date : 'mediumDate' }}</time></span>
                             </div>
-                        </div>
-                    </li>
+                        </li>
 
-                </ul>
+                    </ul>
+
+                </div>
 
             </div>
 

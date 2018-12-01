@@ -337,9 +337,17 @@
 
                         fileData.append('file', self.fileImport[0]);
 
-                        if (self.group && self.group.id) {
+                        if (self.group) {
 
-                            fileData.append('group', self.group.id);
+                            if (self.group.id) {
+
+                                fileData.append('group', self.group.id);
+
+                            } else if (typeof self.group === 'string') {
+
+                                fileData.append('group', self.group);
+
+                            }
 
                         }
 
@@ -353,43 +361,22 @@
 
                         console.log('fileData', fileData);
 
-                        console.log('Shapefile', Shapefile);
+                        Shapefile.upload({}, fileData, function(successResponse) {
 
-                        try {
+                            console.log('successResponse', successResponse.msg);
 
-                            Shapefile.upload({}, fileData, function(shapefileResponse) {
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Upload successful! Creating geographies...',
+                                'prompt': 'OK'
+                            }];
 
-                                console.log('shapefileResponse', shapefileResponse.msg);
+                            $timeout(closeAlerts, 2000);
 
-                                self.error = null;
+                        }, function(errorResponse) {
 
-                                self.alerts = [{
-                                    'type': 'error',
-                                    'flag': 'Error!',
-                                    'msg': 'Upload successful! Creating geographies...',
-                                    'prompt': 'OK'
-                                }];
-
-                                $timeout(closeAlerts, 2000);
-
-                            }).catch(function(errorResponse) {
-
-                                console.log('Upload error', errorResponse);
-
-                                self.alerts = [{
-                                    'type': 'error',
-                                    'flag': 'Error!',
-                                    'msg': 'The file could not be processed.',
-                                    'prompt': 'OK'
-                                }];
-
-                                $timeout(closeAlerts, 2000);
-
-                            });
-
-                        } catch (error) {
-
-                            console.log('Upload error', error);
+                            console.log('Upload error', errorResponse);
 
                             self.alerts = [{
                                 'type': 'error',
@@ -400,7 +387,7 @@
 
                             $timeout(closeAlerts, 2000);
 
-                        }
+                        });
 
                     }
 
