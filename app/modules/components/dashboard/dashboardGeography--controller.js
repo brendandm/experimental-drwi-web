@@ -134,6 +134,12 @@ angular.module('FieldDoc')
 
             };
 
+            self.clearAll = function() {
+
+                self.tempGeographies = [];
+
+            };
+
             self.addGeography = function(item) {
 
                 var _datum = {
@@ -199,7 +205,8 @@ angular.module('FieldDoc')
 
                 var params = {
                     program: programId,
-                    exclude_geometry: true
+                    exclude_geometry: true,
+                    scope: 'all'
                 };
 
                 GeographyService.collection(params).$promise.then(function(successResponse) {

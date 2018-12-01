@@ -50,6 +50,15 @@
 
   }
 
+  button[type="reset"] {
+    background: rgb(193,56,74);
+
+    &:hover {
+      background: rgb(173,50,66);
+    }
+
+  }
+
   button[disabled] {
     background: #9E9E9E;
     cursor: not-allowed;
