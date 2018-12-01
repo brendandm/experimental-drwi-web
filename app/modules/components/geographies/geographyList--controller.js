@@ -337,6 +337,20 @@
 
                         fileData.append('file', self.fileImport[0]);
 
+                        if (self.group && self.group.id) {
+
+                            fileData.append('group', self.group.id);
+
+                        }
+
+                        if (self.program && self.program.id) {
+
+                            fileData.append('program', self.program.id);
+
+                        }
+
+                        fileData.append('persist', true);
+
                         console.log('fileData', fileData);
 
                         console.log('Shapefile', Shapefile);
@@ -392,6 +406,20 @@
 
                 };
 
+                self.extractPrograms = function(user) {
+
+                    var _programs = [];
+
+                    user.properties.programs.forEach(function(program) {
+
+                        _programs.push(program.properties);
+
+                    });
+
+                    return _programs;
+
+                };
+
                 //
                 // Verify Account information for proper UI element display
                 //
@@ -406,6 +434,8 @@
                             role: $rootScope.user.properties.roles[0],
                             account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                         };
+
+                        self.programs = self.extractPrograms($rootScope.user);
 
                         self.loadFeatures();
 

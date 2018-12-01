@@ -71,6 +71,13 @@
                             <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 0.5em;"><strong>Tip:</strong> If the category you enter doesn’t exist, FieldDoc will create it automatically.</p>
                         </div>
 
+                        <!-- Program -->
+
+                        <div class="form-element" data-ng-if="page.programs && page.programs.length">
+                            <span class="meta-label"><b>Program</b></span>
+                            <input id="geography_program_id" name="geography_program_id" type="text" placeholder="Search programs&hellip;" data-ng-model="page.program" uib-typeahead="program as program.name for program in page.programs | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
+                        </div>
+
                         <input type="file" class="form-control" id="geography-collection" name="geography-collection" file-upload file-model="page.fileImport" />
 
                     </div>
