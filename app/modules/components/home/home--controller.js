@@ -237,6 +237,31 @@
 
                 };
 
+                self.createProgram = function() {
+
+                    var newProgram = new Program({
+                        'organization_id': $rootScope.user.properties.organization_id
+                    });
+
+                    newProgram.$save(function(successResponse) {
+
+                        $location.path('/programs/' + successResponse.id + '/edit');
+
+                    }, function(errorResponse) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to create a new program.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                    });
+
+                };
+
                 //
                 // Verify Account information for proper UI element display
                 //

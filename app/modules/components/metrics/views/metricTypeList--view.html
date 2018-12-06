@@ -25,6 +25,8 @@
                 </a>
             </div>
 
+            <input type="text" class="search-bar list-filter reveal fade-in t0" data-ng-if="!page.status.loading && page.metrics.length > 10" data-ng-model="page.q" placeholder="Search your metrics">
+
             <p class="reveal fade-in t0" data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">You have <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize>.</p>
 
             <p class="reveal fade-in t0" data-ng-if="!page.status.loading && !page.selectedProgram.id && ($root.user.properties.is_admin || $root.user.properties.is_manager)">You have <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize>.</p>
@@ -46,8 +48,6 @@
             <!-- <p class="reveal fade-in t0">This program has <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize>.</p> -->
 
             <div class="features--container">
-
-                <input type="text" class="search-bar list-filter" data-ng-model="page.q" placeholder="Search metrics">
 
                 <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;" data-ng-if="!page.status.loading">
 
