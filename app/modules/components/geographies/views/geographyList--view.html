@@ -46,7 +46,55 @@
                 </form>
             </div>
 
-            <section class="reveal fade-in t0" style="padding: 1em 0 0;" data-ng-if="!page.status.loading && !page.geographies.length">
+            <section class="reveal fade-in t0" style="padding: 1em 0 0;" data-ng-if="!page.status.loading && page.pendingTasks.length">
+
+                <h2 style="width: 100%; display: flex; flex-flow: row nowrap; align-items: center; text-align: left;"><i class="material-icons" style="padding-right: 0.5em;">notifications</i>Active tasks</h2>
+
+                <div class="features--container" style="padding: 0;">
+
+                    <table class="features clearfix">
+                        <thead>
+                            <tr class="table-row clearfix">
+                                <th class="table-heading" style="text-align: left;">
+                                    Date
+                                </th>
+                                <th class="table-heading" style="text-align: left;">
+                                    User
+                                </th>
+                                <th class="table-heading" style="text-align: left;">
+                                    Annotation
+                                </th>
+                                <th class="table-heading" style="text-align: left;">
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row clearfix" data-ng-repeat="task in page.pendingTasks | orderBy: '-start'">
+                                <td>
+                                    <time datetime="{{ task.start }}Z" title="{{ task.start }}Z">{{ task.start | date:'fullDate' }} at <span class="lowercase" style="display: inline-flex; padding-bottom: 0;">{{ task.start | date:'mediumTime' }}</span> UTC</time>
+                                </td>
+                                <td>
+                                    <a data-ng-href="profiles/{{ task.user.id }}" style="display: inline; color: #333; font-weight: bold;">{{ task.creator.first_name }} {{ task.creator.last_name }}</a>
+                                </td>
+                                <td class="truncate" style="text-align: left;">
+                                    {{ task.annotation }}
+                                </td>
+                                <td data-ng-if="!task.end" style="color: rgb(223,87,34);">
+                                    <span>Working</span>
+                                </td>
+                                <td data-ng-if="task.end" style="color: rgb(41,189,98);" title="{{ task.end }}Z">
+                                    <span>Complete</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </section>
+
+            <section class="reveal fade-in t0" style="padding: 1em 0 0;" data-ng-if="!page.status.loading && !page.geographies.length && !page.pendTasks.length">
 
                 <form role="form" class="form" id="form--geography-collection" name="form--geography-collection" style="position: relative;" data-ng-submit="page.uploadCollection()">
 

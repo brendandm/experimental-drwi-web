@@ -11,7 +11,8 @@
         .controller('GeographyListController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
                 $route, geographies, user, Utility, GeographyService,
-                MapPreview, leafletBoundsHelpers, $interval, Shapefile, GeographyType) {
+                MapPreview, leafletBoundsHelpers, $interval, Shapefile,
+                GeographyType, Task) {
 
                 var self = this;
 
@@ -313,6 +314,38 @@
 
                 };
 
+                self.fetchTasks = function() {
+
+                    var params = {
+                        scale: 'collection',
+                        scope: 'geography',
+                        status: 'pending'
+                    };
+
+                    if (self.program && self.program.id) {
+
+                        params.program = self.program.id;
+
+                    }
+
+                    return Task.collection(params).$promise.then(function(response) {
+
+                        console.log('Task.collection response', response);
+
+                        self.pendingTasks = response.features;
+
+                        if (!self.pendingTasks.length) {
+
+                            self.loadFeatures();
+
+                            $interval.cancel(self.taskPoll);
+
+                        }
+
+                    });
+
+                };
+
                 self.uploadCollection = function() {
 
                     if (!self.fileImport ||
@@ -361,18 +394,34 @@
 
                         console.log('fileData', fileData);
 
+                        $window.scrollTo(0,0);
+
                         Shapefile.upload({}, fileData, function(successResponse) {
 
-                            console.log('successResponse', successResponse.msg);
+                            console.log('successResponse', successResponse);
 
                             self.alerts = [{
                                 'type': 'success',
                                 'flag': 'Success!',
-                                'msg': 'Upload successful! Creating geographies...',
+                                'msg': 'Upload complete. Processing data...',
                                 'prompt': 'OK'
                             }];
 
                             $timeout(closeAlerts, 2000);
+
+                            if (successResponse.task) {
+
+                                self.pendingTasks = [
+                                    successResponse.task
+                                ];
+
+                            }
+
+                            self.taskPoll = $interval(function() {
+
+                                self.fetchTasks();
+
+                            }, 500);
 
                         }, function(errorResponse) {
 
@@ -425,6 +474,8 @@
                         self.programs = self.extractPrograms($rootScope.user);
 
                         self.loadFeatures();
+
+                        self.fetchTasks();
 
                     });
 
