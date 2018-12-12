@@ -80,11 +80,9 @@
                                 <td class="truncate" style="text-align: left;">
                                     {{ task.annotation }}
                                 </td>
-                                <td data-ng-if="!task.end" style="color: rgb(223,87,34);">
-                                    <span>Working</span>
-                                </td>
-                                <td data-ng-if="task.end" style="color: rgb(41,189,98);" title="{{ task.end }}Z">
-                                    <span>Complete</span>
+                                <td style="color: #616161;">
+                                    <span>{{ task.status }}</span>
+                                    <span data-ng-repeat="error in task.errors">({{ error.message }})</span>
                                 </td>
                             </tr>
                         </tbody>
@@ -115,7 +113,7 @@
 
                         <div class="classification--search" style="margin: 2em 0; position: relative;">
                             <p style="font-style: normal; font-size: 1em; margin-bottom: 1em;"><strong>Category</strong></p>
-                            <input type="search" class="search" placeholder="Search categories&hellip;" data-ng-model="page.group" uib-typeahead="group as group.name for group in page.searchGroups($viewValue)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                            <input type="search" class="search" placeholder="Search categories&hellip;" data-ng-model="page.group" uib-typeahead="group as group.name for group in page.geographyGroups | filter:$viewValue" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
                             <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 0.5em;"><strong>Tip:</strong> If the category you enter doesn’t exist, FieldDoc will create it automatically.</p>
                         </div>
 

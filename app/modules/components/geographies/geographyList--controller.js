@@ -314,6 +314,28 @@
 
                 };
 
+                self.loadGroups = function(value) {
+
+                    GeographyType.collection({
+                        sort: 'name:desc'
+                    }).$promise.then(function(response) {
+
+                        console.log('GeographyType.collection response', response);
+
+                        response.features.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        self.geographyGroups = response.features;
+
+                        // return response.features.slice(0, 5);
+
+                    });
+
+                };
+
                 self.fetchTasks = function() {
 
                     var params = {
@@ -334,7 +356,7 @@
 
                         self.pendingTasks = response.features;
 
-                        if (!self.pendingTasks.length) {
+                        if (self.pendingTasks.length < 1) {
 
                             self.loadFeatures();
 
@@ -421,7 +443,7 @@
 
                                 self.fetchTasks();
 
-                            }, 500);
+                            }, 1000);
 
                         }, function(errorResponse) {
 
@@ -472,6 +494,8 @@
                         };
 
                         self.programs = self.extractPrograms($rootScope.user);
+
+                        self.loadGroups();
 
                         self.loadFeatures();
 
