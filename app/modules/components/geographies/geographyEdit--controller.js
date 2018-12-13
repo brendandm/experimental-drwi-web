@@ -61,13 +61,6 @@ angular.module('FieldDoc')
 
                     self.geography = successResponse;
 
-                    if (self.geography.program &&
-                        typeof self.geography.program !== 'undefined') {
-
-                        self.geography.program = self.geography.program.properties;
-
-                    }
-
                     $rootScope.page.title = self.geography.name ? self.geography.name : 'Un-named Geography';
 
                     if (!successResponse.permissions.read &&
@@ -79,6 +72,8 @@ angular.module('FieldDoc')
 
                     self.permissions.can_edit = successResponse.permissions.write;
                     self.permissions.can_delete = successResponse.permissions.write;
+
+                    self.scrubFeature(self.geography);
 
                     self.showElements();
 
@@ -101,16 +96,44 @@ angular.module('FieldDoc')
 
             };
 
-            self.scrubFeature = function() {
+            self.scrubFeature = function(feature) {
 
-                delete self.geography.counties;
-                delete self.geography.creator;
-                delete self.geography.dashboards;
-                delete self.geography.extent;
-                delete self.geography.last_modified_by;
-                delete self.geography.organization;
-                delete self.geography.sites;
-                delete self.geography.watersheds;
+                var excludedKeys = [
+                    'creator',
+                    'extent',
+                    'geometry',
+                    'last_modified_by',
+                    'organization',
+                    'tags',
+                    'tasks'
+                ];
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
 
             };
 
@@ -118,24 +141,15 @@ angular.module('FieldDoc')
 
                 console.log('self.saveGeography', self.geography);
 
-                self.scrubFeature();
+                self.status.processing = true;
 
-                var data = self.geography;
-
-                data.geometry = self.geography.geometry;
+                self.scrubFeature(self.geography);
 
                 GeographyService.update({
                     id: self.geography.id
-                }, data).$promise.then(function(successResponse) {
+                }, self.geography).then(function(successResponse) {
 
                     self.geography = successResponse;
-
-                    if (self.geography.program &&
-                        typeof self.geography.program !== 'undefined') {
-
-                        self.geography.program = self.geography.program.properties;
-
-                    }
 
                     self.alerts = [{
                         'type': 'success',
@@ -252,16 +266,11 @@ angular.module('FieldDoc')
             self.loadGroups = function(value) {
 
                 GeographyType.collection({
+                    minimal: 'true',
                     sort: 'name:desc'
                 }).$promise.then(function(response) {
 
                     console.log('GeographyType.collection response', response);
-
-                    response.features.forEach(function(result) {
-
-                        result.category = null;
-
-                    });
 
                     self.geographyGroups = response.features;
 

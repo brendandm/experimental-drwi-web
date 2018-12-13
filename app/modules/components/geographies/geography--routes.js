@@ -55,18 +55,18 @@ angular.module('FieldDoc')
 
                         return {};
 
-                        return GeographyService.metrics({
-                            id: $route.current.params.geographyId
-                        });
+                        // return GeographyService.metrics({
+                        //     id: $route.current.params.geographyId
+                        // });
 
                     },
                     outcomes: function(GeographyService, $route) {
 
                         return {};
 
-                        return GeographyService.outcomes({
-                            id: $route.current.params.geographyId
-                        });
+                        // return GeographyService.outcomes({
+                        //     id: $route.current.params.geographyId
+                        // });
 
                     },
                     geography: function(GeographyService, $route) {
