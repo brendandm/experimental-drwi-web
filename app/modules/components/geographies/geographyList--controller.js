@@ -223,7 +223,9 @@
                 self.buildFilter = function() {
 
                     var params = $location.search(),
-                        data = {};
+                        data = {
+                            t: Date.now()
+                        };
 
                     if (self.selectedProgram &&
                         typeof self.selectedProgram.id !== 'undefined' &&
@@ -365,6 +367,20 @@
                         }
 
                     });
+
+                };
+
+                self.hideTasks = function() {
+
+                    self.pendingTasks = [];
+
+                    if (typeof self.taskPoll !== 'undefined') {
+
+                        $interval.cancel(self.taskPoll);
+
+                    }
+
+                    self.loadFeatures();
 
                 };
 

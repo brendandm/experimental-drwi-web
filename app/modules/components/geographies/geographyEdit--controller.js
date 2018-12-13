@@ -7,7 +7,7 @@
  */
 angular.module('FieldDoc')
     .controller('GeographyEditController',
-        function(Account, leafletData, $location, $log, GeographyService, geography,
+        function(Account, leafletData, $location, $log, GeographyService, GeographyType, geography,
             $q, $rootScope, $route, $scope, $timeout, $interval, user) {
 
             var self = this;
@@ -61,14 +61,14 @@ angular.module('FieldDoc')
 
                     self.geography = successResponse;
 
-                    if (self.geography.properties.program &&
-                        typeof self.geography.properties.program !== 'undefined') {
+                    if (self.geography.program &&
+                        typeof self.geography.program !== 'undefined') {
 
-                        self.geography.properties.program = self.geography.properties.program.properties;
+                        self.geography.program = self.geography.program.properties;
 
                     }
 
-                    $rootScope.page.title = self.geography.properties.name ? self.geography.properties.name : 'Un-named Geography';
+                    $rootScope.page.title = self.geography.name ? self.geography.name : 'Un-named Geography';
 
                     if (!successResponse.permissions.read &&
                         !successResponse.permissions.write) {
@@ -103,22 +103,24 @@ angular.module('FieldDoc')
 
             self.scrubFeature = function() {
 
-                delete self.geography.properties.counties;
-                delete self.geography.properties.creator;
-                delete self.geography.properties.dashboards;
-                delete self.geography.properties.extent;
-                delete self.geography.properties.last_modified_by;
-                delete self.geography.properties.organization;
-                delete self.geography.properties.sites;
-                delete self.geography.properties.watersheds;
+                delete self.geography.counties;
+                delete self.geography.creator;
+                delete self.geography.dashboards;
+                delete self.geography.extent;
+                delete self.geography.last_modified_by;
+                delete self.geography.organization;
+                delete self.geography.sites;
+                delete self.geography.watersheds;
 
             };
 
             self.saveGeography = function() {
 
+                console.log('self.saveGeography', self.geography);
+
                 self.scrubFeature();
 
-                var data = self.geography.properties;
+                var data = self.geography;
 
                 data.geometry = self.geography.geometry;
 
@@ -128,10 +130,10 @@ angular.module('FieldDoc')
 
                     self.geography = successResponse;
 
-                    if (self.geography.properties.program &&
-                        typeof self.geography.properties.program !== 'undefined') {
+                    if (self.geography.program &&
+                        typeof self.geography.program !== 'undefined') {
 
-                        self.geography.properties.program = self.geography.properties.program.properties;
+                        self.geography.program = self.geography.program.properties;
 
                     }
 
@@ -247,6 +249,26 @@ angular.module('FieldDoc')
 
             };
 
+            self.loadGroups = function(value) {
+
+                GeographyType.collection({
+                    sort: 'name:desc'
+                }).$promise.then(function(response) {
+
+                    console.log('GeographyType.collection response', response);
+
+                    response.features.forEach(function(result) {
+
+                        result.category = null;
+
+                    });
+
+                    self.geographyGroups = response.features;
+
+                });
+
+            };
+
             //
             // Verify Account information for proper UI element display
             //
@@ -266,6 +288,8 @@ angular.module('FieldDoc')
                     self.programs = self.extractPrograms($rootScope.user);
 
                     self.loadGeography();
+
+                    self.loadGroups();
 
                 });
 

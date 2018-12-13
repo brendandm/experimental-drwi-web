@@ -48,7 +48,12 @@
 
             <section class="reveal fade-in t0" style="padding: 1em 0 0;" data-ng-if="!page.status.loading && page.pendingTasks.length">
 
-                <h2 style="width: 100%; display: flex; flex-flow: row nowrap; align-items: center; text-align: left;"><i class="material-icons" style="padding-right: 0.5em;">notifications</i>Active tasks</h2>
+                <h2 style="width: 100%; display: flex; flex-flow: row nowrap; align-items: center; text-align: left;">
+                    Active tasks
+                    <a href="#" data-ng-click="page.hideTasks()" style="display: inline-block; font-size: 0.5em; margin-left: 1em;">Dismiss</a>
+                </h2>
+
+                <!-- <a href="#" data-ng-click="page.hideTasks()">Dismiss</a> -->
 
                 <div class="features--container" style="padding: 0;">
 
@@ -80,9 +85,12 @@
                                 <td class="truncate" style="text-align: left;">
                                     {{ task.annotation }}
                                 </td>
-                                <td style="color: #616161;">
+                                <td style="color: #616161; vertical-align: middle;">
                                     <span>{{ task.status }}</span>
                                     <span data-ng-repeat="error in task.errors">({{ error.message }})</span>
+                                    <!-- <i class="material-icons">
+                                    remove_circle
+                                    </i> -->
                                 </td>
                             </tr>
                         </tbody>
