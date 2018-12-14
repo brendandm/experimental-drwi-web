@@ -152,11 +152,11 @@ angular.module('FieldDoc')
                     properties: item
                 };
 
-                self.tempMetrics.push(_datum);
+                self.tempTargets.push(_datum);
 
                 self.metricQuery = null;
 
-                console.log('Updated metrics (addition)', self.tempMetrics);
+                console.log('Updated metrics (addition)', self.tempTargets);
 
             };
 
@@ -164,7 +164,7 @@ angular.module('FieldDoc')
 
                 var _index;
 
-                self.tempMetrics.forEach(function(item, idx) {
+                self.tempTargets.forEach(function(item, idx) {
 
                     if (item.id === id) {
 
@@ -178,15 +178,15 @@ angular.module('FieldDoc')
 
                 if (typeof _index === 'number') {
 
-                    self.tempMetrics.splice(_index, 1);
+                    self.tempTargets.splice(_index, 1);
 
                 }
 
-                console.log('Updated metrics (removal)', self.tempMetrics);
+                console.log('Updated metrics (removal)', self.tempTargets);
 
             };
 
-            self.processMetrics = function(list) {
+            self.processTargets = function(list) {
 
                 var _list = [];
 
@@ -236,7 +236,7 @@ angular.module('FieldDoc')
 
                 self.geography = data.properties || data;
 
-                self.tempMetrics = self.geography.metrics;
+                self.tempTargets = self.geography.targets || [];
 
                 self.status.processing = false;
 
@@ -246,14 +246,12 @@ angular.module('FieldDoc')
 
                 var excludedKeys = [
                     'creator',
-                    'geographies',
+                    'extent',
+                    'geometry',
                     'last_modified_by',
-                    'organizations',
                     'organization',
-                    'practices',
-                    'programs',
-                    'projects',
-                    'tags'
+                    'tags',
+                    'tasks'
                 ];
 
                 var reservedProperties = [
@@ -291,7 +289,7 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.geography);
 
-                self.geography.metrics = self.processMetrics(self.tempMetrics);
+                self.geography.targets = self.processTargets(self.tempTargets);
 
                 console.log('self.saveGeography.geography', self.geography);
 
