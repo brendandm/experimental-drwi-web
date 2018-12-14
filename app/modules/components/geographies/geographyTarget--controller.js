@@ -145,6 +145,12 @@ angular.module('FieldDoc')
 
             };
 
+            self.clearAll = function() {
+
+                self.tempTargets = [];
+
+            };
+
             self.addMetric = function(item) {
 
                 var _datum = {

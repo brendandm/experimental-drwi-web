@@ -46,6 +46,15 @@
 
                     </div>
 
+                    <div class="save--action--wrapper save--action--bottom" style="padding: 0; margin: 1em 0 0;" data-ng-if="page.tempTargets && page.tempTargets.length">
+                        <span>Remove all</span>
+                        <button type="reset" data-ng-click="page.clearAll()">
+                            <i class="material-icons">
+                                delete_sweep
+                            </i>
+                        </button>
+                    </div>
+
                     <div class="classification--list" style="margin-top: 2em;">
                         <ul>
                             <li class="reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="metric in page.tempTargets">
