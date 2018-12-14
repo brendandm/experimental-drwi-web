@@ -195,6 +195,40 @@ angular.module('FieldDoc')
 
                     }
                 }
+            })
+            .when('/projects/:projectId/targets', {
+                templateUrl: '/modules/shared/targets/views/featureTarget--view.html?t=' + environment.version,
+                controller: 'FeatureTargetController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    featureCollection: function(Project) {
+
+                        return {
+                            name: 'project',
+                            path: '/projects',
+                            cls: Project
+                        }
+
+                    },
+                    feature: function(Project, $route) {
+
+                        return Project.get({
+                            id: $route.current.params.projectId
+                        });
+
+                    }
+                }
             });
 
     });

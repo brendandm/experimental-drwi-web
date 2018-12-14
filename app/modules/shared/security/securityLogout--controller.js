@@ -35,7 +35,7 @@
             /**
              * Redirect individuals back to the activity list
              */
-            $location.path('/');
+            $location.path('/login');
             
         });
 

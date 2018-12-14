@@ -175,7 +175,41 @@ angular.module('FieldDoc')
                             name: 'geography',
                             path: '/geographies',
                             cls: GeographyService
+                        };
+
+                    },
+                    feature: function(GeographyService, $route) {
+
+                        return GeographyService.get({
+                            id: $route.current.params.geographyId
+                        });
+
+                    }
+                }
+            })
+            .when('/geographies/:geographyId/targets', {
+                templateUrl: '/modules/shared/targets/views/featureTarget--view.html?t=' + environment.version,
+                controller: 'FeatureTargetController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
                         }
+
+                        return Account.userObject;
+
+                    },
+                    featureCollection: function(GeographyService) {
+
+                        return {
+                            name: 'geography',
+                            path: '/geographies',
+                            cls: GeographyService
+                        };
 
                     },
                     feature: function(GeographyService, $route) {

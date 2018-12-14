@@ -81,7 +81,7 @@
 
                     if (response.status === 401 || response.status === 403) {
 
-                        $location.path('/user/logout');
+                        $location.path('/logout');
                         
                     }
 

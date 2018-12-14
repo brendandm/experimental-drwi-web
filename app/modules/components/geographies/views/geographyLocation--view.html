@@ -98,6 +98,13 @@
                     </i>
                 </a>
             </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
+                <a href="/geographies/{{ page.geography.id }}/targets">
+                    <i class="material-icons">
+                        multiline_chart
+                    </i>
+                </a>
+            </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
                 <a href="/geographies/{{ page.geography.properties.id }}/tags">
                     <i class="material-icons">
