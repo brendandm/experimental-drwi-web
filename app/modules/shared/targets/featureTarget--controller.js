@@ -333,7 +333,7 @@
 
                             console.log('self.feature', successResponse);
 
-                            self.feature = successResponse.properties;
+                            self.feature = successResponse.properties || successResponse;
 
                             if (!successResponse.permissions.read &&
                                 !successResponse.permissions.write) {
