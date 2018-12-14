@@ -127,7 +127,7 @@
                             typeof index === 'number' &&
                             featureType === 'report') {
 
-                            self.program.properties.readings_custom.splice(index, 1);
+                            self.program.readings_custom.splice(index, 1);
 
                             self.cancelDelete();
 
@@ -226,7 +226,7 @@
 
                         $rootScope.program = successResponse;
 
-                        $rootScope.page.title = self.program.properties.name ? self.program.properties.name : 'Un-named Program';
+                        $rootScope.page.title = self.program.name ? self.program.name : 'Un-named Program';
 
                         self.status.loading = false;
 

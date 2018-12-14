@@ -130,42 +130,42 @@ angular.module('FieldDoc')
 
                     }
                 }
-            })
-            .when('/programs/:programId/targets', {
-                templateUrl: '/modules/shared/targets/views/featureTarget--view.html?t=' + environment.version,
-                controller: 'FeatureTargetController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account, $route, $rootScope, $document) {
-
-                        $rootScope.targetPath = document.location.pathname;
-
-                        $rootScope.programContext = $route.current.params.programId;
-
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
-
-                        return Account.userObject;
-
-                    },
-                    featureCollection: function(Program) {
-
-                        return {
-                            name: 'program',
-                            path: '/programs',
-                            cls: Program
-                        }
-
-                    },
-                    feature: function(Program, $route) {
-
-                        return Program.get({
-                            id: $route.current.params.programId
-                        });
-
-                    }
-                }
             });
+            // .when('/programs/:programId/targets', {
+            //     templateUrl: '/modules/shared/targets/views/featureTarget--view.html?t=' + environment.version,
+            //     controller: 'FeatureTargetController',
+            //     controllerAs: 'page',
+            //     resolve: {
+            //         user: function(Account, $route, $rootScope, $document) {
+
+            //             $rootScope.targetPath = document.location.pathname;
+
+            //             $rootScope.programContext = $route.current.params.programId;
+
+            //             if (Account.userObject && !Account.userObject.id) {
+            //                 return Account.getUser();
+            //             }
+
+            //             return Account.userObject;
+
+            //         },
+            //         featureCollection: function(Program) {
+
+            //             return {
+            //                 name: 'program',
+            //                 path: '/programs',
+            //                 cls: Program
+            //             }
+
+            //         },
+            //         feature: function(Program, $route) {
+
+            //             return Program.get({
+            //                 id: $route.current.params.programId
+            //             });
+
+            //         }
+            //     }
+            // });
 
     });
