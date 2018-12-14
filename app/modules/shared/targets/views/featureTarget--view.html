@@ -35,18 +35,18 @@
                     <form role="form" class="form" id="form--ProjectTargets" name="form--ProjectTargets" data-ng-submit="page.saveFeature()">
 
                         <div class="classification--search" style="position: relative;">
-                            <input type="search" class="search" placeholder="Search targets" data-ng-model="page.targetQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchTargets($viewValue)" typeahead-on-select="page.addTarget($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                            <input type="search" class="search" placeholder="Search metrics&hellip;" data-ng-model="page.targetQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchMetrics($viewValue)" typeahead-on-select="page.addTarget($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
                         </div>
 
                         <div class="classification--list" style="margin-top: 2em;">
                             <ul>
-                                <li data-ng-repeat="target in page.tempTargets">
+                                <li class="reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="metric in page.tempMetrics">
                                     <i class="material-icons">
-                                        local_offer
+                                        timeline
                                     </i>
-                                    <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ target.properties.name }}</span>
+                                    <span style="flex-grow: 1; padding-left: 2em;">{{ metric.properties.name || metric.name }}</span>
                                     <div class="button--container">
-                                        <button data-ng-if="target.id !== page.profile.id" type="button" class="remove-item" data-ng-click="page.removeTarget(target.id)">
+                                        <button type="button" class="remove-item" data-ng-click="page.removeMetric(metric.id)">
                                             <i class="material-icons">
                                                 remove_circle
                                             </i>

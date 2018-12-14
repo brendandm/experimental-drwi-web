@@ -6,25 +6,25 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('DashboardGeographyController',
-        function($scope, Account, $location, $log, Dashboard, dashboard,
+    .controller('GeographyTargetController',
+        function($scope, Account, $location, $log, GeographyService, geography,
             $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            GeographyService) {
+            MetricType) {
 
             var self = this;
 
             $rootScope.viewState = {
-                'dashboard': true
+                'geography': true
             };
 
             $rootScope.toolbarState = {
-                'editGeographies': true
+                'editMetrics': true
             };
 
             $rootScope.page = {};
 
             self.searchScope = {
-                target: 'geography'
+                target: 'metric'
             };
 
             self.status = {
@@ -41,7 +41,7 @@ angular.module('FieldDoc')
 
             self.closeRoute = function() {
 
-                $location.path('/dashboards');
+                $location.path('/geographies');
 
             };
 
@@ -57,20 +57,20 @@ angular.module('FieldDoc')
 
             };
 
-            self.loadDashboard = function() {
+            self.loadGeography = function() {
 
                 //
-                // Assign dashboard to a scoped variable
+                // Assign geography to a scoped variable
                 //
-                Dashboard.get({
-                    id: $route.current.params.dashboardId
+                GeographyService.get({
+                    id: $route.current.params.geographyId
                 }).$promise.then(function(successResponse) {
 
-                    self.processDashboard(successResponse);
+                    self.processGeographyService(successResponse);
 
                 }).catch(function(errorResponse) {
 
-                    $log.error('Unable to load dashboard');
+                    $log.error('Unable to load geography');
 
                     self.status.processing = false;
 
@@ -80,9 +80,9 @@ angular.module('FieldDoc')
 
             self.search = function(value) {
 
-                if (self.searchScope.target === 'geography') {
+                if (self.searchScope.target === 'metric') {
 
-                    return SearchService.geography({
+                    return SearchService.metric({
                         q: value
                     }).$promise.then(function(response) {
 
@@ -128,38 +128,32 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    self.addGeography(item);
+                    self.addMetric(item);
 
                 }
 
             };
 
-            self.clearAll = function() {
-
-                self.tempGeographies = [];
-
-            };
-
-            self.addGeography = function(item) {
+            self.addMetric = function(item) {
 
                 var _datum = {
                     id: item.id,
                     properties: item
                 };
 
-                self.tempGeographies.push(_datum);
+                self.tempMetrics.push(_datum);
 
-                self.geographyQuery = null;
+                self.metricQuery = null;
 
-                console.log('Updated geographies (addition)', self.tempGeographies);
+                console.log('Updated metrics (addition)', self.tempMetrics);
 
             };
 
-            self.removeGeography = function(id) {
+            self.removeMetric = function(id) {
 
                 var _index;
 
-                self.tempGeographies.forEach(function(item, idx) {
+                self.tempMetrics.forEach(function(item, idx) {
 
                     if (item.id === id) {
 
@@ -169,19 +163,19 @@ angular.module('FieldDoc')
 
                 });
 
-                console.log('Remove geography at index', _index);
+                console.log('Remove metric at index', _index);
 
                 if (typeof _index === 'number') {
 
-                    self.tempGeographies.splice(_index, 1);
+                    self.tempMetrics.splice(_index, 1);
 
                 }
 
-                console.log('Updated geographies (removal)', self.tempGeographies);
+                console.log('Updated metrics (removal)', self.tempMetrics);
 
             };
 
-            self.processGeographies = function(list) {
+            self.processMetrics = function(list) {
 
                 var _list = [];
 
@@ -204,18 +198,16 @@ angular.module('FieldDoc')
             self.loadFeatures = function(programId) {
 
                 var params = {
-                    program: programId,
-                    exclude_geometry: true,
-                    scope: 'all'
+                    program: programId
                 };
 
-                GeographyService.collection(params).$promise.then(function(successResponse) {
+                MetricType.collection(params).$promise.then(function(successResponse) {
 
                     console.log('successResponse', successResponse);
 
                     successResponse.features.forEach(function(feature) {
 
-                        self.addGeography(feature);
+                        self.addMetric(feature);
 
                     });
 
@@ -229,11 +221,11 @@ angular.module('FieldDoc')
 
             };
 
-            self.processDashboard = function(data) {
+            self.processGeographyService = function(data) {
 
-                self.dashboardObject = data.properties || data;
+                self.geographyObject = data.properties || data;
 
-                self.tempGeographies = self.dashboardObject.geographies;
+                self.tempMetrics = self.geographyObject.metrics;
 
                 self.status.processing = false;
 
@@ -243,7 +235,7 @@ angular.module('FieldDoc')
 
                 var excludedKeys = [
                     'creator',
-                    'metrics',
+                    'geographies',
                     'last_modified_by',
                     'organizations',
                     'organization',
@@ -282,28 +274,28 @@ angular.module('FieldDoc')
 
             };
 
-            self.saveDashboard = function() {
+            self.saveGeography = function() {
 
                 self.status.processing = true;
 
-                self.scrubFeature(self.dashboardObject);
+                self.scrubFeature(self.geographyObject);
 
-                self.dashboardObject.geographies = self.processGeographies(self.tempGeographies);
+                self.geographyObject.metrics = self.processMetrics(self.tempMetrics);
 
-                console.log('self.saveDashboard.dashboardObject', self.dashboardObject);
+                console.log('self.saveGeography.geographyObject', self.geographyObject);
 
-                console.log('self.saveDashboard.Dashboard', Dashboard);
+                console.log('self.saveGeography.GeographyService', GeographyService);
 
-                Dashboard.update({
-                    id: +self.dashboardObject.id
-                }, self.dashboardObject).then(function(successResponse) {
+                GeographyService.update({
+                    id: +self.geographyObject.id
+                }, self.geographyObject).then(function(successResponse) {
 
-                    self.processDashboard(successResponse);
+                    self.processGeographyService(successResponse);
 
                     self.alerts = [{
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Dashboard changes saved.',
+                        'msg': 'Geography changes saved.',
                         'prompt': 'OK'
                     }];
 
@@ -313,7 +305,7 @@ angular.module('FieldDoc')
 
                 }).catch(function(error) {
 
-                    console.log('saveDashboard.error', error);
+                    console.log('saveGeography.error', error);
 
                     // Do something with the error
 
@@ -327,24 +319,24 @@ angular.module('FieldDoc')
 
                 var targetId;
 
-                if (self.dashboardObject.properties) {
+                if (self.geographyObject.properties) {
 
-                    targetId = self.dashboardObject.properties.id;
+                    targetId = self.geographyObject.properties.id;
 
                 } else {
 
-                    targetId = self.dashboardObject.id;
+                    targetId = self.geographyObject.id;
 
                 }
 
-                Dashboard.delete({
+                GeographyService.delete({
                     id: +targetId
                 }).$promise.then(function(data) {
 
                     self.alerts.push({
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Successfully deleted this dashboard.',
+                        'msg': 'Successfully deleted this geography.',
                         'prompt': 'OK'
                     });
 
@@ -359,7 +351,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.dashboardObject.properties.name + '”. There are pending tasks affecting this dashboard.',
+                            'msg': 'Unable to delete “' + self.geographyObject.properties.name + '”. There are pending tasks affecting this geography.',
                             'prompt': 'OK'
                         }];
 
@@ -368,7 +360,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this dashboard.',
+                            'msg': 'You don’t have permission to delete this geography.',
                             'prompt': 'OK'
                         }];
 
@@ -377,7 +369,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this dashboard.',
+                            'msg': 'Something went wrong while attempting to delete this geography.',
                             'prompt': 'OK'
                         }];
 
@@ -406,13 +398,13 @@ angular.module('FieldDoc')
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                     };
 
-                    self.loadDashboard();
+                    self.loadGeography();
 
                     //
                     // Setup page meta data
                     //
                     $rootScope.page = {
-                        'title': 'Edit dashboard geographies'
+                        'title': 'Edit geography targets'
                     };
 
                 });

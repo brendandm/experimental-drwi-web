@@ -188,8 +188,8 @@ angular.module('FieldDoc')
                 }
             })
             .when('/geographies/:geographyId/targets', {
-                templateUrl: '/modules/shared/targets/views/featureTarget--view.html?t=' + environment.version,
-                controller: 'FeatureTargetController',
+                templateUrl: '/modules/components/geographies/views/geographyTarget--view.html?t=' + environment.version,
+                controller: 'GeographyTargetController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {

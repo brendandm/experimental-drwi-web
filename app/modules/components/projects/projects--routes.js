@@ -197,8 +197,8 @@ angular.module('FieldDoc')
                 }
             })
             .when('/projects/:projectId/targets', {
-                templateUrl: '/modules/shared/targets/views/featureTarget--view.html?t=' + environment.version,
-                controller: 'FeatureTargetController',
+                templateUrl: '/modules/components/projects/views/projectTarget--view.html?t=' + environment.version,
+                controller: 'ProjectTargetController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
