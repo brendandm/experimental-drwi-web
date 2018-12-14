@@ -34,19 +34,19 @@
 
                     <article class="pad space-right shadow reveal fade-in t0">
 
-                        <h1>{{ page.geography.properties.name || 'Un-named' }}</h1>
+                        <h1>{{ page.geography.name || 'Un-named' }}</h1>
 
                         <p>
-                            <strong>Program:</strong> <a href="{{ page.geography.links.program.html }}">{{ page.geography.properties.program.properties.name }}</a>
+                            <strong>Program:</strong> <a href="{{ page.geography.links.program.html }}">{{ page.geography.program.name }}</a>
                         </p>
 
                         <p>
-                            <strong>Category:</strong> {{ page.geography.properties.category.properties.name }}
+                            <strong>Category:</strong> {{ page.geography.category.name }}
                         </p>
 
-                        <p data-ng-if="page.geography.properties.description" data-ng-bind-html="page.geography.properties.description"></p>
+                        <p data-ng-if="page.geography.description" data-ng-bind-html="page.geography.description"></p>
 
-                        <p data-ng-if="!page.geography.properties.description">{{ page.geography.properties.description }}</p>
+                        <p data-ng-if="!page.geography.description">{{ page.geography.description }}</p>
 
                     </article>
 
@@ -159,7 +159,7 @@
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="report in page.geography.properties.reports | orderBy:'properties.report_date':false">
+                    <li class="card" data-ng-repeat="report in page.geography.reports | orderBy:'properties.report_date':false">
 
                         <div class="card--content">
 
@@ -238,7 +238,7 @@
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
-                <a href="/geographies/{{ page.geography.properties.id }}/location">
+                <a href="/geographies/{{ page.geography.id }}/location">
                     <i class="material-icons">
                         map
                     </i>
@@ -252,7 +252,7 @@
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/geographies/{{ page.geography.properties.id }}/tags">
+                <a href="/geographies/{{ page.geography.id }}/tags">
                     <i class="material-icons">
                         local_offer
                     </i>

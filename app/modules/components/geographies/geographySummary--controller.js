@@ -226,7 +226,7 @@
                         self.permissions.can_edit = successResponse.permissions.write;
                         self.permissions.can_delete = successResponse.permissions.write;
 
-                        $rootScope.page.title = self.geography.properties.name;
+                        $rootScope.page.title = self.geography.name;
 
                         //
                         // If a valid geography geometry is present, add it to the map
@@ -242,7 +242,7 @@
 
                                 self.setGeoJsonLayer(self.geography.geometry, self.geographyExtent);
 
-                                self.map.bounds = Utility.transformBounds(self.geography.properties.extent);
+                                self.map.bounds = Utility.transformBounds(self.geography.extent);
 
                             });
 

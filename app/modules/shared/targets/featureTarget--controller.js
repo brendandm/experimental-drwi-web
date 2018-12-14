@@ -26,7 +26,7 @@
                 };
 
                 $rootScope.toolbarState = {
-                    'editTarget': true
+                    'editTargets': true
                 };
 
                 self.status = {

@@ -102,6 +102,13 @@
                     </i>
                 </a>
             </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
+                <a href="/projects/{{ page.project.id }}/targets">
+                    <i class="material-icons">
+                        multiline_chart
+                    </i>
+                </a>
+            </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
                 <a href="/projects/{{ page.project.id }}/tags">
                     <i class="material-icons">
