@@ -18,7 +18,7 @@ angular.module('FieldDoc')
             };
 
             $rootScope.toolbarState = {
-                'editMetrics': true
+                'editTargets': true
             };
 
             $rootScope.page = {};
@@ -63,10 +63,21 @@ angular.module('FieldDoc')
                 // Assign geography to a scoped variable
                 //
                 GeographyService.get({
-                    id: $route.current.params.geographyId
+                    id: $route.current.params.geographyId,
+                    exclude: 'geometry,properties,type'
                 }).$promise.then(function(successResponse) {
 
-                    self.processGeographyService(successResponse);
+                    self.processGeography(successResponse);
+
+                    if (!successResponse.permissions.read &&
+                        !successResponse.permissions.write) {
+
+                        self.makePrivate = true;
+
+                    }
+
+                    self.permissions.can_edit = successResponse.permissions.write;
+                    self.permissions.can_delete = successResponse.permissions.write;
 
                 }).catch(function(errorResponse) {
 
@@ -221,11 +232,11 @@ angular.module('FieldDoc')
 
             };
 
-            self.processGeographyService = function(data) {
+            self.processGeography = function(data) {
 
-                self.geographyObject = data.properties || data;
+                self.geography = data.properties || data;
 
-                self.tempMetrics = self.geographyObject.metrics;
+                self.tempMetrics = self.geography.metrics;
 
                 self.status.processing = false;
 
@@ -278,17 +289,17 @@ angular.module('FieldDoc')
 
                 self.status.processing = true;
 
-                self.scrubFeature(self.geographyObject);
+                self.scrubFeature(self.geography);
 
-                self.geographyObject.metrics = self.processMetrics(self.tempMetrics);
+                self.geography.metrics = self.processMetrics(self.tempMetrics);
 
-                console.log('self.saveGeography.geographyObject', self.geographyObject);
+                console.log('self.saveGeography.geography', self.geography);
 
                 console.log('self.saveGeography.GeographyService', GeographyService);
 
                 GeographyService.update({
-                    id: +self.geographyObject.id
-                }, self.geographyObject).then(function(successResponse) {
+                    id: +self.geography.id
+                }, self.geography).then(function(successResponse) {
 
                     self.processGeographyService(successResponse);
 
@@ -319,13 +330,13 @@ angular.module('FieldDoc')
 
                 var targetId;
 
-                if (self.geographyObject.properties) {
+                if (self.geography.properties) {
 
-                    targetId = self.geographyObject.properties.id;
+                    targetId = self.geography.properties.id;
 
                 } else {
 
-                    targetId = self.geographyObject.id;
+                    targetId = self.geography.id;
 
                 }
 
@@ -351,7 +362,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.geographyObject.properties.name + '”. There are pending tasks affecting this geography.',
+                            'msg': 'Unable to delete “' + self.geography.properties.name + '”. There are pending tasks affecting this geography.',
                             'prompt': 'OK'
                         }];
 

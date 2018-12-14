@@ -203,20 +203,14 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(GeographyService) {
+                    geography: function(GeographyService, $route) {
 
-                        return {
-                            name: 'geography',
-                            path: '/geographies',
-                            cls: GeographyService
-                        };
+                        return {};
 
-                    },
-                    feature: function(GeographyService, $route) {
-
-                        return GeographyService.get({
-                            id: $route.current.params.geographyId
-                        });
+                        // return GeographyService.get({
+                        //     id: $route.current.params.geographyId,
+                        //     exclude: 'geometry,properties,type'
+                        // });
 
                     }
                 }

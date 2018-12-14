@@ -212,21 +212,10 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(Project) {
-
-                        return {
-                            name: 'project',
-                            path: '/projects',
-                            cls: Project
-                        }
-
-                    },
-                    feature: function(Project, $route) {
-
+                    project: function(Project, $route) {
                         return Project.get({
-                            id: $route.current.params.projectId
+                            'id': $route.current.params.projectId
                         });
-
                     }
                 }
             });
