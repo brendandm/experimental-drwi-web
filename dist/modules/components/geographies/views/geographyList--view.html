@@ -46,7 +46,61 @@
                 </form>
             </div>
 
-            <section class="reveal fade-in t0" style="padding: 1em 0 0;" data-ng-if="!page.status.loading && !page.geographies.length">
+            <section class="reveal fade-in t0" style="padding: 1em 0 0;" data-ng-if="!page.status.loading && page.pendingTasks.length">
+
+                <h2 style="width: 100%; display: flex; flex-flow: row nowrap; align-items: center; text-align: left;">
+                    Active tasks
+                    <a href="#" data-ng-click="page.hideTasks()" style="display: inline-block; font-size: 0.5em; margin-left: 1em;">Dismiss</a>
+                </h2>
+
+                <!-- <a href="#" data-ng-click="page.hideTasks()">Dismiss</a> -->
+
+                <div class="features--container" style="padding: 0;">
+
+                    <table class="features clearfix">
+                        <thead>
+                            <tr class="table-row clearfix">
+                                <th class="table-heading" style="text-align: left;">
+                                    Date
+                                </th>
+                                <th class="table-heading" style="text-align: left;">
+                                    User
+                                </th>
+                                <th class="table-heading" style="text-align: left;">
+                                    Annotation
+                                </th>
+                                <th class="table-heading" style="text-align: left;">
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row clearfix" data-ng-repeat="task in page.pendingTasks | orderBy: '-start'">
+                                <td>
+                                    <time datetime="{{ task.start }}Z" title="{{ task.start }}Z">{{ task.start | date:'fullDate' }} at <span class="lowercase" style="display: inline-flex; padding-bottom: 0;">{{ task.start | date:'mediumTime' }}</span> UTC</time>
+                                </td>
+                                <td>
+                                    <a data-ng-href="profiles/{{ task.user.id }}" style="display: inline; color: #333; font-weight: bold;">{{ task.creator.first_name }} {{ task.creator.last_name }}</a>
+                                </td>
+                                <td class="truncate" style="text-align: left;">
+                                    {{ task.annotation }}
+                                </td>
+                                <td style="color: #616161; vertical-align: middle;">
+                                    <span>{{ task.status }}</span>
+                                    <span data-ng-repeat="error in task.errors">({{ error.message }})</span>
+                                    <!-- <i class="material-icons">
+                                    remove_circle
+                                    </i> -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </section>
+
+            <section class="reveal fade-in t0" style="padding: 1em 0 0;" data-ng-if="!page.status.loading && !page.geographies.length && !page.pendTasks.length">
 
                 <form role="form" class="form" id="form--geography-collection" name="form--geography-collection" style="position: relative;" data-ng-submit="page.uploadCollection()">
 
@@ -67,7 +121,7 @@
 
                         <div class="classification--search" style="margin: 2em 0; position: relative;">
                             <p style="font-style: normal; font-size: 1em; margin-bottom: 1em;"><strong>Category</strong></p>
-                            <input type="search" class="search" placeholder="Search categories&hellip;" data-ng-model="page.group" uib-typeahead="group as group.name for group in page.searchGroups($viewValue)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                            <input type="search" class="search" placeholder="Search categories&hellip;" data-ng-model="page.group" uib-typeahead="group as group.name for group in page.geographyGroups | filter:$viewValue" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
                             <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 0.5em;"><strong>Tip:</strong> If the category you enter doesn’t exist, FieldDoc will create it automatically.</p>
                         </div>
 

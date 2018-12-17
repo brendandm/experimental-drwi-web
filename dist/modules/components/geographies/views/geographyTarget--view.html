@@ -1,0 +1,192 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="site--content--flow fluid-content clearfix distinguish">
+
+    <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
+
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
+
+        <h1 class="inset">Edit geography targets</h1>
+
+        <div class="main--ui reveal fade-in t0">
+
+            <p>The metrics listed here include those that you created and any associated with the <strong>{{ page.geography.program.name }}</strong> conservation program. Assign targets to this geography by entering a numeric value for one or more metrics. If you try to add a geographic target that exceeds a metric’s baseline value, FieldDoc will cap the geographic target’s value for you.<p>
+
+            <h2>Active targets</h2>
+
+            <ul class="target-lst" data-ng-if="page.targets">
+                <li data-ng-repeat="target in page.targets.active">
+                    <div>{{ target.metric.name }}</div>
+                    <input type="number" class="form-control" data-ng-model="target.value" id="name" name="name" placeholder="0" step="0.0001" min="0" />
+                    <button type="button" class="remove-item" data-ng-click="page.removeTarget()">
+                        <i class="material-icons">
+                            remove_circle
+                        </i>
+                    </button>
+                </li>
+            </ul>
+
+            <h2>Inactive targets</h2>
+
+            <ul class="target-lst target-lst-inactive" data-ng-if="page.targets">
+                <li data-ng-repeat="target in page.targets.inactive">
+                    <div>{{ target.name }}</div>
+                    <input type="number" class="form-control" data-ng-model="target.value" id="name" name="name" placeholder="0" step="0.0001" min="0" />
+                </li>
+            </ul>
+
+            <!-- <form role="form" class="form"style="overflow: visible; margin-bottom: 24em;" id="form--geography-metric" name="form--geography-metric" data-ng-submit="page.saveProject()">
+
+                <div class="form-element">
+                    <span class="meta-label"><b>Name</b></span>
+                    <input type="text" data-ng-model="page.geography.name" class="form-control animate" id="name" name="name" placeholder="Project name" disabled="disabled" readonly />
+                </div>
+
+                <h2>Metrics</h2>
+
+                <div class="filter--ui">
+
+                    <p style="font-style: normal; font-size: 1em; color: #616161;">Search for metrics by name or conservation program.<p>
+
+                    <div class="search-options-radio">
+                        <label for="search-metric">
+                            Search metrics
+                            <input type="radio" id="search-metric" name="search-metric" data-ng-model="page.searchScope.target" value="metric" />
+                        </label>
+                        <label for="search-program">
+                            Search programs
+                            <input type="radio" id="search-program" name="search-program" data-ng-model="page.searchScope.target" value="program" />
+                        </label>
+                    </div>
+
+                    <div class="filter--controls">
+
+                        <div class="search--group">
+                            <div global-search class="global--search" style="width: 100%; max-width: none;">
+                                <input type="search" class="search" style="color: #212121;" value="" placeholder="Search&hellip;" data-ng-model="page.metricQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.search($viewValue)" typeahead-on-select="page.directQuery($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="save--action--wrapper save--action--bottom" style="padding: 0; margin: 1em 0 0;" data-ng-if="page.tempTargets && page.tempTargets.length">
+                        <span>Remove all</span>
+                        <button type="reset" data-ng-click="page.clearAll()">
+                            <i class="material-icons">
+                                delete_sweep
+                            </i>
+                        </button>
+                    </div>
+
+                    <div class="classification--list" style="margin-top: 2em;">
+                        <ul>
+                            <li class="reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="metric in page.tempTargets">
+                                <i class="material-icons">
+                                    timeline
+                                </i>
+                                <span style="flex-grow: 1; padding-left: 2em;">{{ metric.properties.name || metric.name }}</span>
+                                <div class="button--container">
+                                    <button type="button" class="remove-item" data-ng-click="page.removeMetric(metric.id)">
+                                        <i class="material-icons">
+                                            remove_circle
+                                        </i>
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="filter--actions" data-ng-if="page.activeFilters && page.activeFilters.length">
+                        <button class="clear" type="button" data-ng-click="page.clearAllFilters()" title="Clear all filters">
+                            Clear all
+                        </button>
+                    </div>
+
+                </div>
+
+                <div class="save--action--wrapper save--action--bottom" style="position: relative; z-index: 9999;">
+                    <button type="submit" data-ng-disabled="page.status.processing">
+                        <i class="material-icons" data-ng-if="page.status.processing">
+                            more_horiz
+                        </i>
+                        <i class="material-icons" data-ng-if="!page.status.processing">
+                            done
+                        </i>
+                    </button>
+                </div>
+
+            </form> -->
+
+        </div>
+
+    </div>
+
+    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
+        <ul>
+            <li>
+                <a href="/geographies/{{ page.geography.id }}">
+                    <i class="material-icons">
+                        dashboard
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
+                <a href="/geographies/{{ page.geography.id }}/edit">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
+                <a href="/geographies/{{ page.geography.id }}/location">
+                    <i class="material-icons">
+                        map
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
+                <a href="/geographies/{{ page.geography.id }}/targets">
+                    <i class="material-icons">
+                        multiline_chart
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
+                <a href="/geographies/{{ page.geography.id }}/tags">
+                    <i class="material-icons">
+                        local_offer
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
+                    <p>Do you want to delete this geography?</p>
+                    <div class="actions">
+                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature()">
+                            Yes
+                        </a>
+                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+                <a href="#" data-ng-click="page.confirmDelete(page.geography)">
+                    <i class="material-icons">
+                        delete
+                    </i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+        <div class="event--container">
+            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                <span class="event--message">{{ alert.msg }}</span>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>
