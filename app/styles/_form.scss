@@ -755,6 +755,27 @@ select[disabled="disabled"] {
     opacity: 0.45;
 }
 
+.remove-item {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+  //border: 2px solid rgb(193,56,74);
+  color: rgb(193,56,74);
+  outline: 0 none;
+  text-decoration: none;
+}
+
+.remove-item:hover {
+  //border: 2px solid rgb(173,50,66);
+  color: rgb(173,50,66);
+  //color: #fff;
+  outline: 0 none;
+  text-decoration: none;
+}
+
 .classification--list {
   display: flex;
   flex-flow: column;

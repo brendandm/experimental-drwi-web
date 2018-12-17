@@ -61,6 +61,16 @@
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/data/project/:id/outcomes'),
                     'isArray': false
+                },
+                matrix: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/project/:id/matrix')
+                },
+                updateMatrix: {
+                    method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/project/:id/matrix')
                 }
             });
         });

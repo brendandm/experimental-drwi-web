@@ -57,6 +57,25 @@ angular.module('FieldDoc')
 
             };
 
+            self.loadMatrix = function() {
+
+                //
+                // Assign geography to a scoped variable
+                //
+                GeographyService.matrix({
+                    id: $route.current.params.geographyId
+                }).$promise.then(function(successResponse) {
+
+                    self.targets = successResponse;
+
+                }).catch(function(errorResponse) {
+
+                    $log.error('Unable to load geography target matrix.');
+
+                });
+
+            };
+
             self.loadGeography = function() {
 
                 //
@@ -414,6 +433,8 @@ angular.module('FieldDoc')
                     };
 
                     self.loadGeography();
+
+                    self.loadMatrix();
 
                     //
                     // Setup page meta data

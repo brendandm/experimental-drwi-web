@@ -21,8 +21,28 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/geographies')
                 },
+                matrix: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/geography/:id/matrix')
+                },
+                updateMatrix: {
+                    method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/geography/:id/matrix')
+                },
                 update: {
                     method: 'PATCH'
+                },
+                'metrics': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/geography/:id/metrics'),
+                    'isArray': false
+                },
+                'outcomes': {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/geography/:id/outcomes'),
+                    'isArray': false
                 }
             });
         });

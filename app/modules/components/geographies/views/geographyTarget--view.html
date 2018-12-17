@@ -10,14 +10,35 @@
 
         <div class="main--ui reveal fade-in t0">
 
-            <form role="form" class="form"style="overflow: visible; margin-bottom: 24em;" id="form--geography-metric" name="form--geography-metric" data-ng-submit="page.saveProject()">
+            <h2>Active targets</h2>
+
+            <ul class="target-lst" data-ng-if="page.targets">
+                <li data-ng-repeat="target in page.targets.active">
+                    <div>{{ target.metric.name }}</div>
+                    <input type="number" class="form-control" data-ng-model="target.value" id="name" name="name" placeholder="0" step="0.0001" min="0" />
+                    <button type="button" class="remove-item" data-ng-click="page.removeTarget()">
+                        <i class="material-icons">
+                            remove_circle
+                        </i>
+                    </button>
+                </li>
+            </ul>
+
+            <h2>Inactive targets</h2>
+
+            <ul class="target-lst target-lst-inactive" data-ng-if="page.targets">
+                <li data-ng-repeat="target in page.targets.inactive">
+                    <div>{{ target.name }}</div>
+                    <input type="number" class="form-control" data-ng-model="target.value" id="name" name="name" placeholder="0" step="0.0001" min="0" />
+                </li>
+            </ul>
+
+            <!-- <form role="form" class="form"style="overflow: visible; margin-bottom: 24em;" id="form--geography-metric" name="form--geography-metric" data-ng-submit="page.saveProject()">
 
                 <div class="form-element">
                     <span class="meta-label"><b>Name</b></span>
                     <input type="text" data-ng-model="page.geography.name" class="form-control animate" id="name" name="name" placeholder="Project name" disabled="disabled" readonly />
                 </div>
-
-                <!-- Filter Tools -->
 
                 <h2>Metrics</h2>
 
@@ -92,7 +113,7 @@
                     </button>
                 </div>
 
-            </form>
+            </form> -->
 
         </div>
 
