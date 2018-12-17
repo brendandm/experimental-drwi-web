@@ -13,13 +13,20 @@
 .target-lst li {
     flex-flow: row nowrap;
     align-items: center;
+    margin-bottom: 0.5em;
+}
+
+.target-lst li > div:first-of-type {
+    width: 50%;
+    padding-right: 1em;
 }
 
 .target-lst li input {
     width: 20%;
     max-width: 128px;
+    margin-right: 1em;
 }
 
-.target-lst-inactive {
-    opacity: 0.8;
+.target-lst-inactive li > div:first-of-type {
+    color: #616161;
 }
