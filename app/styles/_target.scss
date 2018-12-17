@@ -17,7 +17,9 @@
 }
 
 .target-lst li > div:first-of-type {
-    width: 50%;
+    display: flex;
+    flex-flow: column;
+    flex-grow: 1;
     padding-right: 1em;
 }
 

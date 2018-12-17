@@ -12,9 +12,9 @@
 
             <p>The metrics listed here include those that you created and any associated with the <strong>{{ page.geography.program.name }}</strong> conservation program. Assign targets to this geography by entering a numeric value for one or more metrics. If you try to add a geographic target that exceeds a metric’s baseline value, FieldDoc will cap the geographic target’s value for you.<p>
 
-            <h2>Active targets</h2>
+            <h2 data-ng-if="page.targets && page.targets.active.length">Active targets</h2>
 
-            <ul class="target-lst" data-ng-if="page.targets">
+            <ul class="target-lst" data-ng-if="page.targets && page.targets.active.length">
                 <li data-ng-repeat="target in page.targets.active">
                     <div>{{ target.metric.name }}</div>
                     <input type="number" class="form-control" data-ng-model="target.value" id="name" name="name" placeholder="0" step="0.0001" min="0" />
@@ -32,6 +32,11 @@
                 <li data-ng-repeat="target in page.targets.inactive">
                     <div>{{ target.name }}</div>
                     <input type="number" class="form-control" data-ng-model="target.value" id="name" name="name" placeholder="0" step="0.0001" min="0" />
+                    <button type="button" class="remove-item" data-ng-click="page.removeTarget()">
+                        <i class="material-icons">
+                            add_circle
+                        </i>
+                    </button>
                 </li>
             </ul>
 
