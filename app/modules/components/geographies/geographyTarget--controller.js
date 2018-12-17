@@ -164,50 +164,43 @@ angular.module('FieldDoc')
 
             };
 
-            self.clearAll = function() {
+            self.removeAll = function() {
 
-                self.tempTargets = [];
+                self.targets.active.forEach(function (item) {
 
-            };
-
-            self.addMetric = function(item) {
-
-                var _datum = {
-                    id: item.id,
-                    properties: item
-                };
-
-                self.tempTargets.push(_datum);
-
-                self.metricQuery = null;
-
-                console.log('Updated metrics (addition)', self.tempTargets);
-
-            };
-
-            self.removeMetric = function(id) {
-
-                var _index;
-
-                self.tempTargets.forEach(function(item, idx) {
-
-                    if (item.id === id) {
-
-                        _index = idx;
-
-                    }
+                    self.targets.inactive.unshift(item);
 
                 });
 
-                console.log('Remove metric at index', _index);
+                self.targets.active = [];
 
-                if (typeof _index === 'number') {
+            };
 
-                    self.tempTargets.splice(_index, 1);
+            self.addTarget = function(item, idx) {
+
+                if (typeof idx === 'number') {
+
+                    self.targets.inactive.splice(idx, 1);
+
+                    self.targets.active.push(item);
 
                 }
 
-                console.log('Updated metrics (removal)', self.tempTargets);
+                console.log('Updated targets (addition)');
+
+            };
+
+            self.removeTarget = function(item, idx) {
+
+                if (typeof idx === 'number') {
+
+                    self.targets.active.splice(idx, 1);
+
+                    self.targets.inactive.unshift(item);
+
+                }
+
+                console.log('Updated targets (removal)');
 
             };
 
