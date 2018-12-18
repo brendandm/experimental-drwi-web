@@ -182,7 +182,7 @@ angular.module('FieldDoc')
 
                 if (typeof idx === 'number') {
 
-                    item.action == 'add';
+                    item.action = 'add';
 
                     if (!item.metric ||
                         typeof item.metric === 'undefined') {
@@ -209,7 +209,9 @@ angular.module('FieldDoc')
 
                     self.targets.active.splice(idx, 1);
 
-                    item.action == 'remove';
+                    item.action = 'remove';
+
+                    item.value = null;
 
                     self.targets.inactive.unshift(item);
 
@@ -327,12 +329,23 @@ angular.module('FieldDoc')
                 console.log('self.saveGeography.GeographyService', GeographyService);
 
                 var data = {
-                    targets: self.targets.active
+                    targets: self.targets.active.slice(0)
                 };
+
+                self.targets.inactive.forEach(function (item) {
+
+                    if (item.action &&
+                        item.action === 'remove') {
+
+                        data.targets.push(item);
+
+                    }
+
+                });
 
                 GeographyService.updateMatrix({
                     id: +self.geography.id
-                }, data).then(function(successResponse) {
+                }, data).$promise.then(function(successResponse) {
 
                     self.alerts = [{
                         'type': 'success',
