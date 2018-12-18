@@ -1,5 +1,11 @@
 // Target matrix
 
+@media (min-width: 1600px) {
+    .target-ui > p:first-of-type {
+        max-width: 50rem;
+    }
+}
+
 .target-lst {}
 
 .target-lst button {
@@ -9,6 +15,11 @@
     background: transparent;
     margin: 0;
     transition: all .2s cubic-bezier(.4,0,.2,1);
+}
+
+.target-lst button[disabled],
+.target-lst-inactive button[disabled] {
+    cursor: not-allowed;
 }
 
 .target-lst li {

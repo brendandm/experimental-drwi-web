@@ -178,7 +178,20 @@ angular.module('FieldDoc')
 
             self.addTarget = function(item, idx) {
 
+                if (!item.value) return;
+
                 if (typeof idx === 'number') {
+
+                    item.action == 'add';
+
+                    if (!item.metric ||
+                        typeof item.metric === 'undefined') {
+
+                        item.metric_id = item.id;
+
+                        delete item.id;
+
+                    }
 
                     self.targets.inactive.splice(idx, 1);
 
@@ -195,6 +208,8 @@ angular.module('FieldDoc')
                 if (typeof idx === 'number') {
 
                     self.targets.active.splice(idx, 1);
+
+                    item.action == 'remove';
 
                     self.targets.inactive.unshift(item);
 
@@ -296,6 +311,54 @@ angular.module('FieldDoc')
                 reservedProperties.forEach(function(key) {
 
                     delete feature[key];
+
+                });
+
+            };
+
+            self.saveTargets = function() {
+
+                self.status.processing = true;
+
+                self.scrubFeature(self.geography);
+
+                console.log('self.saveGeography.geography', self.geography);
+
+                console.log('self.saveGeography.GeographyService', GeographyService);
+
+                var data = {
+                    targets: self.targets.active
+                };
+
+                GeographyService.updateMatrix({
+                    id: +self.geography.id
+                }, data).then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Target changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                }).catch(function(error) {
+
+                    console.log('saveGeography.error', error);
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong and the targets changes were not saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    self.status.processing = false;
 
                 });
 
