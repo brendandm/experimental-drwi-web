@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1545078082520})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1545095887128})
 
 ;
 /**
@@ -16660,50 +16660,60 @@ angular.module('FieldDoc')
 
             };
 
-            self.clearAll = function() {
+            self.removeAll = function() {
 
-                self.tempTargets = [];
+                self.targets.active.forEach(function (item) {
 
-            };
-
-            self.addMetric = function(item) {
-
-                var _datum = {
-                    id: item.id,
-                    properties: item
-                };
-
-                self.tempTargets.push(_datum);
-
-                self.metricQuery = null;
-
-                console.log('Updated metrics (addition)', self.tempTargets);
-
-            };
-
-            self.removeMetric = function(id) {
-
-                var _index;
-
-                self.tempTargets.forEach(function(item, idx) {
-
-                    if (item.id === id) {
-
-                        _index = idx;
-
-                    }
+                    self.targets.inactive.unshift(item);
 
                 });
 
-                console.log('Remove metric at index', _index);
+                self.targets.active = [];
 
-                if (typeof _index === 'number') {
+            };
 
-                    self.tempTargets.splice(_index, 1);
+            self.addTarget = function(item, idx) {
+
+                if (!item.value) return;
+
+                if (typeof idx === 'number') {
+
+                    item.action = 'add';
+
+                    if (!item.metric ||
+                        typeof item.metric === 'undefined') {
+
+                        item.metric_id = item.id;
+
+                        delete item.id;
+
+                    }
+
+                    self.targets.inactive.splice(idx, 1);
+
+                    self.targets.active.push(item);
 
                 }
 
-                console.log('Updated metrics (removal)', self.tempTargets);
+                console.log('Updated targets (addition)');
+
+            };
+
+            self.removeTarget = function(item, idx) {
+
+                if (typeof idx === 'number') {
+
+                    self.targets.active.splice(idx, 1);
+
+                    item.action = 'remove';
+
+                    item.value = null;
+
+                    self.targets.inactive.unshift(item);
+
+                }
+
+                console.log('Updated targets (removal)');
 
             };
 
@@ -16799,6 +16809,65 @@ angular.module('FieldDoc')
                 reservedProperties.forEach(function(key) {
 
                     delete feature[key];
+
+                });
+
+            };
+
+            self.saveTargets = function() {
+
+                self.status.processing = true;
+
+                self.scrubFeature(self.geography);
+
+                console.log('self.saveGeography.geography', self.geography);
+
+                console.log('self.saveGeography.GeographyService', GeographyService);
+
+                var data = {
+                    targets: self.targets.active.slice(0)
+                };
+
+                self.targets.inactive.forEach(function (item) {
+
+                    if (item.action &&
+                        item.action === 'remove') {
+
+                        data.targets.push(item);
+
+                    }
+
+                });
+
+                GeographyService.updateMatrix({
+                    id: +self.geography.id
+                }, data).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Target changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                }).catch(function(error) {
+
+                    console.log('saveGeography.error', error);
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong and the targets changes were not saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    self.status.processing = false;
 
                 });
 
