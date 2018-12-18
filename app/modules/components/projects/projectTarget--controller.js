@@ -18,7 +18,7 @@ angular.module('FieldDoc')
             };
 
             $rootScope.toolbarState = {
-                'editMetrics': true
+                'editTargets': true
             };
 
             $rootScope.page = {};
@@ -57,16 +57,62 @@ angular.module('FieldDoc')
 
             };
 
-            self.loadProject = function() {
+            self.loadMatrix = function() {
 
                 //
                 // Assign project to a scoped variable
                 //
-                Project.get({
+                Project.matrix({
                     id: $route.current.params.projectId
                 }).$promise.then(function(successResponse) {
 
+                    self.targets = successResponse;
+
+                }).catch(function(errorResponse) {
+
+                    $log.error('Unable to load project target matrix.');
+
+                });
+
+            };
+
+            self.loadProject = function() {
+
+                var exclude = [
+                    'centroid',
+                    'creator',
+                    'dashboards',
+                    'extent',
+                    'geometry',
+                    'members',
+                    'metric_types',
+                    'partners',
+                    'practices',
+                    'practice_types',
+                    'properties',
+                    'tags',
+                    'targets',
+                    'tasks',
+                    'type',
+                    'sites'
+                ].join(',');
+                
+                Project.get({
+                    id: $route.current.params.projectId,
+                    exclude: exclude
+                }).$promise.then(function(successResponse) {
+
                     self.processProject(successResponse);
+
+                    if (!successResponse.permissions.read &&
+                        !successResponse.permissions.write) {
+
+                        self.makePrivate = true;
+
+                    }
+
+                    self.permissions.can_edit = successResponse.permissions.write;
+                    self.permissions.can_delete = successResponse.permissions.write;
 
                 }).catch(function(errorResponse) {
 
@@ -134,48 +180,64 @@ angular.module('FieldDoc')
 
             };
 
-            self.addMetric = function(item) {
+            self.removeAll = function() {
 
-                var _datum = {
-                    id: item.id,
-                    properties: item
-                };
+                self.targets.active.forEach(function (item) {
 
-                self.tempMetrics.push(_datum);
-
-                self.metricQuery = null;
-
-                console.log('Updated metrics (addition)', self.tempMetrics);
-
-            };
-
-            self.removeMetric = function(id) {
-
-                var _index;
-
-                self.tempMetrics.forEach(function(item, idx) {
-
-                    if (item.id === id) {
-
-                        _index = idx;
-
-                    }
+                    self.targets.inactive.unshift(item);
 
                 });
 
-                console.log('Remove metric at index', _index);
-
-                if (typeof _index === 'number') {
-
-                    self.tempMetrics.splice(_index, 1);
-
-                }
-
-                console.log('Updated metrics (removal)', self.tempMetrics);
+                self.targets.active = [];
 
             };
 
-            self.processMetrics = function(list) {
+            self.addTarget = function(item, idx) {
+
+                if (!item.value) return;
+
+                if (typeof idx === 'number') {
+
+                    item.action = 'add';
+
+                    if (!item.metric ||
+                        typeof item.metric === 'undefined') {
+
+                        item.metric_id = item.id;
+
+                        delete item.id;
+
+                    }
+
+                    self.targets.inactive.splice(idx, 1);
+
+                    self.targets.active.push(item);
+
+                }
+
+                console.log('Updated targets (addition)');
+
+            };
+
+            self.removeTarget = function(item, idx) {
+
+                if (typeof idx === 'number') {
+
+                    self.targets.active.splice(idx, 1);
+
+                    item.action = 'remove';
+
+                    item.value = null;
+
+                    self.targets.inactive.unshift(item);
+
+                }
+
+                console.log('Updated targets (removal)');
+
+            };
+
+            self.processTargets = function(list) {
 
                 var _list = [];
 
@@ -223,9 +285,9 @@ angular.module('FieldDoc')
 
             self.processProject = function(data) {
 
-                self.projectObject = data.properties || data;
+                self.project = data.properties || data;
 
-                self.tempMetrics = self.projectObject.metrics;
+                self.tempTargets = self.project.targets || [];
 
                 self.status.processing = false;
 
@@ -235,14 +297,12 @@ angular.module('FieldDoc')
 
                 var excludedKeys = [
                     'creator',
-                    'geographies',
+                    'extent',
+                    'geometry',
                     'last_modified_by',
-                    'organizations',
                     'organization',
-                    'practices',
-                    'programs',
-                    'projects',
-                    'tags'
+                    'tags',
+                    'tasks'
                 ];
 
                 var reservedProperties = [
@@ -274,21 +334,80 @@ angular.module('FieldDoc')
 
             };
 
+            self.saveTargets = function() {
+
+                self.status.processing = true;
+
+                self.scrubFeature(self.project);
+
+                console.log('self.saveProject.project', self.project);
+
+                console.log('self.saveProject.Project', Project);
+
+                var data = {
+                    targets: self.targets.active.slice(0)
+                };
+
+                self.targets.inactive.forEach(function (item) {
+
+                    if (item.action &&
+                        item.action === 'remove') {
+
+                        data.targets.push(item);
+
+                    }
+
+                });
+
+                Project.updateMatrix({
+                    id: +self.project.id
+                }, data).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Target changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                }).catch(function(error) {
+
+                    console.log('saveProject.error', error);
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong and the targets changes were not saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    self.status.processing = false;
+
+                });
+
+            };
+
             self.saveProject = function() {
 
                 self.status.processing = true;
 
-                self.scrubFeature(self.projectObject);
+                self.scrubFeature(self.project);
 
-                self.projectObject.metrics = self.processMetrics(self.tempMetrics);
+                self.project.targets = self.processTargets(self.tempTargets);
 
-                console.log('self.saveProject.projectObject', self.projectObject);
+                console.log('self.saveProject.project', self.project);
 
                 console.log('self.saveProject.Project', Project);
 
                 Project.update({
-                    id: +self.projectObject.id
-                }, self.projectObject).then(function(successResponse) {
+                    id: +self.project.id
+                }, self.project).then(function(successResponse) {
 
                     self.processProject(successResponse);
 
@@ -319,13 +438,13 @@ angular.module('FieldDoc')
 
                 var targetId;
 
-                if (self.projectObject.properties) {
+                if (self.project.properties) {
 
-                    targetId = self.projectObject.properties.id;
+                    targetId = self.project.properties.id;
 
                 } else {
 
-                    targetId = self.projectObject.id;
+                    targetId = self.project.id;
 
                 }
 
@@ -351,7 +470,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.projectObject.properties.name + '”. There are pending tasks affecting this project.',
+                            'msg': 'Unable to delete “' + self.project.properties.name + '”. There are pending tasks affecting this project.',
                             'prompt': 'OK'
                         }];
 
@@ -399,6 +518,8 @@ angular.module('FieldDoc')
                     };
 
                     self.loadProject();
+
+                    self.loadMatrix();
 
                     //
                     // Setup page meta data
