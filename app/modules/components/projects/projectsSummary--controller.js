@@ -124,9 +124,9 @@ angular.module('FieldDoc')
                         self.permissions.can_edit = successResponse.permissions.write;
                         self.permissions.can_delete = successResponse.permissions.write;
 
-                        if (project_.properties.extent) {
+                        if (project_.extent) {
 
-                            project_.staticURL = self.buildStaticMapURL(project_.properties.extent);
+                            project_.staticURL = self.buildStaticMapURL(project_.extent);
 
                         }
 
@@ -142,9 +142,9 @@ angular.module('FieldDoc')
 
                             self.projectExtent = new L.FeatureGroup();
 
-                            if (self.project.properties.extent) {
+                            if (self.project.extent) {
 
-                                self.setGeoJsonLayer(self.project.properties.extent, self.projectExtent);
+                                self.setGeoJsonLayer(self.project.extent, self.projectExtent);
 
                                 map.fitBounds(self.projectExtent.getBounds(), {
                                     maxZoom: 18
@@ -178,7 +178,7 @@ angular.module('FieldDoc')
 
             self.submitProject = function() {
 
-                if (!self.project.properties.organization_id) {
+                if (!self.project.organization_id) {
                     $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.");
                     return;
                 }
@@ -199,7 +199,7 @@ angular.module('FieldDoc')
 
             self.fundProject = function() {
 
-                if (!self.project.properties.organization_id) {
+                if (!self.project.organization_id) {
                     $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.");
                     return;
                 }
@@ -220,7 +220,7 @@ angular.module('FieldDoc')
 
             self.completeProject = function() {
 
-                if (!self.project.properties.organization_id) {
+                if (!self.project.organization_id) {
                     $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.");
                     return;
                 }
@@ -260,7 +260,7 @@ angular.module('FieldDoc')
 
                 self.site = new Site({
                     'project_id': self.project.id,
-                    'organization_id': self.project.properties.organization_id
+                    'organization_id': self.project.organization_id
                 });
 
                 self.site.$save(function(successResponse) {
