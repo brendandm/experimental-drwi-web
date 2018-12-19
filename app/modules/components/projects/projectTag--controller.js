@@ -151,13 +151,44 @@
 
                 };
 
-                self.scrubProject = function() {
+                self.scrubFeature = function(feature) {
 
-                    delete self.project.properties.geographies;
-                    delete self.project.properties.practices;
-                    delete self.project.properties.programs;
-                    delete self.project.properties.sites;
-                    delete self.project.properties.tags;
+                    var excludedKeys = [
+                        'creator',
+                        'extent',
+                        'geometry',
+                        'last_modified_by',
+                        'organization',
+                        'tags',
+                        'tasks'
+                    ];
+
+                    var reservedProperties = [
+                        'links',
+                        'permissions',
+                        '$promise',
+                        '$resolved'
+                    ];
+
+                    excludedKeys.forEach(function(key) {
+
+                        if (feature.properties) {
+
+                            delete feature.properties[key];
+
+                        } else {
+
+                            delete feature[key];
+
+                        }
+
+                    });
+
+                    reservedProperties.forEach(function(key) {
+
+                        delete feature[key];
+
+                    });
 
                 };
 
@@ -165,7 +196,7 @@
 
                     self.status.processing = true;
 
-                    self.scrubProject();
+                    self.scrubFeature(self.project);
 
                     self.project.properties.members = self.processOwners(self.tempOwners);
 
@@ -176,7 +207,7 @@
                             self.alerts = [{
                                 'type': 'success',
                                 'flag': 'Success!',
-                                'msg': 'Collaborators added to project.',
+                                'msg': 'Tags added to project.',
                                 'prompt': 'OK'
                             }];
 
@@ -185,7 +216,7 @@
                             self.alerts = [{
                                 'type': 'success',
                                 'flag': 'Success!',
-                                'msg': 'All collaborators removed from project.',
+                                'msg': 'All tags removed from project.',
                                 'prompt': 'OK'
                             }];
 

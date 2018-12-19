@@ -92,12 +92,7 @@
 
                 self.addOwner = function(item, model, label) {
 
-                    var _datum = {
-                        id: item.id,
-                        properties: item
-                    };
-
-                    self.tempOwners.push(_datum);
+                    self.tempOwners.push(item);
 
                     self.ownerQuery = null;
 
@@ -151,13 +146,44 @@
 
                 };
 
-                self.scrubProject = function() {
+                self.scrubFeature = function(feature) {
 
-                    delete self.project.properties.geographies;
-                    delete self.project.properties.practices;
-                    delete self.project.properties.programs;
-                    delete self.project.properties.sites;
-                    delete self.project.properties.tags;
+                    var excludedKeys = [
+                        'creator',
+                        'extent',
+                        'geometry',
+                        'last_modified_by',
+                        'organization',
+                        'tags',
+                        'tasks'
+                    ];
+
+                    var reservedProperties = [
+                        'links',
+                        'permissions',
+                        '$promise',
+                        '$resolved'
+                    ];
+
+                    excludedKeys.forEach(function(key) {
+
+                        if (feature.properties) {
+
+                            delete feature.properties[key];
+
+                        } else {
+
+                            delete feature[key];
+
+                        }
+
+                    });
+
+                    reservedProperties.forEach(function(key) {
+
+                        delete feature[key];
+
+                    });
 
                 };
 
@@ -165,13 +191,41 @@
 
                     self.status.processing = true;
 
-                    self.scrubProject();
+                    self.scrubFeature(self.project);
 
-                    self.project.properties.members = self.processOwners(self.tempOwners);
+                    self.project.members = self.processOwners(self.tempOwners);
 
-                    self.project.$update().then(function(response) {
+                    var exclude = [
+                        'centroid',
+                        'creator',
+                        'dashboards',
+                        'extent',
+                        'geometry',
+                        // 'members',
+                        'metric_types',
+                        'partners',
+                        'practices',
+                        'practice_types',
+                        'properties',
+                        'tags',
+                        'targets',
+                        'tasks',
+                        'type',
+                        'sites'
+                    ].join(',');
 
-                        if (self.project.properties.members.length) {
+                    Project.update({
+                        id: $route.current.params.projectId,
+                        exclude: exclude
+                    }, self.project).then(function(successResponse) {
+
+                        self.project = successResponse;
+
+                        $rootScope.page.title = self.project.name;
+
+                        self.tempOwners = self.project.members;
+
+                        if (self.project.members.length) {
 
                             self.alerts = [{
                                 'type': 'success',
@@ -207,9 +261,9 @@
 
                     var targetId;
 
-                    if (self.project.properties) {
+                    if (self.project) {
 
-                        targetId = self.project.properties.id;
+                        targetId = self.project.id;
 
                     } else {
 
@@ -239,7 +293,7 @@
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'Unable to delete “' + self.project.properties.name + '”. There are pending tasks affecting this project.',
+                                'msg': 'Unable to delete “' + self.project.name + '”. There are pending tasks affecting this project.',
                                 'prompt': 'OK'
                             }];
 
@@ -304,13 +358,11 @@
                                 self.permissions.can_edit = successResponse.permissions.write;
                                 self.permissions.can_delete = successResponse.permissions.write;
 
-                                $rootScope.page.title = self.project.properties.name;
+                                $rootScope.page.title = self.project.name;
 
-                                self.tempOwners = self.project.properties.members;
+                                self.tempOwners = self.project.members;
 
                                 console.log('tempOwners', self.tempOwners);
-
-                                self.project.users_edit = false;
 
                             }
 

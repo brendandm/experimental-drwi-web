@@ -72,9 +72,31 @@ angular.module('FieldDoc')
 
                     },
                     project: function(Project, $route) {
+                        
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            // 'partners',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
                         return Project.get({
-                            'id': $route.current.params.projectId
+                            id: $route.current.params.projectId,
+                            exclude: exclude
                         });
+                        
                     },
                     metrics: function(Project, $route) {
                         return Project.metrics({
@@ -178,9 +200,31 @@ angular.module('FieldDoc')
 
                     },
                     project: function(Project, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            // 'members',
+                            'metric_types',
+                            'partners',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
                         return Project.get({
-                            'id': $route.current.params.projectId
+                            id: $route.current.params.projectId,
+                            exclude: exclude
                         });
+
                     }
                 }
             })
@@ -211,8 +255,28 @@ angular.module('FieldDoc')
                     },
                     feature: function(Project, $route) {
 
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            'partners',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            // 'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
                         return Project.get({
-                            id: $route.current.params.projectId
+                            id: $route.current.params.projectId,
+                            exclude: exclude
                         });
 
                     }
