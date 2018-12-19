@@ -223,13 +223,13 @@ angular.module('FieldDoc')
 
                 self.project = data;
 
-                if (self.project.properties.program) {
+                if (self.project.program) {
 
-                    self.program = self.project.properties.program.properties;
+                    self.program = self.project.program;
 
                 }
 
-                self.tempPartners = self.project.properties.partners;
+                self.tempPartners = self.project.partners;
 
                 self.status.processing = false;
 
@@ -237,25 +237,56 @@ angular.module('FieldDoc')
 
             self.setProgram = function(item, model, label) {
 
-                self.project.properties.program_id = item.id;
+                self.project.program_id = item.id;
 
             };
 
             self.unsetProgram = function() {
 
-                self.project.properties.program_id = null;
+                self.project.program_id = null;
 
                 self.program = null;
 
             };
 
-            self.scrubProject = function() {
+            self.scrubFeature = function(feature) {
 
-                delete self.project.properties.geographies;
-                delete self.project.properties.practices;
-                delete self.project.properties.program;
-                delete self.project.properties.sites;
-                delete self.project.properties.tags;
+                var excludedKeys = [
+                    'creator',
+                    'extent',
+                    'geometry',
+                    'last_modified_by',
+                    'organization',
+                    'tags',
+                    'tasks'
+                ];
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
 
             };
 
@@ -263,13 +294,35 @@ angular.module('FieldDoc')
 
                 self.status.processing = true;
 
-                self.scrubProject();
+                self.scrubFeature(self.project);
 
-                self.project.properties.partners = self.processRelations(self.tempPartners);
+                self.project.partners = self.processRelations(self.tempPartners);
 
-                self.project.properties.workflow_state = "Draft";
+                self.project.workflow_state = "Draft";
 
-                self.project.$update().then(function(successResponse) {
+                var exclude = [
+                    'centroid',
+                    'creator',
+                    'dashboards',
+                    'extent',
+                    'geometry',
+                    'members',
+                    'metric_types',
+                    // 'partners',
+                    'practices',
+                    'practice_types',
+                    'properties',
+                    'tags',
+                    'targets',
+                    'tasks',
+                    'type',
+                    'sites'
+                ].join(',');
+
+                Project.update({
+                    id: $route.current.params.projectId,
+                    exclude: exclude
+                }, self.project).then(function(successResponse) {
 
                     self.processFeature(successResponse);
 
@@ -305,9 +358,9 @@ angular.module('FieldDoc')
 
                 var targetId;
 
-                if (self.project.properties) {
+                if (self.project) {
 
-                    targetId = self.project.properties.id;
+                    targetId = self.project.id;
 
                 } else {
 
@@ -337,7 +390,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.project.properties.name + '”. There are pending tasks affecting this project.',
+                            'msg': 'Unable to delete “' + self.project.name + '”. There are pending tasks affecting this project.',
                             'prompt': 'OK'
                         }];
 

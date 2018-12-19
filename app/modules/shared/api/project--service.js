@@ -26,11 +26,7 @@
                     url: environment.apiUrl.concat('/v1/data/summary/project/:id')
                 },
                 update: {
-                    method: 'PATCH',
-                    transformRequest: function(data) {
-                        var feature = Preprocessors.geojson(data);
-                        return angular.toJson(feature);
-                    }
+                    method: 'PATCH'
                 },
                 sites: {
                     method: 'GET',

@@ -34,26 +34,26 @@
 
                     <form role="form" class="row form" id="form--ProjectEdit" name="form--ProjectEdit" data-ng-submit="page.saveProject()">
 
-                        <section class="reveal fade-in t0">
+                        <section class="reveal fade-in t0" style="padding: 2em 0 0;">
 
                             <h2>Profile</h2>
 
                             <div class="form-element">
                                 <span class="meta-label"><b>Name</b></span>
-                                <input type="text" data-ng-model="page.project.properties.name" class="form-control animate" id="name" name="name" placeholder="Project name" />
+                                <input type="text" data-ng-model="page.project.name" class="form-control animate" id="name" name="name" placeholder="Project name" />
                             </div>
 
                             <div class="form-element">
                                 <span class="meta-label"><b>Description</b></span>
-                                <textarea class="form-control animate" data-ng-model="page.project.properties.description" msd-elastic id="description" name="description" rows="10" maxlength="1000">{{ page.project.properties.description }}</textarea>
+                                <textarea class="form-control animate" data-ng-model="page.project.description" msd-elastic id="description" name="description" rows="10" maxlength="1000">{{ page.project.description }}</textarea>
                                 <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
-                                    Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.project.properties.description.length || 0) | number }} used)</strong>
+                                    Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.project.description.length || 0) | number }} used)</strong>
                                 </p>
                             </div>
 
                             <div class="form-element">
                                 <span class="meta-label"><b>Organization</b></span>
-                                <input type="text" class="form-control" id="email" name="email" disabled="disabled" data-ng-model="page.project.properties.organization.properties.name" readonly />
+                                <input type="text" class="form-control" id="email" name="email" disabled="disabled" data-ng-model="page.project.organization.name" readonly />
                                 <p style="color: #9e9e9e; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
                                     The project’s organization cannot be changed.
                                 </p>
@@ -61,7 +61,7 @@
 
                         </section>
 
-                        <section class="reveal fade-in t1">
+                        <section class="reveal fade-in t1" style="padding: 0 0 2em;">
 
                             <h2>Partners</h2>
 
@@ -76,7 +76,7 @@
                                         <i class="material-icons">
                                             group_work
                                         </i>
-                                        <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ partner.properties.name }}</span>
+                                        <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ partner.name }}</span>
                                         <div class="button--container">
                                             <button type="button" class="remove-item" data-ng-click="page.removeRelation(partner.id, page.tempPartners)">
                                                 <i class="material-icons">
@@ -120,15 +120,15 @@
                         <div class="scope--control">
                             <span>Off</span>
                             <label class="switch">
-                                <input class="inputdemo" type="checkbox" data-ng-model="page.project.properties.private" data-ng-checked="page.project.properties.private">
+                                <input class="inputdemo" type="checkbox" data-ng-model="page.project.private" data-ng-checked="page.project.private">
                                 <div class="slider round"></div>
                             </label>
-                            <span data-ng-class="{on: page.site.properties.private}">On</span>
+                            <span data-ng-class="{on: page.site.private}">On</span>
                         </div>
 
-                        <p data-ng-if="page.project.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This project is <strong>private</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this project <strong>will not</strong> appear on dashboard maps.</p>
+                        <p data-ng-if="page.project.private" style="font-style: normal; font-size: 1em; color: #616161;">This project is <strong>private</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this project <strong>will not</strong> appear on dashboard maps.</p>
 
-                        <p data-ng-if="!page.project.properties.private" style="font-style: normal; font-size: 1em; color: #616161;">This project is <strong>public</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this project <strong>will</strong> appear on dashboard maps.</p>
+                        <p data-ng-if="!page.project.private" style="font-style: normal; font-size: 1em; color: #616161;">This project is <strong>public</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this project <strong>will</strong> appear on dashboard maps.</p>
 
                         <div class="save--action--wrapper save--action--bottom" style="position: relative; z-index: 9999;">
                             <button type="submit" data-ng-disabled="page.status.processing">
