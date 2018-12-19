@@ -46,6 +46,11 @@
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/data/site/:id/practices')
+                },
+                tasks: {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/site/:id/tasks'),
+                    'isArray': false
                 }
             });
         });

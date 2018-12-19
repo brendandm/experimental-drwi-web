@@ -43,6 +43,11 @@
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/geography/:id/outcomes'),
                     'isArray': false
+                },
+                tasks: {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/geography/:id/tasks'),
+                    'isArray': false
                 }
             });
         });

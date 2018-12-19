@@ -13,7 +13,7 @@
         .controller('GeographyLocationController',
             function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
                 Map, mapbox, Notifications, GeographyService, geography, $rootScope, $route,
-                $scope, $timeout, $interval, user, Shapefile, Utility) {
+                $scope, $timeout, $interval, user, Shapefile, Utility, Task) {
 
                 var self = this;
 
@@ -101,10 +101,71 @@
 
                 };
 
+                self.fetchTasks = function(taskId) {
+
+                    if (taskId &&
+                        typeof taskId === 'number') {
+
+                        return Task.get({
+                            id: taskId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            self.pendingTasks = response.features;
+
+                            if (self.pendingTasks.length < 1) {
+
+                                self.loadFeature();
+
+                                $interval.cancel(self.taskPoll);
+
+                            }
+
+                        });
+
+                    } else {
+
+                        return GeographyService.tasks({
+                            id: $route.current.params.geographyId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            self.pendingTasks = response.features;
+
+                            if (self.pendingTasks.length < 1) {
+
+                                self.loadFeature();
+
+                                $interval.cancel(self.taskPoll);
+
+                            }
+
+                        });
+
+                    }
+
+                };
+
+                self.hideTasks = function() {
+
+                    self.pendingTasks = [];
+
+                    if (typeof self.taskPoll !== 'undefined') {
+
+                        $interval.cancel(self.taskPoll);
+
+                    }
+
+                    self.loadFeatures();
+
+                };
+
                 self.uploadShapefile = function() {
 
-                    if (!self.shapefile ||
-                        !self.shapefile.length) {
+                    if (!self.fileImport ||
+                        !self.fileImport.length) {
 
                         $rootScope.notifications.warning('Uh-oh!', 'You forgot to add a file.');
 
@@ -116,133 +177,67 @@
 
                     }
 
-                    if (self.shapefile) {
+                    self.progressMessage = 'Uploading your file...';
 
-                        self.progressMessage = 'Uploading your file...';
+                    var fileData = new FormData();
 
-                        var fileData = new FormData();
+                    fileData.append('file', self.fileImport[0]);
 
-                        fileData.append('file', self.shapefile[0]);
+                    fileData.append('feature_type', 'geography');
 
-                        console.log('fileData', fileData);
+                    fileData.append('feature_id', self.geography.id);
 
-                        self.fillMeter = $interval(function() {
+                    console.log('fileData', fileData);
 
-                            var tempValue = (self.progressValue || 10) * 0.20;
+                    console.log('Shapefile', Shapefile);
 
-                            if (!self.progressValue) {
+                    try {
 
-                                self.progressValue = tempValue;
+                        Shapefile.upload({}, fileData, function(successResponse) {
 
-                            } else if ((100 - tempValue) > self.progressValue) {
+                            console.log('successResponse', successResponse);
 
-                                self.progressValue += tempValue;
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Upload complete. Processing data...',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                            if (successResponse.task) {
+
+                                self.pendingTasks = [
+                                    successResponse.task
+                                ];
 
                             }
 
-                            console.log('progressValue', self.progressValue);
+                            self.taskPoll = $interval(function() {
 
-                            if (self.progressValue > 75) {
+                                self.fetchTasks(successResponse.task.id);
 
-                                self.progressMessage = 'Analyzing data...';
+                            }, 1000);
 
-                            }
+                        }, function(errorResponse) {
 
-                        }, 50);
+                            console.log('Upload error', errorResponse);
 
-                        console.log('Shapefile', Shapefile);
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'The file could not be processed.',
+                                'prompt': 'OK'
+                            }];
 
-                        try {
+                            $timeout(closeAlerts, 2000);
 
-                            Shapefile.upload({}, fileData, function(shapefileResponse) {
+                        });
 
-                                console.log('shapefileResponse', shapefileResponse.msg);
+                    } catch (error) {
 
-                                self.progressValue = 100;
-
-                                self.progressMessage = 'Upload successful, rendering shape...';
-
-                                $interval.cancel(self.fillMeter);
-
-                                $timeout(function() {
-
-                                    self.progressValue = null;
-
-                                    if (shapefileResponse.msg !== null) {
-
-                                        if (Array.isArray(shapefileResponse.msg)) {
-
-                                            self.setGeoJsonLayer(shapefileResponse.msg[0]);
-
-                                            self.map.geojson = {
-                                                data: shapefileResponse.msg[0]
-                                            };
-
-                                        } else {
-
-                                            if (shapefileResponse.msg.type &&
-                                                shapefileResponse.msg.type === 'FeatureCollection') {
-
-                                                self.setGeoJsonLayer(shapefileResponse.msg.features[0]);
-
-                                                self.map.geojson = {
-                                                    data: shapefileResponse.msg.features[0]
-                                                };
-
-                                            } else {
-
-                                                self.setGeoJsonLayer(shapefileResponse.msg);
-
-                                                self.map.geojson = {
-                                                    data: shapefileResponse.msg
-                                                };
-
-                                            }
-
-                                        }
-
-                                        console.log('self.editableLayers', self.editableLayers);
-
-                                        leafletData.getMap('geography--map').then(function(map) {
-
-                                            map.fitBounds(self.editableLayers.getBounds(), {
-                                                maxZoom: 18
-                                            });
-
-                                        });
-
-                                    }
-
-                                }, 1600);
-
-                                self.error = null;
-
-                            }, function(errorResponse) {
-
-                                console.log(errorResponse);
-
-                                $interval.cancel(self.fillMeter);
-
-                                self.progressValue = null;
-
-                                self.alerts = [{
-                                    'type': 'error',
-                                    'flag': 'Error!',
-                                    'msg': 'The file could not be processed.',
-                                    'prompt': 'OK'
-                                }];
-
-                                $timeout(closeAlerts, 2000);
-
-                                return;
-
-                            });
-
-                        } catch (error) {
-
-                            console.log('Shapefile upload error', error);
-
-                        }
+                        console.log('Shapefile upload error', error);
 
                     }
 
@@ -405,6 +400,70 @@
 
                 };
 
+                self.loadFeature = function() {
+
+                    geography.$promise.then(function(successResponse) {
+
+                        console.log('self.geography', successResponse);
+
+                        self.geography = successResponse;
+
+                        console.log(JSON.stringify(successResponse.properties.extent));
+
+                        if (successResponse.permissions.read &&
+                            successResponse.permissions.write) {
+
+                            self.makePrivate = false;
+
+                        } else {
+
+                            self.makePrivate = true;
+
+                        }
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
+
+                        $rootScope.page.title = self.geography.properties.name;
+
+                        //
+                        // If a valid geography geometry is present, add it to the map
+                        // and track the object in `self.savedObjects`.
+                        //
+
+                        if (self.geography.properties.extent !== null &&
+                            typeof self.geography.properties.extent !== 'undefined') {
+
+                            leafletData.getMap('geography--map').then(function(map) {
+
+                                // self.geographyExtent = new L.FeatureGroup();
+
+                                // self.setGeoJsonLayer(self.geography.properties.extent, self.geographyExtent);
+
+                                // console.log('self.geographyExtent', self.geographyExtent.getBounds());
+
+                                self.map.bounds = Utility.transformBounds(self.geography.properties.extent);
+
+                            });
+
+                        }
+
+                        self.map.geojson = {
+                            data: self.geography.geometry
+                        };
+
+                        self.fetchTasks();
+
+                        self.showElements();
+
+                    }, function(errorResponse) {
+
+                        self.showElements();
+
+                    });
+
+                };
+
                 //
                 // Verify Account information for proper UI element display
                 //
@@ -421,63 +480,7 @@
                             can_edit: false
                         };
 
-                        geography.$promise.then(function(successResponse) {
-
-                            console.log('self.geography', successResponse);
-
-                            self.geography = successResponse;
-
-                            console.log(JSON.stringify(successResponse.properties.extent));
-
-                            if (successResponse.permissions.read &&
-                                successResponse.permissions.write) {
-
-                                self.makePrivate = false;
-
-                            } else {
-
-                                self.makePrivate = true;
-
-                            }
-
-                            self.permissions.can_edit = successResponse.permissions.write;
-                            self.permissions.can_delete = successResponse.permissions.write;
-
-                            $rootScope.page.title = self.geography.properties.name;
-
-                            //
-                            // If a valid geography geometry is present, add it to the map
-                            // and track the object in `self.savedObjects`.
-                            //
-
-                            if (self.geography.properties.extent !== null &&
-                                typeof self.geography.properties.extent !== 'undefined') {
-
-                                leafletData.getMap('geography--map').then(function(map) {
-
-                                    // self.geographyExtent = new L.FeatureGroup();
-
-                                    // self.setGeoJsonLayer(self.geography.properties.extent, self.geographyExtent);
-
-                                    // console.log('self.geographyExtent', self.geographyExtent.getBounds());
-
-                                    self.map.bounds = Utility.transformBounds(self.geography.properties.extent);
-
-                                });
-
-                            }
-
-                            self.map.geojson = {
-                                data: self.geography.geometry
-                            };
-
-                            self.showElements();
-
-                        }, function(errorResponse) {
-
-                            self.showElements();
-
-                        });
+                        self.loadFeature();
 
                     });
 

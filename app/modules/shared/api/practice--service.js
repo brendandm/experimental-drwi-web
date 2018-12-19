@@ -42,64 +42,9 @@
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_custom'),
                     'isArray': false
                 },
-                'agricultureGeneric': {
+                tasks: {
                     'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_agriculture_generic'),
-                    'isArray': false
-                },
-                'bankStabilization': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_bank_stabilization'),
-                    'isArray': false
-                },
-                'bioretention': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_bioretention'),
-                    'isArray': false
-                },
-                'enhancedStreamRestoration': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_enhanced_stream_restoration'),
-                    'isArray': false
-                },
-                'forestBuffer': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_forest_buffer'),
-                    'isArray': false
-                },
-                'grassBuffer': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_grass_buffer'),
-                    'isArray': false
-                },
-                'instreamHabitat': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_instream_habitat'),
-                    'isArray': false
-                },
-                'livestockExclusion': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_livestock_exclusion'),
-                    'isArray': false
-                },
-                'urbanHomeowner': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_urban_homeowner'),
-                    'isArray': false
-                },
-                'shorelineManagement': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_shoreline_management'),
-                    'isArray': false
-                },
-                'stormwater': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_stormwater'),
-                    'isArray': false
-                },
-                'wetlandsNontidal': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_wetlands_nontidal'),
+                    'url': environment.apiUrl.concat('/v1/practice/:id/tasks'),
                     'isArray': false
                 }
             });
