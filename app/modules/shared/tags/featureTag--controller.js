@@ -174,12 +174,12 @@
                         'users'
                     ];
 
-                    var reservedProperties = [
-                        'links',
-                        'permissions',
-                        '$promise',
-                        '$resolved'
-                    ];
+                    // var reservedProperties = [
+                    //     'links',
+                    //     'permissions',
+                    //     '$promise',
+                    //     '$resolved'
+                    // ];
 
                     excludedKeys.forEach(function(key) {
 
@@ -195,13 +195,33 @@
 
                     });
 
-                    reservedProperties.forEach(function(key) {
+                    // reservedProperties.forEach(function(key) {
 
-                        delete feature[key];
+                    //     delete feature[key];
 
-                    });
+                    // });
 
                     return feature;
+
+                };
+
+                self.extractProperties = function(feature) {
+
+                    if (feature.properties) {
+
+                        for (var attr in feature.properties) {
+
+                            feature[attr] = feature.properties[attr];
+
+                        }
+
+                        delete feature.properties;
+
+                    } else {
+
+                        return feature;
+
+                    }
 
                 };
 
@@ -219,11 +239,13 @@
 
                     self.featureCollection.cls.update({
                         id: self.feature.id
-                    }, self.feature).$promise.then(function(successResponse) {
+                    }, self.feature).then(function(successResponse) {
 
                         console.log('saveFeature.successResponse', successResponse);
 
-                        self.feature = successResponse.properties || successResponse;
+                        self.feature = successResponse;
+
+                        self.extractProperties(self.feature);
 
                         console.log('self.feature', self.feature);
 
@@ -353,7 +375,9 @@
 
                             console.log('GET.successResponse', successResponse);
 
-                            self.feature = successResponse.properties || successResponse;
+                            self.feature = successResponse;
+
+                            self.extractProperties(self.feature);
 
                             console.log('self.feature', self.feature);
 
