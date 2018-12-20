@@ -7,7 +7,7 @@
  */
 angular.module('FieldDoc')
     .controller('PracticePhotoController', function(Account, Image, leafletData, $location, $log, Map,
-        mapbox, Media, Practice, practice, practice_types, $q, $rootScope, $route,
+        mapbox, Media, Practice, practice, practiceTypes, $q, $rootScope, $route,
         $scope, $timeout, $interval, site, user, Utility) {
 
         var self = this;

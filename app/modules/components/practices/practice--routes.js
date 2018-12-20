@@ -111,19 +111,25 @@ angular.module('FieldDoc')
 
                     },
                     site: function(Practice, $route) {
+
                         return Practice.site({
                             id: $route.current.params.practiceId
                         });
+
                     },
-                    practice_types: function(PracticeType, $route) {
-                        return PracticeType.query({
-                            results_per_page: 500
-                        });
-                    },
+                    // practiceTypes: function(PracticeType, $route) {
+
+                    //     return PracticeType.collection({
+                    //         practice: $route.current.params.practiceId
+                    //     });
+
+                    // },
                     practice: function(Practice, $route) {
+
                         return Practice.get({
                             id: $route.current.params.practiceId
                         });
+                        
                     }
                 }
             })
@@ -176,7 +182,7 @@ angular.module('FieldDoc')
                             id: $route.current.params.practiceId
                         });
                     },
-                    practice_types: function(PracticeType, $route) {
+                    practiceTypes: function(PracticeType, $route) {
                         return PracticeType.query({
                             results_per_page: 500
                         });

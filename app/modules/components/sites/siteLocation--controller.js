@@ -163,13 +163,10 @@
 
                             console.log('Task.get response', response);
 
-                            self.pendingTasks = [response];
+                            if (response.status &&
+                                response.status === 'complete') {
 
-                            if (self.pendingTasks.length < 1) {
-
-                                self.loadFeature();
-
-                                $interval.cancel(self.taskPoll);
+                                self.hideTasks();
 
                             }
 
@@ -647,7 +644,9 @@
 
                 self.loadFeature = function() {
 
-                    site.$promise.then(function(successResponse) {
+                    Site.get({
+                        id: $route.current.params.siteId
+                    }).$promise.then(function(successResponse) {
 
                         console.log('self.site', successResponse);
 

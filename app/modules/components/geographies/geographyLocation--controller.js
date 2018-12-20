@@ -112,13 +112,10 @@
 
                             console.log('Task.get response', response);
 
-                            self.pendingTasks = response.features;
+                            if (response.status &&
+                                response.status === 'complete') {
 
-                            if (self.pendingTasks.length < 1) {
-
-                                self.loadFeature();
-
-                                $interval.cancel(self.taskPoll);
+                                self.hideTasks();
 
                             }
 
@@ -158,7 +155,7 @@
 
                     }
 
-                    self.loadFeatures();
+                    self.loadFeature();
 
                 };
 
@@ -402,7 +399,9 @@
 
                 self.loadFeature = function() {
 
-                    geography.$promise.then(function(successResponse) {
+                    GeographyService.get({
+                        id: $route.current.params.geographyId
+                    }).$promise.then(function(successResponse) {
 
                         console.log('self.geography', successResponse);
 
@@ -435,12 +434,6 @@
                             typeof self.geography.properties.extent !== 'undefined') {
 
                             leafletData.getMap('geography--map').then(function(map) {
-
-                                // self.geographyExtent = new L.FeatureGroup();
-
-                                // self.setGeoJsonLayer(self.geography.properties.extent, self.geographyExtent);
-
-                                // console.log('self.geographyExtent', self.geographyExtent.getBounds());
 
                                 self.map.bounds = Utility.transformBounds(self.geography.properties.extent);
 

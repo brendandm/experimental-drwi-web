@@ -137,7 +137,9 @@ angular.module('FieldDoc')
 
             self.loadSite = function() {
 
-                site.$promise.then(function(successResponse) {
+                Practice.site({
+                    id: $route.current.params.practiceId
+                }).$promise.then(function(successResponse) {
 
                     console.log('self.site', successResponse);
 
@@ -173,7 +175,9 @@ angular.module('FieldDoc')
 
             self.loadPractice = function() {
 
-                practice.$promise.then(function(successResponse) {
+                Practice.get({
+                    id: $route.current.params.practiceId
+                }).$promise.then(function(successResponse) {
 
                     console.log('self.practice', successResponse);
 
@@ -260,13 +264,10 @@ angular.module('FieldDoc')
 
                         console.log('Task.get response', response);
 
-                        self.pendingTasks = response.features;
+                        if (response.status &&
+                            response.status === 'complete') {
 
-                        if (self.pendingTasks.length < 1) {
-
-                            self.loadFeature();
-
-                            $interval.cancel(self.taskPoll);
+                            self.hideTasks();
 
                         }
 
@@ -284,7 +285,7 @@ angular.module('FieldDoc')
 
                         if (self.pendingTasks.length < 1) {
 
-                            self.loadFeature();
+                            self.loadSite();
 
                             $interval.cancel(self.taskPoll);
 
@@ -306,7 +307,7 @@ angular.module('FieldDoc')
 
                 }
 
-                self.loadFeatures();
+                self.loadSite();
 
             };
 

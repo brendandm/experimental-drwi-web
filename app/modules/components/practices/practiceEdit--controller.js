@@ -6,9 +6,9 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('PracticeEditController', function(Account, Image, leafletData, $location, $log, Map,
-        mapbox, Media, Practice, practice, practice_types, $q, $rootScope, $route,
-        $scope, $timeout, $interval, site, user, Shapefile, leafletBoundsHelpers, Utility) {
+    .controller('PracticeEditController', function(Account, Image, leafletData, $location,
+        $log, Media, Practice, PracticeType, practice, $q, $rootScope, $route,
+        $scope, $timeout, $interval, site, user, Utility) {
 
         var self = this;
 
@@ -113,29 +113,31 @@ angular.module('FieldDoc')
 
                 $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
 
+                //
+                // Load practice types
+                //
+
+                PracticeType.collection({
+                    program: self.practice.properties.program_id
+                }).$promise.then(function(successResponse) {
+
+                    console.log('self.practiceTypes', successResponse);
+
+                    self.practiceTypes = successResponse.features;
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    //
+
+                    self.showElements();
+
+                });
+
             }, function(errorResponse) {
 
                 //
-
-            });
-
-            //
-            // Load practices
-            //
-
-            practice_types.$promise.then(function(successResponse) {
-
-                console.log('self.practiceTypes', successResponse);
-
-                self.practiceTypes = successResponse.features;
-
-                self.showElements();
-
-            }, function(errorResponse) {
-
-                //
-
-                self.showElements();
 
             });
 
