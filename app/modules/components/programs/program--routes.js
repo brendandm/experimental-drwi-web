@@ -96,7 +96,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/programs/:programId/tags', {
-                templateUrl: '/templates/featureTag--view.html?t=' + environment.version,
+                templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
                 controller: 'FeatureTagController',
                 controllerAs: 'page',
                 resolve: {
@@ -128,44 +128,20 @@ angular.module('FieldDoc')
                             id: $route.current.params.programId
                         });
 
+                    },
+                    toolbarUrl: function() {
+
+                        return '/templates/toolbars/program.html?t=' + environment.version;
+
+                    },
+                    viewState: function() {
+
+                        return {
+                            'program': true
+                        };
+
                     }
                 }
             });
-            // .when('/programs/:programId/targets', {
-            //     templateUrl: '/modules/shared/targets/views/featureTarget--view.html?t=' + environment.version,
-            //     controller: 'FeatureTargetController',
-            //     controllerAs: 'page',
-            //     resolve: {
-            //         user: function(Account, $route, $rootScope, $document) {
-
-            //             $rootScope.targetPath = document.location.pathname;
-
-            //             $rootScope.programContext = $route.current.params.programId;
-
-            //             if (Account.userObject && !Account.userObject.id) {
-            //                 return Account.getUser();
-            //             }
-
-            //             return Account.userObject;
-
-            //         },
-            //         featureCollection: function(Program) {
-
-            //             return {
-            //                 name: 'program',
-            //                 path: '/programs',
-            //                 cls: Program
-            //             }
-
-            //         },
-            //         feature: function(Program, $route) {
-
-            //             return Program.get({
-            //                 id: $route.current.params.programId
-            //             });
-
-            //         }
-            //     }
-            // });
 
     });

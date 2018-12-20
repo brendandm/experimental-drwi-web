@@ -13,20 +13,20 @@
         .controller('FeatureTagController',
             function(Account, Collaborators, $window, $rootScope, $scope, $route,
                 $location, $timeout, user, SearchService, featureCollection,
-                feature, Utility, $interval) {
+                feature, Utility, $interval, toolbarUrl, viewState) {
 
                 var self = this;
 
                 self.featureCollection = featureCollection;
 
+                self.toolbarUrl = toolbarUrl;
+
                 $rootScope.page = {};
 
-                $rootScope.viewState = {
-                    'feature': true
-                };
+                $rootScope.viewState = viewState;
 
                 $rootScope.toolbarState = {
-                    'editTag': true
+                    'editTags': true
                 };
 
                 self.status = {
@@ -88,12 +88,12 @@
 
                 self.addTag = function(item, model, label) {
 
-                    var _datum = {
-                        id: item.id,
-                        properties: item
-                    };
+                    // var _datum = {
+                    //     id: item.id,
+                    //     properties: item
+                    // };
 
-                    self.tempTags.push(_datum);
+                    self.tempTags.push(item);
 
                     self.tagQuery = null;
 
@@ -147,11 +147,12 @@
 
                 };
 
-                self.scrubFeature = function() {
+                self.scrubFeature = function(feature) {
 
                     var excludedKeys = [
                         'creator',
                         'dashboards',
+                        'geometry',
                         'geographies',
                         'last_modified_by',
                         'members',
@@ -162,7 +163,10 @@
                         'practices',
                         'practice_types',
                         'program',
+                        'properties',
                         'reports',
+                        'tasks',
+                        'type',
                         'sites',
                         'status',
                         'users'
@@ -177,7 +181,15 @@
 
                     excludedKeys.forEach(function(key) {
 
-                        delete feature.properties[key];
+                        if (feature.properties) {
+
+                            delete feature.properties[key];
+
+                        } else {
+
+                            delete feature[key];
+
+                        }
 
                     });
 
@@ -193,23 +205,21 @@
 
                     self.status.processing = true;
 
-                    self.scrubFeature();
+                    self.scrubFeature(self.feature);
 
-                    feature.properties.tags = self.processTags(self.tempTags);
+                    self.feature.tags = self.processTags(self.tempTags);
 
-                    var data = feature.properties;
-
-                    data.geometry = self.feature.geometry;
+                    var data = self.feature;
 
                     // feature.$update().then(function(successResponse) {
 
                     self.featureCollection.cls.update({
                         id: self.feature.id
-                    }, data).$promise.then(function(successResponse) {
+                    }, data).then(function(successResponse) {
 
                         console.log('saveFeature.successResponse', successResponse);
 
-                        self.feature = successResponse.properties;
+                        self.feature = successResponse.properties || successResponse;
 
                         if (self.feature.tags.length) {
 
@@ -333,7 +343,7 @@
 
                             console.log('self.feature', successResponse);
 
-                            self.feature = successResponse.properties;
+                            self.feature = successResponse.properties || successResponse;
 
                             if (!successResponse.permissions.read &&
                                 !successResponse.permissions.write) {

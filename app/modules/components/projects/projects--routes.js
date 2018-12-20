@@ -229,7 +229,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/projects/:projectId/tags', {
-                templateUrl: '/templates/featureTag--view.html?t=' + environment.version,
+                templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
                 controller: 'FeatureTagController',
                 controllerAs: 'page',
                 resolve: {
@@ -278,6 +278,18 @@ angular.module('FieldDoc')
                             id: $route.current.params.projectId,
                             exclude: exclude
                         });
+
+                    },
+                    toolbarUrl: function() {
+
+                        return '/templates/toolbars/project.html?t=' + environment.version;
+
+                    },
+                    viewState: function() {
+
+                        return {
+                            'project': true
+                        };
 
                     }
                 }

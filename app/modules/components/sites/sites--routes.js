@@ -156,7 +156,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/sites/:siteId/tags', {
-                templateUrl: '/templates/featureTag--view.html?t=' + environment.version,
+                templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
                 controller: 'FeatureTagController',
                 controllerAs: 'page',
                 resolve: {
@@ -185,6 +185,18 @@ angular.module('FieldDoc')
                         return Site.get({
                             id: $route.current.params.siteId
                         });
+
+                    },
+                    toolbarUrl: function() {
+
+                        return '/templates/toolbars/site.html?t=' + environment.version;
+
+                    },
+                    viewState: function() {
+
+                        return {
+                            'site': true
+                        };
 
                     }
                 }

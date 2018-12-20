@@ -4,27 +4,29 @@
 
     /**
      * @ngdoc function
-     * @name FieldDoc.controller:ProjectUsersController
+     * @name FieldDoc.controller:FeatureTagController
      * @description
-     * # ProjectUsersController
+     * # FeatureTagController
      * Controller of the FieldDoc
      */
     angular.module('FieldDoc')
-        .controller('ProjectUsersController',
+        .controller('FeatureTagController',
             function(Account, Collaborators, $window, $rootScope, $scope, $route,
-                $location, $timeout, project, user, members, SearchService, Project,
-                Utility, $interval) {
+                $location, $timeout, user, SearchService, featureCollection,
+                feature, Utility, $interval) {
 
                 var self = this;
+
+                self.featureCollection = featureCollection;
 
                 $rootScope.page = {};
 
                 $rootScope.viewState = {
-                    'project': true
+                    'feature': true
                 };
 
                 $rootScope.toolbarState = {
-                    'users': true
+                    'editTag': true
                 };
 
                 self.status = {
@@ -54,7 +56,7 @@
 
                 function closeRoute() {
 
-                    $location.path('/projects');
+                    $location.path(self.featureCollection.path);
 
                 }
 
@@ -70,19 +72,13 @@
 
                 };
 
-                self.searchUsers = function(value) {
+                self.searchTags = function(value) {
 
-                    return SearchService.user({
+                    return SearchService.tag({
                         q: value
                     }).$promise.then(function(response) {
 
                         console.log('SearchService response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
 
                         return response.results.slice(0, 5);
 
@@ -90,26 +86,26 @@
 
                 };
 
-                self.addOwner = function(item, model, label) {
+                self.addTag = function(item, model, label) {
 
                     var _datum = {
                         id: item.id,
                         properties: item
                     };
 
-                    self.tempOwners.push(_datum);
+                    self.tempTags.push(_datum);
 
-                    self.ownerQuery = null;
+                    self.tagQuery = null;
 
-                    console.log('Updated owners (addition)', self.tempOwners);
+                    console.log('Updated tags (addition)', self.tempTags);
 
                 };
 
-                self.removeOwner = function(id) {
+                self.removeTag = function(id) {
 
                     var _index;
 
-                    self.tempOwners.forEach(function(item, idx) {
+                    self.tempTags.forEach(function(item, idx) {
 
                         if (item.id === id) {
 
@@ -119,19 +115,19 @@
 
                     });
 
-                    console.log('Remove owner at index', _index);
+                    console.log('Remove tag at index', _index);
 
                     if (typeof _index === 'number') {
 
-                        self.tempOwners.splice(_index, 1);
+                        self.tempTags.splice(_index, 1);
 
                     }
 
-                    console.log('Updated owners (removal)', self.tempOwners);
+                    console.log('Updated tags (removal)', self.tempTags);
 
                 };
 
-                self.processOwners = function(list) {
+                self.processTags = function(list) {
 
                     var _list = [];
 
@@ -151,16 +147,25 @@
 
                 };
 
-                self.scrubFeature = function(feature) {
+                self.scrubFeature = function() {
 
                     var excludedKeys = [
                         'creator',
-                        'extent',
-                        'geometry',
+                        'dashboards',
+                        'geographies',
                         'last_modified_by',
+                        'members',
+                        'metrics',
+                        'metric_types',
                         'organization',
-                        'tags',
-                        'tasks'
+                        'partners',
+                        'practices',
+                        'practice_types',
+                        'program',
+                        'reports',
+                        'sites',
+                        'status',
+                        'users'
                     ];
 
                     var reservedProperties = [
@@ -172,15 +177,7 @@
 
                     excludedKeys.forEach(function(key) {
 
-                        if (feature.properties) {
-
-                            delete feature.properties[key];
-
-                        } else {
-
-                            delete feature[key];
-
-                        }
+                        delete feature.properties[key];
 
                     });
 
@@ -192,22 +189,34 @@
 
                 };
 
-                self.saveProject = function() {
+                self.saveFeature = function() {
 
                     self.status.processing = true;
 
-                    self.scrubFeature(self.project);
+                    self.scrubFeature();
 
-                    self.project.properties.members = self.processOwners(self.tempOwners);
+                    feature.properties.tags = self.processTags(self.tempTags);
 
-                    self.project.$update().then(function(response) {
+                    var data = feature.properties;
 
-                        if (self.project.properties.members.length) {
+                    data.geometry = self.feature.geometry;
+
+                    // feature.$update().then(function(successResponse) {
+
+                    self.featureCollection.cls.update({
+                        id: self.feature.id
+                    }, data).$promise.then(function(successResponse) {
+
+                        console.log('saveFeature.successResponse', successResponse);
+
+                        self.feature = successResponse.properties;
+
+                        if (self.feature.tags.length) {
 
                             self.alerts = [{
                                 'type': 'success',
                                 'flag': 'Success!',
-                                'msg': 'Tags added to project.',
+                                'msg': 'Tags added to ' + self.featureCollection.name + '.',
                                 'prompt': 'OK'
                             }];
 
@@ -216,7 +225,7 @@
                             self.alerts = [{
                                 'type': 'success',
                                 'flag': 'Success!',
-                                'msg': 'All tags removed from project.',
+                                'msg': 'All tags removed from ' + self.featureCollection.name + '.',
                                 'prompt': 'OK'
                             }];
 
@@ -226,7 +235,18 @@
 
                         self.status.processing = false;
 
-                    }).then(function(error) {
+                    }).catch(function(errorResponse) {
+
+                        console.log('saveFeature.errorResponse', errorResponse);
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Tag changes not saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
 
                         self.status.processing = false;
 
@@ -236,26 +256,16 @@
 
                 self.deleteFeature = function() {
 
-                    var targetId;
+                    var targetId = self.feature.id;
 
-                    if (self.project.properties) {
-
-                        targetId = self.project.properties.id;
-
-                    } else {
-
-                        targetId = self.project.id;
-
-                    }
-
-                    Project.delete({
+                    self.featureCollection.cls.delete({
                         id: +targetId
                     }).$promise.then(function(data) {
 
                         self.alerts.push({
                             'type': 'success',
                             'flag': 'Success!',
-                            'msg': 'Successfully deleted this project.',
+                            'msg': 'Successfully deleted this ' + self.featureCollection.name + '.',
                             'prompt': 'OK'
                         });
 
@@ -270,7 +280,7 @@
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'Unable to delete “' + self.project.properties.name + '”. There are pending tasks affecting this project.',
+                                'msg': 'Unable to delete “' + self.feature.name + '”. There are pending tasks affecting this ' + self.featureCollection.name + '.',
                                 'prompt': 'OK'
                             }];
 
@@ -279,7 +289,7 @@
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'You don’t have permission to delete this project.',
+                                'msg': 'You don’t have permission to delete this ' + self.featureCollection.name + '.',
                                 'prompt': 'OK'
                             }];
 
@@ -288,7 +298,7 @@
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'Something went wrong while attempting to delete this project.',
+                                'msg': 'Something went wrong while attempting to delete this ' + self.featureCollection.name + '.',
                                 'prompt': 'OK'
                             }];
 
@@ -317,13 +327,13 @@
                         };
 
                         //
-                        // Assign project to a scoped variable
+                        // Assign feature to a scoped variable
                         //
-                        project.$promise.then(function(successResponse) {
+                        feature.$promise.then(function(successResponse) {
 
-                            console.log('self.project', successResponse);
+                            console.log('self.feature', successResponse);
 
-                            self.project = successResponse;
+                            self.feature = successResponse.properties;
 
                             if (!successResponse.permissions.read &&
                                 !successResponse.permissions.write) {
@@ -335,13 +345,11 @@
                                 self.permissions.can_edit = successResponse.permissions.write;
                                 self.permissions.can_delete = successResponse.permissions.write;
 
-                                $rootScope.page.title = self.project.properties.name;
+                                $rootScope.page.title = self.feature.name;
 
-                                self.tempOwners = self.project.properties.members;
+                                self.tempTags = self.feature.tags;
 
-                                console.log('tempOwners', self.tempOwners);
-
-                                self.project.users_edit = false;
+                                console.log('tempTags', self.tempTags);
 
                             }
 
@@ -349,7 +357,7 @@
 
                         }, function(errorResponse) {
 
-                            console.error('Unable to load request project');
+                            console.error('Unable to load request feature');
 
                             self.showElements();
 

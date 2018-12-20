@@ -195,7 +195,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/practices/:practiceId/tags', {
-                templateUrl: '/templates/featureTag--view.html?t=' + environment.version,
+                templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
                 controller: 'FeatureTagController',
                 controllerAs: 'page',
                 resolve: {
@@ -224,6 +224,18 @@ angular.module('FieldDoc')
                         return Practice.get({
                             id: $route.current.params.practiceId
                         });
+
+                    },
+                    toolbarUrl: function() {
+
+                        return '/templates/toolbars/practice.html?t=' + environment.version;
+
+                    },
+                    viewState: function() {
+
+                        return {
+                            'practice': true
+                        };
 
                     }
                 }

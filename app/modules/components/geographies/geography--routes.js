@@ -154,7 +154,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/geographies/:geographyId/tags', {
-                templateUrl: '/templates/featureTag--view.html?t=' + environment.version,
+                templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
                 controller: 'FeatureTagController',
                 controllerAs: 'page',
                 resolve: {
@@ -183,6 +183,18 @@ angular.module('FieldDoc')
                         return GeographyService.get({
                             id: $route.current.params.geographyId
                         });
+
+                    },
+                    toolbarUrl: function() {
+
+                        return '/templates/toolbars/geography.html?t=' + environment.version;
+
+                    },
+                    viewState: function() {
+
+                        return {
+                            'geography': true
+                        };
 
                     }
                 }
