@@ -32,7 +32,7 @@
 
                 <div class="feature-detail-content">
 
-                    <form role="form" class="form" style="position:relative;" id="form--ProgramEdit" name="form--ProgramEdit" data-ng-submit="page.saveProgram()">
+                    <form role="form" class="form" style="position:relative;" id="form--ProgramEdit" name="form--ProgramEdit" data-ng-submit="page.saveProgram()" autocomplete="off">
 
                         <!-- Program Name -->
 
@@ -108,13 +108,6 @@
                     </i>
                 </a>
             </li>
-            <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/programs/{{ page.program.id }}/targets">
-                    <i class="material-icons">
-                        multiline_chart
-                    </i>
-                </a>
-            </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
                 <a href="/programs/{{ page.program.id }}/tags">
                     <i class="material-icons">

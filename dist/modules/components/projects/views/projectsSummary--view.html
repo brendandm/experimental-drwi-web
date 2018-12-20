@@ -32,17 +32,17 @@
 
                     <article class="pad space-right shadow reveal fade-in t0">
 
-                        <h1>{{ page.project.properties.name }}</h1>
+                        <h1>{{ page.project.name }}</h1>
 
-                        <p data-ng-if="page.project.id && page.project.properties.last_modified_by.properties.first_name && page.project.properties.last_modified_by.properties.last_name" class="label">
-                            Last modified by {{ page.project.properties.last_modified_by.properties.first_name }} {{ page.project.properties.last_modified_by.properties.last_name }} on {{ page.project.properties.modified_on | date:'medium' }}
+                        <p data-ng-if="page.project.id && page.project.last_modified_by.first_name && page.project.last_modified_by.last_name" class="label">
+                            Last modified by {{ page.project.last_modified_by.first_name }} {{ page.project.last_modified_by.last_name }} on {{ page.project.modified_on | date:'medium' }}
                         </p>
 
-                        <p data-ng-if="page.project.id && page.project.properties.program_type" class="label" data-ng-class="{'label-info': (page.project.properties.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.properties.program_type === 'Pre-Project Plan')}">
-                            <strong>Program:</strong> {{ page.project.properties.program_type }}
+                        <p data-ng-if="page.project.id && page.project.program_type" class="label" data-ng-class="{'label-info': (page.project.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.program_type === 'Pre-Project Plan')}">
+                            <strong>Program:</strong> {{ page.project.program_type }}
                         </p>
 
-                        <p data-ng-bind-html="page.project.properties.description"></p>
+                        <p data-ng-bind-html="page.project.description"></p>
 
                         <nav class="contextual-navigation-wrapper" style="float: none; padding:0; margin: 0; border: 0 none;">
 
@@ -50,15 +50,15 @@
 
                             <ul class="contextual-navigation" style="float: none; padding:0; margin: 0; border: 0 none;">
 
-                                <li data-ng-if="(page.permissions.is_admin || page.permissions.is_manager) && (page.project.properties.workflow_state === 'Submitted' || page.project.properties.workflow_state === 'Completed')" style="flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
-                                    <button data-ng-click="page.fundProject()" class="button button-submit" data-ng-class="{'button-outline': (page.project.properties.workflow_state === 'Completed')}">
+                                <li data-ng-if="(page.permissions.is_admin || page.permissions.is_manager) && (page.project.workflow_state === 'Submitted' || page.project.workflow_state === 'Completed')" style="flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
+                                    <button data-ng-click="page.fundProject()" class="button button-submit" data-ng-class="{'button-outline': (page.project.workflow_state === 'Completed')}">
                                         <span>
                                             Mark Project as Funded
                                         </span>
                                     </button>
                                 </li>
 
-                                <li data-ng-if="(page.permissions.is_admin || page.permissions.is_manager) && page.project.properties.workflow_state === 'Funded'" style="flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
+                                <li data-ng-if="(page.permissions.is_admin || page.permissions.is_manager) && page.project.workflow_state === 'Funded'" style="flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
                                     <button data-ng-click="page.completeProject()" class="button button-submit">
                                         <span>
                                             Mark Project as Complete
@@ -66,7 +66,7 @@
                                     </button>
                                 </li>
 
-                                <li data-ng-if="page.project.properties.workflow_state === 'Draft'" style="flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
+                                <li data-ng-if="page.project.workflow_state === 'Draft'" style="flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
                                     <button data-ng-click="page.submitProject()" class="button button-info">
                                         <span>
                                             Submit Project to Funder
@@ -74,7 +74,7 @@
                                     </button>
                                 </li>
 
-                                <li data-ng-if="page.project.properties.workflow_state === 'Submitted'" style="flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
+                                <li data-ng-if="page.project.workflow_state === 'Submitted'" style="flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
                                     <button data-ng-click="page.rollbackProjectSubmission()" class="button button-info button-outline">
                                         <span>
                                             Retract Submission
@@ -320,7 +320,7 @@
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.properties.id === page.project.id && page.deletionTarget.collection === 'project'">
+                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.project.id && page.deletionTarget.collection === 'project'">
                     <p>Do you want to delete this project?</p>
                     <div class="actions">
                         <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('project')">

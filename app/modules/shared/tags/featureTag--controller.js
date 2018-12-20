@@ -166,6 +166,7 @@
                         'project',
                         'properties',
                         'reports',
+                        'targets',
                         'tasks',
                         'type',
                         'site',

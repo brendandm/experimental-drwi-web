@@ -28,7 +28,7 @@
 
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
 
-            <form role="form" class="form" id="form--SiteLocation" name="form--SiteLocation" style="position: relative;" data-ng-submit="page.saveSite()">
+            <form role="form" class="form" id="form--SiteLocation" name="form--SiteLocation" style="position: relative;" data-ng-submit="page.saveSite()" autocomplete="off">
 
                 <div class="form-element">
 
@@ -58,10 +58,18 @@
                 <!-- Shapefile input -->
                 <div class="form-field">
                     <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
+                        <strong>Upload GeoJSON or an ESRI Shapefile</strong>
+                    </p>
+                    <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">In addition to the mandatory <span style="font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;">.shp</span>, <span style="font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;">.shx</span>, and <span style="font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;">.dbf</span> files, shapefile archives must include a <span style="font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;">.prj</span> file that describes the coordinate system and projection.</p>
+
+                    <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">GeoJSON files must use the <span style="font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;">.json</span> or <span style="font-family: SFMono-Regular,Consolas,Liberation Mono,Menlo,Courier,monospace;">.geojson</span> file extensions and follow the format described in <a href="https://tools.ietf.org/html/rfc7946" target="_blank">this specification</a>. We recommend testing GeoJSON data with <a href="http://geojson.io" target="_blank">geojson.io</a> before uploading it to FieldDoc. See <a href="https://www.mapbox.com/help/define-geojson/" target="_blank">here</a> for more help with the GeoJSON format.</p>
+                    <input type="file" class="form-control" id="shapefile" name="shapefile" file-upload file-model="page.fileImport" file-on-change="page.uploadShapefile()" />
+
+                    <!-- <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
                         <strong>Upload an ESRI Shapefile</strong>
                     </p>
                     <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">In addition to the mandatory .shp, .shx, and .dbf files, your archive must include a .prj file that describes the coordinate system and projection.</p>
-                    <input type="file" class="form-control" id="shapefile" name="shapefile" file-upload file-model="page.shapefile" file-on-change="page.uploadShapefile()" />
+                    <input type="file" class="form-control" id="shapefile" name="shapefile" file-upload file-model="page.fileImport" file-on-change="page.uploadShapefile()" /> -->
                 </div>
 
                 <div class="save--action--wrapper save--action--bottom">

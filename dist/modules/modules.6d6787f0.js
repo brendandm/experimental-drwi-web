@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1545095887128})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1545339105178})
 
 ;
 /**
@@ -4827,9 +4827,31 @@ angular.module('FieldDoc')
 
                     },
                     project: function(Project, $route) {
+                        
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            // 'partners',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
                         return Project.get({
-                            'id': $route.current.params.projectId
+                            id: $route.current.params.projectId,
+                            exclude: exclude
                         });
+                        
                     },
                     metrics: function(Project, $route) {
                         return Project.metrics({
@@ -4888,9 +4910,31 @@ angular.module('FieldDoc')
 
                     },
                     project: function(Project, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            // 'partners',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
                         return Project.get({
-                            'id': $route.current.params.projectId
+                            id: $route.current.params.projectId,
+                            exclude: exclude
                         });
+
                     }
                 }
             })
@@ -4911,14 +4955,36 @@ angular.module('FieldDoc')
 
                     },
                     project: function(Project, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            // 'members',
+                            'metric_types',
+                            'partners',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
                         return Project.get({
-                            'id': $route.current.params.projectId
+                            id: $route.current.params.projectId,
+                            exclude: exclude
                         });
+
                     }
                 }
             })
             .when('/projects/:projectId/tags', {
-                templateUrl: '/templates/featureTag--view.html?t=' + environment.version,
+                templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
                 controller: 'FeatureTagController',
                 controllerAs: 'page',
                 resolve: {
@@ -4933,20 +4999,53 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(Project) {
+                    featureCollection: function(Project, $route) {
 
                         return {
+                            featureId: $route.current.params.projectId,
                             name: 'project',
                             path: '/projects',
                             cls: Project
-                        }
+                        };
 
                     },
                     feature: function(Project, $route) {
 
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            'partners',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            // 'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
                         return Project.get({
-                            id: $route.current.params.projectId
+                            id: $route.current.params.projectId,
+                            exclude: exclude
                         });
+
+                    },
+                    toolbarUrl: function() {
+
+                        return '/templates/toolbars/project.html?t=' + environment.version;
+
+                    },
+                    viewState: function() {
+
+                        return {
+                            'project': true
+                        };
 
                     }
                 }
@@ -5429,9 +5528,9 @@ angular.module('FieldDoc')
                         self.permissions.can_edit = successResponse.permissions.write;
                         self.permissions.can_delete = successResponse.permissions.write;
 
-                        if (project_.properties.extent) {
+                        if (project_.extent) {
 
-                            project_.staticURL = self.buildStaticMapURL(project_.properties.extent);
+                            project_.staticURL = self.buildStaticMapURL(project_.extent);
 
                         }
 
@@ -5447,9 +5546,9 @@ angular.module('FieldDoc')
 
                             self.projectExtent = new L.FeatureGroup();
 
-                            if (self.project.properties.extent) {
+                            if (self.project.extent) {
 
-                                self.setGeoJsonLayer(self.project.properties.extent, self.projectExtent);
+                                self.setGeoJsonLayer(self.project.extent, self.projectExtent);
 
                                 map.fitBounds(self.projectExtent.getBounds(), {
                                     maxZoom: 18
@@ -5483,7 +5582,7 @@ angular.module('FieldDoc')
 
             self.submitProject = function() {
 
-                if (!self.project.properties.organization_id) {
+                if (!self.project.organization_id) {
                     $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.");
                     return;
                 }
@@ -5504,7 +5603,7 @@ angular.module('FieldDoc')
 
             self.fundProject = function() {
 
-                if (!self.project.properties.organization_id) {
+                if (!self.project.organization_id) {
                     $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.");
                     return;
                 }
@@ -5525,7 +5624,7 @@ angular.module('FieldDoc')
 
             self.completeProject = function() {
 
-                if (!self.project.properties.organization_id) {
+                if (!self.project.organization_id) {
                     $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.");
                     return;
                 }
@@ -5565,7 +5664,7 @@ angular.module('FieldDoc')
 
                 self.site = new Site({
                     'project_id': self.project.id,
-                    'organization_id': self.project.properties.organization_id
+                    'organization_id': self.project.organization_id
                 });
 
                 self.site.$save(function(successResponse) {
@@ -6250,13 +6349,13 @@ angular.module('FieldDoc')
 
                 self.project = data;
 
-                if (self.project.properties.program) {
+                if (self.project.program) {
 
-                    self.program = self.project.properties.program.properties;
+                    self.program = self.project.program;
 
                 }
 
-                self.tempPartners = self.project.properties.partners;
+                self.tempPartners = self.project.partners;
 
                 self.status.processing = false;
 
@@ -6264,25 +6363,56 @@ angular.module('FieldDoc')
 
             self.setProgram = function(item, model, label) {
 
-                self.project.properties.program_id = item.id;
+                self.project.program_id = item.id;
 
             };
 
             self.unsetProgram = function() {
 
-                self.project.properties.program_id = null;
+                self.project.program_id = null;
 
                 self.program = null;
 
             };
 
-            self.scrubProject = function() {
+            self.scrubFeature = function(feature) {
 
-                delete self.project.properties.geographies;
-                delete self.project.properties.practices;
-                delete self.project.properties.program;
-                delete self.project.properties.sites;
-                delete self.project.properties.tags;
+                var excludedKeys = [
+                    'creator',
+                    'extent',
+                    'geometry',
+                    'last_modified_by',
+                    'organization',
+                    'tags',
+                    'tasks'
+                ];
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
 
             };
 
@@ -6290,13 +6420,35 @@ angular.module('FieldDoc')
 
                 self.status.processing = true;
 
-                self.scrubProject();
+                self.scrubFeature(self.project);
 
-                self.project.properties.partners = self.processRelations(self.tempPartners);
+                self.project.partners = self.processRelations(self.tempPartners);
 
-                self.project.properties.workflow_state = "Draft";
+                self.project.workflow_state = "Draft";
 
-                self.project.$update().then(function(successResponse) {
+                var exclude = [
+                    'centroid',
+                    'creator',
+                    'dashboards',
+                    'extent',
+                    'geometry',
+                    'members',
+                    'metric_types',
+                    // 'partners',
+                    'practices',
+                    'practice_types',
+                    'properties',
+                    'tags',
+                    'targets',
+                    'tasks',
+                    'type',
+                    'sites'
+                ].join(',');
+
+                Project.update({
+                    id: $route.current.params.projectId,
+                    exclude: exclude
+                }, self.project).then(function(successResponse) {
 
                     self.processFeature(successResponse);
 
@@ -6321,6 +6473,509 @@ angular.module('FieldDoc')
                     }];
 
                     $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                });
+
+            };
+
+            self.deleteFeature = function() {
+
+                var targetId;
+
+                if (self.project) {
+
+                    targetId = self.project.id;
+
+                } else {
+
+                    targetId = self.project.id;
+
+                }
+
+                Project.delete({
+                    id: +targetId
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this project.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(self.closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.project.name + '”. There are pending tasks affecting this project.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this project.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this project.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(self.closeAlerts, 2000);
+
+                });
+
+            };
+
+        });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('ProjectTargetController',
+        function($scope, Account, $location, $log, Project, project,
+            $rootScope, $route, user, FilterStore, $timeout, SearchService,
+            MetricType) {
+
+            var self = this;
+
+            $rootScope.viewState = {
+                'project': true
+            };
+
+            $rootScope.toolbarState = {
+                'editTargets': true
+            };
+
+            $rootScope.page = {};
+
+            self.searchScope = {
+                target: 'metric'
+            };
+
+            self.status = {
+                processing: true
+            };
+
+            self.alerts = [];
+
+            self.closeAlerts = function() {
+
+                self.alerts = [];
+
+            };
+
+            self.closeRoute = function() {
+
+                $location.path('/projects');
+
+            };
+
+            self.confirmDelete = function(obj) {
+
+                self.deletionTarget = self.deletionTarget ? null : obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.loadMatrix = function() {
+
+                //
+                // Assign project to a scoped variable
+                //
+                Project.matrix({
+                    id: $route.current.params.projectId
+                }).$promise.then(function(successResponse) {
+
+                    self.targets = successResponse;
+
+                }).catch(function(errorResponse) {
+
+                    $log.error('Unable to load project target matrix.');
+
+                });
+
+            };
+
+            self.loadProject = function() {
+
+                var exclude = [
+                    'centroid',
+                    'creator',
+                    'dashboards',
+                    'extent',
+                    'geometry',
+                    'members',
+                    'metric_types',
+                    'partners',
+                    'practices',
+                    'practice_types',
+                    'properties',
+                    'tags',
+                    'targets',
+                    'tasks',
+                    'type',
+                    'sites'
+                ].join(',');
+                
+                Project.get({
+                    id: $route.current.params.projectId,
+                    exclude: exclude
+                }).$promise.then(function(successResponse) {
+
+                    self.processProject(successResponse);
+
+                    if (!successResponse.permissions.read &&
+                        !successResponse.permissions.write) {
+
+                        self.makePrivate = true;
+
+                    }
+
+                    self.permissions.can_edit = successResponse.permissions.write;
+                    self.permissions.can_delete = successResponse.permissions.write;
+
+                }).catch(function(errorResponse) {
+
+                    $log.error('Unable to load project');
+
+                    self.status.processing = false;
+
+                });
+
+            };
+
+            self.search = function(value) {
+
+                if (self.searchScope.target === 'metric') {
+
+                    return SearchService.metric({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService response', response);
+
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
+
+                } else {
+
+                    return SearchService.program({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService response', response);
+
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
+
+                }
+
+            };
+
+            self.directQuery = function(item, model, label) {
+
+                if (self.searchScope.target === 'program') {
+
+                    self.loadFeatures(item.id);
+
+                } else {
+
+                    self.addMetric(item);
+
+                }
+
+            };
+
+            self.removeAll = function() {
+
+                self.targets.active.forEach(function (item) {
+
+                    self.targets.inactive.unshift(item);
+
+                });
+
+                self.targets.active = [];
+
+            };
+
+            self.addTarget = function(item, idx) {
+
+                if (!item.value) return;
+
+                if (typeof idx === 'number') {
+
+                    item.action = 'add';
+
+                    if (!item.metric ||
+                        typeof item.metric === 'undefined') {
+
+                        item.metric_id = item.id;
+
+                        delete item.id;
+
+                    }
+
+                    self.targets.inactive.splice(idx, 1);
+
+                    self.targets.active.push(item);
+
+                }
+
+                console.log('Updated targets (addition)');
+
+            };
+
+            self.removeTarget = function(item, idx) {
+
+                if (typeof idx === 'number') {
+
+                    self.targets.active.splice(idx, 1);
+
+                    item.action = 'remove';
+
+                    item.value = null;
+
+                    self.targets.inactive.unshift(item);
+
+                }
+
+                console.log('Updated targets (removal)');
+
+            };
+
+            self.processTargets = function(list) {
+
+                var _list = [];
+
+                angular.forEach(list, function(item) {
+
+                    var _datum = {};
+
+                    if (item && item.id) {
+                        _datum.id = item.id;
+                    }
+
+                    _list.push(_datum);
+
+                });
+
+                return _list;
+
+            };
+
+            self.loadFeatures = function(programId) {
+
+                var params = {
+                    program: programId
+                };
+
+                MetricType.collection(params).$promise.then(function(successResponse) {
+
+                    console.log('successResponse', successResponse);
+
+                    successResponse.features.forEach(function(feature) {
+
+                        self.addMetric(feature);
+
+                    });
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.processProject = function(data) {
+
+                self.project = data.properties || data;
+
+                self.tempTargets = self.project.targets || [];
+
+                self.status.processing = false;
+
+            };
+
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [
+                    'creator',
+                    'extent',
+                    'geometry',
+                    'last_modified_by',
+                    'organization',
+                    'tags',
+                    'tasks'
+                ];
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
+
+            };
+
+            self.saveTargets = function() {
+
+                self.status.processing = true;
+
+                self.scrubFeature(self.project);
+
+                console.log('self.saveProject.project', self.project);
+
+                console.log('self.saveProject.Project', Project);
+
+                var data = {
+                    targets: self.targets.active.slice(0)
+                };
+
+                self.targets.inactive.forEach(function (item) {
+
+                    if (item.action &&
+                        item.action === 'remove') {
+
+                        data.targets.push(item);
+
+                    }
+
+                });
+
+                Project.updateMatrix({
+                    id: +self.project.id
+                }, data).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Target changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                }).catch(function(error) {
+
+                    console.log('saveProject.error', error);
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong and the targets changes were not saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    self.status.processing = false;
+
+                });
+
+            };
+
+            self.saveProject = function() {
+
+                self.status.processing = true;
+
+                self.scrubFeature(self.project);
+
+                self.project.targets = self.processTargets(self.tempTargets);
+
+                console.log('self.saveProject.project', self.project);
+
+                console.log('self.saveProject.Project', Project);
+
+                Project.update({
+                    id: +self.project.id
+                }, self.project).then(function(successResponse) {
+
+                    self.processProject(successResponse);
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Project changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                }).catch(function(error) {
+
+                    console.log('saveProject.error', error);
+
+                    // Do something with the error
 
                     self.status.processing = false;
 
@@ -6390,390 +7045,6 @@ angular.module('FieldDoc')
 
                     $timeout(self.closeAlerts, 2000);
 
-                });
-
-            };
-
-        });
-'use strict';
-
-/**
- * @ngdoc function
- * @name
- * @description
- */
-angular.module('FieldDoc')
-    .controller('ProjectTargetController',
-        function($scope, Account, $location, $log, Project, project,
-            $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            MetricType) {
-
-            var self = this;
-
-            $rootScope.viewState = {
-                'project': true
-            };
-
-            $rootScope.toolbarState = {
-                'editMetrics': true
-            };
-
-            $rootScope.page = {};
-
-            self.searchScope = {
-                target: 'metric'
-            };
-
-            self.status = {
-                processing: true
-            };
-
-            self.alerts = [];
-
-            self.closeAlerts = function() {
-
-                self.alerts = [];
-
-            };
-
-            self.closeRoute = function() {
-
-                $location.path('/projects');
-
-            };
-
-            self.confirmDelete = function(obj) {
-
-                self.deletionTarget = self.deletionTarget ? null : obj;
-
-            };
-
-            self.cancelDelete = function() {
-
-                self.deletionTarget = null;
-
-            };
-
-            self.loadProject = function() {
-
-                //
-                // Assign project to a scoped variable
-                //
-                Project.get({
-                    id: $route.current.params.projectId
-                }).$promise.then(function(successResponse) {
-
-                    self.processProject(successResponse);
-
-                }).catch(function(errorResponse) {
-
-                    $log.error('Unable to load project');
-
-                    self.status.processing = false;
-
-                });
-
-            };
-
-            self.search = function(value) {
-
-                if (self.searchScope.target === 'metric') {
-
-                    return SearchService.metric({
-                        q: value
-                    }).$promise.then(function(response) {
-
-                        console.log('SearchService response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
-
-                        return response.results.slice(0, 5);
-
-                    });
-
-                } else {
-
-                    return SearchService.program({
-                        q: value
-                    }).$promise.then(function(response) {
-
-                        console.log('SearchService response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
-
-                        return response.results.slice(0, 5);
-
-                    });
-
-                }
-
-            };
-
-            self.directQuery = function(item, model, label) {
-
-                if (self.searchScope.target === 'program') {
-
-                    self.loadFeatures(item.id);
-
-                } else {
-
-                    self.addMetric(item);
-
-                }
-
-            };
-
-            self.addMetric = function(item) {
-
-                var _datum = {
-                    id: item.id,
-                    properties: item
-                };
-
-                self.tempMetrics.push(_datum);
-
-                self.metricQuery = null;
-
-                console.log('Updated metrics (addition)', self.tempMetrics);
-
-            };
-
-            self.removeMetric = function(id) {
-
-                var _index;
-
-                self.tempMetrics.forEach(function(item, idx) {
-
-                    if (item.id === id) {
-
-                        _index = idx;
-
-                    }
-
-                });
-
-                console.log('Remove metric at index', _index);
-
-                if (typeof _index === 'number') {
-
-                    self.tempMetrics.splice(_index, 1);
-
-                }
-
-                console.log('Updated metrics (removal)', self.tempMetrics);
-
-            };
-
-            self.processMetrics = function(list) {
-
-                var _list = [];
-
-                angular.forEach(list, function(item) {
-
-                    var _datum = {};
-
-                    if (item && item.id) {
-                        _datum.id = item.id;
-                    }
-
-                    _list.push(_datum);
-
-                });
-
-                return _list;
-
-            };
-
-            self.loadFeatures = function(programId) {
-
-                var params = {
-                    program: programId
-                };
-
-                MetricType.collection(params).$promise.then(function(successResponse) {
-
-                    console.log('successResponse', successResponse);
-
-                    successResponse.features.forEach(function(feature) {
-
-                        self.addMetric(feature);
-
-                    });
-
-                }, function(errorResponse) {
-
-                    console.log('errorResponse', errorResponse);
-
-                    self.showElements();
-
-                });
-
-            };
-
-            self.processProject = function(data) {
-
-                self.projectObject = data.properties || data;
-
-                self.tempMetrics = self.projectObject.metrics;
-
-                self.status.processing = false;
-
-            };
-
-            self.scrubFeature = function(feature) {
-
-                var excludedKeys = [
-                    'creator',
-                    'geographies',
-                    'last_modified_by',
-                    'organizations',
-                    'organization',
-                    'practices',
-                    'programs',
-                    'projects',
-                    'tags'
-                ];
-
-                var reservedProperties = [
-                    'links',
-                    'permissions',
-                    '$promise',
-                    '$resolved'
-                ];
-
-                excludedKeys.forEach(function(key) {
-
-                    if (feature.properties) {
-
-                        delete feature.properties[key];
-
-                    } else {
-
-                        delete feature[key];
-
-                    }
-
-                });
-
-                reservedProperties.forEach(function(key) {
-
-                    delete feature[key];
-
-                });
-
-            };
-
-            self.saveProject = function() {
-
-                self.status.processing = true;
-
-                self.scrubFeature(self.projectObject);
-
-                self.projectObject.metrics = self.processMetrics(self.tempMetrics);
-
-                console.log('self.saveProject.projectObject', self.projectObject);
-
-                console.log('self.saveProject.Project', Project);
-
-                Project.update({
-                    id: +self.projectObject.id
-                }, self.projectObject).then(function(successResponse) {
-
-                    self.processProject(successResponse);
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Project changes saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
-                    self.status.processing = false;
-
-                }).catch(function(error) {
-
-                    console.log('saveProject.error', error);
-
-                    // Do something with the error
-
-                    self.status.processing = false;
-
-                });
-
-            };
-
-            self.deleteFeature = function() {
-
-                var targetId;
-
-                if (self.projectObject.properties) {
-
-                    targetId = self.projectObject.properties.id;
-
-                } else {
-
-                    targetId = self.projectObject.id;
-
-                }
-
-                Project.delete({
-                    id: +targetId
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully deleted this project.',
-                        'prompt': 'OK'
-                    });
-
-                    $timeout(self.closeRoute, 2000);
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.deleteFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.projectObject.properties.name + '”. There are pending tasks affecting this project.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this project.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this project.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(self.closeAlerts, 2000);
-
                     self.status.processing = false;
 
                 });
@@ -6796,6 +7067,8 @@ angular.module('FieldDoc')
                     };
 
                     self.loadProject();
+
+                    self.loadMatrix();
 
                     //
                     // Setup page meta data
@@ -6907,12 +7180,7 @@ angular.module('FieldDoc')
 
                 self.addOwner = function(item, model, label) {
 
-                    var _datum = {
-                        id: item.id,
-                        properties: item
-                    };
-
-                    self.tempOwners.push(_datum);
+                    self.tempOwners.push(item);
 
                     self.ownerQuery = null;
 
@@ -6966,13 +7234,44 @@ angular.module('FieldDoc')
 
                 };
 
-                self.scrubProject = function() {
+                self.scrubFeature = function(feature) {
 
-                    delete self.project.properties.geographies;
-                    delete self.project.properties.practices;
-                    delete self.project.properties.programs;
-                    delete self.project.properties.sites;
-                    delete self.project.properties.tags;
+                    var excludedKeys = [
+                        'creator',
+                        'extent',
+                        'geometry',
+                        'last_modified_by',
+                        'organization',
+                        'tags',
+                        'tasks'
+                    ];
+
+                    var reservedProperties = [
+                        'links',
+                        'permissions',
+                        '$promise',
+                        '$resolved'
+                    ];
+
+                    excludedKeys.forEach(function(key) {
+
+                        if (feature.properties) {
+
+                            delete feature.properties[key];
+
+                        } else {
+
+                            delete feature[key];
+
+                        }
+
+                    });
+
+                    reservedProperties.forEach(function(key) {
+
+                        delete feature[key];
+
+                    });
 
                 };
 
@@ -6980,13 +7279,41 @@ angular.module('FieldDoc')
 
                     self.status.processing = true;
 
-                    self.scrubProject();
+                    self.scrubFeature(self.project);
 
-                    self.project.properties.members = self.processOwners(self.tempOwners);
+                    self.project.members = self.processOwners(self.tempOwners);
 
-                    self.project.$update().then(function(response) {
+                    var exclude = [
+                        'centroid',
+                        'creator',
+                        'dashboards',
+                        'extent',
+                        'geometry',
+                        // 'members',
+                        'metric_types',
+                        'partners',
+                        'practices',
+                        'practice_types',
+                        'properties',
+                        'tags',
+                        'targets',
+                        'tasks',
+                        'type',
+                        'sites'
+                    ].join(',');
 
-                        if (self.project.properties.members.length) {
+                    Project.update({
+                        id: $route.current.params.projectId,
+                        exclude: exclude
+                    }, self.project).then(function(successResponse) {
+
+                        self.project = successResponse;
+
+                        $rootScope.page.title = self.project.name;
+
+                        self.tempOwners = self.project.members;
+
+                        if (self.project.members.length) {
 
                             self.alerts = [{
                                 'type': 'success',
@@ -7022,9 +7349,9 @@ angular.module('FieldDoc')
 
                     var targetId;
 
-                    if (self.project.properties) {
+                    if (self.project) {
 
-                        targetId = self.project.properties.id;
+                        targetId = self.project.id;
 
                     } else {
 
@@ -7054,7 +7381,7 @@ angular.module('FieldDoc')
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'Unable to delete “' + self.project.properties.name + '”. There are pending tasks affecting this project.',
+                                'msg': 'Unable to delete “' + self.project.name + '”. There are pending tasks affecting this project.',
                                 'prompt': 'OK'
                             }];
 
@@ -7119,13 +7446,11 @@ angular.module('FieldDoc')
                                 self.permissions.can_edit = successResponse.permissions.write;
                                 self.permissions.can_delete = successResponse.permissions.write;
 
-                                $rootScope.page.title = self.project.properties.name;
+                                $rootScope.page.title = self.project.name;
 
-                                self.tempOwners = self.project.properties.members;
+                                self.tempOwners = self.project.members;
 
                                 console.log('tempOwners', self.tempOwners);
-
-                                self.project.users_edit = false;
 
                             }
 
@@ -7800,7 +8125,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/sites/:siteId/tags', {
-                templateUrl: '/templates/featureTag--view.html?t=' + environment.version,
+                templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
                 controller: 'FeatureTagController',
                 controllerAs: 'page',
                 resolve: {
@@ -7815,9 +8140,10 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(Site) {
+                    featureCollection: function(Site, $route) {
 
                         return {
+                            featureId: $route.current.params.siteId,
                             name: 'site',
                             path: '/sites',
                             cls: Site
@@ -7829,6 +8155,18 @@ angular.module('FieldDoc')
                         return Site.get({
                             id: $route.current.params.siteId
                         });
+
+                    },
+                    toolbarUrl: function() {
+
+                        return '/templates/toolbars/site.html?t=' + environment.version;
+
+                    },
+                    viewState: function() {
+
+                        return {
+                            'site': true
+                        };
 
                     }
                 }
@@ -8479,7 +8817,7 @@ angular.module('FieldDoc')
         .controller('SiteLocationController',
             function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
                 Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, $timeout,
-                $interval, user, Shapefile, Utility) {
+                $interval, user, Shapefile, Utility, Task) {
 
                 var self = this;
 
@@ -8618,116 +8956,141 @@ angular.module('FieldDoc')
 
                 };
 
+                self.fetchTasks = function(taskId) {
+
+                    if (taskId &&
+                        typeof taskId === 'number') {
+
+                        return Task.get({
+                            id: taskId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            if (response.status &&
+                                response.status === 'complete') {
+
+                                self.hideTasks();
+
+                            }
+
+                        });
+
+                    } else {
+
+                        return Site.tasks({
+                            id: $route.current.params.siteId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            self.pendingTasks = response.features;
+
+                            if (self.pendingTasks.length < 1) {
+
+                                self.hideTasks();
+
+                            }
+
+                        });
+
+                    }
+
+                };
+
+                self.hideTasks = function() {
+
+                    self.pendingTasks = [];
+
+                    if (typeof self.taskPoll !== 'undefined') {
+
+                        $interval.cancel(self.taskPoll);
+
+                    }
+
+                    self.loadFeature();
+
+                };
+
                 self.uploadShapefile = function() {
 
-                    if (!self.shapefile ||
-                        !self.shapefile.length) {
+                    if (!self.fileImport ||
+                        !self.fileImport.length) {
 
-                        $rootScope.notifications.warning('Uh-oh!', 'You forgot to add a file.');
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Please select a file.',
+                            'prompt': 'OK'
+                        }];
 
-                        $timeout(function() {
-                            $rootScope.notifications.objects = [];
-                        }, 1200);
+                        $timeout(closeAlerts, 2000);
 
                         return false;
 
                     }
 
-                    if (self.shapefile) {
+                    self.progressMessage = 'Uploading your file...';
 
-                        self.progressMessage = 'Uploading your file...';
+                    var fileData = new FormData();
 
-                        var fileData = new FormData();
+                    fileData.append('file', self.fileImport[0]);
 
-                        fileData.append('file', self.shapefile[0]);
+                    fileData.append('feature_type', 'site');
 
-                        console.log('fileData', fileData);
+                    fileData.append('feature_id', self.site.id);
 
-                        self.fillMeter = $interval(function() {
+                    console.log('fileData', fileData);
 
-                            var tempValue = (self.progressValue || 10) * 0.20;
+                    console.log('Shapefile', Shapefile);
 
-                            if (!self.progressValue) {
+                    try {
 
-                                self.progressValue = tempValue;
+                        Shapefile.upload({}, fileData, function(successResponse) {
 
-                            } else if ((100 - tempValue) > self.progressValue) {
+                            console.log('successResponse', successResponse);
 
-                                self.progressValue += tempValue;
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Upload complete. Processing data...',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                            if (successResponse.task) {
+
+                                self.pendingTasks = [
+                                    successResponse.task
+                                ];
 
                             }
 
-                            console.log('progressValue', self.progressValue);
+                            self.taskPoll = $interval(function() {
 
-                            if (self.progressValue > 75) {
+                                self.fetchTasks(successResponse.task.id);
 
-                                self.progressMessage = 'Analyzing data...';
+                            }, 1000);
 
-                            }
+                        }, function(errorResponse) {
 
-                        }, 50);
+                            console.log('Upload error', errorResponse);
 
-                        console.log('Shapefile', Shapefile);
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'The file could not be processed.',
+                                'prompt': 'OK'
+                            }];
 
-                        try {
+                            $timeout(closeAlerts, 2000);
 
-                            Shapefile.upload({}, fileData, function(shapefileResponse) {
+                        });
 
-                                console.log('shapefileResponse', shapefileResponse);
+                    } catch (error) {
 
-                                self.progressValue = 100;
-
-                                self.progressMessage = 'Upload successful, rendering shape...';
-
-                                $interval.cancel(self.fillMeter);
-
-                                $timeout(function() {
-
-                                    self.progressValue = null;
-
-                                    if (shapefileResponse.msg.length) {
-
-                                        console.log('Shapefile --> GeoJSON', shapefileResponse.msg[0]);
-
-                                        if (shapefileResponse.msg[0] !== null &&
-                                            typeof shapefileResponse.msg[0].geometry !== 'undefined') {
-
-                                            self.setGeoJsonLayer(shapefileResponse.msg[0]);
-
-                                        }
-
-                                    }
-
-                                }, 1600);
-
-                                self.error = null;
-
-                            }, function(errorResponse) {
-
-                                console.log(errorResponse);
-
-                                $interval.cancel(self.fillMeter);
-
-                                self.progressValue = null;
-
-                                self.alerts = [{
-                                    'type': 'error',
-                                    'flag': 'Error!',
-                                    'msg': 'The file could not be processed.',
-                                    'prompt': 'OK'
-                                }];
-
-                                $timeout(closeAlerts, 2000);
-
-                                return;
-
-                            });
-
-                        } catch (error) {
-
-                            console.log('Shapefile upload error', error);
-
-                        }
+                        console.log('Shapefile upload error', error);
 
                     }
 
@@ -9060,15 +9423,6 @@ angular.module('FieldDoc')
 
                     });
 
-                    // leafletData.getLayers().then(function(baselayers) {
-                    //     var drawnItems = baselayers.overlays.draw;
-                    //     map.on('draw:created', function(e) {
-                    //         var layer = e.layer;
-                    //         drawnItems.addLayer(layer);
-                    //         console.log(JSON.stringify(layer.toGeoJSON()));
-                    //     });
-                    // });
-
                     //
                     // Update the pin and segment information when the user clicks on the map
                     // or drags the pin to a new location
@@ -9092,6 +9446,68 @@ angular.module('FieldDoc')
 
                 });
 
+                self.loadFeature = function() {
+
+                    Site.get({
+                        id: $route.current.params.siteId
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('self.site', successResponse);
+
+                        self.site = successResponse;
+
+                        if (successResponse.permissions.read &&
+                            successResponse.permissions.write) {
+
+                            self.makePrivate = false;
+
+                        } else {
+
+                            self.makePrivate = true;
+
+                        }
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
+
+                        $rootScope.page.title = self.site.properties.name;
+
+                        //
+                        // If a valid site geometry is present, add it to the map
+                        // and track the object in `self.savedObjects`.
+                        //
+
+                        if (self.site.geometry !== null &&
+                            typeof self.site.geometry !== 'undefined') {
+
+                            leafletData.getMap('site--map').then(function(map) {
+
+                                var siteExtent = new L.FeatureGroup();
+
+                                var siteGeometry = L.geoJson(successResponse, {});
+
+                                siteExtent.addLayer(siteGeometry);
+
+                                map.fitBounds(siteExtent.getBounds(), {
+                                    maxZoom: 18
+                                });
+
+                                self.setGeoJsonLayer(self.site.geometry);
+
+                            });
+
+                        }
+
+                        self.showElements();
+
+                    }, function(errorResponse) {
+
+                        self.showElements();
+
+                    });
+
+                };
+
                 //
                 // Verify Account information for proper UI element display
                 //
@@ -9108,61 +9524,9 @@ angular.module('FieldDoc')
                             can_edit: false
                         };
 
-                        site.$promise.then(function(successResponse) {
+                        self.loadFeature();
 
-                            console.log('self.site', successResponse);
-
-                            self.site = successResponse;
-
-                            if (successResponse.permissions.read &&
-                                successResponse.permissions.write) {
-
-                                self.makePrivate = false;
-
-                            } else {
-
-                                self.makePrivate = true;
-
-                            }
-
-                            self.permissions.can_edit = successResponse.permissions.write;
-                            self.permissions.can_delete = successResponse.permissions.write;
-
-                            $rootScope.page.title = self.site.properties.name;
-
-                            //
-                            // If a valid site geometry is present, add it to the map
-                            // and track the object in `self.savedObjects`.
-                            //
-
-                            if (self.site.geometry !== null &&
-                                typeof self.site.geometry !== 'undefined') {
-
-                                leafletData.getMap('site--map').then(function(map) {
-
-                                    var siteExtent = new L.FeatureGroup();
-
-                                    var siteGeometry = L.geoJson(successResponse, {});
-
-                                    siteExtent.addLayer(siteGeometry);
-
-                                    map.fitBounds(siteExtent.getBounds(), {
-                                        maxZoom: 18
-                                    });
-
-                                    self.setGeoJsonLayer(self.site.geometry);
-
-                                });
-
-                            }
-
-                            self.showElements();
-
-                        }, function(errorResponse) {
-
-                            self.showElements();
-
-                        });
+                        self.fetchTasks();
 
                     });
 
@@ -9964,19 +10328,25 @@ angular.module('FieldDoc')
 
                     },
                     site: function(Practice, $route) {
+
                         return Practice.site({
                             id: $route.current.params.practiceId
                         });
+
                     },
-                    practice_types: function(PracticeType, $route) {
-                        return PracticeType.query({
-                            results_per_page: 500
-                        });
-                    },
+                    // practiceTypes: function(PracticeType, $route) {
+
+                    //     return PracticeType.collection({
+                    //         practice: $route.current.params.practiceId
+                    //     });
+
+                    // },
                     practice: function(Practice, $route) {
+
                         return Practice.get({
                             id: $route.current.params.practiceId
                         });
+                        
                     }
                 }
             })
@@ -10029,7 +10399,7 @@ angular.module('FieldDoc')
                             id: $route.current.params.practiceId
                         });
                     },
-                    practice_types: function(PracticeType, $route) {
+                    practiceTypes: function(PracticeType, $route) {
                         return PracticeType.query({
                             results_per_page: 500
                         });
@@ -10042,7 +10412,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/practices/:practiceId/tags', {
-                templateUrl: '/templates/featureTag--view.html?t=' + environment.version,
+                templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
                 controller: 'FeatureTagController',
                 controllerAs: 'page',
                 resolve: {
@@ -10057,9 +10427,10 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(Practice) {
+                    featureCollection: function(Practice, $route) {
 
                         return {
+                            featureId: $route.current.params.practiceId,
                             name: 'practice',
                             path: '/practices',
                             cls: Practice
@@ -10071,6 +10442,18 @@ angular.module('FieldDoc')
                         return Practice.get({
                             id: $route.current.params.practiceId
                         });
+
+                    },
+                    toolbarUrl: function() {
+
+                        return '/templates/toolbars/practice.html?t=' + environment.version;
+
+                    },
+                    viewState: function() {
+
+                        return {
+                            'practice': true
+                        };
 
                     }
                 }
@@ -10085,9 +10468,9 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-    .controller('PracticeEditController', function(Account, Image, leafletData, $location, $log, Map,
-        mapbox, Media, Practice, practice, practice_types, $q, $rootScope, $route,
-        $scope, $timeout, $interval, site, user, Shapefile, leafletBoundsHelpers, Utility) {
+    .controller('PracticeEditController', function(Account, Image, leafletData, $location,
+        $log, Media, Practice, PracticeType, practice, $q, $rootScope, $route,
+        $scope, $timeout, $interval, site, user, Utility) {
 
         var self = this;
 
@@ -10192,29 +10575,31 @@ angular.module('FieldDoc')
 
                 $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
 
+                //
+                // Load practice types
+                //
+
+                PracticeType.collection({
+                    program: self.practice.properties.program_id
+                }).$promise.then(function(successResponse) {
+
+                    console.log('self.practiceTypes', successResponse);
+
+                    self.practiceTypes = successResponse.features;
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    //
+
+                    self.showElements();
+
+                });
+
             }, function(errorResponse) {
 
                 //
-
-            });
-
-            //
-            // Load practices
-            //
-
-            practice_types.$promise.then(function(successResponse) {
-
-                console.log('self.practiceTypes', successResponse);
-
-                self.practiceTypes = successResponse.features;
-
-                self.showElements();
-
-            }, function(errorResponse) {
-
-                //
-
-                self.showElements();
 
             });
 
@@ -10743,7 +11128,7 @@ angular.module('FieldDoc')
         function(Account, Image, leafletData, $location, $log, Map,
             mapbox, Media, Practice, practice, $q, $rootScope, $route,
             $scope, $timeout, $interval, site, user, Shapefile,
-            leafletBoundsHelpers, Utility) {
+            leafletBoundsHelpers, Utility, Task) {
 
             var self = this;
 
@@ -10870,7 +11255,9 @@ angular.module('FieldDoc')
 
             self.loadSite = function() {
 
-                site.$promise.then(function(successResponse) {
+                Practice.site({
+                    id: $route.current.params.practiceId
+                }).$promise.then(function(successResponse) {
 
                     console.log('self.site', successResponse);
 
@@ -10906,7 +11293,9 @@ angular.module('FieldDoc')
 
             self.loadPractice = function() {
 
-                practice.$promise.then(function(successResponse) {
+                Practice.get({
+                    id: $route.current.params.practiceId
+                }).$promise.then(function(successResponse) {
 
                     console.log('self.practice', successResponse);
 
@@ -10982,15 +11371,73 @@ angular.module('FieldDoc')
 
             };
 
+            self.fetchTasks = function(taskId) {
+
+                if (taskId &&
+                    typeof taskId === 'number') {
+
+                    return Task.get({
+                        id: taskId
+                    }).$promise.then(function(response) {
+
+                        console.log('Task.get response', response);
+
+                        if (response.status &&
+                            response.status === 'complete') {
+
+                            self.hideTasks();
+
+                        }
+
+                    });
+
+                } else {
+
+                    return Practice.tasks({
+                        id: $route.current.params.practiceId
+                    }).$promise.then(function(response) {
+
+                        console.log('Task.get response', response);
+
+                        self.pendingTasks = response.features;
+
+                        if (self.pendingTasks.length < 1) {
+
+                            self.loadSite();
+
+                            $interval.cancel(self.taskPoll);
+
+                        }
+
+                    });
+
+                }
+
+            };
+
+            self.hideTasks = function() {
+
+                self.pendingTasks = [];
+
+                if (typeof self.taskPoll !== 'undefined') {
+
+                    $interval.cancel(self.taskPoll);
+
+                }
+
+                self.loadSite();
+
+            };
+
             self.uploadShapefile = function() {
 
-                if (!self.shapefile ||
-                    !self.shapefile.length) {
+                if (!self.fileImport ||
+                    !self.fileImport.length) {
 
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Please add a file to upload.',
+                        'msg': 'Please select a file.',
                         'prompt': 'OK'
                     }];
 
@@ -11000,101 +11447,65 @@ angular.module('FieldDoc')
 
                 }
 
-                if (self.shapefile) {
+                self.progressMessage = 'Uploading your file...';
 
-                    self.progressMessage = 'Uploading your file...';
+                var fileData = new FormData();
 
-                    var fileData = new FormData();
+                fileData.append('file', self.fileImport[0]);
 
-                    fileData.append('file', self.shapefile[0]);
+                fileData.append('feature_type', 'practice');
 
-                    console.log('fileData', fileData);
+                fileData.append('feature_id', self.practice.id);
 
-                    self.fillMeter = $interval(function() {
+                console.log('fileData', fileData);
 
-                        var tempValue = (self.progressValue || 10) * 0.20;
+                try {
 
-                        if (!self.progressValue) {
+                    Shapefile.upload({}, fileData, function(successResponse) {
 
-                            self.progressValue = tempValue;
+                        console.log('successResponse', successResponse);
 
-                        } else if ((100 - tempValue) > self.progressValue) {
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Upload complete. Processing data...',
+                            'prompt': 'OK'
+                        }];
 
-                            self.progressValue += tempValue;
+                        $timeout(closeAlerts, 2000);
+
+                        if (successResponse.task) {
+
+                            self.pendingTasks = [
+                                successResponse.task
+                            ];
 
                         }
 
-                        console.log('progressValue', self.progressValue);
+                        self.taskPoll = $interval(function() {
 
-                        if (self.progressValue > 75) {
+                            self.fetchTasks(successResponse.task.id);
 
-                            self.progressMessage = 'Analyzing data...';
+                        }, 1000);
 
-                        }
+                    }, function(errorResponse) {
 
-                    }, 50);
+                        console.log('Upload error', errorResponse);
 
-                    console.log('Shapefile', Shapefile);
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'The file could not be processed.',
+                            'prompt': 'OK'
+                        }];
 
-                    try {
+                        $timeout(closeAlerts, 2000);
 
-                        Shapefile.upload({}, fileData, function(shapefileResponse) {
+                    });
 
-                            console.log('shapefileResponse', shapefileResponse);
+                } catch (error) {
 
-                            self.progressValue = 100;
-
-                            self.progressMessage = 'Upload successful, rendering shape...';
-
-                            $interval.cancel(self.fillMeter);
-
-                            $timeout(function() {
-
-                                self.progressValue = null;
-
-                                if (shapefileResponse.msg.length) {
-
-                                    console.log('Shapefile --> GeoJSON', shapefileResponse.msg[0]);
-
-                                    if (shapefileResponse.msg[0] !== null &&
-                                        typeof shapefileResponse.msg[0].geometry !== 'undefined') {
-
-                                        self.setGeoJsonLayer(shapefileResponse.msg[0]);
-
-                                    }
-
-                                }
-
-                            }, 1600);
-
-                            self.error = null;
-
-                        }, function(errorResponse) {
-
-                            console.log(errorResponse);
-
-                            $interval.cancel(self.fillMeter);
-
-                            self.progressValue = null;
-
-                            self.alerts = [{
-                                'type': 'error',
-                                'flag': 'Error!',
-                                'msg': 'The file could not be processed.',
-                                'prompt': 'OK'
-                            }];
-
-                            $timeout(closeAlerts, 2000);
-
-                            return;
-
-                        });
-
-                    } catch (error) {
-
-                        console.log('Shapefile upload error', error);
-
-                    }
+                    console.log('Shapefile upload error', error);
 
                 }
 
@@ -11433,6 +11844,8 @@ angular.module('FieldDoc')
 
                     self.loadSite();
 
+                    self.fetchTasks();
+
                 });
 
             }
@@ -11447,7 +11860,7 @@ angular.module('FieldDoc')
  */
 angular.module('FieldDoc')
     .controller('PracticePhotoController', function(Account, Image, leafletData, $location, $log, Map,
-        mapbox, Media, Practice, practice, practice_types, $q, $rootScope, $route,
+        mapbox, Media, Practice, practice, practiceTypes, $q, $rootScope, $route,
         $scope, $timeout, $interval, site, user, Utility) {
 
         var self = this;
@@ -14778,7 +15191,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/geographies/:geographyId/tags', {
-                templateUrl: '/templates/featureTag--view.html?t=' + environment.version,
+                templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
                 controller: 'FeatureTagController',
                 controllerAs: 'page',
                 resolve: {
@@ -14793,9 +15206,10 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(GeographyService) {
+                    featureCollection: function(GeographyService, $route) {
 
                         return {
+                            featureId: $route.current.params.geographyId,
                             name: 'geography',
                             path: '/geographies',
                             cls: GeographyService
@@ -14807,6 +15221,18 @@ angular.module('FieldDoc')
                         return GeographyService.get({
                             id: $route.current.params.geographyId
                         });
+
+                    },
+                    toolbarUrl: function() {
+
+                        return '/templates/toolbars/geography.html?t=' + environment.version;
+
+                    },
+                    viewState: function() {
+
+                        return {
+                            'geography': true
+                        };
 
                     }
                 }
@@ -16017,7 +16443,7 @@ angular.module('FieldDoc')
         .controller('GeographyLocationController',
             function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
                 Map, mapbox, Notifications, GeographyService, geography, $rootScope, $route,
-                $scope, $timeout, $interval, user, Shapefile, Utility) {
+                $scope, $timeout, $interval, user, Shapefile, Utility, Task) {
 
                 var self = this;
 
@@ -16105,10 +16531,68 @@ angular.module('FieldDoc')
 
                 };
 
+                self.fetchTasks = function(taskId) {
+
+                    if (taskId &&
+                        typeof taskId === 'number') {
+
+                        return Task.get({
+                            id: taskId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            if (response.status &&
+                                response.status === 'complete') {
+
+                                self.hideTasks();
+
+                            }
+
+                        });
+
+                    } else {
+
+                        return GeographyService.tasks({
+                            id: $route.current.params.geographyId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            self.pendingTasks = response.features;
+
+                            if (self.pendingTasks.length < 1) {
+
+                                self.loadFeature();
+
+                                $interval.cancel(self.taskPoll);
+
+                            }
+
+                        });
+
+                    }
+
+                };
+
+                self.hideTasks = function() {
+
+                    self.pendingTasks = [];
+
+                    if (typeof self.taskPoll !== 'undefined') {
+
+                        $interval.cancel(self.taskPoll);
+
+                    }
+
+                    self.loadFeature();
+
+                };
+
                 self.uploadShapefile = function() {
 
-                    if (!self.shapefile ||
-                        !self.shapefile.length) {
+                    if (!self.fileImport ||
+                        !self.fileImport.length) {
 
                         $rootScope.notifications.warning('Uh-oh!', 'You forgot to add a file.');
 
@@ -16120,155 +16604,120 @@ angular.module('FieldDoc')
 
                     }
 
-                    if (self.shapefile) {
+                    self.progressMessage = 'Uploading your file...';
 
-                        self.progressMessage = 'Uploading your file...';
+                    var fileData = new FormData();
 
-                        var fileData = new FormData();
+                    fileData.append('file', self.fileImport[0]);
 
-                        fileData.append('file', self.shapefile[0]);
+                    fileData.append('feature_type', 'geography');
 
-                        console.log('fileData', fileData);
+                    fileData.append('feature_id', self.geography.id);
 
-                        self.fillMeter = $interval(function() {
+                    console.log('fileData', fileData);
 
-                            var tempValue = (self.progressValue || 10) * 0.20;
+                    console.log('Shapefile', Shapefile);
 
-                            if (!self.progressValue) {
+                    try {
 
-                                self.progressValue = tempValue;
+                        Shapefile.upload({}, fileData, function(successResponse) {
 
-                            } else if ((100 - tempValue) > self.progressValue) {
+                            console.log('successResponse', successResponse);
 
-                                self.progressValue += tempValue;
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Upload complete. Processing data...',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                            if (successResponse.task) {
+
+                                self.pendingTasks = [
+                                    successResponse.task
+                                ];
 
                             }
 
-                            console.log('progressValue', self.progressValue);
+                            self.taskPoll = $interval(function() {
 
-                            if (self.progressValue > 75) {
+                                self.fetchTasks(successResponse.task.id);
 
-                                self.progressMessage = 'Analyzing data...';
+                            }, 1000);
 
-                            }
+                        }, function(errorResponse) {
 
-                        }, 50);
+                            console.log('Upload error', errorResponse);
 
-                        console.log('Shapefile', Shapefile);
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'The file could not be processed.',
+                                'prompt': 'OK'
+                            }];
 
-                        try {
+                            $timeout(closeAlerts, 2000);
 
-                            Shapefile.upload({}, fileData, function(shapefileResponse) {
+                        });
 
-                                console.log('shapefileResponse', shapefileResponse.msg);
+                    } catch (error) {
 
-                                self.progressValue = 100;
-
-                                self.progressMessage = 'Upload successful, rendering shape...';
-
-                                $interval.cancel(self.fillMeter);
-
-                                $timeout(function() {
-
-                                    self.progressValue = null;
-
-                                    if (shapefileResponse.msg !== null) {
-
-                                        if (Array.isArray(shapefileResponse.msg)) {
-
-                                            self.setGeoJsonLayer(shapefileResponse.msg[0]);
-
-                                            self.map.geojson = {
-                                                data: shapefileResponse.msg[0]
-                                            };
-
-                                        } else {
-
-                                            if (shapefileResponse.msg.type &&
-                                                shapefileResponse.msg.type === 'FeatureCollection') {
-
-                                                self.setGeoJsonLayer(shapefileResponse.msg.features[0]);
-
-                                                self.map.geojson = {
-                                                    data: shapefileResponse.msg.features[0]
-                                                };
-
-                                            } else {
-
-                                                self.setGeoJsonLayer(shapefileResponse.msg);
-
-                                                self.map.geojson = {
-                                                    data: shapefileResponse.msg
-                                                };
-
-                                            }
-
-                                        }
-
-                                        console.log('self.editableLayers', self.editableLayers);
-
-                                        leafletData.getMap('geography--map').then(function(map) {
-
-                                            map.fitBounds(self.editableLayers.getBounds(), {
-                                                maxZoom: 18
-                                            });
-
-                                        });
-
-                                    }
-
-                                }, 1600);
-
-                                self.error = null;
-
-                            }, function(errorResponse) {
-
-                                console.log(errorResponse);
-
-                                $interval.cancel(self.fillMeter);
-
-                                self.progressValue = null;
-
-                                self.alerts = [{
-                                    'type': 'error',
-                                    'flag': 'Error!',
-                                    'msg': 'The file could not be processed.',
-                                    'prompt': 'OK'
-                                }];
-
-                                $timeout(closeAlerts, 2000);
-
-                                return;
-
-                            });
-
-                        } catch (error) {
-
-                            console.log('Shapefile upload error', error);
-
-                        }
+                        console.log('Shapefile upload error', error);
 
                     }
 
                 };
 
-                self.scrubFeature = function() {
+                self.scrubFeature = function(feature) {
 
-                    delete self.geography.properties.counties;
-                    delete self.geography.properties.creator;
-                    delete self.geography.properties.dashboards;
-                    delete self.geography.properties.extent;
-                    delete self.geography.properties.last_modified_by;
-                    delete self.geography.properties.organization;
-                    delete self.geography.properties.program;
-                    delete self.geography.properties.sites;
-                    delete self.geography.properties.watersheds;
+                    var excludedKeys = [
+                        'counties',
+                        'creator',
+                        'dashboards',
+                        'extent',
+                        'last_modified_by',
+                        'organization',
+                        'program',
+                        'sites',
+                        'tags',
+                        'tasks',
+                        'watersheds'
+                    ];
+
+                    var reservedProperties = [
+                        'links',
+                        'permissions',
+                        '$promise',
+                        '$resolved'
+                    ];
+
+                    excludedKeys.forEach(function(key) {
+
+                        if (feature.properties) {
+
+                            delete feature.properties[key];
+
+                        } else {
+
+                            delete feature[key];
+
+                        }
+
+                    });
+
+                    reservedProperties.forEach(function(key) {
+
+                        delete feature[key];
+
+                    });
 
                 };
 
                 self.saveGeography = function() {
 
-                    self.scrubFeature();
+                    self.scrubFeature(self.geography);
 
                     if (self.savedObjects.length) {
 
@@ -16289,13 +16738,9 @@ angular.module('FieldDoc')
 
                     self.status.processing = true;
 
-                    var data = self.geography.properties;
-
-                    data.geometry = self.geography.geometry;
-
                     GeographyService.update({
                         id: self.geography.id
-                    }, data).$promise.then(function(successResponse) {
+                    }, self.geography).then(function(successResponse) {
 
                         self.status.processing = false;
 
@@ -16379,7 +16824,7 @@ angular.module('FieldDoc')
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this geography.',
+                                'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this geography.',
                                 'prompt': 'OK'
                             }];
 
@@ -16409,6 +16854,64 @@ angular.module('FieldDoc')
 
                 };
 
+                self.loadFeature = function() {
+
+                    GeographyService.get({
+                        id: $route.current.params.geographyId
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('self.geography', successResponse);
+
+                        self.geography = successResponse;
+
+                        console.log(JSON.stringify(successResponse.extent));
+
+                        if (successResponse.permissions.read &&
+                            successResponse.permissions.write) {
+
+                            self.makePrivate = false;
+
+                        } else {
+
+                            self.makePrivate = true;
+
+                        }
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
+
+                        $rootScope.page.title = self.geography.name;
+
+                        //
+                        // If a valid geography geometry is present, add it to the map
+                        // and track the object in `self.savedObjects`.
+                        //
+
+                        if (self.geography.extent !== null &&
+                            typeof self.geography.extent !== 'undefined') {
+
+                            leafletData.getMap('geography--map').then(function(map) {
+
+                                self.map.bounds = Utility.transformBounds(self.geography.extent);
+
+                            });
+
+                        }
+
+                        self.map.geojson = {
+                            data: self.geography.geometry
+                        };
+
+                        self.showElements();
+
+                    }, function(errorResponse) {
+
+                        self.showElements();
+
+                    });
+
+                };
+
                 //
                 // Verify Account information for proper UI element display
                 //
@@ -16425,63 +16928,9 @@ angular.module('FieldDoc')
                             can_edit: false
                         };
 
-                        geography.$promise.then(function(successResponse) {
+                        self.loadFeature();
 
-                            console.log('self.geography', successResponse);
-
-                            self.geography = successResponse;
-
-                            console.log(JSON.stringify(successResponse.properties.extent));
-
-                            if (successResponse.permissions.read &&
-                                successResponse.permissions.write) {
-
-                                self.makePrivate = false;
-
-                            } else {
-
-                                self.makePrivate = true;
-
-                            }
-
-                            self.permissions.can_edit = successResponse.permissions.write;
-                            self.permissions.can_delete = successResponse.permissions.write;
-
-                            $rootScope.page.title = self.geography.properties.name;
-
-                            //
-                            // If a valid geography geometry is present, add it to the map
-                            // and track the object in `self.savedObjects`.
-                            //
-
-                            if (self.geography.properties.extent !== null &&
-                                typeof self.geography.properties.extent !== 'undefined') {
-
-                                leafletData.getMap('geography--map').then(function(map) {
-
-                                    // self.geographyExtent = new L.FeatureGroup();
-
-                                    // self.setGeoJsonLayer(self.geography.properties.extent, self.geographyExtent);
-
-                                    // console.log('self.geographyExtent', self.geographyExtent.getBounds());
-
-                                    self.map.bounds = Utility.transformBounds(self.geography.properties.extent);
-
-                                });
-
-                            }
-
-                            self.map.geojson = {
-                                data: self.geography.geometry
-                            };
-
-                            self.showElements();
-
-                        }, function(errorResponse) {
-
-                            self.showElements();
-
-                        });
+                        self.fetchTasks();
 
                     });
 
@@ -17115,7 +17564,7 @@ angular.module('FieldDoc')
                 }
             })
             .when('/programs/:programId/tags', {
-                templateUrl: '/templates/featureTag--view.html?t=' + environment.version,
+                templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
                 controller: 'FeatureTagController',
                 controllerAs: 'page',
                 resolve: {
@@ -17132,9 +17581,10 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(Program) {
+                    featureCollection: function(Program, $route) {
 
                         return {
+                            featureId: $route.current.params.programId,
                             name: 'program',
                             path: '/programs',
                             cls: Program
@@ -17147,45 +17597,21 @@ angular.module('FieldDoc')
                             id: $route.current.params.programId
                         });
 
+                    },
+                    toolbarUrl: function() {
+
+                        return '/templates/toolbars/program.html?t=' + environment.version;
+
+                    },
+                    viewState: function() {
+
+                        return {
+                            'program': true
+                        };
+
                     }
                 }
             });
-            // .when('/programs/:programId/targets', {
-            //     templateUrl: '/modules/shared/targets/views/featureTarget--view.html?t=' + environment.version,
-            //     controller: 'FeatureTargetController',
-            //     controllerAs: 'page',
-            //     resolve: {
-            //         user: function(Account, $route, $rootScope, $document) {
-
-            //             $rootScope.targetPath = document.location.pathname;
-
-            //             $rootScope.programContext = $route.current.params.programId;
-
-            //             if (Account.userObject && !Account.userObject.id) {
-            //                 return Account.getUser();
-            //             }
-
-            //             return Account.userObject;
-
-            //         },
-            //         featureCollection: function(Program) {
-
-            //             return {
-            //                 name: 'program',
-            //                 path: '/programs',
-            //                 cls: Program
-            //             }
-
-            //         },
-            //         feature: function(Program, $route) {
-
-            //             return Program.get({
-            //                 id: $route.current.params.programId
-            //             });
-
-            //         }
-            //     }
-            // });
 
     });
 'use strict';
@@ -18649,20 +19075,20 @@ angular.module('FieldDoc')
         .controller('FeatureTagController',
             function(Account, Collaborators, $window, $rootScope, $scope, $route,
                 $location, $timeout, user, SearchService, featureCollection,
-                feature, Utility, $interval) {
+                feature, Utility, $interval, toolbarUrl, viewState) {
 
                 var self = this;
 
                 self.featureCollection = featureCollection;
 
+                self.toolbarUrl = toolbarUrl;
+
                 $rootScope.page = {};
 
-                $rootScope.viewState = {
-                    'feature': true
-                };
+                $rootScope.viewState = viewState;
 
                 $rootScope.toolbarState = {
-                    'editTag': true
+                    'editTags': true
                 };
 
                 self.status = {
@@ -18724,12 +19150,12 @@ angular.module('FieldDoc')
 
                 self.addTag = function(item, model, label) {
 
-                    var _datum = {
-                        id: item.id,
-                        properties: item
-                    };
+                    // var _datum = {
+                    //     id: item.id,
+                    //     properties: item
+                    // };
 
-                    self.tempTags.push(_datum);
+                    self.tempTags.push(item);
 
                     self.tagQuery = null;
 
@@ -18783,11 +19209,12 @@ angular.module('FieldDoc')
 
                 };
 
-                self.scrubFeature = function() {
+                self.scrubFeature = function(feature) {
 
                     var excludedKeys = [
                         'creator',
                         'dashboards',
+                        'geometry',
                         'geographies',
                         'last_modified_by',
                         'members',
@@ -18798,30 +19225,66 @@ angular.module('FieldDoc')
                         'practices',
                         'practice_types',
                         'program',
+                        'project',
+                        'properties',
                         'reports',
+                        'targets',
+                        'tasks',
+                        'type',
+                        'site',
                         'sites',
                         'status',
                         'users'
                     ];
 
-                    var reservedProperties = [
-                        'links',
-                        'permissions',
-                        '$promise',
-                        '$resolved'
-                    ];
+                    // var reservedProperties = [
+                    //     'links',
+                    //     'permissions',
+                    //     '$promise',
+                    //     '$resolved'
+                    // ];
 
                     excludedKeys.forEach(function(key) {
 
-                        delete feature.properties[key];
+                        if (feature.properties) {
+
+                            delete feature.properties[key];
+
+                        } else {
+
+                            delete feature[key];
+
+                        }
 
                     });
 
-                    reservedProperties.forEach(function(key) {
+                    // reservedProperties.forEach(function(key) {
 
-                        delete feature[key];
+                    //     delete feature[key];
 
-                    });
+                    // });
+
+                    return feature;
+
+                };
+
+                self.extractProperties = function(feature) {
+
+                    if (feature.properties) {
+
+                        for (var attr in feature.properties) {
+
+                            feature[attr] = feature.properties[attr];
+
+                        }
+
+                        delete feature.properties;
+
+                    } else {
+
+                        return feature;
+
+                    }
 
                 };
 
@@ -18829,23 +19292,25 @@ angular.module('FieldDoc')
 
                     self.status.processing = true;
 
-                    self.scrubFeature();
+                    self.scrubFeature(self.feature);
 
-                    feature.properties.tags = self.processTags(self.tempTags);
-
-                    var data = feature.properties;
-
-                    data.geometry = self.feature.geometry;
+                    self.feature.tags = self.processTags(self.tempTags);
 
                     // feature.$update().then(function(successResponse) {
 
+                    console.log('self.saveFeature:self.feature', self.feature);
+
                     self.featureCollection.cls.update({
                         id: self.feature.id
-                    }, data).$promise.then(function(successResponse) {
+                    }, self.feature).then(function(successResponse) {
 
                         console.log('saveFeature.successResponse', successResponse);
 
-                        self.feature = successResponse.properties;
+                        self.feature = successResponse;
+
+                        self.extractProperties(self.feature);
+
+                        console.log('self.feature', self.feature);
 
                         if (self.feature.tags.length) {
 
@@ -18965,11 +19430,19 @@ angular.module('FieldDoc')
                         //
                         // Assign feature to a scoped variable
                         //
-                        feature.$promise.then(function(successResponse) {
+                        // feature.$promise.then(function(successResponse) {
 
-                            console.log('self.feature', successResponse);
+                        self.featureCollection.cls.get({
+                            id: self.featureCollection.featureId
+                        }).$promise.then(function(successResponse) {
 
-                            self.feature = successResponse.properties;
+                            console.log('GET.successResponse', successResponse);
+
+                            self.feature = successResponse;
+
+                            self.extractProperties(self.feature);
+
+                            console.log('self.feature', self.feature);
 
                             if (!successResponse.permissions.read &&
                                 !successResponse.permissions.write) {
@@ -21346,6 +21819,11 @@ angular
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/geography/:id/outcomes'),
                     'isArray': false
+                },
+                tasks: {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/geography/:id/tasks'),
+                    'isArray': false
                 }
             });
         });
@@ -21634,11 +22112,7 @@ angular
                     'isArray': false
                 },
                 update: {
-                    method: 'PATCH',
-                    transformRequest: function(data) {
-                        var feature = Preprocessors.geojson(data);
-                        return angular.toJson(feature);
-                    }
+                    method: 'PATCH'
                 },
                 'metrics': {
                     'method': 'GET',
@@ -21660,64 +22134,9 @@ angular
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_custom'),
                     'isArray': false
                 },
-                'agricultureGeneric': {
+                tasks: {
                     'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_agriculture_generic'),
-                    'isArray': false
-                },
-                'bankStabilization': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_bank_stabilization'),
-                    'isArray': false
-                },
-                'bioretention': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_bioretention'),
-                    'isArray': false
-                },
-                'enhancedStreamRestoration': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_enhanced_stream_restoration'),
-                    'isArray': false
-                },
-                'forestBuffer': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_forest_buffer'),
-                    'isArray': false
-                },
-                'grassBuffer': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_grass_buffer'),
-                    'isArray': false
-                },
-                'instreamHabitat': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_instream_habitat'),
-                    'isArray': false
-                },
-                'livestockExclusion': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_livestock_exclusion'),
-                    'isArray': false
-                },
-                'urbanHomeowner': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_urban_homeowner'),
-                    'isArray': false
-                },
-                'shorelineManagement': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_shoreline_management'),
-                    'isArray': false
-                },
-                'stormwater': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_stormwater'),
-                    'isArray': false
-                },
-                'wetlandsNontidal': {
-                    'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_wetlands_nontidal'),
+                    'url': environment.apiUrl.concat('/v1/practice/:id/tasks'),
                     'isArray': false
                 }
             });
@@ -21949,11 +22368,7 @@ angular
                     url: environment.apiUrl.concat('/v1/data/summary/project/:id')
                 },
                 update: {
-                    method: 'PATCH',
-                    transformRequest: function(data) {
-                        var feature = Preprocessors.geojson(data);
-                        return angular.toJson(feature);
-                    }
+                    method: 'PATCH'
                 },
                 sites: {
                     method: 'GET',
@@ -22145,11 +22560,7 @@ angular
                     url: environment.apiUrl.concat('/v1/data/site/:id/nodes')
                 },
                 update: {
-                    method: 'PATCH',
-                    transformRequest: function(data) {
-                        var feature = Preprocessors.geojson(data);
-                        return angular.toJson(feature);
-                    }
+                    method: 'PATCH'
                 },
                 'metrics': {
                     'method': 'GET',
@@ -22165,6 +22576,11 @@ angular
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/data/site/:id/practices')
+                },
+                tasks: {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/site/:id/tasks'),
+                    'isArray': false
                 }
             });
         });
