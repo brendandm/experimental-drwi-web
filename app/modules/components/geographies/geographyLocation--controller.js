@@ -240,23 +240,54 @@
 
                 };
 
-                self.scrubFeature = function() {
+                self.scrubFeature = function(feature) {
 
-                    delete self.geography.properties.counties;
-                    delete self.geography.properties.creator;
-                    delete self.geography.properties.dashboards;
-                    delete self.geography.properties.extent;
-                    delete self.geography.properties.last_modified_by;
-                    delete self.geography.properties.organization;
-                    delete self.geography.properties.program;
-                    delete self.geography.properties.sites;
-                    delete self.geography.properties.watersheds;
+                    var excludedKeys = [
+                        'counties',
+                        'creator',
+                        'dashboards',
+                        'extent',
+                        'last_modified_by',
+                        'organization',
+                        'program',
+                        'sites',
+                        'tags',
+                        'tasks',
+                        'watersheds'
+                    ];
+
+                    var reservedProperties = [
+                        'links',
+                        'permissions',
+                        '$promise',
+                        '$resolved'
+                    ];
+
+                    excludedKeys.forEach(function(key) {
+
+                        if (feature.properties) {
+
+                            delete feature.properties[key];
+
+                        } else {
+
+                            delete feature[key];
+
+                        }
+
+                    });
+
+                    reservedProperties.forEach(function(key) {
+
+                        delete feature[key];
+
+                    });
 
                 };
 
                 self.saveGeography = function() {
 
-                    self.scrubFeature();
+                    self.scrubFeature(self.geography);
 
                     if (self.savedObjects.length) {
 
@@ -277,13 +308,9 @@
 
                     self.status.processing = true;
 
-                    var data = self.geography.properties;
-
-                    data.geometry = self.geography.geometry;
-
                     GeographyService.update({
                         id: self.geography.id
-                    }, data).$promise.then(function(successResponse) {
+                    }, self.geography).then(function(successResponse) {
 
                         self.status.processing = false;
 
@@ -367,7 +394,7 @@
                             self.alerts = [{
                                 'type': 'error',
                                 'flag': 'Error!',
-                                'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this geography.',
+                                'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this geography.',
                                 'prompt': 'OK'
                             }];
 
@@ -407,7 +434,7 @@
 
                         self.geography = successResponse;
 
-                        console.log(JSON.stringify(successResponse.properties.extent));
+                        console.log(JSON.stringify(successResponse.extent));
 
                         if (successResponse.permissions.read &&
                             successResponse.permissions.write) {
@@ -423,19 +450,19 @@
                         self.permissions.can_edit = successResponse.permissions.write;
                         self.permissions.can_delete = successResponse.permissions.write;
 
-                        $rootScope.page.title = self.geography.properties.name;
+                        $rootScope.page.title = self.geography.name;
 
                         //
                         // If a valid geography geometry is present, add it to the map
                         // and track the object in `self.savedObjects`.
                         //
 
-                        if (self.geography.properties.extent !== null &&
-                            typeof self.geography.properties.extent !== 'undefined') {
+                        if (self.geography.extent !== null &&
+                            typeof self.geography.extent !== 'undefined') {
 
                             leafletData.getMap('geography--map').then(function(map) {
 
-                                self.map.bounds = Utility.transformBounds(self.geography.properties.extent);
+                                self.map.bounds = Utility.transformBounds(self.geography.extent);
 
                             });
 
@@ -444,8 +471,6 @@
                         self.map.geojson = {
                             data: self.geography.geometry
                         };
-
-                        self.fetchTasks();
 
                         self.showElements();
 
@@ -474,6 +499,8 @@
                         };
 
                         self.loadFeature();
+
+                        self.fetchTasks();
 
                     });
 

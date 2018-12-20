@@ -78,21 +78,21 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li>
-                <a href="/geographies/{{ page.geography.properties.id }}">
+                <a href="/geographies/{{ page.geography.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/geographies/{{ page.geography.properties.id }}/edit">
+                <a href="/geographies/{{ page.geography.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
-                <a href="/geographies/{{ page.geography.properties.id }}/location">
+                <a href="/geographies/{{ page.geography.id }}/location">
                     <i class="material-icons">
                         map
                     </i>
@@ -106,7 +106,7 @@
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/geographies/{{ page.geography.properties.id }}/tags">
+                <a href="/geographies/{{ page.geography.id }}/tags">
                     <i class="material-icons">
                         local_offer
                     </i>
