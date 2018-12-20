@@ -210,9 +210,10 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(Practice) {
+                    featureCollection: function(Practice, $route) {
 
                         return {
+                            featureId: $route.current.params.practiceId,
                             name: 'practice',
                             path: '/practices',
                             cls: Practice

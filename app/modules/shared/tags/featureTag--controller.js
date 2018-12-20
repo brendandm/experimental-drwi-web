@@ -163,10 +163,12 @@
                         'practices',
                         'practice_types',
                         'program',
+                        'project',
                         'properties',
                         'reports',
                         'tasks',
                         'type',
+                        'site',
                         'sites',
                         'status',
                         'users'
@@ -199,6 +201,8 @@
 
                     });
 
+                    return feature;
+
                 };
 
                 self.saveFeature = function() {
@@ -209,17 +213,19 @@
 
                     self.feature.tags = self.processTags(self.tempTags);
 
-                    var data = self.feature;
-
                     // feature.$update().then(function(successResponse) {
+
+                    console.log('self.saveFeature:self.feature', self.feature);
 
                     self.featureCollection.cls.update({
                         id: self.feature.id
-                    }, data).then(function(successResponse) {
+                    }, self.feature).$promise.then(function(successResponse) {
 
                         console.log('saveFeature.successResponse', successResponse);
 
                         self.feature = successResponse.properties || successResponse;
+
+                        console.log('self.feature', self.feature);
 
                         if (self.feature.tags.length) {
 
@@ -339,11 +345,17 @@
                         //
                         // Assign feature to a scoped variable
                         //
-                        feature.$promise.then(function(successResponse) {
+                        // feature.$promise.then(function(successResponse) {
 
-                            console.log('self.feature', successResponse);
+                        self.featureCollection.cls.get({
+                            id: self.featureCollection.featureId
+                        }).$promise.then(function(successResponse) {
+
+                            console.log('GET.successResponse', successResponse);
 
                             self.feature = successResponse.properties || successResponse;
+
+                            console.log('self.feature', self.feature);
 
                             if (!successResponse.permissions.read &&
                                 !successResponse.permissions.write) {

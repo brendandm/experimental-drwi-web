@@ -244,9 +244,10 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(Project) {
+                    featureCollection: function(Project, $route) {
 
                         return {
+                            featureId: $route.current.params.projectId,
                             name: 'project',
                             path: '/projects',
                             cls: Project

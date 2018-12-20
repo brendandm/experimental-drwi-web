@@ -171,9 +171,10 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(Site) {
+                    featureCollection: function(Site, $route) {
 
                         return {
+                            featureId: $route.current.params.siteId,
                             name: 'site',
                             path: '/sites',
                             cls: Site

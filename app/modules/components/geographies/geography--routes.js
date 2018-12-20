@@ -169,9 +169,10 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(GeographyService) {
+                    featureCollection: function(GeographyService, $route) {
 
                         return {
+                            featureId: $route.current.params.geographyId,
                             name: 'geography',
                             path: '/geographies',
                             cls: GeographyService

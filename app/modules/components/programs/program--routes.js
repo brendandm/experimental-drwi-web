@@ -113,9 +113,10 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(Program) {
+                    featureCollection: function(Program, $route) {
 
                         return {
+                            featureId: $route.current.params.programId,
                             name: 'program',
                             path: '/programs',
                             cls: Program
