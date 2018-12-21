@@ -40,11 +40,23 @@
                     cache: true,
                     url: environment.apiUrl.concat('/v1/data/search/organization')
                 },
+                practiceType: {
+                    method: 'GET',
+                    isArray: false,
+                    cache: true,
+                    url: environment.apiUrl.concat('/v1/data/search/practice-type')
+                },
                 program: {
                     method: 'GET',
                     isArray: false,
                     cache: true,
                     url: environment.apiUrl.concat('/v1/data/search/program')
+                },
+                project: {
+                    method: 'GET',
+                    isArray: false,
+                    cache: true,
+                    url: environment.apiUrl.concat('/v1/data/search/project')
                 },
                 tag: {
                     method: 'GET',

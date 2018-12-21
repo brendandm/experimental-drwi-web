@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('DashboardFilterController',
         function($scope, Account, $location, $log, Dashboard, dashboard,
-            $rootScope, $route, user, FilterStore, $timeout) {
+            $rootScope, $route, user, FilterStore, $timeout, SearchService) {
 
             var self = this;
 
@@ -18,6 +18,10 @@ angular.module('FieldDoc')
 
             $rootScope.toolbarState = {
                 'editFilters': true
+            };
+
+            self.searchScope = {
+                target: 'project'
             };
 
             $rootScope.page = {};
@@ -135,11 +139,11 @@ angular.module('FieldDoc')
 
                         break;
 
-                    // case 'status':
+                        // case 'status':
 
-                    //     self.updateCollection(obj, 'statuses');
+                        //     self.updateCollection(obj, 'statuses');
 
-                    //     break;
+                        //     break;
 
                     case 'tag':
 
@@ -333,6 +337,108 @@ angular.module('FieldDoc')
                     self.status.processing = false;
 
                 });
+
+            };
+
+            self.addFilter = function(item, collection) {
+
+                self.dashboard[collection].push(item);
+
+            };
+
+            self.search = function(value) {
+
+                if (self.searchScope.target === 'organization') {
+
+                    return SearchService.organization({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService.organization response', response);
+
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
+
+                } else if (self.searchScope.target === 'practice') {
+
+                    return SearchService.practiceType({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService.practiceType response', response);
+
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
+
+                } else if (self.searchScope.target === 'program') {
+
+                    return SearchService.organization({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService.program response', response);
+
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
+
+                } else if (self.searchScope.target === 'project') {
+
+                    return SearchService.organization({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService.project response', response);
+
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
+
+                } else {
+
+                    return SearchService.tag({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService.tag response', response);
+
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
+
+                }
 
             };
 

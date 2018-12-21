@@ -19,17 +19,48 @@
 
                 <!-- Filter Tools -->
 
-                <h2>Filters</h2>
+                <h2>Set a dashboard category.</h2>
+
+                <div class="filter--ui" style="margin-bottom: 2em;">
+
+                    <!-- <p style="font-style: normal; font-size: 1em; color: #616161;">Search for metrics by name or conservation program. If you select a conservation program, all of that program’s associated metrics will appear in the dashboard.<p> -->
+
+                    <div class="search-options-radio">
+                        <label for="search-project">
+                            Project
+                            <input type="radio" id="search-project" name="search-project" data-ng-model="page.searchScope.target" value="project" />
+                        </label>
+                        <label for="search-tag">
+                            Tag
+                            <input type="radio" id="search-tag" name="search-tag" data-ng-model="page.searchScope.target" value="tag" />
+                        </label>
+                        <label for="search-organization">
+                            Organization
+                            <input type="radio" id="search-organization" name="search-organization" data-ng-model="page.searchScope.target" value="organization" />
+                        </label>
+                        <label for="search-practice">
+                            Conservation practice
+                            <input type="radio" id="search-practice" name="search-practice" data-ng-model="page.searchScope.target" value="practice" />
+                        </label>
+                        <label for="search-program">
+                            Conservation program
+                            <input type="radio" id="search-program" name="search-program" data-ng-model="page.searchScope.target" value="program" />
+                        </label>
+                    </div>
+
+                </div>
+
+                <h2>Search “{{ page.searchScope.target }}” category.</h2>
 
                 <div class="filter--ui">
 
-                    <p style="font-style: normal; font-size: 1em; color: #616161;">Search for projects by conservation practice, grant program, name, or organization.<p>
+                    <!-- <p style="font-style: normal; font-size: 1em; color: #616161;">Search for projects by conservation practice, grant program, name, or organization.<p> -->
 
                     <div class="filter--controls">
 
                         <div class="search--group">
-                            <div global-search class="global--search" style="width: 100%; max-width: none;" filter-projects="page.filterProjects">
-                                <input type="search" class="search" style="color: #212121;" value="" placeholder="Search&hellip;" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue)" typeahead-on-select="setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                            <div global-search class="global--search" style="width: 100%; max-width: none;">
+                                <input type="search" class="search" style="color: #212121;" value="" placeholder="Search&hellip;" data-ng-model="page.query" uib-typeahead="suggestion as suggestion.name for suggestion in page.search($viewValue)" typeahead-on-select="page.setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
                             </div>
                         </div>
 
