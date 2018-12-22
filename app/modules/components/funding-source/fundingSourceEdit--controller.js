@@ -123,7 +123,8 @@ angular.module('FieldDoc')
 
                 response.results.forEach(function(result) {
 
-                    result.category = null;
+                    delete result.category;
+                    delete result.subcategory;
 
                 });
 
