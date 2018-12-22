@@ -7,7 +7,7 @@
  */
 angular.module('FieldDoc')
     .controller('FundingSourceEditController', function(Account, $location, $log,
-        FundingSource, fundingSource, unitTypes, $q, $rootScope, $route, $timeout,
+        FundingSource, fundingSource, $q, $rootScope, $route, $timeout,
         $interval, user, Utility) {
 
         var self = this;
@@ -123,26 +123,6 @@ angular.module('FieldDoc')
             }, function(errorResponse) {
 
                 self.showElements();
-
-            });
-
-            unitTypes.$promise.then(function(successResponse) {
-
-                console.log('Unit types', successResponse);
-
-                var _unitTypes = [];
-
-                successResponse.features.forEach(function(datum) {
-
-                    _unitTypes.push(self.parseUnit(datum, true));
-
-                });
-
-                self.unitTypes = _unitTypes;
-
-            }, function(errorResponse) {
-
-                console.log('errorResponse', errorResponse);
 
             });
 

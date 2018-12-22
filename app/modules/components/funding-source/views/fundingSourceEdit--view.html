@@ -8,11 +8,11 @@
 
         <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
             <div class="progress--container">
-                <p style="font-weight: bold;" class="color-pulse">Loading metric type data&hellip;</p>
+                <p style="font-weight: bold;" class="color-pulse">Loading funding source data&hellip;</p>
             </div>
         </div>
 
-        <h1 class="inset reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">Edit metric type</h1>
+        <h1 class="inset reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">Edit funding source</h1>
 
         <div class="main--ui reveal fade-in t1" data-ng-if="!page.status.loading && !page.makePrivate">
 
@@ -20,26 +20,26 @@
 
                 <div class="feature-detail-content">
 
-                    <form role="form" class="form" style="position:relative;" id="form--MetricEdit" name="form--MetricEdit" data-ng-submit="page.saveFundingSource()" autocomplete="off">
+                    <form role="form" class="form" style="position:relative;" id="form--FundingSourceEdit" name="form--FundingSourceEdit" data-ng-submit="page.saveFundingSource()" autocomplete="off">
 
-                        <!-- Metric Name -->
+                        <!-- FundingSource Name -->
 
                         <div class="form-element">
                             <span class="meta-label"><b>Name</b></span>
-                            <input type="text" data-ng-model="page.fundingSource.properties.name" class="form-control animate" id="name" name="name" placeholder="Metric name" required="required" />
+                            <input type="text" data-ng-model="page.fundingSource.properties.name" class="form-control animate" id="name" name="name" placeholder="“Forest Service Cooperative Agreement”" required="required" />
                         </div>
 
-                        <!-- Metric Target -->
+                        <!-- FundingSource Target -->
 
                         <div class="form-element">
                             <span class="meta-label"><b>Amount</b></span>
                             <input class="form-control" data-ng-model="page.fundingSource.properties.target" id="target" name="target" step="0.0001" type="number" placeholder="0" required="required" />
                             <p style="color: #9e9e9e; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
-                                Provide an overall quantitative goal for this metric type. The target functions as a benchmark for tracking progress.
+                                Enter a monetary value for this funding source.
                             </p>
                         </div>
 
-                        <!-- Metric Description -->
+                        <!-- FundingSource Description -->
 
                         <div class="form-element">
                             <span class="meta-label"><b>Description</b></span>
@@ -95,7 +95,7 @@
             </li>
             <li data-ng-if="page.permissions.can_edit">
                 <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
-                    <p>Do you want to delete this metric type?</p>
+                    <p>Do you want to delete this funding source?</p>
                     <div class="actions">
                         <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature()">
                             Yes
@@ -105,7 +105,7 @@
                         </a>
                     </div>
                 </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.metricType)">
+                <a href="#" data-ng-click="page.confirmDelete(page.fundingSource)">
                     <i class="material-icons">
                         delete
                     </i>

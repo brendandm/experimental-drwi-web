@@ -23,7 +23,7 @@ angular.module('FieldDoc')
             // Setup basic page variables
             //
             $rootScope.page = {
-                title: 'Metric Types'
+                title: 'Funding Sources'
             };
 
             self.status = {
@@ -75,7 +75,7 @@ angular.module('FieldDoc')
                         'prompt': 'OK'
                     }];
 
-                    self.metrics.splice(index, 1);
+                    self.fundingSources.splice(index, 1);
 
                     $timeout(closeAlerts, 2000);
 
@@ -122,16 +122,16 @@ angular.module('FieldDoc')
 
                 self.fundingSource = new FundingSource({
                     'program_id': self.programId,
-                    'organization_id': $rootScope.user.properties.organization_id
+                    'agent_id': $rootScope.user.properties.organization_id
                 });
 
                 self.fundingSource.$save(function(successResponse) {
 
-                    $location.path('/metric-types/' + successResponse.id + '/edit');
+                    $location.path('/funding-sources/' + successResponse.id + '/edit');
 
                 }, function(errorResponse) {
 
-                    console.error('Unable to create a new metric type, please try again later.');
+                    console.error('Unable to create a new funding source, please try again later.');
 
                 });
 
@@ -184,7 +184,7 @@ angular.module('FieldDoc')
 
                     console.log('successResponse', successResponse);
 
-                    self.metrics = successResponse.features;
+                    self.fundingSources = successResponse.features;
 
                     self.showElements();
 
