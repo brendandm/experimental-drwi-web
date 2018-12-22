@@ -7,7 +7,7 @@
  */
 angular.module('FieldDoc')
     .controller('FundingSourceSummaryController',
-        function(Account, $location, $log, FundingSource, metric,
+        function(Account, $location, $log, FundingSource, fundingSource,
             $rootScope, $route, $scope, $timeout, user) {
 
             var self = this;
@@ -32,7 +32,7 @@ angular.module('FieldDoc')
 
             function closeRoute() {
 
-                $location.path('/metrics');
+                $location.path('/funding-sources');
 
             }
 
@@ -108,9 +108,9 @@ angular.module('FieldDoc')
 
                 fundingSource.$promise.then(function(successResponse) {
 
-                    console.log('self.metric', successResponse);
+                    console.log('self.fundingSource', successResponse);
 
-                    self.metric = successResponse;
+                    self.fundingSource = successResponse;
 
                     $rootScope.page.title = self.fundingSource.name ? self.fundingSource.name : 'Un-named Funding Source';
 
