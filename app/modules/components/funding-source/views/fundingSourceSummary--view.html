@@ -16,13 +16,13 @@
 
                     <article class="pad space-right shadow">
 
-                        <h1>{{ page.fundingSource.properties.name || 'Un-named' }}</h1>
+                        <h1>{{ page.fundingSource.name || 'Un-named' }}</h1>
 
                         <p>
-                            <strong>Provider:</strong> <a href="{{ page.fundingSource.links.project.html }}">{{ page.fundingSource.properties.provider.properties.name }}</a>
+                            <strong>Provider:</strong> <a href="{{ page.fundingSource.links.project.html }}">{{ page.fundingSource.provider.properties.name }}</a>
                         </p>
 
-                        <p data-ng-if="page.fundingSource.properties.description" data-ng-bind-html="page.fundingSource.properties.description"></p>
+                        <p data-ng-if="page.fundingSource.description" data-ng-bind-html="page.fundingSource.description"></p>
 
                     </article>
 
@@ -135,7 +135,7 @@
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="report in page.fundingSource.properties.reports | orderBy:'properties.report_date':false">
+                    <li class="card" data-ng-repeat="report in page.fundingSource.reports | orderBy:'properties.report_date':false">
 
                         <div class="card--content">
 

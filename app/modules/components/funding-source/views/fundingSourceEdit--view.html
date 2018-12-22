@@ -22,30 +22,30 @@
 
                     <form role="form" class="form" style="position:relative;" id="form--FundingSourceEdit" name="form--FundingSourceEdit" data-ng-submit="page.saveFundingSource()" autocomplete="off">
 
-                        <!-- FundingSource Name -->
+                        <!-- Funding Source Name -->
 
                         <div class="form-element">
                             <span class="meta-label"><b>Name</b></span>
-                            <input type="text" data-ng-model="page.fundingSource.properties.name" class="form-control animate" id="name" name="name" placeholder="“Forest Service Cooperative Agreement”" required="required" />
+                            <input type="text" data-ng-model="page.fundingSource.name" class="form-control animate" id="name" name="name" placeholder="“Forest Service Cooperative Agreement”" required="required" />
                         </div>
 
-                        <!-- FundingSource Target -->
+                        <!-- Funding Source Amount -->
 
                         <div class="form-element">
                             <span class="meta-label"><b>Amount</b></span>
-                            <input class="form-control" data-ng-model="page.fundingSource.properties.target" id="target" name="target" step="0.0001" type="number" placeholder="0" required="required" />
+                            <input class="form-control" data-ng-model="page.fundingSource.amount" id="amount" name="amount" step="0.0001" type="number" placeholder="0" required="required" />
                             <p style="color: #9e9e9e; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
                                 Enter a monetary value for this funding source.
                             </p>
                         </div>
 
-                        <!-- FundingSource Description -->
+                        <!-- Funding Source Description -->
 
                         <div class="form-element">
                             <span class="meta-label"><b>Description</b></span>
-                            <textarea class="form-control" msd-elastic data-ng-model="page.fundingSource.properties.description" maxlength="1000" rows="10">{{ page.fundingSource.properties.description }}</textarea>
+                            <textarea class="form-control" msd-elastic data-ng-model="page.fundingSource.description" maxlength="1000" rows="10">{{ page.fundingSource.description }}</textarea>
                             <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
-                                Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.fundingSource.properties.description.length || 0) | number }} used)</strong>
+                                Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.fundingSource.description.length || 0) | number }} used)</strong>
                             </p>
                         </div>
 
@@ -53,7 +53,10 @@
 
                         <div class="form-element">
                             <span class="meta-label"><b>Provider</b></span>
-                            <input id="funding_source_program_id" name="funding_source_program_id" type="text" placeholder="Search programs&hellip;" data-ng-model="page.fundingSource.properties.program" uib-typeahead="program as program.name for program in page.programs | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
+                            <input id="funding_source_provider_id" name="funding_source_provider_id" type="text" placeholder="Search organizations&hellip;" data-ng-model="page.fundingSource.provider" uib-typeahead="provider as provider.name for provider in page.searchOrganizations($viewValue)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                            <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
+                                Specify an organization that is providing the funding.
+                            </p>
                         </div>
 
                         <div class="save--action--wrapper save--action--bottom">
@@ -80,14 +83,14 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
 <!--             <li>
-                <a href="/metric-types/{{ page.fundingSource.properties.id }}">
+                <a href="/metric-types/{{ page.fundingSource.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/metric-types/{{ page.fundingSource.properties.id }}/edit">
+                <a href="/metric-types/{{ page.fundingSource.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>

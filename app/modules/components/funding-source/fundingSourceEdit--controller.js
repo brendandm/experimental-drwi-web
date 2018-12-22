@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('FundingSourceEditController', function(Account, $location, $log,
         FundingSource, fundingSource, $q, $rootScope, $route, $timeout,
-        $interval, user, Utility) {
+        $interval, user, Utility, SearchService) {
 
         var self = this;
 
@@ -79,21 +79,6 @@ angular.module('FieldDoc')
 
             self.fundingSource = datum;
 
-            self.programId = self.fundingSource.properties.program_id;
-
-            if (self.fundingSource.properties.unit) {
-
-                self.unitType = self.parseUnit(self.fundingSource.properties.unit.properties);
-
-            }
-
-            if (self.fundingSource.properties.program &&
-                typeof self.fundingSource.properties.program !== 'undefined') {
-
-                self.fundingSource.properties.program = self.fundingSource.properties.program.properties;
-
-            }
-
         };
 
         self.loadFundingSource = function() {
@@ -114,7 +99,7 @@ angular.module('FieldDoc')
                 self.permissions.can_edit = successResponse.permissions.write;
                 self.permissions.can_delete = successResponse.permissions.write;
 
-                $rootScope.page.title = self.fundingSource.properties.name ? self.fundingSource.properties.name : 'Un-named Metric Type';
+                $rootScope.page.title = self.fundingSource.name ? self.fundingSource.name : 'Un-named Funding Source';
 
                 self.scrubFeature();
 
@@ -128,13 +113,29 @@ angular.module('FieldDoc')
 
         };
 
+        self.searchOrganizations = function(value) {
+
+            return SearchService.organization({
+                q: value
+            }).$promise.then(function(response) {
+
+                console.log('SearchService.organization response', response);
+
+                response.results.forEach(function(result) {
+
+                    result.category = null;
+
+                });
+
+                return response.results.slice(0, 5);
+
+            });
+
+        };
+
         self.scrubFeature = function() {
 
-            delete self.fundingSource.geometry;
-            delete self.fundingSource.properties.organization;
-            delete self.fundingSource.properties.creator;
-            delete self.fundingSource.properties.last_modified_by;
-            delete self.fundingSource.properties.unit;
+            //
 
         };
 
@@ -142,25 +143,16 @@ angular.module('FieldDoc')
 
             self.status.processing = true;
 
-            self.scrubFeature();
-
-            if (self.unitType &&
-                typeof self.unitType !== 'string') {
-
-                self.fundingSource.properties.unit_id = self.unitType.id;
-
-            }
-
             FundingSource.update({
                 id: self.fundingSource.id
-            }, self.fundingSource.properties).$promise.then(function(successResponse) {
+            }, self.fundingSource).then(function(successResponse) {
 
                 self.parseFeature(successResponse);
 
                 self.alerts = [{
                     'type': 'success',
                     'flag': 'Success!',
-                    'msg': 'Metric type changes saved.',
+                    'msg': 'Funding source changes saved.',
                     'prompt': 'OK'
                 }];
 
@@ -175,7 +167,7 @@ angular.module('FieldDoc')
                 self.alerts = [{
                     'type': 'success',
                     'flag': 'Success!',
-                    'msg': 'Metric type changes could not be saved.',
+                    'msg': 'Funding source changes could not be saved.',
                     'prompt': 'OK'
                 }];
 
@@ -196,7 +188,7 @@ angular.module('FieldDoc')
                 self.alerts.push({
                     'type': 'success',
                     'flag': 'Success!',
-                    'msg': 'Successfully deleted this metric type.',
+                    'msg': 'Successfully deleted this funding source.',
                     'prompt': 'OK'
                 });
 
@@ -211,7 +203,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this metric type.',
+                        'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this funding source.',
                         'prompt': 'OK'
                     }];
 
@@ -220,7 +212,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'You don’t have permission to delete this metric type.',
+                        'msg': 'You don’t have permission to delete this funding source.',
                         'prompt': 'OK'
                     }];
 
@@ -229,7 +221,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Something went wrong while attempting to delete this metric type.',
+                        'msg': 'Something went wrong while attempting to delete this funding source.',
                         'prompt': 'OK'
                     }];
 
@@ -247,7 +239,7 @@ angular.module('FieldDoc')
 
             self.unitType = $item;
 
-            self.fundingSource.properties.unit_id = $item.id;
+            self.fundingSource.unit_id = $item.id;
 
         };
 
@@ -257,7 +249,7 @@ angular.module('FieldDoc')
 
             user.properties.programs.forEach(function(program) {
 
-                _programs.push(program.properties);
+                _programs.push(program);
 
             });
 

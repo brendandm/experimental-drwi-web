@@ -112,7 +112,7 @@ angular.module('FieldDoc')
 
                     self.metric = successResponse;
 
-                    $rootScope.page.title = self.fundingSource.properties.name ? self.fundingSource.properties.name : 'Un-named Funding Source';
+                    $rootScope.page.title = self.fundingSource.name ? self.fundingSource.name : 'Un-named Funding Source';
 
                 }, function(errorResponse) {
 
