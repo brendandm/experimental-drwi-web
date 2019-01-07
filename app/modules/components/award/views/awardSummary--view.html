@@ -1,0 +1,98 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="site--content--flow fluid-content clearfix distinguish">
+
+    <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
+
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
+
+        <div class="main--ui">
+
+            <div class="module--grid">
+
+                <div class="group">
+
+                    <!-- Descriptors -->
+
+                    <article class="pad space-right shadow">
+
+                        <h1>{{ page.award.name || 'Un-named' }}</h1>
+
+                        <p>
+                            <strong>Provider:</strong> <a href="{{ page.award.links.provider.html }}">{{ page.award.origin.name }}</a>
+                        </p>
+
+                        <p data-ng-if="page.award.description" data-ng-bind-html="page.award.description"></p>
+
+                    </article>
+
+                    <!-- Map -->
+
+                    <!-- <div style="position:relative;">
+
+                        <leaflet id="award--map" class="map tall" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers"></leaflet>
+
+                    </div> -->
+
+                    <article class="pad space-right shadow">
+
+                        <h1>{{ page.award.amount | currency }}</h1>
+
+                    </article>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
+        <ul>
+            <li data-ng-class="{active: $root.toolbarState.dashboard}">
+                <a href="/awards/{{ page.award.id }}">
+                    <i class="material-icons">
+                        dashboard
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="/awards/{{ page.award.id }}/edit">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.award.id && page.deletionTarget.collection === 'award'">
+                    <p>Do you want to delete this award?</p>
+                    <div class="actions">
+                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('award')">
+                            Yes
+                        </a>
+                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+                <a href="#" data-ng-click="page.confirmDelete(page.award, 'award')">
+                    <i class="material-icons">
+                        delete
+                    </i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+        <div class="event--container">
+            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                <span class="event--message">{{ alert.msg }}</span>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>
