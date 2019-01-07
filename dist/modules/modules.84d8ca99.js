@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1545339105178})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1546892083416})
 
 ;
 /**
@@ -3065,7 +3065,7 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('DashboardFilterController',
         function($scope, Account, $location, $log, Dashboard, dashboard,
-            $rootScope, $route, user, FilterStore, $timeout) {
+            $rootScope, $route, user, FilterStore, $timeout, SearchService) {
 
             var self = this;
 
@@ -3075,6 +3075,10 @@ angular.module('FieldDoc')
 
             $rootScope.toolbarState = {
                 'editFilters': true
+            };
+
+            self.searchScope = {
+                target: 'project'
             };
 
             $rootScope.page = {};
@@ -3162,11 +3166,11 @@ angular.module('FieldDoc')
 
                 switch (category) {
 
-                    case 'geography':
+                    // case 'geography':
 
-                        self.updateCollection(obj, 'geographies');
+                    //     self.updateCollection(obj, 'geographies');
 
-                        break;
+                    //     break;
 
                     case 'organization':
 
@@ -3192,11 +3196,11 @@ angular.module('FieldDoc')
 
                         break;
 
-                    case 'status':
+                        // case 'status':
 
-                        self.updateCollection(obj, 'statuses');
+                        //     self.updateCollection(obj, 'statuses');
 
-                        break;
+                        //     break;
 
                     case 'tag':
 
@@ -3232,21 +3236,21 @@ angular.module('FieldDoc')
 
                 var keyMap = {
                     plural: {
-                        'geography': 'geographies',
+                        // 'geography': 'geographies',
                         'organization': 'organizations',
                         'practice': 'practices',
                         'program': 'programs',
                         'project': 'projects',
-                        'status': 'statuses',
+                        // 'status': 'statuses',
                         'tag': 'tags'
                     },
                     single: {
-                        'geographies': 'geography',
+                        // 'geographies': 'geography',
                         'organizations': 'organization',
                         'practices': 'practice',
                         'programs': 'program',
                         'projects': 'project',
-                        'statuses': 'status',
+                        // 'statuses': 'status',
                         'tags': 'tag'
                     }
                 };
@@ -3273,7 +3277,7 @@ angular.module('FieldDoc')
 
                 var relations = [
                     'creator',
-                    'geographies',
+                    // 'geographies',
                     'last_modified_by',
                     'organizations',
                     'organization',
@@ -3390,6 +3394,108 @@ angular.module('FieldDoc')
                     self.status.processing = false;
 
                 });
+
+            };
+
+            self.addFilter = function(item, collection) {
+
+                self.dashboard[collection].push(item);
+
+            };
+
+            self.search = function(value) {
+
+                if (self.searchScope.target === 'organization') {
+
+                    return SearchService.organization({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService.organization response', response);
+
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
+
+                } else if (self.searchScope.target === 'practice') {
+
+                    return SearchService.practiceType({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService.practiceType response', response);
+
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
+
+                } else if (self.searchScope.target === 'program') {
+
+                    return SearchService.organization({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService.program response', response);
+
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
+
+                } else if (self.searchScope.target === 'project') {
+
+                    return SearchService.organization({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService.project response', response);
+
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
+
+                } else {
+
+                    return SearchService.tag({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService.tag response', response);
+
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
+
+                }
 
             };
 
@@ -19862,6 +19968,764 @@ angular.module('FieldDoc')
 'use strict';
 
 /**
+ * @ngdoc overview
+ * @name FieldDoc
+ * @description
+ * # FieldDoc
+ *
+ * Main module of the application.
+ */
+angular.module('FieldDoc')
+    .config(function($routeProvider, environment) {
+
+        $routeProvider
+            .when('/funding-sources', {
+                templateUrl: '/modules/components/funding-source/views/fundingSourceList--view.html?t=' + environment.version,
+                controller: 'FundingSourceListController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    fundingSources: function(Program, $route, $rootScope, $location) {
+
+                        return [];
+
+                    }
+                }
+            })
+            .when('/funding-sources/:fundingSourceId', {
+                templateUrl: '/modules/components/funding-source/views/fundingSourceSummary--view.html?t=' + environment.version,
+                controller: 'FundingSourceSummaryController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    fundingSource: function(FundingSource, $route) {
+
+                        return FundingSource.get({
+                            id: $route.current.params.fundingSourceId
+                        });
+                        
+                    }
+                }
+            })
+            .when('/funding-sources/:fundingSourceId/edit', {
+                templateUrl: '/modules/components/funding-source/views/fundingSourceEdit--view.html?t=' + environment.version,
+                controller: 'FundingSourceEditController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    fundingSource: function(FundingSource, $route) {
+
+                        return FundingSource.get({
+                            id: $route.current.params.fundingSourceId
+                        });
+                        
+                    }
+                }
+            });
+
+    });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('FundingSourceEditController', function(Account, $location, $log,
+        FundingSource, fundingSource, $q, $rootScope, $route, $timeout,
+        $interval, user, Utility, SearchService) {
+
+        var self = this;
+
+        $rootScope.viewState = {
+            'fundingSource': true
+        };
+
+        $rootScope.toolbarState = {
+            'edit': true
+        };
+
+        $rootScope.page = {};
+
+        self.status = {
+            loading: true,
+            processing: true
+        };
+
+        self.alerts = [];
+
+        function closeAlerts() {
+
+            self.alerts = [];
+
+        }
+
+        function closeRoute() {
+
+            $location.path('/programs/' + self.programId + '/metric-types');
+
+        }
+
+        self.confirmDelete = function(obj) {
+
+            console.log('self.confirmDelete', obj);
+
+            self.deletionTarget = self.deletionTarget ? null : obj;
+
+        };
+
+        self.cancelDelete = function() {
+
+            self.deletionTarget = null;
+
+        };
+
+        self.showElements = function() {
+
+            $timeout(function() {
+
+                self.status.loading = false;
+
+                self.status.processing = false;
+
+            }, 1000);
+
+        };
+
+        self.parseUnit = function(datum, symbol) {
+
+            datum.name = symbol ? (datum.symbol + ' \u00B7 ' + datum.plural) : datum.plural;
+
+            return datum;
+
+        };
+
+        self.parseFeature = function(datum) {
+
+            self.fundingSource = datum;
+
+        };
+
+        self.loadFundingSource = function() {
+
+            fundingSource.$promise.then(function(successResponse) {
+
+                console.log('self.fundingSource', successResponse);
+
+                self.parseFeature(successResponse);
+
+                if (!successResponse.permissions.read &&
+                    !successResponse.permissions.write) {
+
+                    self.makePrivate = true;
+
+                }
+
+                self.permissions.can_edit = successResponse.permissions.write;
+                self.permissions.can_delete = successResponse.permissions.write;
+
+                $rootScope.page.title = self.fundingSource.name ? self.fundingSource.name : 'Un-named Funding Source';
+
+                self.scrubFeature();
+
+                self.showElements();
+
+            }, function(errorResponse) {
+
+                self.showElements();
+
+            });
+
+        };
+
+        self.searchOrganizations = function(value) {
+
+            return SearchService.organization({
+                q: value
+            }).$promise.then(function(response) {
+
+                console.log('SearchService.organization response', response);
+
+                response.results.forEach(function(result) {
+
+                    delete result.category;
+                    delete result.subcategory;
+
+                });
+
+                return response.results.slice(0, 5);
+
+            });
+
+        };
+
+        self.scrubFeature = function() {
+
+            //
+
+        };
+
+        self.saveFundingSource = function() {
+
+            self.status.processing = true;
+
+            FundingSource.update({
+                id: self.fundingSource.id
+            }, self.fundingSource).then(function(successResponse) {
+
+                self.parseFeature(successResponse);
+
+                self.alerts = [{
+                    'type': 'success',
+                    'flag': 'Success!',
+                    'msg': 'Funding source changes saved.',
+                    'prompt': 'OK'
+                }];
+
+                $timeout(closeAlerts, 2000);
+
+                self.showElements();
+
+            }).catch(function(errorResponse) {
+
+                // Error message
+
+                self.alerts = [{
+                    'type': 'success',
+                    'flag': 'Success!',
+                    'msg': 'Funding source changes could not be saved.',
+                    'prompt': 'OK'
+                }];
+
+                $timeout(closeAlerts, 2000);
+
+                self.showElements();
+
+            });
+
+        };
+
+        self.deleteFeature = function() {
+
+            FundingSource.delete({
+                id: +self.deletionTarget.id
+            }).$promise.then(function(data) {
+
+                self.alerts.push({
+                    'type': 'success',
+                    'flag': 'Success!',
+                    'msg': 'Successfully deleted this funding source.',
+                    'prompt': 'OK'
+                });
+
+                $timeout(closeRoute, 2000);
+
+            }).catch(function(errorResponse) {
+
+                console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                if (errorResponse.status === 409) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this funding source.',
+                        'prompt': 'OK'
+                    }];
+
+                } else if (errorResponse.status === 403) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'You don’t have permission to delete this funding source.',
+                        'prompt': 'OK'
+                    }];
+
+                } else {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong while attempting to delete this funding source.',
+                        'prompt': 'OK'
+                    }];
+
+                }
+
+                $timeout(closeAlerts, 2000);
+
+            });
+
+        };
+
+        self.setPracticeType = function($item, $model, $label) {
+
+            console.log('self.unitType', $item);
+
+            self.unitType = $item;
+
+            self.fundingSource.unit_id = $item.id;
+
+        };
+
+        self.extractPrograms = function(user) {
+
+            var _programs = [];
+
+            user.properties.programs.forEach(function(program) {
+
+                _programs.push(program);
+
+            });
+
+            return _programs;
+
+        };
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+
+            user.$promise.then(function(userResponse) {
+
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0],
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: false
+                };
+
+                self.programs = self.extractPrograms($rootScope.user);
+
+                self.loadFundingSource();
+
+            });
+
+        } else {
+
+            $location.path('/login');
+
+        }
+
+    });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('FundingSourceSummaryController',
+        function(Account, $location, $log, FundingSource, fundingSource,
+            $rootScope, $route, $scope, $timeout, user) {
+
+            var self = this;
+
+            $rootScope.viewState = {
+                'fundingSource': true
+            };
+
+            $rootScope.toolBarState = {
+                'summary': true
+            };
+
+            $rootScope.page = {};
+
+            self.alerts = [];
+
+            function closeAlerts() {
+
+                self.alerts = [];
+
+            }
+
+            function closeRoute() {
+
+                $location.path('/funding-sources');
+
+            }
+
+            self.confirmDelete = function(obj) {
+
+                console.log('self.confirmDelete', obj);
+
+                self.deletionTarget = self.deletionTarget ? null : obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.deleteFeature = function() {
+
+                FundingSource.delete({
+                    id: +self.deletionTarget.id
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this funding source.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this funding source.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this funding source.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this funding source.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
+
+                });
+
+            };
+
+            self.loadFundingSource = function() {
+
+                fundingSource.$promise.then(function(successResponse) {
+
+                    console.log('self.fundingSource', successResponse);
+
+                    self.fundingSource = successResponse;
+
+                    $rootScope.page.title = self.fundingSource.name ? self.fundingSource.name : 'Un-named Funding Source';
+
+                }, function(errorResponse) {
+
+                    //
+
+                });
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: true
+                    };
+
+                    self.loadFundingSource();
+
+                });
+
+            }
+
+        });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('FundingSourceListController',
+        function(Account, $location, $log, FundingSource,
+            fundingSources, $rootScope, $route, $scope, user,
+            $interval, $timeout, Utility) {
+
+            var self = this;
+
+            self.programId = $route.current.params.programId;
+
+            $rootScope.viewState = {
+                'fundingSource': true
+            };
+
+            //
+            // Setup basic page variables
+            //
+            $rootScope.page = {
+                title: 'Funding Sources'
+            };
+
+            self.status = {
+                loading: true
+            };
+
+            self.showElements = function() {
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                }, 1000);
+
+            };
+
+            self.alerts = [];
+
+            function closeAlerts() {
+
+                self.alerts = [];
+
+            }
+
+            self.confirmDelete = function(obj) {
+
+                self.deletionTarget = obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.deleteFeature = function(obj, index) {
+
+                FundingSource.delete({
+                    id: obj.id
+                }).$promise.then(function(data) {
+
+                    self.deletionTarget = null;
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this funding source.',
+                        'prompt': 'OK'
+                    }];
+
+                    self.fundingSources.splice(index, 1);
+
+                    $timeout(closeAlerts, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + obj.name + '”. There are pending tasks affecting this funding source.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this funding source.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this funding source.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
+
+                });
+
+            };
+
+            self.createFundingSource = function() {
+
+                self.fundingSource = new FundingSource({
+                    'program_id': self.programId,
+                    'agent_id': $rootScope.user.properties.organization_id
+                });
+
+                self.fundingSource.$save(function(successResponse) {
+
+                    $location.path('/funding-sources/' + successResponse.id + '/edit');
+
+                }, function(errorResponse) {
+
+                    console.error('Unable to create a new funding source, please try again later.');
+
+                });
+
+            };
+
+            self.buildFilter = function() {
+
+                var params = $location.search(),
+                    data = {};
+
+                if (self.selectedProgram &&
+                    typeof self.selectedProgram.id !== 'undefined' &&
+                    self.selectedProgram.id > 0) {
+
+                    data.program = self.selectedProgram.id;
+
+                    $rootScope.programContext = self.selectedProgram.id;
+
+                    $location.search('program', self.selectedProgram.id);
+
+                } else if ($rootScope.programContext !== null &&
+                    typeof $rootScope.programContext !== 'undefined') {
+
+                    data.program = $rootScope.programContext;
+
+                    $location.search('program', $rootScope.programContext);
+
+                } else if (params.program !== null &&
+                    typeof params.program !== 'undefined') {
+
+                    data.program = params.program;
+
+                    $rootScope.programContext = params.program;
+
+                } else {
+
+                    $location.search({});
+
+                }
+
+                return data;
+
+            };
+
+            self.loadFeatures = function() {
+
+                var params = self.buildFilter();
+
+                FundingSource.collection(params).$promise.then(function(successResponse) {
+
+                    console.log('successResponse', successResponse);
+
+                    self.fundingSources = successResponse.features;
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                    self.showElements();
+
+                });
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken()
+                    };
+
+                    console.log('rootScope.programContext', $rootScope.programContext);
+
+                    if ($rootScope.programContext !== null &&
+                        typeof $rootScope.programContext !== 'undefined') {
+
+                        $location.search('program', $rootScope.programContext);
+
+                    }
+
+                    self.loadFeatures();
+
+                });
+
+            } else {
+
+                $location.path('/login');
+
+            }
+
+        });
+'use strict';
+
+/**
  * @ngdoc service
  * @name FieldDoc.CommonsCloud
  * @description
@@ -22456,11 +23320,23 @@ angular
                     cache: true,
                     url: environment.apiUrl.concat('/v1/data/search/organization')
                 },
+                practiceType: {
+                    method: 'GET',
+                    isArray: false,
+                    cache: true,
+                    url: environment.apiUrl.concat('/v1/data/search/practice-type')
+                },
                 program: {
                     method: 'GET',
                     isArray: false,
                     cache: true,
                     url: environment.apiUrl.concat('/v1/data/search/program')
+                },
+                project: {
+                    method: 'GET',
+                    isArray: false,
+                    cache: true,
+                    url: environment.apiUrl.concat('/v1/data/search/project')
                 },
                 tag: {
                     method: 'GET',
@@ -23000,6 +23876,35 @@ angular.module('FieldDoc')
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/tasks')
+                }
+            });
+        });
+
+}());
+(function() {
+
+    'use strict';
+
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('FundingSource', function(environment, Preprocessors, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/data/funding-source/:id'), {
+                'id': '@id'
+            }, {
+                'query': {
+                    'isArray': false
+                },
+                collection: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/funding-source')
+                },
+                update: {
+                    'method': 'PATCH'
                 }
             });
         });

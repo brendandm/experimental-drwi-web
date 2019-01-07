@@ -37,6 +37,16 @@
 
     <nav role="navigation">
         <ul class="list-unstyled">
+            <li data-ng-if="$root.user.properties.is_admin || $root.user.properties.is_manager">
+                <a href="/awards" data-ng-class="{viewing: $root.viewState.award}">
+                    Awards
+                </a>
+            </li>
+            <li data-ng-if="$root.user.properties.is_admin || $root.user.properties.is_manager">
+                <a href="/funding-sources" data-ng-class="{viewing: $root.viewState.fundingSource}">
+                    Funding Sources
+                </a>
+            </li>
             <li>
                 <a href="/practice-types" data-ng-class="{viewing: $root.viewState.practiceType}">
                     Practice Types
