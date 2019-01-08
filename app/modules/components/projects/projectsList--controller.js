@@ -84,7 +84,7 @@ angular.module('FieldDoc')
                         'prompt': 'OK'
                     }];
 
-                    self.filteredProjects.splice(index, 1);
+                    self.projects.splice(index, 1);
 
                     $timeout(closeAlerts, 2000);
 
