@@ -16,6 +16,7 @@ angular.module('FieldDoc')
                 templateUrl: '/modules/components/geographies/views/geographyList--view.html?t=' + environment.version,
                 controller: 'GeographyListController',
                 controllerAs: 'page',
+                reloadOnSearch: false,
                 resolve: {
                     user: function(Account, $rootScope, $document) {
 
@@ -29,6 +30,8 @@ angular.module('FieldDoc')
 
                     },
                     geographies: function(Program, $route, $rootScope, $location) {
+
+                        $location.search({});
 
                         return [];
 

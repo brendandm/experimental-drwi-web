@@ -25,22 +25,20 @@
                 </a>
             </div>
 
-            <input type="text" class="search-bar list-filter reveal fade-in t0" data-ng-if="!page.status.loading && page.metrics.length > 10" data-ng-model="page.q" placeholder="Search your metrics">
+            <input type="text" class="search-bar list-filter reveal fade-in t0" data-ng-if="!page.status.loading" data-ng-model="page.q" placeholder="Search your metrics">
 
             <p class="reveal fade-in t0" data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">You have <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize>.</p>
 
-            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && !page.selectedProgram.id && ($root.user.properties.is_admin || $root.user.properties.is_manager)">You have <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize>.</p>
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There are <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize> in this program.</p>
 
-            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && page.selectedProgram.id > 0 && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There are <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize> in this program.</p>
-
-            <div class="collection-filter" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">
+            <div class="collection-filter" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager) && $root.user.properties.programs.length">
                 <form name="myForm">
                     <label for="programFilter"><strong>Filter by program:</strong></label>
                     <select name="programFilter" id="programFilter"
                         data-ng-options="program.properties.name for program in $root.user.properties.programs track by program.id"
                         data-ng-model="page.selectedProgram"
                         data-ng-change="page.loadFeatures()">
-                        <option value="">All programs</option>
+                        <!-- <option value="0">All programs</option> -->
                     </select>
                 </form>
             </div>
@@ -49,7 +47,7 @@
 
             <div class="features--container">
 
-                <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;" data-ng-if="!page.status.loading">
+                <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;" data-ng-if="!page.status.loadingFeatures">
 
                     <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="metric in page.metrics | orderBy:'-modified_on' | filter: page.q">
 

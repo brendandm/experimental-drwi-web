@@ -44,7 +44,7 @@ angular.module('FieldDoc')
 
                         $rootScope.targetPath = document.location.pathname;
 
-                        $rootScope.programContext = $route.current.params.programId;
+                        // $rootScope.programContext = $route.current.params.programId;
 
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
@@ -79,7 +79,7 @@ angular.module('FieldDoc')
 
                         $rootScope.targetPath = document.location.pathname;
 
-                        $rootScope.programContext = $route.current.params.programId;
+                        // $rootScope.programContext = $route.current.params.programId;
 
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
@@ -104,7 +104,7 @@ angular.module('FieldDoc')
 
                         $rootScope.targetPath = document.location.pathname;
 
-                        $rootScope.programContext = $route.current.params.programId;
+                        // $rootScope.programContext = $route.current.params.programId;
 
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();

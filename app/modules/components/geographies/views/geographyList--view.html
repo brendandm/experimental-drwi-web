@@ -40,8 +40,11 @@
             <div class="collection-filter" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">
                 <form name="myForm">
                     <label for="programFilter"><strong>Filter by program:</strong></label>
-                    <select name="programFilter" id="programFilter" data-ng-options="program.properties.name for program in $root.user.properties.programs track by program.id" data-ng-model="page.selectedProgram" data-ng-change="page.loadFeatures()">
-                        <option value="">All programs</option>
+                    <select name="programFilter" id="programFilter"
+                        data-ng-options="program.properties.name for program in $root.user.properties.programs track by program.id"
+                        data-ng-model="page.selectedProgram"
+                        data-ng-change="page.loadFeatures()">
+                        <option value="0">All programs</option>
                     </select>
                 </form>
             </div>

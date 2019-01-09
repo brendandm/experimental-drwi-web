@@ -36,6 +36,8 @@ angular.module('FieldDoc')
 
                     self.status.loading = false;
 
+                    self.status.loadingFeatures = false;
+
                 }, 1000);
 
             };
@@ -146,29 +148,17 @@ angular.module('FieldDoc')
                     typeof self.selectedProgram.id !== 'undefined' &&
                     self.selectedProgram.id > 0) {
 
-                    data.program = self.selectedProgram.id;
+                    console.log('self.selectedProgram', self.selectedProgram);
 
-                    $rootScope.programContext = self.selectedProgram.id;
+                    data.program = self.selectedProgram.id;
 
                     $location.search('program', self.selectedProgram.id);
 
-                } else if ($rootScope.programContext !== null &&
-                    typeof $rootScope.programContext !== 'undefined') {
-
-                    data.program = $rootScope.programContext;
-
-                    $location.search('program', $rootScope.programContext);
-
-                } else if (params.program !== null &&
+                } else if (!self.metrics &&
+                    params.program !== null &&
                     typeof params.program !== 'undefined') {
 
                     data.program = params.program;
-
-                    $rootScope.programContext = params.program;
-
-                } else {
-
-                    $location.search({});
 
                 }
 
@@ -177,6 +167,8 @@ angular.module('FieldDoc')
             };
 
             self.loadFeatures = function() {
+
+                self.status.loadingFeatures = true;
 
                 var params = self.buildFilter();
 
@@ -211,12 +203,9 @@ angular.module('FieldDoc')
                         isLoggedIn: Account.hasToken()
                     };
 
-                    console.log('rootScope.programContext', $rootScope.programContext);
+                    if ($rootScope.user.properties.programs.length) {
 
-                    if ($rootScope.programContext !== null &&
-                        typeof $rootScope.programContext !== 'undefined') {
-
-                        $location.search('program', $rootScope.programContext);
+                        self.selectedProgram = $rootScope.user.properties.programs[0];
 
                     }
 

@@ -23,19 +23,19 @@ angular.module('FieldDoc')
                         var params = $location.search(),
                             data = {};
 
-                        if ($rootScope.programContext !== null &&
-                            typeof $rootScope.programContext !== 'undefined') {
+                        if (// $rootScope.programContext !== null &&
+                            typeof // $rootScope.programContext !== 'undefined') {
 
-                            data.program = $rootScope.programContext;
+                            data.program = // $rootScope.programContext;
 
-                            $location.search('program', $rootScope.programContext);
+                            $location.search('program', // $rootScope.programContext);
 
                         } else if (params.program !== null &&
                             typeof params.program !== 'undefined') {
 
                             data.program = params.program;
 
-                            $rootScope.programContext = params.program;
+                            // $rootScope.programContext = params.program;
 
                         }
 
