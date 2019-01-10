@@ -9,7 +9,7 @@ angular.module('FieldDoc')
     .controller('ProjectPartnershipController',
         function(Account, $location, $log, Project, project, Partnership,
             $rootScope, $route, user, SearchService, $timeout,
-            Utility, $interval) {
+            Utility, $interval, partnerships) {
 
             var self = this;
 
@@ -62,61 +62,25 @@ angular.module('FieldDoc')
 
             };
 
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
+            self.loadPartnerships = function() {
 
-                user.$promise.then(function(userResponse) {
+                Project.partnerships({
+                    id: self.project.id
+                }).$promise.then(function(successResponse) {
 
-                    $rootScope.user = Account.userObject = userResponse;
+                    self.tempPartnerships = successResponse.features;
 
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        can_edit: false,
-                        can_delete: false
-                    };
+                    self.showElements();
 
-                    //
-                    // Assign project to a scoped variable
-                    //
-                    project.$promise.then(function(successResponse) {
+                }, function(errorResponse) {
 
-                        if (!successResponse.permissions.read &&
-                            !successResponse.permissions.write) {
+                    $log.error('Unable to load project partnerships.');
 
-                            self.makePrivate = true;
-
-                        } else {
-
-                            self.processFeature(successResponse);
-
-                            self.permissions.can_edit = successResponse.permissions.write;
-                            self.permissions.can_delete = successResponse.permissions.write;
-
-                            $rootScope.page.title = 'Edit Project';
-
-                        }
-
-                        self.showElements();
-
-                    }, function(errorResponse) {
-
-                        $log.error('Unable to load request project');
-
-                        self.showElements();
-
-                    });
+                    self.showElements();
 
                 });
 
-            } else {
-
-                $location.path('/login');
-
-            }
+            };
 
             self.searchOrganizations = function(value) {
 
@@ -203,13 +167,13 @@ angular.module('FieldDoc')
 
                 self.project = data;
 
-                if (self.project.program) {
+                // if (self.project.program) {
 
-                    self.program = self.project.program;
+                //     self.program = self.project.program;
 
-                }
+                // }
 
-                self.tempPartnerships = self.project.partnerships;
+                // self.tempPartnerships = self.project.partnerships;
 
                 self.status.processing = false;
 
@@ -275,12 +239,44 @@ angular.module('FieldDoc')
 
                     self.saveProject();
 
-                }).then(function(error) {
+                }).catch(function(error) {
 
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
                         'msg': 'Unable to create partnership.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                });
+
+            };
+
+            self.removePartnership = function(partnershipId, index) {
+
+                Partnership.delete({
+                    id: partnershipId
+                }).$promise.then(function(successResponse) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this partnership.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.tempPartnerships.splice(index, 1);
+
+                }).catch(function(error) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Unable to delete partnership.',
                         'prompt': 'OK'
                     }];
 
@@ -324,8 +320,6 @@ angular.module('FieldDoc')
                     exclude: exclude
                 }, self.project).then(function(successResponse) {
 
-                    self.processFeature(successResponse);
-
                     self.alerts = [{
                         'type': 'success',
                         'flag': 'Success!',
@@ -338,6 +332,8 @@ angular.module('FieldDoc')
                     self.displayModal = false;
 
                     self.partnerQuery = null;
+
+                    self.loadPartnerships();
 
                 }).catch(function(error) {
 
@@ -427,5 +423,63 @@ angular.module('FieldDoc')
                 });
 
             };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false,
+                        can_delete: false
+                    };
+
+                    //
+                    // Assign project to a scoped variable
+                    //
+                    project.$promise.then(function(successResponse) {
+
+                        self.project = successResponse;
+
+                        if (!successResponse.permissions.read &&
+                            !successResponse.permissions.write) {
+
+                            self.makePrivate = true;
+
+                        } else {
+
+                            self.processFeature(successResponse);
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            $rootScope.page.title = 'Edit Project';
+
+                        }
+
+                        self.loadPartnerships();
+
+                    }, function(errorResponse) {
+
+                        $log.error('Unable to load project.');
+
+                        self.showElements();
+
+                    });
+
+                });
+
+            } else {
+
+                $location.path('/login');
+
+            }
 
         });

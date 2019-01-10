@@ -206,6 +206,13 @@ angular.module('FieldDoc')
                             exclude: exclude
                         });
 
+                    },
+                    partnerships: function(Project, $route) {
+
+                        return Project.partnerships({
+                            id: $route.current.params.projectId
+                        });
+
                     }
                 }
             })

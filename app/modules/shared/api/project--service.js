@@ -38,6 +38,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/data/project/:id/members')
                 },
+                partnerships: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/project/:id/partnerships')
+                },
                 sites: {
                     method: 'GET',
                     isArray: false,
