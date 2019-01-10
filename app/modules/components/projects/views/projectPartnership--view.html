@@ -45,17 +45,24 @@
 
                         </div>
 
-                        <div class="classification--list" style="margin-top: 2em;">
+                        <div class="partnership--list" style="margin-top: 2em;">
                             <ul>
                                 <li data-ng-repeat="partnership in page.tempPartnerships">
-                                    <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ partnership.organization.properties.name }}</span>
-                                    <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ partnership.amount | currency }}</span>
-                                    <div class="button--container">
-                                        <button type="button" class="remove-item" data-ng-click="page.removePartnership(partnership.id)">
-                                            <i class="material-icons">
-                                                remove_circle
-                                            </i>
-                                        </button>
+                                    <div>
+                                        <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ partnership.organization.properties.name }}</span>
+                                        <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ partnership.amount | currency }}</span>
+                                        <div class="button--container">
+                                            <button type="button" class="remove-item" data-ng-click="page.removePartnership(partnership.id)">
+                                                <i class="material-icons">
+                                                    remove_circle
+                                                </i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p style="font-style: normal; color: #616161; font-size: 1em;">
+                                            {{ partnership.description }}
+                                        </p>
                                     </div>
                                 </li>
                             </ul>

@@ -335,6 +335,10 @@ angular.module('FieldDoc')
 
                     $timeout(self.closeAlerts, 2000);
 
+                    self.displayModal = false;
+
+                    self.partnerQuery = null;
+
                 }).catch(function(error) {
 
                     // Do something with the error
@@ -349,6 +353,10 @@ angular.module('FieldDoc')
                     $timeout(self.closeAlerts, 2000);
 
                     self.status.processing = false;
+
+                    self.displayModal = false;
+
+                    self.partnerQuery = null;
 
                 });
 
