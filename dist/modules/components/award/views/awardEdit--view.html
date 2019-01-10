@@ -8,11 +8,11 @@
 
         <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
             <div class="progress--container">
-                <p style="font-weight: bold;" class="color-pulse">Loading practice type data&hellip;</p>
+                <p style="font-weight: bold;" class="color-pulse">Loading award data&hellip;</p>
             </div>
         </div>
 
-        <h1 class="inset reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">Edit practice type</h1>
+        <h1 class="inset reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">Edit award</h1>
 
         <div class="main--ui reveal fade-in t1" data-ng-if="!page.status.loading && !page.makePrivate">
 
@@ -20,30 +20,57 @@
 
                 <div class="feature-detail-content">
 
-                    <form role="form" class="form" style="position:relative;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePracticeType()" autocomplete="off">
+                    <form role="form" class="form" style="position:relative;" id="form--AwardEdit" name="form--AwardEdit" data-ng-submit="page.saveAward()" autocomplete="off">
 
-                        <!-- Practice Name -->
+                        <!-- Award Name -->
 
                         <div class="form-element">
                             <span class="meta-label"><b>Name</b></span>
-                            <input type="text" data-ng-model="page.practiceType.properties.name" class="form-control animate" id="name" name="name" placeholder="Practice name" />
+                            <input type="text" data-ng-model="page.award.name" class="form-control animate" id="name" name="name" placeholder="“Forest Service Cooperative Agreement”" required="required" />
                         </div>
 
-                        <!-- Practice Description -->
+                        <!-- Award Key -->
+
+                        <div class="form-element">
+                            <span class="meta-label"><b>Code</b></span>
+                            <input type="text" data-ng-model="page.award.key" class="form-control animate" id="code" name="code" placeholder="&hellip;" required="required" />
+                        </div>
+
+                        <!-- Award Year -->
+
+                        <div class="form-element">
+                            <span class="meta-label"><b>Year</b></span>
+                            <input class="form-control" data-ng-model="page.award.year" id="year" name="year" step="1" type="number" placeholder="0" min="1980" max="3000" required="required" />
+                        </div>
+
+                        <!-- Award Amount -->
+
+                        <!-- <div class="form-element">
+                            <span class="meta-label"><b>Amount</b></span>
+                            <input class="form-control" data-ng-model="page.award.amount" id="amount" name="amount" step="0.0001" type="number" placeholder="0" required="required" />
+                            <p style="color: #9e9e9e; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
+                                Enter a monetary value for this award.
+                            </p>
+                        </div> -->
+
+                        <!-- Award Description -->
 
                         <div class="form-element">
                             <span class="meta-label"><b>Description</b></span>
-                            <textarea class="form-control" msd-elastic data-ng-model="page.practiceType.properties.description" maxlength="1000" rows="10">{{ page.practiceType.properties.description }}</textarea>
+                            <textarea class="form-control" msd-elastic data-ng-model="page.award.description" maxlength="1000" rows="10">{{ page.award.description }}</textarea>
                             <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
-                                Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.practiceType.properties.description.length || 0) | number }} used)</strong>
+                                Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.award.description.length || 0) | number }} used)</strong>
                             </p>
                         </div>
 
                         <!-- Program -->
 
-                        <div class="form-element" data-ng-if="$root.user.properties.is_admin || $root.user.properties.is_manager">
-                            <span class="meta-label"><b>Program</b></span>
-                            <input id="practice_type_program_id" name="practice_type_program_id" type="text" placeholder="Search programs&hellip;" data-ng-model="page.practiceType.properties.program" uib-typeahead="program as program.name for program in page.programs | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
+                        <div class="form-element">
+                            <span class="meta-label"><b>Provider</b></span>
+                            <input id="funding_source_origin_id" name="funding_source_origin_id" type="text" placeholder="Search organizations&hellip;" data-ng-model="page.award.origin" uib-typeahead="origin as origin.name for origin in page.searchOrganizations($viewValue)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                            <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
+                                Specify an organization that is providing the funding.
+                            </p>
                         </div>
 
                         <div class="save--action--wrapper save--action--bottom">
@@ -69,15 +96,15 @@
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
-            <li>
-                <a href="/practice-types/{{ page.practiceType.properties.id }}">
+<!--             <li>
+                <a href="/metric-types/{{ page.award.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
-            </li>
+            </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/practice-types/{{ page.practiceType.properties.id }}/edit">
+                <a href="/metric-types/{{ page.award.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>
@@ -85,7 +112,7 @@
             </li>
             <li data-ng-if="page.permissions.can_edit">
                 <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
-                    <p>Do you want to delete this practice type?</p>
+                    <p>Do you want to delete this award?</p>
                     <div class="actions">
                         <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature()">
                             Yes
@@ -95,7 +122,7 @@
                         </a>
                     </div>
                 </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.practiceType)">
+                <a href="#" data-ng-click="page.confirmDelete(page.award)">
                     <i class="material-icons">
                         delete
                     </i>

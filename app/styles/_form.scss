@@ -929,3 +929,17 @@ form[role="form"] {
   }
 
 }
+
+.collection-filter {
+  display: flex;
+  flex-flow: row wrap;
+
+  button {
+    appearance: none;
+    border: 0 none !important;
+    outline: 0 none;
+    background: transparent;
+    //padding: 0.5em;
+    margin: 0;
+  }
+}

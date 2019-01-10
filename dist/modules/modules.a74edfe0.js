@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1546892083416})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1547079537834})
 
 ;
 /**
@@ -4884,19 +4884,19 @@ angular.module('FieldDoc')
                         var params = $location.search(),
                             data = {};
 
-                        if ($rootScope.programContext !== null &&
-                            typeof $rootScope.programContext !== 'undefined') {
+                        if (// $rootScope.programContext !== null &&
+                            typeof // $rootScope.programContext !== 'undefined') {
 
-                            data.program = $rootScope.programContext;
+                            data.program = // $rootScope.programContext;
 
-                            $location.search('program', $rootScope.programContext);
+                            $location.search('program', // $rootScope.programContext);
 
                         } else if (params.program !== null &&
                             typeof params.program !== 'undefined') {
 
                             data.program = params.program;
 
-                            $rootScope.programContext = params.program;
+                            // $rootScope.programContext = params.program;
 
                         }
 
@@ -5267,7 +5267,7 @@ angular.module('FieldDoc')
                         'prompt': 'OK'
                     }];
 
-                    self.filteredProjects.splice(index, 1);
+                    self.projects.splice(index, 1);
 
                     $timeout(closeAlerts, 2000);
 
@@ -5414,23 +5414,12 @@ angular.module('FieldDoc')
 
                     data.program = self.selectedProgram.id;
 
-                    $rootScope.programContext = self.selectedProgram.id;
-
                     $location.search('program', self.selectedProgram.id);
-
-                } else if ($rootScope.programContext !== null &&
-                    typeof $rootScope.programContext !== 'undefined') {
-
-                    data.program = $rootScope.programContext;
-
-                    $location.search('program', $rootScope.programContext);
 
                 } else if (params.program !== null &&
                     typeof params.program !== 'undefined') {
 
                     data.program = params.program;
-
-                    $rootScope.programContext = params.program;
 
                 } else {
 
@@ -13122,6 +13111,7 @@ angular.module('FieldDoc')
                 templateUrl: '/modules/components/practice-types/views/practiceTypeList--view.html?t=' + environment.version,
                 controller: 'PracticeTypeListController',
                 controllerAs: 'page',
+                reloadOnSearch: false,
                 resolve: {
                     user: function(Account, $rootScope, $document) {
 
@@ -13761,25 +13751,16 @@ angular.module('FieldDoc')
                     typeof self.selectedProgram.id !== 'undefined' &&
                     self.selectedProgram.id > 0) {
 
+                    console.log('self.selectedProgram', self.selectedProgram);
+
                     data.program = self.selectedProgram.id;
 
-                    $rootScope.programContext = self.selectedProgram.id;
-
                     $location.search('program', self.selectedProgram.id);
-
-                } else if ($rootScope.programContext !== null &&
-                    typeof $rootScope.programContext !== 'undefined') {
-
-                    data.program = $rootScope.programContext;
-
-                    $location.search('program', $rootScope.programContext);
 
                 } else if (params.program !== null &&
                     typeof params.program !== 'undefined') {
 
                     data.program = params.program;
-
-                    $rootScope.programContext = params.program;
 
                 } else {
 
@@ -13826,6 +13807,12 @@ angular.module('FieldDoc')
                         isLoggedIn: Account.hasToken()
                     };
 
+                    if ($rootScope.user.properties.programs.length) {
+
+                        self.selectedProgram = $rootScope.user.properties.programs[0];
+
+                    }
+
                     self.loadFeatures();
 
                 });
@@ -13855,6 +13842,7 @@ angular.module('FieldDoc')
                 templateUrl: '/modules/components/metrics/views/metricTypeList--view.html?t=' + environment.version,
                 controller: 'MetricTypeListController',
                 controllerAs: 'page',
+                reloadOnSearch: false,
                 resolve: {
                     user: function(Account, $rootScope, $document) {
 
@@ -14440,6 +14428,8 @@ angular.module('FieldDoc')
 
                     self.status.loading = false;
 
+                    self.status.loadingFeatures = false;
+
                 }, 1000);
 
             };
@@ -14550,29 +14540,17 @@ angular.module('FieldDoc')
                     typeof self.selectedProgram.id !== 'undefined' &&
                     self.selectedProgram.id > 0) {
 
-                    data.program = self.selectedProgram.id;
+                    console.log('self.selectedProgram', self.selectedProgram);
 
-                    $rootScope.programContext = self.selectedProgram.id;
+                    data.program = self.selectedProgram.id;
 
                     $location.search('program', self.selectedProgram.id);
 
-                } else if ($rootScope.programContext !== null &&
-                    typeof $rootScope.programContext !== 'undefined') {
-
-                    data.program = $rootScope.programContext;
-
-                    $location.search('program', $rootScope.programContext);
-
-                } else if (params.program !== null &&
+                } else if (!self.metrics &&
+                    params.program !== null &&
                     typeof params.program !== 'undefined') {
 
                     data.program = params.program;
-
-                    $rootScope.programContext = params.program;
-
-                } else {
-
-                    $location.search({});
 
                 }
 
@@ -14581,6 +14559,8 @@ angular.module('FieldDoc')
             };
 
             self.loadFeatures = function() {
+
+                self.status.loadingFeatures = true;
 
                 var params = self.buildFilter();
 
@@ -14615,12 +14595,9 @@ angular.module('FieldDoc')
                         isLoggedIn: Account.hasToken()
                     };
 
-                    console.log('rootScope.programContext', $rootScope.programContext);
+                    if ($rootScope.user.properties.programs.length) {
 
-                    if ($rootScope.programContext !== null &&
-                        typeof $rootScope.programContext !== 'undefined') {
-
-                        $location.search('program', $rootScope.programContext);
+                        self.selectedProgram = $rootScope.user.properties.programs[0];
 
                     }
 
@@ -15159,6 +15136,7 @@ angular.module('FieldDoc')
                 templateUrl: '/modules/components/geographies/views/geographyList--view.html?t=' + environment.version,
                 controller: 'GeographyListController',
                 controllerAs: 'page',
+                reloadOnSearch: false,
                 resolve: {
                     user: function(Account, $rootScope, $document) {
 
@@ -15172,6 +15150,8 @@ angular.module('FieldDoc')
 
                     },
                     geographies: function(Program, $route, $rootScope, $location) {
+
+                        $location.search({});
 
                         return [];
 
@@ -16243,23 +16223,12 @@ angular.module('FieldDoc')
 
                         data.program = self.selectedProgram.id;
 
-                        $rootScope.programContext = self.selectedProgram.id;
-
                         $location.search('program', self.selectedProgram.id);
-
-                    } else if ($rootScope.programContext !== null &&
-                        typeof $rootScope.programContext !== 'undefined') {
-
-                        data.program = $rootScope.programContext;
-
-                        $location.search('program', $rootScope.programContext);
 
                     } else if (params.program !== null &&
                         typeof params.program !== 'undefined') {
 
                         data.program = params.program;
-
-                        $rootScope.programContext = params.program;
 
                     } else {
 
@@ -16303,6 +16272,72 @@ angular.module('FieldDoc')
                         self.showElements();
 
                     });
+
+                };
+
+                self.deleteCollection = function() {
+
+                    self.batchDelete = false;
+
+                    if (self.selectedProgram &&
+                        typeof self.selectedProgram.id !== 'undefined' &&
+                        self.selectedProgram.id > 0) {
+
+                        GeographyService.batchDelete({
+                            program: self.selectedProgram.id
+                        }).$promise.then(function(successResponse) {
+
+                            console.log('successResponse', successResponse);
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Successfully deleted these geographies.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                            self.loadFeatures();
+
+                        }).catch(function(errorResponse) {
+
+                            console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                            if (errorResponse.status === 409) {
+
+                                self.alerts = [{
+                                    'type': 'error',
+                                    'flag': 'Error!',
+                                    'msg': 'Unable to delete. There are pending tasks affecting these geographies.',
+                                    'prompt': 'OK'
+                                }];
+
+                            } else if (errorResponse.status === 403) {
+
+                                self.alerts = [{
+                                    'type': 'error',
+                                    'flag': 'Error!',
+                                    'msg': 'You don’t have permission to delete these geographies.',
+                                    'prompt': 'OK'
+                                }];
+
+                            } else {
+
+                                self.alerts = [{
+                                    'type': 'error',
+                                    'flag': 'Error!',
+                                    'msg': 'Something went wrong while attempting to delete these geographies.',
+                                    'prompt': 'OK'
+                                }];
+
+                            }
+
+                            $timeout(closeAlerts, 2000);
+
+                        });
+
+                    }
 
                 };
 
@@ -16442,7 +16477,7 @@ angular.module('FieldDoc')
 
                         console.log('fileData', fileData);
 
-                        $window.scrollTo(0,0);
+                        $window.scrollTo(0, 0);
 
                         Shapefile.upload({}, fileData, function(successResponse) {
 
@@ -16520,6 +16555,12 @@ angular.module('FieldDoc')
                         };
 
                         self.programs = self.extractPrograms($rootScope.user);
+
+                        if ($rootScope.user.properties.programs.length) {
+
+                            self.selectedProgram = $rootScope.user.properties.programs[0];
+
+                        }
 
                         self.loadGroups();
 
@@ -17618,7 +17659,7 @@ angular.module('FieldDoc')
 
                         $rootScope.targetPath = document.location.pathname;
 
-                        $rootScope.programContext = $route.current.params.programId;
+                        // $rootScope.programContext = $route.current.params.programId;
 
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
@@ -17653,7 +17694,7 @@ angular.module('FieldDoc')
 
                         $rootScope.targetPath = document.location.pathname;
 
-                        $rootScope.programContext = $route.current.params.programId;
+                        // $rootScope.programContext = $route.current.params.programId;
 
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
@@ -17678,7 +17719,7 @@ angular.module('FieldDoc')
 
                         $rootScope.targetPath = document.location.pathname;
 
-                        $rootScope.programContext = $route.current.params.programId;
+                        // $rootScope.programContext = $route.current.params.programId;
 
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
@@ -19979,6 +20020,764 @@ angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
 
         $routeProvider
+            .when('/awards', {
+                templateUrl: '/modules/components/award/views/awardList--view.html?t=' + environment.version,
+                controller: 'AwardListController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    awards: function(Program, $route, $rootScope, $location) {
+
+                        return [];
+
+                    }
+                }
+            })
+            .when('/awards/:awardId', {
+                templateUrl: '/modules/components/award/views/awardSummary--view.html?t=' + environment.version,
+                controller: 'AwardSummaryController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    award: function(Award, $route) {
+
+                        return Award.get({
+                            id: $route.current.params.awardId
+                        });
+                        
+                    }
+                }
+            })
+            .when('/awards/:awardId/edit', {
+                templateUrl: '/modules/components/award/views/awardEdit--view.html?t=' + environment.version,
+                controller: 'AwardEditController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    award: function(Award, $route) {
+
+                        return Award.get({
+                            id: $route.current.params.awardId
+                        });
+                        
+                    }
+                }
+            });
+
+    });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('AwardEditController', function(Account, $location, $log,
+        Award, award, $q, $rootScope, $route, $timeout,
+        $interval, user, Utility, SearchService) {
+
+        var self = this;
+
+        $rootScope.viewState = {
+            'award': true
+        };
+
+        $rootScope.toolbarState = {
+            'edit': true
+        };
+
+        $rootScope.page = {};
+
+        self.status = {
+            loading: true,
+            processing: true
+        };
+
+        self.alerts = [];
+
+        function closeAlerts() {
+
+            self.alerts = [];
+
+        }
+
+        function closeRoute() {
+
+            $location.path('/awards');
+
+        }
+
+        self.confirmDelete = function(obj) {
+
+            console.log('self.confirmDelete', obj);
+
+            self.deletionTarget = self.deletionTarget ? null : obj;
+
+        };
+
+        self.cancelDelete = function() {
+
+            self.deletionTarget = null;
+
+        };
+
+        self.showElements = function() {
+
+            $timeout(function() {
+
+                self.status.loading = false;
+
+                self.status.processing = false;
+
+            }, 1000);
+
+        };
+
+        self.parseUnit = function(datum, symbol) {
+
+            datum.name = symbol ? (datum.symbol + ' \u00B7 ' + datum.plural) : datum.plural;
+
+            return datum;
+
+        };
+
+        self.parseFeature = function(datum) {
+
+            self.award = datum;
+
+        };
+
+        self.loadAward = function() {
+
+            award.$promise.then(function(successResponse) {
+
+                console.log('self.award', successResponse);
+
+                self.parseFeature(successResponse);
+
+                if (!successResponse.permissions.read &&
+                    !successResponse.permissions.write) {
+
+                    self.makePrivate = true;
+
+                }
+
+                self.permissions.can_edit = successResponse.permissions.write;
+                self.permissions.can_delete = successResponse.permissions.write;
+
+                $rootScope.page.title = self.award.name ? self.award.name : 'Un-named Award';
+
+                self.scrubFeature();
+
+                self.showElements();
+
+            }, function(errorResponse) {
+
+                self.showElements();
+
+            });
+
+        };
+
+        self.searchOrganizations = function(value) {
+
+            return SearchService.organization({
+                q: value
+            }).$promise.then(function(response) {
+
+                console.log('SearchService.organization response', response);
+
+                response.results.forEach(function(result) {
+
+                    delete result.category;
+                    delete result.subcategory;
+
+                });
+
+                return response.results.slice(0, 5);
+
+            });
+
+        };
+
+        self.scrubFeature = function() {
+
+            //
+
+        };
+
+        self.saveAward = function() {
+
+            self.status.processing = true;
+
+            Award.update({
+                id: self.award.id
+            }, self.award).then(function(successResponse) {
+
+                self.parseFeature(successResponse);
+
+                self.alerts = [{
+                    'type': 'success',
+                    'flag': 'Success!',
+                    'msg': 'Funding source changes saved.',
+                    'prompt': 'OK'
+                }];
+
+                $timeout(closeAlerts, 2000);
+
+                self.showElements();
+
+            }).catch(function(errorResponse) {
+
+                // Error message
+
+                self.alerts = [{
+                    'type': 'success',
+                    'flag': 'Success!',
+                    'msg': 'Funding source changes could not be saved.',
+                    'prompt': 'OK'
+                }];
+
+                $timeout(closeAlerts, 2000);
+
+                self.showElements();
+
+            });
+
+        };
+
+        self.deleteFeature = function() {
+
+            Award.delete({
+                id: +self.deletionTarget.id
+            }).$promise.then(function(data) {
+
+                self.alerts.push({
+                    'type': 'success',
+                    'flag': 'Success!',
+                    'msg': 'Successfully deleted this award.',
+                    'prompt': 'OK'
+                });
+
+                $timeout(closeRoute, 2000);
+
+            }).catch(function(errorResponse) {
+
+                console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                if (errorResponse.status === 409) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this award.',
+                        'prompt': 'OK'
+                    }];
+
+                } else if (errorResponse.status === 403) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'You don’t have permission to delete this award.',
+                        'prompt': 'OK'
+                    }];
+
+                } else {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong while attempting to delete this award.',
+                        'prompt': 'OK'
+                    }];
+
+                }
+
+                $timeout(closeAlerts, 2000);
+
+            });
+
+        };
+
+        self.setPracticeType = function($item, $model, $label) {
+
+            console.log('self.unitType', $item);
+
+            self.unitType = $item;
+
+            self.award.unit_id = $item.id;
+
+        };
+
+        self.extractPrograms = function(user) {
+
+            var _programs = [];
+
+            user.properties.programs.forEach(function(program) {
+
+                _programs.push(program);
+
+            });
+
+            return _programs;
+
+        };
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+
+            user.$promise.then(function(userResponse) {
+
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0],
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: false
+                };
+
+                self.programs = self.extractPrograms($rootScope.user);
+
+                self.loadAward();
+
+            });
+
+        } else {
+
+            $location.path('/login');
+
+        }
+
+    });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('AwardSummaryController',
+        function(Account, $location, $log, Award, award,
+            $rootScope, $route, $scope, $timeout, user) {
+
+            var self = this;
+
+            $rootScope.viewState = {
+                'award': true
+            };
+
+            $rootScope.toolBarState = {
+                'summary': true
+            };
+
+            $rootScope.page = {};
+
+            self.alerts = [];
+
+            function closeAlerts() {
+
+                self.alerts = [];
+
+            }
+
+            function closeRoute() {
+
+                $location.path('/awards');
+
+            }
+
+            self.confirmDelete = function(obj) {
+
+                console.log('self.confirmDelete', obj);
+
+                self.deletionTarget = self.deletionTarget ? null : obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.deleteFeature = function() {
+
+                Award.delete({
+                    id: +self.deletionTarget.id
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this award.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this award.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this award.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this award.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
+
+                });
+
+            };
+
+            self.loadAward = function() {
+
+                award.$promise.then(function(successResponse) {
+
+                    console.log('self.award', successResponse);
+
+                    self.award = successResponse;
+
+                    $rootScope.page.title = self.award.name ? self.award.name : 'Un-named Award';
+
+                }, function(errorResponse) {
+
+                    //
+
+                });
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: true
+                    };
+
+                    self.loadAward();
+
+                });
+
+            }
+
+        });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('AwardListController',
+        function(Account, $location, $log, Award,
+            awards, $rootScope, $route, $scope, user,
+            $interval, $timeout, Utility) {
+
+            var self = this;
+
+            self.programId = $route.current.params.programId;
+
+            $rootScope.viewState = {
+                'award': true
+            };
+
+            //
+            // Setup basic page variables
+            //
+            $rootScope.page = {
+                title: 'Awards'
+            };
+
+            self.status = {
+                loading: true
+            };
+
+            self.showElements = function() {
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                }, 1000);
+
+            };
+
+            self.alerts = [];
+
+            function closeAlerts() {
+
+                self.alerts = [];
+
+            }
+
+            self.confirmDelete = function(obj) {
+
+                self.deletionTarget = obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.deleteFeature = function(obj, index) {
+
+                Award.delete({
+                    id: obj.id
+                }).$promise.then(function(data) {
+
+                    self.deletionTarget = null;
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this award.',
+                        'prompt': 'OK'
+                    }];
+
+                    self.awards.splice(index, 1);
+
+                    $timeout(closeAlerts, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + obj.name + '”. There are pending tasks affecting this award.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this award.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this award.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
+
+                });
+
+            };
+
+            self.createAward = function() {
+
+                self.award = new Award({
+                    // 'program_id': self.programId,
+                    'funder_id': $rootScope.user.properties.organization_id
+                });
+
+                self.award.$save(function(successResponse) {
+
+                    $location.path('/awards/' + successResponse.id + '/edit');
+
+                }, function(errorResponse) {
+
+                    console.error('Unable to create a new award, please try again later.');
+
+                });
+
+            };
+
+            self.buildFilter = function() {
+
+                var params = $location.search(),
+                    data = {};
+
+                if (self.selectedProgram &&
+                    typeof self.selectedProgram.id !== 'undefined' &&
+                    self.selectedProgram.id > 0) {
+
+                    data.program = self.selectedProgram.id;
+
+                    // $rootScope.programContext = self.selectedProgram.id;
+
+                    $location.search('program', self.selectedProgram.id);
+
+                } else if (// $rootScope.programContext !== null &&
+                    typeof // $rootScope.programContext !== 'undefined') {
+
+                    data.program = // $rootScope.programContext;
+
+                    $location.search('program', // $rootScope.programContext);
+
+                } else if (params.program !== null &&
+                    typeof params.program !== 'undefined') {
+
+                    data.program = params.program;
+
+                    // $rootScope.programContext = params.program;
+
+                } else {
+
+                    $location.search({});
+
+                }
+
+                return data;
+
+            };
+
+            self.loadFeatures = function() {
+
+                var params = self.buildFilter();
+
+                Award.collection(params).$promise.then(function(successResponse) {
+
+                    console.log('successResponse', successResponse);
+
+                    self.awards = successResponse.features;
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                    self.showElements();
+
+                });
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken()
+                    };
+
+                    console.log('rootScope.programContext', // $rootScope.programContext);
+
+                    if (// $rootScope.programContext !== null &&
+                        typeof // $rootScope.programContext !== 'undefined') {
+
+                        $location.search('program', // $rootScope.programContext);
+
+                    }
+
+                    self.loadFeatures();
+
+                });
+
+            } else {
+
+                $location.path('/login');
+
+            }
+
+        });
+'use strict';
+
+/**
+ * @ngdoc overview
+ * @name FieldDoc
+ * @description
+ * # FieldDoc
+ *
+ * Main module of the application.
+ */
+angular.module('FieldDoc')
+    .config(function($routeProvider, environment) {
+
+        $routeProvider
             .when('/funding-sources', {
                 templateUrl: '/modules/components/funding-source/views/fundingSourceList--view.html?t=' + environment.version,
                 controller: 'FundingSourceListController',
@@ -20640,23 +21439,23 @@ angular.module('FieldDoc')
 
                     data.program = self.selectedProgram.id;
 
-                    $rootScope.programContext = self.selectedProgram.id;
+                    // $rootScope.programContext = self.selectedProgram.id;
 
                     $location.search('program', self.selectedProgram.id);
 
-                } else if ($rootScope.programContext !== null &&
-                    typeof $rootScope.programContext !== 'undefined') {
+                } else if (// $rootScope.programContext !== null &&
+                    typeof // $rootScope.programContext !== 'undefined') {
 
-                    data.program = $rootScope.programContext;
+                    data.program = // $rootScope.programContext;
 
-                    $location.search('program', $rootScope.programContext);
+                    $location.search('program', // $rootScope.programContext);
 
                 } else if (params.program !== null &&
                     typeof params.program !== 'undefined') {
 
                     data.program = params.program;
 
-                    $rootScope.programContext = params.program;
+                    // $rootScope.programContext = params.program;
 
                 } else {
 
@@ -20703,12 +21502,12 @@ angular.module('FieldDoc')
                         isLoggedIn: Account.hasToken()
                     };
 
-                    console.log('rootScope.programContext', $rootScope.programContext);
+                    console.log('rootScope.programContext', // $rootScope.programContext);
 
-                    if ($rootScope.programContext !== null &&
-                        typeof $rootScope.programContext !== 'undefined') {
+                    if (// $rootScope.programContext !== null &&
+                        typeof // $rootScope.programContext !== 'undefined') {
 
-                        $location.search('program', $rootScope.programContext);
+                        $location.search('program', // $rootScope.programContext);
 
                     }
 
@@ -22688,6 +23487,11 @@ angular
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/geography/:id/tasks'),
                     'isArray': false
+                },
+                batchDelete: {
+                    'method': 'DELETE',
+                    'url': environment.apiUrl.concat('/v1/geographies'),
+                    'isArray': false
                 }
             });
         });
@@ -23905,6 +24709,40 @@ angular.module('FieldDoc')
                 },
                 update: {
                     'method': 'PATCH'
+                }
+            });
+        });
+
+}());
+(function() {
+
+    'use strict';
+
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('Award', function(environment, Preprocessors, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/data/award/:id'), {
+                id: '@id'
+            }, {
+                query: {
+                    isArray: false
+                },
+                collection: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/awards')
+                },
+                update: {
+                    method: 'PATCH'
+                },
+                minimal: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/data/program/:id/awards')
                 }
             });
         });

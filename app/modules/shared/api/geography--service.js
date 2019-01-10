@@ -48,6 +48,11 @@
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/geography/:id/tasks'),
                     'isArray': false
+                },
+                batchDelete: {
+                    'method': 'DELETE',
+                    'url': environment.apiUrl.concat('/v1/geographies'),
+                    'isArray': false
                 }
             });
         });

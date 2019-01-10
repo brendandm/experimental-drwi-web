@@ -29,21 +29,37 @@
                 <ng-pluralize count="page.geographies.length" when="{'one': 'geography','other': 'geographies'}"></ng-pluralize>.
             </p>
 
-            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && !page.selectedProgram.id && page.geographies.length && ($root.user.properties.is_admin || $root.user.properties.is_manager)">You have <strong>{{ page.geographies.length | number }}</strong>
-                <ng-pluralize count="page.geographies.length" when="{'one': 'geography','other': 'geographies'}"></ng-pluralize>.
-            </p>
-
-            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && page.selectedProgram.id > 0 && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There are <strong>{{ (page.geographies.length | number) || 0 }}</strong>
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There are <strong>{{ (page.geographies.length | number) || 0 }}</strong>
                 <ng-pluralize count="page.geographies.length" when="{'one': 'geography','other': 'geographies'}"></ng-pluralize> in this program.
             </p>
 
             <div class="collection-filter" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">
-                <form name="myForm">
+                <form name="myForm" style="width: auto;">
                     <label for="programFilter"><strong>Filter by program:</strong></label>
-                    <select name="programFilter" id="programFilter" data-ng-options="program.properties.name for program in $root.user.properties.programs track by program.id" data-ng-model="page.selectedProgram" data-ng-change="page.loadFeatures()">
-                        <option value="">All programs</option>
+                    <select name="programFilter" id="programFilter"
+                        data-ng-options="program.properties.name for program in $root.user.properties.programs track by program.id"
+                        data-ng-model="page.selectedProgram"
+                        data-ng-change="page.loadFeatures()">
+                        <!-- <option value="0">All programs</option> -->
                     </select>
                 </form>
+                <button type="reset" data-ng-click="page.batchDelete = !page.batchDelete">
+                    <i class="material-icons">
+                        delete_sweep
+                    </i>
+                </button>
+            </div>
+
+            <div class="delete-collection-modal" data-ng-if="page.batchDelete">
+                <p>Do you want to delete these geographies? This action cannot be undone.</p>
+                <div class="actions" style="flex: 0;">
+                    <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteCollection()">
+                        Yes
+                    </a>
+                    <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.batchDelete = !page.batchDelete">
+                        Cancel
+                    </a>
+                </div>
             </div>
 
             <section class="reveal fade-in t0" style="padding: 1em 0 0;" data-ng-if="!page.status.loading && page.pendingTasks.length">
@@ -100,7 +116,7 @@
 
             </section>
 
-            <section class="reveal fade-in t0" style="padding: 1em 0 0;" data-ng-if="!page.status.loading && !page.geographies.length && !page.pendTasks.length">
+            <section class="reveal fade-in t0" style="padding: 1em 0 0;" data-ng-if="!page.status.loading && !page.geographies.length">
 
                 <form role="form" class="form" id="form--geography-collection" name="form--geography-collection" style="position: relative;" data-ng-submit="page.uploadCollection()">
 
@@ -133,6 +149,8 @@
                         </div>
 
                         <input type="file" class="form-control" id="geography-collection" name="geography-collection" file-upload file-model="page.fileImport" />
+
+                        <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">Regardless of type, file uploads cannot exceed 100MB. For shapefile archives, this is the maximum total size of all <strong>un-compressed</strong> files.</p>
 
                     </div>
 

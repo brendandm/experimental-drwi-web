@@ -285,6 +285,72 @@
 
                 };
 
+                self.deleteCollection = function() {
+
+                    self.batchDelete = false;
+
+                    if (self.selectedProgram &&
+                        typeof self.selectedProgram.id !== 'undefined' &&
+                        self.selectedProgram.id > 0) {
+
+                        GeographyService.batchDelete({
+                            program: self.selectedProgram.id
+                        }).$promise.then(function(successResponse) {
+
+                            console.log('successResponse', successResponse);
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Successfully deleted these geographies.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                            self.loadFeatures();
+
+                        }).catch(function(errorResponse) {
+
+                            console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                            if (errorResponse.status === 409) {
+
+                                self.alerts = [{
+                                    'type': 'error',
+                                    'flag': 'Error!',
+                                    'msg': 'Unable to delete. There are pending tasks affecting these geographies.',
+                                    'prompt': 'OK'
+                                }];
+
+                            } else if (errorResponse.status === 403) {
+
+                                self.alerts = [{
+                                    'type': 'error',
+                                    'flag': 'Error!',
+                                    'msg': 'You don’t have permission to delete these geographies.',
+                                    'prompt': 'OK'
+                                }];
+
+                            } else {
+
+                                self.alerts = [{
+                                    'type': 'error',
+                                    'flag': 'Error!',
+                                    'msg': 'Something went wrong while attempting to delete these geographies.',
+                                    'prompt': 'OK'
+                                }];
+
+                            }
+
+                            $timeout(closeAlerts, 2000);
+
+                        });
+
+                    }
+
+                };
+
                 self.searchGroups = function(value) {
 
                     return GeographyType.collection({
@@ -421,7 +487,7 @@
 
                         console.log('fileData', fileData);
 
-                        $window.scrollTo(0,0);
+                        $window.scrollTo(0, 0);
 
                         Shapefile.upload({}, fileData, function(successResponse) {
 
@@ -499,6 +565,12 @@
                         };
 
                         self.programs = self.extractPrograms($rootScope.user);
+
+                        if ($rootScope.user.properties.programs.length) {
+
+                            self.selectedProgram = $rootScope.user.properties.programs[0];
+
+                        }
 
                         self.loadGroups();
 
