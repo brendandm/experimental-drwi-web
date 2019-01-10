@@ -47,11 +47,11 @@
 
                         <div class="classification--list" style="margin-top: 2em;">
                             <ul>
-                                <li data-ng-repeat="owner in page.tempPartnerships">
-                                    <span data-ng-if="!owner.name" style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ owner.first_name }} {{ owner.last_name }}</span>
-                                    <span data-ng-if="owner.name" style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ owner.name }}</span>
+                                <li data-ng-repeat="partnership in page.tempPartnerships">
+                                    <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ partnership.organization.properties.name }}</span>
+                                    <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ partnership.amount | currency }}</span>
                                     <div class="button--container">
-                                        <button data-ng-if="owner.id !== page.profile.id" type="button" class="remove-item" data-ng-click="page.removeOwner(owner.id)">
+                                        <button type="button" class="remove-item" data-ng-click="page.removePartnership(partnership.id)">
                                             <i class="material-icons">
                                                 remove_circle
                                             </i>
@@ -82,7 +82,7 @@
 
                 <div class="form--row">
 
-                    <form role="form" class="form" id="form--AddPartner" name="form--AddPartner" data-ng-submit="page.addPartner()" autocomplete="off">
+                    <form role="form" class="form" id="form--AddPartner" name="form--AddPartner" data-ng-submit="page.createPartnership()" autocomplete="off">
 
                         <!-- Partner organization name -->
 

@@ -209,7 +209,7 @@ angular.module('FieldDoc')
 
                 }
 
-                self.tempPartners = self.project.partners;
+                self.tempPartnerships = self.project.partnerships;
 
                 self.status.processing = false;
 
@@ -251,6 +251,40 @@ angular.module('FieldDoc')
                 reservedProperties.forEach(function(key) {
 
                     delete feature[key];
+
+                });
+
+            };
+
+            self.createPartnership = function() {
+
+                var params = {
+                    amount: self.partnerQuery.amount,
+                    description: self.partnerQuery.description,
+                    organization_id: self.partnerQuery.id
+                },
+                partnership = new Partnership(params);
+
+                partnership.$save().then(function(successResponse) {
+
+                    self.tempPartnerships.push({
+                        id: successResponse.id
+                    });
+
+                    console.log('self.createPartnership.self.tempPartnerships', self.tempPartnerships);
+
+                    self.saveProject();
+
+                }).then(function(error) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Unable to create partnership.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
 
                 });
 
