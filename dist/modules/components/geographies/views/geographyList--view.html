@@ -29,7 +29,7 @@
                 <ng-pluralize count="page.geographies.length" when="{'one': 'geography','other': 'geographies'}"></ng-pluralize>.
             </p>
 
-            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There are <strong>{{ (page.geographies.length | number) || 0 }}</strong>
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There <ng-pluralize count="page.geographies.length" when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{ (page.geographies.length | number) || 0 }}</strong>
                 <ng-pluralize count="page.geographies.length" when="{'one': 'geography','other': 'geographies'}"></ng-pluralize> in this program.
             </p>
 
@@ -40,7 +40,6 @@
                         data-ng-options="program.properties.name for program in $root.user.properties.programs track by program.id"
                         data-ng-model="page.selectedProgram"
                         data-ng-change="page.loadFeatures()">
-                        <!-- <option value="0">All programs</option> -->
                     </select>
                 </form>
                 <button type="reset" data-ng-click="page.batchDelete = !page.batchDelete">

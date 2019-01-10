@@ -27,9 +27,7 @@
 
             <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">You have <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
 
-            <p data-ng-if="!page.status.loading && !page.selectedProgram.id && ($root.user.properties.is_admin || $root.user.properties.is_manager)">You have <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
-
-            <p data-ng-if="!page.status.loading && page.selectedProgram.id > 0 && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There are <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize> in this program.</p>
+            <p data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There <ng-pluralize count="page.projects.length" when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize> in this program.</p>
 
             <div class="collection-filter" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">
                 <form name="myForm">
@@ -38,7 +36,6 @@
                         data-ng-options="program.properties.name for program in $root.user.properties.programs track by program.id"
                         data-ng-model="page.selectedProgram"
                         data-ng-change="page.loadProjects()">
-                        <option value="">All programs</option>
                     </select>
                 </form>
             </div>

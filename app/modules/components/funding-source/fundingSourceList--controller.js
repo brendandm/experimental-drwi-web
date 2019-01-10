@@ -148,23 +148,12 @@ angular.module('FieldDoc')
 
                     data.program = self.selectedProgram.id;
 
-                    // $rootScope.programContext = self.selectedProgram.id;
-
                     $location.search('program', self.selectedProgram.id);
-
-                } else if (// $rootScope.programContext !== null &&
-                    typeof // $rootScope.programContext !== 'undefined') {
-
-                    data.program = // $rootScope.programContext;
-
-                    $location.search('program', // $rootScope.programContext);
 
                 } else if (params.program !== null &&
                     typeof params.program !== 'undefined') {
 
                     data.program = params.program;
-
-                    // $rootScope.programContext = params.program;
 
                 } else {
 
@@ -210,15 +199,6 @@ angular.module('FieldDoc')
                     self.permissions = {
                         isLoggedIn: Account.hasToken()
                     };
-
-                    console.log('rootScope.programContext', // $rootScope.programContext);
-
-                    if (// $rootScope.programContext !== null &&
-                        typeof // $rootScope.programContext !== 'undefined') {
-
-                        $location.search('program', // $rootScope.programContext);
-
-                    }
 
                     self.loadFeatures();
 

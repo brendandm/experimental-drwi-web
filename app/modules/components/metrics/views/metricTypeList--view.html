@@ -29,7 +29,7 @@
 
             <p class="reveal fade-in t0" data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">You have <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize>.</p>
 
-            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There are <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize> in this program.</p>
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There <ng-pluralize count="page.metrics.length" when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize> in this program.</p>
 
             <div class="collection-filter" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager) && $root.user.properties.programs.length">
                 <form name="myForm">

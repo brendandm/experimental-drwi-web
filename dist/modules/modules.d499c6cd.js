@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1547079537834})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1547080725994})
 
 ;
 /**
@@ -4881,26 +4881,7 @@ angular.module('FieldDoc')
                 resolve: {
                     projects: function($location, Project, $rootScope) {
 
-                        var params = $location.search(),
-                            data = {};
-
-                        if (// $rootScope.programContext !== null &&
-                            typeof // $rootScope.programContext !== 'undefined') {
-
-                            data.program = // $rootScope.programContext;
-
-                            $location.search('program', // $rootScope.programContext);
-
-                        } else if (params.program !== null &&
-                            typeof params.program !== 'undefined') {
-
-                            data.program = params.program;
-
-                            // $rootScope.programContext = params.program;
-
-                        }
-
-                        return Project.collection(data);
+                        return Project.collection({});
 
                     },
                     user: function(Account, $rootScope, $document) {
@@ -5421,10 +5402,6 @@ angular.module('FieldDoc')
 
                     data.program = params.program;
 
-                } else {
-
-                    $location.search({});
-
                 }
 
                 return data;
@@ -5485,6 +5462,12 @@ angular.module('FieldDoc')
                     //
                     // Project functionality
                     //
+
+                    if ($rootScope.user.properties.programs.length) {
+
+                        self.selectedProgram = $rootScope.user.properties.programs[0];
+
+                    }
 
                     self.loadProjects();
 
@@ -20681,23 +20664,12 @@ angular.module('FieldDoc')
 
                     data.program = self.selectedProgram.id;
 
-                    // $rootScope.programContext = self.selectedProgram.id;
-
                     $location.search('program', self.selectedProgram.id);
-
-                } else if (// $rootScope.programContext !== null &&
-                    typeof // $rootScope.programContext !== 'undefined') {
-
-                    data.program = // $rootScope.programContext;
-
-                    $location.search('program', // $rootScope.programContext);
 
                 } else if (params.program !== null &&
                     typeof params.program !== 'undefined') {
 
                     data.program = params.program;
-
-                    // $rootScope.programContext = params.program;
 
                 } else {
 
@@ -20744,12 +20716,9 @@ angular.module('FieldDoc')
                         isLoggedIn: Account.hasToken()
                     };
 
-                    console.log('rootScope.programContext', // $rootScope.programContext);
+                    if ($rootScope.user.properties.programs.length) {
 
-                    if (// $rootScope.programContext !== null &&
-                        typeof // $rootScope.programContext !== 'undefined') {
-
-                        $location.search('program', // $rootScope.programContext);
+                        self.selectedProgram = $rootScope.user.properties.programs[0];
 
                     }
 
@@ -21439,23 +21408,12 @@ angular.module('FieldDoc')
 
                     data.program = self.selectedProgram.id;
 
-                    // $rootScope.programContext = self.selectedProgram.id;
-
                     $location.search('program', self.selectedProgram.id);
-
-                } else if (// $rootScope.programContext !== null &&
-                    typeof // $rootScope.programContext !== 'undefined') {
-
-                    data.program = // $rootScope.programContext;
-
-                    $location.search('program', // $rootScope.programContext);
 
                 } else if (params.program !== null &&
                     typeof params.program !== 'undefined') {
 
                     data.program = params.program;
-
-                    // $rootScope.programContext = params.program;
 
                 } else {
 
@@ -21501,15 +21459,6 @@ angular.module('FieldDoc')
                     self.permissions = {
                         isLoggedIn: Account.hasToken()
                     };
-
-                    console.log('rootScope.programContext', // $rootScope.programContext);
-
-                    if (// $rootScope.programContext !== null &&
-                        typeof // $rootScope.programContext !== 'undefined') {
-
-                        $location.search('program', // $rootScope.programContext);
-
-                    }
 
                     self.loadFeatures();
 

@@ -238,10 +238,6 @@ angular.module('FieldDoc')
 
                     data.program = params.program;
 
-                } else {
-
-                    $location.search({});
-
                 }
 
                 return data;
@@ -302,6 +298,12 @@ angular.module('FieldDoc')
                     //
                     // Project functionality
                     //
+
+                    if ($rootScope.user.properties.programs.length) {
+
+                        self.selectedProgram = $rootScope.user.properties.programs[0];
+
+                    }
 
                     self.loadProjects();
 
