@@ -7,14 +7,14 @@
  */
 angular.module('FieldDoc')
     .controller('ProjectPartnershipController',
-        function(Account, $location, $log, Project, project,
+        function(Account, $location, $log, Project, project, Partnership,
             $rootScope, $route, user, SearchService, $timeout,
             Utility, $interval) {
 
             var self = this;
 
             $rootScope.toolbarState = {
-                'edit': true
+                'partnerships': true
             };
 
             $rootScope.page = {};
@@ -118,26 +118,6 @@ angular.module('FieldDoc')
 
             }
 
-            self.searchPrograms = function(value) {
-
-                return SearchService.program({
-                    q: value
-                }).$promise.then(function(response) {
-
-                    console.log('SearchService.program response', response);
-
-                    response.results.forEach(function(result) {
-
-                        result.category = null;
-
-                    });
-
-                    return response.results.slice(0, 5);
-
-                });
-
-            };
-
             self.searchOrganizations = function(value) {
 
                 return SearchService.organization({
@@ -235,20 +215,6 @@ angular.module('FieldDoc')
 
             };
 
-            self.setProgram = function(item, model, label) {
-
-                self.project.program_id = item.id;
-
-            };
-
-            self.unsetProgram = function() {
-
-                self.project.program_id = null;
-
-                self.program = null;
-
-            };
-
             self.scrubFeature = function(feature) {
 
                 var excludedKeys = [
@@ -296,9 +262,9 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.project);
 
-                self.project.partners = self.processRelations(self.tempPartners);
+                self.project.partnerships = self.processRelations(self.tempPartnerships);
 
-                self.project.workflow_state = "Draft";
+                // self.project.workflow_state = "Draft";
 
                 var exclude = [
                     'centroid',
