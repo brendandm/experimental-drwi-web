@@ -164,6 +164,51 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            .when('/projects/:projectId/partnerships', {
+                templateUrl: '/modules/components/projects/views/projectPartnership--view.html?t=' + environment.version,
+                controller: 'ProjectPartnershipController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    project: function(Project, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            // 'partners',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
+                        return Project.get({
+                            id: $route.current.params.projectId,
+                            exclude: exclude
+                        });
+
+                    }
+                }
+            })
             .when('/projects/:projectId/users', {
                 templateUrl: '/modules/components/projects/views/projectsUsers--view.html?t=' + environment.version,
                 controller: 'ProjectUsersController',
