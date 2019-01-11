@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1547080725994})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1547230017506})
 
 ;
 /**
@@ -5025,6 +5025,58 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            .when('/projects/:projectId/partnerships', {
+                templateUrl: '/modules/components/projects/views/projectPartnership--view.html?t=' + environment.version,
+                controller: 'ProjectPartnershipController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    project: function(Project, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            // 'partners',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
+                        return Project.get({
+                            id: $route.current.params.projectId,
+                            exclude: exclude
+                        });
+
+                    },
+                    partnerships: function(Project, $route) {
+
+                        return Project.partnerships({
+                            id: $route.current.params.projectId
+                        });
+
+                    }
+                }
+            })
             .when('/projects/:projectId/users', {
                 templateUrl: '/modules/components/projects/views/projectsUsers--view.html?t=' + environment.version,
                 controller: 'ProjectUsersController',
@@ -7556,6 +7608,553 @@ angular.module('FieldDoc')
 'use strict';
 
 /**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('ProjectPartnershipController',
+        function(Account, $location, $log, Project, project, Partnership,
+            $rootScope, $route, user, SearchService, $timeout, $window,
+            Utility, $interval, partnerships) {
+
+            var self = this;
+
+            $rootScope.toolbarState = {
+                'partnerships': true
+            };
+
+            $rootScope.page = {};
+
+            self.status = {
+                loading: true,
+                processing: true
+            };
+
+            self.showElements = function() {
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.status.processing = false;
+
+                }, 1000);
+
+            };
+
+            self.alerts = [];
+
+            self.closeAlerts = function() {
+
+                self.alerts = [];
+
+            };
+
+            self.closeRoute = function() {
+
+                $location.path('/projects');
+
+            };
+
+            self.confirmDelete = function(obj) {
+
+                self.deletionTarget = self.deletionTarget ? null : obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.loadPartnerships = function() {
+
+                Project.partnerships({
+                    id: self.project.id
+                }).$promise.then(function(successResponse) {
+
+                    self.tempPartnerships = successResponse.features;
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    $log.error('Unable to load project partnerships.');
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.searchOrganizations = function(value) {
+
+                return SearchService.organization({
+                    q: value
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService.organization response', response);
+
+                    response.results.forEach(function(result) {
+
+                        result.category = null;
+
+                    });
+
+                    return response.results.slice(0, 5);
+
+                });
+
+            };
+
+            self.addRelation = function(item, model, label, collection, queryAttr) {
+
+                var _datum = {
+                    id: item.id,
+                    properties: item
+                };
+
+                collection.push(_datum);
+
+                queryAttr = null;
+
+                console.log('Updated ' + collection + ' (addition)', collection);
+
+            };
+
+            self.removeRelation = function(id, collection) {
+
+                var _index;
+
+                collection.forEach(function(item, idx) {
+
+                    if (item.id === id) {
+
+                        _index = idx;
+
+                    }
+
+                });
+
+                console.log('Remove item at index', _index);
+
+                if (typeof _index === 'number') {
+
+                    collection.splice(_index, 1);
+
+                }
+
+                console.log('Updated ' + collection + ' (removal)', collection);
+
+            };
+
+            self.processRelations = function(list) {
+
+                var _list = [];
+
+                angular.forEach(list, function(item) {
+
+                    var _datum = {};
+
+                    if (item && item.id) {
+                        _datum.id = item.id;
+                    }
+
+                    _list.push(_datum);
+
+                });
+
+                return _list;
+
+            };
+
+            self.processFeature = function(data) {
+
+                self.project = data;
+
+                // if (self.project.program) {
+
+                //     self.program = self.project.program;
+
+                // }
+
+                // self.tempPartnerships = self.project.partnerships;
+
+                self.status.processing = false;
+
+            };
+
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [
+                    'creator',
+                    'extent',
+                    'geometry',
+                    'last_modified_by',
+                    'organization',
+                    'tags',
+                    'tasks'
+                ];
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
+
+            };
+
+            self.createPartnership = function() {
+
+                var params = {
+                    amount: self.partnerQuery.amount,
+                    description: self.partnerQuery.description,
+                    organization_id: self.partnerQuery.id
+                },
+                partnership = new Partnership(params);
+
+                partnership.$save().then(function(successResponse) {
+
+                    self.tempPartnerships.push({
+                        id: successResponse.id
+                    });
+
+                    console.log('self.createPartnership.self.tempPartnerships', self.tempPartnerships);
+
+                    self.saveProject();
+
+                }).catch(function(error) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Unable to create partnership.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                });
+
+            };
+
+            self.editPartnership = function(obj) {
+
+                self.editMode = true;
+
+                self.displayModal = true;
+
+                self.targetFeature = obj;
+
+                $window.scrollTo(0, 0);
+
+            };
+
+            self.updatePartnership = function() {
+
+                self.scrubFeature(self.targetFeature);
+
+                Partnership.update({
+                    id: self.targetFeature.id
+                }, self.targetFeature).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Partnership changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.displayModal = false;
+
+                    self.editMode = false;
+
+                    $window.scrollTo(0, 0);
+
+                    self.loadPartnerships();
+
+                }).catch(function(error) {
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong and the changes could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                    self.displayModal = false;
+
+                    self.editMode = false;
+
+                    $window.scrollTo(0, 0);
+
+                });
+
+            };
+
+            self.removePartnership = function(partnershipId, index) {
+
+                Partnership.delete({
+                    id: partnershipId
+                }).$promise.then(function(successResponse) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this partnership.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.tempPartnerships.splice(index, 1);
+
+                }).catch(function(error) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Unable to delete partnership.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                });
+
+            };
+
+            self.saveProject = function() {
+
+                self.status.processing = true;
+
+                self.scrubFeature(self.project);
+
+                self.project.partnerships = self.processRelations(self.tempPartnerships);
+
+                // self.project.workflow_state = "Draft";
+
+                var exclude = [
+                    'centroid',
+                    'creator',
+                    'dashboards',
+                    'extent',
+                    'geometry',
+                    'members',
+                    'metric_types',
+                    // 'partners',
+                    'practices',
+                    'practice_types',
+                    'properties',
+                    'tags',
+                    'targets',
+                    'tasks',
+                    'type',
+                    'sites'
+                ].join(',');
+
+                Project.update({
+                    id: $route.current.params.projectId,
+                    exclude: exclude
+                }, self.project).then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Project changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.displayModal = false;
+
+                    self.partnerQuery = null;
+
+                    self.loadPartnerships();
+
+                }).catch(function(error) {
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong and the changes could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                    self.displayModal = false;
+
+                    self.partnerQuery = null;
+
+                });
+
+            };
+
+            self.deleteFeature = function() {
+
+                var targetId;
+
+                if (self.project) {
+
+                    targetId = self.project.id;
+
+                } else {
+
+                    targetId = self.project.id;
+
+                }
+
+                Project.delete({
+                    id: +targetId
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this project.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(self.closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.project.name + '”. There are pending tasks affecting this project.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this project.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this project.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(self.closeAlerts, 2000);
+
+                });
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false,
+                        can_delete: false
+                    };
+
+                    //
+                    // Assign project to a scoped variable
+                    //
+                    project.$promise.then(function(successResponse) {
+
+                        self.project = successResponse;
+
+                        if (!successResponse.permissions.read &&
+                            !successResponse.permissions.write) {
+
+                            self.makePrivate = true;
+
+                        } else {
+
+                            self.processFeature(successResponse);
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            $rootScope.page.title = 'Edit Project';
+
+                        }
+
+                        self.loadPartnerships();
+
+                    }, function(errorResponse) {
+
+                        $log.error('Unable to load project.');
+
+                        self.showElements();
+
+                    });
+
+                });
+
+            } else {
+
+                $location.path('/login');
+
+            }
+
+        });
+'use strict';
+
+/**
  * @ngdoc overview
  * @name FieldDoc
  * @description
@@ -8199,6 +8798,58 @@ angular.module('FieldDoc')
                         return Site.get({
                             id: $route.current.params.siteId
                         });
+                    }
+                }
+            })
+            .when('/sites/:siteId/partnerships', {
+                templateUrl: '/modules/components/sites/views/sitePartnership--view.html?t=' + environment.version,
+                controller: 'SitePartnershipController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    site: function(Site, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            // 'partners',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
+                        return Site.get({
+                            id: $route.current.params.siteId,
+                            exclude: exclude
+                        });
+
+                    },
+                    partnerships: function(Site, $route) {
+
+                        return Site.partnerships({
+                            id: $route.current.params.siteId
+                        });
+
                     }
                 }
             })
@@ -9617,6 +10268,553 @@ angular.module('FieldDoc')
             });
 
 }());
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('SitePartnershipController',
+        function(Account, $location, $log, Project, Site, site, Partnership,
+            $rootScope, $route, user, SearchService, $timeout, $window,
+            Utility, $interval, partnerships) {
+
+            var self = this;
+
+            $rootScope.toolbarState = {
+                'partnerships': true
+            };
+
+            $rootScope.page = {};
+
+            self.status = {
+                loading: true,
+                processing: true
+            };
+
+            self.showElements = function() {
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.status.processing = false;
+
+                }, 1000);
+
+            };
+
+            self.alerts = [];
+
+            self.closeAlerts = function() {
+
+                self.alerts = [];
+
+            };
+
+            self.closeRoute = function() {
+
+                $location.path('/sites');
+
+            };
+
+            self.confirmDelete = function(obj) {
+
+                self.deletionTarget = self.deletionTarget ? null : obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.loadPartnerships = function() {
+
+                Site.partnerships({
+                    id: self.site.id
+                }).$promise.then(function(successResponse) {
+
+                    self.tempPartnerships = successResponse.features;
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    $log.error('Unable to load site partnerships.');
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.searchOrganizations = function(value) {
+
+                return SearchService.organization({
+                    q: value
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService.organization response', response);
+
+                    response.results.forEach(function(result) {
+
+                        result.category = null;
+
+                    });
+
+                    return response.results.slice(0, 5);
+
+                });
+
+            };
+
+            self.addRelation = function(item, model, label, collection, queryAttr) {
+
+                var _datum = {
+                    id: item.id,
+                    properties: item
+                };
+
+                collection.push(_datum);
+
+                queryAttr = null;
+
+                console.log('Updated ' + collection + ' (addition)', collection);
+
+            };
+
+            self.removeRelation = function(id, collection) {
+
+                var _index;
+
+                collection.forEach(function(item, idx) {
+
+                    if (item.id === id) {
+
+                        _index = idx;
+
+                    }
+
+                });
+
+                console.log('Remove item at index', _index);
+
+                if (typeof _index === 'number') {
+
+                    collection.splice(_index, 1);
+
+                }
+
+                console.log('Updated ' + collection + ' (removal)', collection);
+
+            };
+
+            self.processRelations = function(list) {
+
+                var _list = [];
+
+                angular.forEach(list, function(item) {
+
+                    var _datum = {};
+
+                    if (item && item.id) {
+                        _datum.id = item.id;
+                    }
+
+                    _list.push(_datum);
+
+                });
+
+                return _list;
+
+            };
+
+            self.processFeature = function(data) {
+
+                self.site = data;
+
+                // if (self.site.program) {
+
+                //     self.program = self.site.program;
+
+                // }
+
+                // self.tempPartnerships = self.site.partnerships;
+
+                self.status.processing = false;
+
+            };
+
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [
+                    'creator',
+                    'extent',
+                    'geometry',
+                    'last_modified_by',
+                    'organization',
+                    'tags',
+                    'tasks'
+                ];
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
+
+            };
+
+            self.createPartnership = function() {
+
+                var params = {
+                    amount: self.partnerQuery.amount,
+                    description: self.partnerQuery.description,
+                    organization_id: self.partnerQuery.id
+                },
+                partnership = new Partnership(params);
+
+                partnership.$save().then(function(successResponse) {
+
+                    self.tempPartnerships.push({
+                        id: successResponse.id
+                    });
+
+                    console.log('self.createPartnership.self.tempPartnerships', self.tempPartnerships);
+
+                    self.saveProject();
+
+                }).catch(function(error) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Unable to create partnership.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                });
+
+            };
+
+            self.editPartnership = function(obj) {
+
+                self.editMode = true;
+
+                self.displayModal = true;
+
+                self.targetFeature = obj;
+
+                $window.scrollTo(0, 0);
+
+            };
+
+            self.updatePartnership = function() {
+
+                self.scrubFeature(self.targetFeature);
+
+                Partnership.update({
+                    id: self.targetFeature.id
+                }, self.targetFeature).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Partnership changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.displayModal = false;
+
+                    self.editMode = false;
+
+                    $window.scrollTo(0, 0);
+
+                    self.loadPartnerships();
+
+                }).catch(function(error) {
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong and the changes could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                    self.displayModal = false;
+
+                    self.editMode = false;
+
+                    $window.scrollTo(0, 0);
+
+                });
+
+            };
+
+            self.removePartnership = function(partnershipId, index) {
+
+                Partnership.delete({
+                    id: partnershipId
+                }).$promise.then(function(successResponse) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this partnership.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.tempPartnerships.splice(index, 1);
+
+                }).catch(function(error) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Unable to delete partnership.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                });
+
+            };
+
+            self.saveProject = function() {
+
+                self.status.processing = true;
+
+                self.scrubFeature(self.site);
+
+                self.site.partnerships = self.processRelations(self.tempPartnerships);
+
+                // self.site.workflow_state = "Draft";
+
+                var exclude = [
+                    'centroid',
+                    'creator',
+                    'dashboards',
+                    'extent',
+                    'geometry',
+                    'members',
+                    'metric_types',
+                    // 'partners',
+                    'practices',
+                    'practice_types',
+                    'properties',
+                    'tags',
+                    'targets',
+                    'tasks',
+                    'type',
+                    'sites'
+                ].join(',');
+
+                Project.update({
+                    id: $route.current.params.siteId,
+                    exclude: exclude
+                }, self.site).then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Project changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.displayModal = false;
+
+                    self.partnerQuery = null;
+
+                    self.loadPartnerships();
+
+                }).catch(function(error) {
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong and the changes could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                    self.displayModal = false;
+
+                    self.partnerQuery = null;
+
+                });
+
+            };
+
+            self.deleteFeature = function() {
+
+                var targetId;
+
+                if (self.site) {
+
+                    targetId = self.site.id;
+
+                } else {
+
+                    targetId = self.site.id;
+
+                }
+
+                Project.delete({
+                    id: +targetId
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this site.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(self.closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.site.name + '”. There are pending tasks affecting this site.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this site.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this site.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(self.closeAlerts, 2000);
+
+                });
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false,
+                        can_delete: false
+                    };
+
+                    //
+                    // Assign site to a scoped variable
+                    //
+                    site.$promise.then(function(successResponse) {
+
+                        self.site = successResponse;
+
+                        if (!successResponse.permissions.read &&
+                            !successResponse.permissions.write) {
+
+                            self.makePrivate = true;
+
+                        } else {
+
+                            self.processFeature(successResponse);
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            $rootScope.page.title = 'Edit Project';
+
+                        }
+
+                        self.loadPartnerships();
+
+                    }, function(errorResponse) {
+
+                        $log.error('Unable to load site.');
+
+                        self.showElements();
+
+                    });
+
+                });
+
+            } else {
+
+                $location.path('/login');
+
+            }
+
+        });
 (function() {
 
     'use strict';
@@ -10486,6 +11684,58 @@ angular.module('FieldDoc')
                         return Practice.get({
                             id: $route.current.params.practiceId
                         });
+                    }
+                }
+            })
+            .when('/practices/:practiceId/partnerships', {
+                templateUrl: '/modules/components/practices/views/practicePartnership--view.html?t=' + environment.version,
+                controller: 'PracticePartnershipController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    practice: function(Practice, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            // 'partners',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
+                        return Practice.get({
+                            id: $route.current.params.practiceId,
+                            exclude: exclude
+                        });
+
+                    },
+                    partnerships: function(Practice, $route) {
+
+                        return Practice.partnerships({
+                            id: $route.current.params.practiceId
+                        });
+
                     }
                 }
             })
@@ -11925,6 +13175,553 @@ angular.module('FieldDoc')
                     self.fetchTasks();
 
                 });
+
+            }
+
+        });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('PracticePartnershipController',
+        function(Account, $location, $log, Project, Practice, practice, Partnership,
+            $rootScope, $route, user, SearchService, $timeout, $window,
+            Utility, $interval, partnerships) {
+
+            var self = this;
+
+            $rootScope.toolbarState = {
+                'partnerships': true
+            };
+
+            $rootScope.page = {};
+
+            self.status = {
+                loading: true,
+                processing: true
+            };
+
+            self.showElements = function() {
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.status.processing = false;
+
+                }, 1000);
+
+            };
+
+            self.alerts = [];
+
+            self.closeAlerts = function() {
+
+                self.alerts = [];
+
+            };
+
+            self.closeRoute = function() {
+
+                $location.path('/practices');
+
+            };
+
+            self.confirmDelete = function(obj) {
+
+                self.deletionTarget = self.deletionTarget ? null : obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.loadPartnerships = function() {
+
+                Practice.partnerships({
+                    id: self.practice.id
+                }).$promise.then(function(successResponse) {
+
+                    self.tempPartnerships = successResponse.features;
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    $log.error('Unable to load practice partnerships.');
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.searchOrganizations = function(value) {
+
+                return SearchService.organization({
+                    q: value
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService.organization response', response);
+
+                    response.results.forEach(function(result) {
+
+                        result.category = null;
+
+                    });
+
+                    return response.results.slice(0, 5);
+
+                });
+
+            };
+
+            self.addRelation = function(item, model, label, collection, queryAttr) {
+
+                var _datum = {
+                    id: item.id,
+                    properties: item
+                };
+
+                collection.push(_datum);
+
+                queryAttr = null;
+
+                console.log('Updated ' + collection + ' (addition)', collection);
+
+            };
+
+            self.removeRelation = function(id, collection) {
+
+                var _index;
+
+                collection.forEach(function(item, idx) {
+
+                    if (item.id === id) {
+
+                        _index = idx;
+
+                    }
+
+                });
+
+                console.log('Remove item at index', _index);
+
+                if (typeof _index === 'number') {
+
+                    collection.splice(_index, 1);
+
+                }
+
+                console.log('Updated ' + collection + ' (removal)', collection);
+
+            };
+
+            self.processRelations = function(list) {
+
+                var _list = [];
+
+                angular.forEach(list, function(item) {
+
+                    var _datum = {};
+
+                    if (item && item.id) {
+                        _datum.id = item.id;
+                    }
+
+                    _list.push(_datum);
+
+                });
+
+                return _list;
+
+            };
+
+            self.processFeature = function(data) {
+
+                self.practice = data;
+
+                // if (self.practice.program) {
+
+                //     self.program = self.practice.program;
+
+                // }
+
+                // self.tempPartnerships = self.practice.partnerships;
+
+                self.status.processing = false;
+
+            };
+
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [
+                    'creator',
+                    'extent',
+                    'geometry',
+                    'last_modified_by',
+                    'organization',
+                    'tags',
+                    'tasks'
+                ];
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
+
+            };
+
+            self.createPartnership = function() {
+
+                var params = {
+                    amount: self.partnerQuery.amount,
+                    description: self.partnerQuery.description,
+                    organization_id: self.partnerQuery.id
+                },
+                partnership = new Partnership(params);
+
+                partnership.$save().then(function(successResponse) {
+
+                    self.tempPartnerships.push({
+                        id: successResponse.id
+                    });
+
+                    console.log('self.createPartnership.self.tempPartnerships', self.tempPartnerships);
+
+                    self.saveProject();
+
+                }).catch(function(error) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Unable to create partnership.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                });
+
+            };
+
+            self.editPartnership = function(obj) {
+
+                self.editMode = true;
+
+                self.displayModal = true;
+
+                self.targetFeature = obj;
+
+                $window.scrollTo(0, 0);
+
+            };
+
+            self.updatePartnership = function() {
+
+                self.scrubFeature(self.targetFeature);
+
+                Partnership.update({
+                    id: self.targetFeature.id
+                }, self.targetFeature).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Partnership changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.displayModal = false;
+
+                    self.editMode = false;
+
+                    $window.scrollTo(0, 0);
+
+                    self.loadPartnerships();
+
+                }).catch(function(error) {
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong and the changes could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                    self.displayModal = false;
+
+                    self.editMode = false;
+
+                    $window.scrollTo(0, 0);
+
+                });
+
+            };
+
+            self.removePartnership = function(partnershipId, index) {
+
+                Partnership.delete({
+                    id: partnershipId
+                }).$promise.then(function(successResponse) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this partnership.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.tempPartnerships.splice(index, 1);
+
+                }).catch(function(error) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Unable to delete partnership.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                });
+
+            };
+
+            self.saveProject = function() {
+
+                self.status.processing = true;
+
+                self.scrubFeature(self.practice);
+
+                self.practice.partnerships = self.processRelations(self.tempPartnerships);
+
+                // self.practice.workflow_state = "Draft";
+
+                var exclude = [
+                    'centroid',
+                    'creator',
+                    'dashboards',
+                    'extent',
+                    'geometry',
+                    'members',
+                    'metric_types',
+                    // 'partners',
+                    'practices',
+                    'practice_types',
+                    'properties',
+                    'tags',
+                    'targets',
+                    'tasks',
+                    'type',
+                    'sites'
+                ].join(',');
+
+                Project.update({
+                    id: $route.current.params.practiceId,
+                    exclude: exclude
+                }, self.practice).then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Project changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.displayModal = false;
+
+                    self.partnerQuery = null;
+
+                    self.loadPartnerships();
+
+                }).catch(function(error) {
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong and the changes could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                    self.displayModal = false;
+
+                    self.partnerQuery = null;
+
+                });
+
+            };
+
+            self.deleteFeature = function() {
+
+                var targetId;
+
+                if (self.practice) {
+
+                    targetId = self.practice.id;
+
+                } else {
+
+                    targetId = self.practice.id;
+
+                }
+
+                Project.delete({
+                    id: +targetId
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this practice.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(self.closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.practice.name + '”. There are pending tasks affecting this practice.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this practice.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this practice.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(self.closeAlerts, 2000);
+
+                });
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false,
+                        can_delete: false
+                    };
+
+                    //
+                    // Assign practice to a scoped variable
+                    //
+                    practice.$promise.then(function(successResponse) {
+
+                        self.practice = successResponse;
+
+                        if (!successResponse.permissions.read &&
+                            !successResponse.permissions.write) {
+
+                            self.makePrivate = true;
+
+                        } else {
+
+                            self.processFeature(successResponse);
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            $rootScope.page.title = 'Edit Project';
+
+                        }
+
+                        self.loadPartnerships();
+
+                    }, function(errorResponse) {
+
+                        $log.error('Unable to load practice.');
+
+                        self.showElements();
+
+                    });
+
+                });
+
+            } else {
+
+                $location.path('/login');
 
             }
 
@@ -23741,6 +25538,11 @@ angular
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/outcomes'),
                     'isArray': false
                 },
+                partnerships: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/partnerships')
+                },
                 'site': {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/site'),
@@ -23879,6 +25681,35 @@ angular
      * @description
      */
     angular.module('FieldDoc')
+        .service('Partnership', function(environment, Preprocessors, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/data/partnership/:id'), {
+                'id': '@id'
+            }, {
+                'query': {
+                    'isArray': false
+                },
+                collection: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/partnership')
+                },
+                update: {
+                    'method': 'PATCH'
+                }
+            });
+        });
+
+}());
+(function() {
+
+    'use strict';
+
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
         .service('PracticeType', function(environment, Preprocessors, $resource) {
             return $resource(environment.apiUrl.concat('/v1/data/practice-type/:id'), {
                 'id': '@id'
@@ -23996,6 +25827,11 @@ angular
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/data/project/:id/members')
+                },
+                partnerships: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/project/:id/partnerships')
                 },
                 sites: {
                     method: 'GET',
@@ -24187,6 +26023,11 @@ angular
                     isArray: false,
                     method: 'GET',
                     url: environment.apiUrl.concat('/v1/data/site/:id/nodes')
+                },
+                partnerships: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/site/:id/partnerships')
                 },
                 update: {
                     method: 'PATCH'

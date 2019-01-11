@@ -95,6 +95,13 @@
                     </i>
                 </a>
             </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
+                <a href="/projects/{{ page.project.id }}/partnerships">
+                    <i class="material-icons">
+                        group_work
+                    </i>
+                </a>
+            </li>
             <li data-ng-if="page.permissions.can_edit">
                 <a href="/projects/{{ page.project.id }}/edit">
                     <i class="material-icons">

@@ -122,6 +122,13 @@
                     </i>
                 </a>
             </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
+                <a href="/practices/{{ page.practice.id }}/partnerships">
+                    <i class="material-icons">
+                        group_work
+                    </i>
+                </a>
+            </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
                 <a href="/practices/{{ page.practice.properties.id }}/tags">
                     <i class="material-icons">
