@@ -254,12 +254,23 @@ angular.module('FieldDoc')
 
             };
 
+            self.editPartnership = function(obj) {
+
+                self.editMode = true;
+
+                self.displayModal = true;
+
+                self.targetFeature = obj;
+
+            };
+
             self.updatePartnership = function() {
 
+                self.scrubFeature(self.targetFeature);
+
                 Partnership.update({
-                    id: $route.current.params.projectId,
-                    exclude: exclude
-                }, self.modifiedPartnership).then(function(successResponse) {
+                    id: self.targetFeature.id
+                }, self.targetFeature).$promise.then(function(successResponse) {
 
                     self.alerts = [{
                         'type': 'success',
@@ -272,7 +283,7 @@ angular.module('FieldDoc')
 
                     self.displayModal = false;
 
-                    self.partnerQuery = null;
+                    self.editMode = false;
 
                     self.loadPartnerships();
 
@@ -293,7 +304,7 @@ angular.module('FieldDoc')
 
                     self.displayModal = false;
 
-                    self.partnerQuery = null;
+                    self.editMode = false;
 
                 });
 
