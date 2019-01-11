@@ -39,7 +39,6 @@
 
                             <p style="font-style: normal; color: #616161; font-size: 1em; margin-bottom: 2em;">If you have trouble managing site partners, feel free to drop us a line at <a href="mailto:support@fielddoc.org">support@fielddoc.org</a>.</p>
 
-                            <input type="search" class="search" value="" placeholder="Search partners" data-ng-model="page.partnerQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchOrganizations($viewValue)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
                         </div>
 
                         <div class="save--action--wrapper save--action--bottom" data-ng-if="page.partnerQuery">
@@ -68,15 +67,15 @@
                                         </p>
                                     </div>
                                     <div>
-                                        <div class="button--container" style="flex-grow: 0;">
+                                        <div class="button--container" style="flex-grow: 0;" data-ng-if="page.targetFeature.id !== partnership.id">
                                             <button type="button" data-ng-click="page.editPartnership(partnership)">
                                                 <i class="material-icons">
                                                     edit
                                                 </i>
                                             </button>
                                         </div>
-                                        <div class="button--container" style="flex-grow: 0;">
-                                            <button type="button" data-ng-click="page.removePartnership(partnership.id, $index)">
+                                        <div class="button--container" style="flex-grow: 0;" data-ng-if="page.targetFeature.id === partnership.id">
+                                            <button type="button" data-ng-click="page.updatePartnership(partnership.id)">
                                                 <i class="material-icons">
                                                     delete
                                                 </i>
