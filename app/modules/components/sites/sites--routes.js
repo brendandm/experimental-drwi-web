@@ -155,6 +155,58 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            .when('/sites/:siteId/partnerships', {
+                templateUrl: '/modules/components/sites/views/sitePartnership--view.html?t=' + environment.version,
+                controller: 'SitePartnershipController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    site: function(Site, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            // 'partners',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
+                        return Site.get({
+                            id: $route.current.params.siteId,
+                            exclude: exclude
+                        });
+
+                    },
+                    partnerships: function(Site, $route) {
+
+                        return Site.partnerships({
+                            id: $route.current.params.siteId
+                        });
+
+                    }
+                }
+            })
             .when('/sites/:siteId/tags', {
                 templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
                 controller: 'FeatureTagController',

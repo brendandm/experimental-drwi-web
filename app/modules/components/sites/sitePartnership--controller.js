@@ -6,8 +6,8 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProjectPartnershipController',
-        function(Account, $location, $log, Project, project, Partnership,
+    .controller('SitePartnershipController',
+        function(Account, $location, $log, Project, site, Partnership,
             $rootScope, $route, user, SearchService, $timeout, $window,
             Utility, $interval, partnerships) {
 
@@ -46,7 +46,7 @@ angular.module('FieldDoc')
 
             self.closeRoute = function() {
 
-                $location.path('/projects');
+                $location.path('/sites');
 
             };
 
@@ -65,7 +65,7 @@ angular.module('FieldDoc')
             self.loadPartnerships = function() {
 
                 Project.partnerships({
-                    id: self.project.id
+                    id: self.site.id
                 }).$promise.then(function(successResponse) {
 
                     self.tempPartnerships = successResponse.features;
@@ -74,7 +74,7 @@ angular.module('FieldDoc')
 
                 }, function(errorResponse) {
 
-                    $log.error('Unable to load project partnerships.');
+                    $log.error('Unable to load site partnerships.');
 
                     self.showElements();
 
@@ -165,15 +165,15 @@ angular.module('FieldDoc')
 
             self.processFeature = function(data) {
 
-                self.project = data;
+                self.site = data;
 
-                // if (self.project.program) {
+                // if (self.site.program) {
 
-                //     self.program = self.project.program;
+                //     self.program = self.site.program;
 
                 // }
 
-                // self.tempPartnerships = self.project.partnerships;
+                // self.tempPartnerships = self.site.partnerships;
 
                 self.status.processing = false;
 
@@ -352,11 +352,11 @@ angular.module('FieldDoc')
 
                 self.status.processing = true;
 
-                self.scrubFeature(self.project);
+                self.scrubFeature(self.site);
 
-                self.project.partnerships = self.processRelations(self.tempPartnerships);
+                self.site.partnerships = self.processRelations(self.tempPartnerships);
 
-                // self.project.workflow_state = "Draft";
+                // self.site.workflow_state = "Draft";
 
                 var exclude = [
                     'centroid',
@@ -378,9 +378,9 @@ angular.module('FieldDoc')
                 ].join(',');
 
                 Project.update({
-                    id: $route.current.params.projectId,
+                    id: $route.current.params.siteId,
                     exclude: exclude
-                }, self.project).then(function(successResponse) {
+                }, self.site).then(function(successResponse) {
 
                     self.alerts = [{
                         'type': 'success',
@@ -424,13 +424,13 @@ angular.module('FieldDoc')
 
                 var targetId;
 
-                if (self.project) {
+                if (self.site) {
 
-                    targetId = self.project.id;
+                    targetId = self.site.id;
 
                 } else {
 
-                    targetId = self.project.id;
+                    targetId = self.site.id;
 
                 }
 
@@ -441,7 +441,7 @@ angular.module('FieldDoc')
                     self.alerts.push({
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Successfully deleted this project.',
+                        'msg': 'Successfully deleted this site.',
                         'prompt': 'OK'
                     });
 
@@ -456,7 +456,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.project.name + '”. There are pending tasks affecting this project.',
+                            'msg': 'Unable to delete “' + self.site.name + '”. There are pending tasks affecting this site.',
                             'prompt': 'OK'
                         }];
 
@@ -465,7 +465,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this project.',
+                            'msg': 'You don’t have permission to delete this site.',
                             'prompt': 'OK'
                         }];
 
@@ -474,7 +474,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this project.',
+                            'msg': 'Something went wrong while attempting to delete this site.',
                             'prompt': 'OK'
                         }];
 
@@ -504,11 +504,11 @@ angular.module('FieldDoc')
                     };
 
                     //
-                    // Assign project to a scoped variable
+                    // Assign site to a scoped variable
                     //
-                    project.$promise.then(function(successResponse) {
+                    site.$promise.then(function(successResponse) {
 
-                        self.project = successResponse;
+                        self.site = successResponse;
 
                         if (!successResponse.permissions.read &&
                             !successResponse.permissions.write) {
@@ -530,7 +530,7 @@ angular.module('FieldDoc')
 
                     }, function(errorResponse) {
 
-                        $log.error('Unable to load project.');
+                        $log.error('Unable to load site.');
 
                         self.showElements();
 

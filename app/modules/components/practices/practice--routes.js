@@ -194,6 +194,58 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            .when('/practices/:practiceId/partnerships', {
+                templateUrl: '/modules/components/practices/views/practicePartnership--view.html?t=' + environment.version,
+                controller: 'PracticePartnershipController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    practice: function(Practice, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            // 'partners',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
+                        return Practice.get({
+                            id: $route.current.params.practiceId,
+                            exclude: exclude
+                        });
+
+                    },
+                    partnerships: function(Practice, $route) {
+
+                        return Practice.partnerships({
+                            id: $route.current.params.practiceId
+                        });
+
+                    }
+                }
+            })
             .when('/practices/:practiceId/tags', {
                 templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
                 controller: 'FeatureTagController',

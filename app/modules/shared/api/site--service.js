@@ -25,6 +25,11 @@
                     method: 'GET',
                     url: environment.apiUrl.concat('/v1/data/site/:id/nodes')
                 },
+                partnerships: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/site/:id/partnerships')
+                },
                 update: {
                     method: 'PATCH'
                 },

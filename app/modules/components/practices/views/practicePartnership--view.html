@@ -8,7 +8,7 @@
 
         <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
             <div class="progress--container">
-                <p style="font-weight: bold;" class="color-pulse">Loading project data&hellip;</p>
+                <p style="font-weight: bold;" class="color-pulse">Loading practice data&hellip;</p>
             </div>
         </div>
 
@@ -20,7 +20,7 @@
                 </i>
             </p>
 
-            <p>This project is private.</p>
+            <p>This practice is private.</p>
 
         </section>
 
@@ -32,16 +32,14 @@
 
                 <div class="form--row">
 
-                    <form role="form" class="form" style="overflow: visible;" id="form--ProjectPartnerships" name="form--ProjectPartnerships" data-ng-submit="page.displayModal = !page.displayModal" autocomplete="off">
+                    <form role="form" class="form" style="overflow: visible;" id="form--PracticePartnerships" name="form--PracticePartnerships" data-ng-submit="page.displayModal = !page.displayModal" autocomplete="off">
 
                         <div class="classification--search" style="position: relative;">
-                            <p style="font-style: normal; color: #616161; font-size: 1em; margin-bottom: 1em;">Add or remove project partners here. If applicable, enter the matching contribution and a brief description for each partner organization. Note that this list of organizations will cascade to any sites and practices that you add to this project. From there you’ll have the option to show how you allocated matching funds and services.</p>
+                            <p style="font-style: normal; color: #616161; font-size: 1em; margin-bottom: 1em;">Use this space to show how you allocated matching funds and services for this practice.</p>
 
-                            <p style="font-style: normal; color: #616161; font-size: 1em; margin-bottom: 2em;">If you have trouble managing project partners, feel free to drop us a line at <a href="mailto:support@fielddoc.org">support@fielddoc.org</a>.</p>
+                            <p style="font-style: normal; color: #616161; font-size: 1em; margin-bottom: 2em;">If you have trouble managing practice partners, feel free to drop us a line at <a href="mailto:support@fielddoc.org">support@fielddoc.org</a>.</p>
 
-                            <input type="search" class="search" value="" placeholder="Search organizations" data-ng-model="page.partnerQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchOrganizations($viewValue)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
-
-                            <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 0.5em;"><strong>Tip:</strong> If the organization you enter doesn’t exist, FieldDoc will create it automatically. Note that the FieldDoc team may standardize the organization name as part of our routine quality control process.</p>
+                            <input type="search" class="search" value="" placeholder="Search partners" data-ng-model="page.partnerQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchOrganizations($viewValue)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
 
                         </div>
 
@@ -64,13 +62,6 @@
                                             <strong>{{ partnership.organization.name }}</strong>
                                         </span>
                                         <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em; justify-content: flex-end;">{{ partnership.amount | currency }}</span>
-                                        <!-- <div class="button--container">
-                                            <button type="button" class="remove-item" data-ng-click="page.removePartnership(partnership.id, $index)">
-                                                <i class="material-icons">
-                                                    remove_circle
-                                                </i>
-                                            </button>
-                                        </div> -->
                                     </div>
                                     <div>
                                         <p style="font-style: normal; color: #616161; font-size: 1em;">
@@ -202,52 +193,52 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li>
-                <a href="/projects/{{ page.project.id }}">
+                <a href="/practices/{{ page.practice.properties.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.users}">
-                <a href="/projects/{{ page.project.id }}/users">
-                    <i class="material-icons">
-                        group
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/projects/{{ page.project.id }}/partnerships">
-                    <i class="material-icons">
-                        group_work
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="/projects/{{ page.project.id }}/edit">
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
+                <a href="/practices/{{ page.practice.properties.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/projects/{{ page.project.id }}/targets">
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
+                <a href="/practices/{{ page.practice.properties.id }}/location">
                     <i class="material-icons">
-                        multiline_chart
+                        location_on
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
+                <a href="/practices/{{ page.practice.properties.id }}/photos">
+                    <i class="material-icons">
+                        insert_photo
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
+                <a href="/practices/{{ page.practice.id }}/partnerships">
+                    <i class="material-icons">
+                        group_work
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/projects/{{ page.project.id }}/tags">
+                <a href="/practices/{{ page.practice.properties.id }}/tags">
                     <i class="material-icons">
                         local_offer
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.id === page.project.id">
-                    <p>Do you want to delete this project?</p>
+                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
+                    <p>Do you want to delete this practice?</p>
                     <div class="actions">
-                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('project')">
+                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature()">
                             Yes
                         </a>
                         <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
@@ -255,7 +246,7 @@
                         </a>
                     </div>
                 </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.project)">
+                <a href="#" data-ng-click="page.confirmDelete(page.practice)">
                     <i class="material-icons">
                         delete
                     </i>
