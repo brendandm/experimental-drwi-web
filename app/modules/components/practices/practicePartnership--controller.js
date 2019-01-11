@@ -7,7 +7,7 @@
  */
 angular.module('FieldDoc')
     .controller('PracticePartnershipController',
-        function(Account, $location, $log, Project, practice, Partnership,
+        function(Account, $location, $log, Project, Practice, practice, Partnership,
             $rootScope, $route, user, SearchService, $timeout, $window,
             Utility, $interval, partnerships) {
 
@@ -64,7 +64,7 @@ angular.module('FieldDoc')
 
             self.loadPartnerships = function() {
 
-                Project.partnerships({
+                Practice.partnerships({
                     id: self.practice.id
                 }).$promise.then(function(successResponse) {
 
