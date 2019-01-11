@@ -254,6 +254,51 @@ angular.module('FieldDoc')
 
             };
 
+            self.updatePartnership = function() {
+
+                Partnership.update({
+                    id: $route.current.params.projectId,
+                    exclude: exclude
+                }, self.modifiedPartnership).then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Partnership changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.displayModal = false;
+
+                    self.partnerQuery = null;
+
+                    self.loadPartnerships();
+
+                }).catch(function(error) {
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong and the changes could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                    self.displayModal = false;
+
+                    self.partnerQuery = null;
+
+                });
+
+            };
+
             self.removePartnership = function(partnershipId, index) {
 
                 Partnership.delete({

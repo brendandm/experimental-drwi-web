@@ -32,7 +32,7 @@
 
                 <div class="form--row">
 
-                    <form role="form" class="form" id="form--ProjectPartnerships" name="form--ProjectPartnerships" data-ng-submit="page.displayModal = !page.displayModal" autocomplete="off">
+                    <form role="form" class="form" style="overflow: visible;" id="form--ProjectPartnerships" name="form--ProjectPartnerships" data-ng-submit="page.displayModal = !page.displayModal" autocomplete="off">
 
                         <div class="classification--search" style="position: relative;">
                             <p style="font-style: normal; color: #616161; font-size: 1em; margin-bottom: 1em;">Add or remove project partners here. If applicable, enter the matching contribution and a brief description for each partner organization. Note that this list of organizations will cascade to any sites and practices that you add to this project. From there you’ll have the option to show how you allocated matching funds and services.</p>
@@ -64,18 +64,34 @@
                                             <strong>{{ partnership.organization.name }}</strong>
                                         </span>
                                         <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em; justify-content: flex-end;">{{ partnership.amount | currency }}</span>
-                                        <div class="button--container">
+                                        <!-- <div class="button--container">
                                             <button type="button" class="remove-item" data-ng-click="page.removePartnership(partnership.id, $index)">
                                                 <i class="material-icons">
                                                     remove_circle
                                                 </i>
                                             </button>
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <div>
                                         <p style="font-style: normal; color: #616161; font-size: 1em;">
                                             {{ partnership.description }}
                                         </p>
+                                    </div>
+                                    <div>
+                                        <div class="button--container" style="flex-grow: 0;">
+                                            <button type="button" data-ng-click="page.editPartnership(partnership.id, $index)">
+                                                <i class="material-icons">
+                                                    edit
+                                                </i>
+                                            </button>
+                                        </div>
+                                        <div class="button--container" style="flex-grow: 0;">
+                                            <button type="button" data-ng-click="page.removePartnership(partnership.id, $index)">
+                                                <i class="material-icons">
+                                                    delete
+                                                </i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </li>
                             </ul>

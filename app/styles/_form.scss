@@ -883,6 +883,18 @@ select[disabled="disabled"] {
     li {
       display: flex;
       flex-flow: column;
+      width: 100%;
+      //padding: 1em;
+      margin-bottom: 2em;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      //box-shadow: 0 1px 1px 0 rgba(60,64,67,.08),0 1px 3px 1px rgba(60,64,67,.16);
+      overflow: hidden;
+      transition: all 250ms ease 0s;
+
+      &:hover {
+        //box-shadow: 0 10px 20px rgba(0,0,0,0.08), 0 6px 6px rgba(0,0,0,0.12);
+      }
 
       &:first-of-type {
         //padding-bottom: 1em;
@@ -892,8 +904,19 @@ select[disabled="disabled"] {
       > div {
         display: flex;
         flex-flow: row nowrap;
-        padding-top: 1em;
         align-items: center;
+        padding: 1em;
+
+        &:first-of-type {
+          //margin-bottom: 1em;
+          border-bottom: 1px solid #eee;
+        }
+
+        &:last-of-type {
+          padding: 0 1em 1em;
+          justify-content: flex-end;
+        }
+
       }
 
       button {
