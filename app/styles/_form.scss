@@ -968,6 +968,110 @@ select[disabled="disabled"] {
 
 }
 
+.allocation--list {
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+  padding: 0 0 2em 0;
+  margin-top: 2em;
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      display: flex;
+      flex-flow: column;
+      width: 100%;
+      margin-bottom: 2em;
+      //border: 1px solid #eee;
+      //border-radius: 4px;
+      overflow: hidden;
+      transition: all 250ms ease 0s;
+
+      &:hover {
+        //
+      }
+
+      &:first-of-type {
+        //
+      }
+
+      .partner-meta {
+        display: flex;
+        flex-flow: column;
+        width: 100%;
+        margin-bottom: 2em;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        overflow: hidden;
+        transition: all 250ms ease 0s;
+
+        > div {
+          display: flex;
+          flex-flow: row nowrap;
+          align-items: center;
+          padding: 1em;
+
+          &:first-of-type {
+            border-bottom: 1px solid #eee;
+          }
+
+          &:last-of-type {
+            //padding: 0 1em 1em;
+            //justify-content: flex-end;
+          }
+
+        }
+
+      }
+
+      button {
+        appearance: none;
+        border: 0 none !important;
+        outline: 0 none;
+        background: transparent;
+        margin: 0;
+      }
+
+      .remove-item {
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        align-items: center;
+        width: 32px;
+        height: 32px;
+        color: rgb(193,56,74);
+        outline: 0 none;
+        text-decoration: none;
+      }
+
+      .remove-item:hover {
+        color: rgb(173,50,66);
+        outline: 0 none;
+        text-decoration: none;
+      }
+
+      span {
+        display: flex;
+        flex-flow: row;
+        align-items: center;
+      }
+
+      .button--container {
+        display: flex;
+        flex-flow: row nowrap;
+        flex-grow: 1;
+        justify-content: flex-end;
+      }
+
+    }
+
+  }
+
+}
+
 .scope--control {
   display: flex;
   flex-flow: row nowrap;
