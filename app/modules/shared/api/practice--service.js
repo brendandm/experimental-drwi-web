@@ -28,6 +28,11 @@
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/outcomes'),
                     'isArray': false
                 },
+                allocations: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/allocations')
+                },
                 partnerships: {
                     method: 'GET',
                     isArray: false,

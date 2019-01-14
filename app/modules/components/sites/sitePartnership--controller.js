@@ -7,9 +7,9 @@
  */
 angular.module('FieldDoc')
     .controller('SitePartnershipController',
-        function(Account, $location, $log, Project, Site, site, Partnership,
+        function(Account, $location, $log, Site, site, Partnership,
             $rootScope, $route, user, SearchService, $timeout, $window,
-            Utility, $interval, partnerships) {
+            Utility, $interval, partnerships, Allocation) {
 
             var self = this;
 
@@ -62,13 +62,33 @@ angular.module('FieldDoc')
 
             };
 
+            self.loadAllocations = function() {
+
+                Site.allocations({
+                    id: self.site.id
+                }).$promise.then(function(successResponse) {
+
+                    self.tempAllocations = successResponse.features;
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    $log.error('Unable to load site allocations.');
+
+                    self.showElements();
+
+                });
+
+            };
+
             self.loadPartnerships = function() {
 
                 Site.partnerships({
                     id: self.site.id
                 }).$promise.then(function(successResponse) {
 
-                    self.tempPartnerships = successResponse.features;
+                    self.partnerships = successResponse.features;
 
                     self.showElements();
 
@@ -82,25 +102,25 @@ angular.module('FieldDoc')
 
             };
 
-            self.searchOrganizations = function(value) {
+            // self.searchOrganizations = function(value) {
 
-                return SearchService.organization({
-                    q: value
-                }).$promise.then(function(response) {
+            //     return SearchService.organization({
+            //         q: value
+            //     }).$promise.then(function(response) {
 
-                    console.log('SearchService.organization response', response);
+            //         console.log('SearchService.organization response', response);
 
-                    response.results.forEach(function(result) {
+            //         response.results.forEach(function(result) {
 
-                        result.category = null;
+            //             result.category = null;
 
-                    });
+            //         });
 
-                    return response.results.slice(0, 5);
+            //         return response.results.slice(0, 5);
 
-                });
+            //     });
 
-            };
+            // };
 
             self.addRelation = function(item, model, label, collection, queryAttr) {
 
@@ -173,7 +193,7 @@ angular.module('FieldDoc')
 
                 // }
 
-                // self.tempPartnerships = self.site.partnerships;
+                // self.tempAllocations = self.site.partnerships;
 
                 self.status.processing = false;
 
@@ -187,6 +207,7 @@ angular.module('FieldDoc')
                     'geometry',
                     'last_modified_by',
                     'organization',
+                    'partnership',
                     'tags',
                     'tasks'
                 ];
@@ -220,31 +241,31 @@ angular.module('FieldDoc')
 
             };
 
-            self.createPartnership = function() {
+            self.createAllocation = function() {
 
                 var params = {
-                    amount: self.partnerQuery.amount,
-                    description: self.partnerQuery.description,
-                    organization_id: self.partnerQuery.id
+                    amount: self.newAllocation.amount,
+                    description: self.newAllocation.description,
+                    partnership_id: self.targetPartner.id
                 },
-                partnership = new Partnership(params);
+                allocation = new Allocation(params);
 
-                partnership.$save().then(function(successResponse) {
+                allocation.$save().then(function(successResponse) {
 
-                    self.tempPartnerships.push({
+                    self.tempAllocations.push({
                         id: successResponse.id
                     });
 
-                    console.log('self.createPartnership.self.tempPartnerships', self.tempPartnerships);
+                    console.log('self.createPartnership.self.tempAllocations', self.tempAllocations);
 
-                    self.saveProject();
+                    self.saveFeature();
 
                 }).catch(function(error) {
 
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Unable to create partnership.',
+                        'msg': 'Unable to create allocation.',
                         'prompt': 'OK'
                     }];
 
@@ -254,7 +275,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.editPartnership = function(obj) {
+            self.editAllocation = function(obj) {
 
                 self.editMode = true;
 
@@ -266,18 +287,34 @@ angular.module('FieldDoc')
 
             };
 
-            self.updatePartnership = function() {
+            self.addAllocation = function(obj) {
+
+                // self.editMode = true;
+
+                self.newAllocation = {};
+
+                self.addMode = true;
+
+                self.displayModal = true;
+
+                self.targetPartner = obj;
+
+                $window.scrollTo(0, 0);
+
+            };
+
+            self.updateAllocation = function() {
 
                 self.scrubFeature(self.targetFeature);
 
-                Partnership.update({
+                Allocation.update({
                     id: self.targetFeature.id
                 }, self.targetFeature).$promise.then(function(successResponse) {
 
                     self.alerts = [{
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Partnership changes saved.',
+                        'msg': 'Allocation changes saved.',
                         'prompt': 'OK'
                     }];
 
@@ -289,7 +326,7 @@ angular.module('FieldDoc')
 
                     $window.scrollTo(0, 0);
 
-                    self.loadPartnerships();
+                    self.loadAllocations();
 
                 }).catch(function(error) {
 
@@ -316,29 +353,29 @@ angular.module('FieldDoc')
 
             };
 
-            self.removePartnership = function(partnershipId, index) {
+            self.removeAllocation = function(feature, index) {
 
-                Partnership.delete({
-                    id: partnershipId
+                Allocation.delete({
+                    id: feature.id
                 }).$promise.then(function(successResponse) {
 
                     self.alerts.push({
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Successfully deleted this partnership.',
+                        'msg': 'Successfully deleted this allocation.',
                         'prompt': 'OK'
                     });
 
                     $timeout(self.closeAlerts, 2000);
 
-                    self.tempPartnerships.splice(index, 1);
+                    self.tempAllocations.splice(index, 1);
 
                 }).catch(function(error) {
 
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Unable to delete partnership.',
+                        'msg': 'Unable to delete allocation.',
                         'prompt': 'OK'
                     }];
 
@@ -348,13 +385,13 @@ angular.module('FieldDoc')
 
             };
 
-            self.saveProject = function() {
+            self.saveFeature = function() {
 
                 self.status.processing = true;
 
                 self.scrubFeature(self.site);
 
-                self.site.partnerships = self.processRelations(self.tempPartnerships);
+                self.site.allocations = self.processRelations(self.tempAllocations);
 
                 // self.site.workflow_state = "Draft";
 
@@ -374,10 +411,10 @@ angular.module('FieldDoc')
                     'targets',
                     'tasks',
                     'type',
-                    'sites'
+                    // 'sites'
                 ].join(',');
 
-                Project.update({
+                Site.update({
                     id: $route.current.params.siteId,
                     exclude: exclude
                 }, self.site).then(function(successResponse) {
@@ -385,7 +422,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Project changes saved.',
+                        'msg': 'Site changes saved.',
                         'prompt': 'OK'
                     }];
 
@@ -393,7 +430,9 @@ angular.module('FieldDoc')
 
                     self.displayModal = false;
 
-                    self.partnerQuery = null;
+                    self.targetPartner = null;
+
+                    self.loadAllocations();
 
                     self.loadPartnerships();
 
@@ -414,7 +453,7 @@ angular.module('FieldDoc')
 
                     self.displayModal = false;
 
-                    self.partnerQuery = null;
+                    self.targetPartner = null;
 
                 });
 
@@ -434,7 +473,7 @@ angular.module('FieldDoc')
 
                 }
 
-                Project.delete({
+                Site.delete({
                     id: +targetId
                 }).$promise.then(function(data) {
 
@@ -525,6 +564,8 @@ angular.module('FieldDoc')
                             $rootScope.page.title = 'Edit Project';
 
                         }
+
+                        self.loadAllocations();
 
                         self.loadPartnerships();
 

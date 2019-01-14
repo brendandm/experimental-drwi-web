@@ -198,6 +198,13 @@ angular.module('FieldDoc')
                         });
 
                     },
+                    // allocations: function(Site, $route) {
+
+                    //     return Site.partnerships({
+                    //         id: $route.current.params.siteId
+                    //     });
+
+                    // },
                     partnerships: function(Site, $route) {
 
                         return Site.partnerships({
