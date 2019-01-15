@@ -11,6 +11,10 @@ angular.module('FieldDoc')
 
             var self = this;
 
+            $rootScope.viewState = {
+                'project': true
+            };
+
             $rootScope.page = {};
 
             self.project = {};

@@ -13,6 +13,10 @@ angular.module('FieldDoc')
 
             var self = this;
 
+            $rootScope.viewState = {
+                'project': true
+            };
+
             $rootScope.toolbarState = {
                 'grant': true
             };

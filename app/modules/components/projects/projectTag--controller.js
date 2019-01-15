@@ -22,7 +22,7 @@
                 $rootScope.page = {};
 
                 $rootScope.viewState = {
-                    'feature': true
+                    'project': true
                 };
 
                 $rootScope.toolbarState = {
