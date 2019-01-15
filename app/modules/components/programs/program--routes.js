@@ -96,8 +96,8 @@ angular.module('FieldDoc')
                 }
             })
             .when('/programs/:programId/tags', {
-                templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
-                controller: 'FeatureTagController',
+                templateUrl: '/modules/components/programs/views/programTag--view.html?t=' + environment.version,
+                controller: 'ProgramTagController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $route, $rootScope, $document) {
@@ -113,36 +113,61 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(Program, $route) {
-
-                        return {
-                            featureId: $route.current.params.programId,
-                            name: 'program',
-                            path: '/programs',
-                            cls: Program
-                        }
-
-                    },
-                    feature: function(Program, $route) {
-
+                    program: function(Program, $route) {
                         return Program.get({
                             id: $route.current.params.programId
                         });
-
-                    },
-                    toolbarUrl: function() {
-
-                        return '/templates/toolbars/program.html?t=' + environment.version;
-
-                    },
-                    viewState: function() {
-
-                        return {
-                            'program': true
-                        };
-
                     }
                 }
             });
+            // .when('/programs/:programId/tags', {
+            //     templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
+            //     controller: 'FeatureTagController',
+            //     controllerAs: 'page',
+            //     resolve: {
+            //         user: function(Account, $route, $rootScope, $document) {
+
+            //             $rootScope.targetPath = document.location.pathname;
+
+            //             // $rootScope.programContext = $route.current.params.programId;
+
+            //             if (Account.userObject && !Account.userObject.id) {
+            //                 return Account.getUser();
+            //             }
+
+            //             return Account.userObject;
+
+            //         },
+            //         featureCollection: function(Program, $route) {
+
+            //             return {
+            //                 featureId: $route.current.params.programId,
+            //                 name: 'program',
+            //                 path: '/programs',
+            //                 cls: Program
+            //             }
+
+            //         },
+            //         feature: function(Program, $route) {
+
+            //             return Program.get({
+            //                 id: $route.current.params.programId
+            //             });
+
+            //         },
+            //         toolbarUrl: function() {
+
+            //             return '/templates/toolbars/program.html?t=' + environment.version;
+
+            //         },
+            //         viewState: function() {
+
+            //             return {
+            //                 'program': true
+            //             };
+
+            //         }
+            //     }
+            // });
 
     });

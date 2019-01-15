@@ -42,6 +42,8 @@
                         </a>
                     </h2>
 
+                    <p class="reveal fade-in t0" data-ng-if="group.selectable && ($root.user.properties.is_admin || $root.user.properties.is_manager)" style="font-style: normal; font-size: 1em; color: #616161;">This tag category is <strong>selectable</strong>. If added to one of your grant programs, grantees will be able to select a tag from this group when editing their projects.</p>
+
                     <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
                         <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="tag in group.tags | orderBy:'-modified_on' | filter: page.q">
