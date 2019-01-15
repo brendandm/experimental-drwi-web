@@ -262,8 +262,8 @@ angular.module('FieldDoc')
                 }
             })
             .when('/projects/:projectId/tags', {
-                templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
-                controller: 'FeatureTagController',
+                templateUrl: '/modules/components/projects/views/projectTag--view.html?t=' + environment.version,
+                controller: 'ProjectTagController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -277,17 +277,7 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(Project, $route) {
-
-                        return {
-                            featureId: $route.current.params.projectId,
-                            name: 'project',
-                            path: '/projects',
-                            cls: Project
-                        };
-
-                    },
-                    feature: function(Project, $route) {
+                    project: function(Project, $route) {
 
                         var exclude = [
                             'centroid',
@@ -297,11 +287,11 @@ angular.module('FieldDoc')
                             'geometry',
                             'members',
                             'metric_types',
-                            'partners',
+                            // 'partners',
                             'practices',
                             'practice_types',
                             'properties',
-                            // 'tags',
+                            'tags',
                             'targets',
                             'tasks',
                             'type',
@@ -313,21 +303,76 @@ angular.module('FieldDoc')
                             exclude: exclude
                         });
 
-                    },
-                    toolbarUrl: function() {
-
-                        return '/templates/toolbars/project.html?t=' + environment.version;
-
-                    },
-                    viewState: function() {
-
-                        return {
-                            'project': true
-                        };
-
                     }
                 }
             })
+            // .when('/projects/:projectId/tags', {
+            //     templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
+            //     controller: 'FeatureTagController',
+            //     controllerAs: 'page',
+            //     resolve: {
+            //         user: function(Account, $rootScope, $document) {
+
+            //             $rootScope.targetPath = document.location.pathname;
+
+            //             if (Account.userObject && !Account.userObject.id) {
+            //                 return Account.getUser();
+            //             }
+
+            //             return Account.userObject;
+
+            //         },
+            //         featureCollection: function(Project, $route) {
+
+            //             return {
+            //                 featureId: $route.current.params.projectId,
+            //                 name: 'project',
+            //                 path: '/projects',
+            //                 cls: Project
+            //             };
+
+            //         },
+            //         feature: function(Project, $route) {
+
+            //             var exclude = [
+            //                 'centroid',
+            //                 'creator',
+            //                 'dashboards',
+            //                 'extent',
+            //                 'geometry',
+            //                 'members',
+            //                 'metric_types',
+            //                 'partners',
+            //                 'practices',
+            //                 'practice_types',
+            //                 'properties',
+            //                 // 'tags',
+            //                 'targets',
+            //                 'tasks',
+            //                 'type',
+            //                 'sites'
+            //             ].join(',');
+
+            //             return Project.get({
+            //                 id: $route.current.params.projectId,
+            //                 exclude: exclude
+            //             });
+
+            //         },
+            //         toolbarUrl: function() {
+
+            //             return '/templates/toolbars/project.html?t=' + environment.version;
+
+            //         },
+            //         viewState: function() {
+
+            //             return {
+            //                 'project': true
+            //             };
+
+            //         }
+            //     }
+            // })
             .when('/projects/:projectId/grant', {
                 templateUrl: '/modules/components/projects/views/projectGrant--view.html?t=' + environment.version,
                 controller: 'ProjectGrantController',

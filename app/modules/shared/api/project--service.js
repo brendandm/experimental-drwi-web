@@ -72,6 +72,11 @@
                     method: 'POST',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/project/:id/matrix')
+                },
+                tagGroups: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/project/:id/tag-groups')
                 }
             });
         });
