@@ -14,6 +14,15 @@
             }, {
                 'query': {
                     'isArray': false
+                },
+                collection: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/tag-groups')
+                },
+                update: {
+                    'method': 'PATCH',
+                    url: environment.apiUrl.concat('/v1/data/tag-group/:id')
                 }
             });
         });

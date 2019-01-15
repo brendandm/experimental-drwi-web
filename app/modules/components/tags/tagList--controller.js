@@ -7,9 +7,9 @@
  */
 angular.module('FieldDoc')
     .controller('TagListController',
-        function(Account, $location, $log, Tag,
+        function(Account, $location, $log, Tag, TagGroup,
             tags, $rootScope, $route, $scope, user,
-            $interval, $timeout, Utility) {
+            $interval, $timeout, Utility, $window) {
 
             var self = this;
 
@@ -116,6 +116,47 @@ angular.module('FieldDoc')
 
             };
 
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [
+                    'creator',
+                    'extent',
+                    'geometry',
+                    'last_modified_by',
+                    'organization',
+                    'tags',
+                    'tasks'
+                ];
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
+
+            };
+
             self.createTag = function() {
 
                 self.tag = new Tag({
@@ -134,6 +175,90 @@ angular.module('FieldDoc')
 
             };
 
+            self.editGroup = function(obj) {
+
+                self.editMode = true;
+
+                self.displayModal = true;
+
+                self.targetGroup = obj;
+
+                $window.scrollTo(0, 0);
+
+            };
+
+            self.saveGroup = function() {
+
+                self.scrubFeature(self.targetGroup);
+
+                TagGroup.update({
+                    id: self.targetGroup.id
+                }, self.targetGroup).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Category changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(closeAlerts, 2000);
+
+                    self.displayModal = false;
+
+                    self.editMode = false;
+
+                    $window.scrollTo(0, 0);
+
+                    self.loadTags();
+
+                }).catch(function(error) {
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong and the changes could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                    self.displayModal = false;
+
+                    self.editMode = false;
+
+                    $window.scrollTo(0, 0);
+
+                });
+
+            };
+
+            self.loadTags = function() {
+
+                Tag.collection({
+                    group: true
+                }).$promise.then(function(successResponse) {
+
+                    console.log('successResponse', successResponse);
+
+                    self.tags = successResponse;
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                    self.showElements();
+
+                });
+
+            };
+
             //
             // Verify Account information for proper UI element display
             //
@@ -147,21 +272,7 @@ angular.module('FieldDoc')
                         isLoggedIn: Account.hasToken()
                     };
 
-                    tags.$promise.then(function(successResponse) {
-
-                        console.log('successResponse', successResponse);
-
-                        self.tags = successResponse;
-
-                        self.showElements();
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                        self.showElements();
-
-                    });
+                    self.loadTags();
 
                 });
 
