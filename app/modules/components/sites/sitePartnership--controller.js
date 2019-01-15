@@ -305,6 +305,8 @@ angular.module('FieldDoc')
 
             self.updateAllocation = function() {
 
+                self.targetFeature.partnership_id = self.targetFeature.partnership.id;
+
                 self.scrubFeature(self.targetFeature);
 
                 Allocation.update({
