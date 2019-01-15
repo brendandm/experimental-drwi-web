@@ -328,6 +328,51 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            .when('/projects/:projectId/grant', {
+                templateUrl: '/modules/components/projects/views/projectGrant--view.html?t=' + environment.version,
+                controller: 'ProjectGrantController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    project: function(Project, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            // 'partners',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
+                        return Project.get({
+                            id: $route.current.params.projectId,
+                            exclude: exclude
+                        });
+
+                    }
+                }
+            })
             .when('/projects/:projectId/targets', {
                 templateUrl: '/modules/components/projects/views/projectTarget--view.html?t=' + environment.version,
                 controller: 'ProjectTargetController',

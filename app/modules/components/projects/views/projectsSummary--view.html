@@ -292,6 +292,20 @@
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
+                <a href="/projects/{{ page.project.id }}/edit">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.grant}">
+                <a href="/projects/{{ page.project.id }}/grant">
+                    <i class="material-icons">
+                        account_balance
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
                 <a href="/projects/{{ page.project.id }}/users">
                     <i class="material-icons">
                         group
@@ -305,13 +319,13 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit">
+            <!-- <li data-ng-if="page.permissions.can_edit">
                 <a href="/projects/{{ page.project.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
-            </li>
+            </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
                 <a href="/projects/{{ page.project.id }}/targets">
                     <i class="material-icons">
