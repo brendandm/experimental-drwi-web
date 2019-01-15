@@ -27,7 +27,9 @@
 
             <input type="text" class="search-bar list-filter reveal fade-in t0" data-ng-if="!page.status.loading && page.tags.count > 10" data-ng-model="page.q" placeholder="Search your tags">
 
-            <p class="reveal fade-in t0">You have <strong>{{ (page.tags.count | number) || 0 }}</strong> <ng-pluralize count="page.tags.count" when="{'one': 'tag','other': 'tags'}"></ng-pluralize>.</p>
+            <p class="reveal fade-in t0" data-ng-if="page.tags.count && page.tags.count.groups > 0">You have <strong>{{ (page.tags.count.tags | number) || 0 }}</strong> <ng-pluralize count="page.tags.count.tags" when="{'one': 'tag','other': 'tags'}"></ng-pluralize> in <strong>{{ (page.tags.count.groups | number) || 0 }}</strong> <ng-pluralize count="page.tags.count.groups" when="{'one': 'category','other': 'categories'}"></ng-pluralize>.</p>
+
+            <p class="reveal fade-in t0" data-ng-if="page.tags.count && page.tags.count.groups < 1">You have <strong>{{ (page.tags.count.tags | number) || 0 }}</strong> <ng-pluralize count="page.tags.count.tags" when="{'one': 'tag','other': 'tags'}"></ng-pluralize>.</p>
 
             <div class="features--container" data-ng-if="!page.status.loading && !page.editMode">
 

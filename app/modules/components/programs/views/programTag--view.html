@@ -79,6 +79,8 @@
 
                         <h2>Categories</h2>
 
+                        <p class="reveal fade-in t0" style="font-style: normal; font-size: 1em; color: #616161;">Add tag categories to your program if you need grantees to select project information from a fixed sets of options. You can review your tag collection <a href="/tags">here</a>.</p>
+
                         <div class="classification--search" style="position: relative;">
                             <input type="search" class="search" placeholder="Search categories" data-ng-model="page.groupQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchGroups($viewValue)" typeahead-on-select="page.addGroup($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
                         </div>
