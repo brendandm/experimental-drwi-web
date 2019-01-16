@@ -50,7 +50,7 @@
 
                                             <label class="name" for="group-{{ tag.id }}">
                                                 {{ tag.name }}
-                                                <input type="radio" id="group-{{ tag.id }}" name="group-{{ tag.id }}" data-ng-model="page.groupTags[group.id]" value="{{ tag.id }}" />
+                                                <input type="radio" id="group-{{ tag.id }}" name="group-{{ group.id }}" data-ng-model="page.groupTags[group.id]" data-ng-value="tag" data-ng-checked="page.groupTags[group.id].id === tag.id" />
                                             </label>
 
                                             <div class="body">
@@ -83,7 +83,7 @@
 
                         <div class="classification--list" style="margin-top: 2em;">
                             <ul>
-                                <li data-ng-repeat="tag in page.tempTags">
+                                <li data-ng-repeat="tag in page.ungrouped">
                                     <i class="material-icons">
                                         local_offer
                                     </i>

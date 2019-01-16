@@ -73,6 +73,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/project/:id/matrix')
                 },
+                freeTags: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/project/:id/free-tags')
+                },
                 tagGroups: {
                     method: 'GET',
                     isArray: false,
