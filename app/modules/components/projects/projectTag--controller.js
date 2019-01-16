@@ -30,6 +30,13 @@ angular.module('FieldDoc')
                 processing: true
             };
 
+            // 
+            // Initialize container for storing grouped
+            // tag selections.
+            // 
+
+            self.groupTags = {};
+
             self.alerts = [];
 
             function closeAlerts() {
@@ -112,8 +119,6 @@ angular.module('FieldDoc')
 
                     self.project = successResponse;
 
-                    self.tempGroups = successResponse.tag_groups;
-
                     self.tempTags = successResponse.tags;
 
                     if (!successResponse.permissions.read &&
@@ -171,12 +176,14 @@ angular.module('FieldDoc')
                     'metric_types',
                     'organization',
                     'partners',
+                    'partnerships',
                     'practices',
                     'practice_types',
-                    'project',
+                    'program',
                     'reports',
                     'sites',
                     'status',
+                    'tasks',
                     'users'
                 ];
 
@@ -245,42 +252,6 @@ angular.module('FieldDoc')
 
             };
 
-            self.addGroup = function(item, model, label) {
-
-                self.tempGroups.push(item);
-
-                self.groupQuery = null;
-
-                console.log('Updated groups (addition)', self.tempGroups);
-
-            };
-
-            self.removeGroup = function(id) {
-
-                var _index;
-
-                self.tempGroups.forEach(function(item, idx) {
-
-                    if (item.id === id) {
-
-                        _index = idx;
-
-                    }
-
-                });
-
-                console.log('Remove group at index', _index);
-
-                if (typeof _index === 'number') {
-
-                    self.tempGroups.splice(_index, 1);
-
-                }
-
-                console.log('Updated groups (removal)', self.tempGroups);
-
-            };
-
             self.processRelations = function(list) {
 
                 var _list = [];
@@ -297,6 +268,20 @@ angular.module('FieldDoc')
 
                 });
 
+                console.log('self.groupTags', self.groupTags);
+
+                for (var key in self.groupTags) {
+
+                    if (self.groupTags.hasOwnProperty(key)) {
+
+                        _list.push({
+                            id: self.groupTags[key]
+                        });
+
+                    }
+
+                }
+
                 return _list;
 
             };
@@ -309,8 +294,6 @@ angular.module('FieldDoc')
 
                 self.project.tags = self.processRelations(self.tempTags);
 
-                self.project.tag_groups = self.processRelations(self.tempGroups);
-
                 self.project.$update().then(function(successResponse) {
 
                     self.alerts = [{
@@ -321,8 +304,6 @@ angular.module('FieldDoc')
                     }];
 
                     $timeout(closeAlerts, 2000);
-
-                    self.tempGroups = successResponse.tag_groups;
 
                     self.tempTags = successResponse.tags;
 

@@ -37,7 +37,7 @@
 
                     <h2>
                         {{ group.name }}&nbsp;
-                        <a class="snapshot--title" href="#" title="Edit category" data-ng-click="page.editGroup(group)">
+                        <a class="snapshot--title" href="#" title="Edit category" data-ng-if="group.id" data-ng-click="page.editGroup(group)">
                             <i class="material-icons">
                             edit
                             </i>
