@@ -28,25 +28,25 @@
                     <p class="reveal fade-in t0" style="font-style: normal; font-size: 1em; color: #616161;">Projects are the core building blocks of a dashboard. To create a list of projects, search by one or more of the below categories to see a filtered project collection. If you use multiple categories, keep in mind that some combinations will produce empty project lists.</p>
 
                     <div class="search-options-radio">
-                        <label for="search-project">
-                            Project name
-                            <input type="radio" id="search-project" name="search-project" data-ng-model="page.searchScope.target" value="project" />
-                        </label>
-                        <label for="search-tag">
-                            Tag
-                            <input type="radio" id="search-tag" name="search-tag" data-ng-model="page.searchScope.target" value="tag" />
-                        </label>
-                        <label for="search-organization">
-                            Organization
-                            <input type="radio" id="search-organization" name="search-organization" data-ng-model="page.searchScope.target" value="organization" />
-                        </label>
                         <label for="search-practice">
                             Conservation practice
-                            <input type="radio" id="search-practice" name="search-practice" data-ng-model="page.searchScope.target" value="practice" />
+                            <input type="checkbox" id="search-practice" name="search-practice" data-ng-model="page.filterCategories.practice" />
                         </label>
                         <label for="search-program">
                             Conservation program
-                            <input type="radio" id="search-program" name="search-program" data-ng-model="page.searchScope.target" value="program" />
+                            <input type="checkbox" id="search-program" name="search-program" data-ng-model="page.filterCategories.program" />
+                        </label>
+                        <label for="search-organization">
+                            Organization
+                            <input type="checkbox" id="search-organization" name="search-organization" data-ng-model="page.filterCategories.organization" />
+                        </label>
+                        <label for="search-project">
+                            Project name
+                            <input type="checkbox" id="search-project" name="search-project" data-ng-model="page.filterCategories.project" />
+                        </label>
+                        <label for="search-tag">
+                            Tag
+                            <input type="checkbox" id="search-tag" name="search-tag" data-ng-model="page.filterCategories.tag" />
                         </label>
                     </div>
 
@@ -66,7 +66,7 @@
                             </div>
                         </div>
 
-                        <div class="filter--group">
+                        <!-- <div class="filter--group">
                             <div class="filter--pill" data-ng-repeat="filter in page.activeFilters">
                                 <div>
                                     <span class="category {{ filter.category }}">{{ filter.category }}</span>
@@ -78,15 +78,15 @@
                                     </i>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
 
-                    <div class="filter--actions" data-ng-if="page.activeFilters && page.activeFilters.length">
+                    <!-- <div class="filter--actions" data-ng-if="page.activeFilters && page.activeFilters.length">
                         <button class="clear" type="button" data-ng-click="page.clearAllFilters()" title="Clear all filters">
                             Clear all
                         </button>
-                    </div>
+                    </div> -->
 
                 </div>
 
@@ -102,7 +102,49 @@
                     </button>
                 </div>
 
+                <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="project in page.projects | orderBy:'-modified_on' | filter: page.q">
+
+                        <div class="card--content">
+
+                            <label class="name" for="project-{{ project.id }}">
+                                {{ project.name }}
+                                <input type="checkbox" id="project-{{ project.id }}" name="project-{{ project.id }}" data-ng-model="page.selectedProjects[project.id]" value="{{ project.id }}" />
+                            </label>
+
+                            <div class="body">
+                                <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (project.description || 'No description') | truncate:250 }}</p>
+                            </div>
+
+                        </div>
+
+                    </li>
+
+                </ul>
+
             </form>
+
+            <!-- <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+
+                <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="project in page.projects | orderBy:'-modified_on' | filter: page.q">
+
+                    <div class="card--content">
+
+                        <label class="name" for="project-{{ project.id }}">
+                            {{ project.name }}
+                            <input type="radio" id="project-{{ project.id }}" name="project-{{ project.id }}" data-ng-model="page.groupTags[group.id]" value="{{ project.id }}" />
+                        </label>
+
+                        <div class="body">
+                            <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (project.description || 'No description') | truncate:250 }}</p>
+                        </div>
+
+                    </div>
+
+                </li>
+
+            </ul> -->
 
         </div>
 

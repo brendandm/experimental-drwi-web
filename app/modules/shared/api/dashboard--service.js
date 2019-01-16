@@ -35,6 +35,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/dashboard/:id/projects')
                 },
+                availableProjects: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/dashboard/:id/available-projects')
+                },
                 projectSites: {
                     method: 'GET',
                     isArray: false,

@@ -24,6 +24,14 @@ angular.module('FieldDoc')
                 target: 'project'
             };
 
+            self.filterCategories = {
+                'name': false,
+                'organization': false,
+                'practice': false,
+                'program': false,
+                'tag': false
+            };
+
             $rootScope.page = {};
 
             self.status = {
@@ -76,6 +84,25 @@ angular.module('FieldDoc')
                     $log.error('Unable to load dashboard');
 
                     self.status.processing = false;
+
+                });
+
+            };
+
+            self.loadProjects = function() {
+
+                //
+                // Assign dashboard to a scoped variable
+                //
+                Dashboard.availableProjects({
+                    id: $route.current.params.dashboardId
+                }).$promise.then(function(successResponse) {
+
+                    self.projects = successResponse.features;
+
+                }).catch(function(errorResponse) {
+
+                    $log.error('Unable to load dashboard projects.');
 
                 });
 
@@ -534,6 +561,8 @@ angular.module('FieldDoc')
                     };
 
                     self.loadDashboard();
+
+                    self.loadProjects();
 
                     //
                     // Setup page meta data
