@@ -220,7 +220,7 @@ angular.module('FieldDoc')
 
                 var relations = [
                     'creator',
-                    // 'geographies',
+                    'geographies',
                     'last_modified_by',
                     'organizations',
                     'organization',
@@ -386,7 +386,7 @@ angular.module('FieldDoc')
 
                 } else if (self.searchScope.target === 'program') {
 
-                    return SearchService.organization({
+                    return SearchService.program({
                         q: value
                     }).$promise.then(function(response) {
 
@@ -404,7 +404,7 @@ angular.module('FieldDoc')
 
                 } else if (self.searchScope.target === 'project') {
 
-                    return SearchService.organization({
+                    return SearchService.project({
                         q: value
                     }).$promise.then(function(response) {
 
