@@ -108,6 +108,24 @@ angular.module('FieldDoc')
 
             };
 
+            self.markSelected = function() {
+
+                self.projects.forEach(function(feature) {
+
+                    if (self.selectAll) {
+
+                        feature.selected = true;
+
+                    } else {
+
+                        feature.selected = false;
+
+                    }
+
+                });
+
+            };
+
             self.clearFilter = function(obj) {
 
                 FilterStore.clearItem(obj);
@@ -283,13 +301,33 @@ angular.module('FieldDoc')
 
             };
 
+            // self.processRelations = function(arr) {
+
+            //     arr.forEach(function(filter) {
+
+            //         self.transformRelation(filter, filter.category);
+
+            //     });
+
+            // };
+
             self.processRelations = function(arr) {
 
-                arr.forEach(function(filter) {
+                var projectCollection = [];
 
-                    self.transformRelation(filter, filter.category);
+                self.projects.forEach(function(feature) {
+
+                    if (feature.selected) {
+
+                        projectCollection.push({
+                            id: feature.id
+                        });
+
+                    }
 
                 });
+
+                return projectCollection;
 
             };
 
@@ -330,17 +368,21 @@ angular.module('FieldDoc')
 
                 self.status.processing = true;
 
-                self.scrubFeature(self.dashboardObject);
+                var data = {
+                    projects: self.processRelations(self.projects)
+                };
 
-                self.processRelations(self.activeFilters);
+                // self.scrubFeature(self.dashboardObject);
 
-                console.log('self.saveDashboard.dashboardObject', self.dashboardObject);
+                // self.processRelations(self.activeFilters);
 
-                console.log('self.saveDashboard.Dashboard', Dashboard);
+                // console.log('self.saveDashboard.dashboardObject', self.dashboardObject);
+
+                // console.log('self.saveDashboard.Dashboard', Dashboard);
 
                 Dashboard.update({
                     id: +self.dashboardObject.id
-                }, self.dashboardObject).then(function(successResponse) {
+                }, data).then(function(successResponse) {
 
                     self.processDashboard(successResponse);
 
@@ -355,11 +397,22 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
+                    self.loadProjects();
+
                 }).catch(function(error) {
 
                     console.log('saveDashboard.error', error);
 
                     // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong while attempting to update this dashboard.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
 
                     self.status.processing = false;
 
@@ -523,7 +576,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this dashboard.',
+                            'msg': 'Something went wrong while attempting to delete this dasoardhb.',
                             'prompt': 'OK'
                         }];
 
