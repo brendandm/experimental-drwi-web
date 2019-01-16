@@ -249,6 +249,24 @@ angular.module('FieldDoc')
 
             self.addTag = function(item, model, label) {
 
+                var existingMatch = false;
+
+                angular.forEach(self.tempTags, function(tag) {
+
+                    console.log('tagCheck', tag, item);
+
+                    if (tag.id === item.id) {
+
+                        self.tagQuery = null;
+
+                        existingMatch = true;
+
+                    }
+
+                });
+
+                if (existingMatch) return;
+
                 self.ungrouped.push(item);
 
                 self.tempTags.push(item);
