@@ -39,7 +39,7 @@
 
                             <p style="font-style: normal; color: #616161; font-size: 1em; margin-bottom: 2em;">If you have trouble managing practice partners, feel free to drop us a line at <a href="mailto:support@fielddoc.org">support@fielddoc.org</a>.</p>
 
-                            <input type="search" class="search" value="" placeholder="Search partners" data-ng-model="page.partnerQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchOrganizations($viewValue)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                            <!-- <input type="search" class="search" value="" placeholder="Search partners" data-ng-model="page.partnerQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchOrganizations($viewValue)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html"> -->
 
                         </div>
 
@@ -63,23 +63,23 @@
                                         </span>
                                         <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em; justify-content: flex-end;">{{ partnership.amount | currency }}</span>
                                     </div>
-                                    <div>
+                                    <!-- <div>
                                         <p style="font-style: normal; color: #616161; font-size: 1em;">
                                             {{ partnership.description }}
                                         </p>
-                                    </div>
+                                    </div> -->
                                     <div>
-                                        <div class="button--container" style="flex-grow: 0;">
+                                        <div class="button--container" style="flex-grow: 0;" data-ng-if="page.targetFeature.id !== partnership.id">
                                             <button type="button" data-ng-click="page.editPartnership(partnership)">
                                                 <i class="material-icons">
                                                     edit
                                                 </i>
                                             </button>
                                         </div>
-                                        <div class="button--container" style="flex-grow: 0;">
-                                            <button type="button" data-ng-click="page.removePartnership(partnership.id, $index)">
+                                        <div class="button--container" style="flex-grow: 0;" data-ng-if="page.targetFeature.id === partnership.id">
+                                            <button type="button" data-ng-click="page.updatePartnership(partnership)">
                                                 <i class="material-icons">
-                                                    delete
+                                                    done
                                                 </i>
                                             </button>
                                         </div>
@@ -87,6 +87,20 @@
                                 </li>
                             </ul>
                         </div>
+
+                        <table class="partnership--list" style="margin-top: 2em;">
+
+                            <thead></thead>
+
+                            <tbody>
+
+                                <tr>
+                                    <td>
+                                        <strong>{{ partnership.organization.name }}</strong>
+                                    </td>
+                                    <td>
+                                        {{ partnership.amount | currency }}
+                                    </td>
 
                     </form>
 
