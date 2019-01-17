@@ -292,11 +292,67 @@
 
                 };
 
+                self.scrubFeature = function(feature) {
+
+                    var excludedKeys = [
+                        'allocations',
+                        'creator',
+                        'counties',
+                        'dashboards',
+                        'geographies',
+                        // 'geometry',
+                        'last_modified_by',
+                        'members',
+                        'metrics',
+                        'metric_types',
+                        'organization',
+                        'partners',
+                        'partnerships',
+                        'practices',
+                        'practice_types',
+                        'program',
+                        'project',
+                        'reports',
+                        'sites',
+                        'status',
+                        'tags',
+                        'tasks',
+                        'watersheds',
+                        'users'
+                    ];
+
+                    var reservedProperties = [
+                        'links',
+                        'permissions',
+                        '$promise',
+                        '$resolved'
+                    ];
+
+                    excludedKeys.forEach(function(key) {
+
+                        if (feature.properties) {
+
+                            delete feature.properties[key];
+
+                        } else {
+
+                            delete feature[key];
+
+                        }
+
+                    });
+
+                    reservedProperties.forEach(function(key) {
+
+                        delete feature[key];
+
+                    });
+
+                };
+
                 self.saveSite = function() {
 
-                    delete self.site.counties;
-                    delete self.site.geographies;
-                    delete self.site.watersheds;
+                    self.scrubFeature(self.site);
 
                     if (self.savedObjects.length) {
 
@@ -326,7 +382,9 @@
 
                     self.status.processing = true;
 
-                    self.site.$update().then(function(successResponse) {
+                    Site.update({
+                        id: self.site.id
+                    }, self.site).then(function(successResponse) {
 
                         self.status.processing = false;
 
@@ -341,7 +399,7 @@
 
                         $timeout(closeAlerts, 2000);
 
-                    }, function(errorResponse) {
+                    }).catch(function(errorResponse) {
 
                         self.status.processing = false;
 

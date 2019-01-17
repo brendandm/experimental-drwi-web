@@ -51,7 +51,7 @@
                 'practices': {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/data/site/:id/practices')
+                    url: environment.apiUrl.concat('/v1/site/:id/practices')
                 },
                 tags: {
                     method: 'GET',
