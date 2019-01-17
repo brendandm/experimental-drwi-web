@@ -107,7 +107,7 @@ angular.module('FieldDoc')
 
                 if (successResponse.category) {
 
-                    self.practiceType = successResponse.category.properties;
+                    self.practiceType = successResponse.category;
 
                 }
 
@@ -143,15 +143,59 @@ angular.module('FieldDoc')
 
         };
 
-        self.scrubFeature = function() {
+        self.scrubFeature = function(feature) {
 
-            delete self.practice.geometry;
-            delete self.practice.site;
-            delete self.practice.project;
-            delete self.practice.program;
-            delete self.practice.organization;
-            delete self.practice.creator;
-            delete self.practice.last_modified_by;
+            var excludedKeys = [
+                'allocations',
+                'creator',
+                'dashboards',
+                'geographies',
+                'geometry',
+                'last_modified_by',
+                'members',
+                'metrics',
+                'metric_types',
+                'organization',
+                'partners',
+                'partnerships',
+                'practices',
+                'practice_types',
+                'program',
+                'project',
+                'reports',
+                'sites',
+                'status',
+                'tags',
+                'tasks',
+                'users'
+            ];
+
+            var reservedProperties = [
+                'links',
+                'permissions',
+                '$promise',
+                '$resolved'
+            ];
+
+            excludedKeys.forEach(function(key) {
+
+                if (feature.properties) {
+
+                    delete feature.properties[key];
+
+                } else {
+
+                    delete feature[key];
+
+                }
+
+            });
+
+            reservedProperties.forEach(function(key) {
+
+                delete feature[key];
+
+            });
 
         };
 
@@ -159,7 +203,7 @@ angular.module('FieldDoc')
 
             self.status.processing = true;
 
-            self.scrubFeature();
+            self.scrubFeature(self.practice);
 
             if (self.practiceType) {
 
@@ -167,7 +211,9 @@ angular.module('FieldDoc')
 
             }
 
-            self.practice.$update().then(function(successResponse) {
+            Practice.update({
+                id: self.practice.id
+            }, self.practice).then(function(successResponse) {
 
                 self.alerts = [{
                     'type': 'success',
@@ -180,7 +226,7 @@ angular.module('FieldDoc')
 
                 self.showElements();
 
-            }, function(errorResponse) {
+            }).catch(function(errorResponse) {
 
                 // Error message
 
@@ -223,7 +269,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this practice.',
+                        'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this practice.',
                         'prompt': 'OK'
                     }];
 

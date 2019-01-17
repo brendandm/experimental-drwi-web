@@ -128,7 +128,7 @@ angular.module('FieldDoc')
 
                     self.practice = successResponse;
 
-                    // self.tempTags = successResponse.tags;
+                    self.tempTags = successResponse.tags;
 
                     if (!successResponse.permissions.read &&
                         !successResponse.permissions.write) {
