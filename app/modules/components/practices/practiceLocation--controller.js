@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('PracticeLocationController',
         function(Account, Image, leafletData, $location, $log, Map,
-            mapbox, Media, Practice, practice, $q, $rootScope, $route,
+            mapbox, Media, Site, Practice, practice, $q, $rootScope, $route,
             $scope, $timeout, $interval, site, user, Shapefile,
             leafletBoundsHelpers, Utility, Task) {
 
@@ -137,8 +137,24 @@ angular.module('FieldDoc')
 
             self.loadSite = function() {
 
+                var exclude = [
+                    'allocations',
+                    'creator',
+                    'counties',
+                    'geographies',
+                    'last_modified_by',
+                    'watersheds',
+                    'partnerships',
+                    'practices',
+                    'project',
+                    'tags',
+                    'tasks'
+                ].join(',');
+
                 Practice.site({
-                    id: $route.current.params.practiceId
+                    id: $route.current.params.practiceId,
+                    format: 'geojson',
+                    exclude: exclude
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.site', successResponse);
@@ -176,7 +192,8 @@ angular.module('FieldDoc')
             self.loadPractice = function() {
 
                 Practice.get({
-                    id: $route.current.params.practiceId
+                    id: $route.current.params.practiceId,
+                    format: 'geojson'
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.practice', successResponse);

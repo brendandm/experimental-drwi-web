@@ -127,7 +127,8 @@ angular.module('FieldDoc')
                     },
                     site: function(Site, $route) {
                         return Site.get({
-                            id: $route.current.params.siteId
+                            id: $route.current.params.siteId,
+                            format: 'geojson'
                         });
                     }
                 }

@@ -645,7 +645,8 @@
                 self.loadFeature = function() {
 
                     Site.get({
-                        id: $route.current.params.siteId
+                        id: $route.current.params.siteId,
+                        format: 'geojson'
                     }).$promise.then(function(successResponse) {
 
                         console.log('self.site', successResponse);

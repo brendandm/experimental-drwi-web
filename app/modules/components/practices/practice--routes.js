@@ -156,7 +156,8 @@ angular.module('FieldDoc')
                     },
                     practice: function(Practice, $route) {
                         return Practice.get({
-                            id: $route.current.params.practiceId
+                            id: $route.current.params.practiceId,
+                            format: 'geojson'
                         });
                     }
                 }

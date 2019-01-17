@@ -40,7 +40,7 @@
                 },
                 'site': {
                     'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/site'),
+                    'url': environment.apiUrl.concat('/v1/practice/:id/site'),
                     'isArray': false
                 },
                 'custom': {
