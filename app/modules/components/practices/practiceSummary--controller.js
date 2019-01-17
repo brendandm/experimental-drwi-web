@@ -125,7 +125,7 @@
                             typeof index === 'number' &&
                             featureType === 'report') {
 
-                            self.practice.properties.readings_custom.splice(index, 1);
+                            self.practice.readings_custom.splice(index, 1);
 
                             self.cancelDelete();
 
@@ -234,7 +234,7 @@
                         self.permissions.can_edit = successResponse.permissions.write;
                         self.permissions.can_delete = successResponse.permissions.write;
 
-                        $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
+                        $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
                         //
                         // If a valid practice geometry is present, add it to the map
@@ -303,7 +303,7 @@
                         'measurement_period': 'Planning',
                         'report_date': new Date(),
                         'practice_id': practiceId,
-                        'organization_id': self.practice.properties.organization_id
+                        'organization_id': self.practice.organization_id
                     });
 
                     newReading.$save().then(function(successResponse) {

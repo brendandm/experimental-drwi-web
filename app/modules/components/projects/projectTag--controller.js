@@ -20,7 +20,7 @@ angular.module('FieldDoc')
             };
 
             $rootScope.toolbarState = {
-                'edit': true
+                'editTags': true
             };
 
             $rootScope.page = {};

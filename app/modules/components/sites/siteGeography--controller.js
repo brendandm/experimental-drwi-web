@@ -320,9 +320,9 @@
 
                         }
 
-                        $rootScope.page.title = self.site.properties.name;
+                        $rootScope.page.title = self.site.name;
 
-                        self.project = successResponse.properties.project;
+                        self.project = successResponse.project;
 
                         console.log('self.project', self.project);
 

@@ -207,28 +207,28 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li>
-                <a href="/practices/{{ page.practice.properties.id }}">
+                <a href="/practices/{{ page.practice.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/practices/{{ page.practice.properties.id }}/edit">
+                <a href="/practices/{{ page.practice.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
-                <a href="/practices/{{ page.practice.properties.id }}/location">
+                <a href="/practices/{{ page.practice.id }}/location">
                     <i class="material-icons">
                         location_on
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
-                <a href="/practices/{{ page.practice.properties.id }}/photos">
+                <a href="/practices/{{ page.practice.id }}/photos">
                     <i class="material-icons">
                         insert_photo
                     </i>
@@ -242,7 +242,7 @@
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/practices/{{ page.practice.properties.id }}/tags">
+                <a href="/practices/{{ page.practice.id }}/tags">
                     <i class="material-icons">
                         local_offer
                     </i>

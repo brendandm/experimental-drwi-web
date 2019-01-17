@@ -247,8 +247,8 @@ angular.module('FieldDoc')
                 }
             })
             .when('/practices/:practiceId/tags', {
-                templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
-                controller: 'FeatureTagController',
+                templateUrl: '/modules/components/practices/views/practiceTag--view.html?t=' + environment.version,
+                controller: 'PracticeTagController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -262,36 +262,82 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(Practice, $route) {
+                    practice: function(Practice, $route) {
 
-                        return {
-                            featureId: $route.current.params.practiceId,
-                            name: 'practice',
-                            path: '/practices',
-                            cls: Practice
-                        }
-
-                    },
-                    feature: function(Practice, $route) {
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'last_modified_by',
+                            'members',
+                            'metric_types',
+                            'partnerships',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            // 'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
 
                         return Practice.get({
-                            id: $route.current.params.practiceId
+                            id: $route.current.params.practiceId,
+                            exclude: exclude
                         });
-
-                    },
-                    toolbarUrl: function() {
-
-                        return '/templates/toolbars/practice.html?t=' + environment.version;
-
-                    },
-                    viewState: function() {
-
-                        return {
-                            'practice': true
-                        };
 
                     }
                 }
             });
+            // .when('/practices/:practiceId/tags', {
+            //     templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
+            //     controller: 'FeatureTagController',
+            //     controllerAs: 'page',
+            //     resolve: {
+            //         user: function(Account, $rootScope, $document) {
+
+            //             $rootScope.targetPath = document.location.pathname;
+
+            //             if (Account.userObject && !Account.userObject.id) {
+            //                 return Account.getUser();
+            //             }
+
+            //             return Account.userObject;
+
+            //         },
+            //         featureCollection: function(Practice, $route) {
+
+            //             return {
+            //                 featureId: $route.current.params.practiceId,
+            //                 name: 'practice',
+            //                 path: '/practices',
+            //                 cls: Practice
+            //             }
+
+            //         },
+            //         feature: function(Practice, $route) {
+
+            //             return Practice.get({
+            //                 id: $route.current.params.practiceId
+            //             });
+
+            //         },
+            //         toolbarUrl: function() {
+
+            //             return '/templates/toolbars/practice.html?t=' + environment.version;
+
+            //         },
+            //         viewState: function() {
+
+            //             return {
+            //                 'practice': true
+            //             };
+
+            //         }
+            //     }
+            // });
 
     });

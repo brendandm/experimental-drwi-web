@@ -1,376 +1,636 @@
-(function() {
+'use strict';
 
-    'use strict';
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('SiteTagController',
+        function(Account, Image, $location, $log, Site, site, $q,
+            $rootScope, $route, $scope, $timeout, $interval, user,
+            Utility, SearchService, $window) {
 
-    /**
-     * @ngdoc function
-     * @name FieldDoc.controller:SiteTagController
-     * @description
-     * # SiteTagController
-     * Controller of the FieldDoc
-     */
-    angular.module('FieldDoc')
-        .controller('SiteTagController',
-            function(Account, Collaborators, $window, $rootScope, $scope, $route,
-                $location, $timeout, user, SearchService, featureCollection,
-                feature, Utility, $interval) {
+            var self = this;
 
-                var self = this;
+            self.siteId = $route.current.params.siteId;
 
-                self.featureCollection = featureCollection;
+            $rootScope.viewState = {
+                'site': true
+            };
 
-                $rootScope.page = {};
+            $rootScope.toolbarState = {
+                'editTags': true
+            };
 
-                $rootScope.viewState = {
-                    'feature': true
-                };
+            $rootScope.page = {};
 
-                $rootScope.toolbarState = {
-                    'editTag': true
-                };
+            self.status = {
+                loading: true,
+                processing: true
+            };
 
-                self.status = {
-                    loading: true,
-                    processing: false
-                };
+            // 
+            // Initialize container for storing grouped
+            // tag selections.
+            // 
 
-                self.showElements = function() {
+            self.groupTags = {};
 
-                    $timeout(function() {
+            self.alerts = [];
 
-                        self.status.loading = false;
-
-                        self.status.processing = false;
-
-                    }, 1000);
-
-                };
+            function closeAlerts() {
 
                 self.alerts = [];
 
-                function closeAlerts() {
+            }
 
-                    self.alerts = [];
+            function closeRoute() {
 
-                }
+                $location.path(self.site.links.site.html);
 
-                function closeRoute() {
+            }
 
-                    $location.path(self.featureCollection.path);
+            self.confirmDelete = function(obj) {
 
-                }
+                console.log('self.confirmDelete', obj);
 
-                self.confirmDelete = function(obj) {
+                self.deletionTarget = self.deletionTarget ? null : obj;
 
-                    self.deletionTarget = self.deletionTarget ? null : obj;
+            };
 
-                };
+            self.cancelDelete = function() {
 
-                self.cancelDelete = function() {
+                self.deletionTarget = null;
 
-                    self.deletionTarget = null;
+            };
 
-                };
+            self.showElements = function() {
 
-                self.searchTags = function(value) {
+                $timeout(function() {
 
-                    return SearchService.tag({
-                        q: value
-                    }).$promise.then(function(response) {
+                    self.status.loading = false;
 
-                        console.log('SearchService response', response);
+                    self.status.processing = false;
 
-                        return response.results.slice(0, 5);
+                }, 1000);
+
+            };
+
+            self.searchTags = function(value) {
+
+                var exclude = [];
+
+                angular.forEach(self.tempTags, function(tag) {
+
+                    exclude.push(tag.id);
+
+                });
+
+                return SearchService.tag({
+                    q: value,
+                    exclude: exclude.join(',')
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService response', response);
+
+                    return response.results.slice(0, 5);
+
+                });
+
+            };
+
+            self.searchGroups = function(value) {
+
+                return SearchService.tagGroup({
+                    q: value
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService response', response);
+
+                    response.results.forEach(function(result) {
+
+                        result.category = null;
 
                     });
 
-                };
+                    return response.results.slice(0, 5);
 
-                self.addTag = function(item, model, label) {
+                });
 
-                    var _datum = {
-                        id: item.id,
-                        properties: item
-                    };
+            };
 
-                    self.tempTags.push(_datum);
+            self.loadSite = function() {
 
-                    self.tagQuery = null;
+                site.$promise.then(function(successResponse) {
 
-                    console.log('Updated tags (addition)', self.tempTags);
+                    console.log('self.site', successResponse);
 
-                };
+                    self.site = successResponse;
 
-                self.removeTag = function(id) {
+                    self.tempTags = successResponse.tags;
 
-                    var _index;
+                    if (!successResponse.permissions.read &&
+                        !successResponse.permissions.write) {
 
-                    self.tempTags.forEach(function(item, idx) {
+                        self.makePrivate = true;
 
-                        if (item.id === id) {
-
-                            _index = idx;
-
-                        }
-
-                    });
-
-                    console.log('Remove tag at index', _index);
-
-                    if (typeof _index === 'number') {
-
-                        self.tempTags.splice(_index, 1);
+                        return;
 
                     }
 
-                    console.log('Updated tags (removal)', self.tempTags);
+                    self.permissions.can_edit = successResponse.permissions.write;
+                    self.permissions.can_delete = successResponse.permissions.write;
 
-                };
+                    $rootScope.page.title = self.site.name || 'Un-named Site';
 
-                self.processTags = function(list) {
+                    self.showElements();
 
-                    var _list = [];
+                }, function(errorResponse) {
 
-                    angular.forEach(list, function(item) {
+                    self.showElements();
 
-                        var _datum = {};
+                });
 
-                        if (item && item.id) {
-                            _datum.id = item.id;
-                        }
+            };
 
-                        _list.push(_datum);
+            self.setGroupSelection = function(group) {
+
+                angular.forEach(group.tags, function(tag) {
+
+                    if (tag.selected) {
+
+                        self.groupTags[group.id] = tag;
+
+                    }
+
+                });
+
+            };
+
+            self.loadGroups = function() {
+
+                Site.tagGroups({
+                    id: self.siteId
+                }).$promise.then(function(successResponse) {
+
+                    console.log('self.groups.successResponse', successResponse);
+
+                    self.groups = successResponse.features.grouped;
+
+                    self.ungrouped = successResponse.features.ungrouped;
+
+                    angular.forEach(self.groups, function(group) {
+
+                        self.setGroupSelection(group);
 
                     });
 
-                    return _list;
+                }, function(errorResponse) {
 
-                };
+                    self.showElements();
 
-                self.scrubFeature = function() {
+                });
 
-                    var excludedKeys = [
-                        'creator',
-                        'dashboards',
-                        'geographies',
-                        'last_modified_by',
-                        'members',
-                        'metrics',
-                        'metric_types',
-                        'organization',
-                        'partners',
-                        'practices',
-                        'practice_types',
-                        'program',
-                        'reports',
-                        'sites',
-                        'status',
-                        'users'
-                    ];
+            };
 
-                    var reservedProperties = [
-                        'links',
-                        'permissions',
-                        '$promise',
-                        '$resolved'
-                    ];
+            self.loadTags = function() {
 
-                    excludedKeys.forEach(function(key) {
+                Site.tags({
+                    id: self.siteId
+                }).$promise.then(function(successResponse) {
+
+                    console.log('self.groups.successResponse', successResponse);
+
+                    self.tempTags = successResponse.features;
+
+                }, function(errorResponse) {
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [
+                    'creator',
+                    'dashboards',
+                    'geographies',
+                    'geometry',
+                    'last_modified_by',
+                    'members',
+                    'metrics',
+                    'metric_types',
+                    'organization',
+                    'partners',
+                    'partnerships',
+                    'practices',
+                    'practice_types',
+                    'program',
+                    'reports',
+                    'sites',
+                    'status',
+                    'tasks',
+                    'users'
+                ];
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
 
                         delete feature.properties[key];
 
-                    });
-
-                    reservedProperties.forEach(function(key) {
+                    } else {
 
                         delete feature[key];
 
-                    });
+                    }
 
-                };
+                });
 
-                self.saveFeature = function() {
+                reservedProperties.forEach(function(key) {
 
-                    self.status.processing = true;
+                    delete feature[key];
 
-                    self.scrubFeature();
+                });
 
-                    feature.properties.tags = self.processTags(self.tempTags);
+            };
 
-                    var data = feature.properties;
+            self.addTag = function(item, model, label) {
 
-                    data.geometry = self.feature.geometry;
+                var existingMatch = false;
 
-                    // feature.$update().then(function(successResponse) {
+                angular.forEach(self.tempTags, function(tag) {
 
-                    self.featureCollection.cls.update({
-                        id: self.feature.id
-                    }, data).$promise.then(function(successResponse) {
+                    console.log('tagCheck', tag, item);
 
-                        console.log('saveFeature.successResponse', successResponse);
+                    if (tag.id === item.id) {
 
-                        self.feature = successResponse.properties;
+                        self.tagQuery = null;
 
-                        if (self.feature.tags.length) {
+                        existingMatch = true;
 
-                            self.alerts = [{
-                                'type': 'success',
-                                'flag': 'Success!',
-                                'msg': 'Tags added to ' + self.featureCollection.name + '.',
-                                'prompt': 'OK'
-                            }];
+                    }
 
-                        } else {
+                });
 
-                            self.alerts = [{
-                                'type': 'success',
-                                'flag': 'Success!',
-                                'msg': 'All tags removed from ' + self.featureCollection.name + '.',
-                                'prompt': 'OK'
-                            }];
+                if (existingMatch) return;
+
+                self.ungrouped.push(item);
+
+                self.tempTags.push(item);
+
+                self.tagQuery = null;
+
+                console.log('Updated tags (addition)', self.tempTags);
+
+            };
+
+            self.removeTag = function(tag) {
+
+                var _index;
+
+                self.ungrouped.forEach(function(item, idx) {
+
+                    if (item.id === tag.id) {
+
+                        _index = idx;
+
+                    }
+
+                });
+
+                console.log('Remove tag at index', _index, tag);
+
+                if (typeof _index === 'number') {
+
+                    self.ungrouped.splice(_index, 1);
+
+                    var tags = [];
+
+                    angular.forEach(self.tempTags, function(_tag) {
+
+                        if (_tag.id !== tag.id) {
+
+                            tags.push(_tag);
 
                         }
 
-                        $timeout(closeAlerts, 2000);
+                    });
 
-                        self.status.processing = false;
+                    self.tempTags = tags;
 
-                    }).catch(function(errorResponse) {
+                }
 
-                        console.log('saveFeature.errorResponse', errorResponse);
+                console.log('Updated tags (removal)', self.tempTags);
+
+            };
+
+            self.manageGroup = function(group, tag) {
+
+                console.log('Manage group', group, tag);
+
+                console.log('self.manageGroup --> self.tempTags', self.tempTags);
+
+                var _index;
+
+                // 
+                // Determine if a tag from the target group is
+                // already present in `self.tempTags`.
+                // 
+
+                angular.forEach(self.tempTags, function(item, idx) {
+
+                    console.log('Seeking tag match', item, tag);
+
+                    if (item.group && item.group.id === group.id) {
+
+                        console.log('Match found in group', item, group);
+
+                        _index = idx;
+
+                    }
+
+                });
+
+                // 
+                // If a match was found, remove it from `self.tempTags`.
+                // 
+
+                if (typeof _index === 'number') {
+
+                    self.tempTags.splice(_index, 1);
+
+                }
+
+                // 
+                // Add target tag to `self.tempTags`.
+                // 
+
+                self.tempTags.push(tag);
+
+                console.log('self.tempTags.groupManaged', self.tempTags);
+
+            };
+
+            self.processRelations = function(list, checkSelected) {
+
+                var _list = [];
+
+                angular.forEach(list, function(item) {
+
+                    var _datum = {};
+
+                    if (item && item.id) {
+
+                        _datum.id = item.id;
+
+                    }
+
+                    _list.push(_datum);
+
+                });
+
+                // angular.forEach(list, function(item) {
+
+                //     console.log('processRelations.item', item);
+
+                //     var _datum = {};
+
+                //     if (checkSelected) {
+
+                //         if (item.id && item.selected) {
+
+                //             _datum.id = item.id;
+
+                //         }
+
+                //     } else if (item && item.id) {
+
+                //         _datum.id = item.id;
+
+                //     }
+
+                //     _list.push(_datum);
+
+                // });
+
+                // for (var key in self.groupTags) {
+
+                //     if (self.groupTags.hasOwnProperty(key)) {
+
+                //         _list.push({
+                //             id: self.groupTags[key].id
+                //         });
+
+                //     }
+
+                // }
+
+                return _list;
+
+            };
+
+            // self.selectTag = function(tag) {
+
+            //     if (tag.selected) {
+
+            //         self.tempTags.push(tag);
+
+            //         console.log('Added tag to tempTags', tag);
+
+            //     } else {
+
+            //         var tags = [];
+
+            //         angular.forEach(self.tempTags, function(item) {
+
+            //             if (item && item.id && item.id !== tag.id) {
+
+            //                 tags.push(item);
+
+            //             }
+
+            //         });
+
+            //         self.tempTags = tags;
+
+            //         console.log('Removed tag from tempTags', tag);
+
+            //     }
+
+            // };
+
+            self.processGroups = function(list) {
+
+                var _list = [];
+
+                console.log('self.groups', self.groups);
+
+                angular.forEach(self.groups, function(item) {
+
+                    var selection = self.processRelations(item.tags, true);
+
+                    _list.push.apply(_list, selection);
+
+                });
+
+                console.log('processGroups._list', _list);
+
+                return _list;
+
+            };
+
+            self.saveFeature = function() {
+
+                self.status.processing = true;
+
+                var data = {
+                    tags: self.processRelations(self.tempTags)
+                };
+
+                console.log('self.saveFeature.data', data);
+
+                // self.scrubFeature(self.site);
+
+                // self.site.tags = self.processRelations(self.tempTags);
+
+                // console.log('self.site.pendingTags', self.site.tags);
+
+                // self.site.$update().then(function(successResponse) {
+                Site.update({
+                    id: self.site.id
+                }, data).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Site changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(closeAlerts, 2000);
+
+                    // self.tempTags = successResponse.tags;
+
+                    $window.scrollTo(0, 0);
+
+                    // self.loadGroups();
+
+                    // self.loadTags();
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    // Error message
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Site changes could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(closeAlerts, 2000);
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.deleteFeature = function() {
+
+                Site.delete({
+                    id: +self.deletionTarget.id
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this site.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
 
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Tag changes not saved.',
+                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this site.',
                             'prompt': 'OK'
                         }];
 
-                        $timeout(closeAlerts, 2000);
+                    } else if (errorResponse.status === 403) {
 
-                        self.status.processing = false;
-
-                    });
-
-                };
-
-                self.deleteFeature = function() {
-
-                    var targetId = self.feature.id;
-
-                    self.featureCollection.cls.delete({
-                        id: +targetId
-                    }).$promise.then(function(data) {
-
-                        self.alerts.push({
-                            'type': 'success',
-                            'flag': 'Success!',
-                            'msg': 'Successfully deleted this ' + self.featureCollection.name + '.',
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this site.',
                             'prompt': 'OK'
-                        });
+                        }];
 
-                        $timeout(closeRoute, 2000);
+                    } else {
 
-                    }).catch(function(errorResponse) {
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this site.',
+                            'prompt': 'OK'
+                        }];
 
-                        console.log('self.deleteFeature.errorResponse', errorResponse);
+                    }
 
-                        if (errorResponse.status === 409) {
+                    $timeout(closeAlerts, 2000);
 
-                            self.alerts = [{
-                                'type': 'error',
-                                'flag': 'Error!',
-                                'msg': 'Unable to delete “' + self.feature.name + '”. There are pending tasks affecting this ' + self.featureCollection.name + '.',
-                                'prompt': 'OK'
-                            }];
+                });
 
-                        } else if (errorResponse.status === 403) {
+            };
 
-                            self.alerts = [{
-                                'type': 'error',
-                                'flag': 'Error!',
-                                'msg': 'You don’t have permission to delete this ' + self.featureCollection.name + '.',
-                                'prompt': 'OK'
-                            }];
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
 
-                        } else {
+                user.$promise.then(function(userResponse) {
 
-                            self.alerts = [{
-                                'type': 'error',
-                                'flag': 'Error!',
-                                'msg': 'Something went wrong while attempting to delete this ' + self.featureCollection.name + '.',
-                                'prompt': 'OK'
-                            }];
+                    $rootScope.user = Account.userObject = userResponse;
 
-                        }
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false
+                    };
 
-                        $timeout(closeAlerts, 2000);
+                    self.loadSite();
 
-                    });
+                    self.loadGroups();
 
-                };
+                    // self.loadTags();
 
-                //
-                // Verify Account information for proper UI element display
-                //
-                if (Account.userObject && user) {
+                });
 
-                    user.$promise.then(function(userResponse) {
+            } else {
 
-                        $rootScope.user = Account.userObject = userResponse;
+                $location.path('/login');
 
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0],
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                            can_edit: false
-                        };
+            }
 
-                        //
-                        // Assign feature to a scoped variable
-                        //
-                        feature.$promise.then(function(successResponse) {
-
-                            console.log('self.feature', successResponse);
-
-                            self.feature = successResponse.properties;
-
-                            if (!successResponse.permissions.read &&
-                                !successResponse.permissions.write) {
-
-                                self.makePrivate = true;
-
-                            } else {
-
-                                self.permissions.can_edit = successResponse.permissions.write;
-                                self.permissions.can_delete = successResponse.permissions.write;
-
-                                $rootScope.page.title = self.feature.name;
-
-                                self.tempTags = self.feature.tags;
-
-                                console.log('tempTags', self.tempTags);
-
-                            }
-
-                            self.showElements();
-
-                        }, function(errorResponse) {
-
-                            console.error('Unable to load request feature');
-
-                            self.showElements();
-
-                        });
-
-                    });
-
-                } else {
-
-                    $location.path('/login');
-
-                }
-
-            });
-
-}());
+        });

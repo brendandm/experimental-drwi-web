@@ -294,9 +294,9 @@
 
                 self.saveSite = function() {
 
-                    delete self.site.properties.counties;
-                    delete self.site.properties.geographies;
-                    delete self.site.properties.watersheds;
+                    delete self.site.counties;
+                    delete self.site.geographies;
+                    delete self.site.watersheds;
 
                     if (self.savedObjects.length) {
 
@@ -666,7 +666,7 @@
                         self.permissions.can_edit = successResponse.permissions.write;
                         self.permissions.can_delete = successResponse.permissions.write;
 
-                        $rootScope.page.title = self.site.properties.name;
+                        $rootScope.page.title = self.site.name;
 
                         //
                         // If a valid site geometry is present, add it to the map

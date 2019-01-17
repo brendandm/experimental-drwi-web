@@ -243,9 +243,9 @@
                         self.permissions.can_edit = successResponse.permissions.write;
                         self.permissions.can_delete = successResponse.permissions.write;
 
-                        $rootScope.page.title = self.site.properties.name;
+                        $rootScope.page.title = self.site.name;
 
-                        self.project = successResponse.properties.project;
+                        self.project = successResponse.project;
 
                         console.log('self.project', self.project);
 
@@ -328,8 +328,8 @@
                     self.practice = new Practice({
                         'practice_type': 'Custom',
                         'site_id': self.site.id,
-                        'project_id': self.site.properties.project.id,
-                        'organization_id': self.site.properties.organization_id
+                        'project_id': self.site.project.id,
+                        'organization_id': self.site.organization_id
                     });
 
                     self.practice.$save(function(successResponse) {

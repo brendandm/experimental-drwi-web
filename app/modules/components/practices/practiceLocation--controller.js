@@ -195,13 +195,13 @@ angular.module('FieldDoc')
                     self.permissions.can_edit = successResponse.permissions.write;
                     self.permissions.can_delete = successResponse.permissions.write;
 
-                    delete self.practice.properties.organization;
-                    delete self.practice.properties.project;
-                    delete self.practice.properties.site;
+                    delete self.practice.organization;
+                    delete self.practice.project;
+                    delete self.practice.site;
 
-                    self.practiceType = successResponse.properties.category;
+                    self.practiceType = successResponse.category;
 
-                    $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
+                    $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
                     //
                     // If a valid practice geometry is present, add it to the map

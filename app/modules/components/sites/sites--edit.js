@@ -40,11 +40,71 @@
 
                 };
 
+                self.scrubFeature = function(feature) {
+
+                    var excludedKeys = [
+                        'allocations',
+                        'creator',
+                        'dashboards',
+                        'geographies',
+                        'geometry',
+                        'last_modified_by',
+                        'members',
+                        'metrics',
+                        'metric_types',
+                        'organization',
+                        'partners',
+                        'partnerships',
+                        'practices',
+                        'practice_types',
+                        'program',
+                        'project',
+                        'reports',
+                        'sites',
+                        'status',
+                        'tags',
+                        'tasks',
+                        'users'
+                    ];
+
+                    var reservedProperties = [
+                        'links',
+                        'permissions',
+                        '$promise',
+                        '$resolved'
+                    ];
+
+                    excludedKeys.forEach(function(key) {
+
+                        if (feature.properties) {
+
+                            delete feature.properties[key];
+
+                        } else {
+
+                            delete feature[key];
+
+                        }
+
+                    });
+
+                    reservedProperties.forEach(function(key) {
+
+                        delete feature[key];
+
+                    });
+
+                };
+
                 self.saveSite = function() {
 
                     self.status.processing = true;
 
-                    self.site.$update().then(function(successResponse) {
+                    self.scrubFeature(self.site);
+
+                    Site.update({
+                        id: self.site.id
+                    }, self.site).then(function(successResponse) {
 
                         self.site = successResponse;
 
@@ -57,7 +117,7 @@
 
                         $timeout(closeAlerts, 2000);
 
-                    }, function(errorResponse) {
+                    }).catch(function(errorResponse) {
 
                         self.alerts = [{
                             'type': 'error',
@@ -192,7 +252,7 @@
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
 
-                            $rootScope.page.title = self.site.properties.name;
+                            $rootScope.page.title = self.site.name;
 
                             self.showElements();
 

@@ -53,6 +53,16 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/data/site/:id/practices')
                 },
+                tags: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/site/:id/tags')
+                },
+                tagGroups: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/site/:id/tag-groups')
+                },
                 tasks: {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/site/:id/tasks'),

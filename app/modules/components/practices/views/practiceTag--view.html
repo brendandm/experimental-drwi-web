@@ -8,7 +8,7 @@
 
         <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
             <div class="progress--container">
-                <p style="font-weight: bold;" class="color-pulse">Loading site data&hellip;</p>
+                <p style="font-weight: bold;" class="color-pulse">Loading tag data&hellip;</p>
             </div>
         </div>
 
@@ -20,49 +20,60 @@
                 </i>
             </p>
 
-            <p>This site is private.</p>
+            <p>This feature is private.</p>
 
         </section>
 
-        <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">Edit site</h1>
+        <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">Edit tags</h1>
 
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
 
-            <article class="feature-detail">
+            <article class="feature-detail" style="width: 100%; max-width: 48rem; margin: 1em auto;">
 
-                <div class="feature-detail-content" style="position:relative;">
+                <div class="form--row">
 
-                    <form role="form" class="form" id="form--SiteEdit" name="form--SiteEdit" data-ng-submit="page.saveSite()" autocomplete="off">
-                        
-                        <!-- Site Number -->
-                        <div class="form-element">
-                            <span class="meta-label"><b>Name</b></span>
-                            <input type="text" data-ng-model="page.site.name" class="form-control animate" id="site_name" name="site_name" placeholder="Site name" />
+                    <div class="features--container" style="padding: 0;" data-ng-if="!page.status.loading && !page.editMode">
+
+                        <div data-ng-repeat="group in page.groups" style="width: 100%;">
+
+                            <form role="form" class="form" style="overflow: visible;" id="form--{{ group.id }}" name="form--dashboard-filter" data-ng-submit="page.saveFeature()" autocomplete="off">
+
+                                <h2>
+                                    {{ group.name }}
+                                </h2>
+
+                                <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+
+                                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="tag in group.tags | orderBy:'-modified_on' | filter: page.q">
+
+                                        <div class="card--content">
+
+                                            <label class="name" for="group-{{ tag.id }}">
+                                                {{ tag.name }}
+                                                <input type="radio" id="group-{{ tag.id }}" name="group-{{ group.id }}" data-ng-model="page.groupTags[group.id]" data-ng-value="tag" data-ng-checked="page.groupTags[group.id].id === tag.id" data-ng-change="page.manageGroup(group, tag)" />
+                                            </label>
+
+                                            <div class="body">
+                                                <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (tag.description || 'No description') }}</p>
+                                            </div>
+
+                                        </div>
+
+                                    </li>
+
+                                </ul>
+
+                            </form>
+
                         </div>
 
-                        <!-- Site Description -->
-                        <div class="form-element">
-                            <span class="meta-label"><b>Description</b></span>
-                            <textarea rows="10" data-ng-model="page.site.description" class="form-control animate" msd-elastic id="description" name="description" placeholder="Site description" maxlength="1000">{{ page.site.description }}</textarea>
-                            <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
-                                Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.site.description.length || 0) | number }} used)</strong>
-                            </p>
-                        </div>
+                    </div>
 
-                        <h2>Privacy</h2>
+                </div>
 
-                        <div class="scope--control">
-                            <span>Off</span>
-                            <label class="switch">
-                                <input class="inputdemo" type="checkbox" data-ng-model="page.site.private" data-ng-checked="page.site.private">
-                                <div class="slider round"></div>
-                            </label>
-                            <span data-ng-class="{on: page.site.private}">On</span>
-                        </div>
+                <div class="form--row">
 
-                        <p data-ng-if="page.site.private" style="font-style: normal; font-size: 1em; color: #616161;">This site is <strong>private</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this site <strong>will not</strong> appear on dashboard maps.</p>
-
-                        <p data-ng-if="!page.site.private" style="font-style: normal; font-size: 1em; color: #616161;">This site is <strong>public</strong>. It can only be viewed and edited by project collaborators and program managers. Geographic data related to this site <strong>will</strong> appear on dashboard maps.</p>
+                    <form role="form" class="form" id="form--ProjectTags" name="form--ProjectTags" data-ng-submit="page.saveFeature()">
 
                         <div class="save--action--wrapper save--action--bottom">
                             <button type="submit" data-ng-disabled="page.status.processing">
@@ -87,43 +98,43 @@
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
-            <li data-ng-class="{active: $root.toolbarState.dashboard}">
-                <a href="/sites/{{ page.site.id }}">
+            <li>
+                <a href="/practices/{{ page.practice.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/sites/{{ page.site.id }}/edit">
+                <a href="/practices/{{ page.practice.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
-                <a href="/sites/{{ page.site.id }}/location">
+                <a href="/practices/{{ page.practice.id }}/location">
                     <i class="material-icons">
                         location_on
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.viewGeographies}">
-                <a href="/sites/{{ page.site.id }}/geographies">
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
+                <a href="/practices/{{ page.practice.id }}/photos">
                     <i class="material-icons">
-                        public
+                        insert_photo
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/sites/{{ page.site.id }}/partnerships">
+                <a href="/practices/{{ page.practice.id }}/partnerships">
                     <i class="material-icons">
                         group_work
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/sites/{{ page.site.id }}/tags">
+                <a href="/practices/{{ page.practice.id }}/tags">
                     <i class="material-icons">
                         local_offer
                     </i>
@@ -131,7 +142,7 @@
             </li>
             <li data-ng-if="page.permissions.can_edit">
                 <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
-                    <p>Do you want to delete this site?</p>
+                    <p>Do you want to delete this practice?</p>
                     <div class="actions">
                         <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature()">
                             Yes
@@ -141,7 +152,7 @@
                         </a>
                     </div>
                 </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.site)">
+                <a href="#" data-ng-click="page.confirmDelete(page.practice)">
                     <i class="material-icons">
                         delete
                     </i>

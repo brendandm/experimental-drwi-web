@@ -72,15 +72,15 @@ angular.module('FieldDoc')
 
             }
 
-            delete self.practice.properties.organization;
-            delete self.practice.properties.project;
-            delete self.practice.properties.site;
+            delete self.practice.organization;
+            delete self.practice.project;
+            delete self.practice.site;
 
             self.practiceType = data.properties.category;
 
-            $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
+            $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
-            self.practice.properties.images.sort(function(a, b) {
+            self.practice.images.sort(function(a, b) {
 
                 return a.id < b.id;
 
@@ -138,7 +138,7 @@ angular.module('FieldDoc')
 
             var _images = [];
 
-            self.practice.properties.images.forEach(function(image) {
+            self.practice.images.forEach(function(image) {
 
                 _images.push({
                     id: image.id
@@ -160,7 +160,7 @@ angular.module('FieldDoc')
 
                     angular.forEach(successResponse, function(image) {
 
-                        self.practice.properties.images.push({
+                        self.practice.images.push({
 
                             id: image.id
 
@@ -262,7 +262,7 @@ angular.module('FieldDoc')
 
             if (featureType === 'image') {
 
-                self.practice.properties.images.splice(index, 1);
+                self.practice.images.splice(index, 1);
 
                 self.cancelDelete();
 

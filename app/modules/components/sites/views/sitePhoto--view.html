@@ -22,7 +22,7 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;" data-ng-if="page.makePrivate !== null && !page.makePrivate">
 
-        <h1 class="inset">Edit “{{ page.site.properties.name || 'Un-named' }}”</h1>
+        <h1 class="inset">Edit “{{ page.site.name || 'Un-named' }}”</h1>
 
         <div class="main--ui">
 
@@ -35,14 +35,14 @@
                         <div class="form-element">
                             <span class="meta-label"><b>Name</b></span>
                             <!-- <label for="site_number" class="control-label">1. What is the name of this site?</label> -->
-                            <input type="text" data-ng-model="page.site.properties.name" class="form-control animate" id="site_name" name="site_name" placeholder="Site name" />
+                            <input type="text" data-ng-model="page.site.name" class="form-control animate" id="site_name" name="site_name" placeholder="Site name" />
                         </div>
 
                         <!-- Site Description -->
                         <div class="form-element">
                             <span class="meta-label"><b>Description</b></span>
                             <!-- <label for="site_description" class="control-label">2. Please describe this site.</label> -->
-                            <textarea rows="1" data-ng-model="page.site.properties.description" class="form-control animate" msd-elastic id="description" name="description" placeholder="Site description">{{ page.site.properties.description }}</textarea>
+                            <textarea rows="1" data-ng-model="page.site.description" class="form-control animate" msd-elastic id="description" name="description" placeholder="Site description">{{ page.site.description }}</textarea>
                         </div>
 
                         <div class="form-row">

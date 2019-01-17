@@ -215,8 +215,8 @@ angular.module('FieldDoc')
                 }
             })
             .when('/sites/:siteId/tags', {
-                templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
-                controller: 'FeatureTagController',
+                templateUrl: '/modules/components/sites/views/siteTag--view.html?t=' + environment.version,
+                controller: 'SiteTagController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -230,36 +230,82 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(Site, $route) {
+                    site: function(Site, $route) {
 
-                        return {
-                            featureId: $route.current.params.siteId,
-                            name: 'site',
-                            path: '/sites',
-                            cls: Site
-                        }
-
-                    },
-                    feature: function(Site, $route) {
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'last_modified_by',
+                            'members',
+                            'metric_types',
+                            'partnerships',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            // 'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
 
                         return Site.get({
-                            id: $route.current.params.siteId
+                            id: $route.current.params.siteId,
+                            exclude: exclude
                         });
-
-                    },
-                    toolbarUrl: function() {
-
-                        return '/templates/toolbars/site.html?t=' + environment.version;
-
-                    },
-                    viewState: function() {
-
-                        return {
-                            'site': true
-                        };
 
                     }
                 }
             });
+            // .when('/sites/:siteId/tags', {
+            //     templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
+            //     controller: 'FeatureTagController',
+            //     controllerAs: 'page',
+            //     resolve: {
+            //         user: function(Account, $rootScope, $document) {
+
+            //             $rootScope.targetPath = document.location.pathname;
+
+            //             if (Account.userObject && !Account.userObject.id) {
+            //                 return Account.getUser();
+            //             }
+
+            //             return Account.userObject;
+
+            //         },
+            //         featureCollection: function(Site, $route) {
+
+            //             return {
+            //                 featureId: $route.current.params.siteId,
+            //                 name: 'site',
+            //                 path: '/sites',
+            //                 cls: Site
+            //             }
+
+            //         },
+            //         feature: function(Site, $route) {
+
+            //             return Site.get({
+            //                 id: $route.current.params.siteId
+            //             });
+
+            //         },
+            //         toolbarUrl: function() {
+
+            //             return '/templates/toolbars/site.html?t=' + environment.version;
+
+            //         },
+            //         viewState: function() {
+
+            //             return {
+            //                 'site': true
+            //             };
+
+            //         }
+            //     }
+            // });
 
     }]);

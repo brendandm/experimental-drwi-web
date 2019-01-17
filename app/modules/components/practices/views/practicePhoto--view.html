@@ -51,9 +51,9 @@
 
             <div style="position: relative; min-height: 640px; width: 100%;">
 
-                <ul class="snapshot--cards list-unstyled" data-ng-if="page.practice.properties.images.length">
+                <ul class="snapshot--cards list-unstyled" data-ng-if="page.practice.images.length">
 
-                    <li class="image-card reveal fade-in" style="animation-delay: {{ $index * 250 }}ms;" data-ng-repeat="image in page.practice.properties.images track by $index">
+                    <li class="image-card reveal fade-in" style="animation-delay: {{ $index * 250 }}ms;" data-ng-repeat="image in page.practice.images track by $index">
 
                         <div class="card--content">
 
@@ -100,7 +100,7 @@
 
                 </ul>
 
-                <!-- <div class="progress--modal reveal fade-in t0" style="align-items: flex-start;" data-ng-if="page.status.processing && page.practice.properties.images.length">
+                <!-- <div class="progress--modal reveal fade-in t0" style="align-items: flex-start;" data-ng-if="page.status.processing && page.practice.images.length">
                     <div class="progress--container">
                         <p style="font-weight: bold;" class="color-pulse">Updating photos&hellip;</p>
                     </div>
@@ -115,28 +115,28 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li>
-                <a href="/practices/{{ page.practice.properties.id }}">
+                <a href="/practices/{{ page.practice.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/practices/{{ page.practice.properties.id }}/edit">
+                <a href="/practices/{{ page.practice.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit && page.practice.properties.category" data-ng-class="{active: $root.toolbarState.editLocation}">
-                <a href="/practices/{{ page.practice.properties.id }}/location">
+            <li data-ng-if="page.permissions.can_edit && page.practice.category" data-ng-class="{active: $root.toolbarState.editLocation}">
+                <a href="/practices/{{ page.practice.id }}/location">
                     <i class="material-icons">
                         location_on
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
-                <a href="/practices/{{ page.practice.properties.id }}/photos">
+                <a href="/practices/{{ page.practice.id }}/photos">
                     <i class="material-icons">
                         insert_photo
                     </i>
@@ -150,14 +150,14 @@
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/practices/{{ page.practice.properties.id }}/tags">
+                <a href="/practices/{{ page.practice.id }}/tags">
                     <i class="material-icons">
                         local_offer
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.properties.id === page.practice.properties.id && page.deletionTarget.collection === 'practice'">
+                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.properties.id === page.practice.id && page.deletionTarget.collection === 'practice'">
                     <p>Do you want to delete this practice?</p>
                     <div class="actions">
                         <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('practice', page.practice)">

@@ -44,14 +44,14 @@
                     self.permissions.can_edit = successResponse.permissions.write;
                     self.permissions.can_delete = successResponse.permissions.write;
 
-                    $rootScope.page.title = self.site.properties.name;
+                    $rootScope.page.title = self.site.name;
 
                     //
                     // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
                     // selected their property, so we just need to display it on the map for them again.
                     //
-                    // if (self.site && self.site.properties && self.site.properties.segment) {
-                    //     self.geolocation.drawSegment(self.site.properties.segment);
+                    // if (self.site && self.site.properties && self.site.segment) {
+                    //     self.geolocation.drawSegment(self.site.segment);
                     // }
 
                     //

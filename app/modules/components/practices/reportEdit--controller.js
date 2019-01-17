@@ -326,7 +326,7 @@
 
                         }
 
-                        self.loadMetricTypes(self.practice.properties.project);
+                        self.loadMetricTypes(self.practice.project);
 
                     }).catch(function(errorResponse) {
 
@@ -563,12 +563,12 @@
                         //
                         // self.reportMetrics.push(metric_);
 
-                        if (successResponse.properties.category !== null) {
-                            successResponse.properties.category.properties = successResponse.properties.category;
+                        if (successResponse.category !== null) {
+                            successResponse.category.properties = successResponse.category;
                         }
 
-                        // if (successResponse.properties.metric_unit !== null) {
-                        //     successResponse.properties.metric_unit.properties = successResponse.properties.metric_unit;
+                        // if (successResponse.metric_unit !== null) {
+                        //     successResponse.metric_unit.properties = successResponse.metric_unit;
                         // }
 
                         var datum = self.processMetric(successResponse);

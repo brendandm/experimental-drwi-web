@@ -101,24 +101,24 @@ angular.module('FieldDoc')
                 self.permissions.can_edit = successResponse.permissions.write;
                 self.permissions.can_delete = successResponse.permissions.write;
 
-                delete self.practice.properties.organization;
-                delete self.practice.properties.project;
-                delete self.practice.properties.site;
+                delete self.practice.organization;
+                delete self.practice.project;
+                delete self.practice.site;
 
-                if (successResponse.properties.category) {
+                if (successResponse.category) {
 
-                    self.practiceType = successResponse.properties.category.properties;
+                    self.practiceType = successResponse.category.properties;
 
                 }
 
-                $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
+                $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
                 //
                 // Load practice types
                 //
 
                 PracticeType.collection({
-                    program: self.practice.properties.program_id
+                    program: self.practice.program_id
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.practiceTypes', successResponse);
@@ -146,12 +146,12 @@ angular.module('FieldDoc')
         self.scrubFeature = function() {
 
             delete self.practice.geometry;
-            delete self.practice.properties.site;
-            delete self.practice.properties.project;
-            delete self.practice.properties.program;
-            delete self.practice.properties.organization;
-            delete self.practice.properties.creator;
-            delete self.practice.properties.last_modified_by;
+            delete self.practice.site;
+            delete self.practice.project;
+            delete self.practice.program;
+            delete self.practice.organization;
+            delete self.practice.creator;
+            delete self.practice.last_modified_by;
 
         };
 
@@ -163,7 +163,7 @@ angular.module('FieldDoc')
 
             if (self.practiceType) {
 
-                self.practice.properties.category_id = self.practiceType.id;
+                self.practice.category_id = self.practiceType.id;
 
             }
 
@@ -259,7 +259,7 @@ angular.module('FieldDoc')
 
             self.practiceType = $item;
 
-            self.practice.properties.category_id = $item.id;
+            self.practice.category_id = $item.id;
 
         };
 

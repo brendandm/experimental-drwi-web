@@ -48,6 +48,16 @@
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_custom'),
                     'isArray': false
                 },
+                tags: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/tags')
+                },
+                tagGroups: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/tag-groups')
+                },
                 tasks: {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/practice/:id/tasks'),
