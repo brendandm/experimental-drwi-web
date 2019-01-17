@@ -48,7 +48,7 @@
 
                     <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
-                        <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="tag in group.tags | orderBy:'-modified_on' | filter: page.q">
+                        <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="tag in group.tags | filter: page.q">
 
                             <div class="card--content">
 

@@ -60,6 +60,8 @@ angular.module('FieldDoc')
 
             self.deleteFeature = function(obj, group, index) {
 
+                console.log('self.deleteFeature', obj, group, index);
+
                 Tag.delete({
                     id: obj.id
                 }).$promise.then(function(data) {
@@ -73,7 +75,9 @@ angular.module('FieldDoc')
                         'prompt': 'OK'
                     }];
 
-                    self.tags.features[group].splice(index, 1);
+                    // self.tags.features[group].splice(index, 1);
+
+                    group.tags.splice(index, 1);
 
                     $timeout(closeAlerts, 2000);
 
