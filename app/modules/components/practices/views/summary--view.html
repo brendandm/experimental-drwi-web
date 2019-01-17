@@ -37,15 +37,15 @@
                         <h1>{{ page.practice.name || 'Un-named' }}</h1>
 
                         <p>
-                            <strong>Project:</strong> <a href="{{ page.practice.links.project.html }}">{{ page.practice.project.properties.name }}</a>
+                            <strong>Project:</strong> <a href="{{ page.practice.links.project.html }}">{{ page.practice.project.name }}</a>
                         </p>
 
                         <p>
-                            <strong>Site:</strong> <a href="{{ page.practice.links.site.html }}">{{ page.practice.site.properties.name }}</a>
+                            <strong>Site:</strong> <a href="{{ page.practice.links.site.html }}">{{ page.practice.site.name }}</a>
                         </p>
 
                         <p>
-                            <strong>Practice Type:</strong> {{ page.practice.category.properties.name }}
+                            <strong>Practice Type:</strong> {{ page.practice.category.name }}
                         </p>
 
                         <p data-ng-if="page.practice.area && page.practice.area > 0">
@@ -54,7 +54,7 @@
 
                         <p data-ng-if="page.practice.description" data-ng-bind-html="page.practice.description"></p>
 
-                        <p data-ng-if="!page.practice.description">{{ page.practice.category.properties.description }}</p>
+                        <p data-ng-if="!page.practice.description">{{ page.practice.category.description }}</p>
 
                     </article>
 
@@ -259,13 +259,13 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
+            <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
                 <a href="/practices/{{ page.practice.id }}/partnerships">
                     <i class="material-icons">
                         group_work
                     </i>
                 </a>
-            </li>
+            </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
                 <a href="/practices/{{ page.practice.id }}/tags">
                     <i class="material-icons">

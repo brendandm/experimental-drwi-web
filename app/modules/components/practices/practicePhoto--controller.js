@@ -76,7 +76,7 @@ angular.module('FieldDoc')
             delete self.practice.project;
             delete self.practice.site;
 
-            self.practiceType = data.properties.category;
+            self.practiceType = data.category;
 
             $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
@@ -146,7 +146,7 @@ angular.module('FieldDoc')
 
             });
 
-            self.practice.properties = {
+            self.practice = {
                 'images': _images
             };
 
