@@ -50,7 +50,7 @@
 
                                             <label class="name" for="group-{{ tag.id }}">
                                                 {{ tag.name }}
-                                                <input type="radio" id="group-{{ tag.id }}" name="group-{{ group.id }}" data-ng-model="page.groupTags[group.id]" data-ng-value="tag" data-ng-checked="page.groupTags[group.id].id === tag.id" />
+                                                <input type="radio" id="group-{{ tag.id }}" name="group-{{ group.id }}" data-ng-model="page.groupTags[group.id]" data-ng-value="tag" data-ng-checked="page.groupTags[group.id].id === tag.id" data-ng-change="page.manageGroup(group, tag)" />
                                             </label>
 
                                             <div class="body">
@@ -89,7 +89,7 @@
                                     </i>
                                     <span style="flex-shrink: 0; flex-grow: 1; padding-left: 2em;">{{ tag.properties.name || tag.name }}</span>
                                     <div class="button--container">
-                                        <button type="button" class="remove-item" data-ng-click="page.removeTag(tag.id)">
+                                        <button type="button" class="remove-item" data-ng-click="page.removeTag(tag)">
                                             <i class="material-icons">
                                                 remove_circle
                                             </i>

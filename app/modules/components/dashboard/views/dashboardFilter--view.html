@@ -121,7 +121,7 @@
 
                 <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
-                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="project in page.projects | orderBy:'-modified_on' | filter: page.query" data-ng-click="project.selected = !project.selected;">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="project in page.projects | orderBy:'-modified_on' | filter: page.query">
 
                         <div class="card--content">
 

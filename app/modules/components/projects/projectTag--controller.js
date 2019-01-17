@@ -9,7 +9,7 @@ angular.module('FieldDoc')
     .controller('ProjectTagController',
         function(Account, Image, $location, $log, Project, project, $q,
             $rootScope, $route, $scope, $timeout, $interval, user,
-            Utility, SearchService) {
+            Utility, SearchService, $window) {
 
             var self = this;
 
@@ -128,7 +128,7 @@ angular.module('FieldDoc')
 
                     self.project = successResponse;
 
-                    self.tempTags = successResponse.tags;
+                    // self.tempTags = successResponse.tags;
 
                     if (!successResponse.permissions.read &&
                         !successResponse.permissions.write) {
@@ -185,6 +185,24 @@ angular.module('FieldDoc')
                         self.setGroupSelection(group);
 
                     });
+
+                }, function(errorResponse) {
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.loadTags = function() {
+
+                Project.tags({
+                    id: self.projectId
+                }).$promise.then(function(successResponse) {
+
+                    console.log('self.groups.successResponse', successResponse);
+
+                    self.tempTags = successResponse.features;
 
                 }, function(errorResponse) {
 
@@ -277,13 +295,13 @@ angular.module('FieldDoc')
 
             };
 
-            self.removeTag = function(id) {
+            self.removeTag = function(tag) {
 
                 var _index;
 
                 self.ungrouped.forEach(function(item, idx) {
 
-                    if (item.id === id) {
+                    if (item.id === tag.id) {
 
                         _index = idx;
 
@@ -299,11 +317,11 @@ angular.module('FieldDoc')
 
                     var tags = [];
 
-                    angular.forEach(self.tempTags, function(tag) {
+                    angular.forEach(self.tempTags, function(_tag) {
 
-                        if (tag.id === id) {
+                        if (_tag.id !== tag.id) {
 
-                            tags.push(tag);
+                            tags.push(_tag);
 
                         }
 
@@ -314,6 +332,53 @@ angular.module('FieldDoc')
                 }
 
                 console.log('Updated tags (removal)', self.tempTags);
+
+            };
+
+            self.manageGroup = function(group, tag) {
+
+                console.log('Manage group', group, tag);
+
+                console.log('self.manageGroup --> self.tempTags', self.tempTags);
+
+                var _index;
+
+                // 
+                // Determine if a tag from the target group is
+                // already present in `self.tempTags`.
+                // 
+
+                angular.forEach(self.tempTags, function(item, idx) {
+
+                    console.log('Seeking tag match', item, tag);
+
+                    if (item.group && item.group.id === group.id) {
+
+                        console.log('Match found in group', item, group);
+
+                        _index = idx;
+
+                    }
+
+                });
+
+                // 
+                // If a match was found, remove it from `self.tempTags`.
+                // 
+
+                if (typeof _index === 'number') {
+
+                    self.tempTags.splice(_index, 1);
+
+                }
+
+                // 
+                // Add target tag to `self.tempTags`.
+                // 
+
+                self.tempTags.push(tag);
+
+                console.log('self.tempTags.groupManaged', self.tempTags);
 
             };
 
@@ -359,17 +424,17 @@ angular.module('FieldDoc')
 
                 // });
 
-                for (var key in self.groupTags) {
+                // for (var key in self.groupTags) {
 
-                    if (self.groupTags.hasOwnProperty(key)) {
+                //     if (self.groupTags.hasOwnProperty(key)) {
 
-                        _list.push({
-                            id: self.groupTags[key].id
-                        });
+                //         _list.push({
+                //             id: self.groupTags[key].id
+                //         });
 
-                    }
+                //     }
 
-                }
+                // }
 
                 return _list;
 
@@ -429,13 +494,22 @@ angular.module('FieldDoc')
 
                 self.status.processing = true;
 
-                self.scrubFeature(self.project);
+                var data = {
+                    tags: self.processRelations(self.tempTags)
+                };
 
-                self.project.tags = self.processRelations(self.tempTags);
+                console.log('self.saveFeature.data', data);
 
-                console.log('self.project.pendingTags', self.project.tags);
+                // self.scrubFeature(self.project);
 
-                self.project.$update().then(function(successResponse) {
+                // self.project.tags = self.processRelations(self.tempTags);
+
+                // console.log('self.project.pendingTags', self.project.tags);
+
+                // self.project.$update().then(function(successResponse) {
+                Project.update({
+                    id: self.project.id
+                }, data).$promise.then(function(successResponse) {
 
                     self.alerts = [{
                         'type': 'success',
@@ -446,7 +520,13 @@ angular.module('FieldDoc')
 
                     $timeout(closeAlerts, 2000);
 
-                    self.tempTags = successResponse.tags;
+                    // self.tempTags = successResponse.tags;
+
+                    $window.scrollTo(0, 0);
+
+                    // self.loadGroups();
+
+                    self.loadTags();
 
                     self.showElements();
 
@@ -542,6 +622,8 @@ angular.module('FieldDoc')
                     self.loadProject();
 
                     self.loadGroups();
+
+                    self.loadTags();
 
                 });
 
