@@ -235,7 +235,7 @@ angular.module('FieldDoc')
 
                     console.log('errorResponse', errorResponse);
 
-                    self.showElements();
+                    // self.showElements();
 
                 });
 

@@ -176,8 +176,17 @@
 
                 self.loadMetricTypes = function(datum) {
 
-                    Program.metricTypes({
-                        id: datum.program_id
+                    var exclude = [
+                        'creator_id',
+                        'geometry',
+                        'last_modified_by_id',
+                        'organization_id',
+                        'tags'
+                    ].join(',');
+
+                    MetricType.collection({
+                        program: datum.program_id,
+                        exclude: exclude
                     }).$promise.then(function(successResponse) {
 
                         console.log('Metric types', successResponse);

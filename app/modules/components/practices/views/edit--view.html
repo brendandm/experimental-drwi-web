@@ -79,24 +79,21 @@
                                     </p>
                                 </div>
 
-                                <div class="form-element">
-                                    <!-- Nitrogen -->
+                                <!-- <div class="form-element">
                                     <span class="meta-label"><b>Nitrogen (pounds per year)</b></span>
                                     <input class="form-control" data-ng-model="page.report.properties.custom_model_nitrogen_total" id="nitrogen_reduction" name="nitrogen_reduction" step="0.01" min="0" type="number" />
 
                                 </div>
 
                                 <div class="form-element">
-                                    <!-- Phosphorus -->
                                     <span class="meta-label"><b>Phosphorus (pounds per year)</b></span>
                                     <input class="form-control" data-ng-model="page.report.properties.custom_model_phosphorus_total" id="phosphorus_reduction" name="phosphorus_reduction" step="0.01" min="0" type="number" />
                                 </div>
 
                                 <div class="form-element">
-                                    <!-- Sediment -->
                                     <span class="meta-label"><b>Sediment (tons per year)</b></span>
                                     <input class="form-control" data-ng-model="page.report.properties.custom_model_sediment_total" id="sediment_reduction" name="sediment_reduction" step="0.01" min="0" type="number" />
-                                </div>
+                                </div> -->
 
                             </div>
 
@@ -137,7 +134,7 @@
 
                             <div class="form-element">
                                 <span class="meta-label"><b>Metric units</b></span>
-                                <input type="text" class="form-control" id="metric_units_{{ $index }}" name="metric_units_{{ $index }}" data-ng-model="reportMetric.category.unit.plural" disabled="disabled" readonly />
+                                <input type="text" class="form-control" id="metric_units_{{ $index }}" name="metric_units_{{ $index }}" data-ng-model="reportMetric.unit" disabled="disabled" readonly />
                                 <p style="color: #9e9e9e; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
                                     Metric units are standardized.
                                 </p>
