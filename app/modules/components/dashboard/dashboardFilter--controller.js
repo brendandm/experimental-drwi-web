@@ -124,11 +124,11 @@ angular.module('FieldDoc')
 
                 switch (category) {
 
-                    case 'geography':
+                    // case 'geography':
 
-                        self.updateCollection(obj, 'geographies');
+                    //     self.updateCollection(obj, 'geographies');
 
-                        break;
+                    //     break;
 
                     case 'organization':
 
@@ -154,11 +154,11 @@ angular.module('FieldDoc')
 
                         break;
 
-                    case 'status':
+                    // case 'status':
 
-                        self.updateCollection(obj, 'statuses');
+                    //     self.updateCollection(obj, 'statuses');
 
-                        break;
+                    //     break;
 
                     case 'tag':
 
@@ -194,21 +194,21 @@ angular.module('FieldDoc')
 
                 var keyMap = {
                     plural: {
-                        'geography': 'geographies',
+                        // 'geography': 'geographies',
                         'organization': 'organizations',
                         'practice': 'practices',
                         'program': 'programs',
                         'project': 'projects',
-                        'status': 'statuses',
+                        // 'status': 'statuses',
                         'tag': 'tags'
                     },
                     single: {
-                        'geographies': 'geography',
+                        // 'geographies': 'geography',
                         'organizations': 'organization',
                         'practices': 'practice',
                         'programs': 'program',
                         'projects': 'project',
-                        'statuses': 'status',
+                        // 'statuses': 'status',
                         'tags': 'tag'
                     }
                 };
@@ -256,7 +256,7 @@ angular.module('FieldDoc')
 
                 var relations = [
                     'creator',
-                    'geographies',
+                    // 'geographies',
                     'last_modified_by',
                     'organizations',
                     'organization',
