@@ -65,11 +65,20 @@ angular.module('FieldDoc')
 
             self.loadDashboard = function() {
 
+                var exclude = [
+                    'creator',
+                    'geographies',
+                    'geometry',
+                    'last_modified_by',
+                    'metrics',
+                ].join(',');
+
                 //
                 // Assign dashboard to a scoped variable
                 //
                 Dashboard.get({
-                    id: $route.current.params.dashboardId
+                    id: $route.current.params.dashboardId,
+                    exclude: exclude
                 }).$promise.then(function(successResponse) {
 
                     self.processDashboard(successResponse);
@@ -101,9 +110,38 @@ angular.module('FieldDoc')
 
                     }
 
+                    if (self.modes.filter) {
+
+                        self.projects.forEach(function(item) {
+
+                            item.selected = false;
+
+                        });
+
+                    }
+
                 }).catch(function(errorResponse) {
 
                     $log.error('Unable to load dashboard projects.');
+
+                });
+
+            };
+
+            self.loadFilters = function() {
+
+                //
+                // Assign dashboard to a scoped variable
+                //
+                Dashboard.filters({
+                    id: $route.current.params.dashboardId
+                }).$promise.then(function(successResponse) {
+
+                    self.activeFilters = successResponse.features;
+
+                }).catch(function(errorResponse) {
+
+                    $log.error('Unable to load dashboard filters.');
 
                 });
 
@@ -117,7 +155,7 @@ angular.module('FieldDoc')
 
                     self.modes.filter = false;
 
-                    self.activeFilters = [];
+                    self.dashboardObject.user_only = true;
 
                 } else {
 
@@ -125,19 +163,11 @@ angular.module('FieldDoc')
 
                     self.modes.filter = true;
 
-                    self.selectedProjects = [];
-
                     self.dashboardObject.user_only = false;
 
                     self.dashboardObject.select_all = false;
 
                     self.dashboardObject.projects = [];
-
-                    self.projects.forEach(function(item) {
-
-                        item.selected = false;
-
-                    });
 
                 }
 
@@ -280,11 +310,13 @@ angular.module('FieldDoc')
 
             self.extractFilter = function(key, data) {
 
+                console.log('extractFilter', key, data);
+
                 data.forEach(function(datum) {
 
-                    FilterStore.addItem({
+                    self.activeFilters.push({
                         id: datum.id,
-                        name: datum.name || datum.properties.name,
+                        name: datum.properties.name || datum.name,
                         category: self.parseKey(key)
                     });
 
@@ -356,49 +388,25 @@ angular.module('FieldDoc')
 
                 self.clearAllFilters();
 
-                var relations = [
-                    'creator',
-                    // 'geographies',
-                    'last_modified_by',
-                    'organizations',
-                    'organization',
-                    'practices',
-                    'programs',
-                    // 'projects',
-                    'tags'
-                ];
-
                 self.dashboardObject = data.properties || data;
 
                 console.log('self.processDashboard.dashboardObject', self.dashboardObject);
 
-                relations.forEach(function(relation) {
-
-                    var collection = self.dashboardObject[relation];
-
-                    if (Array.isArray(collection)) {
-
-                        self.extractFilter(relation, collection);
-
-                        self.dashboardObject[relation] = [];
-
-                    } else {
-
-                        delete self.dashboardObject[relation];
-
-                    }
-
-                });
-
                 if (self.dashboardObject.user_only) {
 
                     self.setMode(0);
+
+                } else {
+
+                    self.setMode(1);
 
                 }
 
                 self.status.processing = false;
 
                 self.loadProjects();
+
+                self.loadFilters();
 
             };
 
@@ -425,6 +433,8 @@ angular.module('FieldDoc')
             self.processRelations = function(arr) {
 
                 arr.forEach(function(filter) {
+
+                    console.log('processRelations', filter, filter.category);
 
                     self.transformRelation(filter, filter.category);
 
@@ -470,6 +480,23 @@ angular.module('FieldDoc')
 
             };
 
+            self.clearFilterCollections = function() {
+
+                var filterCollections = [
+                    'organizations',
+                    'practices',
+                    'programs',
+                    'tags'
+                ];
+
+                filterCollections.forEach(function(collection) {
+
+                    self.dashboardObject[collection] = [];
+
+                });
+
+            };
+
             self.saveDashboard = function() {
 
                 self.status.processing = true;
@@ -480,7 +507,19 @@ angular.module('FieldDoc')
 
                     self.dashboardObject.projects = self.processProjects(self.projects);
 
+                    self.clearFilterCollections();
+
                 } else {
+
+                    self.clearFilterCollections();
+
+                    self.dashboardObject.projects = [];
+
+                    // if (self.activeFilters.length < 1) {
+
+                    //     self.clearFilterCollections();
+
+                    // }
 
                     self.processRelations(self.activeFilters);
 
@@ -488,8 +527,17 @@ angular.module('FieldDoc')
 
                 console.log('self.saveDashboard.dashboardObject', self.dashboardObject);
 
+                var exclude = [
+                    'creator',
+                    'geographies',
+                    'geometry',
+                    'last_modified_by',
+                    'metrics',
+                ].join(',');
+
                 Dashboard.update({
-                    id: +self.dashboardObject.id
+                    id: +self.dashboardObject.id,
+                    exclude: exclude
                 }, self.dashboardObject).then(function(successResponse) {
 
                     self.processDashboard(successResponse);
@@ -505,13 +553,26 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
+                    self.query = null;
+
                 }).catch(function(error) {
 
                     console.log('saveDashboard.error', error);
 
                     // Do something with the error
 
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong while attempting to update this dashboard.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
                     self.status.processing = false;
+
+                    self.query = null;
 
                 });
 

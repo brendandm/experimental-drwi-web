@@ -9,11 +9,21 @@
      */
     angular.module('FieldDoc')
         .service('Dashboard', function(environment, Preprocessors, $resource) {
-            return $resource(environment.apiUrl.concat('/v1/dashboard/:id'), {
+            return $resource(environment.apiUrl.concat('/v1/data/dashboard/:id'), {
                 id: '@id'
             }, {
                 query: {
                     isArray: false
+                },
+                // legacyFormat: {
+                //     method: 'GET',
+                //     isArray: false,
+                //     url: environment.apiUrl.concat('/v1/data/dashboard/:id')
+                // },
+                filters: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/dashboard/:id/filters')
                 },
                 geographies: {
                     method: 'GET',
