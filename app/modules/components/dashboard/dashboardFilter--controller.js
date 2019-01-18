@@ -165,7 +165,7 @@ angular.module('FieldDoc')
 
                     self.dashboardObject.user_only = false;
 
-                    self.dashboardObject.select_all = false;
+                    // self.dashboardObject.select_all = false;
 
                     self.dashboardObject.projects = [];
 
@@ -513,13 +513,11 @@ angular.module('FieldDoc')
 
                     self.clearFilterCollections();
 
+                    self.dashboardObject.user_only = false;
+
+                    self.dashboardObject.select_all = false;
+
                     self.dashboardObject.projects = [];
-
-                    // if (self.activeFilters.length < 1) {
-
-                    //     self.clearFilterCollections();
-
-                    // }
 
                     self.processRelations(self.activeFilters);
 

@@ -9,7 +9,7 @@ angular.module('FieldDoc')
     .controller('DashboardGeographyController',
         function($scope, Account, $location, $log, Dashboard, dashboard,
             $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            GeographyService) {
+            GeographyService, $window) {
 
             var self = this;
 
@@ -243,6 +243,7 @@ angular.module('FieldDoc')
 
                 var excludedKeys = [
                     'creator',
+                    'geometry',
                     'metrics',
                     'last_modified_by',
                     'organizations',
@@ -310,6 +311,8 @@ angular.module('FieldDoc')
                     $timeout(self.closeAlerts, 2000);
 
                     self.status.processing = false;
+
+                    $window.scrollTo(0, 0);
 
                 }).catch(function(error) {
 
