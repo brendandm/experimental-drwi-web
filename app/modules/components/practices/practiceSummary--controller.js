@@ -214,6 +214,26 @@
 
                 };
 
+                self.loadReports = function() {
+
+                    Practice.reports({
+                        id: self.practice.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('self.practice', successResponse);
+
+                        self.reports = successResponse.features;
+
+                        self.status.loading = false;
+
+                    }, function(errorResponse) {
+
+                        self.status.loading = false;
+
+                    });
+
+                };
+
                 self.loadPractice = function() {
 
                     practice.$promise.then(function(successResponse) {
@@ -263,6 +283,8 @@
                         }
 
                         self.status.loading = false;
+
+                        self.loadReports();
 
                     }, function(errorResponse) {
 

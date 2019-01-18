@@ -177,7 +177,7 @@
                 self.loadMetricTypes = function(datum) {
 
                     Program.metricTypes({
-                        id: datum.properties.program_id
+                        id: datum.program_id
                     }).$promise.then(function(successResponse) {
 
                         console.log('Metric types', successResponse);

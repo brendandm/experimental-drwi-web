@@ -38,6 +38,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice/:id/partnerships')
                 },
+                reports: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/reports')
+                },
                 'site': {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/practice/:id/site'),
