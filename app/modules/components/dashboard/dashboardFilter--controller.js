@@ -20,18 +20,6 @@ angular.module('FieldDoc')
                 'editFilters': true
             };
 
-            self.searchScope = {
-                target: 'project'
-            };
-
-            self.filterCategories = {
-                'name': false,
-                'organization': false,
-                'practice': false,
-                'program': false,
-                'tag': false
-            };
-
             $rootScope.page = {};
 
             self.status = {
@@ -108,24 +96,6 @@ angular.module('FieldDoc')
 
             };
 
-            self.markSelected = function() {
-
-                self.projects.forEach(function(feature) {
-
-                    if (self.selectAll) {
-
-                        feature.selected = true;
-
-                    } else {
-
-                        feature.selected = false;
-
-                    }
-
-                });
-
-            };
-
             self.clearFilter = function(obj) {
 
                 FilterStore.clearItem(obj);
@@ -154,11 +124,11 @@ angular.module('FieldDoc')
 
                 switch (category) {
 
-                    // case 'geography':
+                    case 'geography':
 
-                    //     self.updateCollection(obj, 'geographies');
+                        self.updateCollection(obj, 'geographies');
 
-                    //     break;
+                        break;
 
                     case 'organization':
 
@@ -184,11 +154,11 @@ angular.module('FieldDoc')
 
                         break;
 
-                        // case 'status':
+                    case 'status':
 
-                        //     self.updateCollection(obj, 'statuses');
+                        self.updateCollection(obj, 'statuses');
 
-                        //     break;
+                        break;
 
                     case 'tag':
 
@@ -224,21 +194,21 @@ angular.module('FieldDoc')
 
                 var keyMap = {
                     plural: {
-                        // 'geography': 'geographies',
+                        'geography': 'geographies',
                         'organization': 'organizations',
                         'practice': 'practices',
                         'program': 'programs',
                         'project': 'projects',
-                        // 'status': 'statuses',
+                        'status': 'statuses',
                         'tag': 'tags'
                     },
                     single: {
-                        // 'geographies': 'geography',
+                        'geographies': 'geography',
                         'organizations': 'organization',
                         'practices': 'practice',
                         'programs': 'program',
                         'projects': 'project',
-                        // 'statuses': 'status',
+                        'statuses': 'status',
                         'tags': 'tag'
                     }
                 };
@@ -252,6 +222,27 @@ angular.module('FieldDoc')
                 console.log('keyMap.single', obj, keyMap.single[obj]);
 
                 return keyMap.single[obj];
+
+            };
+
+            self.search = function(value) {
+
+                return SearchService.get({
+                    q: value,
+                    scope: 'dashboard'
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService response', response);
+
+                    // response.results.forEach(function(result) {
+
+                    //     result.category = null;
+
+                    // });
+
+                    return response.results.slice(0, 5);
+
+                });
 
             };
 
@@ -301,33 +292,13 @@ angular.module('FieldDoc')
 
             };
 
-            // self.processRelations = function(arr) {
-
-            //     arr.forEach(function(filter) {
-
-            //         self.transformRelation(filter, filter.category);
-
-            //     });
-
-            // };
-
             self.processRelations = function(arr) {
 
-                var projectCollection = [];
+                arr.forEach(function(filter) {
 
-                self.projects.forEach(function(feature) {
-
-                    if (feature.selected) {
-
-                        projectCollection.push({
-                            id: feature.id
-                        });
-
-                    }
+                    self.transformRelation(filter, filter.category);
 
                 });
-
-                return projectCollection;
 
             };
 
@@ -368,21 +339,17 @@ angular.module('FieldDoc')
 
                 self.status.processing = true;
 
-                var data = {
-                    projects: self.processRelations(self.projects)
-                };
+                self.scrubFeature(self.dashboardObject);
 
-                // self.scrubFeature(self.dashboardObject);
+                self.processRelations(self.activeFilters);
 
-                // self.processRelations(self.activeFilters);
+                console.log('self.saveDashboard.dashboardObject', self.dashboardObject);
 
-                // console.log('self.saveDashboard.dashboardObject', self.dashboardObject);
-
-                // console.log('self.saveDashboard.Dashboard', Dashboard);
+                console.log('self.saveDashboard.Dashboard', Dashboard);
 
                 Dashboard.update({
                     id: +self.dashboardObject.id
-                }, data).then(function(successResponse) {
+                }, self.dashboardObject).then(function(successResponse) {
 
                     self.processDashboard(successResponse);
 
@@ -397,128 +364,15 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                    self.loadProjects();
-
                 }).catch(function(error) {
 
                     console.log('saveDashboard.error', error);
 
                     // Do something with the error
 
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Something went wrong while attempting to update this dashboard.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(self.closeAlerts, 2000);
-
                     self.status.processing = false;
 
                 });
-
-            };
-
-            self.addFilter = function(item, collection) {
-
-                self.dashboard[collection].push(item);
-
-            };
-
-            self.search = function(value) {
-
-                if (self.searchScope.target === 'organization') {
-
-                    return SearchService.organization({
-                        q: value
-                    }).$promise.then(function(response) {
-
-                        console.log('SearchService.organization response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
-
-                        return response.results.slice(0, 5);
-
-                    });
-
-                } else if (self.searchScope.target === 'practice') {
-
-                    return SearchService.practiceType({
-                        q: value
-                    }).$promise.then(function(response) {
-
-                        console.log('SearchService.practiceType response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
-
-                        return response.results.slice(0, 5);
-
-                    });
-
-                } else if (self.searchScope.target === 'program') {
-
-                    return SearchService.program({
-                        q: value
-                    }).$promise.then(function(response) {
-
-                        console.log('SearchService.program response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
-
-                        return response.results.slice(0, 5);
-
-                    });
-
-                } else if (self.searchScope.target === 'project') {
-
-                    return SearchService.project({
-                        q: value
-                    }).$promise.then(function(response) {
-
-                        console.log('SearchService.project response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
-
-                        return response.results.slice(0, 5);
-
-                    });
-
-                } else {
-
-                    return SearchService.tag({
-                        q: value
-                    }).$promise.then(function(response) {
-
-                        console.log('SearchService.tag response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
-
-                        return response.results.slice(0, 5);
-
-                    });
-
-                }
 
             };
 
@@ -576,7 +430,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this dasoardhb.',
+                            'msg': 'Something went wrong while attempting to delete this dashboard.',
                             'prompt': 'OK'
                         }];
 
