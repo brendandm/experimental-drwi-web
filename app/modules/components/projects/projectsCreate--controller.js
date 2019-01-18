@@ -169,9 +169,9 @@ angular.module('FieldDoc')
 
                 // project.programs = self.processRelations(self.tempPrograms);
 
-                project.partners = self.processRelations(self.tempPartners);
+                // project.partners = self.processRelations(self.tempPartners);
 
-                project.workflow_state = 'Draft';
+                // project.workflow_state = 'Draft';
 
                 project.$save().then(function(response) {
 

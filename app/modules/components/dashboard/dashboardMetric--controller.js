@@ -195,21 +195,41 @@ angular.module('FieldDoc')
 
             };
 
+            // self.loadFeatures = function(programId) {
+
+            //     var params = {
+            //         program: programId
+            //     };
+
+            //     MetricType.collection(params).$promise.then(function(successResponse) {
+
+            //         console.log('successResponse', successResponse);
+
+            //         successResponse.features.forEach(function(feature) {
+
+            //             self.addMetric(feature);
+
+            //         });
+
+            //     }, function(errorResponse) {
+
+            //         console.log('errorResponse', errorResponse);
+
+            //         self.showElements();
+
+            //     });
+
+            // };
+
             self.loadFeatures = function(programId) {
 
-                var params = {
-                    program: programId
-                };
+                Dashboard.availableMetrics({
+                    id: $route.current.params.dashboardId
+                }).$promise.then(function(successResponse) {
 
-                MetricType.collection(params).$promise.then(function(successResponse) {
+                    console.log('Dashboard.availableMetrics.successResponse', successResponse);
 
-                    console.log('successResponse', successResponse);
-
-                    successResponse.features.forEach(function(feature) {
-
-                        self.addMetric(feature);
-
-                    });
+                    self.metrics = successResponse.features;
 
                 }, function(errorResponse) {
 
@@ -225,9 +245,11 @@ angular.module('FieldDoc')
 
                 self.dashboardObject = data.properties || data;
 
-                self.tempMetrics = self.dashboardObject.metrics;
+                // self.tempMetrics = self.dashboardObject.metrics;
 
                 self.status.processing = false;
+
+                self.loadFeatures();
 
             };
 

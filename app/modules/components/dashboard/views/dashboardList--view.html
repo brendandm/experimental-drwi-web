@@ -38,7 +38,7 @@
                         <div class="card--content">
 
                             <div class="name">
-                                <span>{{ snapshot.name }}</span>
+                                <span>{{ snapshot.properties.name }}</span>
                             </div>
 
                             <div class="body">
@@ -54,7 +54,7 @@
                                         </a>
                                     </div>
                                 </div>
-                                <p>{{ (snapshot.description || 'No description') | truncate:80 }}</p>
+                                <p>{{ (snapshot.snapshot.properties.properties.description || 'No description') | truncate:80 }}</p>
                                 <div class="actions">
                                     <a class="snapshot--title" href="/dashboards/{{ snapshot.id }}" title="View dashboard" target="_blank">
                                         <i class="material-icons">
@@ -72,7 +72,7 @@
                                         </i>
                                     </a>
                                 </div>
-                                <span><time datetime="{{ snapshot.modified_on }}" title="{{ snapshot.modified_on }}">Last updated {{ snapshot.modified_on | date : 'mediumDate' }}</time></span>
+                                <span><time datetime="{{ snapshot.modified_on }}" title="{{ snapshot.modified_on }}">Last updated {{ snapshot.properties.modified_on | date : 'mediumDate' }}</time></span>
                             </div>
                         </div>
                     </li>

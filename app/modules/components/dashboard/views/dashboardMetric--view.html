@@ -23,9 +23,11 @@
 
                 <div class="filter--ui">
 
-                    <p style="font-style: normal; font-size: 1em; color: #616161;">Search for metrics by name or conservation program. If you select a conservation program, all of that program’s associated metrics will appear in the dashboard.<p>
+                    <!-- <p style="font-style: normal; font-size: 1em; color: #616161;">Search for metrics by name or conservation program. If you select a conservation program, all of that program’s associated metrics will appear in the dashboard.<p> -->
 
-                    <div class="search-options-radio">
+                    <p style="font-style: normal; font-size: 1em; color: #616161;" data-ng-if="page.metrics.length">The metrics below are those associated with the projects that you added to this dashboard. You can control which metrics are visible in the dashboard by selecting or de-selecting them one-at-a-time.<p>
+
+                    <!-- <div class="search-options-radio">
                         <label for="search-metric">
                             Search metrics
                             <input type="radio" id="search-metric" name="search-metric" data-ng-model="page.searchScope.target" value="metric" />
@@ -44,11 +46,32 @@
                             </div>
                         </div>
 
-                    </div>
+                    </div> -->
 
-                    <div class="classification--list" style="margin-top: 2em;">
+                    <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+
+                        <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="metric in page.metrics | orderBy:'-modified_on' | filter: page.metricQuery">
+
+                            <div class="card--content">
+
+                                <label class="name" for="metric-{{ metric.id }}">
+                                    {{ metric.name }}
+                                    <input type="checkbox" id="metric-{{ metric.id }}" name="metric-{{ metric.id }}" data-ng-model="metric.selected" data-ng-checked="metric.selected" />
+                                </label>
+
+                                <div class="body">
+                                    <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (metric.description || 'No description') | truncate:250 }}</p>
+                                </div>
+
+                            </div>
+
+                        </li>
+
+                    </ul>
+
+                    <!-- <div class="classification--list" style="margin-top: 2em;">
                         <ul>
-                            <li class="reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="metric in page.tempMetrics">
+                            <li class="reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="metric in page.metrics">
                                 <i class="material-icons">
                                     timeline
                                 </i>
@@ -68,7 +91,7 @@
                         <button class="clear" type="button" data-ng-click="page.clearAllFilters()" title="Clear all filters">
                             Clear all
                         </button>
-                    </div>
+                    </div> -->
 
                 </div>
 

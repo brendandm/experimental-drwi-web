@@ -30,6 +30,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/dashboard/:id/geographies')
                 },
+                availableMetrics: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/dashboard/:id/available-metrics')
+                },
                 metrics: {
                     method: 'GET',
                     isArray: false,
