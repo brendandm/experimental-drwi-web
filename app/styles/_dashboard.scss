@@ -910,3 +910,63 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+//
+// Dashboard modes selector
+//
+
+.dashboard-modes {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    margin-bottom: 2em;
+    border-bottom: 1px solid #e0e0e0;
+
+    > div {
+        position: relative;
+        display: flex;
+        flex-shrink: 0;
+        flex-grow: 1;
+        flex-flow: column;
+        justify-content: center;
+        align-items: center;
+        padding: 1em 0;
+        cursor: default;
+        color: #424242;
+        border-bottom: 0px solid rgb(6, 170, 223);
+        transition: all 250ms ease 0s;
+
+        &:after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            height: 0;
+            width: 100%;
+            background: rgb(6, 170, 223);
+        }
+
+    }
+
+    > div:hover,
+    .active {
+        color: rgb(6, 170, 223);
+        //border-bottom: 2px solid rgb(6, 170, 223);
+
+        &:after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            width: 100%;
+            background: rgb(6, 170, 223);
+        }
+
+    }
+
+}

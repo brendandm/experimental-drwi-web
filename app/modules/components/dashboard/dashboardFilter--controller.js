@@ -26,6 +26,11 @@ angular.module('FieldDoc')
                 processing: true
             };
 
+            self.modes = {
+                filter: false,
+                list: false
+            };
+
             self.alerts = [];
 
             self.closeAlerts = function() {
@@ -88,9 +93,57 @@ angular.module('FieldDoc')
 
                     self.projects = successResponse.features;
 
+                    if (self.dashboardObject.select_all) {
+
+                        self.markSelected();
+
+                    }
+
                 }).catch(function(errorResponse) {
 
                     $log.error('Unable to load dashboard projects.');
+
+                });
+
+            };
+
+            self.setMode = function(value) {
+
+                if (value === 0) {
+
+                    self.modes.list = true;
+
+                    self.modes.filter = false;
+
+                    self.activeFilters = [];
+
+                } else {
+
+                    self.modes.list = false;
+
+                    self.modes.filter = true;
+
+                    self.selectedProjects = [];
+
+                    self.dashboardObject.projects = [];
+
+                }
+
+            };
+
+            self.markSelected = function() {
+
+                self.projects.forEach(function(feature) {
+
+                    if (self.dashboardObject.select_all) {
+
+                        feature.selected = true;
+
+                    } else {
+
+                        feature.selected = false;
+
+                    }
 
                 });
 
@@ -148,11 +201,11 @@ angular.module('FieldDoc')
 
                         break;
 
-                    case 'project':
+                    // case 'project':
 
-                        self.updateCollection(obj, 'projects');
+                    //     self.updateCollection(obj, 'projects');
 
-                        break;
+                    //     break;
 
                     // case 'status':
 
@@ -198,7 +251,7 @@ angular.module('FieldDoc')
                         'organization': 'organizations',
                         'practice': 'practices',
                         'program': 'programs',
-                        'project': 'projects',
+                        // 'project': 'projects',
                         // 'status': 'statuses',
                         'tag': 'tags'
                     },
@@ -207,7 +260,7 @@ angular.module('FieldDoc')
                         'organizations': 'organization',
                         'practices': 'practice',
                         'programs': 'program',
-                        'projects': 'project',
+                        // 'projects': 'project',
                         // 'statuses': 'status',
                         'tags': 'tag'
                     }
@@ -262,7 +315,7 @@ angular.module('FieldDoc')
                     'organization',
                     'practices',
                     'programs',
-                    'projects',
+                    // 'projects',
                     'tags'
                 ];
 
@@ -288,7 +341,15 @@ angular.module('FieldDoc')
 
                 });
 
+                if (self.dashboardObject.user_only) {
+
+                    self.setMode(0);
+
+                }
+
                 self.status.processing = false;
+
+                self.loadProjects();
 
             };
 
@@ -469,7 +530,7 @@ angular.module('FieldDoc')
 
                     self.loadDashboard();
 
-                    self.loadProjects();
+                    // self.loadProjects();
 
                     //
                     // Setup page meta data
