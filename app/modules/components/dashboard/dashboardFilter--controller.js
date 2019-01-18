@@ -31,6 +31,8 @@ angular.module('FieldDoc')
                 list: false
             };
 
+            self.activeFilters = [];
+
             self.alerts = [];
 
             self.closeAlerts = function() {
@@ -159,9 +161,38 @@ angular.module('FieldDoc')
 
             };
 
-            self.clearFilter = function(obj) {
+            self.addFilter = function(item, model, label) {
 
-                FilterStore.clearItem(obj);
+                var match = false;
+
+                self.activeFilters.forEach(function(datum) {
+
+                    if (datum.id === item.id &&
+                        datum.category === item.category) {
+
+                        match = true;
+
+                    }
+
+                });
+
+                if (!match) {
+
+                    self.activeFilters.push(item);
+
+                }
+
+            };
+
+            self.clearFilter = function(obj, index) {
+
+                self.activeFilters.splice(index, 1);
+
+                // var filters = [];
+
+                // self.activeFilters.forEach
+
+                // FilterStore.clearItem(obj);
 
             };
 
@@ -171,11 +202,19 @@ angular.module('FieldDoc')
                 // Remove all stored filter objects
                 //
 
-                FilterStore.clearAll();
+                // FilterStore.clearAll();
+
+                self.activeFilters = [];
 
             };
 
             self.updateCollection = function(obj, collection) {
+
+                if (typeof self.dashboardObject[collection] === 'undefined') {
+
+                    collection = 'tags';
+
+                }
 
                 self.dashboardObject[collection].push({
                     id: obj.id
@@ -546,13 +585,13 @@ angular.module('FieldDoc')
 
             };
 
-            $scope.$watch('filterStore.index', function(newVal) {
+            // $scope.$watch('filterStore.index', function(newVal) {
 
-                console.log('Updated filterStore', newVal);
+            //     console.log('Updated filterStore', newVal);
 
-                self.activeFilters = newVal;
+            //     self.activeFilters = newVal;
 
-            });
+            // });
 
             //
             // Verify Account information for proper UI element display

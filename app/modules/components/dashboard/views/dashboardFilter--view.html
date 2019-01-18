@@ -47,7 +47,7 @@
 
                     <p class="reveal fade-in t0" style="font-style: normal; font-size: 1em; color: #616161;" data-ng-if="page.modes.list">Add projects to this dashboard by selecting them from your collection below. If you want to create a dashboard for all of your projects, activate the “Select all” switch. Please keep in mind that this is a fixed set of projects — FieldDoc won’t include new projects you create unless the “Select all” option is turned on.</p>
 
-                    <p class="reveal fade-in t0" style="font-style: normal; font-size: 1em; color: #616161;" data-ng-if="page.modes.filter">Search for practices, programs, organizations, and/or tags to use as project filters. When you add a filter, FieldDoc automatically includes <strong>any</strong> project that match your filter combination. With filters turned on, you won’t need to manually add projects to this dashboard.</p>
+                    <p class="reveal fade-in t0" style="font-style: normal; font-size: 1em; color: #616161;" data-ng-if="page.modes.filter">Search for practices, programs, organizations, and/or tags to use as project filters. When you add a filter, FieldDoc automatically includes <strong>any</strong> projects that match your filter combination. With filters turned on, you won’t need to manually add projects to this dashboard.</p>
 
                 </div>
 
@@ -59,7 +59,7 @@
 
                             <div global-search class="global--search" style="width: 100%; max-width: none;">
 
-                                <input type="search" class="search" style="color: #212121;" value="" placeholder="Search&hellip;" data-ng-model="page.query" uib-typeahead="suggestion as suggestion.name for suggestion in page.search($viewValue)" typeahead-on-select="page.setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                                <input type="search" class="search" style="color: #212121;" value="" placeholder="Search&hellip;" data-ng-model="page.query" uib-typeahead="suggestion as suggestion.name for suggestion in page.search($viewValue)" typeahead-on-select="page.addFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
 
                             </div>
 
@@ -71,7 +71,7 @@
                                     <span class="category {{ filter.category }}">{{ filter.category }}</span>
                                     <span>{{ filter.name }}</span>
                                 </div>
-                                <div data-ng-click="page.clearFilter(filter)">
+                                <div data-ng-click="page.clearFilter(filter, $index)">
                                     <i class="material-icons">
                                         remove_circle
                                     </i>
