@@ -299,6 +299,7 @@
                         'creator',
                         'counties',
                         'dashboards',
+                        'extent',
                         'geographies',
                         // 'geometry',
                         'last_modified_by',

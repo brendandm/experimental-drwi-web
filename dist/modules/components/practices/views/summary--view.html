@@ -34,27 +34,27 @@
 
                     <article class="pad space-right shadow reveal fade-in t0">
 
-                        <h1>{{ page.practice.properties.name || 'Un-named' }}</h1>
+                        <h1>{{ page.practice.name || 'Un-named' }}</h1>
 
                         <p>
-                            <strong>Project:</strong> <a href="{{ page.practice.links.project.html }}">{{ page.practice.properties.project.properties.name }}</a>
-                        </p>
-
-                        <p>
-                            <strong>Site:</strong> <a href="{{ page.practice.links.site.html }}">{{ page.practice.properties.site.properties.name }}</a>
+                            <strong>Project:</strong> <a href="{{ page.practice.links.project.html }}">{{ page.practice.project.name }}</a>
                         </p>
 
                         <p>
-                            <strong>Practice Type:</strong> {{ page.practice.properties.category.properties.name }}
+                            <strong>Site:</strong> <a href="{{ page.practice.links.site.html }}">{{ page.practice.site.name }}</a>
                         </p>
 
-                        <p data-ng-if="page.practice.properties.area && page.practice.properties.area > 0">
-                            <strong>Area:</strong> {{ page.practice.properties.area | convertArea:'acre' | number:2 }} acres</a>
+                        <p>
+                            <strong>Practice Type:</strong> {{ page.practice.category.name }}
                         </p>
 
-                        <p data-ng-if="page.practice.properties.description" data-ng-bind-html="page.practice.properties.description"></p>
+                        <p data-ng-if="page.practice.area && page.practice.area > 0">
+                            <strong>Area:</strong> {{ page.practice.area | convertArea:'acre' | number:2 }} acres</a>
+                        </p>
 
-                        <p data-ng-if="!page.practice.properties.description">{{ page.practice.properties.category.properties.description }}</p>
+                        <p data-ng-if="page.practice.description" data-ng-bind-html="page.practice.description"></p>
+
+                        <p data-ng-if="!page.practice.description">{{ page.practice.category.description }}</p>
 
                     </article>
 
@@ -167,7 +167,7 @@
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="report in page.practice.properties.reports | orderBy:'properties.report_date':false">
+                    <li class="card" data-ng-repeat="report in page.practice.reports | orderBy:'properties.report_date':false">
 
                         <div class="card--content">
 
@@ -245,29 +245,29 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit && page.practice.properties.category" data-ng-class="{active: $root.toolbarState.editLocation}">
-                <a href="/practices/{{ page.practice.properties.id }}/location">
+            <li data-ng-if="page.permissions.can_edit && page.practice.category" data-ng-class="{active: $root.toolbarState.editLocation}">
+                <a href="/practices/{{ page.practice.id }}/location">
                     <i class="material-icons">
                         location_on
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
-                <a href="/practices/{{ page.practice.properties.id }}/photos">
+                <a href="/practices/{{ page.practice.id }}/photos">
                     <i class="material-icons">
                         insert_photo
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
+            <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
                 <a href="/practices/{{ page.practice.id }}/partnerships">
                     <i class="material-icons">
                         group_work
                     </i>
                 </a>
-            </li>
+            </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/practices/{{ page.practice.properties.id }}/tags">
+                <a href="/practices/{{ page.practice.id }}/tags">
                     <i class="material-icons">
                         local_offer
                     </i>

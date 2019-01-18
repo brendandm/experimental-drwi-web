@@ -32,27 +32,27 @@
 
                     <article class="pad space-right shadow reveal fade-in t0">
 
-                        <h1>{{ page.site.properties.name }}</h1>
+                        <h1>{{ page.site.name }}</h1>
 
-                        <p data-ng-if="page.site.id && page.site.properties.last_modified_by.properties.first_name && page.site.properties.last_modified_by.properties.last_name" class="label">
-                            Last modified by {{ page.site.properties.last_modified_by.properties.first_name }} {{ page.site.properties.last_modified_by.properties.last_name }} on {{ page.site.properties.modified_on | date:'medium' }}
+                        <p data-ng-if="page.site.id && page.site.last_modified_by.first_name && page.site.last_modified_by.last_name" class="label">
+                            Last modified by {{ page.site.last_modified_by.first_name }} {{ page.site.last_modified_by.last_name }} on {{ page.site.modified_on | date:'medium' }}
                         </p>
 
-                        <p data-ng-if="page.project.id && page.project.properties.program">
-                            <strong>Program:</strong> {{ page.project.properties.program.properties.name }}
+                        <p data-ng-if="page.project.id && page.project.program">
+                            <strong>Program:</strong> {{ page.project.program.name }}
                         </p>
 
                         <p>
-                            <strong>Project:</strong> <a href="{{ page.site.links.project.html }}">{{ page.project.properties.name }}</a>
+                            <strong>Project:</strong> <a href="{{ page.site.links.project.html }}">{{ page.project.name }}</a>
                         </p>
 
-                        <p data-ng-if="page.site.properties.area && page.site.properties.area > 0">
-                            <strong>Area:</strong> {{ page.site.properties.area | convertArea:'acre' | number:2 }} acres</a>
+                        <p data-ng-if="page.site.area && page.site.area > 0">
+                            <strong>Area:</strong> {{ page.site.area | convertArea:'acre' | number:2 }} acres</a>
                         </p>
 
-                        <p data-ng-if="page.site.properties.description" data-ng-bind-html="page.site.properties.description"></p>
+                        <p data-ng-if="page.site.description" data-ng-bind-html="page.site.description"></p>
 
-                        <p data-ng-if="!page.site.properties.description">No description</p>
+                        <p data-ng-if="!page.site.description">No description</p>
 
                     </article>
 

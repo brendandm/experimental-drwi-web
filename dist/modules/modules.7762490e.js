@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1547739595823})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1547822465283})
 
 ;
 /**
@@ -8786,7 +8786,7 @@ angular.module('FieldDoc')
             };
 
             $rootScope.toolbarState = {
-                'edit': true
+                'editTags': true
             };
 
             $rootScope.page = {};
@@ -10021,7 +10021,8 @@ angular.module('FieldDoc')
                     },
                     site: function(Site, $route) {
                         return Site.get({
-                            id: $route.current.params.siteId
+                            id: $route.current.params.siteId,
+                            format: 'geojson'
                         });
                     }
                 }
@@ -10109,8 +10110,8 @@ angular.module('FieldDoc')
                 }
             })
             .when('/sites/:siteId/tags', {
-                templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
-                controller: 'FeatureTagController',
+                templateUrl: '/modules/components/sites/views/siteTag--view.html?t=' + environment.version,
+                controller: 'SiteTagController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -10124,37 +10125,83 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(Site, $route) {
+                    site: function(Site, $route) {
 
-                        return {
-                            featureId: $route.current.params.siteId,
-                            name: 'site',
-                            path: '/sites',
-                            cls: Site
-                        }
-
-                    },
-                    feature: function(Site, $route) {
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'last_modified_by',
+                            'members',
+                            'metric_types',
+                            'partnerships',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            // 'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
 
                         return Site.get({
-                            id: $route.current.params.siteId
+                            id: $route.current.params.siteId,
+                            exclude: exclude
                         });
-
-                    },
-                    toolbarUrl: function() {
-
-                        return '/templates/toolbars/site.html?t=' + environment.version;
-
-                    },
-                    viewState: function() {
-
-                        return {
-                            'site': true
-                        };
 
                     }
                 }
             });
+            // .when('/sites/:siteId/tags', {
+            //     templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
+            //     controller: 'FeatureTagController',
+            //     controllerAs: 'page',
+            //     resolve: {
+            //         user: function(Account, $rootScope, $document) {
+
+            //             $rootScope.targetPath = document.location.pathname;
+
+            //             if (Account.userObject && !Account.userObject.id) {
+            //                 return Account.getUser();
+            //             }
+
+            //             return Account.userObject;
+
+            //         },
+            //         featureCollection: function(Site, $route) {
+
+            //             return {
+            //                 featureId: $route.current.params.siteId,
+            //                 name: 'site',
+            //                 path: '/sites',
+            //                 cls: Site
+            //             }
+
+            //         },
+            //         feature: function(Site, $route) {
+
+            //             return Site.get({
+            //                 id: $route.current.params.siteId
+            //             });
+
+            //         },
+            //         toolbarUrl: function() {
+
+            //             return '/templates/toolbars/site.html?t=' + environment.version;
+
+            //         },
+            //         viewState: function() {
+
+            //             return {
+            //                 'site': true
+            //             };
+
+            //         }
+            //     }
+            // });
 
     }]);
 (function() {
@@ -10402,9 +10449,9 @@ angular.module('FieldDoc')
                         self.permissions.can_edit = successResponse.permissions.write;
                         self.permissions.can_delete = successResponse.permissions.write;
 
-                        $rootScope.page.title = self.site.properties.name;
+                        $rootScope.page.title = self.site.name;
 
-                        self.project = successResponse.properties.project;
+                        self.project = successResponse.project;
 
                         console.log('self.project', self.project);
 
@@ -10487,8 +10534,8 @@ angular.module('FieldDoc')
                     self.practice = new Practice({
                         'practice_type': 'Custom',
                         'site_id': self.site.id,
-                        'project_id': self.site.properties.project.id,
-                        'organization_id': self.site.properties.organization_id
+                        'project_id': self.site.project.id,
+                        'organization_id': self.site.organization_id
                     });
 
                     self.practice.$save(function(successResponse) {
@@ -10613,11 +10660,71 @@ angular.module('FieldDoc')
 
                 };
 
+                self.scrubFeature = function(feature) {
+
+                    var excludedKeys = [
+                        'allocations',
+                        'creator',
+                        'dashboards',
+                        'geographies',
+                        'geometry',
+                        'last_modified_by',
+                        'members',
+                        'metrics',
+                        'metric_types',
+                        'organization',
+                        'partners',
+                        'partnerships',
+                        'practices',
+                        'practice_types',
+                        'program',
+                        'project',
+                        'reports',
+                        'sites',
+                        'status',
+                        'tags',
+                        'tasks',
+                        'users'
+                    ];
+
+                    var reservedProperties = [
+                        'links',
+                        'permissions',
+                        '$promise',
+                        '$resolved'
+                    ];
+
+                    excludedKeys.forEach(function(key) {
+
+                        if (feature.properties) {
+
+                            delete feature.properties[key];
+
+                        } else {
+
+                            delete feature[key];
+
+                        }
+
+                    });
+
+                    reservedProperties.forEach(function(key) {
+
+                        delete feature[key];
+
+                    });
+
+                };
+
                 self.saveSite = function() {
 
                     self.status.processing = true;
 
-                    self.site.$update().then(function(successResponse) {
+                    self.scrubFeature(self.site);
+
+                    Site.update({
+                        id: self.site.id
+                    }, self.site).then(function(successResponse) {
 
                         self.site = successResponse;
 
@@ -10630,7 +10737,7 @@ angular.module('FieldDoc')
 
                         $timeout(closeAlerts, 2000);
 
-                    }, function(errorResponse) {
+                    }).catch(function(errorResponse) {
 
                         self.alerts = [{
                             'type': 'error',
@@ -10765,7 +10872,7 @@ angular.module('FieldDoc')
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
 
-                            $rootScope.page.title = self.site.properties.name;
+                            $rootScope.page.title = self.site.name;
 
                             self.showElements();
 
@@ -11080,11 +11187,68 @@ angular.module('FieldDoc')
 
                 };
 
+                self.scrubFeature = function(feature) {
+
+                    var excludedKeys = [
+                        'allocations',
+                        'creator',
+                        'counties',
+                        'dashboards',
+                        'extent',
+                        'geographies',
+                        // 'geometry',
+                        'last_modified_by',
+                        'members',
+                        'metrics',
+                        'metric_types',
+                        'organization',
+                        'partners',
+                        'partnerships',
+                        'practices',
+                        'practice_types',
+                        'program',
+                        'project',
+                        'reports',
+                        'sites',
+                        'status',
+                        'tags',
+                        'tasks',
+                        'watersheds',
+                        'users'
+                    ];
+
+                    var reservedProperties = [
+                        'links',
+                        'permissions',
+                        '$promise',
+                        '$resolved'
+                    ];
+
+                    excludedKeys.forEach(function(key) {
+
+                        if (feature.properties) {
+
+                            delete feature.properties[key];
+
+                        } else {
+
+                            delete feature[key];
+
+                        }
+
+                    });
+
+                    reservedProperties.forEach(function(key) {
+
+                        delete feature[key];
+
+                    });
+
+                };
+
                 self.saveSite = function() {
 
-                    delete self.site.properties.counties;
-                    delete self.site.properties.geographies;
-                    delete self.site.properties.watersheds;
+                    self.scrubFeature(self.site);
 
                     if (self.savedObjects.length) {
 
@@ -11114,7 +11278,9 @@ angular.module('FieldDoc')
 
                     self.status.processing = true;
 
-                    self.site.$update().then(function(successResponse) {
+                    Site.update({
+                        id: self.site.id
+                    }, self.site).then(function(successResponse) {
 
                         self.status.processing = false;
 
@@ -11129,7 +11295,7 @@ angular.module('FieldDoc')
 
                         $timeout(closeAlerts, 2000);
 
-                    }, function(errorResponse) {
+                    }).catch(function(errorResponse) {
 
                         self.status.processing = false;
 
@@ -11433,7 +11599,8 @@ angular.module('FieldDoc')
                 self.loadFeature = function() {
 
                     Site.get({
-                        id: $route.current.params.siteId
+                        id: $route.current.params.siteId,
+                        format: 'geojson'
                     }).$promise.then(function(successResponse) {
 
                         console.log('self.site', successResponse);
@@ -11454,7 +11621,7 @@ angular.module('FieldDoc')
                         self.permissions.can_edit = successResponse.permissions.write;
                         self.permissions.can_delete = successResponse.permissions.write;
 
-                        $rootScope.page.title = self.site.properties.name;
+                        $rootScope.page.title = self.site.name;
 
                         //
                         // If a valid site geometry is present, add it to the map
@@ -12159,14 +12326,14 @@ angular.module('FieldDoc')
                     self.permissions.can_edit = successResponse.permissions.write;
                     self.permissions.can_delete = successResponse.permissions.write;
 
-                    $rootScope.page.title = self.site.properties.name;
+                    $rootScope.page.title = self.site.name;
 
                     //
                     // If the page is being loaded, and a parcel exists within the user's plan, that means they've already
                     // selected their property, so we just need to display it on the map for them again.
                     //
-                    // if (self.site && self.site.properties && self.site.properties.segment) {
-                    //     self.geolocation.drawSegment(self.site.properties.segment);
+                    // if (self.site && self.site.properties && self.site.segment) {
+                    //     self.geolocation.drawSegment(self.site.segment);
                     // }
 
                     //
@@ -12726,9 +12893,9 @@ angular.module('FieldDoc')
 
                         }
 
-                        $rootScope.page.title = self.site.properties.name;
+                        $rootScope.page.title = self.site.name;
 
-                        self.project = successResponse.properties.project;
+                        self.project = successResponse.project;
 
                         console.log('self.project', self.project);
 
@@ -12789,6 +12956,643 @@ angular.module('FieldDoc')
             });
 
 })();
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('SiteTagController',
+        function(Account, Image, $location, $log, Site, site, $q,
+            $rootScope, $route, $scope, $timeout, $interval, user,
+            Utility, SearchService, $window) {
+
+            var self = this;
+
+            self.siteId = $route.current.params.siteId;
+
+            $rootScope.viewState = {
+                'site': true
+            };
+
+            $rootScope.toolbarState = {
+                'editTags': true
+            };
+
+            $rootScope.page = {};
+
+            self.status = {
+                loading: true,
+                processing: true
+            };
+
+            // 
+            // Initialize container for storing grouped
+            // tag selections.
+            // 
+
+            self.groupTags = {};
+
+            self.alerts = [];
+
+            function closeAlerts() {
+
+                self.alerts = [];
+
+            }
+
+            function closeRoute() {
+
+                $location.path(self.site.links.site.html);
+
+            }
+
+            self.confirmDelete = function(obj) {
+
+                console.log('self.confirmDelete', obj);
+
+                self.deletionTarget = self.deletionTarget ? null : obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.showElements = function() {
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.status.processing = false;
+
+                }, 1000);
+
+            };
+
+            self.searchTags = function(value) {
+
+                var exclude = [];
+
+                angular.forEach(self.tempTags, function(tag) {
+
+                    exclude.push(tag.id);
+
+                });
+
+                return SearchService.tag({
+                    q: value,
+                    exclude: exclude.join(',')
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService response', response);
+
+                    return response.results.slice(0, 5);
+
+                });
+
+            };
+
+            self.searchGroups = function(value) {
+
+                return SearchService.tagGroup({
+                    q: value
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService response', response);
+
+                    response.results.forEach(function(result) {
+
+                        result.category = null;
+
+                    });
+
+                    return response.results.slice(0, 5);
+
+                });
+
+            };
+
+            self.loadSite = function() {
+
+                site.$promise.then(function(successResponse) {
+
+                    console.log('self.site', successResponse);
+
+                    self.site = successResponse;
+
+                    self.tempTags = successResponse.tags;
+
+                    if (!successResponse.permissions.read &&
+                        !successResponse.permissions.write) {
+
+                        self.makePrivate = true;
+
+                        return;
+
+                    }
+
+                    self.permissions.can_edit = successResponse.permissions.write;
+                    self.permissions.can_delete = successResponse.permissions.write;
+
+                    $rootScope.page.title = self.site.name || 'Un-named Site';
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.setGroupSelection = function(group) {
+
+                angular.forEach(group.tags, function(tag) {
+
+                    if (tag.selected) {
+
+                        self.groupTags[group.id] = tag;
+
+                    }
+
+                });
+
+            };
+
+            self.loadGroups = function() {
+
+                Site.tagGroups({
+                    id: self.siteId
+                }).$promise.then(function(successResponse) {
+
+                    console.log('self.groups.successResponse', successResponse);
+
+                    self.groups = successResponse.features.grouped;
+
+                    self.ungrouped = successResponse.features.ungrouped;
+
+                    angular.forEach(self.groups, function(group) {
+
+                        self.setGroupSelection(group);
+
+                    });
+
+                }, function(errorResponse) {
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.loadTags = function() {
+
+                Site.tags({
+                    id: self.siteId
+                }).$promise.then(function(successResponse) {
+
+                    console.log('self.groups.successResponse', successResponse);
+
+                    self.tempTags = successResponse.features;
+
+                }, function(errorResponse) {
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [
+                    'creator',
+                    'dashboards',
+                    'extent',
+                    'geographies',
+                    'geometry',
+                    'last_modified_by',
+                    'members',
+                    'metrics',
+                    'metric_types',
+                    'organization',
+                    'partners',
+                    'partnerships',
+                    'practices',
+                    'practice_types',
+                    'program',
+                    'reports',
+                    'sites',
+                    'status',
+                    'tasks',
+                    'users'
+                ];
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
+
+            };
+
+            self.addTag = function(item, model, label) {
+
+                var existingMatch = false;
+
+                angular.forEach(self.tempTags, function(tag) {
+
+                    console.log('tagCheck', tag, item);
+
+                    if (tag.id === item.id) {
+
+                        self.tagQuery = null;
+
+                        existingMatch = true;
+
+                    }
+
+                });
+
+                if (existingMatch) return;
+
+                self.ungrouped.push(item);
+
+                self.tempTags.push(item);
+
+                self.tagQuery = null;
+
+                console.log('Updated tags (addition)', self.tempTags);
+
+            };
+
+            self.removeTag = function(tag) {
+
+                var _index;
+
+                self.ungrouped.forEach(function(item, idx) {
+
+                    if (item.id === tag.id) {
+
+                        _index = idx;
+
+                    }
+
+                });
+
+                console.log('Remove tag at index', _index, tag);
+
+                if (typeof _index === 'number') {
+
+                    self.ungrouped.splice(_index, 1);
+
+                    var tags = [];
+
+                    angular.forEach(self.tempTags, function(_tag) {
+
+                        if (_tag.id !== tag.id) {
+
+                            tags.push(_tag);
+
+                        }
+
+                    });
+
+                    self.tempTags = tags;
+
+                }
+
+                console.log('Updated tags (removal)', self.tempTags);
+
+            };
+
+            self.manageGroup = function(group, tag) {
+
+                console.log('Manage group', group, tag);
+
+                console.log('self.manageGroup --> self.tempTags', self.tempTags);
+
+                var _index;
+
+                // 
+                // Determine if a tag from the target group is
+                // already present in `self.tempTags`.
+                // 
+
+                angular.forEach(self.tempTags, function(item, idx) {
+
+                    console.log('Seeking tag match', item, tag);
+
+                    if (item.group && item.group.id === group.id) {
+
+                        console.log('Match found in group', item, group);
+
+                        _index = idx;
+
+                    }
+
+                });
+
+                // 
+                // If a match was found, remove it from `self.tempTags`.
+                // 
+
+                if (typeof _index === 'number') {
+
+                    self.tempTags.splice(_index, 1);
+
+                }
+
+                // 
+                // Add target tag to `self.tempTags`.
+                // 
+
+                self.tempTags.push(tag);
+
+                console.log('self.tempTags.groupManaged', self.tempTags);
+
+            };
+
+            self.processRelations = function(list, checkSelected) {
+
+                var _list = [];
+
+                angular.forEach(list, function(item) {
+
+                    var _datum = {};
+
+                    if (item && item.id) {
+
+                        _datum.id = item.id;
+
+                    }
+
+                    _list.push(_datum);
+
+                });
+
+                // angular.forEach(list, function(item) {
+
+                //     console.log('processRelations.item', item);
+
+                //     var _datum = {};
+
+                //     if (checkSelected) {
+
+                //         if (item.id && item.selected) {
+
+                //             _datum.id = item.id;
+
+                //         }
+
+                //     } else if (item && item.id) {
+
+                //         _datum.id = item.id;
+
+                //     }
+
+                //     _list.push(_datum);
+
+                // });
+
+                // for (var key in self.groupTags) {
+
+                //     if (self.groupTags.hasOwnProperty(key)) {
+
+                //         _list.push({
+                //             id: self.groupTags[key].id
+                //         });
+
+                //     }
+
+                // }
+
+                return _list;
+
+            };
+
+            // self.selectTag = function(tag) {
+
+            //     if (tag.selected) {
+
+            //         self.tempTags.push(tag);
+
+            //         console.log('Added tag to tempTags', tag);
+
+            //     } else {
+
+            //         var tags = [];
+
+            //         angular.forEach(self.tempTags, function(item) {
+
+            //             if (item && item.id && item.id !== tag.id) {
+
+            //                 tags.push(item);
+
+            //             }
+
+            //         });
+
+            //         self.tempTags = tags;
+
+            //         console.log('Removed tag from tempTags', tag);
+
+            //     }
+
+            // };
+
+            self.processGroups = function(list) {
+
+                var _list = [];
+
+                console.log('self.groups', self.groups);
+
+                angular.forEach(self.groups, function(item) {
+
+                    var selection = self.processRelations(item.tags, true);
+
+                    _list.push.apply(_list, selection);
+
+                });
+
+                console.log('processGroups._list', _list);
+
+                return _list;
+
+            };
+
+            self.saveFeature = function() {
+
+                self.status.processing = true;
+
+                var data = {
+                    tags: self.processRelations(self.tempTags)
+                };
+
+                console.log('self.saveFeature.data', data);
+
+                // self.scrubFeature(self.site);
+
+                // self.site.tags = self.processRelations(self.tempTags);
+
+                // console.log('self.site.pendingTags', self.site.tags);
+
+                // self.site.$update().then(function(successResponse) {
+                Site.update({
+                    id: self.site.id
+                }, data).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Site changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(closeAlerts, 2000);
+
+                    // self.tempTags = successResponse.tags;
+
+                    $window.scrollTo(0, 0);
+
+                    // self.loadGroups();
+
+                    // self.loadTags();
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    // Error message
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Site changes could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(closeAlerts, 2000);
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.deleteFeature = function() {
+
+                Site.delete({
+                    id: +self.deletionTarget.id
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this site.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this site.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this site.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this site.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
+
+                });
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false
+                    };
+
+                    self.loadSite();
+
+                    self.loadGroups();
+
+                    // self.loadTags();
+
+                });
+
+            } else {
+
+                $location.path('/login');
+
+            }
+
+        });
 'use strict';
 
 /**
@@ -12947,7 +13751,8 @@ angular.module('FieldDoc')
                     },
                     practice: function(Practice, $route) {
                         return Practice.get({
-                            id: $route.current.params.practiceId
+                            id: $route.current.params.practiceId,
+                            format: 'geojson'
                         });
                     }
                 }
@@ -13038,8 +13843,8 @@ angular.module('FieldDoc')
                 }
             })
             .when('/practices/:practiceId/tags', {
-                templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
-                controller: 'FeatureTagController',
+                templateUrl: '/modules/components/practices/views/practiceTag--view.html?t=' + environment.version,
+                controller: 'PracticeTagController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
@@ -13053,37 +13858,83 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    featureCollection: function(Practice, $route) {
+                    practice: function(Practice, $route) {
 
-                        return {
-                            featureId: $route.current.params.practiceId,
-                            name: 'practice',
-                            path: '/practices',
-                            cls: Practice
-                        }
-
-                    },
-                    feature: function(Practice, $route) {
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'last_modified_by',
+                            'members',
+                            'metric_types',
+                            'partnerships',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            // 'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
 
                         return Practice.get({
-                            id: $route.current.params.practiceId
+                            id: $route.current.params.practiceId,
+                            exclude: exclude
                         });
-
-                    },
-                    toolbarUrl: function() {
-
-                        return '/templates/toolbars/practice.html?t=' + environment.version;
-
-                    },
-                    viewState: function() {
-
-                        return {
-                            'practice': true
-                        };
 
                     }
                 }
             });
+            // .when('/practices/:practiceId/tags', {
+            //     templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
+            //     controller: 'FeatureTagController',
+            //     controllerAs: 'page',
+            //     resolve: {
+            //         user: function(Account, $rootScope, $document) {
+
+            //             $rootScope.targetPath = document.location.pathname;
+
+            //             if (Account.userObject && !Account.userObject.id) {
+            //                 return Account.getUser();
+            //             }
+
+            //             return Account.userObject;
+
+            //         },
+            //         featureCollection: function(Practice, $route) {
+
+            //             return {
+            //                 featureId: $route.current.params.practiceId,
+            //                 name: 'practice',
+            //                 path: '/practices',
+            //                 cls: Practice
+            //             }
+
+            //         },
+            //         feature: function(Practice, $route) {
+
+            //             return Practice.get({
+            //                 id: $route.current.params.practiceId
+            //             });
+
+            //         },
+            //         toolbarUrl: function() {
+
+            //             return '/templates/toolbars/practice.html?t=' + environment.version;
+
+            //         },
+            //         viewState: function() {
+
+            //             return {
+            //                 'practice': true
+            //             };
+
+            //         }
+            //     }
+            // });
 
     });
 'use strict';
@@ -13189,24 +14040,24 @@ angular.module('FieldDoc')
                 self.permissions.can_edit = successResponse.permissions.write;
                 self.permissions.can_delete = successResponse.permissions.write;
 
-                delete self.practice.properties.organization;
-                delete self.practice.properties.project;
-                delete self.practice.properties.site;
+                delete self.practice.organization;
+                delete self.practice.project;
+                delete self.practice.site;
 
-                if (successResponse.properties.category) {
+                if (successResponse.category) {
 
-                    self.practiceType = successResponse.properties.category.properties;
+                    self.practiceType = successResponse.category;
 
                 }
 
-                $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
+                $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
                 //
                 // Load practice types
                 //
 
                 PracticeType.collection({
-                    program: self.practice.properties.program_id
+                    program: self.practice.program_id
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.practiceTypes', successResponse);
@@ -13231,15 +14082,59 @@ angular.module('FieldDoc')
 
         };
 
-        self.scrubFeature = function() {
+        self.scrubFeature = function(feature) {
 
-            delete self.practice.geometry;
-            delete self.practice.properties.site;
-            delete self.practice.properties.project;
-            delete self.practice.properties.program;
-            delete self.practice.properties.organization;
-            delete self.practice.properties.creator;
-            delete self.practice.properties.last_modified_by;
+            var excludedKeys = [
+                'allocations',
+                'creator',
+                'dashboards',
+                'geographies',
+                'geometry',
+                'last_modified_by',
+                'members',
+                'metrics',
+                'metric_types',
+                'organization',
+                'partners',
+                'partnerships',
+                'practices',
+                'practice_types',
+                'program',
+                'project',
+                'reports',
+                'sites',
+                'status',
+                'tags',
+                'tasks',
+                'users'
+            ];
+
+            var reservedProperties = [
+                'links',
+                'permissions',
+                '$promise',
+                '$resolved'
+            ];
+
+            excludedKeys.forEach(function(key) {
+
+                if (feature.properties) {
+
+                    delete feature.properties[key];
+
+                } else {
+
+                    delete feature[key];
+
+                }
+
+            });
+
+            reservedProperties.forEach(function(key) {
+
+                delete feature[key];
+
+            });
 
         };
 
@@ -13247,15 +14142,17 @@ angular.module('FieldDoc')
 
             self.status.processing = true;
 
-            self.scrubFeature();
+            self.scrubFeature(self.practice);
 
             if (self.practiceType) {
 
-                self.practice.properties.category_id = self.practiceType.id;
+                self.practice.category_id = self.practiceType.id;
 
             }
 
-            self.practice.$update().then(function(successResponse) {
+            Practice.update({
+                id: self.practice.id
+            }, self.practice).then(function(successResponse) {
 
                 self.alerts = [{
                     'type': 'success',
@@ -13268,7 +14165,7 @@ angular.module('FieldDoc')
 
                 self.showElements();
 
-            }, function(errorResponse) {
+            }).catch(function(errorResponse) {
 
                 // Error message
 
@@ -13311,7 +14208,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this practice.',
+                        'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this practice.',
                         'prompt': 'OK'
                     }];
 
@@ -13347,7 +14244,7 @@ angular.module('FieldDoc')
 
             self.practiceType = $item;
 
-            self.practice.properties.category_id = $item.id;
+            self.practice.category_id = $item.id;
 
         };
 
@@ -13505,7 +14402,7 @@ angular.module('FieldDoc')
                             typeof index === 'number' &&
                             featureType === 'report') {
 
-                            self.practice.properties.readings_custom.splice(index, 1);
+                            self.practice.readings_custom.splice(index, 1);
 
                             self.cancelDelete();
 
@@ -13614,7 +14511,7 @@ angular.module('FieldDoc')
                         self.permissions.can_edit = successResponse.permissions.write;
                         self.permissions.can_delete = successResponse.permissions.write;
 
-                        $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
+                        $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
                         //
                         // If a valid practice geometry is present, add it to the map
@@ -13683,7 +14580,7 @@ angular.module('FieldDoc')
                         'measurement_period': 'Planning',
                         'report_date': new Date(),
                         'practice_id': practiceId,
-                        'organization_id': self.practice.properties.organization_id
+                        'organization_id': self.practice.organization_id
                     });
 
                     newReading.$save().then(function(successResponse) {
@@ -13752,7 +14649,7 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('PracticeLocationController',
         function(Account, Image, leafletData, $location, $log, Map,
-            mapbox, Media, Practice, practice, $q, $rootScope, $route,
+            mapbox, Media, Site, Practice, practice, $q, $rootScope, $route,
             $scope, $timeout, $interval, site, user, Shapefile,
             leafletBoundsHelpers, Utility, Task) {
 
@@ -13881,8 +14778,24 @@ angular.module('FieldDoc')
 
             self.loadSite = function() {
 
+                var exclude = [
+                    'allocations',
+                    'creator',
+                    'counties',
+                    'geographies',
+                    'last_modified_by',
+                    'watersheds',
+                    'partnerships',
+                    'practices',
+                    'project',
+                    'tags',
+                    'tasks'
+                ].join(',');
+
                 Practice.site({
-                    id: $route.current.params.practiceId
+                    id: $route.current.params.practiceId,
+                    format: 'geojson',
+                    exclude: exclude
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.site', successResponse);
@@ -13920,7 +14833,8 @@ angular.module('FieldDoc')
             self.loadPractice = function() {
 
                 Practice.get({
-                    id: $route.current.params.practiceId
+                    id: $route.current.params.practiceId,
+                    format: 'geojson'
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.practice', successResponse);
@@ -13939,13 +14853,13 @@ angular.module('FieldDoc')
                     self.permissions.can_edit = successResponse.permissions.write;
                     self.permissions.can_delete = successResponse.permissions.write;
 
-                    delete self.practice.properties.organization;
-                    delete self.practice.properties.project;
-                    delete self.practice.properties.site;
+                    delete self.practice.organization;
+                    delete self.practice.project;
+                    delete self.practice.site;
 
-                    self.practiceType = successResponse.properties.category;
+                    self.practiceType = successResponse.category;
 
-                    $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
+                    $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
                     //
                     // If a valid practice geometry is present, add it to the map
@@ -15098,15 +16012,15 @@ angular.module('FieldDoc')
 
             }
 
-            delete self.practice.properties.organization;
-            delete self.practice.properties.project;
-            delete self.practice.properties.site;
+            delete self.practice.organization;
+            delete self.practice.project;
+            delete self.practice.site;
 
-            self.practiceType = data.properties.category;
+            self.practiceType = data.category;
 
-            $rootScope.page.title = self.practice.properties.name ? self.practice.properties.name : 'Un-named Practice';
+            $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
-            self.practice.properties.images.sort(function(a, b) {
+            self.practice.images.sort(function(a, b) {
 
                 return a.id < b.id;
 
@@ -15164,7 +16078,7 @@ angular.module('FieldDoc')
 
             var _images = [];
 
-            self.practice.properties.images.forEach(function(image) {
+            self.practice.images.forEach(function(image) {
 
                 _images.push({
                     id: image.id
@@ -15172,7 +16086,7 @@ angular.module('FieldDoc')
 
             });
 
-            self.practice.properties = {
+            self.practice = {
                 'images': _images
             };
 
@@ -15186,7 +16100,7 @@ angular.module('FieldDoc')
 
                     angular.forEach(successResponse, function(image) {
 
-                        self.practice.properties.images.push({
+                        self.practice.images.push({
 
                             id: image.id
 
@@ -15288,7 +16202,7 @@ angular.module('FieldDoc')
 
             if (featureType === 'image') {
 
-                self.practice.properties.images.splice(index, 1);
+                self.practice.images.splice(index, 1);
 
                 self.cancelDelete();
 
@@ -15367,6 +16281,642 @@ angular.module('FieldDoc')
         };
 
     });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('PracticeTagController',
+        function(Account, Image, $location, $log, Practice, practice, $q,
+            $rootScope, $route, $scope, $timeout, $interval, user,
+            Utility, SearchService, $window) {
+
+            var self = this;
+
+            self.practiceId = $route.current.params.practiceId;
+
+            $rootScope.viewState = {
+                'practice': true
+            };
+
+            $rootScope.toolbarState = {
+                'editTags': true
+            };
+
+            $rootScope.page = {};
+
+            self.status = {
+                loading: true,
+                processing: true
+            };
+
+            // 
+            // Initialize container for storing grouped
+            // tag selections.
+            // 
+
+            self.groupTags = {};
+
+            self.alerts = [];
+
+            function closeAlerts() {
+
+                self.alerts = [];
+
+            }
+
+            function closeRoute() {
+
+                $location.path(self.practice.links.practice.html);
+
+            }
+
+            self.confirmDelete = function(obj) {
+
+                console.log('self.confirmDelete', obj);
+
+                self.deletionTarget = self.deletionTarget ? null : obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.showElements = function() {
+
+                $timeout(function() {
+
+                    self.status.loading = false;
+
+                    self.status.processing = false;
+
+                }, 1000);
+
+            };
+
+            self.searchTags = function(value) {
+
+                var exclude = [];
+
+                angular.forEach(self.tempTags, function(tag) {
+
+                    exclude.push(tag.id);
+
+                });
+
+                return SearchService.tag({
+                    q: value,
+                    exclude: exclude.join(',')
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService response', response);
+
+                    return response.results.slice(0, 5);
+
+                });
+
+            };
+
+            self.searchGroups = function(value) {
+
+                return SearchService.tagGroup({
+                    q: value
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService response', response);
+
+                    response.results.forEach(function(result) {
+
+                        result.category = null;
+
+                    });
+
+                    return response.results.slice(0, 5);
+
+                });
+
+            };
+
+            self.loadPractice = function() {
+
+                practice.$promise.then(function(successResponse) {
+
+                    console.log('self.practice', successResponse);
+
+                    self.practice = successResponse;
+
+                    self.tempTags = successResponse.tags;
+
+                    if (!successResponse.permissions.read &&
+                        !successResponse.permissions.write) {
+
+                        self.makePrivate = true;
+
+                        return;
+
+                    }
+
+                    self.permissions.can_edit = successResponse.permissions.write;
+                    self.permissions.can_delete = successResponse.permissions.write;
+
+                    $rootScope.page.title = self.practice.name || 'Un-named Practice';
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.setGroupSelection = function(group) {
+
+                angular.forEach(group.tags, function(tag) {
+
+                    if (tag.selected) {
+
+                        self.groupTags[group.id] = tag;
+
+                    }
+
+                });
+
+            };
+
+            self.loadGroups = function() {
+
+                Practice.tagGroups({
+                    id: self.practiceId
+                }).$promise.then(function(successResponse) {
+
+                    console.log('self.groups.successResponse', successResponse);
+
+                    self.groups = successResponse.features.grouped;
+
+                    self.ungrouped = successResponse.features.ungrouped;
+
+                    angular.forEach(self.groups, function(group) {
+
+                        self.setGroupSelection(group);
+
+                    });
+
+                }, function(errorResponse) {
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.loadTags = function() {
+
+                Practice.tags({
+                    id: self.practiceId
+                }).$promise.then(function(successResponse) {
+
+                    console.log('self.groups.successResponse', successResponse);
+
+                    self.tempTags = successResponse.features;
+
+                }, function(errorResponse) {
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [
+                    'creator',
+                    'dashboards',
+                    'geographies',
+                    'geometry',
+                    'last_modified_by',
+                    'members',
+                    'metrics',
+                    'metric_types',
+                    'organization',
+                    'partners',
+                    'partnerships',
+                    'practices',
+                    'practice_types',
+                    'program',
+                    'reports',
+                    'practices',
+                    'status',
+                    'tasks',
+                    'users'
+                ];
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
+
+            };
+
+            self.addTag = function(item, model, label) {
+
+                var existingMatch = false;
+
+                angular.forEach(self.tempTags, function(tag) {
+
+                    console.log('tagCheck', tag, item);
+
+                    if (tag.id === item.id) {
+
+                        self.tagQuery = null;
+
+                        existingMatch = true;
+
+                    }
+
+                });
+
+                if (existingMatch) return;
+
+                self.ungrouped.push(item);
+
+                self.tempTags.push(item);
+
+                self.tagQuery = null;
+
+                console.log('Updated tags (addition)', self.tempTags);
+
+            };
+
+            self.removeTag = function(tag) {
+
+                var _index;
+
+                self.ungrouped.forEach(function(item, idx) {
+
+                    if (item.id === tag.id) {
+
+                        _index = idx;
+
+                    }
+
+                });
+
+                console.log('Remove tag at index', _index, tag);
+
+                if (typeof _index === 'number') {
+
+                    self.ungrouped.splice(_index, 1);
+
+                    var tags = [];
+
+                    angular.forEach(self.tempTags, function(_tag) {
+
+                        if (_tag.id !== tag.id) {
+
+                            tags.push(_tag);
+
+                        }
+
+                    });
+
+                    self.tempTags = tags;
+
+                }
+
+                console.log('Updated tags (removal)', self.tempTags);
+
+            };
+
+            self.manageGroup = function(group, tag) {
+
+                console.log('Manage group', group, tag);
+
+                console.log('self.manageGroup --> self.tempTags', self.tempTags);
+
+                var _index;
+
+                // 
+                // Determine if a tag from the target group is
+                // already present in `self.tempTags`.
+                // 
+
+                angular.forEach(self.tempTags, function(item, idx) {
+
+                    console.log('Seeking tag match', item, tag);
+
+                    if (item.group && item.group.id === group.id) {
+
+                        console.log('Match found in group', item, group);
+
+                        _index = idx;
+
+                    }
+
+                });
+
+                // 
+                // If a match was found, remove it from `self.tempTags`.
+                // 
+
+                if (typeof _index === 'number') {
+
+                    self.tempTags.splice(_index, 1);
+
+                }
+
+                // 
+                // Add target tag to `self.tempTags`.
+                // 
+
+                self.tempTags.push(tag);
+
+                console.log('self.tempTags.groupManaged', self.tempTags);
+
+            };
+
+            self.processRelations = function(list, checkSelected) {
+
+                var _list = [];
+
+                angular.forEach(list, function(item) {
+
+                    var _datum = {};
+
+                    if (item && item.id) {
+
+                        _datum.id = item.id;
+
+                    }
+
+                    _list.push(_datum);
+
+                });
+
+                // angular.forEach(list, function(item) {
+
+                //     console.log('processRelations.item', item);
+
+                //     var _datum = {};
+
+                //     if (checkSelected) {
+
+                //         if (item.id && item.selected) {
+
+                //             _datum.id = item.id;
+
+                //         }
+
+                //     } else if (item && item.id) {
+
+                //         _datum.id = item.id;
+
+                //     }
+
+                //     _list.push(_datum);
+
+                // });
+
+                // for (var key in self.groupTags) {
+
+                //     if (self.groupTags.hasOwnProperty(key)) {
+
+                //         _list.push({
+                //             id: self.groupTags[key].id
+                //         });
+
+                //     }
+
+                // }
+
+                return _list;
+
+            };
+
+            // self.selectTag = function(tag) {
+
+            //     if (tag.selected) {
+
+            //         self.tempTags.push(tag);
+
+            //         console.log('Added tag to tempTags', tag);
+
+            //     } else {
+
+            //         var tags = [];
+
+            //         angular.forEach(self.tempTags, function(item) {
+
+            //             if (item && item.id && item.id !== tag.id) {
+
+            //                 tags.push(item);
+
+            //             }
+
+            //         });
+
+            //         self.tempTags = tags;
+
+            //         console.log('Removed tag from tempTags', tag);
+
+            //     }
+
+            // };
+
+            self.processGroups = function(list) {
+
+                var _list = [];
+
+                console.log('self.groups', self.groups);
+
+                angular.forEach(self.groups, function(item) {
+
+                    var selection = self.processRelations(item.tags, true);
+
+                    _list.push.apply(_list, selection);
+
+                });
+
+                console.log('processGroups._list', _list);
+
+                return _list;
+
+            };
+
+            self.saveFeature = function() {
+
+                self.status.processing = true;
+
+                var data = {
+                    tags: self.processRelations(self.tempTags)
+                };
+
+                console.log('self.saveFeature.data', data);
+
+                // self.scrubFeature(self.practice);
+
+                // self.practice.tags = self.processRelations(self.tempTags);
+
+                // console.log('self.practice.pendingTags', self.practice.tags);
+
+                // self.practice.$update().then(function(successResponse) {
+                Practice.update({
+                    id: self.practice.id
+                }, data).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Practice changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(closeAlerts, 2000);
+
+                    // self.tempTags = successResponse.tags;
+
+                    $window.scrollTo(0, 0);
+
+                    // self.loadGroups();
+
+                    // self.loadTags();
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    // Error message
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Practice changes could not be saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(closeAlerts, 2000);
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.deleteFeature = function() {
+
+                Practice.delete({
+                    id: +self.deletionTarget.id
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this practice.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this practice.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this practice.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this practice.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(closeAlerts, 2000);
+
+                });
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false
+                    };
+
+                    self.loadPractice();
+
+                    self.loadGroups();
+
+                    // self.loadTags();
+
+                });
+
+            } else {
+
+                $location.path('/login');
+
+            }
+
+        });
 (function() {
 
     'use strict';
@@ -15695,7 +17245,7 @@ angular.module('FieldDoc')
 
                         }
 
-                        self.loadMetricTypes(self.practice.properties.project);
+                        self.loadMetricTypes(self.practice.project);
 
                     }).catch(function(errorResponse) {
 
@@ -15932,12 +17482,12 @@ angular.module('FieldDoc')
                         //
                         // self.reportMetrics.push(metric_);
 
-                        if (successResponse.properties.category !== null) {
-                            successResponse.properties.category.properties = successResponse.properties.category;
+                        if (successResponse.category !== null) {
+                            successResponse.category.properties = successResponse.category;
                         }
 
-                        // if (successResponse.properties.metric_unit !== null) {
-                        //     successResponse.properties.metric_unit.properties = successResponse.properties.metric_unit;
+                        // if (successResponse.metric_unit !== null) {
+                        //     successResponse.metric_unit.properties = successResponse.metric_unit;
                         // }
 
                         var datum = self.processMetric(successResponse);
@@ -27400,13 +28950,23 @@ angular
                 },
                 'site': {
                     'method': 'GET',
-                    'url': environment.apiUrl.concat('/v1/data/practice/:id/site'),
+                    'url': environment.apiUrl.concat('/v1/practice/:id/site'),
                     'isArray': false
                 },
                 'custom': {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_custom'),
                     'isArray': false
+                },
+                tags: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/tags')
+                },
+                tagGroups: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/tag-groups')
                 },
                 tasks: {
                     'method': 'GET',
@@ -27718,11 +29278,6 @@ angular
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/project/:id/matrix')
                 },
-                freeTags: {
-                    method: 'GET',
-                    isArray: false,
-                    url: environment.apiUrl.concat('/v1/project/:id/free-tags')
-                },
                 tags: {
                     method: 'GET',
                     isArray: false,
@@ -27920,7 +29475,17 @@ angular
                 'practices': {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/data/site/:id/practices')
+                    url: environment.apiUrl.concat('/v1/site/:id/practices')
+                },
+                tags: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/site/:id/tags')
+                },
+                tagGroups: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/site/:id/tag-groups')
                 },
                 tasks: {
                     'method': 'GET',

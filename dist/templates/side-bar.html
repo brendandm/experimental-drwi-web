@@ -27,7 +27,7 @@
                     Dashboards
                 </a>
             </li>
-            <li>
+            <li data-ng-if="$root.user.properties.is_admin || $root.user.properties.is_manager">
                 <a href="/tags" data-ng-class="{viewing: $root.viewState.tag}">
                     Tags
                 </a>
