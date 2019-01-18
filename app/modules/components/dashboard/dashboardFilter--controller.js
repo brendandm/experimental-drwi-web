@@ -125,7 +125,17 @@ angular.module('FieldDoc')
 
                     self.selectedProjects = [];
 
+                    self.dashboardObject.user_only = false;
+
+                    self.dashboardObject.select_all = false;
+
                     self.dashboardObject.projects = [];
+
+                    self.projects.forEach(function(item) {
+
+                        item.selected = false;
+
+                    });
 
                 }
 
@@ -353,6 +363,26 @@ angular.module('FieldDoc')
 
             };
 
+            self.processProjects = function(arr) {
+
+                var selectedProjects = [];
+
+                arr.forEach(function(item) {
+
+                    if (item.selected) {
+
+                        selectedProjects.push({
+                            id: item.id
+                        });
+
+                    }
+
+                });
+
+                return selectedProjects;
+
+            };
+
             self.processRelations = function(arr) {
 
                 arr.forEach(function(filter) {
@@ -365,7 +395,12 @@ angular.module('FieldDoc')
 
             self.scrubFeature = function(feature) {
 
-                var excludedKeys = [];
+                var excludedKeys = [
+                    'creator',
+                    'geographies',
+                    'last_modified_by',
+                    'metrics'
+                ];
 
                 var reservedProperties = [
                     'links',
@@ -402,11 +437,17 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.dashboardObject);
 
-                self.processRelations(self.activeFilters);
+                if (self.dashboardObject.user_only) {
+
+                    self.dashboardObject.projects = self.processProjects(self.projects);
+
+                } else {
+
+                    self.processRelations(self.activeFilters);
+
+                }
 
                 console.log('self.saveDashboard.dashboardObject', self.dashboardObject);
-
-                console.log('self.saveDashboard.Dashboard', Dashboard);
 
                 Dashboard.update({
                     id: +self.dashboardObject.id
