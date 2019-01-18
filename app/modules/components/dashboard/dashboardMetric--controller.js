@@ -183,7 +183,7 @@ angular.module('FieldDoc')
 
                     var _datum = {};
 
-                    if (item && item.id) {
+                    if (item.id && item.selected) {
                         _datum.id = item.id;
                     }
 
@@ -258,6 +258,7 @@ angular.module('FieldDoc')
                 var excludedKeys = [
                     'creator',
                     'geographies',
+                    'geometry',
                     'last_modified_by',
                     'organizations',
                     'organization',
@@ -302,11 +303,9 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.dashboardObject);
 
-                self.dashboardObject.metrics = self.processMetrics(self.tempMetrics);
+                self.dashboardObject.metrics = self.processMetrics(self.metrics);
 
                 console.log('self.saveDashboard.dashboardObject', self.dashboardObject);
-
-                console.log('self.saveDashboard.Dashboard', Dashboard);
 
                 Dashboard.update({
                     id: +self.dashboardObject.id
@@ -330,6 +329,15 @@ angular.module('FieldDoc')
                     console.log('saveDashboard.error', error);
 
                     // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong while attempting to update this dashboard.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
 
                     self.status.processing = false;
 
