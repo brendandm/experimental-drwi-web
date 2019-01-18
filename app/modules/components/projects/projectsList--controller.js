@@ -301,7 +301,23 @@ angular.module('FieldDoc')
 
                     if ($rootScope.user.properties.programs.length) {
 
-                        self.selectedProgram = $rootScope.user.properties.programs[0];
+                        var programs = [];
+
+                        $rootScope.user.properties.programs.forEach(function(item) {
+
+                            programs.push(item.properties);
+
+                        });
+
+                        programs.sort(function(a, b) {
+
+                            return a.id > b.id;
+
+                        });
+
+                        self.programs = programs;
+
+                        self.selectedProgram = self.programs[0];
 
                     }
 

@@ -33,7 +33,7 @@
                 <form name="myForm">
                     <label for="programFilter"><strong>Filter by program:</strong></label>
                     <select name="programFilter" id="programFilter"
-                        data-ng-options="program.properties.name for program in $root.user.properties.programs track by program.id"
+                        data-ng-options="program.name for program in page.programs track by program.id"
                         data-ng-model="page.selectedProgram"
                         data-ng-change="page.loadProjects()">
                     </select>
