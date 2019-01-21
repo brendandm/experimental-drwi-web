@@ -160,13 +160,13 @@
 
                     // if (datum.metric_unit !== null) {
 
-                    //     datum.metric_unit = datum.metric_unit.properties;
+                    // datum.metric_unit = datum.metric_unit.properties;
 
-                    //     datum.metric_unit.name = datum.metric_unit.plural;
+                    // datum.metric_unit.name = datum.metric_unit.plural;
 
                     // } else {
 
-                    //     datum.metric_unit = null;
+                    // datum.metric_unit = null;
 
                     // }
 
@@ -293,7 +293,7 @@
 
                 function convertPracticeArea(data) {
 
-                    var area = data.properties.area,
+                    var area = data.area,
                         acres;
 
                     if (area !== null &&
@@ -306,6 +306,25 @@
                     }
 
                 }
+
+                self.loadMatrix = function() {
+
+                    //
+                    // Assign practice to a scoped variable
+                    //
+                    Report.targetMatrix({
+                        id: self.report.id
+                    }).$promise.then(function(successResponse) {
+
+                        self.targets = successResponse;
+
+                    }).catch(function(errorResponse) {
+
+                        console.error('Unable to load report target matrix.');
+
+                    });
+
+                };
 
                 self.loadPractice = function(practiceId) {
 
@@ -335,7 +354,7 @@
 
                         }
 
-                        self.loadMetricTypes(self.practice.project);
+                        // self.loadMetricTypes(self.practice.project);
 
                     }).catch(function(errorResponse) {
 
@@ -444,7 +463,7 @@
 
                             // if (datum.metric_unit !== null) {
 
-                            //     datum.metric_unit_id = datum.metric_unit.id;
+                            // datum.metric_unit_id = datum.metric_unit.id;
 
                             // }
 
@@ -477,65 +496,6 @@
                         self.saveReport(_modifiedMetrics);
 
                     }
-
-                };
-
-                self.addReading = function(reading_) {
-
-                    self.status.readings.loading = true;
-
-                    //
-                    // Step 1: Show a new row with a "loading" indiciator
-                    //
-
-                    //
-                    // Step 2: Create empty Reading to post to the system
-                    //
-                    var newReading = new ReportReading({
-                        "geometry": null,
-                        "properties": {
-                            "bmp_custom_id": self.report.id,
-                            "practice_type_id": null,
-                            "practice_extent": 0,
-                            "practice_unit_id": null,
-                            "practice_description": "",
-                            "practice_nutrient_reductions": {
-                                "properties": {
-                                    "nitrogen": 0,
-                                    "phosphorus": 0,
-                                    "sediment": 0,
-                                    "protocol": ""
-                                }
-                            }
-                        }
-                    });
-
-                    //
-                    // Step 3: POST this empty reading to the `/v1/data/report-readings` endpoint
-                    //
-                    newReading.$save().then(function(successResponse) {
-
-                        console.log('A new reading has been created for this report', successResponse);
-
-                        var reading_ = successResponse;
-
-                        //
-                        // Step 4: Add the new reading to the existing report
-                        //
-                        self.report.properties.readings.push(reading_);
-
-                        //
-                        // Step 6: Hide Loading Indicator and display the form to the user
-                        //
-                        self.status.readings.loading = false;
-
-                    }, function(errorResponse) {
-
-                        console.log('An error occurred while trying to create a new reading', errorResponse);
-
-                        self.status.readings.loading = false;
-
-                    });
 
                 };
 
@@ -577,7 +537,7 @@
                         }
 
                         // if (successResponse.metric_unit !== null) {
-                        //     successResponse.metric_unit.properties = successResponse.metric_unit;
+                        // successResponse.metric_unit.properties = successResponse.metric_unit;
                         // }
 
                         var datum = self.processMetric(successResponse);
@@ -748,6 +708,140 @@
 
                 };
 
+                self.removeAll = function() {
+
+                    self.targets.active.forEach(function(item) {
+
+                        self.targets.inactive.unshift(item);
+
+                    });
+
+                    self.targets.active = [];
+
+                };
+
+                self.addTarget = function(item, idx) {
+
+                    if (!item.value) return;
+
+                    if (typeof idx === 'number') {
+
+                        item.action = 'add';
+
+                        if (!item.metric ||
+                            typeof item.metric === 'undefined') {
+
+                            item.metric_id = item.id;
+
+                            delete item.id;
+
+                        }
+
+                        self.targets.inactive.splice(idx, 1);
+
+                        self.targets.active.push(item);
+
+                    }
+
+                    console.log('Updated targets (addition)');
+
+                };
+
+                self.removeTarget = function(item, idx) {
+
+                    if (typeof idx === 'number') {
+
+                        self.targets.active.splice(idx, 1);
+
+                        item.action = 'remove';
+
+                        item.value = null;
+
+                        self.targets.inactive.unshift(item);
+
+                    }
+
+                    console.log('Updated targets (removal)');
+
+                };
+
+                self.processTargets = function(list) {
+
+                    var _list = [];
+
+                    angular.forEach(list, function(item) {
+
+                        var _datum = {};
+
+                        if (item && item.id) {
+                            _datum.id = item.id;
+                        }
+
+                        _list.push(_datum);
+
+                    });
+
+                    return _list;
+
+                };
+
+                self.saveTargets = function() {
+
+                    self.status.processing = true;
+
+                    self.scrubFeature(self.report);
+
+                    var data = {
+                        targets: self.targets.active.slice(0)
+                    };
+
+                    self.targets.inactive.forEach(function(item) {
+
+                        if (item.action &&
+                            item.action === 'remove') {
+
+                            data.targets.push(item);
+
+                        }
+
+                    });
+
+                    Report.updateMatrix({
+                        id: +self.report.id
+                    }, data).$promise.then(function(successResponse) {
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Target changes saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
+                        self.status.processing = false;
+
+                    }).catch(function(error) {
+
+                        console.log('saveReport.error', error);
+
+                        // Do something with the error
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Something went wrong and the target changes were not saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
+                        self.status.processing = false;
+
+                    });
+
+                };
+
                 //
                 // Verify Account information for proper UI element display
                 //
@@ -764,7 +858,7 @@
                         };
 
                         //
-                        // 
+                        //
                         //
                         report.$promise.then(function(successResponse) {
 
@@ -792,7 +886,9 @@
 
                             $rootScope.page.title = 'Edit measurement data';
 
-                            self.loadPractice(self.report.properties.practice.id);
+                            self.loadPractice(self.report.properties.practice_id);
+
+                            self.loadMatrix();
 
                         }, function(errorResponse) {
 

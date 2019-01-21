@@ -25,6 +25,11 @@
                     method: 'GET',
                     url: environment.apiUrl.concat('/v1/data/summary/custom/:id')
                 },
+                targetMatrix: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/report/:id/matrix')
+                },
                 update: {
                     method: 'PATCH',
                     transformRequest: function(data) {
@@ -32,6 +37,11 @@
                             json_ = angular.toJson(feature);
                         return json_;
                     }
+                },
+                updateMatrix: {
+                    method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/report/:id/matrix')
                 }
             });
         });
