@@ -6,15 +6,15 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProjectTargetController',
-        function($scope, Account, $location, $log, Project, project,
+    .controller('PracticeTargetController',
+        function($scope, Account, $location, $log, Practice, practice,
             $rootScope, $route, user, FilterStore, $timeout, SearchService,
             MetricType) {
 
             var self = this;
 
             $rootScope.viewState = {
-                'project': true
+                'practice': true
             };
 
             $rootScope.toolbarState = {
@@ -41,7 +41,7 @@ angular.module('FieldDoc')
 
             self.closeRoute = function() {
 
-                $location.path('/projects');
+                $location.path('/practices');
 
             };
 
@@ -60,23 +60,23 @@ angular.module('FieldDoc')
             self.loadMatrix = function() {
 
                 //
-                // Assign project to a scoped variable
+                // Assign practice to a scoped variable
                 //
-                Project.targetMatrix({
-                    id: $route.current.params.projectId
+                Practice.targetMatrix({
+                    id: $route.current.params.practiceId
                 }).$promise.then(function(successResponse) {
 
                     self.targets = successResponse;
 
                 }).catch(function(errorResponse) {
 
-                    $log.error('Unable to load project target matrix.');
+                    $log.error('Unable to load practice target matrix.');
 
                 });
 
             };
 
-            self.loadProject = function() {
+            self.loadPractice = function() {
 
                 var exclude = [
                     'centroid',
@@ -94,15 +94,15 @@ angular.module('FieldDoc')
                     'targets',
                     'tasks',
                     'type',
-                    'sites'
+                    'practices'
                 ].join(',');
                 
-                Project.get({
-                    id: $route.current.params.projectId,
+                Practice.get({
+                    id: $route.current.params.practiceId,
                     exclude: exclude
                 }).$promise.then(function(successResponse) {
 
-                    self.processProject(successResponse);
+                    self.processPractice(successResponse);
 
                     if (!successResponse.permissions.read &&
                         !successResponse.permissions.write) {
@@ -116,7 +116,7 @@ angular.module('FieldDoc')
 
                 }).catch(function(errorResponse) {
 
-                    $log.error('Unable to load project');
+                    $log.error('Unable to load practice');
 
                     self.status.processing = false;
 
@@ -283,11 +283,11 @@ angular.module('FieldDoc')
 
             };
 
-            self.processProject = function(data) {
+            self.processPractice = function(data) {
 
-                self.project = data.properties || data;
+                self.practice = data.properties || data;
 
-                self.tempTargets = self.project.targets || [];
+                self.tempTargets = self.practice.targets || [];
 
                 self.status.processing = false;
 
@@ -338,11 +338,11 @@ angular.module('FieldDoc')
 
                 self.status.processing = true;
 
-                self.scrubFeature(self.project);
+                self.scrubFeature(self.practice);
 
-                console.log('self.saveProject.project', self.project);
+                console.log('self.savePractice.practice', self.practice);
 
-                console.log('self.saveProject.Project', Project);
+                console.log('self.savePractice.Practice', Practice);
 
                 var data = {
                     targets: self.targets.active.slice(0)
@@ -359,8 +359,8 @@ angular.module('FieldDoc')
 
                 });
 
-                Project.updateMatrix({
-                    id: +self.project.id
+                Practice.updateMatrix({
+                    id: +self.practice.id
                 }, data).$promise.then(function(successResponse) {
 
                     self.alerts = [{
@@ -376,7 +376,7 @@ angular.module('FieldDoc')
 
                 }).catch(function(error) {
 
-                    console.log('saveProject.error', error);
+                    console.log('savePractice.error', error);
 
                     // Do something with the error
 
@@ -395,28 +395,28 @@ angular.module('FieldDoc')
 
             };
 
-            self.saveProject = function() {
+            self.savePractice = function() {
 
                 self.status.processing = true;
 
-                self.scrubFeature(self.project);
+                self.scrubFeature(self.practice);
 
-                self.project.targets = self.processTargets(self.tempTargets);
+                self.practice.targets = self.processTargets(self.tempTargets);
 
-                console.log('self.saveProject.project', self.project);
+                console.log('self.savePractice.practice', self.practice);
 
-                console.log('self.saveProject.Project', Project);
+                console.log('self.savePractice.Practice', Practice);
 
-                Project.update({
-                    id: +self.project.id
-                }, self.project).then(function(successResponse) {
+                Practice.update({
+                    id: +self.practice.id
+                }, self.practice).then(function(successResponse) {
 
-                    self.processProject(successResponse);
+                    self.processPractice(successResponse);
 
                     self.alerts = [{
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Project changes saved.',
+                        'msg': 'Practice changes saved.',
                         'prompt': 'OK'
                     }];
 
@@ -426,7 +426,7 @@ angular.module('FieldDoc')
 
                 }).catch(function(error) {
 
-                    console.log('saveProject.error', error);
+                    console.log('savePractice.error', error);
 
                     // Do something with the error
 
@@ -440,24 +440,24 @@ angular.module('FieldDoc')
 
                 var targetId;
 
-                if (self.project.properties) {
+                if (self.practice.properties) {
 
-                    targetId = self.project.properties.id;
+                    targetId = self.practice.properties.id;
 
                 } else {
 
-                    targetId = self.project.id;
+                    targetId = self.practice.id;
 
                 }
 
-                Project.delete({
+                Practice.delete({
                     id: +targetId
                 }).$promise.then(function(data) {
 
                     self.alerts.push({
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Successfully deleted this project.',
+                        'msg': 'Successfully deleted this practice.',
                         'prompt': 'OK'
                     });
 
@@ -472,7 +472,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.project.properties.name + '”. There are pending tasks affecting this project.',
+                            'msg': 'Unable to delete “' + self.practice.properties.name + '”. There are pending tasks affecting this practice.',
                             'prompt': 'OK'
                         }];
 
@@ -481,7 +481,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this project.',
+                            'msg': 'You don’t have permission to delete this practice.',
                             'prompt': 'OK'
                         }];
 
@@ -490,7 +490,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this project.',
+                            'msg': 'Something went wrong while attempting to delete this practice.',
                             'prompt': 'OK'
                         }];
 
@@ -519,7 +519,7 @@ angular.module('FieldDoc')
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                     };
 
-                    self.loadProject();
+                    self.loadPractice();
 
                     self.loadMatrix();
 
@@ -527,7 +527,7 @@ angular.module('FieldDoc')
                     // Setup page meta data
                     //
                     $rootScope.page = {
-                        'title': 'Edit project targets'
+                        'title': 'Edit practice targets'
                     };
 
                 });

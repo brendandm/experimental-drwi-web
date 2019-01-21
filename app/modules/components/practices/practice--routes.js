@@ -292,53 +292,29 @@ angular.module('FieldDoc')
 
                     }
                 }
+            })
+            .when('/practices/:practiceId/targets', {
+                templateUrl: '/modules/components/practices/views/practiceTarget--view.html?t=' + environment.version,
+                controller: 'PracticeTargetController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    practice: function(Practice, $route) {
+                        return Practice.get({
+                            'id': $route.current.params.practiceId
+                        });
+                    }
+                }
             });
-            // .when('/practices/:practiceId/tags', {
-            //     templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
-            //     controller: 'FeatureTagController',
-            //     controllerAs: 'page',
-            //     resolve: {
-            //         user: function(Account, $rootScope, $document) {
-
-            //             $rootScope.targetPath = document.location.pathname;
-
-            //             if (Account.userObject && !Account.userObject.id) {
-            //                 return Account.getUser();
-            //             }
-
-            //             return Account.userObject;
-
-            //         },
-            //         featureCollection: function(Practice, $route) {
-
-            //             return {
-            //                 featureId: $route.current.params.practiceId,
-            //                 name: 'practice',
-            //                 path: '/practices',
-            //                 cls: Practice
-            //             }
-
-            //         },
-            //         feature: function(Practice, $route) {
-
-            //             return Practice.get({
-            //                 id: $route.current.params.practiceId
-            //             });
-
-            //         },
-            //         toolbarUrl: function() {
-
-            //             return '/templates/toolbars/practice.html?t=' + environment.version;
-
-            //         },
-            //         viewState: function() {
-
-            //             return {
-            //                 'practice': true
-            //             };
-
-            //         }
-            //     }
-            // });
 
     });

@@ -63,7 +63,7 @@
                     'url': environment.apiUrl.concat('/v1/data/project/:id/outcomes'),
                     'isArray': false
                 },
-                matrix: {
+                targetMatrix: {
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/project/:id/matrix')

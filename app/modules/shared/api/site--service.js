@@ -63,10 +63,20 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/site/:id/tag-groups')
                 },
+                targetMatrix: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/site/:id/matrix')
+                },
                 tasks: {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/site/:id/tasks'),
                     'isArray': false
+                },
+                updateMatrix: {
+                    method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/site/:id/matrix')
                 }
             });
         });

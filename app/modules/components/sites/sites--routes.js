@@ -260,53 +260,29 @@ angular.module('FieldDoc')
 
                     }
                 }
+            })
+            .when('/sites/:siteId/targets', {
+                templateUrl: '/modules/components/sites/views/siteTarget--view.html?t=' + environment.version,
+                controller: 'SiteTargetController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    site: function(Site, $route) {
+                        return Site.get({
+                            'id': $route.current.params.siteId
+                        });
+                    }
+                }
             });
-            // .when('/sites/:siteId/tags', {
-            //     templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
-            //     controller: 'FeatureTagController',
-            //     controllerAs: 'page',
-            //     resolve: {
-            //         user: function(Account, $rootScope, $document) {
-
-            //             $rootScope.targetPath = document.location.pathname;
-
-            //             if (Account.userObject && !Account.userObject.id) {
-            //                 return Account.getUser();
-            //             }
-
-            //             return Account.userObject;
-
-            //         },
-            //         featureCollection: function(Site, $route) {
-
-            //             return {
-            //                 featureId: $route.current.params.siteId,
-            //                 name: 'site',
-            //                 path: '/sites',
-            //                 cls: Site
-            //             }
-
-            //         },
-            //         feature: function(Site, $route) {
-
-            //             return Site.get({
-            //                 id: $route.current.params.siteId
-            //             });
-
-            //         },
-            //         toolbarUrl: function() {
-
-            //             return '/templates/toolbars/site.html?t=' + environment.version;
-
-            //         },
-            //         viewState: function() {
-
-            //             return {
-            //                 'site': true
-            //             };
-
-            //         }
-            //     }
-            // });
 
     }]);
