@@ -174,36 +174,36 @@
 
                 };
 
-                self.loadMetricTypes = function(datum) {
+                // self.loadMetricTypes = function(datum) {
 
-                    var exclude = [
-                        'creator_id',
-                        'geometry',
-                        'last_modified_by_id',
-                        'organization_id',
-                        'tags'
-                    ].join(',');
+                //     var exclude = [
+                //         'creator_id',
+                //         'geometry',
+                //         'last_modified_by_id',
+                //         'organization_id',
+                //         'tags'
+                //     ].join(',');
 
-                    MetricType.collection({
-                        program: datum.program_id,
-                        exclude: exclude
-                    }).$promise.then(function(successResponse) {
+                //     MetricType.collection({
+                //         program: datum.program_id,
+                //         exclude: exclude
+                //     }).$promise.then(function(successResponse) {
 
-                        console.log('Metric types', successResponse);
+                //         console.log('Metric types', successResponse);
 
-                        self.metricTypes = successResponse.features;
+                //         self.metricTypes = successResponse.features;
 
-                        self.showElements();
+                //         self.showElements();
 
-                    }, function(errorResponse) {
+                //     }, function(errorResponse) {
 
-                        console.log('errorResponse', errorResponse);
+                //         console.log('errorResponse', errorResponse);
 
-                        self.showElements();
+                //         self.showElements();
 
-                    });
+                //     });
 
-                };
+                // };
 
                 self.monitoringType = null;
                 self.monitoringTypes = monitoring_types;
@@ -318,9 +318,20 @@
 
                         self.targets = successResponse;
 
+                        self.showElements();
+
                     }).catch(function(errorResponse) {
 
                         console.error('Unable to load report target matrix.');
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to load report metric targets.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
 
                     });
 
@@ -353,6 +364,8 @@
                             }
 
                         }
+
+                        self.loadMatrix();
 
                         // self.loadMetricTypes(self.practice.project);
 
@@ -789,7 +802,7 @@
 
                     self.status.processing = true;
 
-                    self.scrubFeature(self.report);
+                    // self.scrubFeature(self.report);
 
                     var data = {
                         targets: self.targets.active.slice(0)
@@ -888,7 +901,7 @@
 
                             self.loadPractice(self.report.properties.practice_id);
 
-                            self.loadMatrix();
+                            // self.loadMatrix();
 
                         }, function(errorResponse) {
 

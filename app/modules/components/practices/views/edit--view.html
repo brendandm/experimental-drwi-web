@@ -89,7 +89,9 @@
 
                             <p style="font-style: normal; font-size: 1em; color: #616161;">The metrics listed here are associated with the <strong>{{ page.practice.name }}</strong> practice. Track implementation by entering a numeric value for one or more metrics. If you try to add a progress value that exceeds a metric’s baseline practice value, FieldDoc will cap the site target’s value for you.</p>
 
-                            <h2 data-ng-if="page.targets && page.targets.active.length">Active targets</h2>
+                            <br />
+
+                            <!-- <h2 data-ng-if="page.targets && page.targets.active.length">Active targets</h2> -->
 
                             <ul class="target-lst" data-ng-if="page.targets && page.targets.active.length">
                                 <li data-ng-repeat="target in page.targets.active">
@@ -119,7 +121,7 @@
                                 </li>
                             </ul>
 
-                            <!-- <h2 data-ng-if="page.targets && page.targets.inactive.length">Implementation progress</h2> -->
+                            <!-- <h2 data-ng-if="page.targets && page.targets.inactive.length">Available metrics</h2> -->
 
                             <ul class="target-lst target-lst-inactive" data-ng-if="page.targets">
                                 <li data-ng-repeat="target in page.targets.inactive">
