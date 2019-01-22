@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548118826192})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548156638069})
 
 ;
 /**
@@ -2391,6 +2391,24 @@ angular.module('FieldDoc')
                 self.loadDashboard();
 
             }
+
+        };
+
+        self.showMetricModal = function(metric) {
+
+            console.log('self.showMetricModal', metric);
+
+            self.selectedMetric = metric;
+
+            self.displayModal = true;
+
+        };
+
+        self.closeMetricModal = function() {
+
+            self.selectedMetric = null;
+
+            self.displayModal = false;
 
         };
 

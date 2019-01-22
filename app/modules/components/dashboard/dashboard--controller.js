@@ -1397,6 +1397,24 @@ angular.module('FieldDoc')
 
         };
 
+        self.showMetricModal = function(metric) {
+
+            console.log('self.showMetricModal', metric);
+
+            self.selectedMetric = metric;
+
+            self.displayModal = true;
+
+        };
+
+        self.closeMetricModal = function() {
+
+            self.selectedMetric = null;
+
+            self.displayModal = false;
+
+        };
+
         //
         // Verify Account information for proper UI element display
         //

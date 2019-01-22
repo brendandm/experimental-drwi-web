@@ -970,3 +970,70 @@ input:checked + .slider:before {
     }
 
 }
+
+.metric-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999999;
+
+    .summary-card {
+        position: relative;
+        display: flex;
+        flex-flow: column;
+        padding: 2em;
+        max-width: 40rem;
+        background-color: #252f3a;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+        border-radius: 4px;
+        overflow: hidden;
+
+        .close {
+            position: absolute;
+            top: 1em;
+            right: 1em;
+            display: flex;
+            flex-flow: column;
+            justify-content: center;
+            align-items: center;
+            appearance: none;
+            cursor: pointer;
+            border: 0 none;
+            outline: none;
+            box-shadow: none;
+            color: #fff;
+            font-size: 1em;
+            padding: 0.5em;
+            border-radius: 50%;
+            //background: rgba(0,0,0,0.1);
+            background: transparent;
+        }
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
