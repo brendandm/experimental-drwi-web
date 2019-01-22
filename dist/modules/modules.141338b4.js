@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1547822465283})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548118826192})
 
 ;
 /**
@@ -3077,23 +3077,18 @@ angular.module('FieldDoc')
                 'editFilters': true
             };
 
-            self.searchScope = {
-                target: 'project'
-            };
-
-            self.filterCategories = {
-                'name': false,
-                'organization': false,
-                'practice': false,
-                'program': false,
-                'tag': false
-            };
-
             $rootScope.page = {};
 
             self.status = {
                 processing: true
             };
+
+            self.modes = {
+                filter: false,
+                list: false
+            };
+
+            self.activeFilters = [];
 
             self.alerts = [];
 
@@ -3127,11 +3122,20 @@ angular.module('FieldDoc')
 
             self.loadDashboard = function() {
 
+                var exclude = [
+                    'creator',
+                    'geographies',
+                    'geometry',
+                    'last_modified_by',
+                    'metrics',
+                ].join(',');
+
                 //
                 // Assign dashboard to a scoped variable
                 //
                 Dashboard.get({
-                    id: $route.current.params.dashboardId
+                    id: $route.current.params.dashboardId,
+                    exclude: exclude
                 }).$promise.then(function(successResponse) {
 
                     self.processDashboard(successResponse);
@@ -3157,6 +3161,22 @@ angular.module('FieldDoc')
 
                     self.projects = successResponse.features;
 
+                    if (self.dashboardObject.select_all) {
+
+                        self.markSelected();
+
+                    }
+
+                    if (self.modes.filter) {
+
+                        self.projects.forEach(function(item) {
+
+                            item.selected = false;
+
+                        });
+
+                    }
+
                 }).catch(function(errorResponse) {
 
                     $log.error('Unable to load dashboard projects.');
@@ -3165,11 +3185,56 @@ angular.module('FieldDoc')
 
             };
 
+            self.loadFilters = function() {
+
+                //
+                // Assign dashboard to a scoped variable
+                //
+                Dashboard.filters({
+                    id: $route.current.params.dashboardId
+                }).$promise.then(function(successResponse) {
+
+                    self.activeFilters = successResponse.features;
+
+                }).catch(function(errorResponse) {
+
+                    $log.error('Unable to load dashboard filters.');
+
+                });
+
+            };
+
+            self.setMode = function(value) {
+
+                if (value === 0) {
+
+                    self.modes.list = true;
+
+                    self.modes.filter = false;
+
+                    self.dashboardObject.user_only = true;
+
+                } else {
+
+                    self.modes.list = false;
+
+                    self.modes.filter = true;
+
+                    self.dashboardObject.user_only = false;
+
+                    // self.dashboardObject.select_all = false;
+
+                    self.dashboardObject.projects = [];
+
+                }
+
+            };
+
             self.markSelected = function() {
 
                 self.projects.forEach(function(feature) {
 
-                    if (self.selectAll) {
+                    if (self.dashboardObject.select_all) {
 
                         feature.selected = true;
 
@@ -3183,9 +3248,38 @@ angular.module('FieldDoc')
 
             };
 
-            self.clearFilter = function(obj) {
+            self.addFilter = function(item, model, label) {
 
-                FilterStore.clearItem(obj);
+                var match = false;
+
+                self.activeFilters.forEach(function(datum) {
+
+                    if (datum.id === item.id &&
+                        datum.category === item.category) {
+
+                        match = true;
+
+                    }
+
+                });
+
+                if (!match) {
+
+                    self.activeFilters.push(item);
+
+                }
+
+            };
+
+            self.clearFilter = function(obj, index) {
+
+                self.activeFilters.splice(index, 1);
+
+                // var filters = [];
+
+                // self.activeFilters.forEach
+
+                // FilterStore.clearItem(obj);
 
             };
 
@@ -3195,11 +3289,19 @@ angular.module('FieldDoc')
                 // Remove all stored filter objects
                 //
 
-                FilterStore.clearAll();
+                // FilterStore.clearAll();
+
+                self.activeFilters = [];
 
             };
 
             self.updateCollection = function(obj, collection) {
+
+                if (typeof self.dashboardObject[collection] === 'undefined') {
+
+                    collection = 'tags';
+
+                }
 
                 self.dashboardObject[collection].push({
                     id: obj.id
@@ -3235,17 +3337,17 @@ angular.module('FieldDoc')
 
                         break;
 
-                    case 'project':
+                    // case 'project':
 
-                        self.updateCollection(obj, 'projects');
+                    //     self.updateCollection(obj, 'projects');
 
-                        break;
+                    //     break;
 
-                        // case 'status':
+                    // case 'status':
 
-                        //     self.updateCollection(obj, 'statuses');
+                    //     self.updateCollection(obj, 'statuses');
 
-                        //     break;
+                    //     break;
 
                     case 'tag':
 
@@ -3265,11 +3367,13 @@ angular.module('FieldDoc')
 
             self.extractFilter = function(key, data) {
 
+                console.log('extractFilter', key, data);
+
                 data.forEach(function(datum) {
 
-                    FilterStore.addItem({
+                    self.activeFilters.push({
                         id: datum.id,
-                        name: datum.name || datum.properties.name,
+                        name: datum.properties.name || datum.name,
                         category: self.parseKey(key)
                     });
 
@@ -3285,7 +3389,7 @@ angular.module('FieldDoc')
                         'organization': 'organizations',
                         'practice': 'practices',
                         'program': 'programs',
-                        'project': 'projects',
+                        // 'project': 'projects',
                         // 'status': 'statuses',
                         'tag': 'tags'
                     },
@@ -3294,7 +3398,7 @@ angular.module('FieldDoc')
                         'organizations': 'organization',
                         'practices': 'practice',
                         'programs': 'program',
-                        'projects': 'project',
+                        // 'projects': 'project',
                         // 'statuses': 'status',
                         'tags': 'tag'
                     }
@@ -3312,6 +3416,27 @@ angular.module('FieldDoc')
 
             };
 
+            self.search = function(value) {
+
+                return SearchService.get({
+                    q: value,
+                    scope: 'dashboard'
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService response', response);
+
+                    // response.results.forEach(function(result) {
+
+                    //     result.category = null;
+
+                    // });
+
+                    return response.results.slice(0, 5);
+
+                });
+
+            };
+
             self.processDashboard = function(data) {
 
                 //
@@ -3320,77 +3445,68 @@ angular.module('FieldDoc')
 
                 self.clearAllFilters();
 
-                var relations = [
-                    'creator',
-                    'geographies',
-                    'last_modified_by',
-                    'organizations',
-                    'organization',
-                    'practices',
-                    'programs',
-                    'projects',
-                    'tags'
-                ];
-
                 self.dashboardObject = data.properties || data;
 
                 console.log('self.processDashboard.dashboardObject', self.dashboardObject);
 
-                relations.forEach(function(relation) {
+                if (self.dashboardObject.user_only) {
 
-                    var collection = self.dashboardObject[relation];
+                    self.setMode(0);
 
-                    if (Array.isArray(collection)) {
+                } else {
 
-                        self.extractFilter(relation, collection);
+                    self.setMode(1);
 
-                        self.dashboardObject[relation] = [];
-
-                    } else {
-
-                        delete self.dashboardObject[relation];
-
-                    }
-
-                });
+                }
 
                 self.status.processing = false;
 
+                self.loadProjects();
+
+                self.loadFilters();
+
             };
 
-            // self.processRelations = function(arr) {
+            self.processProjects = function(arr) {
 
-            //     arr.forEach(function(filter) {
+                var selectedProjects = [];
 
-            //         self.transformRelation(filter, filter.category);
+                arr.forEach(function(item) {
 
-            //     });
+                    if (item.selected) {
 
-            // };
-
-            self.processRelations = function(arr) {
-
-                var projectCollection = [];
-
-                self.projects.forEach(function(feature) {
-
-                    if (feature.selected) {
-
-                        projectCollection.push({
-                            id: feature.id
+                        selectedProjects.push({
+                            id: item.id
                         });
 
                     }
 
                 });
 
-                return projectCollection;
+                return selectedProjects;
+
+            };
+
+            self.processRelations = function(arr) {
+
+                arr.forEach(function(filter) {
+
+                    console.log('processRelations', filter, filter.category);
+
+                    self.transformRelation(filter, filter.category);
+
+                });
 
             };
 
             self.scrubFeature = function(feature) {
 
-                var excludedKeys = [];
+                var excludedKeys = [
+                    'creator',
+                    'geographies',
+                    'last_modified_by',
+                    'metrics'
+                ];
 
                 var reservedProperties = [
                     'links',
@@ -3421,25 +3537,63 @@ angular.module('FieldDoc')
 
             };
 
+            self.clearFilterCollections = function() {
+
+                var filterCollections = [
+                    'organizations',
+                    'practices',
+                    'programs',
+                    'tags'
+                ];
+
+                filterCollections.forEach(function(collection) {
+
+                    self.dashboardObject[collection] = [];
+
+                });
+
+            };
+
             self.saveDashboard = function() {
 
                 self.status.processing = true;
 
-                var data = {
-                    projects: self.processRelations(self.projects)
-                };
+                self.scrubFeature(self.dashboardObject);
 
-                // self.scrubFeature(self.dashboardObject);
+                if (self.dashboardObject.user_only) {
 
-                // self.processRelations(self.activeFilters);
+                    self.dashboardObject.projects = self.processProjects(self.projects);
 
-                // console.log('self.saveDashboard.dashboardObject', self.dashboardObject);
+                    self.clearFilterCollections();
 
-                // console.log('self.saveDashboard.Dashboard', Dashboard);
+                } else {
+
+                    self.clearFilterCollections();
+
+                    self.dashboardObject.user_only = false;
+
+                    self.dashboardObject.select_all = false;
+
+                    self.dashboardObject.projects = [];
+
+                    self.processRelations(self.activeFilters);
+
+                }
+
+                console.log('self.saveDashboard.dashboardObject', self.dashboardObject);
+
+                var exclude = [
+                    'creator',
+                    'geographies',
+                    'geometry',
+                    'last_modified_by',
+                    'metrics',
+                ].join(',');
 
                 Dashboard.update({
-                    id: +self.dashboardObject.id
-                }, data).then(function(successResponse) {
+                    id: +self.dashboardObject.id,
+                    exclude: exclude
+                }, self.dashboardObject).then(function(successResponse) {
 
                     self.processDashboard(successResponse);
 
@@ -3454,7 +3608,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                    self.loadProjects();
+                    self.query = null;
 
                 }).catch(function(error) {
 
@@ -3463,8 +3617,8 @@ angular.module('FieldDoc')
                     // Do something with the error
 
                     self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
+                        'type': 'error',
+                        'flag': 'Error!',
                         'msg': 'Something went wrong while attempting to update this dashboard.',
                         'prompt': 'OK'
                     }];
@@ -3473,109 +3627,9 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
+                    self.query = null;
+
                 });
-
-            };
-
-            self.addFilter = function(item, collection) {
-
-                self.dashboard[collection].push(item);
-
-            };
-
-            self.search = function(value) {
-
-                if (self.searchScope.target === 'organization') {
-
-                    return SearchService.organization({
-                        q: value
-                    }).$promise.then(function(response) {
-
-                        console.log('SearchService.organization response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
-
-                        return response.results.slice(0, 5);
-
-                    });
-
-                } else if (self.searchScope.target === 'practice') {
-
-                    return SearchService.practiceType({
-                        q: value
-                    }).$promise.then(function(response) {
-
-                        console.log('SearchService.practiceType response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
-
-                        return response.results.slice(0, 5);
-
-                    });
-
-                } else if (self.searchScope.target === 'program') {
-
-                    return SearchService.program({
-                        q: value
-                    }).$promise.then(function(response) {
-
-                        console.log('SearchService.program response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
-
-                        return response.results.slice(0, 5);
-
-                    });
-
-                } else if (self.searchScope.target === 'project') {
-
-                    return SearchService.project({
-                        q: value
-                    }).$promise.then(function(response) {
-
-                        console.log('SearchService.project response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
-
-                        return response.results.slice(0, 5);
-
-                    });
-
-                } else {
-
-                    return SearchService.tag({
-                        q: value
-                    }).$promise.then(function(response) {
-
-                        console.log('SearchService.tag response', response);
-
-                        response.results.forEach(function(result) {
-
-                            result.category = null;
-
-                        });
-
-                        return response.results.slice(0, 5);
-
-                    });
-
-                }
 
             };
 
@@ -3633,7 +3687,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'error',
                             'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this dasoardhb.',
+                            'msg': 'Something went wrong while attempting to delete this dashboard.',
                             'prompt': 'OK'
                         }];
 
@@ -3647,13 +3701,13 @@ angular.module('FieldDoc')
 
             };
 
-            $scope.$watch('filterStore.index', function(newVal) {
+            // $scope.$watch('filterStore.index', function(newVal) {
 
-                console.log('Updated filterStore', newVal);
+            //     console.log('Updated filterStore', newVal);
 
-                self.activeFilters = newVal;
+            //     self.activeFilters = newVal;
 
-            });
+            // });
 
             //
             // Verify Account information for proper UI element display
@@ -3672,7 +3726,7 @@ angular.module('FieldDoc')
 
                     self.loadDashboard();
 
-                    self.loadProjects();
+                    // self.loadProjects();
 
                     //
                     // Setup page meta data
@@ -3701,7 +3755,7 @@ angular.module('FieldDoc')
     .controller('DashboardGeographyController',
         function($scope, Account, $location, $log, Dashboard, dashboard,
             $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            GeographyService) {
+            GeographyService, $window) {
 
             var self = this;
 
@@ -3935,6 +3989,7 @@ angular.module('FieldDoc')
 
                 var excludedKeys = [
                     'creator',
+                    'geometry',
                     'metrics',
                     'last_modified_by',
                     'organizations',
@@ -4002,6 +4057,8 @@ angular.module('FieldDoc')
                     $timeout(self.closeAlerts, 2000);
 
                     self.status.processing = false;
+
+                    $window.scrollTo(0, 0);
 
                 }).catch(function(error) {
 
@@ -4301,7 +4358,7 @@ angular.module('FieldDoc')
 
                     var _datum = {};
 
-                    if (item && item.id) {
+                    if (item.id && item.selected) {
                         _datum.id = item.id;
                     }
 
@@ -4313,27 +4370,47 @@ angular.module('FieldDoc')
 
             };
 
+            // self.loadFeatures = function(programId) {
+
+            //     var params = {
+            //         program: programId
+            //     };
+
+            //     MetricType.collection(params).$promise.then(function(successResponse) {
+
+            //         console.log('successResponse', successResponse);
+
+            //         successResponse.features.forEach(function(feature) {
+
+            //             self.addMetric(feature);
+
+            //         });
+
+            //     }, function(errorResponse) {
+
+            //         console.log('errorResponse', errorResponse);
+
+            //         self.showElements();
+
+            //     });
+
+            // };
+
             self.loadFeatures = function(programId) {
 
-                var params = {
-                    program: programId
-                };
+                Dashboard.availableMetrics({
+                    id: $route.current.params.dashboardId
+                }).$promise.then(function(successResponse) {
 
-                MetricType.collection(params).$promise.then(function(successResponse) {
+                    console.log('Dashboard.availableMetrics.successResponse', successResponse);
 
-                    console.log('successResponse', successResponse);
-
-                    successResponse.features.forEach(function(feature) {
-
-                        self.addMetric(feature);
-
-                    });
+                    self.metrics = successResponse.features;
 
                 }, function(errorResponse) {
 
                     console.log('errorResponse', errorResponse);
 
-                    self.showElements();
+                    // self.showElements();
 
                 });
 
@@ -4343,9 +4420,11 @@ angular.module('FieldDoc')
 
                 self.dashboardObject = data.properties || data;
 
-                self.tempMetrics = self.dashboardObject.metrics;
+                // self.tempMetrics = self.dashboardObject.metrics;
 
                 self.status.processing = false;
+
+                self.loadFeatures();
 
             };
 
@@ -4354,6 +4433,7 @@ angular.module('FieldDoc')
                 var excludedKeys = [
                     'creator',
                     'geographies',
+                    'geometry',
                     'last_modified_by',
                     'organizations',
                     'organization',
@@ -4398,11 +4478,9 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.dashboardObject);
 
-                self.dashboardObject.metrics = self.processMetrics(self.tempMetrics);
+                self.dashboardObject.metrics = self.processMetrics(self.metrics);
 
                 console.log('self.saveDashboard.dashboardObject', self.dashboardObject);
-
-                console.log('self.saveDashboard.Dashboard', Dashboard);
 
                 Dashboard.update({
                     id: +self.dashboardObject.id
@@ -4426,6 +4504,15 @@ angular.module('FieldDoc')
                     console.log('saveDashboard.error', error);
 
                     // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Something went wrong while attempting to update this dashboard.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
 
                     self.status.processing = false;
 
@@ -5690,7 +5777,23 @@ angular.module('FieldDoc')
 
                     if ($rootScope.user.properties.programs.length) {
 
-                        self.selectedProgram = $rootScope.user.properties.programs[0];
+                        var programs = [];
+
+                        $rootScope.user.properties.programs.forEach(function(item) {
+
+                            programs.push(item.properties);
+
+                        });
+
+                        programs.sort(function(a, b) {
+
+                            return a.id > b.id;
+
+                        });
+
+                        self.programs = programs;
+
+                        self.selectedProgram = self.programs[0];
 
                     }
 
@@ -6414,9 +6517,9 @@ angular.module('FieldDoc')
 
                 // project.programs = self.processRelations(self.tempPrograms);
 
-                project.partners = self.processRelations(self.tempPartners);
+                // project.partners = self.processRelations(self.tempPartners);
 
-                project.workflow_state = 'Draft';
+                // project.workflow_state = 'Draft';
 
                 project.$save().then(function(response) {
 
@@ -6922,7 +7025,7 @@ angular.module('FieldDoc')
                 //
                 // Assign project to a scoped variable
                 //
-                Project.matrix({
+                Project.targetMatrix({
                     id: $route.current.params.projectId
                 }).$promise.then(function(successResponse) {
 
@@ -7243,9 +7346,11 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'success',
                         'flag': 'Success!',
-                        'msg': 'Something went wrong and the targets changes were not saved.',
+                        'msg': 'Something went wrong and the target changes were not saved.',
                         'prompt': 'OK'
                     }];
+
+                    $timeout(self.closeAlerts, 2000);
 
                     self.status.processing = false;
 
@@ -10154,54 +10259,30 @@ angular.module('FieldDoc')
 
                     }
                 }
+            })
+            .when('/sites/:siteId/targets', {
+                templateUrl: '/modules/components/sites/views/siteTarget--view.html?t=' + environment.version,
+                controller: 'SiteTargetController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    site: function(Site, $route) {
+                        return Site.get({
+                            'id': $route.current.params.siteId
+                        });
+                    }
+                }
             });
-            // .when('/sites/:siteId/tags', {
-            //     templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
-            //     controller: 'FeatureTagController',
-            //     controllerAs: 'page',
-            //     resolve: {
-            //         user: function(Account, $rootScope, $document) {
-
-            //             $rootScope.targetPath = document.location.pathname;
-
-            //             if (Account.userObject && !Account.userObject.id) {
-            //                 return Account.getUser();
-            //             }
-
-            //             return Account.userObject;
-
-            //         },
-            //         featureCollection: function(Site, $route) {
-
-            //             return {
-            //                 featureId: $route.current.params.siteId,
-            //                 name: 'site',
-            //                 path: '/sites',
-            //                 cls: Site
-            //             }
-
-            //         },
-            //         feature: function(Site, $route) {
-
-            //             return Site.get({
-            //                 id: $route.current.params.siteId
-            //             });
-
-            //         },
-            //         toolbarUrl: function() {
-
-            //             return '/templates/toolbars/site.html?t=' + environment.version;
-
-            //         },
-            //         viewState: function() {
-
-            //             return {
-            //                 'site': true
-            //             };
-
-            //         }
-            //     }
-            // });
 
     }]);
 (function() {
@@ -13596,6 +13677,547 @@ angular.module('FieldDoc')
 'use strict';
 
 /**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('SiteTargetController',
+        function($scope, Account, $location, $log, Site, site,
+            $rootScope, $route, user, FilterStore, $timeout, SearchService,
+            MetricType) {
+
+            var self = this;
+
+            $rootScope.viewState = {
+                'site': true
+            };
+
+            $rootScope.toolbarState = {
+                'editTargets': true
+            };
+
+            $rootScope.page = {};
+
+            self.searchScope = {
+                target: 'metric'
+            };
+
+            self.status = {
+                processing: true
+            };
+
+            self.alerts = [];
+
+            self.closeAlerts = function() {
+
+                self.alerts = [];
+
+            };
+
+            self.closeRoute = function() {
+
+                $location.path('/sites');
+
+            };
+
+            self.confirmDelete = function(obj) {
+
+                self.deletionTarget = self.deletionTarget ? null : obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.loadMatrix = function() {
+
+                //
+                // Assign site to a scoped variable
+                //
+                Site.targetMatrix({
+                    id: $route.current.params.siteId
+                }).$promise.then(function(successResponse) {
+
+                    self.targets = successResponse;
+
+                }).catch(function(errorResponse) {
+
+                    $log.error('Unable to load site target matrix.');
+
+                });
+
+            };
+
+            self.loadSite = function() {
+
+                var exclude = [
+                    'centroid',
+                    'creator',
+                    'dashboards',
+                    'extent',
+                    'geometry',
+                    'members',
+                    'metric_types',
+                    'partners',
+                    'practices',
+                    'practice_types',
+                    'properties',
+                    'tags',
+                    'targets',
+                    'tasks',
+                    'type',
+                    'sites'
+                ].join(',');
+                
+                Site.get({
+                    id: $route.current.params.siteId,
+                    exclude: exclude
+                }).$promise.then(function(successResponse) {
+
+                    self.processSite(successResponse);
+
+                    if (!successResponse.permissions.read &&
+                        !successResponse.permissions.write) {
+
+                        self.makePrivate = true;
+
+                    }
+
+                    self.permissions.can_edit = successResponse.permissions.write;
+                    self.permissions.can_delete = successResponse.permissions.write;
+
+                }).catch(function(errorResponse) {
+
+                    $log.error('Unable to load site');
+
+                    self.status.processing = false;
+
+                });
+
+            };
+
+            self.search = function(value) {
+
+                if (self.searchScope.target === 'metric') {
+
+                    return SearchService.metric({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService response', response);
+
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
+
+                } else {
+
+                    return SearchService.program({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService response', response);
+
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
+
+                }
+
+            };
+
+            self.directQuery = function(item, model, label) {
+
+                if (self.searchScope.target === 'program') {
+
+                    self.loadFeatures(item.id);
+
+                } else {
+
+                    self.addMetric(item);
+
+                }
+
+            };
+
+            self.removeAll = function() {
+
+                self.targets.active.forEach(function (item) {
+
+                    self.targets.inactive.unshift(item);
+
+                });
+
+                self.targets.active = [];
+
+            };
+
+            self.addTarget = function(item, idx) {
+
+                if (!item.value) return;
+
+                if (typeof idx === 'number') {
+
+                    item.action = 'add';
+
+                    if (!item.metric ||
+                        typeof item.metric === 'undefined') {
+
+                        item.metric_id = item.id;
+
+                        delete item.id;
+
+                    }
+
+                    self.targets.inactive.splice(idx, 1);
+
+                    self.targets.active.push(item);
+
+                }
+
+                console.log('Updated targets (addition)');
+
+            };
+
+            self.removeTarget = function(item, idx) {
+
+                if (typeof idx === 'number') {
+
+                    self.targets.active.splice(idx, 1);
+
+                    item.action = 'remove';
+
+                    item.value = null;
+
+                    self.targets.inactive.unshift(item);
+
+                }
+
+                console.log('Updated targets (removal)');
+
+            };
+
+            self.processTargets = function(list) {
+
+                var _list = [];
+
+                angular.forEach(list, function(item) {
+
+                    var _datum = {};
+
+                    if (item && item.id) {
+                        _datum.id = item.id;
+                    }
+
+                    _list.push(_datum);
+
+                });
+
+                return _list;
+
+            };
+
+            self.loadFeatures = function(programId) {
+
+                var params = {
+                    program: programId
+                };
+
+                MetricType.collection(params).$promise.then(function(successResponse) {
+
+                    console.log('successResponse', successResponse);
+
+                    successResponse.features.forEach(function(feature) {
+
+                        self.addMetric(feature);
+
+                    });
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.processSite = function(data) {
+
+                self.site = data.properties || data;
+
+                self.tempTargets = self.site.targets || [];
+
+                self.status.processing = false;
+
+            };
+
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [
+                    'creator',
+                    'extent',
+                    'geometry',
+                    'last_modified_by',
+                    'organization',
+                    'tags',
+                    'tasks'
+                ];
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
+
+            };
+
+            self.saveTargets = function() {
+
+                self.status.processing = true;
+
+                self.scrubFeature(self.site);
+
+                console.log('self.saveSite.site', self.site);
+
+                console.log('self.saveSite.Site', Site);
+
+                var data = {
+                    targets: self.targets.active.slice(0)
+                };
+
+                self.targets.inactive.forEach(function (item) {
+
+                    if (item.action &&
+                        item.action === 'remove') {
+
+                        data.targets.push(item);
+
+                    }
+
+                });
+
+                Site.updateMatrix({
+                    id: +self.site.id
+                }, data).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Target changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                }).catch(function(error) {
+
+                    console.log('saveSite.error', error);
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong and the target changes were not saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                });
+
+            };
+
+            self.saveSite = function() {
+
+                self.status.processing = true;
+
+                self.scrubFeature(self.site);
+
+                self.site.targets = self.processTargets(self.tempTargets);
+
+                console.log('self.saveSite.site', self.site);
+
+                console.log('self.saveSite.Site', Site);
+
+                Site.update({
+                    id: +self.site.id
+                }, self.site).then(function(successResponse) {
+
+                    self.processSite(successResponse);
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Site changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                }).catch(function(error) {
+
+                    console.log('saveSite.error', error);
+
+                    // Do something with the error
+
+                    self.status.processing = false;
+
+                });
+
+            };
+
+            self.deleteFeature = function() {
+
+                var targetId;
+
+                if (self.site.properties) {
+
+                    targetId = self.site.properties.id;
+
+                } else {
+
+                    targetId = self.site.id;
+
+                }
+
+                Site.delete({
+                    id: +targetId
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this site.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(self.closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.site.properties.name + '”. There are pending tasks affecting this site.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this site.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this site.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                });
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                    };
+
+                    self.loadSite();
+
+                    self.loadMatrix();
+
+                    //
+                    // Setup page meta data
+                    //
+                    $rootScope.page = {
+                        'title': 'Edit site targets'
+                    };
+
+                });
+
+            } else {
+
+                $location.path('/login');
+
+            }
+
+        });
+'use strict';
+
+/**
  * @ngdoc overview
  * @name FieldDoc
  * @description
@@ -13887,54 +14509,30 @@ angular.module('FieldDoc')
 
                     }
                 }
+            })
+            .when('/practices/:practiceId/targets', {
+                templateUrl: '/modules/components/practices/views/practiceTarget--view.html?t=' + environment.version,
+                controller: 'PracticeTargetController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    practice: function(Practice, $route) {
+                        return Practice.get({
+                            'id': $route.current.params.practiceId
+                        });
+                    }
+                }
             });
-            // .when('/practices/:practiceId/tags', {
-            //     templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
-            //     controller: 'FeatureTagController',
-            //     controllerAs: 'page',
-            //     resolve: {
-            //         user: function(Account, $rootScope, $document) {
-
-            //             $rootScope.targetPath = document.location.pathname;
-
-            //             if (Account.userObject && !Account.userObject.id) {
-            //                 return Account.getUser();
-            //             }
-
-            //             return Account.userObject;
-
-            //         },
-            //         featureCollection: function(Practice, $route) {
-
-            //             return {
-            //                 featureId: $route.current.params.practiceId,
-            //                 name: 'practice',
-            //                 path: '/practices',
-            //                 cls: Practice
-            //             }
-
-            //         },
-            //         feature: function(Practice, $route) {
-
-            //             return Practice.get({
-            //                 id: $route.current.params.practiceId
-            //             });
-
-            //         },
-            //         toolbarUrl: function() {
-
-            //             return '/templates/toolbars/practice.html?t=' + environment.version;
-
-            //         },
-            //         viewState: function() {
-
-            //             return {
-            //                 'practice': true
-            //             };
-
-            //         }
-            //     }
-            // });
 
     });
 'use strict';
@@ -14491,6 +15089,26 @@ angular.module('FieldDoc')
 
                 };
 
+                self.loadReports = function() {
+
+                    Practice.reports({
+                        id: self.practice.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('self.practice', successResponse);
+
+                        self.reports = successResponse.features;
+
+                        self.status.loading = false;
+
+                    }, function(errorResponse) {
+
+                        self.status.loading = false;
+
+                    });
+
+                };
+
                 self.loadPractice = function() {
 
                     practice.$promise.then(function(successResponse) {
@@ -14540,6 +15158,8 @@ angular.module('FieldDoc')
                         }
 
                         self.status.loading = false;
+
+                        self.loadReports();
 
                     }, function(errorResponse) {
 
@@ -16917,6 +17537,547 @@ angular.module('FieldDoc')
             }
 
         });
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('PracticeTargetController',
+        function($scope, Account, $location, $log, Practice, practice,
+            $rootScope, $route, user, FilterStore, $timeout, SearchService,
+            MetricType) {
+
+            var self = this;
+
+            $rootScope.viewState = {
+                'practice': true
+            };
+
+            $rootScope.toolbarState = {
+                'editTargets': true
+            };
+
+            $rootScope.page = {};
+
+            self.searchScope = {
+                target: 'metric'
+            };
+
+            self.status = {
+                processing: true
+            };
+
+            self.alerts = [];
+
+            self.closeAlerts = function() {
+
+                self.alerts = [];
+
+            };
+
+            self.closeRoute = function() {
+
+                $location.path('/practices');
+
+            };
+
+            self.confirmDelete = function(obj) {
+
+                self.deletionTarget = self.deletionTarget ? null : obj;
+
+            };
+
+            self.cancelDelete = function() {
+
+                self.deletionTarget = null;
+
+            };
+
+            self.loadMatrix = function() {
+
+                //
+                // Assign practice to a scoped variable
+                //
+                Practice.targetMatrix({
+                    id: $route.current.params.practiceId
+                }).$promise.then(function(successResponse) {
+
+                    self.targets = successResponse;
+
+                }).catch(function(errorResponse) {
+
+                    $log.error('Unable to load practice target matrix.');
+
+                });
+
+            };
+
+            self.loadPractice = function() {
+
+                var exclude = [
+                    'centroid',
+                    'creator',
+                    'dashboards',
+                    'extent',
+                    'geometry',
+                    'members',
+                    'metric_types',
+                    'partners',
+                    'practices',
+                    'practice_types',
+                    'properties',
+                    'tags',
+                    'targets',
+                    'tasks',
+                    'type',
+                    'practices'
+                ].join(',');
+                
+                Practice.get({
+                    id: $route.current.params.practiceId,
+                    exclude: exclude
+                }).$promise.then(function(successResponse) {
+
+                    self.processPractice(successResponse);
+
+                    if (!successResponse.permissions.read &&
+                        !successResponse.permissions.write) {
+
+                        self.makePrivate = true;
+
+                    }
+
+                    self.permissions.can_edit = successResponse.permissions.write;
+                    self.permissions.can_delete = successResponse.permissions.write;
+
+                }).catch(function(errorResponse) {
+
+                    $log.error('Unable to load practice');
+
+                    self.status.processing = false;
+
+                });
+
+            };
+
+            self.search = function(value) {
+
+                if (self.searchScope.target === 'metric') {
+
+                    return SearchService.metric({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService response', response);
+
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
+
+                } else {
+
+                    return SearchService.program({
+                        q: value
+                    }).$promise.then(function(response) {
+
+                        console.log('SearchService response', response);
+
+                        response.results.forEach(function(result) {
+
+                            result.category = null;
+
+                        });
+
+                        return response.results.slice(0, 5);
+
+                    });
+
+                }
+
+            };
+
+            self.directQuery = function(item, model, label) {
+
+                if (self.searchScope.target === 'program') {
+
+                    self.loadFeatures(item.id);
+
+                } else {
+
+                    self.addMetric(item);
+
+                }
+
+            };
+
+            self.removeAll = function() {
+
+                self.targets.active.forEach(function (item) {
+
+                    self.targets.inactive.unshift(item);
+
+                });
+
+                self.targets.active = [];
+
+            };
+
+            self.addTarget = function(item, idx) {
+
+                if (!item.value) return;
+
+                if (typeof idx === 'number') {
+
+                    item.action = 'add';
+
+                    if (!item.metric ||
+                        typeof item.metric === 'undefined') {
+
+                        item.metric_id = item.id;
+
+                        delete item.id;
+
+                    }
+
+                    self.targets.inactive.splice(idx, 1);
+
+                    self.targets.active.push(item);
+
+                }
+
+                console.log('Updated targets (addition)');
+
+            };
+
+            self.removeTarget = function(item, idx) {
+
+                if (typeof idx === 'number') {
+
+                    self.targets.active.splice(idx, 1);
+
+                    item.action = 'remove';
+
+                    item.value = null;
+
+                    self.targets.inactive.unshift(item);
+
+                }
+
+                console.log('Updated targets (removal)');
+
+            };
+
+            self.processTargets = function(list) {
+
+                var _list = [];
+
+                angular.forEach(list, function(item) {
+
+                    var _datum = {};
+
+                    if (item && item.id) {
+                        _datum.id = item.id;
+                    }
+
+                    _list.push(_datum);
+
+                });
+
+                return _list;
+
+            };
+
+            self.loadFeatures = function(programId) {
+
+                var params = {
+                    program: programId
+                };
+
+                MetricType.collection(params).$promise.then(function(successResponse) {
+
+                    console.log('successResponse', successResponse);
+
+                    successResponse.features.forEach(function(feature) {
+
+                        self.addMetric(feature);
+
+                    });
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                    self.showElements();
+
+                });
+
+            };
+
+            self.processPractice = function(data) {
+
+                self.practice = data.properties || data;
+
+                self.tempTargets = self.practice.targets || [];
+
+                self.status.processing = false;
+
+            };
+
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [
+                    'creator',
+                    'extent',
+                    'geometry',
+                    'last_modified_by',
+                    'organization',
+                    'tags',
+                    'tasks'
+                ];
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
+
+            };
+
+            self.saveTargets = function() {
+
+                self.status.processing = true;
+
+                self.scrubFeature(self.practice);
+
+                console.log('self.savePractice.practice', self.practice);
+
+                console.log('self.savePractice.Practice', Practice);
+
+                var data = {
+                    targets: self.targets.active.slice(0)
+                };
+
+                self.targets.inactive.forEach(function (item) {
+
+                    if (item.action &&
+                        item.action === 'remove') {
+
+                        data.targets.push(item);
+
+                    }
+
+                });
+
+                Practice.updateMatrix({
+                    id: +self.practice.id
+                }, data).$promise.then(function(successResponse) {
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Target changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                }).catch(function(error) {
+
+                    console.log('savePractice.error', error);
+
+                    // Do something with the error
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Something went wrong and the target changes were not saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                });
+
+            };
+
+            self.savePractice = function() {
+
+                self.status.processing = true;
+
+                self.scrubFeature(self.practice);
+
+                self.practice.targets = self.processTargets(self.tempTargets);
+
+                console.log('self.savePractice.practice', self.practice);
+
+                console.log('self.savePractice.Practice', Practice);
+
+                Practice.update({
+                    id: +self.practice.id
+                }, self.practice).then(function(successResponse) {
+
+                    self.processPractice(successResponse);
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Practice changes saved.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                }).catch(function(error) {
+
+                    console.log('savePractice.error', error);
+
+                    // Do something with the error
+
+                    self.status.processing = false;
+
+                });
+
+            };
+
+            self.deleteFeature = function() {
+
+                var targetId;
+
+                if (self.practice.properties) {
+
+                    targetId = self.practice.properties.id;
+
+                } else {
+
+                    targetId = self.practice.id;
+
+                }
+
+                Practice.delete({
+                    id: +targetId
+                }).$promise.then(function(data) {
+
+                    self.alerts.push({
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully deleted this practice.',
+                        'prompt': 'OK'
+                    });
+
+                    $timeout(self.closeRoute, 2000);
+
+                }).catch(function(errorResponse) {
+
+                    console.log('self.deleteFeature.errorResponse', errorResponse);
+
+                    if (errorResponse.status === 409) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to delete “' + self.practice.properties.name + '”. There are pending tasks affecting this practice.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else if (errorResponse.status === 403) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'You don’t have permission to delete this practice.',
+                            'prompt': 'OK'
+                        }];
+
+                    } else {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong while attempting to delete this practice.',
+                            'prompt': 'OK'
+                        }];
+
+                    }
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    self.status.processing = false;
+
+                });
+
+            };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                    };
+
+                    self.loadPractice();
+
+                    self.loadMatrix();
+
+                    //
+                    // Setup page meta data
+                    //
+                    $rootScope.page = {
+                        'title': 'Edit practice targets'
+                    };
+
+                });
+
+            } else {
+
+                $location.path('/login');
+
+            }
+
+        });
 (function() {
 
     'use strict';
@@ -17079,13 +18240,13 @@ angular.module('FieldDoc')
 
                     // if (datum.metric_unit !== null) {
 
-                    //     datum.metric_unit = datum.metric_unit.properties;
+                    // datum.metric_unit = datum.metric_unit.properties;
 
-                    //     datum.metric_unit.name = datum.metric_unit.plural;
+                    // datum.metric_unit.name = datum.metric_unit.plural;
 
                     // } else {
 
-                    //     datum.metric_unit = null;
+                    // datum.metric_unit = null;
 
                     // }
 
@@ -17093,27 +18254,36 @@ angular.module('FieldDoc')
 
                 };
 
-                self.loadMetricTypes = function(datum) {
+                // self.loadMetricTypes = function(datum) {
 
-                    Program.metricTypes({
-                        id: datum.properties.program_id
-                    }).$promise.then(function(successResponse) {
+                //     var exclude = [
+                //         'creator_id',
+                //         'geometry',
+                //         'last_modified_by_id',
+                //         'organization_id',
+                //         'tags'
+                //     ].join(',');
 
-                        console.log('Metric types', successResponse);
+                //     MetricType.collection({
+                //         program: datum.program_id,
+                //         exclude: exclude
+                //     }).$promise.then(function(successResponse) {
 
-                        self.metricTypes = successResponse.features;
+                //         console.log('Metric types', successResponse);
 
-                        self.showElements();
+                //         self.metricTypes = successResponse.features;
 
-                    }, function(errorResponse) {
+                //         self.showElements();
 
-                        console.log('errorResponse', errorResponse);
+                //     }, function(errorResponse) {
 
-                        self.showElements();
+                //         console.log('errorResponse', errorResponse);
 
-                    });
+                //         self.showElements();
 
-                };
+                //     });
+
+                // };
 
                 self.monitoringType = null;
                 self.monitoringTypes = monitoring_types;
@@ -17203,7 +18373,7 @@ angular.module('FieldDoc')
 
                 function convertPracticeArea(data) {
 
-                    var area = data.properties.area,
+                    var area = data.area,
                         acres;
 
                     if (area !== null &&
@@ -17216,6 +18386,36 @@ angular.module('FieldDoc')
                     }
 
                 }
+
+                self.loadMatrix = function() {
+
+                    //
+                    // Assign practice to a scoped variable
+                    //
+                    Report.targetMatrix({
+                        id: self.report.id
+                    }).$promise.then(function(successResponse) {
+
+                        self.targets = successResponse;
+
+                        self.showElements();
+
+                    }).catch(function(errorResponse) {
+
+                        console.error('Unable to load report target matrix.');
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to load report metric targets.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                    });
+
+                };
 
                 self.loadPractice = function(practiceId) {
 
@@ -17245,7 +18445,9 @@ angular.module('FieldDoc')
 
                         }
 
-                        self.loadMetricTypes(self.practice.project);
+                        self.loadMatrix();
+
+                        // self.loadMetricTypes(self.practice.project);
 
                     }).catch(function(errorResponse) {
 
@@ -17354,7 +18556,7 @@ angular.module('FieldDoc')
 
                             // if (datum.metric_unit !== null) {
 
-                            //     datum.metric_unit_id = datum.metric_unit.id;
+                            // datum.metric_unit_id = datum.metric_unit.id;
 
                             // }
 
@@ -17387,65 +18589,6 @@ angular.module('FieldDoc')
                         self.saveReport(_modifiedMetrics);
 
                     }
-
-                };
-
-                self.addReading = function(reading_) {
-
-                    self.status.readings.loading = true;
-
-                    //
-                    // Step 1: Show a new row with a "loading" indiciator
-                    //
-
-                    //
-                    // Step 2: Create empty Reading to post to the system
-                    //
-                    var newReading = new ReportReading({
-                        "geometry": null,
-                        "properties": {
-                            "bmp_custom_id": self.report.id,
-                            "practice_type_id": null,
-                            "practice_extent": 0,
-                            "practice_unit_id": null,
-                            "practice_description": "",
-                            "practice_nutrient_reductions": {
-                                "properties": {
-                                    "nitrogen": 0,
-                                    "phosphorus": 0,
-                                    "sediment": 0,
-                                    "protocol": ""
-                                }
-                            }
-                        }
-                    });
-
-                    //
-                    // Step 3: POST this empty reading to the `/v1/data/report-readings` endpoint
-                    //
-                    newReading.$save().then(function(successResponse) {
-
-                        console.log('A new reading has been created for this report', successResponse);
-
-                        var reading_ = successResponse;
-
-                        //
-                        // Step 4: Add the new reading to the existing report
-                        //
-                        self.report.properties.readings.push(reading_);
-
-                        //
-                        // Step 6: Hide Loading Indicator and display the form to the user
-                        //
-                        self.status.readings.loading = false;
-
-                    }, function(errorResponse) {
-
-                        console.log('An error occurred while trying to create a new reading', errorResponse);
-
-                        self.status.readings.loading = false;
-
-                    });
 
                 };
 
@@ -17487,7 +18630,7 @@ angular.module('FieldDoc')
                         }
 
                         // if (successResponse.metric_unit !== null) {
-                        //     successResponse.metric_unit.properties = successResponse.metric_unit;
+                        // successResponse.metric_unit.properties = successResponse.metric_unit;
                         // }
 
                         var datum = self.processMetric(successResponse);
@@ -17658,6 +18801,140 @@ angular.module('FieldDoc')
 
                 };
 
+                self.removeAll = function() {
+
+                    self.targets.active.forEach(function(item) {
+
+                        self.targets.inactive.unshift(item);
+
+                    });
+
+                    self.targets.active = [];
+
+                };
+
+                self.addTarget = function(item, idx) {
+
+                    if (!item.value) return;
+
+                    if (typeof idx === 'number') {
+
+                        item.action = 'add';
+
+                        if (!item.metric ||
+                            typeof item.metric === 'undefined') {
+
+                            item.metric_id = item.id;
+
+                            delete item.id;
+
+                        }
+
+                        self.targets.inactive.splice(idx, 1);
+
+                        self.targets.active.push(item);
+
+                    }
+
+                    console.log('Updated targets (addition)');
+
+                };
+
+                self.removeTarget = function(item, idx) {
+
+                    if (typeof idx === 'number') {
+
+                        self.targets.active.splice(idx, 1);
+
+                        item.action = 'remove';
+
+                        item.value = null;
+
+                        self.targets.inactive.unshift(item);
+
+                    }
+
+                    console.log('Updated targets (removal)');
+
+                };
+
+                self.processTargets = function(list) {
+
+                    var _list = [];
+
+                    angular.forEach(list, function(item) {
+
+                        var _datum = {};
+
+                        if (item && item.id) {
+                            _datum.id = item.id;
+                        }
+
+                        _list.push(_datum);
+
+                    });
+
+                    return _list;
+
+                };
+
+                self.saveTargets = function() {
+
+                    self.status.processing = true;
+
+                    // self.scrubFeature(self.report);
+
+                    var data = {
+                        targets: self.targets.active.slice(0)
+                    };
+
+                    self.targets.inactive.forEach(function(item) {
+
+                        if (item.action &&
+                            item.action === 'remove') {
+
+                            data.targets.push(item);
+
+                        }
+
+                    });
+
+                    Report.updateMatrix({
+                        id: +self.report.id
+                    }, data).$promise.then(function(successResponse) {
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Target changes saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
+                        self.status.processing = false;
+
+                    }).catch(function(error) {
+
+                        console.log('saveReport.error', error);
+
+                        // Do something with the error
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Something went wrong and the target changes were not saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
+                        self.status.processing = false;
+
+                    });
+
+                };
+
                 //
                 // Verify Account information for proper UI element display
                 //
@@ -17674,7 +18951,7 @@ angular.module('FieldDoc')
                         };
 
                         //
-                        // 
+                        //
                         //
                         report.$promise.then(function(successResponse) {
 
@@ -17702,7 +18979,9 @@ angular.module('FieldDoc')
 
                             $rootScope.page.title = 'Edit measurement data';
 
-                            self.loadPractice(self.report.properties.practice.id);
+                            self.loadPractice(self.report.properties.practice_id);
+
+                            // self.loadMatrix();
 
                         }, function(errorResponse) {
 
@@ -28948,6 +30227,11 @@ angular
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice/:id/partnerships')
                 },
+                reports: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/reports')
+                },
                 'site': {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/practice/:id/site'),
@@ -28968,10 +30252,20 @@ angular
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice/:id/tag-groups')
                 },
+                targetMatrix: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/matrix')
+                },
                 tasks: {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/practice/:id/tasks'),
                     'isArray': false
+                },
+                updateMatrix: {
+                    method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/matrix')
                 }
             });
         });
@@ -29004,6 +30298,11 @@ angular
                     method: 'GET',
                     url: environment.apiUrl.concat('/v1/data/summary/custom/:id')
                 },
+                targetMatrix: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/report/:id/matrix')
+                },
                 update: {
                     method: 'PATCH',
                     transformRequest: function(data) {
@@ -29011,6 +30310,11 @@ angular
                             json_ = angular.toJson(feature);
                         return json_;
                     }
+                },
+                updateMatrix: {
+                    method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/report/:id/matrix')
                 }
             });
         });
@@ -29268,7 +30572,7 @@ angular
                     'url': environment.apiUrl.concat('/v1/data/project/:id/outcomes'),
                     'isArray': false
                 },
-                matrix: {
+                targetMatrix: {
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/project/:id/matrix')
@@ -29487,10 +30791,20 @@ angular
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/site/:id/tag-groups')
                 },
+                targetMatrix: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/site/:id/matrix')
+                },
                 tasks: {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/site/:id/tasks'),
                     'isArray': false
+                },
+                updateMatrix: {
+                    method: 'POST',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/site/:id/matrix')
                 }
             });
         });
@@ -29684,16 +30998,31 @@ angular.module('FieldDoc')
      */
     angular.module('FieldDoc')
         .service('Dashboard', function(environment, Preprocessors, $resource) {
-            return $resource(environment.apiUrl.concat('/v1/dashboard/:id'), {
+            return $resource(environment.apiUrl.concat('/v1/data/dashboard/:id'), {
                 id: '@id'
             }, {
                 query: {
                     isArray: false
                 },
+                // legacyFormat: {
+                //     method: 'GET',
+                //     isArray: false,
+                //     url: environment.apiUrl.concat('/v1/data/dashboard/:id')
+                // },
+                filters: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/dashboard/:id/filters')
+                },
                 geographies: {
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/dashboard/:id/geographies')
+                },
+                availableMetrics: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/dashboard/:id/available-metrics')
                 },
                 metrics: {
                     method: 'GET',

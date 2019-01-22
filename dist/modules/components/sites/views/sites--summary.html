@@ -76,7 +76,7 @@
 
                                 <div class="list">
 
-                                    <article class="statistics project--summary">
+                                    <!-- <article class="statistics project--summary">
 
                                         <div class="statistics--statistic">
                                             <p class="statistic--value">
@@ -111,7 +111,7 @@
                                             </div>
                                         </div>
 
-                                    </article>
+                                    </article> -->
 
                                     <table class="table table-practices with-metrics" data-ng-if="page.metrics">
 
@@ -296,6 +296,13 @@
                 <a href="/sites/{{ page.site.id }}/partnerships">
                     <i class="material-icons">
                         group_work
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
+                <a href="/sites/{{ page.site.id }}/targets">
+                    <i class="material-icons">
+                        multiline_chart
                     </i>
                 </a>
             </li>
