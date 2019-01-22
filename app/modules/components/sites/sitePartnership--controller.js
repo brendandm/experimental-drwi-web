@@ -208,6 +208,7 @@ angular.module('FieldDoc')
                     'last_modified_by',
                     'organization',
                     'partnership',
+                    'project',
                     'tags',
                     'tasks'
                 ];
@@ -408,6 +409,7 @@ angular.module('FieldDoc')
                     // 'partners',
                     'practices',
                     'practice_types',
+                    'project',
                     'properties',
                     'tags',
                     'targets',
