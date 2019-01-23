@@ -11,7 +11,7 @@
         .controller('ReportEditController',
             function(Account, $location, MetricType, monitoring_types,
                 Practice, Report, ReportMetric, ReportMonitoring, report,
-                $rootScope, $route, $scope, unit_types, user, Utility,
+                $rootScope, $route, $scope, user, Utility,
                 $timeout, report_metrics, $filter, $interval, Program) {
 
                 var self = this;
@@ -19,16 +19,22 @@
                 self.measurementPeriods = [{
                         'name': 'Installation',
                         'description': null
-                    },
-                    {
-                        'name': 'Planning',
-                        'description': null
-                    },
-                    {
-                        'name': 'Monitoring',
-                        'description': null
                     }
                 ];
+
+                // self.measurementPeriods = [{
+                //         'name': 'Installation',
+                //         'description': null
+                //     },
+                //     {
+                //         'name': 'Planning',
+                //         'description': null
+                //     },
+                //     {
+                //         'name': 'Monitoring',
+                //         'description': null
+                //     }
+                // ];
 
                 $rootScope.page = {};
 
@@ -48,11 +54,11 @@
 
                 self.alerts = [];
 
-                function closeAlerts() {
+                self.closeAlerts = function() {
 
                     self.alerts = [];
 
-                }
+                };
 
                 function closeRoute() {
 
@@ -85,28 +91,6 @@
                     }, 1000);
 
                 };
-
-                unit_types.$promise.then(function(successResponse) {
-
-                    console.log('Unit types', successResponse);
-
-                    var _unitTypes = [];
-
-                    successResponse.features.forEach(function(datum) {
-
-                        datum.name = datum.plural;
-
-                        _unitTypes.push(datum);
-
-                    });
-
-                    self.unitTypes = _unitTypes;
-
-                }, function(errorResponse) {
-
-                    console.log('errorResponse', errorResponse);
-
-                });
 
                 self.loadMetrics = function() {
 

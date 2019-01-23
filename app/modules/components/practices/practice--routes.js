@@ -85,12 +85,12 @@ angular.module('FieldDoc')
                         return MonitoringType.query({
                             results_per_page: 500
                         });
-                    },
-                    unit_types: function(UnitType, $route) {
-                        return UnitType.query({
-                            results_per_page: 500
-                        });
                     }
+                    // unit_types: function(UnitType, $route) {
+                    //     return UnitType.query({
+                    //         results_per_page: 500
+                    //     });
+                    // }
 
                 }
             })
