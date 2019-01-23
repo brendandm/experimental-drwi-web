@@ -101,10 +101,6 @@ angular.module('FieldDoc')
                 self.permissions.can_edit = successResponse.permissions.write;
                 self.permissions.can_delete = successResponse.permissions.write;
 
-                delete self.practice.organization;
-                delete self.practice.project;
-                delete self.practice.site;
-
                 if (successResponse.category) {
 
                     self.practiceType = successResponse.category;
@@ -118,7 +114,7 @@ angular.module('FieldDoc')
                 //
 
                 PracticeType.collection({
-                    program: self.practice.program_id
+                    program: self.practice.project.program_id
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.practiceTypes', successResponse);
