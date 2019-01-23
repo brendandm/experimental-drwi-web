@@ -20,7 +20,7 @@ angular.module('FieldDoc')
                 resolve: {
                     dashboards: function($route, $location, Dashboard) {
 
-                        return Dashboard.query();
+                        return Dashboard.collection();
 
                     },
                     user: function(Account, $rootScope, $document) {

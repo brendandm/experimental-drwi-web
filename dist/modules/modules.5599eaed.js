@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548156638069})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548269983487})
 
 ;
 /**
@@ -786,7 +786,7 @@ angular.module('FieldDoc')
                 resolve: {
                     dashboards: function($route, $location, Dashboard) {
 
-                        return Dashboard.query();
+                        return Dashboard.collection();
 
                     },
                     user: function(Account, $rootScope, $document) {
@@ -11999,6 +11999,7 @@ angular.module('FieldDoc')
                     'last_modified_by',
                     'organization',
                     'partnership',
+                    'project',
                     'tags',
                     'tasks'
                 ];
@@ -12199,6 +12200,7 @@ angular.module('FieldDoc')
                     // 'partners',
                     'practices',
                     'practice_types',
+                    'project',
                     'properties',
                     'tags',
                     'targets',
@@ -31027,6 +31029,11 @@ angular.module('FieldDoc')
                 //     isArray: false,
                 //     url: environment.apiUrl.concat('/v1/data/dashboard/:id')
                 // },
+                collection: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/dashboard')
+                },
                 filters: {
                     method: 'GET',
                     isArray: false,

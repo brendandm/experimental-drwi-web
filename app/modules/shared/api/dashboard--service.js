@@ -20,6 +20,11 @@
                 //     isArray: false,
                 //     url: environment.apiUrl.concat('/v1/data/dashboard/:id')
                 // },
+                collection: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/dashboard')
+                },
                 filters: {
                     method: 'GET',
                     isArray: false,
