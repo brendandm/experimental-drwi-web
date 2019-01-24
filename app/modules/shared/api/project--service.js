@@ -43,6 +43,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/project/:id/partnerships')
                 },
+                progress: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/project/:id/progress')
+                },
                 sites: {
                     method: 'GET',
                     isArray: false,

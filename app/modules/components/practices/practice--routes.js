@@ -28,16 +28,16 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    metrics: function(Practice, $route) {
-                        return Practice.metrics({
-                            id: $route.current.params.practiceId
-                        });
-                    },
-                    outcomes: function(Practice, $route) {
-                        return Practice.outcomes({
-                            id: $route.current.params.practiceId
-                        });
-                    },
+                    // metrics: function(Practice, $route) {
+                    //     return Practice.metrics({
+                    //         id: $route.current.params.practiceId
+                    //     });
+                    // },
+                    // outcomes: function(Practice, $route) {
+                    //     return Practice.outcomes({
+                    //         id: $route.current.params.practiceId
+                    //     });
+                    // },
                     practice: function(Practice, $route) {
                         return Practice.get({
                             id: $route.current.params.practiceId

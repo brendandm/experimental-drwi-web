@@ -28,7 +28,7 @@
             'program',
             function(Account, $location, $timeout, $log, $rootScope,
                 $route, Utility, user, $window, Map, mapbox, leafletData,
-                leafletBoundsHelpers, Program, metrics, outcomes, program) {
+                leafletBoundsHelpers, Program, program) {
 
                 var self = this;
                 
@@ -230,9 +230,37 @@
 
                         self.status.loading = false;
 
+                        self.loadMetrics();
+
                     }, function(errorResponse) {
 
 
+
+                    });
+
+                };
+
+                self.loadMetrics = function() {
+
+                    Program.progress({
+                        id: self.program.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Project metrics', successResponse);
+
+                        successResponse.features.forEach(function(metric) {
+
+                            var _percentComplete = +((metric.installation/metric.planning)*100).toFixed(0);
+
+                            metric.percentComplete = _percentComplete;
+
+                        });
+
+                        self.metrics = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
 
                     });
 
@@ -256,52 +284,8 @@
 
                         self.loadProgram();
 
-                        self.loadMetrics();
-
-                        self.loadOutcomes();
-
                     });
                 }
-
-                self.loadMetrics = function() {
-
-                    metrics.$promise.then(function(successResponse) {
-
-                        console.log('Project metrics', successResponse);
-
-                        successResponse.features.forEach(function(metric) {
-
-                            var _percentComplete = +((metric.installation/metric.planning)*100).toFixed(0);
-
-                            metric.percentComplete = _percentComplete;
-
-                        });
-
-                        self.metrics = successResponse.features;
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                    });
-
-                };
-
-                self.loadOutcomes = function() {
-
-                    outcomes.$promise.then(function(successResponse) {
-
-                        console.log('Project outcomes', successResponse);
-
-                        self.outcomes = successResponse;
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                    });
-
-                };
 
             }
         ]);

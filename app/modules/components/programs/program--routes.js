@@ -53,16 +53,16 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    metrics: function(Program, $route) {
-                        return Program.metrics({
-                            id: $route.current.params.programId
-                        });
-                    },
-                    outcomes: function(Program, $route) {
-                        return Program.outcomes({
-                            id: $route.current.params.programId
-                        });
-                    },
+                    // metrics: function(Program, $route) {
+                    //     return Program.metrics({
+                    //         id: $route.current.params.programId
+                    //     });
+                    // },
+                    // outcomes: function(Program, $route) {
+                    //     return Program.outcomes({
+                    //         id: $route.current.params.programId
+                    //     });
+                    // },
                     program: function(Program, $route) {
                         return Program.get({
                             id: $route.current.params.programId

@@ -100,7 +100,7 @@
 
                         <h2>Metrics</h2>
 
-                        <div data-ng-if="page.metrics && page.outcomes">
+                        <div data-ng-if="page.metrics">
 
                             <section id="sites">
 
@@ -162,8 +162,8 @@
                                                     </p>
                                                 </td>
                                                 <td>
-                                                    <strong class="metrics--metric--rollup--small">{{ metric.installation | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit }}<br />
-                                                        of {{ metric.planning | number:2 }}</span>
+                                                    <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
+                                                        of {{ metric.target | number:2 }}</span>
                                                 </td>
                                                 <td>
                                                     <strong class="metrics--metric--percentage">

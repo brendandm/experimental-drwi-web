@@ -26,12 +26,10 @@
             'leafletData',
             'leafletBoundsHelpers',
             'Practice',
-            'metrics',
-            'outcomes',
             'practice',
             function(Account, $location, $timeout, $log, Report, $rootScope,
                 $route, Utility, user, Project, Site, $window, Map, mapbox,
-                leafletData, leafletBoundsHelpers, Practice, metrics, outcomes, practice) {
+                leafletData, leafletBoundsHelpers, Practice, practice) {
 
                 var self = this,
                     practiceId = $route.current.params.practiceId;
@@ -286,6 +284,8 @@
 
                         self.loadReports();
 
+                        self.loadMetrics();
+
                     }, function(errorResponse) {
 
                         self.status.loading = false;
@@ -293,31 +293,6 @@
                     });
 
                 };
-
-                //
-                // Verify Account information for proper UI element display
-                //
-                if (Account.userObject && user) {
-
-                    user.$promise.then(function(userResponse) {
-
-                        $rootScope.user = Account.userObject = userResponse;
-
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0],
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                            can_edit: false
-                        };
-
-                        self.loadPractice();
-
-                        self.loadMetrics();
-
-                        self.loadOutcomes();
-
-                    });
-                }
 
                 self.addReading = function(measurementPeriod) {
 
@@ -342,13 +317,15 @@
 
                 self.loadMetrics = function() {
 
-                    metrics.$promise.then(function(successResponse) {
+                    Practice.progress({
+                        id: self.practice.id
+                    }).$promise.then(function(successResponse) {
 
                         console.log('Project metrics', successResponse);
 
                         successResponse.features.forEach(function(metric) {
 
-                            var _percentComplete = +((metric.installation/metric.planning)*100).toFixed(0);
+                            var _percentComplete = +((metric.current_value/metric.context_target)*100).toFixed(0);
 
                             metric.percentComplete = _percentComplete;
 
@@ -364,21 +341,26 @@
 
                 };
 
-                self.loadOutcomes = function() {
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
 
-                    outcomes.$promise.then(function(successResponse) {
+                    user.$promise.then(function(userResponse) {
 
-                        console.log('Project outcomes', successResponse);
+                        $rootScope.user = Account.userObject = userResponse;
 
-                        self.outcomes = successResponse;
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0],
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                            can_edit: false
+                        };
 
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
+                        self.loadPractice();
 
                     });
-
-                };
+                }
 
             }
         ]);

@@ -31,21 +31,21 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    metrics: function(Site, $route) {
-                        return Site.metrics({
-                            id: $route.current.params.siteId
-                        });
-                    },
+                    // metrics: function(Site, $route) {
+                    //     return Site.metrics({
+                    //         id: $route.current.params.siteId
+                    //     });
+                    // },
                     nodes: function(Site, $route) {
                         return Site.nodes({
                             id: $route.current.params.siteId
                         });
                     },
-                    outcomes: function(Site, $route) {
-                        return Site.outcomes({
-                            id: $route.current.params.siteId
-                        });
-                    },
+                    // outcomes: function(Site, $route) {
+                    //     return Site.outcomes({
+                    //         id: $route.current.params.siteId
+                    //     });
+                    // },
                     practices: function(Site, $route) {
                         return Site.practices({
                             id: $route.current.params.siteId

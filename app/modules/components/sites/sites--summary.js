@@ -10,7 +10,7 @@
     angular.module('FieldDoc')
         .controller('SiteSummaryController',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
-                $route, nodes, user, Utility, metrics, outcomes, site, Map, mapbox, leafletData,
+                $route, nodes, user, Utility, site, Map, mapbox, leafletData,
                 leafletBoundsHelpers, Site, Project, practices, $interval) {
 
                 var self = this;
@@ -317,6 +317,8 @@
 
                         }
 
+                        self.loadMetrics();
+
                         self.showElements();
 
                     });
@@ -346,35 +348,21 @@
 
                 self.loadMetrics = function() {
 
-                    metrics.$promise.then(function(successResponse) {
+                    Site.progress({
+                        id: self.site.id
+                    }).$promise.then(function(successResponse) {
 
                         console.log('Project metrics', successResponse);
 
                         successResponse.features.forEach(function(metric) {
 
-                            var _percentComplete = +((metric.installation / metric.planning) * 100).toFixed(0);
+                            var _percentComplete = +((metric.current_value / metric.context_target) * 100).toFixed(0);
 
                             metric.percentComplete = _percentComplete;
 
                         });
 
                         self.metrics = successResponse.features;
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                    });
-
-                };
-
-                self.loadOutcomes = function() {
-
-                    outcomes.$promise.then(function(successResponse) {
-
-                        console.log('Project outcomes', successResponse);
-
-                        self.outcomes = successResponse;
 
                     }, function(errorResponse) {
 
@@ -400,10 +388,6 @@
                         };
 
                         self.loadSite();
-
-                        self.loadMetrics();
-
-                        self.loadOutcomes();
 
                     });
 

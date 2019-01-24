@@ -53,6 +53,11 @@
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_custom'),
                     'isArray': false
                 },
+                progress: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/progress')
+                },
                 tags: {
                     method: 'GET',
                     isArray: false,

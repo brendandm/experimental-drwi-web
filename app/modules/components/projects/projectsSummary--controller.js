@@ -12,7 +12,7 @@ angular.module('FieldDoc')
         function(Account, Notifications, $rootScope, Project, $routeParams,
             $scope, $location, Map, mapbox, Site, user, $window,
             leafletData, leafletBoundsHelpers, $timeout, Practice, project,
-            metrics, outcomes, sites, Utility, $interval) {
+            sites, Utility, $interval) {
 
             var self = this;
 
@@ -159,6 +159,8 @@ angular.module('FieldDoc')
                             }
 
                         });
+
+                        self.loadMetrics();
 
                         self.loadSites();
 
@@ -468,13 +470,15 @@ angular.module('FieldDoc')
 
             self.loadMetrics = function() {
 
-                metrics.$promise.then(function(successResponse) {
+                Project.progress({
+                    id: self.project.id
+                }).$promise.then(function(successResponse) {
 
                     console.log('Project metrics', successResponse);
 
                     successResponse.features.forEach(function(metric) {
 
-                        var _percentComplete = +((metric.installation / metric.planning) * 100).toFixed(0);
+                        var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
 
                         metric.percentComplete = _percentComplete;
 
@@ -488,23 +492,43 @@ angular.module('FieldDoc')
 
                 });
 
+                // metrics.$promise.then(function(successResponse) {
+
+                //     console.log('Project metrics', successResponse);
+
+                //     successResponse.features.forEach(function(metric) {
+
+                //         var _percentComplete = +((metric.installation / metric.planning) * 100).toFixed(0);
+
+                //         metric.percentComplete = _percentComplete;
+
+                //     });
+
+                //     self.metrics = successResponse.features;
+
+                // }, function(errorResponse) {
+
+                //     console.log('errorResponse', errorResponse);
+
+                // });
+
             };
 
-            self.loadOutcomes = function() {
+            // self.loadOutcomes = function() {
 
-                outcomes.$promise.then(function(successResponse) {
+            //     outcomes.$promise.then(function(successResponse) {
 
-                    console.log('Project outcomes', successResponse);
+            //         console.log('Project outcomes', successResponse);
 
-                    self.outcomes = successResponse;
+            //         self.outcomes = successResponse;
 
-                }, function(errorResponse) {
+            //     }, function(errorResponse) {
 
-                    console.log('errorResponse', errorResponse);
+            //         console.log('errorResponse', errorResponse);
 
-                });
+            //     });
 
-            };
+            // };
 
             //
             // Verify Account information for proper UI element display
@@ -527,9 +551,9 @@ angular.module('FieldDoc')
 
                     self.loadProject();
 
-                    self.loadMetrics();
+                    // self.loadMetrics();
 
-                    self.loadOutcomes();
+                    // self.loadOutcomes();
 
                 });
 

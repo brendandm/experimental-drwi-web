@@ -45,6 +45,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/program/:id/practice-type')
                 },
+                progress: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/program/:id/progress')
+                },
                 projects: {
                     method: 'GET',
                     isArray: false,

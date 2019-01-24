@@ -45,7 +45,7 @@
 
                         <h2>Metrics</h2>
 
-                        <article class="statistics project--summary">
+                        <!-- <article class="statistics project--summary">
 
                             <div class="statistics--statistic">
                                 <p class="statistic--value">
@@ -80,7 +80,7 @@
                                 </div>
                             </div>
 
-                        </article>
+                        </article> -->
 
                         <table class="table table-programs with-metrics" data-ng-if="page.metrics">
 
@@ -101,8 +101,8 @@
                                         </p>
                                     </td>
                                     <td>
-                                        <strong class="metrics--metric--rollup--small">{{ metric.installation | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit }}<br />
-                                            of {{ metric.planning | number:2 }}</span>
+                                        <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
+                                            of {{ metric.target | number:2 }}</span>
                                     </td>
                                     <td>
                                         <strong class="metrics--metric--percentage">

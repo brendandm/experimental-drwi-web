@@ -74,43 +74,6 @@
 
                         <h2>Metrics</h2>
 
-                        <!-- <article class="statistics project--summary">
-
-                            <div class="statistics--statistic">
-                                <p class="statistic--value">
-                                    {{ page.outcomes.installation.nitrogen | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.nitrogen | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
-                                    <span class="statistic--title">Nitrogen</span>
-                                </p>
-                                <div class="statistic--chart">
-                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.nitrogen/page.outcomes.planning.nitrogen)*100) + '%' }" style="background-color: #2196F3;">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="statistics--statistic">
-                                <p class="statistic--value">
-                                    {{ page.outcomes.installation.phosphorus | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.phosphorus | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
-                                    <span class="statistic--title">Phosphorus</span>
-                                </p>
-                                <div class="statistic--chart">
-                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.phosphorus/page.outcomes.planning.phosphorus)*100) + '%' }" style="background-color: #2196F3;">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="statistics--statistic">
-                                <p class="statistic--value">
-                                    {{ page.outcomes.installation.sediment | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.sediment | number:2 }} <span class="statistic--valueLabel">tons/yr</span><br />
-                                    <span class="statistic--title">Sediment</span>
-                                </p>
-                                <div class="statistic--chart">
-                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.sediment/page.outcomes.planning.sediment)*100) + '%' }" style="background-color: #2196F3;">
-                                    </div>
-                                </div>
-                            </div>
-
-                        </article> -->
-
                         <table class="table table-practices with-metrics" data-ng-if="page.metrics">
 
                             <thead>
@@ -130,8 +93,8 @@
                                         </p>
                                     </td>
                                     <td>
-                                        <strong class="metrics--metric--rollup--small">{{ metric.installation | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit }}<br />
-                                            of {{ metric.planning | number:2 }}</span>
+                                        <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
+                                            of {{ metric.context_target | number:2 }}</span>
                                     </td>
                                     <td>
                                         <strong class="metrics--metric--percentage">
