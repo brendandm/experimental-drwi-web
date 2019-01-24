@@ -38,9 +38,13 @@
                             Last modified by {{ page.project.last_modified_by.first_name }} {{ page.project.last_modified_by.last_name }} on {{ page.project.modified_on | date:'medium' }}
                         </p>
 
-                        <p data-ng-if="page.project.id && page.project.program_type" class="label" data-ng-class="{'label-info': (page.project.program_type !== 'Pre-Project Plan'), 'label-success': (page.project.program_type === 'Pre-Project Plan')}">
-                            <strong>Program:</strong> {{ page.project.program_type }}
+                        <p data-ng-if="page.project.program && page.project.program.id" class="label">
+                            <strong>Program:</strong> <a href="{{ page.project.links.program.html }}">{{ page.project.program.name }}</a>
                         </p>
+
+                        <!-- <p data-ng-if="page.project.id && page.project.program_type" class="label">
+                            <strong>Program:</strong> {{ page.project.program.name }}
+                        </p> -->
 
                         <p data-ng-bind-html="page.project.description"></p>
 
@@ -105,43 +109,6 @@
                             <section id="sites">
 
                                 <div class="list">
-
-                                    <!-- <article class="statistics project--summary">
-
-                                        <div class="statistics--statistic">
-                                            <p class="statistic--value">
-                                                {{ page.outcomes.installation.nitrogen | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.nitrogen | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
-                                                <span class="statistic--title">Nitrogen</span>
-                                            </p>
-                                            <div class="statistic--chart">
-                                                <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.nitrogen/page.outcomes.planning.nitrogen)*100) + '%' }" style="background-color: #2196F3;">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="statistics--statistic">
-                                            <p class="statistic--value">
-                                                {{ page.outcomes.installation.phosphorus | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.phosphorus | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
-                                                <span class="statistic--title">Phosphorus</span>
-                                            </p>
-                                            <div class="statistic--chart">
-                                                <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.phosphorus/page.outcomes.planning.phosphorus)*100) + '%' }" style="background-color: #2196F3;">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="statistics--statistic">
-                                            <p class="statistic--value">
-                                                {{ page.outcomes.installation.sediment | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.sediment | number:2 }} <span class="statistic--valueLabel">tons/yr</span><br />
-                                                <span class="statistic--title">Sediment</span>
-                                            </p>
-                                            <div class="statistic--chart">
-                                                <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.sediment/page.outcomes.planning.sediment)*100) + '%' }" style="background-color: #2196F3;">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </article> -->
 
                                     <table class="table table-practices with-metrics" data-ng-if="page.metrics">
 

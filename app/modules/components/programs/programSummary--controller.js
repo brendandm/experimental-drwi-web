@@ -22,10 +22,7 @@
             'mapbox',
             'leafletData',
             'leafletBoundsHelpers',
-            'Program',
-            'metrics',
-            'outcomes',
-            'program',
+            'Program',            'program',
             function(Account, $location, $timeout, $log, $rootScope,
                 $route, Utility, user, $window, Map, mapbox, leafletData,
                 leafletBoundsHelpers, Program, program) {
@@ -250,7 +247,7 @@
 
                         successResponse.features.forEach(function(metric) {
 
-                            var _percentComplete = +((metric.installation/metric.planning)*100).toFixed(0);
+                            var _percentComplete = +((metric.current_value/metric.target)*100).toFixed(0);
 
                             metric.percentComplete = _percentComplete;
 
