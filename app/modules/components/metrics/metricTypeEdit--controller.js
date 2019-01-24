@@ -79,18 +79,18 @@ angular.module('FieldDoc')
 
             self.metricType = datum;
 
-            self.programId = self.metricType.properties.program_id;
+            self.programId = self.metricType.program_id;
 
-            if (self.metricType.properties.unit) {
+            if (self.metricType.unit) {
 
-                self.unitType = self.parseUnit(self.metricType.properties.unit.properties);
+                self.unitType = self.parseUnit(self.metricType.unit);
 
             }
 
-            if (self.metricType.properties.program &&
-                typeof self.metricType.properties.program !== 'undefined') {
+            if (self.metricType.program &&
+                typeof self.metricType.program !== 'undefined') {
 
-                self.metricType.properties.program = self.metricType.properties.program.properties;
+                self.metricType.program = self.metricType.program;
 
             }
 
@@ -114,9 +114,9 @@ angular.module('FieldDoc')
                 self.permissions.can_edit = successResponse.permissions.write;
                 self.permissions.can_delete = successResponse.permissions.write;
 
-                $rootScope.page.title = self.metricType.properties.name ? self.metricType.properties.name : 'Un-named Metric Type';
+                $rootScope.page.title = self.metricType.name ? self.metricType.name : 'Un-named Metric Type';
 
-                self.scrubFeature();
+                self.scrubFeature(self.metricType);
 
                 self.showElements();
 
@@ -148,13 +148,45 @@ angular.module('FieldDoc')
 
         };
 
-        self.scrubFeature = function() {
+        self.scrubFeature = function(feature) {
 
-            delete self.metricType.geometry;
-            delete self.metricType.properties.organization;
-            delete self.metricType.properties.creator;
-            delete self.metricType.properties.last_modified_by;
-            delete self.metricType.properties.unit;
+            var excludedKeys = [
+                'creator',
+                'extent',
+                'geometry',
+                'last_modified_by',
+                'organization',
+                'tags',
+                'tasks',
+                'unit'
+            ];
+
+            var reservedProperties = [
+                'links',
+                'permissions',
+                '$promise',
+                '$resolved'
+            ];
+
+            excludedKeys.forEach(function(key) {
+
+                if (feature.properties) {
+
+                    delete feature.properties[key];
+
+                } else {
+
+                    delete feature[key];
+
+                }
+
+            });
+
+            reservedProperties.forEach(function(key) {
+
+                delete feature[key];
+
+            });
 
         };
 
@@ -162,18 +194,18 @@ angular.module('FieldDoc')
 
             self.status.processing = true;
 
-            self.scrubFeature();
+            self.scrubFeature(self.metricType);
 
             if (self.unitType &&
                 typeof self.unitType !== 'string') {
 
-                self.metricType.properties.unit_id = self.unitType.id;
+                self.metricType.unit_id = self.unitType.id;
 
             }
 
             MetricType.update({
                 id: self.metricType.id
-            }, self.metricType.properties).$promise.then(function(successResponse) {
+            }, self.metricType).then(function(successResponse) {
 
                 self.parseFeature(successResponse);
 
@@ -231,7 +263,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this metric type.',
+                        'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this metric type.',
                         'prompt': 'OK'
                     }];
 
@@ -267,7 +299,7 @@ angular.module('FieldDoc')
 
             self.unitType = $item;
 
-            self.metricType.properties.unit_id = $item.id;
+            self.metricType.unit_id = $item.id;
 
         };
 

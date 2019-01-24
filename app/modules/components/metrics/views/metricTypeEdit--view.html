@@ -26,14 +26,14 @@
 
                         <div class="form-element">
                             <span class="meta-label"><b>Name</b></span>
-                            <input type="text" data-ng-model="page.metricType.properties.name" class="form-control animate" id="name" name="name" placeholder="Metric name" required="required" />
+                            <input type="text" data-ng-model="page.metricType.name" class="form-control animate" id="name" name="name" placeholder="Metric name" required="required" />
                         </div>
 
                         <!-- Metric Target -->
 
                         <div class="form-element">
                             <span class="meta-label"><b>Target</b></span>
-                            <input class="form-control" data-ng-model="page.metricType.properties.target" id="target" name="target" step="0.0001" type="number" placeholder="0" required="required" />
+                            <input class="form-control" data-ng-model="page.metricType.target" id="target" name="target" step="0.0001" type="number" placeholder="0" required="required" />
                             <p style="color: #9e9e9e; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
                                 Provide an overall quantitative goal for this metric type. The target functions as a benchmark for tracking progress.
                             </p>
@@ -53,9 +53,9 @@
 
                         <div class="form-element">
                             <span class="meta-label"><b>Description</b></span>
-                            <textarea class="form-control" msd-elastic data-ng-model="page.metricType.properties.description" maxlength="1000" rows="10">{{ page.metricType.properties.description }}</textarea>
+                            <textarea class="form-control" msd-elastic data-ng-model="page.metricType.description" maxlength="1000" rows="10">{{ page.metricType.description }}</textarea>
                             <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
-                                Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.metricType.properties.description.length || 0) | number }} used)</strong>
+                                Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.metricType.description.length || 0) | number }} used)</strong>
                             </p>
                         </div>
 
@@ -63,7 +63,7 @@
 
                         <div class="form-element" data-ng-if="$root.user.properties.is_admin || $root.user.properties.is_manager">
                             <span class="meta-label"><b>Program</b></span>
-                            <input id="metric_type_program_id" name="metric_type_program_id" type="text" placeholder="Search programs&hellip;" data-ng-model="page.metricType.properties.program" uib-typeahead="program as program.name for program in page.programs | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
+                            <input id="metric_type_program_id" name="metric_type_program_id" type="text" placeholder="Search programs&hellip;" data-ng-model="page.metricType.program" uib-typeahead="program as program.name for program in page.programs | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
                         </div>
 
                         <div class="save--action--wrapper save--action--bottom">
@@ -90,14 +90,14 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
 <!--             <li>
-                <a href="/metric-types/{{ page.metricType.properties.id }}">
+                <a href="/metric-types/{{ page.metricType.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/metric-types/{{ page.metricType.properties.id }}/edit">
+                <a href="/metric-types/{{ page.metricType.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>

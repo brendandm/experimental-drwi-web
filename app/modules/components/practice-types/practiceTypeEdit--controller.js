@@ -68,12 +68,10 @@ angular.module('FieldDoc')
 
         self.parseFeature = function(data) {
 
-            if (data.properties.program &&
-                typeof data.properties.program !== 'undefined') {
+            if (data.program &&
+                typeof data.program !== 'undefined') {
 
-                data.properties.program = data.properties.program.properties;
-
-                self.programId = data.properties.program_id;
+                self.programId = data.program_id;
 
             }
 
@@ -101,9 +99,9 @@ angular.module('FieldDoc')
                 self.permissions.can_edit = successResponse.permissions.write;
                 self.permissions.can_delete = successResponse.permissions.write;
 
-                $rootScope.page.title = self.practiceType.properties.name ? self.practiceType.properties.name : 'Un-named Practice Type';
+                $rootScope.page.title = self.practiceType.name ? self.practiceType.name : 'Un-named Practice Type';
 
-                self.scrubFeature();
+                self.scrubFeature(self.practiceType);
 
                 self.showElements();
 
@@ -115,12 +113,44 @@ angular.module('FieldDoc')
 
         };
 
-        self.scrubFeature = function() {
+        self.scrubFeature = function(feature) {
 
-            delete self.practiceType.geometry;
-            delete self.practiceType.properties.creator;
-            delete self.practiceType.properties.last_modified_by;
-            delete self.practiceType.properties.organization;
+            var excludedKeys = [
+                'creator',
+                'extent',
+                'geometry',
+                'last_modified_by',
+                'organization',
+                'tags',
+                'tasks'
+            ];
+
+            var reservedProperties = [
+                'links',
+                'permissions',
+                '$promise',
+                '$resolved'
+            ];
+
+            excludedKeys.forEach(function(key) {
+
+                if (feature.properties) {
+
+                    delete feature.properties[key];
+
+                } else {
+
+                    delete feature[key];
+
+                }
+
+            });
+
+            reservedProperties.forEach(function(key) {
+
+                delete feature[key];
+
+            });
 
         };
 
@@ -128,11 +158,11 @@ angular.module('FieldDoc')
 
             self.status.processing = true;
 
-            self.scrubFeature();
+            self.scrubFeature(self.practiceType);
 
             PracticeType.update({
                 id: self.practiceType.id
-            }, self.practiceType.properties).$promise.then(function(successResponse) {
+            }, self.practiceType).then(function(successResponse) {
 
                 self.practiceType = self.parseFeature(successResponse);
 
@@ -190,7 +220,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this practice type.',
+                        'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this practice type.',
                         'prompt': 'OK'
                     }];
 
