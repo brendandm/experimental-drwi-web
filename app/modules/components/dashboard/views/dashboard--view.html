@@ -77,86 +77,11 @@
                 </div>
             </div>
 
-            <!-- Filter Tools -->
-
-            <!-- <div class="filter--ui" data-ng-if="page.showFilters">
-
-                <button class="close" type="button" data-ng-click="page.closeFilterModal()" title="Cancel">
-                    <i class="material-icons">
-                        clear
-                    </i>
-                </button>
-
-                <div class="filter--header">
-
-                    <span class="filter--label">Filters</span>
-
-                    <p>Search for projects by name, status, geographic area, or conservation practice.<p>
-
-                </div>
-
-                <div class="filter--controls">
-
-                    <div class="search--group">
-                        <div global-search class="global--search" style="width: 100%; max-width: none;" filter-projects="page.filterProjects">
-                            <input type="search" class="search" value="" placeholder="Type the name of a project, status, geography, or practice" data-ng-model="query" uib-typeahead="suggestion as suggestion.name for suggestion in fetchSuggestions($viewValue)" typeahead-on-select="setFilter($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
-                        </div>
-                    </div>
-
-                    <div class="filter--group" data-ng-if="page.activeFilters && page.activeFilters.length">
-                        <div class="filter--pill" data-ng-repeat="filter in page.activeFilters" data-ng-click="page.clearFilter(filter)">
-                            <div>
-                                <span class="category {{ filter.category }}">{{ filter.category }}</span>
-                                <span>{{ filter.name }}</span>
-                            </div>
-                            <div>
-                                <i class="material-icons">
-                                    clear
-                                </i>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="filter--actions" data-ng-if="page.activeFilters && page.activeFilters.length">
-                    <button class="clear" type="button" data-ng-click="page.clearAllFilters()" title="Clear all filters">
-                        Clear all
-                    </button>
-                    <button class="search" type="button" data-ng-click="page.filterProjects()" title="Search projects">
-                        Search
-                    </button>
-                </div>
-
-            </div> -->
-
             <div class="tab--controls">
 
                 <button class="trigger--search tab" data-ng-class="{'active': page.activeTab.collection === 'metric'}" type="button" data-ng-click="page.setTab('metric')" title="Metrics">
                     Metrics
                 </button>
-
-                <!-- <button class="trigger--search tab" data-ng-class="{'active': page.activeTab.collection === 'list'}" type="button" data-ng-click="page.setTab('list')" title="{{ page.card.featureTabLabel }}">
-                    {{ page.card.featureTabLabel }}
-                </button> -->
-
-                <!-- <div class="filter--toggle">
-
-                    <button class="trigger--search" type="button" data-ng-click="page.showFilters = !page.showFilters" title="Filters">
-                        <i class="material-icons">
-                            filter_list
-                        </i>
-                    </button>
-
-                </div>
-
-                <div class="filter--count" data-ng-if="page.activeFilters.length">
-
-                    <button class="trigger--search" type="button" data-ng-click="page.showFilters = !page.showFilters" title="{{ page.activeFilters.length }} active filters">
-                        {{ page.activeFilters.length | number }}
-                    </button>
-
-                </div> -->
 
             </div>
 
@@ -224,43 +149,6 @@
                 <section id="sites">
 
                     <div class="list">
-
-                        <!-- <article style="padding: 1em 2em 0 2em;" class="statistics project--summary">
-
-                            <div class="statistics--statistic">
-                                <p class="statistic--value" style="color: #e0e0e0;">
-                                    {{ page.outcomes.installation.nitrogen | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.nitrogen | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
-                                    <span class="statistic--title">Nitrogen</span>
-                                </p>
-                                <div class="statistic--chart" style="color: #e0e0e0; background: rgba(0,0,0,0.2);">
-                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.nitrogen/page.outcomes.planning.nitrogen)*100) + '%' }" style="background: #2196F3;">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="statistics--statistic">
-                                <p class="statistic--value" style="color: #e0e0e0;">
-                                    {{ page.outcomes.installation.phosphorus | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.phosphorus | number:2 }} <span class="statistic--valueLabel">lbs/yr</span><br />
-                                    <span class="statistic--title">Phosphorus</span>
-                                </p>
-                                <div class="statistic--chart" style="color: #e0e0e0; background: rgba(0,0,0,0.2);">
-                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.phosphorus/page.outcomes.planning.phosphorus)*100) + '%' }" style="background: #2196F3;">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="statistics--statistic">
-                                <p class="statistic--value" style="color: #e0e0e0;">
-                                    {{ page.outcomes.installation.sediment | number:2 }} <span class="statistic--valueLabel">of</span> {{ page.outcomes.planning.sediment | number:2 }} <span class="statistic--valueLabel">tons/yr</span><br />
-                                    <span class="statistic--title">Sediment</span>
-                                </p>
-                                <div class="statistic--chart" style="color: #e0e0e0; background: rgba(0,0,0,0.2);">
-                                    <div class="statistic--chart--value" data-ng-style="{'width': ((page.outcomes.installation.sediment/page.outcomes.planning.sediment)*100) + '%' }" style="background: #2196F3;">
-                                    </div>
-                                </div>
-                            </div>
-
-                        </article> -->
 
                         <table class="table table-practices with-metrics" data-ng-if="page.metrics">
                             <thead>

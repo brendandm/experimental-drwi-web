@@ -79,16 +79,14 @@
                                                     </strong>
                                                 </td>
                                                 <td>
-                                                    <div class="donut-chart chart{{ metric.percentComplete }}" data-ng-if="metric.percentComplete < 100">
-                                                        <div class="slice one"></div>
-                                                        <div class="slice two"></div>
-                                                        <div class="chart-center"></div>
-                                                    </div>
-                                                    <div class="donut-chart chart100" data-ng-if="metric.percentComplete >= 100">
-                                                        <div class="slice one"></div>
-                                                        <div class="slice two"></div>
-                                                        <div class="chart-center"></div>
-                                                    </div>
+                                                    <progress-arc
+                                                        size="32"
+                                                        stroke="#2196F3"
+                                                        stroke-width="4"
+                                                        complete="(metric.current_value/metric.target)"
+                                                        counter-clockwise="false"
+                                                        background="rgba(0,0,0,0.2)">
+                                                    </progress-arc>
                                                 </td>
                                             </tr>
                                         </tbody>

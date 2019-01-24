@@ -123,7 +123,7 @@
                             typeof index === 'number' &&
                             featureType === 'report') {
 
-                            self.practice.readings_custom.splice(index, 1);
+                            self.practice.reports.splice(index, 1);
 
                             self.cancelDelete();
 
@@ -297,7 +297,7 @@
                 self.addReading = function(measurementPeriod) {
 
                     var newReading = new Report({
-                        'measurement_period': 'Planning',
+                        'measurement_period': 'Installation',
                         'report_date': new Date(),
                         'practice_id': practiceId,
                         'organization_id': self.practice.organization_id

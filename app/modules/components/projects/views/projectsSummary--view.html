@@ -42,10 +42,6 @@
                             <strong>Program:</strong> <a href="{{ page.project.links.program.html }}">{{ page.project.program.name }}</a>
                         </p>
 
-                        <!-- <p data-ng-if="page.project.id && page.project.program_type" class="label">
-                            <strong>Program:</strong> {{ page.project.program.name }}
-                        </p> -->
-
                         <p data-ng-bind-html="page.project.description"></p>
 
                         <nav class="contextual-navigation-wrapper" style="float: none; padding:0; margin: 0; border: 0 none;">
@@ -138,16 +134,14 @@
                                                     </strong>
                                                 </td>
                                                 <td>
-                                                    <div class="donut-chart chart{{ metric.percentComplete }}" data-ng-if="metric.percentComplete < 100">
-                                                        <div class="slice one"></div>
-                                                        <div class="slice two"></div>
-                                                        <div class="chart-center"></div>
-                                                    </div>
-                                                    <div class="donut-chart chart100" data-ng-if="metric.percentComplete >= 100">
-                                                        <div class="slice one"></div>
-                                                        <div class="slice two"></div>
-                                                        <div class="chart-center"></div>
-                                                    </div>
+                                                    <progress-arc
+                                                        size="32"
+                                                        stroke="#2196F3"
+                                                        stroke-width="4"
+                                                        complete="(metric.current_value/metric.target)"
+                                                        counter-clockwise="false"
+                                                        background="rgba(0,0,0,0.2)">
+                                                    </progress-arc>
                                                 </td>
                                             </tr>
                                         </tbody>
