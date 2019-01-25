@@ -972,11 +972,17 @@ angular.module('FieldDoc')
 
         };
 
-        self.navigateBack = function() {
+        self.navigateBack = function(featureType) {
 
-            var historyType = self.historyItem.type;
+            console.log('self.navigateBack', featureType);
 
-            switch (historyType) {
+            console.log('self.navigateBack.activeProject', self.activeProject);
+
+            console.log('self.navigateBack.activeSite', self.activeSite);
+
+            // var historyType = self.historyItem.type;
+
+            switch (featureType) {
 
                 case 'program':
 
@@ -1004,6 +1010,11 @@ angular.module('FieldDoc')
                         linkTarget: '_self'
                     };
 
+                    self.loadMetrics(null, {
+                        collection: 'project',
+                        featureId: self.activeProject.properties.id
+                    });
+
                     break;
 
                 case 'site':
@@ -1025,6 +1036,11 @@ angular.module('FieldDoc')
                         description: self.activeSite.properties.description,
                         linkTarget: '_self'
                     };
+
+                    self.loadMetrics(null, {
+                        collection: 'site',
+                        featureId: self.activeSite.properties.id
+                    });
 
                     //
                     // Update history item
@@ -1075,9 +1091,9 @@ angular.module('FieldDoc')
 
             // ProjectStore.filterAll(FilterStore.index);
 
-            self.loadMetrics([
-                obj
-            ]);
+            // self.loadMetrics([
+            //     obj
+            // ]);
 
             self.loadMetrics(null, {
                 collection: 'project',

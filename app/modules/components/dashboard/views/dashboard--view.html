@@ -67,7 +67,7 @@
             <!-- Back navigation -->
 
             <div class="navigation--control" data-ng-if="page.historyItem.label">
-                <button class="navigate--up" type="button" data-ng-click="page.navigateBack()">
+                <button class="navigate--up" type="button" data-ng-click="page.navigateBack(page.historyItem.type)">
                     <i class="material-icons">
                         keyboard_arrow_left
                     </i>
