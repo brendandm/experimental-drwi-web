@@ -279,7 +279,8 @@
 
                         // console.log('centroid', centroid);
 
-                        if (feature.geometry) {
+                        if (feature.geometry &&
+                            feature.geometry.coordinates) {
 
                             self.map.markers['project_' + index] = {
                                 lat: feature.geometry.coordinates[1],
