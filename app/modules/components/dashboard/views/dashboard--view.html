@@ -177,12 +177,12 @@
                                     </td>
                                     <td data-ng-if="metric.context_target" style="color: #e0e0e0;">
                                         <strong class="metrics--metric--percentage">
-                                            {{ (metric.current_value/metric.context_target)*100 }}%
+                                            {{ (metric.current_value/metric.context_target)*100 | number:1 }}%
                                         </strong>
                                     </td>
                                     <td data-ng-if="!metric.context_target" style="color: #e0e0e0;">
                                         <strong class="metrics--metric--percentage">
-                                            {{ (metric.current_value/metric.target)*100 }}%
+                                            {{ (metric.current_value/metric.target)*100 | number:1 }}%
                                         </strong>
                                     </td>
                                     <td data-ng-if="metric.context_target">
@@ -273,7 +273,6 @@
                         size="80"
                         stroke="#2196F3"
                         stroke-width="8"
-                        complete=".60"
                         complete="(page.selectedMetric.current_value/page.selectedMetric.self_target)"
                         background="rgba(0,0,0,0.2)">
                     </progress-arc>
@@ -298,14 +297,13 @@
                     <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.context_target | number:2 }}</span>
                 </div>
 
-                <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center;" data-ng-if="page.card.featureType === 'project'">
+                <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center;">
                     <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Site progress</span>
                     <br />
                     <progress-arc
                         size="80"
                         stroke="#2196F3"
                         stroke-width="8"
-                        complete=".60"
                         complete="(page.selectedMetric.current_value/page.selectedMetric.self_target)"
                         background="rgba(0,0,0,0.2)">
                     </progress-arc>
@@ -327,7 +325,7 @@
                         counter-clockwise="false"
                         background="rgba(0,0,0,0.2)">
                     </progress-arc>
-                    <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.target | number:2 }}</span>
+                    <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.context_target | number:2 }}</span>
                 </div>
 
                 <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center;">
@@ -337,7 +335,6 @@
                         size="80"
                         stroke="#2196F3"
                         stroke-width="8"
-                        complete=".60"
                         complete="(page.selectedMetric.current_value/page.selectedMetric.self_target)"
                         background="rgba(0,0,0,0.2)">
                     </progress-arc>
@@ -369,7 +366,6 @@
                         size="80"
                         stroke="#2196F3"
                         stroke-width="8"
-                        complete=".60"
                         complete="(page.selectedMetric.current_value/page.selectedMetric.context_target)"
                         background="rgba(0,0,0,0.2)">
                     </progress-arc>
