@@ -8,6 +8,64 @@
 .map,
 .leaflet-container.map {
   height: 30em;
+
+  .project--marker {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    //position: absolute;
+    //height: 24px;
+    //width: 24px;
+    //border: 2px solid #fff;
+    //border-radius: 4px;
+    //background: #123b9d;
+    //transform: rotate(45deg);
+
+    &:after {
+      content: '';
+      display: block;
+      //position: absolute;
+      top: 0;
+      left: 0;
+      height: 20px;
+      width: 20px;
+      border: 2px solid #fff;
+      border-radius: 8px;
+      background: #123b9d;
+      transform: rotate(45deg);
+    }
+
+  }
+
+  .marker--title {
+    font-family: Georgia,Cambria,"Times New Roman",Times,serif;
+    padding: 10px;
+  }
+
+  .border--right {
+    //padding-right: 1em;
+    border-right: 1px solid #e0e0e0;
+  }
+
+  .project--popup {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+
+    a {
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        align-items: center;
+        //margin-left: 1em;
+        text-decoration: none;
+        color: #123b9d;
+        padding: 0 1em;
+    }
+
+  }
+
 }
 
 .map.tall {
@@ -70,7 +128,8 @@
 //
 
 .leaflet-map-pane .leaflet-popup .leaflet-popup-tip {
-  margin: -16px auto 0;
+  //margin: -4px auto 0;
+  display: none !important;
 }
 
 .leaflet-popup-content-wrapper {

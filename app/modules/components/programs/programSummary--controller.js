@@ -63,16 +63,30 @@
                     }
                 };
 
-                self.map.defaults = {
-                    doubleClickZoom: false,
-                    dragging: false,
-                    keyboard: false,
-                    scrollWheelZoom: false,
-                    tap: false,
-                    touchZoom: false,
-                    maxZoom: 19,
-                    zoomControl: false
+                self.map.layers.overlays = {
+                    projects: {
+                        type: 'group',
+                        name: 'projects',
+                        visible: true,
+                        layerOptions: {
+                            showOnSelector: false
+                        },
+                        layerParams: {
+                            showOnSelector: false
+                        }
+                    }
                 };
+
+                // self.map.defaults = {
+                //     // doubleClickZoom: false,
+                //     // dragging: false,
+                //     // keyboard: false,
+                //     scrollWheelZoom: false,
+                //     // tap: false,
+                //     // touchZoom: false,
+                //     maxZoom: 19,
+                //     // zoomControl: false
+                // };
 
                 self.status = {
                     loading: true
@@ -244,28 +258,39 @@
 
                 };
 
+                self.popupTemplate = function(feature) {
+
+                    return '<div class=\"project--popup\">' +
+                        '<div class=\"marker--title border--right\">' + feature.properties.name + '</div>' +
+                        '<a href=\"projects/' + feature.properties.id + '\">' +
+                        '<i class=\"material-icons\">keyboard_arrow_right</i>' +
+                        '</a>' +
+                        '</div>';
+
+                };
+
                 self.processLocations = function(features) {
 
                     self.map.markers = {};
 
-                    features.forEach(function(feature) {
+                    features.forEach(function(feature, index) {
 
-                        var centroid = feature.centroid;
+                        // var centroid = feature.geometry;
 
-                        console.log('centroid', centroid);
+                        // console.log('centroid', centroid);
 
-                        if (centroid) {
+                        if (feature.geometry) {
 
-                            self.map.markers['project_' + feature.id] = {
-                                lat: centroid.coordinates[1],
-                                lng: centroid.coordinates[0],
+                            self.map.markers['project_' + index] = {
+                                lat: feature.geometry.coordinates[1],
+                                lng: feature.geometry.coordinates[0],
                                 layer: 'projects',
                                 focus: false,
                                 icon: {
                                     type: 'div',
                                     className: 'project--marker',
                                     iconSize: [24, 24],
-                                    popupAnchor: [-2, -10],
+                                    popupAnchor: [0, 0],
                                     html: ''
                                 },
                                 message: self.popupTemplate(feature)
@@ -349,17 +374,19 @@
 
                         });
 
-                        self.map.geojson = {
-                            data: successResponse,
-                            // onEachFeature: onEachFeature,
-                            style: {
-                                color: '#00D',
-                                fillColor: 'red',
-                                weight: 2.0,
-                                opacity: 0.6,
-                                fillOpacity: 0.2
-                            }
-                        };
+                        self.processLocations(successResponse.features);
+
+                        // self.map.geojson = {
+                        //     data: successResponse,
+                        //     // onEachFeature: onEachFeature,
+                        //     style: {
+                        //         color: '#00D',
+                        //         fillColor: 'red',
+                        //         weight: 2.0,
+                        //         opacity: 0.6,
+                        //         fillOpacity: 0.2
+                        //     }
+                        // };
 
                     }, function(errorResponse) {
 
