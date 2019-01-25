@@ -50,6 +50,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/dashboard/:id/outcomes')
                 },
+                progress: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/dashboard/:id/progress')
+                },
                 projects: {
                     method: 'GET',
                     isArray: false,

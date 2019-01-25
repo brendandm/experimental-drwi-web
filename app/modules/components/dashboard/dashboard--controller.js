@@ -642,18 +642,18 @@ angular.module('FieldDoc')
 
                 }
 
-                Dashboard.metrics({
+                Dashboard.progress({
                     id: $routeParams.dashboardId,
                     t: Date.now()
                 }).$promise.then(function(successResponse) {
 
-                    console.log('granteeResponse', successResponse);
+                    console.log('Dashboard.progress.successResponse', successResponse);
 
                     self.metrics = self.processMetrics(successResponse.features);
 
                 }, function(errorResponse) {
 
-                    console.log('errorResponse', errorResponse);
+                    console.log('Dashboard.progress.errorResponse', errorResponse);
 
                 });
 
