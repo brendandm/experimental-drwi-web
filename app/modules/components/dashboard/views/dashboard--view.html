@@ -250,18 +250,7 @@
 
             <p style="color: #e0e0e0;">{{ page.selectedMetric.description || 'No description' }}</p>
 
-            <!-- <div>
-                <strong class="metrics--metric--rollup--small" style="color: #e0e0e0;">{{ metric.installation | number:2 }}</strong> <span class="metrics--metric--rollup--label" style="color: #e0e0e0;">{{ metric.unit }}<br />
-                    of {{ metric.planning | number:2 }}</span>
-            </div>
-
-            <div>
-                <strong class="metrics--metric--percentage" style="color: #e0e0e0;">
-                    {{ (metric.installation/metric.planning)*100 | number:1 }}%
-                </strong>
-            </div> -->
-
-            <div style="display: flex; flex-flow: row nowrap; justify-content: center; align-items: center; padding: 1em 0; width: 100%;">
+            <div style="display: flex; flex-flow: row nowrap; justify-content: center; align-items: center; padding: 1em 0; width: 100%;" data-ng-if="page.card.featureType === 'project'">
 
                 <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center; ">
                     <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Program progress</span>
@@ -285,13 +274,31 @@
                         stroke="#2196F3"
                         stroke-width="8"
                         complete=".60"
-                        complete="(page.selectedMetric.current_value/page.selectedMetric.target)"
+                        complete="(page.selectedMetric.current_value/page.selectedMetric.self_target)"
                         background="rgba(0,0,0,0.2)">
                     </progress-arc>
-                    <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.target | number:2 }}</span>
+                    <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.self_target | number:2 }}</span>
                 </div>
 
-                <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center;" data-ng-if="page.card.featureType === 'site'">
+            </div>
+
+            <div style="display: flex; flex-flow: row nowrap; justify-content: center; align-items: center; padding: 1em 0; width: 100%;" data-ng-if="page.card.featureType === 'site'">
+
+                <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center; ">
+                    <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Project progress</span>
+                    <br />
+                    <progress-arc
+                        size="80"
+                        stroke="#2196F3"
+                        stroke-width="8"
+                        complete="(page.selectedMetric.current_value/page.selectedMetric.context_target)"
+                        counter-clockwise="false"
+                        background="rgba(0,0,0,0.2)">
+                    </progress-arc>
+                    <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.context_target | number:2 }}</span>
+                </div>
+
+                <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center;" data-ng-if="page.card.featureType === 'project'">
                     <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Site progress</span>
                     <br />
                     <progress-arc
@@ -299,13 +306,31 @@
                         stroke="#2196F3"
                         stroke-width="8"
                         complete=".60"
-                        complete="(metric.current_value/metric.context_target)"
+                        complete="(page.selectedMetric.current_value/page.selectedMetric.self_target)"
                         background="rgba(0,0,0,0.2)">
                     </progress-arc>
-                    <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.context_target | number:2 }}</span>
+                    <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.self_target | number:2 }}</span>
                 </div>
 
-                <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center;" data-ng-if="page.card.featureType === 'practice'">
+            </div>
+
+            <div style="display: flex; flex-flow: row nowrap; justify-content: center; align-items: center; padding: 1em 0; width: 100%;" data-ng-if="page.card.featureType === 'practice'">
+
+                <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center; ">
+                    <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Site progress</span>
+                    <br />
+                    <progress-arc
+                        size="80"
+                        stroke="#2196F3"
+                        stroke-width="8"
+                        complete="(page.selectedMetric.current_value/page.selectedMetric.context_target)"
+                        counter-clockwise="false"
+                        background="rgba(0,0,0,0.2)">
+                    </progress-arc>
+                    <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.target | number:2 }}</span>
+                </div>
+
+                <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center;">
                     <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Practice progress</span>
                     <br />
                     <progress-arc
@@ -313,13 +338,31 @@
                         stroke="#2196F3"
                         stroke-width="8"
                         complete=".60"
-                        complete="(metric.current_value/metric.context_target)"
+                        complete="(page.selectedMetric.current_value/page.selectedMetric.self_target)"
                         background="rgba(0,0,0,0.2)">
                     </progress-arc>
-                    <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.context_target | number:2 }}</span>
+                    <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.self_target | number:2 }}</span>
                 </div>
 
-                <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center;" data-ng-if="page.card.featureType === 'geography'">
+            </div>
+
+            <div style="display: flex; flex-flow: row nowrap; justify-content: center; align-items: center; padding: 1em 0; width: 100%;" data-ng-if="page.card.featureType === 'geography'">
+
+                <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center; ">
+                    <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Program progress</span>
+                    <br />
+                    <progress-arc
+                        size="80"
+                        stroke="#2196F3"
+                        stroke-width="8"
+                        complete="(page.selectedMetric.current_value/page.selectedMetric.target)"
+                        counter-clockwise="false"
+                        background="rgba(0,0,0,0.2)">
+                    </progress-arc>
+                    <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.target | number:2 }}</span>
+                </div>
+
+                <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center;">
                     <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Geography progress</span>
                     <br />
                     <progress-arc
@@ -327,25 +370,11 @@
                         stroke="#2196F3"
                         stroke-width="8"
                         complete=".60"
-                        complete="(metric.current_value/metric.context_target)"
+                        complete="(page.selectedMetric.current_value/page.selectedMetric.context_target)"
                         background="rgba(0,0,0,0.2)">
                     </progress-arc>
                     <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.context_target | number:2 }}</span>
                 </div>
-
-                <!-- <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center; ">
-                    <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Site progress</span>
-                    <br />
-                    <progress-arc
-                        size="80"
-                        stroke="#2196F3"
-                        stroke-width="8"
-                        complete=".80"
-                        counter-clockwise="false"
-                        background="rgba(0,0,0,0.2)">
-                    </progress-arc>
-                    <span style="display: block; margin-top: 2em; color: #e0e0e0;">$192k / $240k</span>
-                </div> -->
 
             </div>
 
