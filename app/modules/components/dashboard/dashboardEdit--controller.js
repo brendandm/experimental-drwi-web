@@ -264,7 +264,16 @@ angular.module('FieldDoc')
 
             self.scrubFeature = function(feature) {
 
-                var excludedKeys = [];
+                var excludedKeys = [
+                    'creator',
+                    'geographies',
+                    'geometry',
+                    'last_modified_by',
+                    'metrics',
+                    'projects',
+                    'tags',
+                    'tasks'
+                ];
 
                 var reservedProperties = [
                     'links',
