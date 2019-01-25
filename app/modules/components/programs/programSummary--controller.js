@@ -22,13 +22,15 @@
             'mapbox',
             'leafletData',
             'leafletBoundsHelpers',
-            'Program',            'program',
+            'Program',
+            'Project',
+            'program',
             function(Account, $location, $timeout, $log, $rootScope,
                 $route, Utility, user, $window, Map, mapbox, leafletData,
-                leafletBoundsHelpers, Program, program) {
+                leafletBoundsHelpers, Program, Project, program) {
 
                 var self = this;
-                
+
                 self.programId = $route.current.params.programId;
 
                 $rootScope.viewState = {
@@ -42,6 +44,24 @@
                 $rootScope.page = {};
 
                 self.map = JSON.parse(JSON.stringify(Map));
+
+                self.map.markers = {};
+
+                self.map.layers = {
+                    baselayers: {
+                        streets: {
+                            name: 'Streets',
+                            type: 'xyz',
+                            url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                            layerOptions: {
+                                apikey: mapbox.access_token,
+                                mapid: 'mapbox.streets',
+                                attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>',
+                                showOnSelector: false
+                            }
+                        }
+                    }
+                };
 
                 self.status = {
                     loading: true
@@ -95,9 +115,9 @@
 
                     switch (featureType) {
 
-                        case 'report':
+                        case 'project':
 
-                            targetCollection = Report;
+                            targetCollection = Project;
 
                             break;
 
@@ -213,6 +233,41 @@
 
                 };
 
+                self.processLocations = function(features) {
+
+                    self.map.markers = {};
+
+                    features.forEach(function(feature) {
+
+                        var centroid = feature.centroid;
+
+                        console.log('centroid', centroid);
+
+                        if (centroid) {
+
+                            self.map.markers['project_' + feature.id] = {
+                                lat: centroid.coordinates[1],
+                                lng: centroid.coordinates[0],
+                                layer: 'projects',
+                                focus: false,
+                                icon: {
+                                    type: 'div',
+                                    className: 'project--marker',
+                                    iconSize: [24, 24],
+                                    popupAnchor: [-2, -10],
+                                    html: ''
+                                },
+                                message: self.popupTemplate(feature)
+                            };
+
+                        }
+
+                    });
+
+                    console.log('self.map.markers', self.map.markers);
+
+                };
+
                 self.loadProgram = function() {
 
                     program.$promise.then(function(successResponse) {
@@ -229,6 +284,8 @@
 
                         self.loadMetrics();
 
+                        self.loadProjects();
+
                     }, function(errorResponse) {
 
 
@@ -243,17 +300,55 @@
                         id: self.program.id
                     }).$promise.then(function(successResponse) {
 
-                        console.log('Project metrics', successResponse);
+                        console.log('Program metrics', successResponse);
 
                         successResponse.features.forEach(function(metric) {
 
-                            var _percentComplete = +((metric.current_value/metric.target)*100).toFixed(0);
+                            var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
 
                             metric.percentComplete = _percentComplete;
 
                         });
 
                         self.metrics = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+                self.loadProjects = function() {
+
+                    Program.pointLayer({
+                        id: self.program.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Program projects', successResponse);
+
+                        var geoJsonLayer = L.geoJson(successResponse, {});
+
+                        leafletData.getMap('program--map').then(function(map) {
+
+                            map.fitBounds(geoJsonLayer.getBounds(), {
+                                maxZoom: 18
+                            });
+
+                        });
+
+                        self.map.geojson = {
+                            data: successResponse,
+                            // onEachFeature: onEachFeature,
+                            style: {
+                                color: '#00D',
+                                fillColor: 'red',
+                                weight: 2.0,
+                                opacity: 0.6,
+                                fillOpacity: 0.2
+                            }
+                        };
 
                     }, function(errorResponse) {
 

@@ -40,6 +40,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/program/:id/outcomes')
                 },
+                pointLayer: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/program/:id/point-layer')
+                },
                 practiceTypes: {
                     method: 'GET',
                     isArray: false,
