@@ -148,12 +148,12 @@
 
                 <section id="sites">
 
-                    <div class="list">
+                    <div class="list" style="padding: 0 2em;">
 
                         <table class="table table-practices with-metrics" data-ng-if="page.metrics">
                             <thead>
                                 <tr>
-                                    <th class="table-column-wide table-metrics-header" style="color: #e0e0e0;">Metric</th>
+                                    <th class="table-column-wide table-metrics-header" style="color: #e0e0e0;">&nbsp;</th>
                                     <th class="table-metrics-header" style="color: #e0e0e0;">Installed To-Date</th>
                                     <th class="table-metrics-header" style="color: #e0e0e0;">% Installed</th>
                                     <th>&nbsp;</th>
@@ -161,36 +161,59 @@
                             </thead>
 
                             <tbody class="metrics">
-                                <tr class="metrics--metric" style="cursor: pointer;" data-ng-repeat="metric in page.metrics track by $index" data-ng-click="page.showMetricModal(metric)">
+                                <tr class="metrics--metric" data-ng-repeat="metric in page.metrics track by $index" data-ng-click="page.showMetricModal(metric)">
                                     <td class="table-column-wide">
                                         <p class="metric--title" style="color: #e0e0e0;">
                                             {{ metric.name }}
                                         </p>
                                     </td>
-                                    <td>
-                                        <strong class="metrics--metric--rollup--small" style="color: #e0e0e0;">{{ metric.installation | number:2 }}</strong> <span class="metrics--metric--rollup--label" style="color: #e0e0e0;">{{ metric.unit }}<br />
-                                            of {{ metric.planning | number:2 }}</span>
+                                    <td data-ng-if="metric.context_target" style="color: #e0e0e0;">
+                                        <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
+                                            of {{ metric.context_target | number:2 }}</span>
                                     </td>
-                                    <td>
-                                        <strong class="metrics--metric--percentage" style="color: #e0e0e0;">
-                                            {{ (metric.installation/metric.planning)*100 | number:1 }}%
+                                    <td data-ng-if="!metric.context_target" style="color: #e0e0e0;">
+                                        <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
+                                            of {{ metric.target | number:2 }}</span>
+                                    </td>
+                                    <td data-ng-if="metric.context_target" style="color: #e0e0e0;">
+                                        <strong class="metrics--metric--percentage">
+                                            {{ (metric.current_value/metric.context_target)*100 }}%
                                         </strong>
                                     </td>
-                                    <td>
+                                    <td data-ng-if="!metric.context_target" style="color: #e0e0e0;">
+                                        <strong class="metrics--metric--percentage">
+                                            {{ (metric.current_value/metric.target)*100 }}%
+                                        </strong>
+                                    </td>
+                                    <td data-ng-if="metric.context_target">
                                         <progress-arc
                                             size="32"
                                             stroke="#2196F3"
                                             stroke-width="4"
-                                            complete="(metric.installation/metric.planning)"
+                                            complete="(metric.current_value/metric.context_target)"
+                                            counter-clockwise="false"
+                                            background="rgba(0,0,0,0.2)">
+                                        </progress-arc>
+                                    </td>
+                                    <td data-ng-if="!metric.context_target">
+                                        <progress-arc
+                                            size="32"
+                                            stroke="#2196F3"
+                                            stroke-width="4"
+                                            complete="(metric.current_value/metric.target)"
                                             counter-clockwise="false"
                                             background="rgba(0,0,0,0.2)">
                                         </progress-arc>
                                     </td>
                                 </tr>
                             </tbody>
+
                         </table>
+
                     </div>
+
                 </section>
+
             </div>
 
         </div>
@@ -225,7 +248,7 @@
                 {{ page.selectedMetric.name }}
             </h2>
 
-            <p style="color: #e0e0e0;">{{ page.selectedMetric.description || 'In the United States, the farm bill is the primary agricultural and food policy tool of the federal government. The comprehensive omnibus bill is renewed every 5 years or so and deals with both agriculture and all other affairs under the purview of the United States Department of Agriculture.' }}</p>
+            <p style="color: #e0e0e0;">{{ page.selectedMetric.description || 'No description' }}</p>
 
             <!-- <div>
                 <strong class="metrics--metric--rollup--small" style="color: #e0e0e0;">{{ metric.installation | number:2 }}</strong> <span class="metrics--metric--rollup--label" style="color: #e0e0e0;">{{ metric.unit }}<br />

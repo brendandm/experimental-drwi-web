@@ -9,7 +9,7 @@ angular.module('FieldDoc')
     .controller('DashboardController', function(Account, $location, $log, $interval, $timeout, Project, Map,
         baseProjects, $rootScope, $scope, Site, leafletData, leafletBoundsHelpers,
         MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox,
-        Practice, dashboard, $routeParams, Dashboard, Utility, user) {
+        Practice, GeographyService, dashboard, $routeParams, Dashboard, Utility, user) {
 
         $scope.filterStore = FilterStore;
 
@@ -305,10 +305,10 @@ angular.module('FieldDoc')
                             featureId: feature.properties.id
                         });
 
-                        self.loadOutcomes(null, {
-                            collection: 'site',
-                            featureId: feature.properties.id
-                        });
+                        // self.loadOutcomes(null, {
+                        //     collection: 'site',
+                        //     featureId: feature.properties.id
+                        // });
 
                         //
                         // Set value of `self.historyItem`
@@ -337,6 +337,11 @@ angular.module('FieldDoc')
                             linkTarget: '_self'
                         };
 
+                        self.loadMetrics(null, {
+                            collection: 'site',
+                            featureId: feature.properties.id
+                        });
+
                     } else if (layer.feature.properties.feature_type === 'practice') {
 
                         self.loadMetrics(null, {
@@ -344,10 +349,10 @@ angular.module('FieldDoc')
                             featureId: feature.properties.id
                         });
 
-                        self.loadOutcomes(null, {
-                            collection: 'practice',
-                            featureId: feature.properties.id
-                        });
+                        // self.loadOutcomes(null, {
+                        //     collection: 'practice',
+                        //     featureId: feature.properties.id
+                        // });
 
                         self.card = {
                             featureType: 'practice',
@@ -515,8 +520,43 @@ angular.module('FieldDoc')
 
                 if (options.collection === 'site') {
 
-                    Site.metrics({
-                        id: options.featureId
+                    Site.progress({
+                        id: options.featureId,
+                        t: Date.now()
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('granteeResponse', successResponse);
+
+                        self.metrics = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                } else if (options.collection === 'practice') {
+
+                    Practice.progress({
+                        id: options.featureId,
+                        t: Date.now()
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('granteeResponse', successResponse);
+
+                        self.metrics = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                } else if (options.collection === 'project') {
+
+                    Project.progress({
+                        id: options.featureId,
+                        t: Date.now()
                     }).$promise.then(function(successResponse) {
 
                         console.log('granteeResponse', successResponse);
@@ -531,8 +571,9 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    Practice.metrics({
-                        id: options.featureId
+                    GeographyService.progress({
+                        id: options.featureId,
+                        t: Date.now()
                     }).$promise.then(function(successResponse) {
 
                         console.log('granteeResponse', successResponse);
@@ -569,7 +610,8 @@ angular.module('FieldDoc')
                 }
 
                 Dashboard.metrics({
-                    id: $routeParams.dashboardId
+                    id: $routeParams.dashboardId,
+                    t: Date.now()
                 }).$promise.then(function(successResponse) {
 
                     console.log('granteeResponse', successResponse);
@@ -1004,9 +1046,14 @@ angular.module('FieldDoc')
                 obj
             ]);
 
-            self.loadOutcomes([
-                obj
-            ]);
+            self.loadMetrics(null, {
+                collection: 'project',
+                featureId: obj.id
+            });
+
+            // self.loadOutcomes([
+            //     obj
+            // ]);
 
             //
             // Set value of `self.historyItem`
