@@ -63,6 +63,17 @@
                     }
                 };
 
+                self.map.defaults = {
+                    doubleClickZoom: false,
+                    dragging: false,
+                    keyboard: false,
+                    scrollWheelZoom: false,
+                    tap: false,
+                    touchZoom: false,
+                    maxZoom: 19,
+                    zoomControl: false
+                };
+
                 self.status = {
                     loading: true
                 };
