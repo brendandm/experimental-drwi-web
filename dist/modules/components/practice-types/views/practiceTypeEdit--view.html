@@ -26,16 +26,16 @@
 
                         <div class="form-element">
                             <span class="meta-label"><b>Name</b></span>
-                            <input type="text" data-ng-model="page.practiceType.properties.name" class="form-control animate" id="name" name="name" placeholder="Practice name" />
+                            <input type="text" data-ng-model="page.practiceType.name" class="form-control animate" id="name" name="name" placeholder="Practice name" />
                         </div>
 
                         <!-- Practice Description -->
 
                         <div class="form-element">
                             <span class="meta-label"><b>Description</b></span>
-                            <textarea class="form-control" msd-elastic data-ng-model="page.practiceType.properties.description" maxlength="1000" rows="10">{{ page.practiceType.properties.description }}</textarea>
+                            <textarea class="form-control" msd-elastic data-ng-model="page.practiceType.description" maxlength="1000" rows="10">{{ page.practiceType.description }}</textarea>
                             <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
-                                Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.practiceType.properties.description.length || 0) | number }} used)</strong>
+                                Descriptions may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.practiceType.description.length || 0) | number }} used)</strong>
                             </p>
                         </div>
 
@@ -43,7 +43,7 @@
 
                         <div class="form-element" data-ng-if="$root.user.properties.is_admin || $root.user.properties.is_manager">
                             <span class="meta-label"><b>Program</b></span>
-                            <input id="practice_type_program_id" name="practice_type_program_id" type="text" placeholder="Search programs&hellip;" data-ng-model="page.practiceType.properties.program" uib-typeahead="program as program.name for program in page.programs | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
+                            <input id="practice_type_program_id" name="practice_type_program_id" type="text" placeholder="Search programs&hellip;" data-ng-model="page.practiceType.program" uib-typeahead="program as program.name for program in page.programs | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html">
                         </div>
 
                         <div class="save--action--wrapper save--action--bottom">
@@ -70,14 +70,14 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li>
-                <a href="/practice-types/{{ page.practiceType.properties.id }}">
+                <a href="/practice-types/{{ page.practiceType.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/practice-types/{{ page.practiceType.properties.id }}/edit">
+                <a href="/practice-types/{{ page.practiceType.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>

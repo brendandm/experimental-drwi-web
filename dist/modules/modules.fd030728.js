@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548269983487})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548435914142})
 
 ;
 /**
@@ -5127,21 +5127,21 @@ angular.module('FieldDoc')
                         });
                         
                     },
-                    metrics: function(Project, $route) {
-                        return Project.metrics({
-                            id: $route.current.params.projectId
-                        });
-                    },
+                    // metrics: function(Project, $route) {
+                    //     return Project.metrics({
+                    //         id: $route.current.params.projectId
+                    //     });
+                    // },
                     // nodes: function(Site, $route) {
                     //     return Site.nodes({
                     //         id: $route.current.params.projectId
                     //     });
                     // },
-                    outcomes: function(Project, $route) {
-                        return Project.outcomes({
-                            id: $route.current.params.projectId
-                        });
-                    },
+                    // outcomes: function(Project, $route) {
+                    //     return Project.outcomes({
+                    //         id: $route.current.params.projectId
+                    //     });
+                    // },
                     sites: function(Project, $route) {
                         return Project.sites({
                             id: $route.current.params.projectId
@@ -5840,7 +5840,7 @@ angular.module('FieldDoc')
         function(Account, Notifications, $rootScope, Project, $routeParams,
             $scope, $location, Map, mapbox, Site, user, $window,
             leafletData, leafletBoundsHelpers, $timeout, Practice, project,
-            metrics, outcomes, sites, Utility, $interval) {
+            sites, Utility, $interval) {
 
             var self = this;
 
@@ -5987,6 +5987,8 @@ angular.module('FieldDoc')
                             }
 
                         });
+
+                        self.loadMetrics();
 
                         self.loadSites();
 
@@ -6296,13 +6298,15 @@ angular.module('FieldDoc')
 
             self.loadMetrics = function() {
 
-                metrics.$promise.then(function(successResponse) {
+                Project.progress({
+                    id: self.project.id
+                }).$promise.then(function(successResponse) {
 
                     console.log('Project metrics', successResponse);
 
                     successResponse.features.forEach(function(metric) {
 
-                        var _percentComplete = +((metric.installation / metric.planning) * 100).toFixed(0);
+                        var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
 
                         metric.percentComplete = _percentComplete;
 
@@ -6316,23 +6320,43 @@ angular.module('FieldDoc')
 
                 });
 
+                // metrics.$promise.then(function(successResponse) {
+
+                //     console.log('Project metrics', successResponse);
+
+                //     successResponse.features.forEach(function(metric) {
+
+                //         var _percentComplete = +((metric.installation / metric.planning) * 100).toFixed(0);
+
+                //         metric.percentComplete = _percentComplete;
+
+                //     });
+
+                //     self.metrics = successResponse.features;
+
+                // }, function(errorResponse) {
+
+                //     console.log('errorResponse', errorResponse);
+
+                // });
+
             };
 
-            self.loadOutcomes = function() {
+            // self.loadOutcomes = function() {
 
-                outcomes.$promise.then(function(successResponse) {
+            //     outcomes.$promise.then(function(successResponse) {
 
-                    console.log('Project outcomes', successResponse);
+            //         console.log('Project outcomes', successResponse);
 
-                    self.outcomes = successResponse;
+            //         self.outcomes = successResponse;
 
-                }, function(errorResponse) {
+            //     }, function(errorResponse) {
 
-                    console.log('errorResponse', errorResponse);
+            //         console.log('errorResponse', errorResponse);
 
-                });
+            //     });
 
-            };
+            // };
 
             //
             // Verify Account information for proper UI element display
@@ -6355,9 +6379,9 @@ angular.module('FieldDoc')
 
                     self.loadProject();
 
-                    self.loadMetrics();
+                    // self.loadMetrics();
 
-                    self.loadOutcomes();
+                    // self.loadOutcomes();
 
                 });
 
@@ -10048,21 +10072,21 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    metrics: function(Site, $route) {
-                        return Site.metrics({
-                            id: $route.current.params.siteId
-                        });
-                    },
+                    // metrics: function(Site, $route) {
+                    //     return Site.metrics({
+                    //         id: $route.current.params.siteId
+                    //     });
+                    // },
                     nodes: function(Site, $route) {
                         return Site.nodes({
                             id: $route.current.params.siteId
                         });
                     },
-                    outcomes: function(Site, $route) {
-                        return Site.outcomes({
-                            id: $route.current.params.siteId
-                        });
-                    },
+                    // outcomes: function(Site, $route) {
+                    //     return Site.outcomes({
+                    //         id: $route.current.params.siteId
+                    //     });
+                    // },
                     practices: function(Site, $route) {
                         return Site.practices({
                             id: $route.current.params.siteId
@@ -10315,7 +10339,7 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('SiteSummaryController',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
-                $route, nodes, user, Utility, metrics, outcomes, site, Map, mapbox, leafletData,
+                $route, nodes, user, Utility, site, Map, mapbox, leafletData,
                 leafletBoundsHelpers, Site, Project, practices, $interval) {
 
                 var self = this;
@@ -10622,6 +10646,8 @@ angular.module('FieldDoc')
 
                         }
 
+                        self.loadMetrics();
+
                         self.showElements();
 
                     });
@@ -10651,35 +10677,21 @@ angular.module('FieldDoc')
 
                 self.loadMetrics = function() {
 
-                    metrics.$promise.then(function(successResponse) {
+                    Site.progress({
+                        id: self.site.id
+                    }).$promise.then(function(successResponse) {
 
                         console.log('Project metrics', successResponse);
 
                         successResponse.features.forEach(function(metric) {
 
-                            var _percentComplete = +((metric.installation / metric.planning) * 100).toFixed(0);
+                            var _percentComplete = +((metric.current_value / metric.context_target) * 100).toFixed(0);
 
                             metric.percentComplete = _percentComplete;
 
                         });
 
                         self.metrics = successResponse.features;
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                    });
-
-                };
-
-                self.loadOutcomes = function() {
-
-                    outcomes.$promise.then(function(successResponse) {
-
-                        console.log('Project outcomes', successResponse);
-
-                        self.outcomes = successResponse;
 
                     }, function(errorResponse) {
 
@@ -10705,10 +10717,6 @@ angular.module('FieldDoc')
                         };
 
                         self.loadSite();
-
-                        self.loadMetrics();
-
-                        self.loadOutcomes();
 
                     });
 
@@ -14265,16 +14273,16 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    metrics: function(Practice, $route) {
-                        return Practice.metrics({
-                            id: $route.current.params.practiceId
-                        });
-                    },
-                    outcomes: function(Practice, $route) {
-                        return Practice.outcomes({
-                            id: $route.current.params.practiceId
-                        });
-                    },
+                    // metrics: function(Practice, $route) {
+                    //     return Practice.metrics({
+                    //         id: $route.current.params.practiceId
+                    //     });
+                    // },
+                    // outcomes: function(Practice, $route) {
+                    //     return Practice.outcomes({
+                    //         id: $route.current.params.practiceId
+                    //     });
+                    // },
                     practice: function(Practice, $route) {
                         return Practice.get({
                             id: $route.current.params.practiceId
@@ -14322,12 +14330,12 @@ angular.module('FieldDoc')
                         return MonitoringType.query({
                             results_per_page: 500
                         });
-                    },
-                    unit_types: function(UnitType, $route) {
-                        return UnitType.query({
-                            results_per_page: 500
-                        });
                     }
+                    // unit_types: function(UnitType, $route) {
+                    //     return UnitType.query({
+                    //         results_per_page: 500
+                    //     });
+                    // }
 
                 }
             })
@@ -14658,10 +14666,6 @@ angular.module('FieldDoc')
                 self.permissions.can_edit = successResponse.permissions.write;
                 self.permissions.can_delete = successResponse.permissions.write;
 
-                delete self.practice.organization;
-                delete self.practice.project;
-                delete self.practice.site;
-
                 if (successResponse.category) {
 
                     self.practiceType = successResponse.category;
@@ -14675,7 +14679,7 @@ angular.module('FieldDoc')
                 //
 
                 PracticeType.collection({
-                    program: self.practice.program_id
+                    program: self.practice.project.program_id
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.practiceTypes', successResponse);
@@ -14921,12 +14925,10 @@ angular.module('FieldDoc')
             'leafletData',
             'leafletBoundsHelpers',
             'Practice',
-            'metrics',
-            'outcomes',
             'practice',
             function(Account, $location, $timeout, $log, Report, $rootScope,
                 $route, Utility, user, Project, Site, $window, Map, mapbox,
-                leafletData, leafletBoundsHelpers, Practice, metrics, outcomes, practice) {
+                leafletData, leafletBoundsHelpers, Practice, practice) {
 
                 var self = this,
                     practiceId = $route.current.params.practiceId;
@@ -15020,7 +15022,7 @@ angular.module('FieldDoc')
                             typeof index === 'number' &&
                             featureType === 'report') {
 
-                            self.practice.readings_custom.splice(index, 1);
+                            self.practice.reports.splice(index, 1);
 
                             self.cancelDelete();
 
@@ -15181,9 +15183,58 @@ angular.module('FieldDoc')
 
                         self.loadReports();
 
+                        self.loadMetrics();
+
                     }, function(errorResponse) {
 
                         self.status.loading = false;
+
+                    });
+
+                };
+
+                self.addReading = function(measurementPeriod) {
+
+                    var newReading = new Report({
+                        'measurement_period': 'Installation',
+                        'report_date': new Date(),
+                        'practice_id': practiceId,
+                        'organization_id': self.practice.organization_id
+                    });
+
+                    newReading.$save().then(function(successResponse) {
+
+                        $location.path('/reports/' + successResponse.id + '/edit');
+
+                    }, function(errorResponse) {
+
+                        console.error('ERROR: ', errorResponse);
+
+                    });
+
+                };
+
+                self.loadMetrics = function() {
+
+                    Practice.progress({
+                        id: self.practice.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Project metrics', successResponse);
+
+                        successResponse.features.forEach(function(metric) {
+
+                            var _percentComplete = +((metric.current_value/metric.context_target)*100).toFixed(0);
+
+                            metric.percentComplete = _percentComplete;
+
+                        });
+
+                        self.metrics = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
 
                     });
 
@@ -15207,73 +15258,8 @@ angular.module('FieldDoc')
 
                         self.loadPractice();
 
-                        self.loadMetrics();
-
-                        self.loadOutcomes();
-
                     });
                 }
-
-                self.addReading = function(measurementPeriod) {
-
-                    var newReading = new Report({
-                        'measurement_period': 'Planning',
-                        'report_date': new Date(),
-                        'practice_id': practiceId,
-                        'organization_id': self.practice.organization_id
-                    });
-
-                    newReading.$save().then(function(successResponse) {
-
-                        $location.path('/reports/' + successResponse.id + '/edit');
-
-                    }, function(errorResponse) {
-
-                        console.error('ERROR: ', errorResponse);
-
-                    });
-
-                };
-
-                self.loadMetrics = function() {
-
-                    metrics.$promise.then(function(successResponse) {
-
-                        console.log('Project metrics', successResponse);
-
-                        successResponse.features.forEach(function(metric) {
-
-                            var _percentComplete = +((metric.installation/metric.planning)*100).toFixed(0);
-
-                            metric.percentComplete = _percentComplete;
-
-                        });
-
-                        self.metrics = successResponse.features;
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                    });
-
-                };
-
-                self.loadOutcomes = function() {
-
-                    outcomes.$promise.then(function(successResponse) {
-
-                        console.log('Project outcomes', successResponse);
-
-                        self.outcomes = successResponse;
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                    });
-
-                };
 
             }
         ]);
@@ -18111,7 +18097,7 @@ angular.module('FieldDoc')
         .controller('ReportEditController',
             function(Account, $location, MetricType, monitoring_types,
                 Practice, Report, ReportMetric, ReportMonitoring, report,
-                $rootScope, $route, $scope, unit_types, user, Utility,
+                $rootScope, $route, $scope, user, Utility,
                 $timeout, report_metrics, $filter, $interval, Program) {
 
                 var self = this;
@@ -18119,16 +18105,22 @@ angular.module('FieldDoc')
                 self.measurementPeriods = [{
                         'name': 'Installation',
                         'description': null
-                    },
-                    {
-                        'name': 'Planning',
-                        'description': null
-                    },
-                    {
-                        'name': 'Monitoring',
-                        'description': null
                     }
                 ];
+
+                // self.measurementPeriods = [{
+                //         'name': 'Installation',
+                //         'description': null
+                //     },
+                //     {
+                //         'name': 'Planning',
+                //         'description': null
+                //     },
+                //     {
+                //         'name': 'Monitoring',
+                //         'description': null
+                //     }
+                // ];
 
                 $rootScope.page = {};
 
@@ -18148,11 +18140,11 @@ angular.module('FieldDoc')
 
                 self.alerts = [];
 
-                function closeAlerts() {
+                self.closeAlerts = function() {
 
                     self.alerts = [];
 
-                }
+                };
 
                 function closeRoute() {
 
@@ -18185,28 +18177,6 @@ angular.module('FieldDoc')
                     }, 1000);
 
                 };
-
-                unit_types.$promise.then(function(successResponse) {
-
-                    console.log('Unit types', successResponse);
-
-                    var _unitTypes = [];
-
-                    successResponse.features.forEach(function(datum) {
-
-                        datum.name = datum.plural;
-
-                        _unitTypes.push(datum);
-
-                    });
-
-                    self.unitTypes = _unitTypes;
-
-                }, function(errorResponse) {
-
-                    console.log('errorResponse', errorResponse);
-
-                });
 
                 self.loadMetrics = function() {
 
@@ -19186,12 +19156,10 @@ angular.module('FieldDoc')
 
         self.parseFeature = function(data) {
 
-            if (data.properties.program &&
-                typeof data.properties.program !== 'undefined') {
+            if (data.program &&
+                typeof data.program !== 'undefined') {
 
-                data.properties.program = data.properties.program.properties;
-
-                self.programId = data.properties.program_id;
+                self.programId = data.program_id;
 
             }
 
@@ -19219,9 +19187,9 @@ angular.module('FieldDoc')
                 self.permissions.can_edit = successResponse.permissions.write;
                 self.permissions.can_delete = successResponse.permissions.write;
 
-                $rootScope.page.title = self.practiceType.properties.name ? self.practiceType.properties.name : 'Un-named Practice Type';
+                $rootScope.page.title = self.practiceType.name ? self.practiceType.name : 'Un-named Practice Type';
 
-                self.scrubFeature();
+                self.scrubFeature(self.practiceType);
 
                 self.showElements();
 
@@ -19233,12 +19201,44 @@ angular.module('FieldDoc')
 
         };
 
-        self.scrubFeature = function() {
+        self.scrubFeature = function(feature) {
 
-            delete self.practiceType.geometry;
-            delete self.practiceType.properties.creator;
-            delete self.practiceType.properties.last_modified_by;
-            delete self.practiceType.properties.organization;
+            var excludedKeys = [
+                'creator',
+                'extent',
+                'geometry',
+                'last_modified_by',
+                'organization',
+                'tags',
+                'tasks'
+            ];
+
+            var reservedProperties = [
+                'links',
+                'permissions',
+                '$promise',
+                '$resolved'
+            ];
+
+            excludedKeys.forEach(function(key) {
+
+                if (feature.properties) {
+
+                    delete feature.properties[key];
+
+                } else {
+
+                    delete feature[key];
+
+                }
+
+            });
+
+            reservedProperties.forEach(function(key) {
+
+                delete feature[key];
+
+            });
 
         };
 
@@ -19246,11 +19246,11 @@ angular.module('FieldDoc')
 
             self.status.processing = true;
 
-            self.scrubFeature();
+            self.scrubFeature(self.practiceType);
 
             PracticeType.update({
                 id: self.practiceType.id
-            }, self.practiceType.properties).$promise.then(function(successResponse) {
+            }, self.practiceType).then(function(successResponse) {
 
                 self.practiceType = self.parseFeature(successResponse);
 
@@ -19308,7 +19308,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this practice type.',
+                        'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this practice type.',
                         'prompt': 'OK'
                     }];
 
@@ -19935,18 +19935,18 @@ angular.module('FieldDoc')
 
             self.metricType = datum;
 
-            self.programId = self.metricType.properties.program_id;
+            self.programId = self.metricType.program_id;
 
-            if (self.metricType.properties.unit) {
+            if (self.metricType.unit) {
 
-                self.unitType = self.parseUnit(self.metricType.properties.unit.properties);
+                self.unitType = self.parseUnit(self.metricType.unit);
 
             }
 
-            if (self.metricType.properties.program &&
-                typeof self.metricType.properties.program !== 'undefined') {
+            if (self.metricType.program &&
+                typeof self.metricType.program !== 'undefined') {
 
-                self.metricType.properties.program = self.metricType.properties.program.properties;
+                self.metricType.program = self.metricType.program;
 
             }
 
@@ -19970,9 +19970,9 @@ angular.module('FieldDoc')
                 self.permissions.can_edit = successResponse.permissions.write;
                 self.permissions.can_delete = successResponse.permissions.write;
 
-                $rootScope.page.title = self.metricType.properties.name ? self.metricType.properties.name : 'Un-named Metric Type';
+                $rootScope.page.title = self.metricType.name ? self.metricType.name : 'Un-named Metric Type';
 
-                self.scrubFeature();
+                self.scrubFeature(self.metricType);
 
                 self.showElements();
 
@@ -20004,13 +20004,45 @@ angular.module('FieldDoc')
 
         };
 
-        self.scrubFeature = function() {
+        self.scrubFeature = function(feature) {
 
-            delete self.metricType.geometry;
-            delete self.metricType.properties.organization;
-            delete self.metricType.properties.creator;
-            delete self.metricType.properties.last_modified_by;
-            delete self.metricType.properties.unit;
+            var excludedKeys = [
+                'creator',
+                'extent',
+                'geometry',
+                'last_modified_by',
+                'organization',
+                'tags',
+                'tasks',
+                'unit'
+            ];
+
+            var reservedProperties = [
+                'links',
+                'permissions',
+                '$promise',
+                '$resolved'
+            ];
+
+            excludedKeys.forEach(function(key) {
+
+                if (feature.properties) {
+
+                    delete feature.properties[key];
+
+                } else {
+
+                    delete feature[key];
+
+                }
+
+            });
+
+            reservedProperties.forEach(function(key) {
+
+                delete feature[key];
+
+            });
 
         };
 
@@ -20018,18 +20050,18 @@ angular.module('FieldDoc')
 
             self.status.processing = true;
 
-            self.scrubFeature();
+            self.scrubFeature(self.metricType);
 
             if (self.unitType &&
                 typeof self.unitType !== 'string') {
 
-                self.metricType.properties.unit_id = self.unitType.id;
+                self.metricType.unit_id = self.unitType.id;
 
             }
 
             MetricType.update({
                 id: self.metricType.id
-            }, self.metricType.properties).$promise.then(function(successResponse) {
+            }, self.metricType).then(function(successResponse) {
 
                 self.parseFeature(successResponse);
 
@@ -20087,7 +20119,7 @@ angular.module('FieldDoc')
                     self.alerts = [{
                         'type': 'error',
                         'flag': 'Error!',
-                        'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this metric type.',
+                        'msg': 'Unable to delete “' + self.deletionTarget.name + '”. There are pending tasks affecting this metric type.',
                         'prompt': 'OK'
                     }];
 
@@ -20123,7 +20155,7 @@ angular.module('FieldDoc')
 
             self.unitType = $item;
 
-            self.metricType.properties.unit_id = $item.id;
+            self.metricType.unit_id = $item.id;
 
         };
 
@@ -21101,24 +21133,24 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    metrics: function(GeographyService, $route) {
+                    // metrics: function(GeographyService, $route) {
 
-                        return {};
+                    //     return {};
 
-                        // return GeographyService.metrics({
-                        //     id: $route.current.params.geographyId
-                        // });
+                    //     // return GeographyService.metrics({
+                    //     //     id: $route.current.params.geographyId
+                    //     // });
 
-                    },
-                    outcomes: function(GeographyService, $route) {
+                    // },
+                    // outcomes: function(GeographyService, $route) {
 
-                        return {};
+                    //     return {};
 
-                        // return GeographyService.outcomes({
-                        //     id: $route.current.params.geographyId
-                        // });
+                    //     // return GeographyService.outcomes({
+                    //     //     id: $route.current.params.geographyId
+                    //     // });
 
-                    },
+                    // },
                     geography: function(GeographyService, $route) {
 
                         return GeographyService.get({
@@ -21599,7 +21631,7 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('GeographySummaryController',
             function(Account, $location, $window, $timeout, $rootScope, $scope, $route,
-                user, Utility, metrics, outcomes, geography, Map, mapbox, leafletData,
+                user, Utility, geography, Map, mapbox, leafletData,
                 leafletBoundsHelpers, GeographyService, $interval) {
 
                 var self = this;
@@ -21630,6 +21662,17 @@ angular.module('FieldDoc')
                             }
                         }
                     }
+                };
+
+                self.map.defaults = {
+                    doubleClickZoom: false,
+                    dragging: false,
+                    keyboard: false,
+                    scrollWheelZoom: false,
+                    tap: false,
+                    touchZoom: false,
+                    maxZoom: 19,
+                    zoomControl: false
                 };
 
                 self.status = {
@@ -21841,6 +21884,8 @@ angular.module('FieldDoc')
 
                         }
 
+                        self.loadMetrics();
+
                         self.showElements();
 
                     });
@@ -21849,35 +21894,21 @@ angular.module('FieldDoc')
 
                 self.loadMetrics = function() {
 
-                    metrics.$promise.then(function(successResponse) {
+                    GeographyService.progress({
+                        id: self.geography.id
+                    }).$promise.then(function(successResponse) {
 
                         console.log('Project metrics', successResponse);
 
                         successResponse.features.forEach(function(metric) {
 
-                            var _percentComplete = +((metric.installation / metric.planning) * 100).toFixed(0);
+                            var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
 
                             metric.percentComplete = _percentComplete;
 
                         });
 
                         self.metrics = successResponse.features;
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                    });
-
-                };
-
-                self.loadOutcomes = function() {
-
-                    outcomes.$promise.then(function(successResponse) {
-
-                        console.log('Project outcomes', successResponse);
-
-                        self.outcomes = successResponse;
 
                     }, function(errorResponse) {
 
@@ -21903,10 +21934,6 @@ angular.module('FieldDoc')
                         };
 
                         self.loadGeography();
-
-                        // self.loadMetrics();
-
-                        // self.loadOutcomes();
 
                     });
 
@@ -23595,16 +23622,16 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    metrics: function(Program, $route) {
-                        return Program.metrics({
-                            id: $route.current.params.programId
-                        });
-                    },
-                    outcomes: function(Program, $route) {
-                        return Program.outcomes({
-                            id: $route.current.params.programId
-                        });
-                    },
+                    // metrics: function(Program, $route) {
+                    //     return Program.metrics({
+                    //         id: $route.current.params.programId
+                    //     });
+                    // },
+                    // outcomes: function(Program, $route) {
+                    //     return Program.outcomes({
+                    //         id: $route.current.params.programId
+                    //     });
+                    // },
                     program: function(Program, $route) {
                         return Program.get({
                             id: $route.current.params.programId
@@ -24016,15 +24043,14 @@ angular.module('FieldDoc')
             'leafletData',
             'leafletBoundsHelpers',
             'Program',
-            'metrics',
-            'outcomes',
+            'Project',
             'program',
             function(Account, $location, $timeout, $log, $rootScope,
                 $route, Utility, user, $window, Map, mapbox, leafletData,
-                leafletBoundsHelpers, Program, metrics, outcomes, program) {
+                leafletBoundsHelpers, Program, Project, program) {
 
                 var self = this;
-                
+
                 self.programId = $route.current.params.programId;
 
                 $rootScope.viewState = {
@@ -24038,6 +24064,49 @@ angular.module('FieldDoc')
                 $rootScope.page = {};
 
                 self.map = JSON.parse(JSON.stringify(Map));
+
+                self.map.markers = {};
+
+                self.map.layers = {
+                    baselayers: {
+                        streets: {
+                            name: 'Streets',
+                            type: 'xyz',
+                            url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                            layerOptions: {
+                                apikey: mapbox.access_token,
+                                mapid: 'mapbox.streets',
+                                attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>',
+                                showOnSelector: false
+                            }
+                        }
+                    }
+                };
+
+                self.map.layers.overlays = {
+                    projects: {
+                        type: 'group',
+                        name: 'projects',
+                        visible: true,
+                        layerOptions: {
+                            showOnSelector: false
+                        },
+                        layerParams: {
+                            showOnSelector: false
+                        }
+                    }
+                };
+
+                // self.map.defaults = {
+                //     // doubleClickZoom: false,
+                //     // dragging: false,
+                //     // keyboard: false,
+                //     scrollWheelZoom: false,
+                //     // tap: false,
+                //     // touchZoom: false,
+                //     maxZoom: 19,
+                //     // zoomControl: false
+                // };
 
                 self.status = {
                     loading: true
@@ -24091,9 +24160,9 @@ angular.module('FieldDoc')
 
                     switch (featureType) {
 
-                        case 'report':
+                        case 'project':
 
-                            targetCollection = Report;
+                            targetCollection = Project;
 
                             break;
 
@@ -24209,6 +24278,52 @@ angular.module('FieldDoc')
 
                 };
 
+                self.popupTemplate = function(feature) {
+
+                    return '<div class=\"project--popup\">' +
+                        '<div class=\"marker--title border--right\">' + feature.properties.name + '</div>' +
+                        '<a href=\"projects/' + feature.properties.id + '\">' +
+                        '<i class=\"material-icons\">keyboard_arrow_right</i>' +
+                        '</a>' +
+                        '</div>';
+
+                };
+
+                self.processLocations = function(features) {
+
+                    self.map.markers = {};
+
+                    features.forEach(function(feature, index) {
+
+                        // var centroid = feature.geometry;
+
+                        // console.log('centroid', centroid);
+
+                        if (feature.geometry) {
+
+                            self.map.markers['project_' + index] = {
+                                lat: feature.geometry.coordinates[1],
+                                lng: feature.geometry.coordinates[0],
+                                layer: 'projects',
+                                focus: false,
+                                icon: {
+                                    type: 'div',
+                                    className: 'project--marker',
+                                    iconSize: [24, 24],
+                                    popupAnchor: [0, 0],
+                                    html: ''
+                                },
+                                message: self.popupTemplate(feature)
+                            };
+
+                        }
+
+                    });
+
+                    console.log('self.map.markers', self.map.markers);
+
+                };
+
                 self.loadProgram = function() {
 
                     program.$promise.then(function(successResponse) {
@@ -24223,9 +24338,79 @@ angular.module('FieldDoc')
 
                         self.status.loading = false;
 
+                        self.loadMetrics();
+
+                        self.loadProjects();
+
                     }, function(errorResponse) {
 
 
+
+                    });
+
+                };
+
+                self.loadMetrics = function() {
+
+                    Program.progress({
+                        id: self.program.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Program metrics', successResponse);
+
+                        successResponse.features.forEach(function(metric) {
+
+                            var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
+
+                            metric.percentComplete = _percentComplete;
+
+                        });
+
+                        self.metrics = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+                self.loadProjects = function() {
+
+                    Program.pointLayer({
+                        id: self.program.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Program projects', successResponse);
+
+                        var geoJsonLayer = L.geoJson(successResponse, {});
+
+                        leafletData.getMap('program--map').then(function(map) {
+
+                            map.fitBounds(geoJsonLayer.getBounds(), {
+                                maxZoom: 18
+                            });
+
+                        });
+
+                        self.processLocations(successResponse.features);
+
+                        // self.map.geojson = {
+                        //     data: successResponse,
+                        //     // onEachFeature: onEachFeature,
+                        //     style: {
+                        //         color: '#00D',
+                        //         fillColor: 'red',
+                        //         weight: 2.0,
+                        //         opacity: 0.6,
+                        //         fillOpacity: 0.2
+                        //     }
+                        // };
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
 
                     });
 
@@ -24249,52 +24434,8 @@ angular.module('FieldDoc')
 
                         self.loadProgram();
 
-                        self.loadMetrics();
-
-                        self.loadOutcomes();
-
                     });
                 }
-
-                self.loadMetrics = function() {
-
-                    metrics.$promise.then(function(successResponse) {
-
-                        console.log('Project metrics', successResponse);
-
-                        successResponse.features.forEach(function(metric) {
-
-                            var _percentComplete = +((metric.installation/metric.planning)*100).toFixed(0);
-
-                            metric.percentComplete = _percentComplete;
-
-                        });
-
-                        self.metrics = successResponse.features;
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                    });
-
-                };
-
-                self.loadOutcomes = function() {
-
-                    outcomes.$promise.then(function(successResponse) {
-
-                        console.log('Project outcomes', successResponse);
-
-                        self.outcomes = successResponse;
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                    });
-
-                };
 
             }
         ]);
@@ -29928,6 +30069,11 @@ angular
                     'url': environment.apiUrl.concat('/v1/geography/:id/outcomes'),
                     'isArray': false
                 },
+                progress: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/geography/:id/progress')
+                },
                 tasks: {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/geography/:id/tasks'),
@@ -30262,6 +30408,11 @@ angular
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_custom'),
                     'isArray': false
                 },
+                progress: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/progress')
+                },
                 tags: {
                     method: 'GET',
                     isArray: false,
@@ -30510,10 +30661,20 @@ angular
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/program/:id/outcomes')
                 },
+                pointLayer: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/program/:id/point-layer')
+                },
                 practiceTypes: {
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/program/:id/practice-type')
+                },
+                progress: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/program/:id/progress')
                 },
                 projects: {
                     method: 'GET',
@@ -30571,6 +30732,11 @@ angular
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/project/:id/partnerships')
+                },
+                progress: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/project/:id/progress')
                 },
                 sites: {
                     method: 'GET',
@@ -30800,6 +30966,11 @@ angular
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/site/:id/practices')
+                },
+                progress: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/site/:id/progress')
                 },
                 tags: {
                     method: 'GET',
