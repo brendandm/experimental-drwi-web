@@ -54,24 +54,24 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    metrics: function(GeographyService, $route) {
+                    // metrics: function(GeographyService, $route) {
 
-                        return {};
+                    //     return {};
 
-                        // return GeographyService.metrics({
-                        //     id: $route.current.params.geographyId
-                        // });
+                    //     // return GeographyService.metrics({
+                    //     //     id: $route.current.params.geographyId
+                    //     // });
 
-                    },
-                    outcomes: function(GeographyService, $route) {
+                    // },
+                    // outcomes: function(GeographyService, $route) {
 
-                        return {};
+                    //     return {};
 
-                        // return GeographyService.outcomes({
-                        //     id: $route.current.params.geographyId
-                        // });
+                    //     // return GeographyService.outcomes({
+                    //     //     id: $route.current.params.geographyId
+                    //     // });
 
-                    },
+                    // },
                     geography: function(GeographyService, $route) {
 
                         return GeographyService.get({

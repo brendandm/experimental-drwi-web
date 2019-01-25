@@ -49,18 +49,18 @@
 
                                 <p>{{ (geography.description || 'No description') | truncate:80 }}</p>
 
-                                <!-- <div class="actions">
+                                <div class="actions">
                                     <a class="snapshot--title" href="/geographies/{{ geography.id }}" title="Geography summary">
                                         <i class="material-icons">
                                             dashboard
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="/geographies/{{ geography.id }}/edit" title="Edit geography">
+                                    <a class="snapshot--title" href="/geographies/{{ geography.id }}/edit" title="Edit geography" data-ng-if="$root.user.id === geography.creator_id">
                                         <i class="material-icons">
                                             edit
                                         </i>
                                     </a>
-                                </div> -->
+                                </div>
                                 
                                 <span><time datetime="{{ geography.created_on }}" title="{{ geography.created_on }}">
                                         Created on {{ geography.created_on | date }}</time></span>
