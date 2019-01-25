@@ -203,20 +203,22 @@
 
                 self.createGeography = function() {
 
-                    self.geography = new GeographyService({
-                        'program_id': self.programId,
-                        'organization_id': $rootScope.user.properties.organization_id
-                    });
+                    $location.path('/geographies/collection/new');
 
-                    self.geography.$save(function(successResponse) {
+                    // self.geography = new GeographyService({
+                    //     'program_id': self.programId,
+                    //     'organization_id': $rootScope.user.properties.organization_id
+                    // });
 
-                        $location.path('/geographies/' + successResponse.id + '/edit');
+                    // self.geography.$save(function(successResponse) {
 
-                    }, function(errorResponse) {
+                    //     $location.path('/geographies/' + successResponse.id + '/edit');
 
-                        console.error('Unable to create a new geography, please try again later.');
+                    // }, function(errorResponse) {
 
-                    });
+                    //     console.error('Unable to create a new geography, please try again later.');
+
+                    // });
 
                 };
 

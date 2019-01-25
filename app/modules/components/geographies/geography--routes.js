@@ -38,6 +38,32 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            .when('/geographies/collection/new', {
+                templateUrl: '/modules/components/geographies/views/geographyCreate--view.html?t=' + environment.version,
+                controller: 'GeographyCreateController',
+                controllerAs: 'page',
+                reloadOnSearch: false,
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    geographies: function(Program, $route, $rootScope, $location) {
+
+                        $location.search({});
+
+                        return [];
+
+                    }
+                }
+            })
             .when('/geographies/:geographyId', {
                 templateUrl: '/modules/components/geographies/views/geographySummary--view.html?t=' + environment.version,
                 controller: 'GeographySummaryController',
