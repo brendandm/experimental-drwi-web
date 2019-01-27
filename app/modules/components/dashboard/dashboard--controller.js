@@ -338,7 +338,7 @@ angular.module('FieldDoc')
                         };
 
                         self.loadMetrics(null, {
-                            collection: 'site',
+                            collection: 'geography',
                             featureId: feature.properties.id
                         });
 
