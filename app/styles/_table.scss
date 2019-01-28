@@ -488,6 +488,31 @@ td.disabled-value {
   }
 }
 
+.with-metrics {
+  
+  tbody {
+
+    tr {
+      cursor: pointer;
+
+      p {
+        transition: all 250ms ease 0s;
+      }
+
+      &:hover {
+
+        p {
+          color: rgb(6, 170, 223);
+        }
+
+      }
+
+    }
+
+  }
+
+}
+
 .table.table-practices.with-metrics {
   border-collapse: separate;
   //padding: 12px 12px 48px;
