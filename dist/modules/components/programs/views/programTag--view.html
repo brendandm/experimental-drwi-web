@@ -124,7 +124,31 @@
 
     </div>
 
-    <div data-ng-include="page.toolbarUrl"></div>
+    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
+        <ul>
+            <li data-ng-class="{active: $root.toolbarState.dashboard}">
+                <a href="/programs/{{ page.program.id }}">
+                    <i class="material-icons">
+                        dashboard
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="/programs/{{ page.program.id }}/edit">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
+                <a href="/programs/{{ page.program.id }}/tags">
+                    <i class="material-icons">
+                        local_offer
+                    </i>
+                </a>
+            </li>
+        </ul>
+    </nav>
 
     <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
         <div class="event--container">
