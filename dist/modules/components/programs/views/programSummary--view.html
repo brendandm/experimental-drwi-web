@@ -27,6 +27,27 @@
                             <a href="{{ page.program.website }}" target="_blank">&nbsp;View website</a>
                         </p>
 
+                        <div data-ng-if="page.tags && page.tags.length">
+
+                            <span style="display: block; margin: 1em 0; color: #757575; text-transform: uppercase; font-size: .8em; font-weight: bold; letter-spacing: .05em;">Tags</span>
+
+                            <div class="tag--group">
+
+                                <div class="tag--pill" data-ng-class="{'colorize': tag.color && tag.color.length === 7}" data-ng-repeat="tag in page.tags">
+                                    <div class="colorize" data-ng-if="tag.color">
+                                        <span class="category" style="background: {{ tag.color }}; color: #f5f5f5; border-bottom: 1px solid {{ tag.color }};">{{ tag.group.name || 'misc' }}</span>
+                                        <span style="background: {{ tag.color }}; color: #f5f5f5; opacity: 0.8;">{{ tag.name }}</span>
+                                    </div>
+                                    <div data-ng-if="!tag.color || tag.color.length < 7">
+                                        <span class="category">{{ tag.group.name || 'misc' }}</span>
+                                        <span>{{ tag.name }}</span>
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+                        </div>
+
                     </article>
 
                     <!-- Map -->
@@ -125,13 +146,6 @@
                     </i>
                 </a>
             </li>
-<!--             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/programs/{{ page.program.id }}/targets">
-                    <i class="material-icons">
-                        multiline_chart
-                    </i>
-                </a>
-            </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
                 <a href="/programs/{{ page.program.id }}/tags">
                     <i class="material-icons">
@@ -139,24 +153,6 @@
                     </i>
                 </a>
             </li>
-            <!-- <li data-ng-if="page.permissions.can_edit">
-                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.program.id && page.deletionTarget.collection === 'program'">
-                    <p>Do you want to delete this program?</p>
-                    <div class="actions">
-                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('program')">
-                            Yes
-                        </a>
-                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
-                            Cancel
-                        </a>
-                    </div>
-                </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.program, 'program')">
-                    <i class="material-icons">
-                        delete
-                    </i>
-                </a>
-            </li> -->
         </ul>
     </nav>
 

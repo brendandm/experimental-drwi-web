@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548694515001})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548712146657})
 
 ;
 /**
@@ -5801,6 +5801,8 @@ angular.module('FieldDoc')
 
                         self.loadSites();
 
+                        self.loadTags();
+
                     }
 
                     self.showElements();
@@ -6105,6 +6107,24 @@ angular.module('FieldDoc')
 
             };
 
+            self.loadTags = function() {
+
+                Project.tags({
+                    id: self.project.id
+                }).$promise.then(function(successResponse) {
+
+                    console.log('Project.tags', successResponse);
+
+                    self.tags = successResponse.features;
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
+
+            };
+
             self.loadMetrics = function() {
 
                 Project.progress({
@@ -6113,13 +6133,7 @@ angular.module('FieldDoc')
 
                     console.log('Project metrics', successResponse);
 
-                    successResponse.features.forEach(function(metric) {
-
-                        var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
-
-                        metric.percentComplete = _percentComplete;
-
-                    });
+                    self.processMetrics(successResponse.features);
 
                     self.metrics = successResponse.features;
 
@@ -6129,43 +6143,58 @@ angular.module('FieldDoc')
 
                 });
 
-                // metrics.$promise.then(function(successResponse) {
+            };
 
-                //     console.log('Project metrics', successResponse);
+            self.processMetrics = function(arr) {
 
-                //     successResponse.features.forEach(function(metric) {
+                arr.forEach(function(datum) {
 
-                //         var _percentComplete = +((metric.installation / metric.planning) * 100).toFixed(0);
+                    var contextProgress,
+                        selfProgress;
 
-                //         metric.percentComplete = _percentComplete;
+                    if (datum.context_target) {
 
-                //     });
+                        contextProgress = datum.current_value / datum.context_target;
 
-                //     self.metrics = successResponse.features;
+                    } else {
 
-                // }, function(errorResponse) {
+                        contextProgress = datum.current_value / datum.target;
 
-                //     console.log('errorResponse', errorResponse);
+                    }
 
-                // });
+                    if (datum.self_target) {
+
+                        selfProgress = datum.current_value / datum.self_target;
+
+                    }
+
+                    datum.contextProgress = contextProgress > 1 ? 1 : contextProgress;
+
+                    datum.selfProgress = selfProgress > 1 ? 1 : selfProgress;
+
+                });
+
+                return arr;
 
             };
 
-            // self.loadOutcomes = function() {
+            self.showMetricModal = function(metric) {
 
-            //     outcomes.$promise.then(function(successResponse) {
+                console.log('self.showMetricModal', metric);
 
-            //         console.log('Project outcomes', successResponse);
+                self.selectedMetric = metric;
 
-            //         self.outcomes = successResponse;
+                self.displayModal = true;
 
-            //     }, function(errorResponse) {
+            };
 
-            //         console.log('errorResponse', errorResponse);
+            self.closeMetricModal = function() {
 
-            //     });
+                self.selectedMetric = null;
 
-            // };
+                self.displayModal = false;
+
+            };
 
             //
             // Verify Account information for proper UI element display
@@ -10432,6 +10461,8 @@ angular.module('FieldDoc')
 
                         self.loadMetrics();
 
+                        self.loadTags();
+
                         self.showElements();
 
                     });
@@ -10459,6 +10490,24 @@ angular.module('FieldDoc')
 
                 };
 
+                self.loadTags = function() {
+
+                    Site.tags({
+                        id: self.site.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Site.tags', successResponse);
+
+                        self.tags = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
                 self.loadMetrics = function() {
 
                     Site.progress({
@@ -10467,13 +10516,7 @@ angular.module('FieldDoc')
 
                         console.log('Project metrics', successResponse);
 
-                        successResponse.features.forEach(function(metric) {
-
-                            var _percentComplete = +((metric.current_value / metric.context_target) * 100).toFixed(0);
-
-                            metric.percentComplete = _percentComplete;
-
-                        });
+                        self.processMetrics(successResponse.features);
 
                         self.metrics = successResponse.features;
 
@@ -10482,6 +10525,57 @@ angular.module('FieldDoc')
                         console.log('errorResponse', errorResponse);
 
                     });
+
+                };
+
+                self.processMetrics = function(arr) {
+
+                    arr.forEach(function(datum) {
+
+                        var contextProgress,
+                            selfProgress;
+
+                        if (datum.context_target) {
+
+                            contextProgress = datum.current_value / datum.context_target;
+
+                        } else {
+
+                            contextProgress = datum.current_value / datum.target;
+
+                        }
+
+                        if (datum.self_target) {
+
+                            selfProgress = datum.current_value / datum.self_target;
+
+                        }
+
+                        datum.contextProgress = contextProgress > 1 ? 1 : contextProgress;
+
+                        datum.selfProgress = selfProgress > 1 ? 1 : selfProgress;
+
+                    });
+
+                    return arr;
+
+                };
+
+                self.showMetricModal = function(metric) {
+
+                    console.log('self.showMetricModal', metric);
+
+                    self.selectedMetric = metric;
+
+                    self.displayModal = true;
+
+                };
+
+                self.closeMetricModal = function() {
+
+                    self.selectedMetric = null;
+
+                    self.displayModal = false;
 
                 };
 
@@ -14801,7 +14895,7 @@ angular.module('FieldDoc')
                             typeof index === 'number' &&
                             featureType === 'report') {
 
-                            self.practice.reports.splice(index, 1);
+                            self.reports.splice(index, 1);
 
                             self.cancelDelete();
 
@@ -14964,6 +15058,8 @@ angular.module('FieldDoc')
 
                         self.loadMetrics();
 
+                        self.loadTags();
+
                     }, function(errorResponse) {
 
                         self.status.loading = false;
@@ -14993,6 +15089,24 @@ angular.module('FieldDoc')
 
                 };
 
+                self.loadTags = function() {
+
+                    Practice.tags({
+                        id: self.practice.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Practice.tags', successResponse);
+
+                        self.tags = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
                 self.loadMetrics = function() {
 
                     Practice.progress({
@@ -15001,13 +15115,7 @@ angular.module('FieldDoc')
 
                         console.log('Project metrics', successResponse);
 
-                        successResponse.features.forEach(function(metric) {
-
-                            var _percentComplete = +((metric.current_value/metric.context_target)*100).toFixed(0);
-
-                            metric.percentComplete = _percentComplete;
-
-                        });
+                        self.processMetrics(successResponse.features);
 
                         self.metrics = successResponse.features;
 
@@ -15016,6 +15124,57 @@ angular.module('FieldDoc')
                         console.log('errorResponse', errorResponse);
 
                     });
+
+                };
+
+                self.processMetrics = function(arr) {
+
+                    arr.forEach(function(datum) {
+
+                        var contextProgress,
+                            selfProgress;
+
+                        if (datum.context_target) {
+
+                            contextProgress = datum.current_value / datum.context_target;
+
+                        } else {
+
+                            contextProgress = datum.current_value / datum.target;
+
+                        }
+
+                        if (datum.self_target) {
+
+                            selfProgress = datum.current_value / datum.self_target;
+
+                        }
+
+                        datum.contextProgress = contextProgress > 1 ? 1 : contextProgress;
+
+                        datum.selfProgress = selfProgress > 1 ? 1 : selfProgress;
+
+                    });
+
+                    return arr;
+
+                };
+
+                self.showMetricModal = function(metric) {
+
+                    console.log('self.showMetricModal', metric);
+
+                    self.selectedMetric = metric;
+
+                    self.displayModal = true;
+
+                };
+
+                self.closeMetricModal = function() {
+
+                    self.selectedMetric = null;
+
+                    self.displayModal = false;
 
                 };
 
@@ -17884,24 +18043,9 @@ angular.module('FieldDoc')
                 var self = this;
 
                 self.measurementPeriods = [{
-                        'name': 'Installation',
-                        'description': null
-                    }
-                ];
-
-                // self.measurementPeriods = [{
-                //         'name': 'Installation',
-                //         'description': null
-                //     },
-                //     {
-                //         'name': 'Planning',
-                //         'description': null
-                //     },
-                //     {
-                //         'name': 'Monitoring',
-                //         'description': null
-                //     }
-                // ];
+                    'name': 'Installation',
+                    'description': null
+                }];
 
                 $rootScope.page = {};
 
@@ -18009,55 +18153,9 @@ angular.module('FieldDoc')
 
                     }
 
-                    // if (datum.metric_unit !== null) {
-
-                    // datum.metric_unit = datum.metric_unit.properties;
-
-                    // datum.metric_unit.name = datum.metric_unit.plural;
-
-                    // } else {
-
-                    // datum.metric_unit = null;
-
-                    // }
-
                     return datum;
 
                 };
-
-                // self.loadMetricTypes = function(datum) {
-
-                //     var exclude = [
-                //         'creator_id',
-                //         'geometry',
-                //         'last_modified_by_id',
-                //         'organization_id',
-                //         'tags'
-                //     ].join(',');
-
-                //     MetricType.collection({
-                //         program: datum.program_id,
-                //         exclude: exclude
-                //     }).$promise.then(function(successResponse) {
-
-                //         console.log('Metric types', successResponse);
-
-                //         self.metricTypes = successResponse.features;
-
-                //         self.showElements();
-
-                //     }, function(errorResponse) {
-
-                //         console.log('errorResponse', errorResponse);
-
-                //         self.showElements();
-
-                //     });
-
-                // };
-
-                self.monitoringType = null;
-                self.monitoringTypes = monitoring_types;
 
                 //
                 // Setup all of our basic date information so that we can use it
@@ -18182,7 +18280,7 @@ angular.module('FieldDoc')
                             'prompt': 'OK'
                         }];
 
-                        $timeout(closeAlerts, 2000);
+                        $timeout(self.closeAlerts, 2000);
 
                     });
 
@@ -18208,9 +18306,9 @@ angular.module('FieldDoc')
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
 
-                            if (!self.report.properties.practice_extent) {
+                            if (!self.report.practice_extent) {
 
-                                self.report.properties.practice_extent = convertPracticeArea(self.practice);
+                                self.report.practice_extent = convertPracticeArea(self.practice);
 
                             }
 
@@ -18244,32 +18342,74 @@ angular.module('FieldDoc')
 
                 }, true);
 
+                self.scrubFeature = function(feature) {
+
+                    var excludedKeys = [
+                        'creator',
+                        'geometry',
+                        'last_modified_by',
+                        'organization',
+                        'practice',
+                        'program',
+                        'project',
+                        'properties',
+                        'site',
+                        'status',
+                        'tags',
+                        'targets',
+                        'tasks',
+                        'users'
+                    ];
+
+                    var reservedProperties = [
+                        'links',
+                        'permissions',
+                        '$promise',
+                        '$resolved'
+                    ];
+
+                    excludedKeys.forEach(function(key) {
+
+                        if (feature.properties) {
+
+                            delete feature.properties[key];
+
+                        } else {
+
+                            delete feature[key];
+
+                        }
+
+                    });
+
+                    reservedProperties.forEach(function(key) {
+
+                        delete feature[key];
+
+                    });
+
+                };
+
                 self.saveReport = function(metricArray) {
 
                     self.status.processing = true;
 
-                    console.log('self.saveReport.metricArray', metricArray);
-
-                    if (self.report.properties.measurement_period.name) {
-
-                        self.report.properties.measurement_period = self.report.properties.measurement_period.name;
-
-                    }
-
-                    self.report.properties.metrics = metricArray;
+                    self.scrubFeature(self.report);
 
                     if (self.date.month.numeric !== null &&
                         typeof self.date.month.numeric === 'string') {
 
-                        self.report.properties.report_date = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
+                        self.report.report_date = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
 
                     } else {
 
-                        self.report.properties.report_date = self.date.year + '-' + self.date.month + '-' + self.date.date;
+                        self.report.report_date = self.date.year + '-' + self.date.month + '-' + self.date.date;
 
                     }
 
-                    self.report.$update().then(function(successResponse) {
+                    Report.update({
+                        id: self.report.id
+                    }, self.report).then(function(successResponse) {
 
                         self.processReport(successResponse);
 
@@ -18280,13 +18420,13 @@ angular.module('FieldDoc')
                             'prompt': 'OK'
                         }];
 
-                        $timeout(closeAlerts, 2000);
+                        $timeout(self.closeAlerts, 2000);
 
                         self.loadMetrics();
 
                         self.showElements();
 
-                    }, function(errorResponse) {
+                    }).catch(function(errorResponse) {
 
                         console.error('ERROR: ', errorResponse);
 
@@ -18297,224 +18437,11 @@ angular.module('FieldDoc')
                             'prompt': 'OK'
                         }];
 
-                        $timeout(closeAlerts, 2000);
+                        $timeout(self.closeAlerts, 2000);
 
                         self.showElements();
 
                     });
-
-                };
-
-                self.saveMetrics = function() {
-
-                    console.log('self.saveMetrics.reportMetrics', self.reportMetrics);
-
-                    var _modifiedMetrics = [];
-
-                    if (self.reportMetrics.length) {
-
-                        self.reportMetrics.forEach(function(metric) {
-
-                            console.log('Updating metric...', metric);
-
-                            var datum = metric;
-
-                            if (datum.category !== null) {
-
-                                datum.category_id = datum.category.id;
-
-                            }
-
-                            // if (datum.metric_unit !== null) {
-
-                            // datum.metric_unit_id = datum.metric_unit.id;
-
-                            // }
-
-                            // delete datum.id;
-                            delete datum.category;
-                            delete datum.metric_unit;
-
-                            ReportMetric.update({
-                                id: metric.id
-                            }, datum).$promise.then(function(successResponse) {
-
-                                _modifiedMetrics.push(successResponse.properties);
-
-                                if (_modifiedMetrics.length === self.reportMetrics.length) {
-
-                                    self.saveReport(_modifiedMetrics);
-
-                                }
-
-                            }, function(errorResponse) {
-
-                                console.error('ERROR: ', errorResponse);
-
-                            });
-
-                        });
-
-                    } else {
-
-                        self.saveReport(_modifiedMetrics);
-
-                    }
-
-                };
-
-                self.addMetric = function() {
-
-                    console.log('addMetric');
-
-                    //
-                    // Step 1: Show a new row with a "loading" indiciator
-                    //
-                    self.status.metrics.loading = true;
-
-                    //
-                    // Step 2: Create empty Reading to post to the system
-                    //
-                    var newMetric = new ReportMetric({
-                        "category_id": null,
-                        "value": null,
-                        "description": null,
-                        "report_id": self.report.id
-                    });
-
-                    console.log('addMetric', newMetric);
-
-                    //
-                    // Step 3: POST this empty reading to the `/v1/data/report-readings` endpoint
-                    //
-                    newMetric.$save().then(function(successResponse) {
-
-                        console.log('A new reading has been created for this report', successResponse);
-
-                        //
-                        // Step 4: Add the new reading to the existing report
-                        //
-                        // self.reportMetrics.push(metric_);
-
-                        if (successResponse.category !== null) {
-                            successResponse.category.properties = successResponse.category;
-                        }
-
-                        // if (successResponse.metric_unit !== null) {
-                        // successResponse.metric_unit.properties = successResponse.metric_unit;
-                        // }
-
-                        var datum = self.processMetric(successResponse);
-
-                        self.reportMetrics.push(datum);
-
-                        //
-                        // Step 5: Hide Loading Indicator and display the form to the user
-                        //
-                        self.status.metrics.loading = false;
-
-                    }, function(errorResponse) {
-
-                        console.log('An error occurred while trying to create a new metric', errorResponse);
-
-                        self.status.metrics.loading = false;
-
-                    });
-
-                };
-
-                self.addMonitoringCheck = function() {
-
-                    //
-                    // Step 1: Show a new row with a "loading" indiciator
-                    //
-                    self.status.monitoring.loading = true;
-
-                    //
-                    // Step 2: Create empty Reading to post to the system
-                    //
-                    var newMetric = new ReportMonitoring({
-                        "geometry": null,
-                        "properties": {
-                            "monitoring_type_id": null,
-                            "monitoring_value": 0,
-                            "was_verified": false,
-                            "monitoring_description": ""
-                        }
-                    });
-
-                    //
-                    // Step 3: POST this empty reading to the `/v1/data/report-readings` endpoint
-                    //
-                    newMetric.$save().then(function(successResponse) {
-
-                        console.log('A new reading has been created for this report', successResponse);
-
-                        var monitoring_ = successResponse;
-
-                        //
-                        // Step 4: Add the new reading to the existing report
-                        //
-                        self.report.properties.monitoring.push(monitoring_);
-
-                        //
-                        // Step 5: Hide Loading Indicator and display the form to the user
-                        //
-                        self.status.monitoring.loading = false;
-
-                    }, function(errorResponse) {
-
-                        console.log('An error occurred while trying to create a new metric', errorResponse);
-
-                        self.status.monitoring.loading = false;
-
-                    });
-
-                };
-
-                self.deleteSubPractice = function(reading_id) {
-
-                    var readings_ = [];
-
-                    angular.forEach(self.report.properties.readings, function(reading_, index_) {
-                        if (reading_id !== reading_.id) {
-                            readings_.push(reading_);
-                        }
-                    });
-
-                    self.report.properties.readings = readings_;
-
-                };
-
-                self.deleteMetric = function(metric_id) {
-
-                    var metrics_ = [];
-
-                    angular.forEach(self.reportMetrics, function(metric_, index_) {
-
-                        if (metric_id !== metric_.id) {
-
-                            metrics_.push(metric_);
-
-                        }
-
-                    });
-
-                    self.reportMetrics = metrics_;
-
-                };
-
-                self.deleteMonitoringCheck = function(monitoring_id) {
-
-                    var monitorings_ = [];
-
-                    angular.forEach(self.report.properties.monitoring, function(monitoring_, index_) {
-                        if (monitoring_id !== monitoring_.id) {
-                            monitorings_.push(monitoring_);
-                        }
-                    });
-
-                    self.report.properties.monitoring = monitorings_;
 
                 };
 
@@ -18566,7 +18493,7 @@ angular.module('FieldDoc')
 
                         }
 
-                        $timeout(closeAlerts, 2000);
+                        $timeout(self.closeAlerts, 2000);
 
                     });
 
@@ -18730,9 +18657,9 @@ angular.module('FieldDoc')
 
                             self.processReport(successResponse);
 
-                            if (self.report.properties.report_date) {
+                            if (self.report.report_date) {
 
-                                self.today = parseISOLike(self.report.properties.report_date);
+                                self.today = parseISOLike(self.report.report_date);
 
                             }
 
@@ -18750,7 +18677,7 @@ angular.module('FieldDoc')
 
                             $rootScope.page.title = 'Edit measurement data';
 
-                            self.loadPractice(self.report.properties.practice_id);
+                            self.loadPractice(self.report.practice_id);
 
                             // self.loadMatrix();
 
@@ -21910,7 +21837,27 @@ angular.module('FieldDoc')
 
                         self.loadMetrics();
 
+                        self.loadTags();
+
                         self.showElements();
+
+                    });
+
+                };
+
+                self.loadTags = function() {
+
+                    GeographyService.tags({
+                        id: self.geography.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('GeographyService.tags', successResponse);
+
+                        self.tags = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
 
                     });
 
@@ -21924,13 +21871,7 @@ angular.module('FieldDoc')
 
                         console.log('Project metrics', successResponse);
 
-                        successResponse.features.forEach(function(metric) {
-
-                            var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
-
-                            metric.percentComplete = _percentComplete;
-
-                        });
+                        self.processMetrics(successResponse.features);
 
                         self.metrics = successResponse.features;
 
@@ -21939,6 +21880,57 @@ angular.module('FieldDoc')
                         console.log('errorResponse', errorResponse);
 
                     });
+
+                };
+
+                self.processMetrics = function(arr) {
+
+                    arr.forEach(function(datum) {
+
+                        var contextProgress,
+                            selfProgress;
+
+                        if (datum.context_target) {
+
+                            contextProgress = datum.current_value / datum.context_target;
+
+                        } else {
+
+                            contextProgress = datum.current_value / datum.target;
+
+                        }
+
+                        if (datum.self_target) {
+
+                            selfProgress = datum.current_value / datum.self_target;
+
+                        }
+
+                        datum.contextProgress = contextProgress > 1 ? 1 : contextProgress;
+
+                        datum.selfProgress = selfProgress > 1 ? 1 : selfProgress;
+
+                    });
+
+                    return arr;
+
+                };
+
+                self.showMetricModal = function(metric) {
+
+                    console.log('self.showMetricModal', metric);
+
+                    self.selectedMetric = metric;
+
+                    self.displayModal = true;
+
+                };
+
+                self.closeMetricModal = function() {
+
+                    self.selectedMetric = null;
+
+                    self.displayModal = false;
 
                 };
 
@@ -24369,9 +24361,29 @@ angular.module('FieldDoc')
 
                         self.loadProjects();
 
+                        self.loadTags();
+
                     }, function(errorResponse) {
 
 
+
+                    });
+
+                };
+
+                self.loadTags = function() {
+
+                    Program.tags({
+                        id: self.program.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Program.tags', successResponse);
+
+                        self.tags = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
 
                     });
 
@@ -25141,7 +25153,7 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('TagEditController', function(Account, $location, $log,
         Tag, SearchService, tag, $q, $rootScope, $route, $timeout, $interval,
-        user, Utility) {
+        user, Utility, ColorService) {
 
         var self = this;
 
@@ -25384,6 +25396,16 @@ angular.module('FieldDoc')
                 }
 
                 $timeout(closeAlerts, 2000);
+
+            });
+
+        };
+
+        self.randomColor = function() {
+
+            ColorService.randomColor().$promise.then(function(data) {
+
+                self.tag.color = data.hex;
 
             });
 
@@ -29977,6 +29999,34 @@ angular
         });
 
 }());
+(function() {
+
+    'use strict';
+
+    /**
+     * @ngdoc function
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('ColorService', function(environment, Preprocessors, $resource) {
+
+            return $resource(environment.apiUrl.concat('/v1/color/:id'), {
+                id: '@id'
+            }, {
+                query: {
+                    isArray: false
+                },
+                randomColor: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/color/random-color')
+                }
+            });
+
+        });
+
+}());
 (function () {
 
     'use strict';
@@ -30100,6 +30150,11 @@ angular
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/geography/:id/progress')
+                },
+                tags: {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/geography/:id/tags'),
+                    'isArray': false
                 },
                 tasks: {
                     'method': 'GET',
@@ -30502,12 +30557,7 @@ angular
                     url: environment.apiUrl.concat('/v1/report/:id/matrix')
                 },
                 update: {
-                    method: 'PATCH',
-                    transformRequest: function(data) {
-                        var feature = Preprocessors.geojson(data),
-                            json_ = angular.toJson(feature);
-                        return json_;
-                    }
+                    method: 'PATCH'
                 },
                 updateMatrix: {
                     method: 'POST',
@@ -30707,6 +30757,11 @@ angular
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/program/:id/projects')
+                },
+                tags: {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/program/:id/tags'),
+                    'isArray': false
                 },
                 update: {
                     method: 'PATCH'
@@ -32214,13 +32269,42 @@ angular.module('FieldDoc')
 
                         scope.routeTo = function(item, model, label) {
 
-                            // $window.location.href = item.permalink;
+                            var featureType = item.category,
+                                path;
 
-                            console.log('searchItem', item);
+                            switch (featureType) {
 
-                            var path = item.category + 's/' + item.id;
+                                case 'geography':
 
-                            // $location.path(item.permalink).search({});
+                                    path = 'geographies/' + item.id;
+
+                                    break;
+
+                                case 'metric type':
+
+                                    path = 'metric-types/' + item.id + '/edit';
+
+                                    break;
+
+                                case 'practice type':
+
+                                    path = 'practice-types/' + item.id + '/edit';
+
+                                    break;
+
+                                case 'tag':
+
+                                    path = 'tags/' + item.id + '/edit';
+
+                                    break;
+
+                                default:
+
+                                    path = featureType + 's/' + item.id;
+
+                                    break;
+
+                            }
 
                             $location.path(path).search({});
 

@@ -54,6 +54,27 @@
 
                         <p data-ng-if="!page.site.description">No description</p>
 
+                        <div data-ng-if="page.tags && page.tags.length">
+
+                            <span style="display: block; margin: 1em 0; color: #757575; text-transform: uppercase; font-size: .8em; font-weight: bold; letter-spacing: .05em;">Tags</span>
+
+                            <div class="tag--group">
+
+                                <div class="tag--pill" data-ng-class="{'colorize': tag.color && tag.color.length === 7}" data-ng-repeat="tag in page.tags">
+                                    <div class="colorize" data-ng-if="tag.color">
+                                        <span class="category" style="background: {{ tag.color }}; color: #f5f5f5; border-bottom: 1px solid {{ tag.color }};">{{ tag.group.name || 'misc' }}</span>
+                                        <span style="background: {{ tag.color }}; color: #f5f5f5; opacity: 0.8;">{{ tag.name }}</span>
+                                    </div>
+                                    <div data-ng-if="!tag.color || tag.color.length < 7">
+                                        <span class="category">{{ tag.group.name || 'misc' }}</span>
+                                        <span>{{ tag.name }}</span>
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+                        </div>
+
                     </article>
 
                     <!-- Map -->
@@ -88,7 +109,7 @@
                                         </thead>
 
                                         <tbody class="metrics">
-                                            <tr class="metrics--metric" data-ng-repeat="metric in page.metrics track by $index">
+                                            <tr class="metrics--metric" data-ng-repeat="metric in page.metrics track by $index" data-ng-click="page.showMetricModal(metric)">
                                                 <td class="table-column-wide">
                                                     <p class="metric--title">
                                                         {{ metric.name }}
@@ -100,7 +121,7 @@
                                                 </td>
                                                 <td>
                                                     <strong class="metrics--metric--percentage">
-                                                        {{ metric.percentComplete }}%
+                                                        {{ metric.contextProgress * 100 | number:1 }}%
                                                     </strong>
                                                 </td>
                                                 <td>
@@ -108,7 +129,7 @@
                                                         size="32"
                                                         stroke="#2196F3"
                                                         stroke-width="4"
-                                                        complete="(metric.current_value/metric.context_target)"
+                                                        complete="metric.contextProgress"
                                                         counter-clockwise="false"
                                                         background="rgba(0,0,0,0.2)">
                                                     </progress-arc>
@@ -125,6 +146,51 @@
                         </div>
 
                     </section>
+
+                </div>
+
+                <div class="metric-modal" data-ng-if="page.displayModal" data-ng-click="page.closeMetricModal()">
+
+                    <div class="summary-card">
+
+                        <button class="close" type="button" data-ng-click="page.closeMetricModal()" title="Cancel">
+                            <i class="material-icons">
+                                clear
+                            </i>
+                        </button>
+
+                        <h2 class="metric--title" style="color: #e0e0e0; margin-bottom: 1em; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 1em;">
+                            {{ page.selectedMetric.name }}
+                        </h2>
+
+                        <p style="color: #e0e0e0;">{{ page.selectedMetric.description || 'No description' }}</p>
+
+                        <div style="display: flex; flex-flow: row nowrap; justify-content: center; align-items: center; padding: 1em 0; width: 100%;">
+
+                            <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center; ">
+                                <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Project progress</span>
+                                <br />
+                                <progress-arc size="80" stroke="#2196F3" stroke-width="8" complete="page.selectedMetric.contextProgress" counter-clockwise="false" background="rgba(0,0,0,0.2)">
+                                </progress-arc>
+                                <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.context_target | number:2 }}</span>
+                            </div>
+
+                            <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center;">
+                                <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Site progress</span>
+                                <br />
+                                <progress-arc
+                                    size="80"
+                                    stroke="#2196F3"
+                                    stroke-width="8"
+                                    complete="page.selectedMetric.selfProgress"
+                                    background="rgba(0,0,0,0.2)">
+                                </progress-arc>
+                                <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.self_target | number:2 }}</span>
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
