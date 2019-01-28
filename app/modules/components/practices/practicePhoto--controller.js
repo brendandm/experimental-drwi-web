@@ -142,7 +142,7 @@ angular.module('FieldDoc')
 
                     Practice.update({
                         id: self.practice.id
-                    }, imageCollection).then(function(successResponse) {
+                    }, imageCollection).$promise.then(function(successResponse) {
 
                         self.processPractice(successResponse);
 
@@ -175,7 +175,9 @@ angular.module('FieldDoc')
 
             } else {
 
-                self.practice.$update().then(function(successResponse) {
+                Practice.update({
+                        id: self.practice.id
+                    }, imageCollection).$promise.then(function(successResponse) {
 
                     self.processPractice(successResponse);
 
