@@ -279,13 +279,7 @@
 
                         console.log('Project metrics', successResponse);
 
-                        successResponse.features.forEach(function(metric) {
-
-                            var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
-
-                            metric.percentComplete = _percentComplete;
-
-                        });
+                        self.processMetrics(successResponse.features);
 
                         self.metrics = successResponse.features;
 
@@ -294,6 +288,57 @@
                         console.log('errorResponse', errorResponse);
 
                     });
+
+                };
+
+                self.processMetrics = function(arr) {
+
+                    arr.forEach(function(datum) {
+
+                        var contextProgress,
+                            selfProgress;
+
+                        if (datum.context_target) {
+
+                            contextProgress = datum.current_value / datum.context_target;
+
+                        } else {
+
+                            contextProgress = datum.current_value / datum.target;
+
+                        }
+
+                        if (datum.self_target) {
+
+                            selfProgress = datum.current_value / datum.self_target;
+
+                        }
+
+                        datum.contextProgress = contextProgress > 1 ? 1 : contextProgress;
+
+                        datum.selfProgress = selfProgress > 1 ? 1 : selfProgress;
+
+                    });
+
+                    return arr;
+
+                };
+
+                self.showMetricModal = function(metric) {
+
+                    console.log('self.showMetricModal', metric);
+
+                    self.selectedMetric = metric;
+
+                    self.displayModal = true;
+
+                };
+
+                self.closeMetricModal = function() {
+
+                    self.selectedMetric = null;
+
+                    self.displayModal = false;
 
                 };
 
