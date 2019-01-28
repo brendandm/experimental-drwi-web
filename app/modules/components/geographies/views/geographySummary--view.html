@@ -48,6 +48,31 @@
 
                         <p data-ng-if="!page.geography.description">{{ page.geography.description }}</p>
 
+                        <div data-ng-if="page.tags">
+
+                            <span>Tags</span>
+
+                            <div class="filter--ui">
+
+                                <div class="filter--controls">
+
+                                    <div class="filter--group">
+
+                                        <div class="filter--pill" data-ng-repeat="tag in page.tags">
+                                            <div>
+                                                <span class="category {{ tag.category }}">{{ tag.subcategory || tag.category }}</span>
+                                                <span>{{ tag.name }}</span>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
                     </article>
 
                     <!-- Map -->
@@ -59,6 +84,35 @@
                     </div>
 
                 </div>
+
+                <!-- <div class="group reveal fade-in t2" data-ng-if="page.tags">
+
+                    <section class="pad shadow">
+
+                        <h2>Tags</h2>
+
+                        <div class="filter--ui">
+
+                            <div class="filter--controls">
+
+                                <div class="filter--group">
+
+                                    <div class="filter--pill" data-ng-repeat="tag in page.tags">
+                                        <div>
+                                            <span class="category {{ tag.category }}">{{ tag.subcategory || tag.category }}</span>
+                                            <span>{{ tag.name }}</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                </div> -->
 
                 <div class="group reveal fade-in t2">
 

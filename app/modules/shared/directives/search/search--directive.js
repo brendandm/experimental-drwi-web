@@ -26,13 +26,42 @@
 
                         scope.routeTo = function(item, model, label) {
 
-                            // $window.location.href = item.permalink;
+                            var featureType = item.category,
+                                path;
 
-                            console.log('searchItem', item);
+                            switch (featureType) {
 
-                            var path = item.category + 's/' + item.id;
+                                case 'geography':
 
-                            // $location.path(item.permalink).search({});
+                                    path = 'geographies/' + item.id;
+
+                                    break;
+
+                                case 'metric type':
+
+                                    path = 'metric-types/' + item.id + '/edit';
+
+                                    break;
+
+                                case 'practice type':
+
+                                    path = 'practice-types/' + item.id + '/edit';
+
+                                    break;
+
+                                case 'tag':
+
+                                    path = 'tags/' + item.id + '/edit';
+
+                                    break;
+
+                                default:
+
+                                    path = featureType + 's/' + item.id;
+
+                                    break;
+
+                            }
 
                             $location.path(path).search({});
 
