@@ -123,7 +123,7 @@
                             typeof index === 'number' &&
                             featureType === 'report') {
 
-                            self.practice.reports.splice(index, 1);
+                            self.reports.splice(index, 1);
 
                             self.cancelDelete();
 

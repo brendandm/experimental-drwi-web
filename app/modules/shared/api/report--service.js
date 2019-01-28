@@ -31,12 +31,7 @@
                     url: environment.apiUrl.concat('/v1/report/:id/matrix')
                 },
                 update: {
-                    method: 'PATCH',
-                    transformRequest: function(data) {
-                        var feature = Preprocessors.geojson(data),
-                            json_ = angular.toJson(feature);
-                        return json_;
-                    }
+                    method: 'PATCH'
                 },
                 updateMatrix: {
                     method: 'POST',

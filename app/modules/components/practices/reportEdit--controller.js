@@ -17,24 +17,9 @@
                 var self = this;
 
                 self.measurementPeriods = [{
-                        'name': 'Installation',
-                        'description': null
-                    }
-                ];
-
-                // self.measurementPeriods = [{
-                //         'name': 'Installation',
-                //         'description': null
-                //     },
-                //     {
-                //         'name': 'Planning',
-                //         'description': null
-                //     },
-                //     {
-                //         'name': 'Monitoring',
-                //         'description': null
-                //     }
-                // ];
+                    'name': 'Installation',
+                    'description': null
+                }];
 
                 $rootScope.page = {};
 
@@ -142,55 +127,9 @@
 
                     }
 
-                    // if (datum.metric_unit !== null) {
-
-                    // datum.metric_unit = datum.metric_unit.properties;
-
-                    // datum.metric_unit.name = datum.metric_unit.plural;
-
-                    // } else {
-
-                    // datum.metric_unit = null;
-
-                    // }
-
                     return datum;
 
                 };
-
-                // self.loadMetricTypes = function(datum) {
-
-                //     var exclude = [
-                //         'creator_id',
-                //         'geometry',
-                //         'last_modified_by_id',
-                //         'organization_id',
-                //         'tags'
-                //     ].join(',');
-
-                //     MetricType.collection({
-                //         program: datum.program_id,
-                //         exclude: exclude
-                //     }).$promise.then(function(successResponse) {
-
-                //         console.log('Metric types', successResponse);
-
-                //         self.metricTypes = successResponse.features;
-
-                //         self.showElements();
-
-                //     }, function(errorResponse) {
-
-                //         console.log('errorResponse', errorResponse);
-
-                //         self.showElements();
-
-                //     });
-
-                // };
-
-                self.monitoringType = null;
-                self.monitoringTypes = monitoring_types;
 
                 //
                 // Setup all of our basic date information so that we can use it
@@ -315,7 +254,7 @@
                             'prompt': 'OK'
                         }];
 
-                        $timeout(closeAlerts, 2000);
+                        $timeout(self.closeAlerts, 2000);
 
                     });
 
@@ -341,9 +280,9 @@
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
 
-                            if (!self.report.properties.practice_extent) {
+                            if (!self.report.practice_extent) {
 
-                                self.report.properties.practice_extent = convertPracticeArea(self.practice);
+                                self.report.practice_extent = convertPracticeArea(self.practice);
 
                             }
 
@@ -377,32 +316,74 @@
 
                 }, true);
 
+                self.scrubFeature = function(feature) {
+
+                    var excludedKeys = [
+                        'creator',
+                        'geometry',
+                        'last_modified_by',
+                        'organization',
+                        'practice',
+                        'program',
+                        'project',
+                        'properties',
+                        'site',
+                        'status',
+                        'tags',
+                        'targets',
+                        'tasks',
+                        'users'
+                    ];
+
+                    var reservedProperties = [
+                        'links',
+                        'permissions',
+                        '$promise',
+                        '$resolved'
+                    ];
+
+                    excludedKeys.forEach(function(key) {
+
+                        if (feature.properties) {
+
+                            delete feature.properties[key];
+
+                        } else {
+
+                            delete feature[key];
+
+                        }
+
+                    });
+
+                    reservedProperties.forEach(function(key) {
+
+                        delete feature[key];
+
+                    });
+
+                };
+
                 self.saveReport = function(metricArray) {
 
                     self.status.processing = true;
 
-                    console.log('self.saveReport.metricArray', metricArray);
-
-                    if (self.report.properties.measurement_period.name) {
-
-                        self.report.properties.measurement_period = self.report.properties.measurement_period.name;
-
-                    }
-
-                    self.report.properties.metrics = metricArray;
+                    self.scrubFeature(self.report);
 
                     if (self.date.month.numeric !== null &&
                         typeof self.date.month.numeric === 'string') {
 
-                        self.report.properties.report_date = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
+                        self.report.report_date = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
 
                     } else {
 
-                        self.report.properties.report_date = self.date.year + '-' + self.date.month + '-' + self.date.date;
+                        self.report.report_date = self.date.year + '-' + self.date.month + '-' + self.date.date;
 
                     }
 
-                    self.report.$update().then(function(successResponse) {
+                    Report.update({
+                        id: self.report.id
+                    }, self.report).then(function(successResponse) {
 
                         self.processReport(successResponse);
 
@@ -413,13 +394,13 @@
                             'prompt': 'OK'
                         }];
 
-                        $timeout(closeAlerts, 2000);
+                        $timeout(self.closeAlerts, 2000);
 
                         self.loadMetrics();
 
                         self.showElements();
 
-                    }, function(errorResponse) {
+                    }).catch(function(errorResponse) {
 
                         console.error('ERROR: ', errorResponse);
 
@@ -430,224 +411,11 @@
                             'prompt': 'OK'
                         }];
 
-                        $timeout(closeAlerts, 2000);
+                        $timeout(self.closeAlerts, 2000);
 
                         self.showElements();
 
                     });
-
-                };
-
-                self.saveMetrics = function() {
-
-                    console.log('self.saveMetrics.reportMetrics', self.reportMetrics);
-
-                    var _modifiedMetrics = [];
-
-                    if (self.reportMetrics.length) {
-
-                        self.reportMetrics.forEach(function(metric) {
-
-                            console.log('Updating metric...', metric);
-
-                            var datum = metric;
-
-                            if (datum.category !== null) {
-
-                                datum.category_id = datum.category.id;
-
-                            }
-
-                            // if (datum.metric_unit !== null) {
-
-                            // datum.metric_unit_id = datum.metric_unit.id;
-
-                            // }
-
-                            // delete datum.id;
-                            delete datum.category;
-                            delete datum.metric_unit;
-
-                            ReportMetric.update({
-                                id: metric.id
-                            }, datum).$promise.then(function(successResponse) {
-
-                                _modifiedMetrics.push(successResponse.properties);
-
-                                if (_modifiedMetrics.length === self.reportMetrics.length) {
-
-                                    self.saveReport(_modifiedMetrics);
-
-                                }
-
-                            }, function(errorResponse) {
-
-                                console.error('ERROR: ', errorResponse);
-
-                            });
-
-                        });
-
-                    } else {
-
-                        self.saveReport(_modifiedMetrics);
-
-                    }
-
-                };
-
-                self.addMetric = function() {
-
-                    console.log('addMetric');
-
-                    //
-                    // Step 1: Show a new row with a "loading" indiciator
-                    //
-                    self.status.metrics.loading = true;
-
-                    //
-                    // Step 2: Create empty Reading to post to the system
-                    //
-                    var newMetric = new ReportMetric({
-                        "category_id": null,
-                        "value": null,
-                        "description": null,
-                        "report_id": self.report.id
-                    });
-
-                    console.log('addMetric', newMetric);
-
-                    //
-                    // Step 3: POST this empty reading to the `/v1/data/report-readings` endpoint
-                    //
-                    newMetric.$save().then(function(successResponse) {
-
-                        console.log('A new reading has been created for this report', successResponse);
-
-                        //
-                        // Step 4: Add the new reading to the existing report
-                        //
-                        // self.reportMetrics.push(metric_);
-
-                        if (successResponse.category !== null) {
-                            successResponse.category.properties = successResponse.category;
-                        }
-
-                        // if (successResponse.metric_unit !== null) {
-                        // successResponse.metric_unit.properties = successResponse.metric_unit;
-                        // }
-
-                        var datum = self.processMetric(successResponse);
-
-                        self.reportMetrics.push(datum);
-
-                        //
-                        // Step 5: Hide Loading Indicator and display the form to the user
-                        //
-                        self.status.metrics.loading = false;
-
-                    }, function(errorResponse) {
-
-                        console.log('An error occurred while trying to create a new metric', errorResponse);
-
-                        self.status.metrics.loading = false;
-
-                    });
-
-                };
-
-                self.addMonitoringCheck = function() {
-
-                    //
-                    // Step 1: Show a new row with a "loading" indiciator
-                    //
-                    self.status.monitoring.loading = true;
-
-                    //
-                    // Step 2: Create empty Reading to post to the system
-                    //
-                    var newMetric = new ReportMonitoring({
-                        "geometry": null,
-                        "properties": {
-                            "monitoring_type_id": null,
-                            "monitoring_value": 0,
-                            "was_verified": false,
-                            "monitoring_description": ""
-                        }
-                    });
-
-                    //
-                    // Step 3: POST this empty reading to the `/v1/data/report-readings` endpoint
-                    //
-                    newMetric.$save().then(function(successResponse) {
-
-                        console.log('A new reading has been created for this report', successResponse);
-
-                        var monitoring_ = successResponse;
-
-                        //
-                        // Step 4: Add the new reading to the existing report
-                        //
-                        self.report.properties.monitoring.push(monitoring_);
-
-                        //
-                        // Step 5: Hide Loading Indicator and display the form to the user
-                        //
-                        self.status.monitoring.loading = false;
-
-                    }, function(errorResponse) {
-
-                        console.log('An error occurred while trying to create a new metric', errorResponse);
-
-                        self.status.monitoring.loading = false;
-
-                    });
-
-                };
-
-                self.deleteSubPractice = function(reading_id) {
-
-                    var readings_ = [];
-
-                    angular.forEach(self.report.properties.readings, function(reading_, index_) {
-                        if (reading_id !== reading_.id) {
-                            readings_.push(reading_);
-                        }
-                    });
-
-                    self.report.properties.readings = readings_;
-
-                };
-
-                self.deleteMetric = function(metric_id) {
-
-                    var metrics_ = [];
-
-                    angular.forEach(self.reportMetrics, function(metric_, index_) {
-
-                        if (metric_id !== metric_.id) {
-
-                            metrics_.push(metric_);
-
-                        }
-
-                    });
-
-                    self.reportMetrics = metrics_;
-
-                };
-
-                self.deleteMonitoringCheck = function(monitoring_id) {
-
-                    var monitorings_ = [];
-
-                    angular.forEach(self.report.properties.monitoring, function(monitoring_, index_) {
-                        if (monitoring_id !== monitoring_.id) {
-                            monitorings_.push(monitoring_);
-                        }
-                    });
-
-                    self.report.properties.monitoring = monitorings_;
 
                 };
 
@@ -699,7 +467,7 @@
 
                         }
 
-                        $timeout(closeAlerts, 2000);
+                        $timeout(self.closeAlerts, 2000);
 
                     });
 
@@ -863,9 +631,9 @@
 
                             self.processReport(successResponse);
 
-                            if (self.report.properties.report_date) {
+                            if (self.report.report_date) {
 
-                                self.today = parseISOLike(self.report.properties.report_date);
+                                self.today = parseISOLike(self.report.report_date);
 
                             }
 
@@ -883,7 +651,7 @@
 
                             $rootScope.page.title = 'Edit measurement data';
 
-                            self.loadPractice(self.report.properties.practice_id);
+                            self.loadPractice(self.report.practice_id);
 
                             // self.loadMatrix();
 

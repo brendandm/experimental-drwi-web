@@ -32,7 +32,7 @@
 
                 <div class="feature-detail-content">
 
-                    <form data-ng-submit="page.saveMetrics()" class="form" role="form" autocomplete="off">
+                    <form data-ng-submit="page.saveReport()" class="form" role="form" autocomplete="off">
 
                         <h2>
                             Report date and measurement period
@@ -53,22 +53,13 @@
                             <input number type="number" min="1900" step="1" id="report_date_year" name="report_date_year" data-ng-model="page.date.year" />
                         </div>
 
-                        <!-- Measurement Period -->
-
-                        <!-- <div class="form-element">
-                            <span class="meta-label"><b>Measurement period</b></span>
-                            <input id="measurement_period" name="measurement_period" type="text" data-ng-model="page.report.properties.measurement_period" uib-typeahead="period as period.name for period in page.measurementPeriods | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html" required="required">
-                        </div> -->
-
-                        <!-- <h2>Load reductions</h2> -->
-
-                        <div data-ng-if="(page.report.properties.measurement_period === 'Planning' || page.report.properties.measurement_period === 'Installation') || (page.report.properties.measurement_period.name === 'Planning' || page.report.properties.measurement_period.name === 'Installation')">
+                        <div>
 
                             <div class="form-element">
 
                                 <div class="form-element">
                                     <span class="meta-label"><b>Practice area</b></span>
-                                    <input class="form-control" data-ng-model="page.report.properties.practice_extent" id="practice_extent" name="practice_extent" step="0.0001" type="number" placeholder="0" />
+                                    <input class="form-control" data-ng-model="page.report.practice_extent" id="practice_extent" name="practice_extent" step="0.0001" type="number" placeholder="0" />
                                 </div>
 
                                 <div class="form-element">
@@ -90,8 +81,6 @@
                             <p style="font-style: normal; font-size: 1em; color: #616161;">The metrics listed here are associated with the <strong>{{ page.practice.name }}</strong> practice. Track implementation by entering a numeric value for one or more metrics. If you try to add a progress value that exceeds a metric’s baseline practice value, FieldDoc will cap the site target’s value for you.</p>
 
                             <br />
-
-                            <!-- <h2 data-ng-if="page.targets && page.targets.active.length">Active targets</h2> -->
 
                             <ul class="target-lst" data-ng-if="page.targets && page.targets.active.length">
                                 <li data-ng-repeat="target in page.targets.active">
@@ -121,8 +110,6 @@
                                 </li>
                             </ul>
 
-                            <!-- <h2 data-ng-if="page.targets && page.targets.inactive.length">Available metrics</h2> -->
-
                             <ul class="target-lst target-lst-inactive" data-ng-if="page.targets">
                                 <li data-ng-repeat="target in page.targets.inactive">
                                     <div>{{ target.name || target.metric.name }}</div>
@@ -140,9 +127,9 @@
 
                         <div class="form-element">
                             <span class="meta-label"><b>Notes</b></span>
-                            <textarea class="form-control" msd-elastic data-ng-model="page.report.properties.notes" maxlength="1000" rows="10">{{ page.report.properties.notes }}</textarea>
+                            <textarea class="form-control" msd-elastic data-ng-model="page.report.notes" maxlength="1000" rows="10">{{ page.report.notes }}</textarea>
                             <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
-                                Notes may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.report.properties.notes.length || 0) | number }} used)</strong>
+                                Notes may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.report.notes.length || 0) | number }} used)</strong>
                             </p>
                         </div>
 
