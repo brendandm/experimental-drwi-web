@@ -39,6 +39,21 @@
                             </p>
                         </div>
 
+                        <!-- Tag color -->
+
+                        <div class="form-element">
+                            <div class="grade--color">
+                                <span class="meta-label"><b>Color</b></span>
+                                <input type="text" data-ng-model="page.tag.color" placeholder="…" />
+                                <button type="button" style="background: {{ page.tag.color }};" data-ng-click="page.randomColor()">
+                                    <i class="material-icons">
+                                        refresh
+                                    </i>
+                                </button>
+                            </div>
+                            <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 0.5em;"><strong>Hint:</strong> Whip up your own hexadecimal color (tools like <a href="https://www.colorhexa.com" target="_blank">this one</a> can help!) or click the button to generate one. Either way, you want to end up with something that looks like this: <strong>#8aa8b4</strong>.</p>
+                        </div>
+
                         <!-- Tag Group -->
 
                         <div class="classification--search" style="position: relative;">

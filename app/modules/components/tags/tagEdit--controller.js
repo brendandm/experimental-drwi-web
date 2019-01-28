@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('TagEditController', function(Account, $location, $log,
         Tag, SearchService, tag, $q, $rootScope, $route, $timeout, $interval,
-        user, Utility) {
+        user, Utility, ColorService) {
 
         var self = this;
 
@@ -251,6 +251,16 @@ angular.module('FieldDoc')
                 }
 
                 $timeout(closeAlerts, 2000);
+
+            });
+
+        };
+
+        self.randomColor = function() {
+
+            ColorService.randomColor().$promise.then(function(data) {
+
+                self.tag.color = data.hex;
 
             });
 
