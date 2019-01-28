@@ -164,6 +164,8 @@ angular.module('FieldDoc')
 
                         self.loadSites();
 
+                        self.loadTags();
+
                     }
 
                     self.showElements();
@@ -463,6 +465,24 @@ angular.module('FieldDoc')
                 }, function(errorResponse) {
 
                     console.log('loadSites.errorResponse', errorResponse);
+
+                });
+
+            };
+
+            self.loadTags = function() {
+
+                Project.tags({
+                    id: self.project.id
+                }).$promise.then(function(successResponse) {
+
+                    console.log('Project.tags', successResponse);
+
+                    self.tags = successResponse.features;
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
 
                 });
 

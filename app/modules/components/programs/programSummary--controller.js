@@ -323,9 +323,29 @@
 
                         self.loadProjects();
 
+                        self.loadTags();
+
                     }, function(errorResponse) {
 
 
+
+                    });
+
+                };
+
+                self.loadTags = function() {
+
+                    Program.tags({
+                        id: self.program.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Program.tags', successResponse);
+
+                        self.tags = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
 
                     });
 

@@ -265,7 +265,27 @@
 
                         self.loadMetrics();
 
+                        self.loadTags();
+
                         self.showElements();
+
+                    });
+
+                };
+
+                self.loadTags = function() {
+
+                    GeographyService.tags({
+                        id: self.geography.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('GeographyService.tags', successResponse);
+
+                        self.tags = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
 
                     });
 

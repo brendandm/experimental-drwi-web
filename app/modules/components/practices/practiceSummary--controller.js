@@ -286,6 +286,8 @@
 
                         self.loadMetrics();
 
+                        self.loadTags();
+
                     }, function(errorResponse) {
 
                         self.status.loading = false;
@@ -310,6 +312,24 @@
                     }, function(errorResponse) {
 
                         console.error('ERROR: ', errorResponse);
+
+                    });
+
+                };
+
+                self.loadTags = function() {
+
+                    Practice.tags({
+                        id: self.practice.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Practice.tags', successResponse);
+
+                        self.tags = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
 
                     });
 

@@ -319,6 +319,8 @@
 
                         self.loadMetrics();
 
+                        self.loadTags();
+
                         self.showElements();
 
                     });
@@ -341,6 +343,24 @@
                     }, function(errorResponse) {
 
                         console.error('Unable to create your practice, please try again later');
+
+                    });
+
+                };
+
+                self.loadTags = function() {
+
+                    Site.tags({
+                        id: self.site.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Site.tags', successResponse);
+
+                        self.tags = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
 
                     });
 

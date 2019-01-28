@@ -60,6 +60,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/program/:id/projects')
                 },
+                tags: {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/program/:id/tags'),
+                    'isArray': false
+                },
                 update: {
                     method: 'PATCH'
                 }

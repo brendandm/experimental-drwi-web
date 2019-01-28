@@ -44,7 +44,7 @@
 
                         <p data-ng-bind-html="page.project.description"></p>
 
-                        <nav class="contextual-navigation-wrapper" style="float: none; padding:0; margin: 0; border: 0 none;">
+                        <!-- <nav class="contextual-navigation-wrapper" style="float: none; padding:0; margin: 0; border: 0 none;">
 
                             <p><strong>Status</strong></p>
 
@@ -84,7 +84,24 @@
 
                             </ul>
 
-                        </nav>
+                        </nav> -->
+
+                        <div data-ng-if="page.tags && page.tags.length">
+
+                            <span style="display: block; margin: 1em 0; color: #757575; text-transform: uppercase; font-size: .8em; font-weight: bold; letter-spacing: .05em;">Tags</span>
+
+                            <div class="tag--group">
+
+                                <div class="tag--pill" data-ng-repeat="tag in page.tags">
+                                    <div>
+                                        <span class="category">{{ tag.group.name || 'misc' }}</span>
+                                        <span>{{ tag.name }}</span>
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+                        </div>
 
                     </article>
 

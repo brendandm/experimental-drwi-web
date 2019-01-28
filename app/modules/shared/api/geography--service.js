@@ -49,6 +49,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/geography/:id/progress')
                 },
+                tags: {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/geography/:id/tags'),
+                    'isArray': false
+                },
                 tasks: {
                     'method': 'GET',
                     'url': environment.apiUrl.concat('/v1/geography/:id/tasks'),
