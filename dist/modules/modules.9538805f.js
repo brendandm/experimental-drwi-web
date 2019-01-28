@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548630813852})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548693611449})
 
 ;
 /**
@@ -2776,10 +2776,6 @@ angular.module('FieldDoc')
 
             };
 
-            $scope.filterStore = FilterStore;
-
-            console.log('self.filterStore', self.filterStore);
-
             self.loadDashboard = function() {
 
                 //
@@ -2801,147 +2797,14 @@ angular.module('FieldDoc')
 
             };
 
-            self.clearFilter = function(obj) {
-
-                FilterStore.clearItem(obj);
-
-            };
-
-            self.clearAllFilters = function(reload) {
-
-                //
-                // Remove all stored filter objects
-                //
-
-                FilterStore.clearAll();
-
-            };
-
-            self.updateCollection = function(obj, collection) {
-
-                self.dashboardObject[collection].push({
-                    id: obj.id
-                });
-
-            };
-
-            self.transformRelation = function(obj, category) {
-
-                switch (category) {
-
-                    case 'geography':
-
-                        self.updateCollection(obj, 'geographies');
-
-                        break;
-
-                    case 'organization':
-
-                        self.updateCollection(obj, 'organizations');
-
-                        break;
-
-                    case 'practice':
-
-                        self.updateCollection(obj, 'practices');
-
-                        break;
-
-                    case 'program':
-
-                        self.updateCollection(obj, 'programs');
-
-                        break;
-
-                    case 'project':
-
-                        self.updateCollection(obj, 'projects');
-
-                        break;
-
-                    case 'status':
-
-                        self.updateCollection(obj, 'statuses');
-
-                        break;
-
-                    case 'tag':
-
-                        self.updateCollection(obj, 'tags');
-
-                        break;
-
-                    default:
-
-                        self.updateCollection(obj, category);
-
-                        break;
-
-                }
-
-            };
-
-            self.extractFilter = function(key, data) {
-
-                data.forEach(function(datum) {
-
-                    FilterStore.addItem({
-                        id: datum.id,
-                        name: datum.name || datum.properties.name,
-                        category: self.parseKey(key)
-                    });
-
-                });
-
-            };
-
-            self.parseKey = function(obj, pluralize) {
-
-                var keyMap = {
-                    plural: {
-                        'geography': 'geographies',
-                        'organization': 'organizations',
-                        'practice': 'practices',
-                        'program': 'programs',
-                        'project': 'projects',
-                        'status': 'statuses',
-                        'tag': 'tags'
-                    },
-                    single: {
-                        'geographies': 'geography',
-                        'organizations': 'organization',
-                        'practices': 'practice',
-                        'programs': 'program',
-                        'projects': 'project',
-                        'statuses': 'status',
-                        'tags': 'tag'
-                    }
-                };
-
-                if (pluralize) {
-
-                    return keyMap.plural[obj];
-
-                }
-
-                console.log('keyMap.single', obj, keyMap.single[obj]);
-
-                return keyMap.single[obj];
-
-            };
-
             self.processDashboard = function(data) {
-
-                //
-                // Reset filters
-                //
-
-                self.clearAllFilters();
 
                 var relations = [
                     'creator',
+                    'geometry',
                     'geographies',
                     'last_modified_by',
+                    'metrics',
                     'organizations',
                     'organization',
                     'practices',
@@ -2956,33 +2819,11 @@ angular.module('FieldDoc')
 
                 relations.forEach(function(relation) {
 
-                    var collection = self.dashboardObject[relation];
-
-                    if (Array.isArray(collection)) {
-
-                        self.extractFilter(relation, collection);
-
-                        self.dashboardObject[relation] = [];
-
-                    } else {
-
-                        delete self.dashboardObject[relation];
-
-                    }
+                    delete self.dashboardObject[relation];
 
                 });
 
                 self.status.processing = false;
-
-            };
-
-            self.processRelations = function(arr) {
-
-                arr.forEach(function(filter) {
-
-                    self.transformRelation(filter, filter.category);
-
-                });
 
             };
 
@@ -2994,6 +2835,8 @@ angular.module('FieldDoc')
                     'geometry',
                     'last_modified_by',
                     'metrics',
+                    'organization',
+                    'organizations',
                     'projects',
                     'tags',
                     'tasks'
@@ -3033,12 +2876,6 @@ angular.module('FieldDoc')
                 self.status.processing = true;
 
                 self.scrubFeature(self.dashboardObject);
-
-                self.processRelations(self.activeFilters);
-
-                console.log('self.saveDashboard.dashboardObject', self.dashboardObject);
-
-                console.log('self.saveDashboard.Dashboard', Dashboard);
 
                 Dashboard.update({
                     id: +self.dashboardObject.id
@@ -3136,14 +2973,6 @@ angular.module('FieldDoc')
                 });
 
             };
-
-            $scope.$watch('filterStore.index', function(newVal) {
-
-                console.log('Updated filterStore', newVal);
-
-                self.activeFilters = newVal;
-
-            });
 
             //
             // Verify Account information for proper UI element display
@@ -9813,31 +9642,6 @@ angular.module('FieldDoc')
 
                 };
 
-                self.createProgram = function() {
-
-                    var newProgram = new Program({
-                        'organization_id': $rootScope.user.properties.organization_id
-                    });
-
-                    newProgram.$save(function(successResponse) {
-
-                        $location.path('/programs/' + successResponse.id + '/edit');
-
-                    }, function(errorResponse) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to create a new program.',
-                            'prompt': 'OK'
-                        }];
-
-                        $timeout(closeAlerts, 2000);
-
-                    });
-
-                };
-
                 //
                 // Verify Account information for proper UI element display
                 //
@@ -14408,11 +14212,6 @@ angular.module('FieldDoc')
                             id: $route.current.params.practiceId
                         });
                     },
-                    practiceTypes: function(PracticeType, $route) {
-                        return PracticeType.query({
-                            results_per_page: 500
-                        });
-                    },
                     practice: function(Practice, $route) {
                         return Practice.get({
                             id: $route.current.params.practiceId
@@ -16553,7 +16352,7 @@ angular.module('FieldDoc')
  */
 angular.module('FieldDoc')
     .controller('PracticePhotoController', function(Account, Image, leafletData, $location, $log, Map,
-        mapbox, Media, Practice, practice, practiceTypes, $q, $rootScope, $route,
+        mapbox, Media, Practice, practice, $q, $rootScope, $route,
         $scope, $timeout, $interval, site, user, Utility) {
 
         var self = this;
@@ -16652,32 +16451,6 @@ angular.module('FieldDoc')
 
         };
 
-        //
-        // Verify Account information for proper UI element display
-        //
-        if (Account.userObject && user) {
-
-            user.$promise.then(function(userResponse) {
-
-                $rootScope.user = Account.userObject = userResponse;
-
-                self.permissions = {
-                    isLoggedIn: Account.hasToken(),
-                    role: $rootScope.user.properties.roles[0],
-                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                    can_edit: false
-                };
-
-                self.loadPractice();
-
-            });
-
-        } else {
-
-            $location.path('/login');
-
-        }
-
         self.savePractice = function() {
 
             self.status.processing = true;
@@ -16714,7 +16487,9 @@ angular.module('FieldDoc')
 
                     });
 
-                    self.practice.$update().then(function(successResponse) {
+                    Practice.update({
+                        id: self.practice.id
+                    }).then(function(successResponse) {
 
                         self.processPractice(successResponse);
 
@@ -16885,6 +16660,32 @@ angular.module('FieldDoc')
             });
 
         };
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+
+            user.$promise.then(function(userResponse) {
+
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0],
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: false
+                };
+
+                self.loadPractice();
+
+            });
+
+        } else {
+
+            $location.path('/login');
+
+        }
 
     });
 'use strict';

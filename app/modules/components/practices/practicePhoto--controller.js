@@ -7,7 +7,7 @@
  */
 angular.module('FieldDoc')
     .controller('PracticePhotoController', function(Account, Image, leafletData, $location, $log, Map,
-        mapbox, Media, Practice, practice, practiceTypes, $q, $rootScope, $route,
+        mapbox, Media, Practice, practice, $q, $rootScope, $route,
         $scope, $timeout, $interval, site, user, Utility) {
 
         var self = this;
@@ -106,32 +106,6 @@ angular.module('FieldDoc')
 
         };
 
-        //
-        // Verify Account information for proper UI element display
-        //
-        if (Account.userObject && user) {
-
-            user.$promise.then(function(userResponse) {
-
-                $rootScope.user = Account.userObject = userResponse;
-
-                self.permissions = {
-                    isLoggedIn: Account.hasToken(),
-                    role: $rootScope.user.properties.roles[0],
-                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                    can_edit: false
-                };
-
-                self.loadPractice();
-
-            });
-
-        } else {
-
-            $location.path('/login');
-
-        }
-
         self.savePractice = function() {
 
             self.status.processing = true;
@@ -168,7 +142,9 @@ angular.module('FieldDoc')
 
                     });
 
-                    self.practice.$update().then(function(successResponse) {
+                    Practice.update({
+                        id: self.practice.id
+                    }).then(function(successResponse) {
 
                         self.processPractice(successResponse);
 
@@ -339,5 +315,31 @@ angular.module('FieldDoc')
             });
 
         };
+
+        //
+        // Verify Account information for proper UI element display
+        //
+        if (Account.userObject && user) {
+
+            user.$promise.then(function(userResponse) {
+
+                $rootScope.user = Account.userObject = userResponse;
+
+                self.permissions = {
+                    isLoggedIn: Account.hasToken(),
+                    role: $rootScope.user.properties.roles[0],
+                    account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                    can_edit: false
+                };
+
+                self.loadPractice();
+
+            });
+
+        } else {
+
+            $location.path('/login');
+
+        }
 
     });
