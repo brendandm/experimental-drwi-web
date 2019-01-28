@@ -116,7 +116,7 @@ angular.module('FieldDoc')
 
             self.practice.images.forEach(function(image) {
 
-                data.images.push({
+                imageCollection.images.push({
                     id: image.id
                 });
 

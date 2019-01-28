@@ -57,13 +57,13 @@
 
                         <div class="card--content">
 
-                            <div style="width: 100%; height: 200px; min-height: 200px; background: #f5f5f5 url('{{ image.properties.original }}') center center / cover no-repeat;"></div>
+                            <div style="width: 100%; height: 200px; min-height: 200px; background: #f5f5f5 url('{{ image.original }}') center center / cover no-repeat;"></div>
 
                             <img height="0" width="auto" />
 
                             <div class="body">
 
-                                <div class="confirm--delete" style="opacity: 0; visibility: hidden;" data-ng-class="{visible: (page.deletionTarget && page.deletionTarget.feature.properties.id === image.properties.id && page.deletionTarget.collection === 'image')}">
+                                <div class="confirm--delete" style="opacity: 0; visibility: hidden;" data-ng-class="{visible: (page.deletionTarget && page.deletionTarget.feature.id === image.id && page.deletionTarget.collection === 'image')}">
                                     <p style="font-style: normal; color: #616161; font-size: 0.9em; margin: 0;">Delete this image?</p>
                                     <div class="actions" style="flex: 0;">
                                         <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('image', $index)">
@@ -75,10 +75,10 @@
                                     </div>
                                 </div>
 
-                                <p style="font-style: normal; color: #616161; font-size: 0.9em;">{{ (image.properties.caption || 'No caption') | truncate:80 }}</p>
+                                <p style="font-style: normal; color: #616161; font-size: 0.9em;">{{ (image.caption || 'No caption') | truncate:80 }}</p>
 
                                 <div class="actions">
-                                    <a class="snapshot--title" href="{{ image.properties.original }}" title="Save image" target="_blank">
+                                    <a class="snapshot--title" href="{{ image.original }}" title="Save image" target="_blank">
                                         <i class="material-icons">
                                             save_alt
                                         </i>
@@ -90,8 +90,8 @@
                                     </a>
                                 </div>
 
-                                <span><time datetime="{{ image.properties.created_on }}" title="{{ image.properties.created_on }}">
-                                        Added on {{ image.properties.created_on | date }}</time></span>
+                                <span><time datetime="{{ image.created_on }}" title="{{ image.created_on }}">
+                                        Added on {{ image.created_on | date }}</time></span>
                             </div>
 
                         </div>
@@ -164,7 +164,7 @@
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.properties.id === page.practice.id && page.deletionTarget.collection === 'practice'">
+                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.practice.id && page.deletionTarget.collection === 'practice'">
                     <p>Do you want to delete this practice?</p>
                     <div class="actions">
                         <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('practice', page.practice)">
