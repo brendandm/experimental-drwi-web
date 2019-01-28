@@ -110,19 +110,17 @@ angular.module('FieldDoc')
 
             self.status.processing = true;
 
-            var _images = [];
+            var imageCollection = {
+                images: []
+            };
 
             self.practice.images.forEach(function(image) {
 
-                _images.push({
+                data.images.push({
                     id: image.id
                 });
 
             });
-
-            self.practice = {
-                'images': _images
-            };
 
             if (self.files.images.length) {
 
@@ -134,7 +132,7 @@ angular.module('FieldDoc')
 
                     angular.forEach(successResponse, function(image) {
 
-                        self.practice.images.push({
+                        imageCollection.images.push({
 
                             id: image.id
 
@@ -144,7 +142,7 @@ angular.module('FieldDoc')
 
                     Practice.update({
                         id: self.practice.id
-                    }).then(function(successResponse) {
+                    }, imageCollection).then(function(successResponse) {
 
                         self.processPractice(successResponse);
 

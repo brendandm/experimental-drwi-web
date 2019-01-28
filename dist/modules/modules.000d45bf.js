@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548693611449})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548694074137})
 
 ;
 /**
@@ -16455,19 +16455,17 @@ angular.module('FieldDoc')
 
             self.status.processing = true;
 
-            var _images = [];
+            var imageCollection = {
+                images: []
+            };
 
             self.practice.images.forEach(function(image) {
 
-                _images.push({
+                data.images.push({
                     id: image.id
                 });
 
             });
-
-            self.practice = {
-                'images': _images
-            };
 
             if (self.files.images.length) {
 
@@ -16479,7 +16477,7 @@ angular.module('FieldDoc')
 
                     angular.forEach(successResponse, function(image) {
 
-                        self.practice.images.push({
+                        imageCollection.images.push({
 
                             id: image.id
 
@@ -16489,7 +16487,7 @@ angular.module('FieldDoc')
 
                     Practice.update({
                         id: self.practice.id
-                    }).then(function(successResponse) {
+                    }, imageCollection).then(function(successResponse) {
 
                         self.processPractice(successResponse);
 
