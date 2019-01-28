@@ -476,13 +476,7 @@ angular.module('FieldDoc')
 
                     console.log('Project metrics', successResponse);
 
-                    successResponse.features.forEach(function(metric) {
-
-                        var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
-
-                        metric.percentComplete = _percentComplete;
-
-                    });
+                    self.processMetrics(successResponse.features);
 
                     self.metrics = successResponse.features;
 
@@ -492,43 +486,58 @@ angular.module('FieldDoc')
 
                 });
 
-                // metrics.$promise.then(function(successResponse) {
+            };
 
-                //     console.log('Project metrics', successResponse);
+            self.processMetrics = function(arr) {
 
-                //     successResponse.features.forEach(function(metric) {
+                arr.forEach(function(datum) {
 
-                //         var _percentComplete = +((metric.installation / metric.planning) * 100).toFixed(0);
+                    var contextProgress,
+                        selfProgress;
 
-                //         metric.percentComplete = _percentComplete;
+                    if (datum.context_target) {
 
-                //     });
+                        contextProgress = datum.current_value / datum.context_target;
 
-                //     self.metrics = successResponse.features;
+                    } else {
 
-                // }, function(errorResponse) {
+                        contextProgress = datum.current_value / datum.target;
 
-                //     console.log('errorResponse', errorResponse);
+                    }
 
-                // });
+                    if (datum.self_target) {
+
+                        selfProgress = datum.current_value / datum.self_target;
+
+                    }
+
+                    datum.contextProgress = contextProgress > 1 ? 1 : contextProgress;
+
+                    datum.selfProgress = selfProgress > 1 ? 1 : selfProgress;
+
+                });
+
+                return arr;
 
             };
 
-            // self.loadOutcomes = function() {
+            self.showMetricModal = function(metric) {
 
-            //     outcomes.$promise.then(function(successResponse) {
+                console.log('self.showMetricModal', metric);
 
-            //         console.log('Project outcomes', successResponse);
+                self.selectedMetric = metric;
 
-            //         self.outcomes = successResponse;
+                self.displayModal = true;
 
-            //     }, function(errorResponse) {
+            };
 
-            //         console.log('errorResponse', errorResponse);
+            self.closeMetricModal = function() {
 
-            //     });
+                self.selectedMetric = null;
 
-            // };
+                self.displayModal = false;
+
+            };
 
             //
             // Verify Account information for proper UI element display
