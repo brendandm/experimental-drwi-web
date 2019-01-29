@@ -45,7 +45,7 @@
                             <div class="grade--color">
                                 <span class="meta-label"><b>Color</b></span>
                                 <input type="text" data-ng-model="page.tag.color" placeholder="…" />
-                                <button type="button" style="background: {{ page.tag.color }};" data-ng-click="page.randomColor()">
+                                <button type="button" style="background: {{ page.tag.color || '#29cc82' }};" data-ng-click="page.randomColor()">
                                     <i class="material-icons">
                                         refresh
                                     </i>

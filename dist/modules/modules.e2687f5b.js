@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548712461580})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548721418360})
 
 ;
 /**
@@ -1302,10 +1302,7 @@ angular.module('FieldDoc')
                             featureId: feature.properties.id
                         });
 
-                        // self.loadOutcomes(null, {
-                        //     collection: 'site',
-                        //     featureId: feature.properties.id
-                        // });
+                        self.loadTags('site', feature.properties.id);
 
                         //
                         // Set value of `self.historyItem`
@@ -1339,6 +1336,8 @@ angular.module('FieldDoc')
                             featureId: feature.properties.id
                         });
 
+                        self.loadTags('geography', feature.properties.id);
+
                     } else if (layer.feature.properties.feature_type === 'practice') {
 
                         self.loadMetrics(null, {
@@ -1346,10 +1345,7 @@ angular.module('FieldDoc')
                             featureId: feature.properties.id
                         });
 
-                        // self.loadOutcomes(null, {
-                        //     collection: 'practice',
-                        //     featureId: feature.properties.id
-                        // });
+                        self.loadTags('practice', feature.properties.id);
 
                         self.card = {
                             featureType: 'practice',
@@ -1658,83 +1654,6 @@ angular.module('FieldDoc')
 
         };
 
-        self.loadOutcomes = function(arr, options) {
-
-            if (options) {
-
-                if (options.collection === 'site') {
-
-                    Site.outcomes({
-                        id: options.featureId
-                    }).$promise.then(function(successResponse) {
-
-                        console.log('siteOutcomesResponse', successResponse);
-
-                        self.outcomes = successResponse;
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                    });
-
-                } else {
-
-                    Practice.outcomes({
-                        id: options.featureId
-                    }).$promise.then(function(successResponse) {
-
-                        console.log('practiceOutcomesResponse', successResponse);
-
-                        self.outcomes = successResponse;
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                    });
-
-                }
-
-            } else {
-
-                //
-                // A program (account) identifier
-                // is required by default.
-                //
-
-                var params = {};
-
-                //
-                // If the `arr` parameter is valid,
-                // constrain the query to the given
-                // set of numeric project identifiers.
-                //
-
-                if (arr && arr.length) {
-
-                    params.projects = self.extractIds(arr);
-
-                }
-
-                Dashboard.outcomes({
-                    id: $routeParams.dashboardId
-                }).$promise.then(function(successResponse) {
-
-                    console.log('granteeResponse', successResponse);
-
-                    self.outcomes = successResponse;
-
-                }, function(errorResponse) {
-
-                    console.log('errorResponse', errorResponse);
-
-                });
-
-            }
-
-        };
-
         self.search = {
             query: '',
             execute: function(page) {
@@ -1856,6 +1775,8 @@ angular.module('FieldDoc')
                 var markerId = 'project_' + feature.id,
                     marker = self.map.markers[markerId];
 
+                console.log('setMarkerFocus', markerId, self.map.markers[markerId]);
+
                 self.removeMarkerPopups();
 
                 if (marker) {
@@ -1869,8 +1790,6 @@ angular.module('FieldDoc')
                     }
 
                 }
-
-                console.log('setMarkerFocus', markerId, self.map.markers[markerId]);
 
             } else {
 
@@ -1987,6 +1906,10 @@ angular.module('FieldDoc')
 
                     self.clearAllFilters(true);
 
+                    self.tags = [];
+
+                    // self.loadTags('program', self.activeProject.properties.id);
+
                     break;
 
                 case 'project':
@@ -2011,6 +1934,8 @@ angular.module('FieldDoc')
                         collection: 'project',
                         featureId: self.activeProject.properties.id
                     });
+
+                    self.loadTags('project', self.activeProject.properties.id);
 
                     break;
 
@@ -2038,6 +1963,8 @@ angular.module('FieldDoc')
                         collection: 'site',
                         featureId: self.activeSite.properties.id
                     });
+
+                    self.loadTags('site', self.activeSite.properties.id);
 
                     //
                     // Update history item
@@ -2086,20 +2013,20 @@ angular.module('FieldDoc')
 
             FilterStore.addItem(_filterObject);
 
-            // ProjectStore.filterAll(FilterStore.index);
-
-            // self.loadMetrics([
-            //     obj
-            // ]);
+            //
+            // Load project progress
+            //
 
             self.loadMetrics(null, {
                 collection: 'project',
                 featureId: obj.id
             });
 
-            // self.loadOutcomes([
-            //     obj
-            // ]);
+            //
+            // Load project tags
+            //
+
+            self.loadTags('project', obj.id);
 
             //
             // Set value of `self.historyItem`
@@ -2157,18 +2084,6 @@ angular.module('FieldDoc')
             self.activeTab = {
                 collection: collection
             };
-
-        };
-
-        self.closeFilterModal = function() {
-
-            if (FilterStore.index.length < 1) {
-
-                self.clearAllFilters(true);
-
-            }
-
-            self.showFilters = false;
 
         };
 
@@ -2263,8 +2178,6 @@ angular.module('FieldDoc')
 
             self.processLocations(data.features);
 
-            self.loadOutcomes(self.filteredProjects);
-
             self.loadMetrics(self.filteredProjects);
 
             self.zoomToProjects();
@@ -2346,82 +2259,6 @@ angular.module('FieldDoc')
 
         };
 
-        self.filterProjects = function() {
-
-            //
-            // Dismiss filter modal
-            //
-
-            self.showFilters = false;
-
-            //
-            // Extract feature identifiers from active filters
-            //
-
-            var params = {};
-
-            if (self.limitScope) {
-
-                params.user = $rootScope.user.id;
-
-            }
-
-            FilterStore.index.forEach(function(obj) {
-
-                if (params.hasOwnProperty(obj.category)) {
-
-                    params[obj.category].push(obj.id);
-
-                } else {
-
-                    params[obj.category] = [obj.id];
-
-                }
-
-            });
-
-            console.log('self.filterProjects.params', params);
-
-            //
-            // Convert arrays of feature identifiers to strings
-            //
-
-            for (var key in params) {
-
-                if (params.hasOwnProperty(key)) {
-
-                    //
-                    // If attribute value is an array, convert it to a string
-                    //
-
-                    if (Array.isArray(params[key])) {
-
-                        var parsedValue = params[key].join(',');
-
-                        params[key] = parsedValue;
-
-                    }
-
-                }
-
-            }
-
-            //
-            // Execute API request
-            //
-
-            self.loadProjects(params);
-
-        };
-
-        $scope.$watch('filterStore.index', function(newVal) {
-
-            console.log('Updated filterStore', newVal);
-
-            self.activeFilters = newVal;
-
-        });
-
         $scope.$on('leafletDirectiveMarker.dashboard--map.click', function(event, args) {
 
             console.log('leafletDirectiveMarker.dashboard--map.click', event, args);
@@ -2433,6 +2270,8 @@ angular.module('FieldDoc')
                 return datum.id === id;
 
             })[0];
+
+            console.log('leafletDirectiveMarker.dashboard--map.click.project', project);
 
             self.setMarkerFocus(project, 'project', true);
 
@@ -2454,42 +2293,6 @@ angular.module('FieldDoc')
 
         });
 
-        self.changeScope = function() {
-
-            //
-            // Reset map extent
-            //
-
-            self.resetMapExtent();
-
-            //
-            // Reset dashboard state
-            //
-
-            self.clearAllFilters(false);
-
-            //
-            // Refresh project data
-            //
-
-            if (self.limitScope) {
-
-                self.loadProjects({
-                    user: $rootScope.user.id
-                });
-
-            } else {
-
-                // self.loadProjects({});
-
-                // self.loadBaseProjects();
-
-                self.loadDashboard();
-
-            }
-
-        };
-
         self.showMetricModal = function(metric) {
 
             console.log('self.showMetricModal', metric);
@@ -2508,23 +2311,46 @@ angular.module('FieldDoc')
 
         };
 
-        //
-        // Verify Account information for proper UI element display
-        //
-        // if (Account.userObject && user) {
+        self.loadTags = function(featureType, featureId) {
 
-        //     user.$promise.then(function(userResponse) {
+            var models = {
+                    'geography': GeographyService,
+                    'practice': Practice,
+                    'project': Project,
+                    'site': Site
+                },
+                targetModel = models[featureType];
 
-        //         $rootScope.user = Account.userObject = userResponse;
+            if (targetModel) {
 
-        //         self.permissions = {
-        //             isLoggedIn: Account.hasToken(),
-        //             isAdmin: Account.hasRole('admin')
-        //         };
+                targetModel.tags({
+                    id: featureId
+                }).$promise.then(function(successResponse) {
 
-        //     });
+                    console.log('Feature.tags', successResponse);
 
-        // }
+                    successResponse.features.forEach(function(tag) {
+
+                        if (tag.color &&
+                            tag.color.length) {
+
+                            tag.lightColor = tinycolor(tag.color).lighten(5).toString();
+
+                        }
+
+                    });
+
+                    self.tags = successResponse.features;
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
+
+            }
+
+        };
 
         self.loadDashboard();
 
@@ -6114,6 +5940,17 @@ angular.module('FieldDoc')
                 }).$promise.then(function(successResponse) {
 
                     console.log('Project.tags', successResponse);
+
+                    successResponse.features.forEach(function(tag) {
+
+                        if (tag.color &&
+                            tag.color.length) {
+
+                            tag.lightColor = tinycolor(tag.color).lighten(5).toString();
+
+                        }
+
+                    });
 
                     self.tags = successResponse.features;
 
@@ -10497,6 +10334,17 @@ angular.module('FieldDoc')
                     }).$promise.then(function(successResponse) {
 
                         console.log('Site.tags', successResponse);
+
+                        successResponse.features.forEach(function(tag) {
+
+                            if (tag.color &&
+                                tag.color.length) {
+
+                                tag.lightColor = tinycolor(tag.color).lighten(5).toString();
+
+                            }
+
+                        });
 
                         self.tags = successResponse.features;
 
@@ -15096,6 +14944,17 @@ angular.module('FieldDoc')
                     }).$promise.then(function(successResponse) {
 
                         console.log('Practice.tags', successResponse);
+
+                        successResponse.features.forEach(function(tag) {
+
+                            if (tag.color &&
+                                tag.color.length) {
+
+                                tag.lightColor = tinycolor(tag.color).lighten(5).toString();
+
+                            }
+
+                        });
 
                         self.tags = successResponse.features;
 
@@ -21853,6 +21712,17 @@ angular.module('FieldDoc')
 
                         console.log('GeographyService.tags', successResponse);
 
+                        successResponse.features.forEach(function(tag) {
+
+                            if (tag.color &&
+                                tag.color.length) {
+
+                                tag.lightColor = tinycolor(tag.color).lighten(5).toString();
+
+                            }
+
+                        });
+
                         self.tags = successResponse.features;
 
                     }, function(errorResponse) {
@@ -24378,6 +24248,17 @@ angular.module('FieldDoc')
                     }).$promise.then(function(successResponse) {
 
                         console.log('Program.tags', successResponse);
+
+                        successResponse.features.forEach(function(tag) {
+
+                            if (tag.color &&
+                                tag.color.length) {
+
+                                tag.lightColor = tinycolor(tag.color).lighten(5).toString();
+
+                            }
+
+                        });
 
                         self.tags = successResponse.features;
 
