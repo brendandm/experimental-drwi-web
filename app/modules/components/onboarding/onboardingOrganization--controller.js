@@ -53,7 +53,17 @@ angular.module('FieldDoc')
 
                     $timeout(closeAlerts, 2000);
 
-                    $location.path('/');
+                    Account.getUser().$promise.then(function(userResponse) {
+
+                        Account.userObject = userResponse;
+
+                        $rootScope.user = Account.userObject;
+                        $rootScope.isLoggedIn = Account.hasToken();
+                        $rootScope.isAdmin = Account.hasRole('admin');
+
+                        $location.path('/');
+
+                    });
 
                 }, function(errorResponse) {
 
