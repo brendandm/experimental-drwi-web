@@ -325,6 +325,17 @@
 
                         console.log('Practice.tags', successResponse);
 
+                        successResponse.features.forEach(function(tag) {
+
+                            if (tag.color &&
+                                tag.color.length) {
+
+                                tag.lightColor = tinycolor(tag.color).lighten(5).toString();
+
+                            }
+
+                        });
+
                         self.tags = successResponse.features;
 
                     }, function(errorResponse) {

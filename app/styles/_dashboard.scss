@@ -1071,6 +1071,56 @@ input:checked + .slider:before {
 
 }
 
+.dashboard {
+
+    .tag--group {
+        display: flex;
+        flex-flow: row wrap;
+        //margin-bottom: 0.5em;
+        margin-top: 1em;
+
+        .tag--pill {
+            display: flex;
+            flex-flow: column;
+            border: 1px solid #49525b;
+            border-radius: 4px;
+            background: #252f3a;
+            font-size: 1em;
+            margin-right: 1em;
+            color: #f9f9f9;
+            cursor: default;
+
+            span {
+                display: flex;
+                padding: 8px;
+                overflow: hidden;
+
+                &:last-of-type {
+                    border-radius: 0 0 4px 4px;
+                }
+            }
+
+            .category {
+                font-size: 0.7em;
+                text-transform: uppercase;
+                font-weight: normal;
+                border-bottom: 1px solid #49525b;
+                border-radius: 4px 4px 0 0;
+                //opacity: 0.6;
+            }
+
+        }
+
+        .tag--pill.colorize {
+            border: 1px solid #252f3a;
+            border-radius: 4px;
+            background: transparent;
+        }
+
+    }
+
+}
+
 
 
 
