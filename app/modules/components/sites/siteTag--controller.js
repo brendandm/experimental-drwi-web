@@ -401,75 +401,9 @@ angular.module('FieldDoc')
 
                 });
 
-                // angular.forEach(list, function(item) {
-
-                //     console.log('processRelations.item', item);
-
-                //     var _datum = {};
-
-                //     if (checkSelected) {
-
-                //         if (item.id && item.selected) {
-
-                //             _datum.id = item.id;
-
-                //         }
-
-                //     } else if (item && item.id) {
-
-                //         _datum.id = item.id;
-
-                //     }
-
-                //     _list.push(_datum);
-
-                // });
-
-                // for (var key in self.groupTags) {
-
-                //     if (self.groupTags.hasOwnProperty(key)) {
-
-                //         _list.push({
-                //             id: self.groupTags[key].id
-                //         });
-
-                //     }
-
-                // }
-
                 return _list;
 
             };
-
-            // self.selectTag = function(tag) {
-
-            //     if (tag.selected) {
-
-            //         self.tempTags.push(tag);
-
-            //         console.log('Added tag to tempTags', tag);
-
-            //     } else {
-
-            //         var tags = [];
-
-            //         angular.forEach(self.tempTags, function(item) {
-
-            //             if (item && item.id && item.id !== tag.id) {
-
-            //                 tags.push(item);
-
-            //             }
-
-            //         });
-
-            //         self.tempTags = tags;
-
-            //         console.log('Removed tag from tempTags', tag);
-
-            //     }
-
-            // };
 
             self.processGroups = function(list) {
 
@@ -500,14 +434,7 @@ angular.module('FieldDoc')
                 };
 
                 console.log('self.saveFeature.data', data);
-
-                // self.scrubFeature(self.site);
-
-                // self.site.tags = self.processRelations(self.tempTags);
-
-                // console.log('self.site.pendingTags', self.site.tags);
-
-                // self.site.$update().then(function(successResponse) {
+                
                 Site.update({
                     id: self.site.id
                 }, data).$promise.then(function(successResponse) {
@@ -521,13 +448,9 @@ angular.module('FieldDoc')
 
                     $timeout(closeAlerts, 2000);
 
-                    // self.tempTags = successResponse.tags;
-
                     $window.scrollTo(0, 0);
 
-                    // self.loadGroups();
-
-                    // self.loadTags();
+                    self.loadTags();
 
                     self.showElements();
 
@@ -624,7 +547,7 @@ angular.module('FieldDoc')
 
                     self.loadGroups();
 
-                    // self.loadTags();
+                    self.loadTags();
 
                 });
 
