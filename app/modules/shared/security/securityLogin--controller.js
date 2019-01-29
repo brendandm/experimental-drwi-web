@@ -100,20 +100,43 @@
                                     $rootScope.isLoggedIn = Account.hasToken();
                                     $rootScope.isAdmin = Account.hasRole('admin');
 
-                                    if ($rootScope.targetPath &&
-                                        typeof $rootScope.targetPath === 'string') {
+                                    if ($rootScope.user.properties.organization) {
 
-                                        var targetPath = $rootScope.targetPath;
+                                        if ($rootScope.targetPath &&
+                                            typeof $rootScope.targetPath === 'string') {
 
-                                        $rootScope.targetPath = null;
+                                            var targetPath = $rootScope.targetPath;
 
-                                        $location.path(targetPath);
+                                            $rootScope.targetPath = null;
+
+                                            $location.path(targetPath);
+
+                                        } else {
+
+                                            $location.path('/');
+
+                                        }
 
                                     } else {
 
-                                        $location.path('/');
+                                        $location.path('/onboarding/organization');
 
                                     }
+
+                                    // if ($rootScope.targetPath &&
+                                    //     typeof $rootScope.targetPath === 'string') {
+
+                                    //     var targetPath = $rootScope.targetPath;
+
+                                    //     $rootScope.targetPath = null;
+
+                                    //     $location.path(targetPath);
+
+                                    // } else {
+
+                                    //     $location.path('/');
+
+                                    // }
 
                                 });
 

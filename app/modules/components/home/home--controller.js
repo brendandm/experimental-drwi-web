@@ -246,16 +246,24 @@
 
                         $rootScope.user = Account.userObject = userResponse;
 
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0],
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                            can_edit: true
-                        };
+                        if ($rootScope.user.properties.organization) {
 
-                        self.loadPrograms();
+                            self.permissions = {
+                                isLoggedIn: Account.hasToken(),
+                                role: $rootScope.user.properties.roles[0],
+                                account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                                can_edit: true
+                            };
 
-                        self.loadProjects();
+                            self.loadPrograms();
+
+                            self.loadProjects();
+
+                        } else {
+
+                            $location.path('/onboarding/organization');
+
+                        }
 
                     }).catch(function(errorResponse) {
 
