@@ -194,9 +194,11 @@ angular.module('FieldDoc')
 
             self.addTarget = function(item, idx) {
 
-                if (!item.value) return;
+                // if (!item.value) return;
 
                 if (typeof idx === 'number') {
+
+                    item.value = 0;
 
                     item.action = 'add';
 

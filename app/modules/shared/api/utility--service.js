@@ -143,6 +143,45 @@ angular.module('FieldDoc')
                     'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
                 ].join('');
 
+            },
+            processMetrics: function(arr) {
+
+                arr.forEach(function(datum) {
+
+                    datum.contextProgress = {
+                        value: 0,
+                        arcValue: 0
+                    };
+
+                    datum.selfProgress = {
+                        value: 0,
+                        arcValue: 0
+                    };
+
+                    if (datum.context_target) {
+
+                        datum.contextProgress.value = datum.current_value / datum.context_target;
+
+                    } else {
+
+                        datum.contextProgress.value = datum.current_value / datum.target;
+
+                    }
+
+                    if (datum.self_target) {
+
+                        datum.selfProgress.value = datum.current_value / datum.self_target;
+
+                    }
+
+                    datum.contextProgress.arcValue = datum.contextProgress.value > 1 ? 1 : datum.contextProgress.value;
+
+                    datum.selfProgress.arcValue = datum.selfProgress.value > 1 ? 1 : datum.selfProgress.value;
+
+                });
+
+                return arr;
+
             }
         };
 

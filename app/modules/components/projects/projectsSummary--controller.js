@@ -507,7 +507,7 @@ angular.module('FieldDoc')
 
                     console.log('Project metrics', successResponse);
 
-                    self.processMetrics(successResponse.features);
+                    Utility.processMetrics(successResponse.features);
 
                     self.metrics = successResponse.features;
 
@@ -516,39 +516,6 @@ angular.module('FieldDoc')
                     console.log('errorResponse', errorResponse);
 
                 });
-
-            };
-
-            self.processMetrics = function(arr) {
-
-                arr.forEach(function(datum) {
-
-                    var contextProgress,
-                        selfProgress;
-
-                    if (datum.context_target) {
-
-                        contextProgress = datum.current_value / datum.context_target;
-
-                    } else {
-
-                        contextProgress = datum.current_value / datum.target;
-
-                    }
-
-                    if (datum.self_target) {
-
-                        selfProgress = datum.current_value / datum.self_target;
-
-                    }
-
-                    datum.contextProgress = contextProgress > 1 ? 1 : contextProgress;
-
-                    datum.selfProgress = selfProgress > 1 ? 1 : selfProgress;
-
-                });
-
-                return arr;
 
             };
 
