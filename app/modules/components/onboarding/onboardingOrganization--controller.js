@@ -51,19 +51,21 @@ angular.module('FieldDoc')
                         'prompt': 'OK'
                     }];
 
-                    $timeout(closeAlerts, 2000);
+                    $timeout(function() {
 
-                    Account.getUser().$promise.then(function(userResponse) {
+                        Account.getUser().$promise.then(function(userResponse) {
 
-                        Account.userObject = userResponse;
+                            Account.userObject = userResponse;
 
-                        $rootScope.user = Account.userObject;
-                        $rootScope.isLoggedIn = Account.hasToken();
-                        $rootScope.isAdmin = Account.hasRole('admin');
+                            $rootScope.user = Account.userObject;
+                            $rootScope.isLoggedIn = Account.hasToken();
+                            $rootScope.isAdmin = Account.hasRole('admin');
 
-                        $location.path('/');
+                            $location.path('/');
 
-                    });
+                        });
+
+                    }, 4000);
 
                 }, function(errorResponse) {
 
