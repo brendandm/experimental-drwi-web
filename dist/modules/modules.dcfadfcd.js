@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548722649069})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548791036210})
 
 ;
 /**
@@ -246,20 +246,43 @@ angular.module('FieldDoc')
                                     $rootScope.isLoggedIn = Account.hasToken();
                                     $rootScope.isAdmin = Account.hasRole('admin');
 
-                                    if ($rootScope.targetPath &&
-                                        typeof $rootScope.targetPath === 'string') {
+                                    if ($rootScope.user.properties.organization) {
 
-                                        var targetPath = $rootScope.targetPath;
+                                        if ($rootScope.targetPath &&
+                                            typeof $rootScope.targetPath === 'string') {
 
-                                        $rootScope.targetPath = null;
+                                            var targetPath = $rootScope.targetPath;
 
-                                        $location.path(targetPath);
+                                            $rootScope.targetPath = null;
+
+                                            $location.path(targetPath);
+
+                                        } else {
+
+                                            $location.path('/');
+
+                                        }
 
                                     } else {
 
-                                        $location.path('/');
+                                        $location.path('/onboarding/organization');
 
                                     }
+
+                                    // if ($rootScope.targetPath &&
+                                    //     typeof $rootScope.targetPath === 'string') {
+
+                                    //     var targetPath = $rootScope.targetPath;
+
+                                    //     $rootScope.targetPath = null;
+
+                                    //     $location.path(targetPath);
+
+                                    // } else {
+
+                                    //     $location.path('/');
+
+                                    // }
 
                                 });
 
@@ -392,18 +415,26 @@ angular.module('FieldDoc')
 
                                         self.newUser.$update().then(function(updateUserSuccessResponse) {
 
-                                            if ($rootScope.targetPath &&
-                                                typeof $rootScope.targetPath === 'string') {
+                                            if (updateUserSuccessResponse.properties.organization) {
 
-                                                var targetPath = $rootScope.targetPath;
+                                                if ($rootScope.targetPath &&
+                                                    typeof $rootScope.targetPath === 'string') {
 
-                                                $rootScope.targetPath = null;
+                                                    var targetPath = $rootScope.targetPath;
 
-                                                $location.path(targetPath);
+                                                    $rootScope.targetPath = null;
+
+                                                    $location.path(targetPath);
+
+                                                } else {
+
+                                                    $location.path('/');
+
+                                                }
 
                                             } else {
 
-                                                $location.path('/account');
+                                                $location.path('/onboarding/organization');
 
                                             }
 
@@ -9145,6 +9176,204 @@ angular.module('FieldDoc')
             }
 
         });
+(function() {
+
+    'use strict';
+
+    /**
+     * @ngdoc
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .config(function($routeProvider, environment) {
+
+            $routeProvider
+                .when('/onboarding/organization', {
+                    templateUrl: '/modules/components/onboarding/views/onboardingOrganization--view.html?t=' + environment.version,
+                    controller: 'OnboardingOrganizationController',
+                    controllerAs: 'page',
+                    resolve: {
+                        user: function(Account) {
+                            return Account.getUser();
+                        }
+                    }
+                });
+
+        });
+
+}());
+'use strict';
+
+/**
+ * @ngdoc function
+ * @name
+ * @description
+ */
+angular.module('FieldDoc')
+    .controller('OnboardingOrganizationController',
+        function(Account, $location, $log, Notifications, $rootScope,
+            $route, user, User, Organization, SearchService, $timeout) {
+
+            var self = this;
+
+            $rootScope.viewState = {
+                'organization': true
+            };
+
+            self.status = {
+                loading: false,
+                processing: false
+            };
+
+            self.alerts = [];
+
+            function closeAlerts() {
+
+                self.alerts = [];
+
+            }
+
+            self.updateRelation = function(organization) {
+
+                var _user = new User({
+                    'id': self.user.id,
+                    'first_name': self.user.properties.first_name,
+                    'last_name': self.user.properties.last_name,
+                    'organization_id': organization.id
+                });
+
+                _user.$update(function(successResponse) {
+
+                    console.log('Onboarding update user', successResponse);
+
+                    self.status.processing = false;
+
+                    self.alerts = [{
+                        'type': 'success',
+                        'flag': 'Success!',
+                        'msg': 'Successfully added you to ' + organization.name + '.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(function() {
+
+                        Account.getUser().$promise.then(function(userResponse) {
+
+                            Account.userObject = userResponse;
+
+                            $rootScope.user = Account.userObject;
+                            $rootScope.isLoggedIn = Account.hasToken();
+                            $rootScope.isAdmin = Account.hasRole('admin');
+
+                            $location.path('/');
+
+                        });
+
+                    }, 4000);
+
+                }, function(errorResponse) {
+
+                    self.status.processing = false;
+
+                });
+
+            };
+
+            self.assignOrganization = function() {
+
+                console.log('self.organizationSelection', self.organizationSelection);
+
+                self.status.processing = true;
+
+                if (typeof self.organizationSelection === 'string') {
+
+                    var _organization = new Organization({
+                        'name': self.organizationSelection
+                    });
+
+                    _organization.$save(function(successResponse) {
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Successfully created ' + self.organization.name + '.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        self.updateRelation(successResponse.properties);
+
+                    }, function(errorResponse) {
+
+                        self.status.processing = false;
+
+                    });
+
+                } else {
+
+                    self.updateRelation(self.organizationSelection);
+
+                }
+
+            };
+
+            self.searchOrganizations = function(value) {
+
+                return SearchService.organization({
+                    q: value
+                }).$promise.then(function(response) {
+
+                    console.log('SearchService.organization response', response);
+
+                    response.results.forEach(function(result) {
+
+                        result.category = null;
+
+                    });
+
+                    return response.results.slice(0, 5);
+
+                });
+
+            };
+
+            //
+            // Assign project to a scoped variable
+            //
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = self.user = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                    };
+
+                    //
+                    // Setup page meta data
+                    //
+                    $rootScope.page = {
+                        'title': 'Join an organization'
+                    };
+
+                });
+
+
+            } else {
+
+                $location.path('/login');
+
+            }
+
+        });
 'use strict';
 
 /**
@@ -9440,16 +9669,24 @@ angular.module('FieldDoc')
 
                         $rootScope.user = Account.userObject = userResponse;
 
-                        self.permissions = {
-                            isLoggedIn: Account.hasToken(),
-                            role: $rootScope.user.properties.roles[0],
-                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                            can_edit: true
-                        };
+                        if ($rootScope.user.properties.organization) {
 
-                        self.loadPrograms();
+                            self.permissions = {
+                                isLoggedIn: Account.hasToken(),
+                                role: $rootScope.user.properties.roles[0],
+                                account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                                can_edit: true
+                            };
 
-                        self.loadProjects();
+                            self.loadPrograms();
+
+                            self.loadProjects();
+
+                        } else {
+
+                            $location.path('/onboarding/organization');
+
+                        }
 
                     }).catch(function(errorResponse) {
 
