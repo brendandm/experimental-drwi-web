@@ -380,7 +380,7 @@
 
                 } else {
 
-                    $location.path('/login');
+                    $location.path('/logout');
 
                 }
 

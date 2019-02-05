@@ -338,7 +338,7 @@ angular.module('FieldDoc')
 
         } else {
 
-            $location.path('/login');
+            $location.path('/logout');
 
         }
 

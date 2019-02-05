@@ -267,13 +267,13 @@
 
                     }).catch(function(errorResponse) {
 
-                        $location.path('/login');
+                        $location.path('/logout');
 
                     });
 
                 } else {
 
-                    $location.path('/login');
+                    $location.path('/logout');
 
                 }
 

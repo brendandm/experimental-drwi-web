@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1549384988331})
+.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1549399967882})
 
 ;
 /**
@@ -2460,7 +2460,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -2826,7 +2826,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -3515,7 +3515,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -3944,7 +3944,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -4392,7 +4392,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -4499,7 +4499,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -5454,7 +5454,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -6336,7 +6336,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -7181,7 +7181,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -7568,7 +7568,7 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    $location.path('/login');
+                    $location.path('/logout');
 
                 }
 
@@ -8121,7 +8121,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -8246,7 +8246,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -9107,7 +9107,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -9305,7 +9305,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -9626,13 +9626,13 @@ angular.module('FieldDoc')
 
                     }).catch(function(errorResponse) {
 
-                        $location.path('/login');
+                        $location.path('/logout');
 
                     });
 
                 } else {
 
-                    $location.path('/login');
+                    $location.path('/logout');
 
                 }
 
@@ -10782,7 +10782,7 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    $location.path('/login');
+                    $location.path('/logout');
 
                 }
 
@@ -11579,7 +11579,7 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    $location.path('/login');
+                    $location.path('/logout');
 
                 }
 
@@ -12173,7 +12173,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -13409,7 +13409,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -13950,7 +13950,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -14599,7 +14599,7 @@ angular.module('FieldDoc')
 
         } else {
 
-            $location.path('/login');
+            $location.path('/logout');
 
         }
 
@@ -16309,7 +16309,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -16654,7 +16654,7 @@ angular.module('FieldDoc')
 
         } else {
 
-            $location.path('/login');
+            $location.path('/logout');
 
         }
 
@@ -17213,7 +17213,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -17754,7 +17754,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -18426,7 +18426,7 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    $location.path('/login');
+                    $location.path('/logout');
 
                 }
 
@@ -18819,7 +18819,7 @@ angular.module('FieldDoc')
 
         } else {
 
-            $location.path('/login');
+            $location.path('/logout');
 
         }
 
@@ -19189,7 +19189,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -19640,7 +19640,7 @@ angular.module('FieldDoc')
 
         } else {
 
-            $location.path('/login');
+            $location.path('/logout');
 
         }
 
@@ -20009,7 +20009,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -22768,7 +22768,7 @@ angular.module('FieldDoc')
 
                 } else {
 
-                    $location.path('/login');
+                    $location.path('/logout');
 
                 }
 
@@ -23293,7 +23293,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -23744,7 +23744,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -24363,7 +24363,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -24775,7 +24775,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -25157,7 +25157,7 @@ angular.module('FieldDoc')
 
         } else {
 
-            $location.path('/login');
+            $location.path('/logout');
 
         }
 
@@ -25595,7 +25595,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -26772,7 +26772,7 @@ angular.module('FieldDoc')
 
         } else {
 
-            $location.path('/login');
+            $location.path('/logout');
 
         }
 
@@ -27138,7 +27138,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
@@ -27516,7 +27516,7 @@ angular.module('FieldDoc')
 
         } else {
 
-            $location.path('/login');
+            $location.path('/logout');
 
         }
 
@@ -27876,7 +27876,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                $location.path('/login');
+                $location.path('/logout');
 
             }
 
