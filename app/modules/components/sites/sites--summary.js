@@ -10,7 +10,7 @@
     angular.module('FieldDoc')
         .controller('SiteSummaryController',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
-                $route, nodes, user, Utility, site, Map, mapbox, leafletData,
+                $route, nodes, user, Utility, site, Map, MapPreview, mapbox, leafletData,
                 leafletBoundsHelpers, Site, Project, practices, $interval) {
 
                 var self = this;
@@ -22,6 +22,8 @@
                 $rootScope.page = {};
 
                 self.map = JSON.parse(JSON.stringify(Map));
+
+                self.previewMap = JSON.parse(JSON.stringify(MapPreview));
 
                 self.status = {
                     loading: true,
@@ -255,37 +257,43 @@
 
                         practices.$promise.then(function(successResponse) {
 
-                            console.log('self.practices', successResponse);
+                            // console.log('self.practices', successResponse);
 
                             successResponse.features.forEach(function(feature) {
 
                                 if (feature.geometry) {
 
-                                    var styledFeature = {
-                                        "type": "Feature",
-                                        "geometry": feature.geometry,
-                                        "properties": {
-                                            "marker-size": "small",
-                                            "marker-color": "#2196F3",
-                                            "stroke": "#2196F3",
-                                            "stroke-opacity": 1.0,
-                                            "stroke-width": 2,
-                                            "fill": "#2196F3",
-                                            "fill-opacity": 0.5
-                                        }
-                                    };
+                                    feature.geojson = self.buildFeature(feature.geometry);
 
-                                    // Build static map URL for Mapbox API
+                                    feature.bounds = self.transformBounds(feature.properties);
 
-                                    var staticURL = 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
+                                    // var styledFeature = {
+                                    //     "type": "Feature",
+                                    //     "geometry": feature.geometry,
+                                    //     "properties": {
+                                    //         "marker-size": "small",
+                                    //         "marker-color": "#2196F3",
+                                    //         "stroke": "#2196F3",
+                                    //         "stroke-opacity": 1.0,
+                                    //         "stroke-width": 2,
+                                    //         "fill": "#2196F3",
+                                    //         "fill-opacity": 0.5
+                                    //     }
+                                    // };
 
-                                    feature.staticURL = staticURL;
+                                    // // Build static map URL for Mapbox API
+
+                                    // var staticURL = 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
+
+                                    // feature.staticURL = staticURL;
 
                                 }
 
                             });
 
                             self.practices = successResponse.features;
+
+                            console.log('self.practices', successResponse);
 
                         }, function(errorResponse) {
 
@@ -376,6 +384,88 @@
                     });
 
                 };
+
+                self.buildFeature = function(geometry) {
+
+                    var styleProperties = {
+                        color: "#2196F3",
+                        opacity: 1.0,
+                        weight: 2,
+                        fillColor: "#2196F3",
+                        fillOpacity: 0.5
+                    };
+
+                    return {
+                        data: {
+                            "type": "Feature",
+                            "geometry": geometry,
+                            "properties": {
+                                "marker-size": "small",
+                                "marker-color": "#2196F3",
+                                "stroke": "#2196F3",
+                                "stroke-opacity": 1.0,
+                                "stroke-width": 2,
+                                "fill": "#2196F3",
+                                "fill-opacity": 0.5
+                            }
+                        },
+                        style: styleProperties
+                    };
+
+                };
+
+                self.transformBounds = function(obj) {
+
+                    var xRange = [],
+                        yRange = [],
+                        southWest,
+                        northEast,
+                        bounds;
+
+                    obj.bounds.coordinates[0].forEach(function(coords) {
+
+                        xRange.push(coords[0]);
+
+                        yRange.push(coords[1]);
+
+                    });
+
+                    southWest = [
+                        Math.min.apply(null, yRange),
+                        Math.min.apply(null, xRange)
+                    ];
+
+                    northEast = [
+                        Math.max.apply(null, yRange),
+                        Math.max.apply(null, xRange)
+                    ];
+
+                    bounds = leafletBoundsHelpers.createBoundsFromArray([
+                        southWest,
+                        northEast
+                    ]);
+
+                    return bounds;
+
+                };
+
+                // self.processCollection = function(arr) {
+
+                //     arr.forEach(function(feature) {
+
+                //         if (feature.geometry !== null) {
+
+                //             // feature.staticURL = self.buildStaticMapURL(feature.geometry);
+
+                //             feature.geojson = self.buildFeature(feature.geometry);
+
+                //             feature.bounds = self.transformBounds(feature);
+
+                //         }
+
+                //     });
+
+                // };
 
                 self.loadMetrics = function() {
 

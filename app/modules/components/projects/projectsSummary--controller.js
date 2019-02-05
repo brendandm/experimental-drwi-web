@@ -10,7 +10,7 @@
 angular.module('FieldDoc')
     .controller('ProjectSummaryController',
         function(Account, Notifications, $rootScope, Project, $routeParams,
-            $scope, $location, Map, mapbox, Site, user, $window,
+            $scope, $location, Map, MapPreview, mapbox, Site, user, $window,
             leafletData, leafletBoundsHelpers, $timeout, Practice, project,
             sites, Utility, $interval) {
 
@@ -27,6 +27,8 @@ angular.module('FieldDoc')
             $rootScope.page = {};
 
             self.map = JSON.parse(JSON.stringify(Map));
+
+            self.previewMap = JSON.parse(JSON.stringify(MapPreview));
 
             self.map.markers = {};
 
@@ -434,6 +436,10 @@ angular.module('FieldDoc')
 
                             feature.staticURL = self.buildStaticMapURL(feature.geometry);
 
+                            feature.geojson = self.buildFeature(feature.geometry);
+
+                            feature.bounds = self.transformBounds(feature.properties);
+
                         }
 
                     });
@@ -494,6 +500,88 @@ angular.module('FieldDoc')
                 }, function(errorResponse) {
 
                     console.log('errorResponse', errorResponse);
+
+                });
+
+            };
+
+            self.buildFeature = function(geometry) {
+
+                var styleProperties = {
+                    color: "#2196F3",
+                    opacity: 1.0,
+                    weight: 2,
+                    fillColor: "#2196F3",
+                    fillOpacity: 0.5
+                };
+
+                return {
+                    data: {
+                        "type": "Feature",
+                        "geometry": geometry,
+                        "properties": {
+                            "marker-size": "small",
+                            "marker-color": "#2196F3",
+                            "stroke": "#2196F3",
+                            "stroke-opacity": 1.0,
+                            "stroke-width": 2,
+                            "fill": "#2196F3",
+                            "fill-opacity": 0.5
+                        }
+                    },
+                    style: styleProperties
+                };
+
+            };
+
+            self.transformBounds = function(obj) {
+
+                var xRange = [],
+                    yRange = [],
+                    southWest,
+                    northEast,
+                    bounds;
+
+                obj.bounds.coordinates[0].forEach(function(coords) {
+
+                    xRange.push(coords[0]);
+
+                    yRange.push(coords[1]);
+
+                });
+
+                southWest = [
+                    Math.min.apply(null, yRange),
+                    Math.min.apply(null, xRange)
+                ];
+
+                northEast = [
+                    Math.max.apply(null, yRange),
+                    Math.max.apply(null, xRange)
+                ];
+
+                bounds = leafletBoundsHelpers.createBoundsFromArray([
+                    southWest,
+                    northEast
+                ]);
+
+                return bounds;
+
+            };
+
+            self.processCollection = function(arr) {
+
+                arr.forEach(function(feature) {
+
+                    if (feature.geometry !== null) {
+
+                        // feature.staticURL = self.buildStaticMapURL(feature.geometry);
+
+                        feature.geojson = self.buildFeature(feature.geometry);
+
+                        feature.bounds = self.transformBounds(feature);
+
+                    }
 
                 });
 
