@@ -119,7 +119,7 @@
                                     </td>
                                     <td>
                                         <strong class="metrics--metric--percentage">
-                                            {{ metric.contextProgress * 100 | number:1 }}%
+                                            {{ metric.contextProgress.value * 100 | number:1 }}%
                                         </strong>
                                     </td>
                                     <td>
@@ -127,7 +127,7 @@
                                             size="32"
                                             stroke="#2196F3"
                                             stroke-width="4"
-                                            complete="metric.contextProgress"
+                                            complete="metric.contextProgress.arcValue"
                                             counter-clockwise="false"
                                             background="rgba(0,0,0,0.2)">
                                         </progress-arc>
@@ -162,7 +162,13 @@
                             <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center; ">
                                 <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Site progress</span>
                                 <br />
-                                <progress-arc size="80" stroke="#2196F3" stroke-width="8" complete="page.selectedMetric.contextProgress" counter-clockwise="false" background="rgba(0,0,0,0.2)">
+                                <progress-arc
+                                    size="80"
+                                    stroke="#2196F3"
+                                    stroke-width="8"
+                                    complete="page.selectedMetric.contextProgress.arcValue"
+                                    counter-clockwise="false"
+                                    background="rgba(0,0,0,0.2)">
                                 </progress-arc>
                                 <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.context_target | number:2 }}</span>
                             </div>
@@ -174,7 +180,7 @@
                                     size="80"
                                     stroke="#2196F3"
                                     stroke-width="8"
-                                    complete="page.selectedMetric.selfProgress"
+                                    complete="page.selectedMetric.selfProgress.arcValue"
                                     background="rgba(0,0,0,0.2)">
                                 </progress-arc>
                                 <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.self_target | number:2 }}</span>

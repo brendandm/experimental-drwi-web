@@ -23,30 +23,9 @@
 
                 <div class="filter--ui">
 
-                    <!-- <p style="font-style: normal; font-size: 1em; color: #616161;">Search for metrics by name or conservation program. If you select a conservation program, all of that program’s associated metrics will appear in the dashboard.<p> -->
+                    <p style="font-style: normal; font-size: 1em; color: #616161;" data-ng-if="!page.metrics.length">If you don’t see any metrics here, that means you need to set some metric targets for your projects and begin reporting implementation progress. The metrics you’re tracking will start showing up when you create project, site and practice targets and start entering installation reports. Not sure how to get started? Feel free to drop us a line at <a href="mailto:support@fielddoc.org">support@fielddoc.org</a>.<p>
 
                     <p style="font-style: normal; font-size: 1em; color: #616161;" data-ng-if="page.metrics.length">The metrics below are those associated with the projects that you added to this dashboard. You can control which metrics are visible in the dashboard by selecting or de-selecting them one-at-a-time.<p>
-
-                    <!-- <div class="search-options-radio">
-                        <label for="search-metric">
-                            Search metrics
-                            <input type="radio" id="search-metric" name="search-metric" data-ng-model="page.searchScope.target" value="metric" />
-                        </label>
-                        <label for="search-program">
-                            Search programs
-                            <input type="radio" id="search-program" name="search-program" data-ng-model="page.searchScope.target" value="program" />
-                        </label>
-                    </div>
-
-                    <div class="filter--controls">
-
-                        <div class="search--group">
-                            <div global-search class="global--search" style="width: 100%; max-width: none;" filter-projects="page.filterProjects">
-                                <input type="search" class="search" style="color: #212121;" value="" placeholder="Search&hellip;" data-ng-model="page.metricQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.search($viewValue)" typeahead-on-select="page.directQuery($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
-                            </div>
-                        </div>
-
-                    </div> -->
 
                     <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
@@ -68,30 +47,6 @@
                         </li>
 
                     </ul>
-
-                    <!-- <div class="classification--list" style="margin-top: 2em;">
-                        <ul>
-                            <li class="reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="metric in page.metrics">
-                                <i class="material-icons">
-                                    timeline
-                                </i>
-                                <span style="flex-grow: 1; padding-left: 2em;">{{ metric.properties.name || metric.name }}</span>
-                                <div class="button--container">
-                                    <button type="button" class="remove-item" data-ng-click="page.removeMetric(metric.id)">
-                                        <i class="material-icons">
-                                            remove_circle
-                                        </i>
-                                    </button>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="filter--actions" data-ng-if="page.activeFilters && page.activeFilters.length">
-                        <button class="clear" type="button" data-ng-click="page.clearAllFilters()" title="Clear all filters">
-                            Clear all
-                        </button>
-                    </div> -->
 
                 </div>
 

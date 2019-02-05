@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1548791036210})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1549384838445})
 
 ;
 /**
@@ -1538,39 +1538,6 @@ angular.module('FieldDoc')
 
         };
 
-        self.processMetrics = function(arr) {
-
-            arr.forEach(function(datum) {
-
-                var contextProgress,
-                    selfProgress;
-
-                if (datum.context_target) {
-
-                    contextProgress = datum.current_value / datum.context_target;
-
-                } else {
-
-                    contextProgress = datum.current_value / datum.target;
-
-                }
-
-                if (datum.self_target) {
-
-                    selfProgress = datum.current_value / datum.self_target;
-
-                }
-
-                datum.contextProgress = contextProgress > 1 ? 1 : contextProgress;
-
-                datum.selfProgress = selfProgress > 1 ? 1 : selfProgress;
-
-            });
-
-            return arr;
-
-        };
-
         self.loadMetrics = function(arr, options) {
 
             if (options) {
@@ -1584,7 +1551,7 @@ angular.module('FieldDoc')
 
                         console.log('granteeResponse', successResponse);
 
-                        self.metrics = self.processMetrics(successResponse.features);
+                        self.metrics = Utility.processMetrics(successResponse.features);
 
                     }, function(errorResponse) {
 
@@ -1601,7 +1568,7 @@ angular.module('FieldDoc')
 
                         console.log('granteeResponse', successResponse);
 
-                        self.metrics = self.processMetrics(successResponse.features);
+                        self.metrics = Utility.processMetrics(successResponse.features);
 
                     }, function(errorResponse) {
 
@@ -1618,7 +1585,7 @@ angular.module('FieldDoc')
 
                         console.log('granteeResponse', successResponse);
 
-                        self.metrics = self.processMetrics(successResponse.features);
+                        self.metrics = Utility.processMetrics(successResponse.features);
 
                     }, function(errorResponse) {
 
@@ -1635,7 +1602,7 @@ angular.module('FieldDoc')
 
                         console.log('granteeResponse', successResponse);
 
-                        self.metrics = self.processMetrics(successResponse.features);
+                        self.metrics = Utility.processMetrics(successResponse.features);
 
                     }, function(errorResponse) {
 
@@ -1673,7 +1640,7 @@ angular.module('FieldDoc')
 
                     console.log('Dashboard.progress.successResponse', successResponse);
 
-                    self.metrics = self.processMetrics(successResponse.features);
+                    self.metrics = Utility.processMetrics(successResponse.features);
 
                 }, function(errorResponse) {
 
@@ -6001,7 +5968,7 @@ angular.module('FieldDoc')
 
                     console.log('Project metrics', successResponse);
 
-                    self.processMetrics(successResponse.features);
+                    Utility.processMetrics(successResponse.features);
 
                     self.metrics = successResponse.features;
 
@@ -6010,39 +5977,6 @@ angular.module('FieldDoc')
                     console.log('errorResponse', errorResponse);
 
                 });
-
-            };
-
-            self.processMetrics = function(arr) {
-
-                arr.forEach(function(datum) {
-
-                    var contextProgress,
-                        selfProgress;
-
-                    if (datum.context_target) {
-
-                        contextProgress = datum.current_value / datum.context_target;
-
-                    } else {
-
-                        contextProgress = datum.current_value / datum.target;
-
-                    }
-
-                    if (datum.self_target) {
-
-                        selfProgress = datum.current_value / datum.self_target;
-
-                    }
-
-                    datum.contextProgress = contextProgress > 1 ? 1 : contextProgress;
-
-                    datum.selfProgress = selfProgress > 1 ? 1 : selfProgress;
-
-                });
-
-                return arr;
 
             };
 
@@ -6905,9 +6839,11 @@ angular.module('FieldDoc')
 
             self.addTarget = function(item, idx) {
 
-                if (!item.value) return;
+                // if (!item.value) return;
 
                 if (typeof idx === 'number') {
+
+                    item.value = 0;
 
                     item.action = 'add';
 
@@ -10524,7 +10460,7 @@ angular.module('FieldDoc')
 
                         console.log('Project metrics', successResponse);
 
-                        self.processMetrics(successResponse.features);
+                        Utility.processMetrics(successResponse.features);
 
                         self.metrics = successResponse.features;
 
@@ -10533,39 +10469,6 @@ angular.module('FieldDoc')
                         console.log('errorResponse', errorResponse);
 
                     });
-
-                };
-
-                self.processMetrics = function(arr) {
-
-                    arr.forEach(function(datum) {
-
-                        var contextProgress,
-                            selfProgress;
-
-                        if (datum.context_target) {
-
-                            contextProgress = datum.current_value / datum.context_target;
-
-                        } else {
-
-                            contextProgress = datum.current_value / datum.target;
-
-                        }
-
-                        if (datum.self_target) {
-
-                            selfProgress = datum.current_value / datum.self_target;
-
-                        }
-
-                        datum.contextProgress = contextProgress > 1 ? 1 : contextProgress;
-
-                        datum.selfProgress = selfProgress > 1 ? 1 : selfProgress;
-
-                    });
-
-                    return arr;
 
                 };
 
@@ -15057,7 +14960,7 @@ angular.module('FieldDoc')
 
                         console.log('Project metrics', successResponse);
 
-                        self.processMetrics(successResponse.features);
+                        Utility.processMetrics(successResponse.features);
 
                         self.metrics = successResponse.features;
 
@@ -15066,39 +14969,6 @@ angular.module('FieldDoc')
                         console.log('errorResponse', errorResponse);
 
                     });
-
-                };
-
-                self.processMetrics = function(arr) {
-
-                    arr.forEach(function(datum) {
-
-                        var contextProgress,
-                            selfProgress;
-
-                        if (datum.context_target) {
-
-                            contextProgress = datum.current_value / datum.context_target;
-
-                        } else {
-
-                            contextProgress = datum.current_value / datum.target;
-
-                        }
-
-                        if (datum.self_target) {
-
-                            selfProgress = datum.current_value / datum.self_target;
-
-                        }
-
-                        datum.contextProgress = contextProgress > 1 ? 1 : contextProgress;
-
-                        datum.selfProgress = selfProgress > 1 ? 1 : selfProgress;
-
-                    });
-
-                    return arr;
 
                 };
 
@@ -21747,7 +21617,7 @@ angular.module('FieldDoc')
 
                         console.log('Project metrics', successResponse);
 
-                        self.processMetrics(successResponse.features);
+                        Utility.processMetrics(successResponse.features);
 
                         self.metrics = successResponse.features;
 
@@ -21756,39 +21626,6 @@ angular.module('FieldDoc')
                         console.log('errorResponse', errorResponse);
 
                     });
-
-                };
-
-                self.processMetrics = function(arr) {
-
-                    arr.forEach(function(datum) {
-
-                        var contextProgress,
-                            selfProgress;
-
-                        if (datum.context_target) {
-
-                            contextProgress = datum.current_value / datum.context_target;
-
-                        } else {
-
-                            contextProgress = datum.current_value / datum.target;
-
-                        }
-
-                        if (datum.self_target) {
-
-                            selfProgress = datum.current_value / datum.self_target;
-
-                        }
-
-                        datum.contextProgress = contextProgress > 1 ? 1 : contextProgress;
-
-                        datum.selfProgress = selfProgress > 1 ? 1 : selfProgress;
-
-                    });
-
-                    return arr;
 
                 };
 
@@ -31142,6 +30979,45 @@ angular.module('FieldDoc')
                     ')/auto/400x200@2x?access_token=',
                     'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
                 ].join('');
+
+            },
+            processMetrics: function(arr) {
+
+                arr.forEach(function(datum) {
+
+                    datum.contextProgress = {
+                        value: 0,
+                        arcValue: 0
+                    };
+
+                    datum.selfProgress = {
+                        value: 0,
+                        arcValue: 0
+                    };
+
+                    if (datum.context_target) {
+
+                        datum.contextProgress.value = datum.current_value / datum.context_target;
+
+                    } else {
+
+                        datum.contextProgress.value = datum.current_value / datum.target;
+
+                    }
+
+                    if (datum.self_target) {
+
+                        datum.selfProgress.value = datum.current_value / datum.self_target;
+
+                    }
+
+                    datum.contextProgress.arcValue = datum.contextProgress.value > 1 ? 1 : datum.contextProgress.value;
+
+                    datum.selfProgress.arcValue = datum.selfProgress.value > 1 ? 1 : datum.selfProgress.value;
+
+                });
+
+                return arr;
 
             }
         };
