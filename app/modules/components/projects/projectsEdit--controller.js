@@ -66,62 +66,6 @@ angular.module('FieldDoc')
 
             };
 
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
-
-                user.$promise.then(function(userResponse) {
-
-                    $rootScope.user = Account.userObject = userResponse;
-
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        can_edit: false,
-                        can_delete: false
-                    };
-
-                    //
-                    // Assign project to a scoped variable
-                    //
-                    project.$promise.then(function(successResponse) {
-
-                        if (!successResponse.permissions.read &&
-                            !successResponse.permissions.write) {
-
-                            self.makePrivate = true;
-
-                        } else {
-
-                            self.processFeature(successResponse);
-
-                            self.permissions.can_edit = successResponse.permissions.write;
-                            self.permissions.can_delete = successResponse.permissions.write;
-
-                            $rootScope.page.title = 'Edit Project';
-
-                        }
-
-                        self.showElements();
-
-                    }, function(errorResponse) {
-
-                        $log.error('Unable to load request project');
-
-                        self.showElements();
-
-                    });
-
-                });
-
-            } else {
-
-                $location.path('/logout');
-
-            }
-
             self.searchPrograms = function(value) {
 
                 return SearchService.program({
@@ -423,5 +367,61 @@ angular.module('FieldDoc')
                 });
 
             };
+
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false,
+                        can_delete: false
+                    };
+
+                    //
+                    // Assign project to a scoped variable
+                    //
+                    project.$promise.then(function(successResponse) {
+
+                        if (!successResponse.permissions.read &&
+                            !successResponse.permissions.write) {
+
+                            self.makePrivate = true;
+
+                        } else {
+
+                            self.processFeature(successResponse);
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            $rootScope.page.title = 'Edit Project';
+
+                        }
+
+                        self.showElements();
+
+                    }, function(errorResponse) {
+
+                        $log.error('Unable to load request project');
+
+                        self.showElements();
+
+                    });
+
+                });
+
+            } else {
+
+                $location.path('/logout');
+
+            }
 
         });

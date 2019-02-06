@@ -173,9 +173,9 @@ angular.module('FieldDoc')
 
                 // project.workflow_state = 'Draft';
 
-                project.$save().then(function(response) {
+                project.$save().then(function(successResponse) {
 
-                    $location.path('/projects');
+                    $location.path('/projects/' + successResponse.id);
 
                 }).then(function(error) {
 
