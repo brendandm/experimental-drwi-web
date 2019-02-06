@@ -27,9 +27,9 @@
 
             <input type="text" class="search-bar list-filter reveal fade-in t0" data-ng-if="!page.status.loading" data-ng-model="page.q" placeholder="Search your metrics">
 
-            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">You have <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize>.</p>
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">You have <strong>{{ (page.featureCount | number) || 0 }}</strong> <ng-pluralize count="page.featureCount" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize>.</p>
 
-            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There <ng-pluralize count="page.metrics.length" when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{ (page.metrics.length | number) || 0 }}</strong> <ng-pluralize count="page.metrics.length" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize> in this program.</p>
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There <ng-pluralize count="page.featureCount" when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{ (page.featureCount | number) || 0 }}</strong> <ng-pluralize count="page.featureCount" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize> in this program.</p>
 
             <div class="collection-filter" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager) && $root.user.properties.programs.length">
                 <form name="myForm">
@@ -74,17 +74,17 @@
                                 </div>
                                 <p>{{ (metric.description || 'No description') | truncate:80 }}</p>
                                 <div class="actions">
-                                    <a class="snapshot--title" href="/metric-types/{{ metric.id }}" title="View metric">
+                                    <!-- <a class="snapshot--title" href="/metric-types/{{ metric.id }}" title="View metric">
                                         <i class="material-icons">
                                         metric
                                         </i>
-                                    </a>
-                                    <a class="snapshot--title" href="/metric-types/{{ metric.id }}/edit" title="Edit metric">
+                                    </a> -->
+                                    <a class="snapshot--title" href="/metric-types/{{ metric.id }}/edit" title="Edit metric" data-ng-if="$root.user.properties.id === metric.creator_id || $root.user.properties.organization_id === metric.organization_id || $root.user.properties.is_admin">
                                         <i class="material-icons">
                                         edit
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="#" title="Delete metric" data-ng-click="page.confirmDelete(metric)">
+                                    <a class="snapshot--title" href="#" title="Delete metric" data-ng-click="page.confirmDelete(metric)" data-ng-if="$root.user.properties.id === metric.creator_id || $root.user.properties.organization_id === metric.organization_id || $root.user.properties.is_admin">
                                         <i class="material-icons">
                                         delete
                                         </i>

@@ -27,9 +27,9 @@
 
             <input type="text" class="search-bar list-filter reveal fade-in t0" data-ng-if="!page.status.loading" data-ng-model="page.q" placeholder="Search your practices">
 
-            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">You have <strong>{{ (page.practices.length | number) || 0 }}</strong> <ng-pluralize count="page.practices.length" when="{'one': 'practice','other': 'practices'}"></ng-pluralize>.</p>
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">You have <strong>{{ (page.featureCount | number) || 0 }}</strong> <ng-pluralize count="page.featureCount" when="{'one': 'practice','other': 'practices'}"></ng-pluralize>.</p>
 
-            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There <ng-pluralize count="page.practices.length" when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{ (page.practices.length | number) || 0 }}</strong> <ng-pluralize count="page.practices.length" when="{'one': 'practice','other': 'practices'}"></ng-pluralize> in this program.</p>
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There <ng-pluralize count="page.featureCount" when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{ (page.featureCount | number) || 0 }}</strong> <ng-pluralize count="page.featureCount" when="{'one': 'practice','other': 'practices'}"></ng-pluralize> in this program.</p>
 
             <div class="collection-filter" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager) && $root.user.properties.programs.length">
                 <form name="myForm">
@@ -72,17 +72,17 @@
                                 </div>
                                 <p>{{ (practice.description || 'No description') | truncate:80 }}</p>
                                 <div class="actions">
-                                    <a class="snapshot--title" href="/practice-types/{{ practice.id }}" title="View practice">
+                                    <!-- <a class="snapshot--title" href="/practice-types/{{ practice.id }}" title="View practice">
                                         <i class="material-icons">
                                         practice
                                         </i>
-                                    </a>
-                                    <a class="snapshot--title" href="/practice-types/{{ practice.id }}/edit" title="Edit practice">
+                                    </a> -->
+                                    <a class="snapshot--title" href="/practice-types/{{ practice.id }}/edit" title="Edit practice" data-ng-if="$root.user.properties.id === practice.creator_id || $root.user.properties.organization_id === practice.organization_id || $root.user.properties.is_admin">
                                         <i class="material-icons">
                                         edit
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="#" title="Delete practice" data-ng-click="page.confirmDelete(practice)">
+                                    <a class="snapshot--title" href="#" title="Delete practice" data-ng-click="page.confirmDelete(practice)" data-ng-if="$root.user.properties.id === practice.creator_id || $root.user.properties.organization_id === practice.organization_id || $root.user.properties.is_admin">
                                         <i class="material-icons">
                                         delete
                                         </i>

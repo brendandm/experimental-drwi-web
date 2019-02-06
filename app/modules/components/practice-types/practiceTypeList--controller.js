@@ -175,6 +175,8 @@ angular.module('FieldDoc')
 
                     console.log('successResponse', successResponse);
 
+                    self.featureCount = successResponse.count;
+
                     self.practices = successResponse.features;
 
                     self.showElements();
