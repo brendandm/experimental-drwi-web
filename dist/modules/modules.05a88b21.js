@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1549408428754})
+.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1549494560637})
 
 ;
 /**
@@ -6291,9 +6291,9 @@ angular.module('FieldDoc')
 
                 // project.workflow_state = 'Draft';
 
-                project.$save().then(function(response) {
+                project.$save().then(function(successResponse) {
 
-                    $location.path('/projects');
+                    $location.path('/projects/' + successResponse.id);
 
                 }).then(function(error) {
 
@@ -6371,62 +6371,6 @@ angular.module('FieldDoc')
                 self.deletionTarget = null;
 
             };
-
-            //
-            // Verify Account information for proper UI element display
-            //
-            if (Account.userObject && user) {
-
-                user.$promise.then(function(userResponse) {
-
-                    $rootScope.user = Account.userObject = userResponse;
-
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                        can_edit: false,
-                        can_delete: false
-                    };
-
-                    //
-                    // Assign project to a scoped variable
-                    //
-                    project.$promise.then(function(successResponse) {
-
-                        if (!successResponse.permissions.read &&
-                            !successResponse.permissions.write) {
-
-                            self.makePrivate = true;
-
-                        } else {
-
-                            self.processFeature(successResponse);
-
-                            self.permissions.can_edit = successResponse.permissions.write;
-                            self.permissions.can_delete = successResponse.permissions.write;
-
-                            $rootScope.page.title = 'Edit Project';
-
-                        }
-
-                        self.showElements();
-
-                    }, function(errorResponse) {
-
-                        $log.error('Unable to load request project');
-
-                        self.showElements();
-
-                    });
-
-                });
-
-            } else {
-
-                $location.path('/logout');
-
-            }
 
             self.searchPrograms = function(value) {
 
@@ -6730,6 +6674,62 @@ angular.module('FieldDoc')
 
             };
 
+            //
+            // Verify Account information for proper UI element display
+            //
+            if (Account.userObject && user) {
+
+                user.$promise.then(function(userResponse) {
+
+                    $rootScope.user = Account.userObject = userResponse;
+
+                    self.permissions = {
+                        isLoggedIn: Account.hasToken(),
+                        role: $rootScope.user.properties.roles[0],
+                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                        can_edit: false,
+                        can_delete: false
+                    };
+
+                    //
+                    // Assign project to a scoped variable
+                    //
+                    project.$promise.then(function(successResponse) {
+
+                        if (!successResponse.permissions.read &&
+                            !successResponse.permissions.write) {
+
+                            self.makePrivate = true;
+
+                        } else {
+
+                            self.processFeature(successResponse);
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                            $rootScope.page.title = 'Edit Project';
+
+                        }
+
+                        self.showElements();
+
+                    }, function(errorResponse) {
+
+                        $log.error('Unable to load request project');
+
+                        self.showElements();
+
+                    });
+
+                });
+
+            } else {
+
+                $location.path('/logout');
+
+            }
+
         });
 'use strict';
 
@@ -6927,11 +6927,14 @@ angular.module('FieldDoc')
 
             self.addTarget = function(item, idx) {
 
-                // if (!item.value) return;
-
-                if (typeof idx === 'number') {
+                if (!item.value ||
+                    typeof item.value !== 'number') {
 
                     item.value = 0;
+
+                };
+
+                if (typeof idx === 'number') {
 
                     item.action = 'add';
 
@@ -13788,7 +13791,12 @@ angular.module('FieldDoc')
 
             self.addTarget = function(item, idx) {
 
-                if (!item.value) return;
+                if (!item.value ||
+                    typeof item.value !== 'number') {
+
+                    item.value = 0;
+
+                };
 
                 if (typeof idx === 'number') {
 
@@ -17592,7 +17600,12 @@ angular.module('FieldDoc')
 
             self.addTarget = function(item, idx) {
 
-                if (!item.value) return;
+                if (!item.value ||
+                    typeof item.value !== 'number') {
+
+                    item.value = 0;
+
+                };
 
                 if (typeof idx === 'number') {
 
@@ -19328,6 +19341,8 @@ angular.module('FieldDoc')
 
                     console.log('successResponse', successResponse);
 
+                    self.featureCount = successResponse.count;
+
                     self.practices = successResponse.features;
 
                     self.showElements();
@@ -20147,6 +20162,8 @@ angular.module('FieldDoc')
                 MetricType.collection(params).$promise.then(function(successResponse) {
 
                     console.log('successResponse', successResponse);
+
+                    self.featureCount = successResponse.count;
 
                     self.metrics = successResponse.features;
 
