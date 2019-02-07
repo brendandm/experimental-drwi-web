@@ -17,7 +17,7 @@ angular.module('Mapbox')
                 scrollWheelZoom: false,
                 touchZoom: false,
                 tap: false,
-                maxZoom: 19,
+                maxZoom: 18,
                 zoomControl: false
             },
             layers: {
