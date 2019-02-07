@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1549498690562})
+.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1549501659822})
 
 ;
 /**
@@ -2493,7 +2493,8 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-    .controller('DashboardCreateController', function(Account, $location, $log, Dashboard, $rootScope, $route, user) {
+    .controller('DashboardCreateController',
+        function(Account, $location, $log, Dashboard, $rootScope, $route, user) {
 
         var self = this;
 
@@ -2502,6 +2503,8 @@ angular.module('FieldDoc')
         };
 
         $rootScope.page = {};
+
+        self.dashboard = {};
 
         //
         // Verify Account information for proper UI element display
@@ -2518,8 +2521,6 @@ angular.module('FieldDoc')
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                 };
 
-                self.dashboard = new Dashboard();
-
                 //
                 // Setup page meta data
                 //
@@ -2533,14 +2534,16 @@ angular.module('FieldDoc')
 
         self.saveDashboard = function() {
 
-            self.dashboard.$save().then(function(response) {
+            var newFeature = new Dashboard(self.dashboard)
 
-                self.dashboard = response;
+            newFeature.$save().then(function(response) {
 
                 $location.path('/dashboards/' + self.dashboard.id + '/edit');
 
             }).then(function(error) {
-                // Do something with the error
+
+                $log.error('Unable to create dashboard.');
+
             });
 
         };
@@ -6284,12 +6287,6 @@ angular.module('FieldDoc')
             self.saveProject = function() {
 
                 var project = new Project(self.project);
-
-                // project.programs = self.processRelations(self.tempPrograms);
-
-                // project.partners = self.processRelations(self.tempPartners);
-
-                // project.workflow_state = 'Draft';
 
                 project.$save().then(function(successResponse) {
 

@@ -6,7 +6,8 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('DashboardCreateController', function(Account, $location, $log, Dashboard, $rootScope, $route, user) {
+    .controller('DashboardCreateController',
+        function(Account, $location, $log, Dashboard, $rootScope, $route, user) {
 
         var self = this;
 
@@ -15,6 +16,8 @@ angular.module('FieldDoc')
         };
 
         $rootScope.page = {};
+
+        self.dashboard = {};
 
         //
         // Verify Account information for proper UI element display
@@ -31,8 +34,6 @@ angular.module('FieldDoc')
                     account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                 };
 
-                self.dashboard = new Dashboard();
-
                 //
                 // Setup page meta data
                 //
@@ -46,14 +47,16 @@ angular.module('FieldDoc')
 
         self.saveDashboard = function() {
 
-            self.dashboard.$save().then(function(response) {
+            var newFeature = new Dashboard(self.dashboard)
 
-                self.dashboard = response;
+            newFeature.$save().then(function(response) {
 
                 $location.path('/dashboards/' + self.dashboard.id + '/edit');
 
             }).then(function(error) {
-                // Do something with the error
+
+                $log.error('Unable to create dashboard.');
+
             });
 
         };

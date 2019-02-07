@@ -167,12 +167,6 @@ angular.module('FieldDoc')
 
                 var project = new Project(self.project);
 
-                // project.programs = self.processRelations(self.tempPrograms);
-
-                // project.partners = self.processRelations(self.tempPartners);
-
-                // project.workflow_state = 'Draft';
-
                 project.$save().then(function(successResponse) {
 
                     $location.path('/projects/' + successResponse.id);
