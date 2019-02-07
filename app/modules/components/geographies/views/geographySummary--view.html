@@ -142,11 +142,11 @@
                                                 </td>
                                                 <td>
                                                     <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
-                                                        of {{ metric.target | number:2 }}</span>
+                                                        of {{ metric.self_target | number:2 }}</span>
                                                 </td>
                                                 <td>
                                                     <strong class="metrics--metric--percentage">
-                                                        {{ metric.contextProgress.value * 100 | number:1 }}%
+                                                        {{ metric.selfProgress.value * 100 | number:1 }}%
                                                     </strong>
                                                 </td>
                                                 <td>

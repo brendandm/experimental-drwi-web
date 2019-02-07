@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1549501907872})
+.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1549561158550})
 
 ;
 /**
@@ -18436,7 +18436,12 @@ angular.module('FieldDoc')
 
                 self.addTarget = function(item, idx) {
 
-                    if (!item.value) return;
+                    if (!item.value ||
+                        typeof item.value !== 'number') {
+
+                        item.value = 0;
+
+                    };
 
                     if (typeof idx === 'number') {
 
@@ -23149,7 +23154,12 @@ angular.module('FieldDoc')
 
             self.addTarget = function(item, idx) {
 
-                if (!item.value) return;
+                if (!item.value ||
+                    typeof item.value !== 'number') {
+
+                    item.value = 0;
+
+                };
 
                 if (typeof idx === 'number') {
 
