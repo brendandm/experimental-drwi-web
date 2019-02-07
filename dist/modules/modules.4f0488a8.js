@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1549494560637})
+.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1549498690562})
 
 ;
 /**
@@ -19287,7 +19287,7 @@ angular.module('FieldDoc')
             self.createPracticeType = function() {
 
                 self.practiceType = new PracticeType({
-                    'program_id': self.programId,
+                    // 'program_id': self.programId,
                     'organization_id': $rootScope.user.properties.organization_id
                 });
 
@@ -20110,7 +20110,7 @@ angular.module('FieldDoc')
             self.createMetricType = function() {
 
                 self.metricType = new MetricType({
-                    'program_id': self.programId,
+                    // 'program_id': self.programId,
                     'organization_id': $rootScope.user.properties.organization_id
                 });
 
@@ -22138,6 +22138,8 @@ angular.module('FieldDoc')
                             }
 
                         }
+
+                        self.featureCount = successResponse.count;
 
                         self.geographies = successResponse.features;
 

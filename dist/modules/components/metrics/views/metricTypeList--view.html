@@ -16,7 +16,7 @@
 
         <div class="main--ui">
 
-            <div class="add--new--wrapper">
+            <div class="add--new--wrapper" data-ng-if="!$root.user.properties.is_manager">
                 <span>Create metric</span>
                 <a class="add--new--btn" href="#" data-ng-click="page.createMetricType()">
                     <i class="material-icons">

@@ -121,7 +121,7 @@ angular.module('FieldDoc')
             self.createPracticeType = function() {
 
                 self.practiceType = new PracticeType({
-                    'program_id': self.programId,
+                    // 'program_id': self.programId,
                     'organization_id': $rootScope.user.properties.organization_id
                 });
 

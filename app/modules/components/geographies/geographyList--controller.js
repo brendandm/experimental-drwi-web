@@ -271,6 +271,8 @@
 
                         }
 
+                        self.featureCount = successResponse.count;
+
                         self.geographies = successResponse.features;
 
                         console.log('self.geographies', self.geographies);

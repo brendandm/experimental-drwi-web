@@ -123,7 +123,7 @@ angular.module('FieldDoc')
             self.createMetricType = function() {
 
                 self.metricType = new MetricType({
-                    'program_id': self.programId,
+                    // 'program_id': self.programId,
                     'organization_id': $rootScope.user.properties.organization_id
                 });
 
