@@ -51,7 +51,7 @@ angular.module('FieldDoc')
 
             newFeature.$save().then(function(response) {
 
-                $location.path('/dashboards/' + self.dashboard.id + '/edit');
+                $location.path('/dashboards/' + response.id + '/edit');
 
             }).then(function(error) {
 

@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1549501659822})
+.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1549501907872})
 
 ;
 /**
@@ -2538,7 +2538,7 @@ angular.module('FieldDoc')
 
             newFeature.$save().then(function(response) {
 
-                $location.path('/dashboards/' + self.dashboard.id + '/edit');
+                $location.path('/dashboards/' + response.id + '/edit');
 
             }).then(function(error) {
 
