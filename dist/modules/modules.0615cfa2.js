@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1549585144468})
+.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1549920390519})
 
 ;
 /**
@@ -861,7 +861,7 @@ angular.module('FieldDoc')
 
                         $rootScope.targetPath = '/dashboards';
 
-                        return Dashboard.get({
+                        return Dashboard.basic({
                             id: $route.current.params.dashboardId
                         });
 
@@ -31295,6 +31295,11 @@ angular.module('FieldDoc')
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/dashboard')
+                },
+                basic: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/dashboard/:id')
                 },
                 filters: {
                     method: 'GET',

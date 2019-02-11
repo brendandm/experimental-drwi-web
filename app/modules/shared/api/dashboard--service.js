@@ -25,6 +25,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/dashboard')
                 },
+                basic: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/dashboard/:id')
+                },
                 filters: {
                     method: 'GET',
                     isArray: false,

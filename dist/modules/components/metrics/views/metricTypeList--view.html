@@ -79,12 +79,12 @@
                                         metric
                                         </i>
                                     </a> -->
-                                    <a class="snapshot--title" href="/metric-types/{{ metric.id }}/edit" title="Edit metric" data-ng-if="$root.user.properties.id === metric.creator_id || $root.user.properties.organization_id === metric.organization_id || $root.user.properties.is_admin">
+                                    <a class="snapshot--title" href="/metric-types/{{ metric.id }}/edit" title="Edit metric" data-ng-if="$root.user.properties.id === metric.creator.id || $root.user.properties.organization_id === metric.organization.id || $root.user.properties.is_admin">
                                         <i class="material-icons">
                                         edit
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="#" title="Delete metric" data-ng-click="page.confirmDelete(metric)" data-ng-if="$root.user.properties.id === metric.creator_id || $root.user.properties.organization_id === metric.organization_id || $root.user.properties.is_admin">
+                                    <a class="snapshot--title" href="#" title="Delete metric" data-ng-click="page.confirmDelete(metric)" data-ng-if="$root.user.properties.id === metric.creator.id || $root.user.properties.organization_id === metric.organization.id || $root.user.properties.is_admin">
                                         <i class="material-icons">
                                         delete
                                         </i>

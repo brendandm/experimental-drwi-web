@@ -64,7 +64,7 @@ angular.module('FieldDoc')
 
                         $rootScope.targetPath = '/dashboards';
 
-                        return Dashboard.get({
+                        return Dashboard.basic({
                             id: $route.current.params.dashboardId
                         });
 
