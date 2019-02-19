@@ -16,15 +16,15 @@
 
         <div class="main--ui" data-ng-if="$root.user.properties.is_admin || $root.user.properties.is_manager">
 
-            <h2>Programs</h2>
+            <h2 data-ng-if="page.programs && page.programs.length">Programs</h2>
 
             <p class="reveal fade-in t0">You have <strong>{{ (page.programs.length | number) || 0 }}</strong> <ng-pluralize count="page.programs.length" when="{'one': 'program','other': 'programs'}"></ng-pluralize>.</p>
 
-            <div class="features--container">
+            <div class="features--container" data-ng-if="!page.status.loading && page.programs && page.programs.length">
 
                 <!-- <input type="text" class="search-bar list-filter" data-ng-model="page.q" placeholder="Search programs"> -->
 
-                <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;" data-ng-if="!page.status.loading">
+                <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
                     <li class="card reveal fade-in" style="animation-delay: {{ $index * 250 }}ms;" data-ng-repeat="program in page.programs | orderBy:'-modified_on'">
 
@@ -78,7 +78,7 @@
 
         <div class="main--ui">
 
-            <div class="add--new--wrapper">
+            <div class="add--new--wrapper" data-ng-if="page.projects && page.projects.length">
                 <span>Create project</span>
                 <a class="add--new--btn" href="projects/collection/new">
                     <i class="material-icons">
@@ -89,7 +89,7 @@
 
             <h2 data-ng-if="page.projects && page.projects.length">Recent projects</h2>
 
-            <div class="features--container" data-ng-if="!page.status.loading">
+            <div class="features--container" data-ng-if="!page.status.loading" data-ng-if="page.projects && page.projects.length">
 
                 <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 

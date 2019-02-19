@@ -552,14 +552,18 @@ angular.module('FieldDoc')
 
                     });
 
+                    // 
+                    // Add padding to bounds coordinates
+                    // 
+
                     southWest = [
-                        Math.min.apply(null, yRange),
-                        Math.min.apply(null, xRange)
+                        Math.min.apply(null, yRange) - 0.001,
+                        Math.min.apply(null, xRange) - 0.001
                     ];
 
                     northEast = [
-                        Math.max.apply(null, yRange),
-                        Math.max.apply(null, xRange)
+                        Math.max.apply(null, yRange) + 0.001,
+                        Math.max.apply(null, xRange) + 0.001
                     ];
 
                     bounds = leafletBoundsHelpers.createBoundsFromArray([
@@ -569,14 +573,18 @@ angular.module('FieldDoc')
 
                 } else {
 
+                    // 
+                    // Add padding to bounds coordinates
+                    // 
+
                     southWest = [
-                        obj.bounds.coordinates[1] - 0.05,
-                        obj.bounds.coordinates[0] - 0.05
+                        obj.bounds.coordinates[1] - 0.001,
+                        obj.bounds.coordinates[0] - 0.001
                     ];
 
                     northEast = [
-                        obj.bounds.coordinates[1] + 0.05,
-                        obj.bounds.coordinates[0] + 0.05
+                        obj.bounds.coordinates[1] + 0.001,
+                        obj.bounds.coordinates[0] + 0.001
                     ];
 
                     bounds = leafletBoundsHelpers.createBoundsFromArray([
