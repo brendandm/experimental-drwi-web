@@ -9,7 +9,7 @@ angular.module('FieldDoc')
     .controller('PracticeTargetController',
         function($scope, Account, $location, $log, Practice, practice,
             $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            MetricType) {
+            MetricType, Model) {
 
             var self = this;
 
@@ -76,6 +76,62 @@ angular.module('FieldDoc')
 
             };
 
+            self.loadModel = function() {
+
+                Practice.model({
+                    id: $route.current.params.practiceId
+                }).$promise.then(function(successResponse) {
+
+                    console.log('Practice model successResponse', successResponse);
+
+                    self.model = successResponse;
+
+                }, function(errorResponse) {
+
+                    console.log('Practice model errorResponse', errorResponse);
+
+                });
+
+            };
+
+            self.runModel = function() {
+
+                var data = {
+                    practice_code: self.practice.category.model_key,
+                    geometry: self.practice.geometry,
+                    units: self.practice.area
+                };
+
+                Model.cast({}, data).$promise.then(function(successResponse) {
+
+                    console.log('Run model successResponse', successResponse);
+
+                    self.model.metrics.forEach(function(metric) {
+
+                        if (metric.name.indexOf('nitrogen') > 0) {
+
+                            metric.value = successResponse.tn_lbs_reduced;
+
+                        } else if (metric.name.indexOf('phosphorus') > 0) {
+
+                            metric.value = successResponse.tp_lbs_reduced;
+
+                        } else {
+
+                            metric.value = successResponse.tss_lbs_reduced;
+
+                        }
+
+                    });
+
+                }, function(errorResponse) {
+
+                    console.log('Run model errorResponse', errorResponse);
+
+                });
+
+            };
+
             self.loadPractice = function() {
 
                 var exclude = [
@@ -83,7 +139,7 @@ angular.module('FieldDoc')
                     'creator',
                     'dashboards',
                     'extent',
-                    'geometry',
+                    // 'geometry',
                     'members',
                     'metric_types',
                     'partners',
@@ -527,6 +583,8 @@ angular.module('FieldDoc')
                     self.loadPractice();
 
                     self.loadMatrix();
+
+                    self.loadModel();
 
                     //
                     // Setup page meta data

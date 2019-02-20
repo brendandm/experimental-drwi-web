@@ -8,31 +8,34 @@
      * @description
      */
     angular.module('FieldDoc')
-        .controller('CustomSummaryController', [
+        .controller('ProgramSummaryController', [
             'Account',
             '$location',
             '$timeout',
             '$log',
-            'Report',
             '$rootScope',
             '$route',
             'Utility',
             'user',
-            'Project',
-            'Site',
             '$window',
             'Map',
             'mapbox',
             'leafletData',
             'leafletBoundsHelpers',
-            'Practice',
-            'practice',
-            function(Account, $location, $timeout, $log, Report, $rootScope,
-                $route, Utility, user, Project, Site, $window, Map, mapbox,
-                leafletData, leafletBoundsHelpers, Practice, practice) {
+            'Program',
+            'Project',
+            'program',
+            function(Account, $location, $timeout, $log, $rootScope,
+                $route, Utility, user, $window, Map, mapbox, leafletData,
+                leafletBoundsHelpers, Program, Project, program) {
 
-                var self = this,
-                    practiceId = $route.current.params.practiceId;
+                var self = this;
+
+                self.programId = $route.current.params.programId;
+
+                $rootScope.viewState = {
+                    'program': true
+                };
 
                 $rootScope.toolbarState = {
                     'dashboard': true
@@ -41,6 +44,49 @@
                 $rootScope.page = {};
 
                 self.map = JSON.parse(JSON.stringify(Map));
+
+                self.map.markers = {};
+
+                self.map.layers = {
+                    baselayers: {
+                        streets: {
+                            name: 'Streets',
+                            type: 'xyz',
+                            url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+                            layerOptions: {
+                                apikey: mapbox.access_token,
+                                mapid: 'mapbox.streets',
+                                attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>',
+                                showOnSelector: false
+                            }
+                        }
+                    }
+                };
+
+                self.map.layers.overlays = {
+                    projects: {
+                        type: 'group',
+                        name: 'projects',
+                        visible: true,
+                        layerOptions: {
+                            showOnSelector: false
+                        },
+                        layerParams: {
+                            showOnSelector: false
+                        }
+                    }
+                };
+
+                // self.map.defaults = {
+                //     // doubleClickZoom: false,
+                //     // dragging: false,
+                //     // keyboard: false,
+                //     scrollWheelZoom: false,
+                //     // tap: false,
+                //     // touchZoom: false,
+                //     maxZoom: 19,
+                //     // zoomControl: false
+                // };
 
                 self.status = {
                     loading: true
@@ -56,7 +102,7 @@
 
                 function closeRoute() {
 
-                    $location.path(self.practice.links.site.html);
+                    $location.path(self.program.links.site.html);
 
                 }
 
@@ -65,7 +111,7 @@
                     console.log('self.confirmDelete', obj, targetCollection);
 
                     if (self.deletionTarget &&
-                        self.deletionTarget.collection === 'practice') {
+                        self.deletionTarget.collection === 'program') {
 
                         self.cancelDelete();
 
@@ -94,15 +140,15 @@
 
                     switch (featureType) {
 
-                        case 'report':
+                        case 'project':
 
-                            targetCollection = Report;
+                            targetCollection = Project;
 
                             break;
 
                         default:
 
-                            targetCollection = Practice;
+                            targetCollection = Program;
 
                             break;
 
@@ -123,7 +169,7 @@
                             typeof index === 'number' &&
                             featureType === 'report') {
 
-                            self.reports.splice(index, 1);
+                            self.program.readings_custom.splice(index, 1);
 
                             self.cancelDelete();
 
@@ -212,108 +258,76 @@
 
                 };
 
-                self.loadReports = function() {
+                self.popupTemplate = function(feature) {
 
-                    Practice.reports({
-                        id: self.practice.id
-                    }).$promise.then(function(successResponse) {
-
-                        console.log('self.practice', successResponse);
-
-                        self.reports = successResponse.features;
-
-                        self.status.loading = false;
-
-                    }, function(errorResponse) {
-
-                        self.status.loading = false;
-
-                    });
+                    return '<div class=\"project--popup\">' +
+                        '<div class=\"marker--title border--right\">' + feature.properties.name + '</div>' +
+                        '<a href=\"projects/' + feature.properties.id + '\">' +
+                        '<i class=\"material-icons\">keyboard_arrow_right</i>' +
+                        '</a>' +
+                        '</div>';
 
                 };
 
-                self.loadPractice = function() {
+                self.processLocations = function(features) {
 
-                    practice.$promise.then(function(successResponse) {
+                    self.map.markers = {};
 
-                        console.log('self.practice', successResponse);
+                    features.forEach(function(feature, index) {
 
-                        self.practice = successResponse;
+                        // var centroid = feature.geometry;
 
-                        if (!successResponse.permissions.read &&
-                            !successResponse.permissions.write) {
+                        // console.log('centroid', centroid);
 
-                            self.makePrivate = true;
+                        if (feature.geometry &&
+                            feature.geometry.coordinates) {
 
-                            return;
-
-                        }
-
-                        self.permissions.can_edit = successResponse.permissions.write;
-                        self.permissions.can_delete = successResponse.permissions.write;
-
-                        $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
-
-                        //
-                        // If a valid practice geometry is present, add it to the map
-                        // and track the object in `self.savedObjects`.
-                        //
-
-                        if (self.practice.geometry !== null &&
-                            typeof self.practice.geometry !== 'undefined') {
-
-                            leafletData.getMap('practice--map').then(function(map) {
-
-                                self.practiceExtent = new L.FeatureGroup();
-
-                                self.setGeoJsonLayer(self.practice.geometry, self.practiceExtent);
-
-                                map.fitBounds(self.practiceExtent.getBounds(), {
-                                    maxZoom: 18
-                                });
-
-                            });
-
-                            self.map.geojson = {
-                                data: self.practice.geometry
+                            self.map.markers['project_' + index] = {
+                                lat: feature.geometry.coordinates[1],
+                                lng: feature.geometry.coordinates[0],
+                                layer: 'projects',
+                                focus: false,
+                                icon: {
+                                    type: 'div',
+                                    className: 'project--marker',
+                                    iconSize: [24, 24],
+                                    popupAnchor: [0, 0],
+                                    html: ''
+                                },
+                                message: self.popupTemplate(feature)
                             };
 
                         }
 
-                        self.status.loading = false;
-
-                        self.loadReports();
-
-                        self.loadMetrics();
-
-                        self.loadTags();
-
-                        self.loadModel();
-
-                    }, function(errorResponse) {
-
-                        self.status.loading = false;
-
                     });
+
+                    console.log('self.map.markers', self.map.markers);
 
                 };
 
-                self.addReading = function(measurementPeriod) {
+                self.loadProgram = function() {
 
-                    var newReading = new Report({
-                        'measurement_period': 'Installation',
-                        'report_date': new Date(),
-                        'practice_id': practiceId,
-                        'organization_id': self.practice.organization_id
-                    });
+                    program.$promise.then(function(successResponse) {
 
-                    newReading.$save().then(function(successResponse) {
+                        console.log('self.program', successResponse);
 
-                        $location.path('/reports/' + successResponse.id + '/edit');
+                        self.program = successResponse;
+
+                        $rootScope.program = successResponse;
+
+                        $rootScope.page.title = self.program.name ? self.program.name : 'Un-named Program';
+
+                        self.status.loading = false;
+
+                        self.loadMetrics();
+
+                        self.loadProjects();
+
+                        self.loadTags();
 
                     }, function(errorResponse) {
 
-                        console.error('ERROR: ', errorResponse);
+
 
                     });
 
@@ -321,11 +335,11 @@
 
                 self.loadTags = function() {
 
-                    Practice.tags({
-                        id: self.practice.id
+                    Program.tags({
+                        id: self.program.id
                     }).$promise.then(function(successResponse) {
 
-                        console.log('Practice.tags', successResponse);
+                        console.log('Program.tags', successResponse);
 
                         successResponse.features.forEach(function(tag) {
 
@@ -348,31 +362,21 @@
 
                 };
 
-                self.loadModel = function() {
-
-                    Practice.model({
-                        id: self.practice.id
-                    }).$promise.then(function(successResponse) {
-
-                        console.log('Practice model successResponse', successResponse);
-
-                    }, function(errorResponse) {
-
-                        console.log('Practice model errorResponse', errorResponse);
-
-                    });
-
-                };
-
                 self.loadMetrics = function() {
 
-                    Practice.progress({
-                        id: self.practice.id
+                    Program.progress({
+                        id: self.program.id
                     }).$promise.then(function(successResponse) {
 
-                        console.log('Project metrics', successResponse);
+                        console.log('Program metrics', successResponse);
 
-                        Utility.processMetrics(successResponse.features);
+                        successResponse.features.forEach(function(metric) {
+
+                            var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
+
+                            metric.percentComplete = _percentComplete;
+
+                        });
 
                         self.metrics = successResponse.features;
 
@@ -384,21 +388,43 @@
 
                 };
 
-                self.showMetricModal = function(metric) {
+                self.loadProjects = function() {
 
-                    console.log('self.showMetricModal', metric);
+                    Program.pointLayer({
+                        id: self.program.id
+                    }).$promise.then(function(successResponse) {
 
-                    self.selectedMetric = metric;
+                        console.log('Program projects', successResponse);
 
-                    self.displayModal = true;
+                        var geoJsonLayer = L.geoJson(successResponse, {});
 
-                };
+                        leafletData.getMap('program--map').then(function(map) {
 
-                self.closeMetricModal = function() {
+                            map.fitBounds(geoJsonLayer.getBounds(), {
+                                maxZoom: 18
+                            });
 
-                    self.selectedMetric = null;
+                        });
 
-                    self.displayModal = false;
+                        self.processLocations(successResponse.features);
+
+                        // self.map.geojson = {
+                        //     data: successResponse,
+                        //     // onEachFeature: onEachFeature,
+                        //     style: {
+                        //         color: '#00D',
+                        //         fillColor: 'red',
+                        //         weight: 2.0,
+                        //         opacity: 0.6,
+                        //         fillOpacity: 0.2
+                        //     }
+                        // };
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
 
                 };
 
@@ -415,10 +441,10 @@
                             isLoggedIn: Account.hasToken(),
                             role: $rootScope.user.properties.roles[0],
                             account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
-                            can_edit: false
+                            can_edit: true
                         };
 
-                        self.loadPractice();
+                        self.loadProgram();
 
                     });
                 }
