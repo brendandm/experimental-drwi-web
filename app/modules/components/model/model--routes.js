@@ -12,39 +12,16 @@ angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
 
         $routeProvider
-            .when('/programs', {
-                templateUrl: '/modules/components/programs/views/programList--view.html?t=' + environment.version,
-                controller: 'ProgramListController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account, $rootScope, $document) {
-
-                        $rootScope.targetPath = document.location.pathname;
-
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
-
-                        return Account.userObject;
-
-                    },
-                    programs: function(Program, $route) {
-
-                        return Program.collection({});
-
-                    }
-                }
-            })
-            .when('/programs/:programId', {
-                templateUrl: '/modules/components/programs/views/programSummary--view.html?t=' + environment.version,
-                controller: 'ProgramSummaryController',
+            .when('/models/:modelId', {
+                templateUrl: '/modules/components/model/views/modelSummary--view.html?t=' + environment.version,
+                controller: 'ModelSummaryController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $route, $rootScope, $document) {
 
                         $rootScope.targetPath = document.location.pathname;
 
-                        // $rootScope.programContext = $route.current.params.programId;
+                        // $rootScope.modelContext = $route.current.params.modelId;
 
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
@@ -53,33 +30,23 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    // metrics: function(Program, $route) {
-                    //     return Program.metrics({
-                    //         id: $route.current.params.programId
-                    //     });
-                    // },
-                    // outcomes: function(Program, $route) {
-                    //     return Program.outcomes({
-                    //         id: $route.current.params.programId
-                    //     });
-                    // },
-                    program: function(Program, $route) {
-                        return Program.get({
-                            id: $route.current.params.programId
+                    model: function(Model, $route) {
+                        return Model.get({
+                            id: $route.current.params.modelId
                         });
                     }
                 }
             })
-            .when('/programs/:programId/edit', {
-                templateUrl: '/modules/components/programs/views/programEdit--view.html?t=' + environment.version,
-                controller: 'ProgramEditController',
+            .when('/models/:modelId/practices', {
+                templateUrl: '/modules/components/model/views/modelTag--view.html?t=' + environment.version,
+                controller: 'ModelTagController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $route, $rootScope, $document) {
 
                         $rootScope.targetPath = document.location.pathname;
 
-                        // $rootScope.programContext = $route.current.params.programId;
+                        // $rootScope.modelContext = $route.current.params.modelId;
 
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
@@ -88,23 +55,23 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    program: function(Program, $route) {
-                        return Program.get({
-                            id: $route.current.params.programId
+                    model: function(Model, $route) {
+                        return Model.get({
+                            id: $route.current.params.modelId
                         });
                     }
                 }
             })
-            .when('/programs/:programId/tags', {
-                templateUrl: '/modules/components/programs/views/programTag--view.html?t=' + environment.version,
-                controller: 'ProgramTagController',
+            .when('/models/:modelId/tags', {
+                templateUrl: '/modules/components/model/views/modelTag--view.html?t=' + environment.version,
+                controller: 'ModelTagController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $route, $rootScope, $document) {
 
                         $rootScope.targetPath = document.location.pathname;
 
-                        // $rootScope.programContext = $route.current.params.programId;
+                        // $rootScope.modelContext = $route.current.params.modelId;
 
                         if (Account.userObject && !Account.userObject.id) {
                             return Account.getUser();
@@ -113,61 +80,12 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    program: function(Program, $route) {
-                        return Program.get({
-                            id: $route.current.params.programId
+                    model: function(Model, $route) {
+                        return Model.get({
+                            id: $route.current.params.modelId
                         });
                     }
                 }
             });
-            // .when('/programs/:programId/tags', {
-            //     templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
-            //     controller: 'FeatureTagController',
-            //     controllerAs: 'page',
-            //     resolve: {
-            //         user: function(Account, $route, $rootScope, $document) {
-
-            //             $rootScope.targetPath = document.location.pathname;
-
-            //             // $rootScope.programContext = $route.current.params.programId;
-
-            //             if (Account.userObject && !Account.userObject.id) {
-            //                 return Account.getUser();
-            //             }
-
-            //             return Account.userObject;
-
-            //         },
-            //         featureCollection: function(Program, $route) {
-
-            //             return {
-            //                 featureId: $route.current.params.programId,
-            //                 name: 'program',
-            //                 path: '/programs',
-            //                 cls: Program
-            //             }
-
-            //         },
-            //         feature: function(Program, $route) {
-
-            //             return Program.get({
-            //                 id: $route.current.params.programId
-            //             });
-
-            //         },
-            //         toolbarUrl: function() {
-
-            //             return '/templates/toolbars/program.html?t=' + environment.version;
-
-            //         },
-            //         viewState: function() {
-
-            //             return {
-            //                 'program': true
-            //             };
-
-            //         }
-            //     }
-            // });
 
     });

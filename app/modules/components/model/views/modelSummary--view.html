@@ -16,15 +16,22 @@
 
                     <article class="pad space-right shadow">
 
-                        <h1>{{ page.program.name || 'Un-named' }}</h1>
+                        <h1>{{ page.model.name || 'Un-named' }}</h1>
 
-                        <p data-ng-if="page.program.description" data-ng-bind-html="page.program.description"></p>
+                        <p data-ng-if="page.model.description" data-ng-bind-html="page.model.description"></p>
 
-                        <p data-ng-if="page.program.website" style="display: flex; flex-flow: row nowrap; align-items: center;">
+                        <p data-ng-if="page.model.website_url" style="display: flex; flex-flow: row nowrap; align-items: center;">
                             <i class="material-icons">
                             open_in_new
                             </i>
-                            <a href="{{ page.program.website }}" target="_blank">&nbsp;View website</a>
+                            <a href="{{ page.model.website_url }}" target="_blank">&nbsp;View website</a>
+                        </p>
+
+                        <p data-ng-if="page.model.documentation_url" style="display: flex; flex-flow: row nowrap; align-items: center;">
+                            <i class="material-icons">
+                            open_in_new
+                            </i>
+                            <a href="{{ page.model.documentation_url }}" target="_blank">&nbsp;View documentation</a>
                         </p>
 
                         <div data-ng-if="page.tags && page.tags.length">
@@ -50,13 +57,33 @@
 
                     </article>
 
+                    <article class="pad shadow reveal fade-in t1">
+
+                        <!-- <h1>{{ page.model.name || 'Un-named' }}</h1> -->
+
+                        <p data-ng-if="page.model.website_url" style="display: flex; flex-flow: row nowrap; align-items: center;">
+                            <i class="material-icons">
+                            open_in_new
+                            </i>
+                            <a href="{{ page.model.website_url }}" target="_blank">&nbsp;View website</a>
+                        </p>
+
+                        <p data-ng-if="page.model.documentation_url" style="display: flex; flex-flow: row nowrap; align-items: center;">
+                            <i class="material-icons">
+                            open_in_new
+                            </i>
+                            <a href="{{ page.model.documentation_url }}" target="_blank">&nbsp;View documentation</a>
+                        </p>
+
+                    </article>
+
                     <!-- Map -->
 
-                    <div style="position:relative;">
+                    <!-- <div style="position:relative;">
 
                         <leaflet id="program--map" class="map tall" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers" markers="page.map.markers"></leaflet>
 
-                    </div>
+                    </div> -->
 
                 </div>
 
@@ -64,61 +91,28 @@
 
                     <section class="pad shadow">
 
-                        <h2>Metrics</h2>
+                        <h2>Practices</h2>
 
-                        <div data-ng-if="page.metrics">
+                        <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
-                            <section id="sites">
+                            <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="practice in page.practiceTypes | orderBy:'name' | filter: page.q">
 
-                                <div class="list">
+                                <div class="card--content">
 
-                                    <table class="table table-practices with-metrics" data-ng-if="page.metrics">
+                                    <label class="name" for="practice-{{ practice.id }}">
+                                        {{ practice.name }}
+                                        <!-- <input type="radio" id="practice-{{ practice.id }}" name="practice-{{ practice.id }}" /> -->
+                                    </label>
 
-                                        <thead>
-                                            <tr>
-                                                <th class="table-column-wide table-metrics-header">&nbsp;</th>
-                                                <th class="table-metrics-header">Installed To-Date</th>
-                                                <th class="table-metrics-header">% Installed</th>
-                                                <th>&nbsp;</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody class="metrics">
-                                            <tr class="metrics--metric" data-ng-repeat="metric in page.metrics track by $index">
-                                                <td class="table-column-wide">
-                                                    <p class="metric--title">
-                                                        {{ metric.name }}
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
-                                                        of {{ metric.target | number:2 }}</span>
-                                                </td>
-                                                <td>
-                                                    <strong class="metrics--metric--percentage">
-                                                        {{ metric.percentComplete }}%
-                                                    </strong>
-                                                </td>
-                                                <td>
-                                                    <progress-arc
-                                                        size="32"
-                                                        stroke="#2196F3"
-                                                        stroke-width="4"
-                                                        complete="(metric.current_value/metric.target)"
-                                                        counter-clockwise="false"
-                                                        background="rgba(0,0,0,0.2)">
-                                                    </progress-arc>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-
-                                    </table>
+                                    <div class="body">
+                                        <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (practice.description || 'No description') }}</p>
+                                    </div>
 
                                 </div>
 
-                            </section>
+                            </li>
 
-                        </div>
+                        </ul>
 
                     </section>
 
@@ -133,21 +127,21 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
         <ul>
             <li data-ng-class="{active: $root.toolbarState.dashboard}">
-                <a href="/programs/{{ page.program.id }}">
+                <a href="/programs/{{ page.model.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <a href="/programs/{{ page.program.id }}/edit">
+                <a href="/programs/{{ page.model.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/programs/{{ page.program.id }}/tags">
+                <a href="/programs/{{ page.model.id }}/tags">
                     <i class="material-icons">
                         local_offer
                     </i>
