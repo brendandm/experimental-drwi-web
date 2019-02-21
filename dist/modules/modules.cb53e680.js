@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1550791388782})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1550792148336})
 
 ;
 /**
@@ -32003,7 +32003,7 @@ angular.module('FieldDoc')
                 cast: {
                     method: 'POST',
                     isArray: false,
-                    url: environment.castUrl.concat('v1/analyze')
+                    url: environment.castUrl.concat('/v1/analyze')
                 },
                 collection: {
                     method: 'GET',

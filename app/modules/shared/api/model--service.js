@@ -18,7 +18,7 @@
                 cast: {
                     method: 'POST',
                     isArray: false,
-                    url: environment.castUrl.concat('v1/analyze')
+                    url: environment.castUrl.concat('/v1/analyze')
                 },
                 collection: {
                     method: 'GET',
