@@ -53,6 +53,7 @@ module.exports = function(grunt) {
                     environment: {
                         name: 'local',
                         apiUrl: 'http://127.0.0.1:5000',
+                        castUrl: 'http://127.0.0.1:4000',
                         siteUrl: 'http://127.0.0.1:9000',
                         clientId: 'sL3yMmmnSNszktuQGVBCasZ6mCy7DahS',
                         version: version
@@ -67,6 +68,7 @@ module.exports = function(grunt) {
                     environment: {
                         name: 'development',
                         apiUrl: 'https://dev.api.fielddoc.chesapeakecommons.org',
+                        castUrl: 'https://dev.cast.fielddoc.chesapeakecommons.org',
                         siteUrl: 'https://dev.fielddoc.chesapeakecommons.org',
                         clientId: '2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',
                         version: version
@@ -81,6 +83,7 @@ module.exports = function(grunt) {
                     environment: {
                         name: 'staging',
                         apiUrl: 'https://api.drwi.chesapeakecommons.org',
+                        castUrl: 'https://cast.fielddoc.chesapeakecommons.org',
                         siteUrl: 'https://drwi.chesapeakecommons.org',
                         clientId: 'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',
                         version: version

@@ -18,7 +18,7 @@
                 cast: {
                     method: 'POST',
                     isArray: false,
-                    url: 'http://localhost:4000/v1/analyze'
+                    url: environment.castUrl.concat('v1/analyze')
                 },
                 collection: {
                     method: 'GET',

@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1549920390519})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1550791388782})
 
 ;
 /**
@@ -6016,14 +6016,18 @@ angular.module('FieldDoc')
 
                     });
 
+                    // 
+                    // Add padding to bounds coordinates
+                    // 
+
                     southWest = [
-                        Math.min.apply(null, yRange),
-                        Math.min.apply(null, xRange)
+                        Math.min.apply(null, yRange) - 0.001,
+                        Math.min.apply(null, xRange) - 0.001
                     ];
 
                     northEast = [
-                        Math.max.apply(null, yRange),
-                        Math.max.apply(null, xRange)
+                        Math.max.apply(null, yRange) + 0.001,
+                        Math.max.apply(null, xRange) + 0.001
                     ];
 
                     bounds = leafletBoundsHelpers.createBoundsFromArray([
@@ -6033,14 +6037,18 @@ angular.module('FieldDoc')
 
                 } else {
 
+                    // 
+                    // Add padding to bounds coordinates
+                    // 
+
                     southWest = [
-                        obj.bounds.coordinates[1] - 0.05,
-                        obj.bounds.coordinates[0] - 0.05
+                        obj.bounds.coordinates[1] - 0.001,
+                        obj.bounds.coordinates[0] - 0.001
                     ];
 
                     northEast = [
-                        obj.bounds.coordinates[1] + 0.05,
-                        obj.bounds.coordinates[0] + 0.05
+                        obj.bounds.coordinates[1] + 0.001,
+                        obj.bounds.coordinates[0] + 0.001
                     ];
 
                     bounds = leafletBoundsHelpers.createBoundsFromArray([
@@ -10616,14 +10624,18 @@ angular.module('FieldDoc')
 
                         });
 
+                        // 
+                        // Add padding to bounds coordinates
+                        // 
+
                         southWest = [
-                            Math.min.apply(null, yRange),
-                            Math.min.apply(null, xRange)
+                            Math.min.apply(null, yRange) - 0.001,
+                            Math.min.apply(null, xRange) - 0.001
                         ];
 
                         northEast = [
-                            Math.max.apply(null, yRange),
-                            Math.max.apply(null, xRange)
+                            Math.max.apply(null, yRange) + 0.001,
+                            Math.max.apply(null, xRange) + 0.001
                         ];
 
                         bounds = leafletBoundsHelpers.createBoundsFromArray([
@@ -10633,14 +10645,18 @@ angular.module('FieldDoc')
 
                     } else {
 
+                        // 
+                        // Add padding to bounds coordinates
+                        // 
+
                         southWest = [
-                            obj.bounds.coordinates[1] - 0.05,
-                            obj.bounds.coordinates[0] - 0.05
+                            obj.bounds.coordinates[1] - 0.001,
+                            obj.bounds.coordinates[0] - 0.001
                         ];
 
                         northEast = [
-                            obj.bounds.coordinates[1] + 0.05,
-                            obj.bounds.coordinates[0] + 0.05
+                            obj.bounds.coordinates[1] + 0.001,
+                            obj.bounds.coordinates[0] + 0.001
                         ];
 
                         bounds = leafletBoundsHelpers.createBoundsFromArray([
@@ -15119,6 +15135,8 @@ angular.module('FieldDoc')
 
                         self.loadTags();
 
+                        self.loadModel();
+
                     }, function(errorResponse) {
 
                         self.status.loading = false;
@@ -15172,6 +15190,22 @@ angular.module('FieldDoc')
                     }, function(errorResponse) {
 
                         console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
+                self.loadModel = function() {
+
+                    Practice.model({
+                        id: self.practice.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Practice model successResponse', successResponse);
+
+                    }, function(errorResponse) {
+
+                        console.log('Practice model errorResponse', errorResponse);
 
                     });
 
@@ -17454,7 +17488,7 @@ angular.module('FieldDoc')
     .controller('PracticeTargetController',
         function($scope, Account, $location, $log, Practice, practice,
             $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            MetricType) {
+            MetricType, Model) {
 
             var self = this;
 
@@ -17521,6 +17555,62 @@ angular.module('FieldDoc')
 
             };
 
+            self.loadModel = function() {
+
+                Practice.model({
+                    id: $route.current.params.practiceId
+                }).$promise.then(function(successResponse) {
+
+                    console.log('Practice model successResponse', successResponse);
+
+                    self.model = successResponse;
+
+                }, function(errorResponse) {
+
+                    console.log('Practice model errorResponse', errorResponse);
+
+                });
+
+            };
+
+            self.runModel = function() {
+
+                var data = {
+                    practice_code: self.practice.category.model_key,
+                    geometry: self.practice.geometry,
+                    units: self.practice.area
+                };
+
+                Model.cast({}, data).$promise.then(function(successResponse) {
+
+                    console.log('Run model successResponse', successResponse);
+
+                    self.model.metrics.forEach(function(metric) {
+
+                        if (metric.name.indexOf('nitrogen') > 0) {
+
+                            metric.value = successResponse.tn_lbs_reduced;
+
+                        } else if (metric.name.indexOf('phosphorus') > 0) {
+
+                            metric.value = successResponse.tp_lbs_reduced;
+
+                        } else {
+
+                            metric.value = successResponse.tss_lbs_reduced;
+
+                        }
+
+                    });
+
+                }, function(errorResponse) {
+
+                    console.log('Run model errorResponse', errorResponse);
+
+                });
+
+            };
+
             self.loadPractice = function() {
 
                 var exclude = [
@@ -17528,7 +17618,7 @@ angular.module('FieldDoc')
                     'creator',
                     'dashboards',
                     'extent',
-                    'geometry',
+                    // 'geometry',
                     'members',
                     'metric_types',
                     'partners',
@@ -17972,6 +18062,8 @@ angular.module('FieldDoc')
                     self.loadPractice();
 
                     self.loadMatrix();
+
+                    self.loadModel();
 
                     //
                     // Setup page meta data
@@ -28130,6 +28222,245 @@ angular.module('FieldDoc')
 'use strict';
 
 /**
+ * @ngdoc overview
+ * @name FieldDoc
+ * @description
+ * # FieldDoc
+ *
+ * Main module of the application.
+ */
+angular.module('FieldDoc')
+    .config(function($routeProvider, environment) {
+
+        $routeProvider
+            .when('/models/:modelId', {
+                templateUrl: '/modules/components/model/views/modelSummary--view.html?t=' + environment.version,
+                controller: 'ModelSummaryController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $route, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        // $rootScope.modelContext = $route.current.params.modelId;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    model: function(Model, $route) {
+                        return Model.get({
+                            id: $route.current.params.modelId
+                        });
+                    }
+                }
+            })
+            .when('/models/:modelId/practices', {
+                templateUrl: '/modules/components/model/views/modelTag--view.html?t=' + environment.version,
+                controller: 'ModelTagController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $route, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        // $rootScope.modelContext = $route.current.params.modelId;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    model: function(Model, $route) {
+                        return Model.get({
+                            id: $route.current.params.modelId
+                        });
+                    }
+                }
+            })
+            .when('/models/:modelId/tags', {
+                templateUrl: '/modules/components/model/views/modelTag--view.html?t=' + environment.version,
+                controller: 'ModelTagController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $route, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        // $rootScope.modelContext = $route.current.params.modelId;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    model: function(Model, $route) {
+                        return Model.get({
+                            id: $route.current.params.modelId
+                        });
+                    }
+                }
+            });
+
+    });
+(function() {
+
+    'use strict';
+
+    /**
+     * @ngdoc function
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .controller('ModelSummaryController', [
+            'Account',
+            '$location',
+            '$timeout',
+            '$log',
+            '$rootScope',
+            '$route',
+            'Utility',
+            'user',
+            '$window',
+            'Map',
+            'mapbox',
+            'leafletData',
+            'leafletBoundsHelpers',
+            'Model',
+            'Project',
+            'model',
+            function(Account, $location, $timeout, $log, $rootScope,
+                $route, Utility, user, $window, Map, mapbox, leafletData,
+                leafletBoundsHelpers, Model, Project, model) {
+
+                var self = this;
+
+                self.modelId = $route.current.params.modelId;
+
+                $rootScope.viewState = {
+                    'model': true
+                };
+
+                $rootScope.toolbarState = {
+                    'dashboard': true
+                };
+
+                $rootScope.page = {};
+
+                self.status = {
+                    loading: true
+                };
+
+                self.alerts = [];
+
+                function closeAlerts() {
+
+                    self.alerts = [];
+
+                }
+
+                function closeRoute() {
+
+                    $location.path(self.model.links.site.html);
+
+                }
+
+                self.loadModel = function() {
+
+                    model.$promise.then(function(successResponse) {
+
+                        console.log('self.model', successResponse);
+
+                        self.model = successResponse;
+
+                        $rootScope.model = successResponse;
+
+                        $rootScope.page.title = self.model.name ? self.model.name : 'Un-named Model';
+
+                        self.status.loading = false;
+
+                        self.loadPractices();
+
+                    }, function(errorResponse) {
+
+
+
+                    });
+
+                };
+
+                self.loadTags = function() {
+
+                    //
+
+                };
+
+                self.loadMetrics = function() {
+
+                    //
+
+                };
+
+                self.loadProjects = function() {
+
+                    //
+
+                };
+
+                self.loadPractices = function() {
+
+                    Model.practiceTypes({
+                        id: self.model.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Model.practiceTypes successResponse', successResponse);
+
+                        self.practiceTypes = successResponse.features;
+
+                    }, function(errorResponse) {
+
+                        console.log('Model.practiceTypes errorResponse', errorResponse);
+
+                    });
+
+                };
+
+                //
+                // Verify Account information for proper UI element display
+                //
+                if (Account.userObject && user) {
+
+                    user.$promise.then(function(userResponse) {
+
+                        $rootScope.user = Account.userObject = userResponse;
+
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0],
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null,
+                            can_edit: true
+                        };
+
+                        self.loadModel();
+
+                    });
+                }
+
+            }
+        ]);
+
+}());
+'use strict';
+
+/**
  * @ngdoc service
  * @name FieldDoc.CommonsCloud
  * @description
@@ -30460,6 +30791,11 @@ angular
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_custom'),
                     'isArray': false
                 },
+                model: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/model')
+                },
                 progress: {
                     method: 'GET',
                     isArray: false,
@@ -31642,6 +31978,42 @@ angular.module('FieldDoc')
                 },
                 update: {
                     'method': 'PATCH'
+                }
+            });
+        });
+
+}());
+(function() {
+
+    'use strict';
+
+    /**
+     * @ngdoc service
+     * @name
+     * @description
+     */
+    angular.module('FieldDoc')
+        .service('Model', function(environment, Preprocessors, $resource) {
+            return $resource(environment.apiUrl.concat('/v1/model/:id'), {
+                id: '@id'
+            }, {
+                query: {
+                    isArray: false
+                },
+                cast: {
+                    method: 'POST',
+                    isArray: false,
+                    url: environment.castUrl.concat('v1/analyze')
+                },
+                collection: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/models')
+                },
+                practiceTypes: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/model/:id/practices')
                 }
             });
         });
