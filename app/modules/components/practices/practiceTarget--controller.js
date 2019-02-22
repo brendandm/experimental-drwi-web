@@ -68,6 +68,16 @@ angular.module('FieldDoc')
 
                     self.targets = successResponse;
 
+                    var activeDomain = [];
+
+                    self.targets.active.forEach(function(target) {
+
+                        activeDomain.push(target.metric.id);
+
+                    });
+
+                    self.loadModel(activeDomain);
+
                 }).catch(function(errorResponse) {
 
                     $log.error('Unable to load practice target matrix.');
@@ -76,7 +86,9 @@ angular.module('FieldDoc')
 
             };
 
-            self.loadModel = function() {
+            self.loadModel = function(activeDomain) {
+
+                console.log('self.loadModel.activeDomain', activeDomain);
 
                 Practice.model({
                     id: $route.current.params.practiceId
@@ -84,7 +96,21 @@ angular.module('FieldDoc')
 
                     console.log('Practice model successResponse', successResponse);
 
+                    var modelTargets = [];
+
                     self.model = successResponse;
+
+                    self.model.metrics.forEach(function(metric) {
+
+                        if (activeDomain.indexOf(metric.id) < 0) {
+
+                            modelTargets.push(metric);
+
+                        }
+
+                    });
+
+                    self.modelTargets = modelTargets;            
 
                 }, function(errorResponse) {
 
@@ -106,23 +132,46 @@ angular.module('FieldDoc')
 
                     console.log('Run model successResponse', successResponse);
 
-                    self.model.metrics.forEach(function(metric) {
+                    self.modelTargets.forEach(function(metric) {
 
                         if (metric.name.indexOf('nitrogen') > 0) {
 
                             metric.value = successResponse.tn_lbs_reduced;
 
+                            self.targets.active.push({
+                                name: metric.name,
+                                value: successResponse.tn_lbs_reduced,
+                                metric_id: metric.id,
+                                metric: metric
+                            });
+
                         } else if (metric.name.indexOf('phosphorus') > 0) {
 
                             metric.value = successResponse.tp_lbs_reduced;
+
+                            self.targets.active.push({
+                                name: metric.name,
+                                value: successResponse.tp_lbs_reduced,
+                                metric_id: metric.id,
+                                metric: metric
+                            });
 
                         } else {
 
                             metric.value = successResponse.tss_lbs_reduced;
 
+                            self.targets.active.push({
+                                name: metric.name,
+                                value: successResponse.tss_lbs_reduced,
+                                metric_id: metric.id,
+                                metric: metric
+                            });
+
                         }
 
                     });
+
+                    self.modelTargets = [];
 
                 }, function(errorResponse) {
 
@@ -584,7 +633,7 @@ angular.module('FieldDoc')
 
                     self.loadMatrix();
 
-                    self.loadModel();
+                    // self.loadModel();
 
                     //
                     // Setup page meta data

@@ -188,6 +188,10 @@
 
                         </div>
 
+                        <p style="color: #e0e0e0; margin: 0; padding-top: 2em; font-size: 0.9em;" data-ng-if="page.selectedMetric.model">
+                            This is an automated metric. The values above were generated using data and algorithms supplied by the {{ page.selectedMetric.model.name }} model. You can find more information about this model <a href="/models/{{ page.selectedMetric.model.id }}">here</a>.
+                        </p>
+
                     </div>
 
                 </div>

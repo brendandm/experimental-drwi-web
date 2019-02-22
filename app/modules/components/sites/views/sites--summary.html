@@ -109,84 +109,6 @@
                                         </thead>
 
                                         <tbody class="metrics">
-                                            <tr class="metrics--metric">
-                                                <td class="table-column-wide">
-                                                    <p class="metric--title">
-                                                        Pounds of total nitrogen reduced
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    <strong class="metrics--metric--rollup--small">12.16</strong> <span class="metrics--metric--rollup--label">pounds per year<br />
-                                                        of 32.36</span>
-                                                </td>
-                                                <td>
-                                                    <strong class="metrics--metric--percentage">
-                                                        37.6%
-                                                    </strong>
-                                                </td>
-                                                <td>
-                                                    <progress-arc
-                                                        size="32"
-                                                        stroke="#2196F3"
-                                                        stroke-width="4"
-                                                        complete="0.38"
-                                                        counter-clockwise="false"
-                                                        background="rgba(0,0,0,0.2)">
-                                                    </progress-arc>
-                                                </td>
-                                            </tr>
-                                            <tr class="metrics--metric">
-                                                <td class="table-column-wide">
-                                                    <p class="metric--title">
-                                                        Pounds of total phosphorus reduced
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    <strong class="metrics--metric--rollup--small">4.88</strong> <span class="metrics--metric--rollup--label">pounds per year<br />
-                                                        of 14.64</span>
-                                                </td>
-                                                <td>
-                                                    <strong class="metrics--metric--percentage">
-                                                        33.3%
-                                                    </strong>
-                                                </td>
-                                                <td>
-                                                    <progress-arc
-                                                        size="32"
-                                                        stroke="#2196F3"
-                                                        stroke-width="4"
-                                                        complete="0.33"
-                                                        counter-clockwise="false"
-                                                        background="rgba(0,0,0,0.2)">
-                                                    </progress-arc>
-                                                </td>
-                                            </tr>
-                                            <tr class="metrics--metric">
-                                                <td class="table-column-wide">
-                                                    <p class="metric--title">
-                                                        Pounds of total suspended solids reduced
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    <strong class="metrics--metric--rollup--small">24.64</strong> <span class="metrics--metric--rollup--label">pounds per year<br />
-                                                        of 76.77</span>
-                                                </td>
-                                                <td>
-                                                    <strong class="metrics--metric--percentage">
-                                                        32.1%
-                                                    </strong>
-                                                </td>
-                                                <td>
-                                                    <progress-arc
-                                                        size="32"
-                                                        stroke="#2196F3"
-                                                        stroke-width="4"
-                                                        complete="0.32"
-                                                        counter-clockwise="false"
-                                                        background="rgba(0,0,0,0.2)">
-                                                    </progress-arc>
-                                                </td>
-                                            </tr>
                                             <tr class="metrics--metric" data-ng-repeat="metric in page.metrics track by $index" data-ng-click="page.showMetricModal(metric)">
                                                 <td class="table-column-wide">
                                                     <p class="metric--title">
@@ -273,6 +195,10 @@
                             </div>
 
                         </div>
+
+                        <p style="color: #e0e0e0; margin: 0; padding-top: 2em; font-size: 0.9em;" data-ng-if="page.selectedMetric.model">
+                            This is an automated metric. The values above were generated using data and algorithms supplied by the {{ page.selectedMetric.model.name }} model. You can find more information about this model <a href="/models/{{ page.selectedMetric.model.id }}">here</a>.
+                        </p>
 
                     </div>
 
