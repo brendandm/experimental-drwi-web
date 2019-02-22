@@ -66,7 +66,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1550792148336})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1550794108757})
 
 ;
 /**
@@ -17488,7 +17488,7 @@ angular.module('FieldDoc')
     .controller('PracticeTargetController',
         function($scope, Account, $location, $log, Practice, practice,
             $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            MetricType, Model) {
+            MetricType, Model, $filter) {
 
             var self = this;
 
@@ -17578,7 +17578,7 @@ angular.module('FieldDoc')
                 var data = {
                     practice_code: self.practice.category.model_key,
                     geometry: self.practice.geometry,
-                    units: self.practice.area
+                    units: $filter('convertArea')(self.practice.area, 'acre')
                 };
 
                 Model.cast({}, data).$promise.then(function(successResponse) {

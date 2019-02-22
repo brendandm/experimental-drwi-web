@@ -9,7 +9,7 @@ angular.module('FieldDoc')
     .controller('PracticeTargetController',
         function($scope, Account, $location, $log, Practice, practice,
             $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            MetricType, Model) {
+            MetricType, Model, $filter) {
 
             var self = this;
 
@@ -99,7 +99,7 @@ angular.module('FieldDoc')
                 var data = {
                     practice_code: self.practice.category.model_key,
                     geometry: self.practice.geometry,
-                    units: self.practice.area
+                    units: $filter('convertArea')(self.practice.area, 'acre')
                 };
 
                 Model.cast({}, data).$promise.then(function(successResponse) {
