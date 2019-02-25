@@ -25,6 +25,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/models')
                 },
+                dnr: {
+                    method: 'POST',
+                    isArray: false,
+                    url: environment.dnrUrl.concat('/v1/analyze')
+                },
                 practiceTypes: {
                     method: 'GET',
                     isArray: false,
