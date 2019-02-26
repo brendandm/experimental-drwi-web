@@ -9,7 +9,7 @@ angular.module('FieldDoc')
     .controller('PracticeModelDataController',
         function($scope, Account, $location, $log, Practice, practice,
             $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            MetricType, Model, $filter) {
+            MetricType, Model, $filter, $http) {
 
             var self = this;
 
@@ -318,6 +318,15 @@ angular.module('FieldDoc')
                 self.tempTargets = self.practice.targets || [];
 
                 self.status.processing = false;
+
+  //               $http({
+  //   method : 'GET',
+  //     url : self.practice.category.model_tpl_url
+  // }).then(function mySuccess(response) {
+  //   $scope.myWelcome = response.data;
+  // }, function myError(response) {
+  //   $scope.myWelcome = response.statusText;
+  // });
 
             };
 
