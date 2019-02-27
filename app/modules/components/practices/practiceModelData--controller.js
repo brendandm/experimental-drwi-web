@@ -167,59 +167,6 @@ angular.module('FieldDoc')
 
                 });
 
-                // Model.analyze({
-                //     endpoint: self.model.api_url
-                // }, self.modelInputs).$promise.then(function(successResponse) {
-
-                //     console.log('Run model successResponse', successResponse);
-
-                //     self.modelTargets.forEach(function(metric) {
-
-                //         if (metric.name.indexOf('nitrogen') > 0) {
-
-                //             metric.value = successResponse.tn_lbs_reduced;
-
-                //             self.targets.active.push({
-                //                 name: metric.name,
-                //                 value: successResponse.tn_lbs_reduced,
-                //                 metric_id: metric.id,
-                //                 metric: metric
-                //             });
-
-                //         } else if (metric.name.indexOf('phosphorus') > 0) {
-
-                //             metric.value = successResponse.tp_lbs_reduced;
-
-                //             self.targets.active.push({
-                //                 name: metric.name,
-                //                 value: successResponse.tp_lbs_reduced,
-                //                 metric_id: metric.id,
-                //                 metric: metric
-                //             });
-
-                //         } else {
-
-                //             metric.value = successResponse.tss_lbs_reduced;
-
-                //             self.targets.active.push({
-                //                 name: metric.name,
-                //                 value: successResponse.tss_lbs_reduced,
-                //                 metric_id: metric.id,
-                //                 metric: metric
-                //             });
-
-                //         }
-
-                //     });
-
-                //     self.modelTargets = [];
-
-                // }, function(errorResponse) {
-
-                //     console.log('Run model errorResponse', errorResponse);
-
-                // });
-
             };
 
             self.loadPractice = function() {
