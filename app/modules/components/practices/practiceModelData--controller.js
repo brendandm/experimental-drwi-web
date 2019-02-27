@@ -31,6 +31,8 @@ angular.module('FieldDoc')
                 processing: true
             };
 
+            self.modelInputs = {};
+
             self.alerts = [];
 
             self.closeAlerts = function() {
@@ -96,21 +98,7 @@ angular.module('FieldDoc')
 
                     console.log('Practice model successResponse', successResponse);
 
-                    var modelTargets = [];
-
                     self.model = successResponse;
-
-                    self.model.metrics.forEach(function(metric) {
-
-                        if (activeDomain.indexOf(metric.id) < 0) {
-
-                            modelTargets.push(metric);
-
-                        }
-
-                    });
-
-                    self.modelTargets = modelTargets;            
 
                 }, function(errorResponse) {
 
@@ -120,15 +108,15 @@ angular.module('FieldDoc')
 
             };
 
-            self.runModel = function() {
+            self.saveInputs = function() {
 
-                var data = {
-                    practice_code: self.practice.category.model_key,
-                    geometry: self.practice.geometry,
-                    units: $filter('convertArea')(self.practice.area, 'acre')
-                };
+                self.modelInputs.practice_code = self.practice.category.model_key;
 
-                Model.cast({}, data).$promise.then(function(successResponse) {
+                $http({
+                    method: 'POST',
+                    url: self.model.api_url,
+                    data: self.modelInputs
+                }).then(function successCallback(successResponse) {
 
                     console.log('Run model successResponse', successResponse);
 
@@ -173,11 +161,64 @@ angular.module('FieldDoc')
 
                     self.modelTargets = [];
 
-                }, function(errorResponse) {
+                }, function errorCallback(errorResponse) {
 
                     console.log('Run model errorResponse', errorResponse);
 
                 });
+
+                // Model.analyze({
+                //     endpoint: self.model.api_url
+                // }, self.modelInputs).$promise.then(function(successResponse) {
+
+                //     console.log('Run model successResponse', successResponse);
+
+                //     self.modelTargets.forEach(function(metric) {
+
+                //         if (metric.name.indexOf('nitrogen') > 0) {
+
+                //             metric.value = successResponse.tn_lbs_reduced;
+
+                //             self.targets.active.push({
+                //                 name: metric.name,
+                //                 value: successResponse.tn_lbs_reduced,
+                //                 metric_id: metric.id,
+                //                 metric: metric
+                //             });
+
+                //         } else if (metric.name.indexOf('phosphorus') > 0) {
+
+                //             metric.value = successResponse.tp_lbs_reduced;
+
+                //             self.targets.active.push({
+                //                 name: metric.name,
+                //                 value: successResponse.tp_lbs_reduced,
+                //                 metric_id: metric.id,
+                //                 metric: metric
+                //             });
+
+                //         } else {
+
+                //             metric.value = successResponse.tss_lbs_reduced;
+
+                //             self.targets.active.push({
+                //                 name: metric.name,
+                //                 value: successResponse.tss_lbs_reduced,
+                //                 metric_id: metric.id,
+                //                 metric: metric
+                //             });
+
+                //         }
+
+                //     });
+
+                //     self.modelTargets = [];
+
+                // }, function(errorResponse) {
+
+                //     console.log('Run model errorResponse', errorResponse);
+
+                // });
 
             };
 
@@ -201,7 +242,7 @@ angular.module('FieldDoc')
                     'type',
                     'practices'
                 ].join(',');
-                
+
                 Practice.get({
                     id: $route.current.params.practiceId,
                     exclude: exclude
@@ -231,7 +272,7 @@ angular.module('FieldDoc')
 
             self.removeAll = function() {
 
-                self.targets.active.forEach(function (item) {
+                self.targets.active.forEach(function(item) {
 
                     self.targets.inactive.unshift(item);
 
@@ -248,7 +289,7 @@ angular.module('FieldDoc')
 
                     item.value = 0;
 
-                };
+                }
 
                 if (typeof idx === 'number') {
 
@@ -319,14 +360,16 @@ angular.module('FieldDoc')
 
                 self.status.processing = false;
 
-  //               $http({
-  //   method : 'GET',
-  //     url : self.practice.category.model_tpl_url
-  // }).then(function mySuccess(response) {
-  //   $scope.myWelcome = response.data;
-  // }, function myError(response) {
-  //   $scope.myWelcome = response.statusText;
-  // });
+                self.tplUrl = self.practice.category.model_tpl_url + '?t=' + Date.now();
+
+                //               $http({
+                //   method : 'GET',
+                //     url : self.practice.category.model_tpl_url
+                // }).then(function mySuccess(response) {
+                //   $scope.myWelcome = response.data;
+                // }, function myError(response) {
+                //   $scope.myWelcome = response.statusText;
+                // });
 
             };
 
@@ -385,7 +428,7 @@ angular.module('FieldDoc')
                     targets: self.targets.active.slice(0)
                 };
 
-                self.targets.inactive.forEach(function (item) {
+                self.targets.inactive.forEach(function(item) {
 
                     if (item.action &&
                         item.action === 'remove') {
@@ -558,11 +601,13 @@ angular.module('FieldDoc')
 
                     self.loadPractice();
 
+                    self.loadModel();
+
                     //
                     // Setup page meta data
                     //
                     $rootScope.page = {
-                        'title': 'Edit practice targets'
+                        'title': 'Add model data'
                     };
 
                 });
