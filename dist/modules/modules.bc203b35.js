@@ -83,7 +83,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1551375770935})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1551377976981})
 
 ;
 /**
@@ -16204,11 +16204,23 @@ angular.module('FieldDoc')
 
                     });
 
-                    automatedTargets.forEach(function(newTarget) {
+                    //
+                    // If the practice has existing targets, update their values.
+                    // 
 
-                        self.syncTarget(self.targets, newTarget);
+                    if (self.targets.length) {
 
-                    });
+                        automatedTargets.forEach(function(newTarget) {
+
+                            self.syncTarget(self.targets, newTarget);
+
+                        });
+
+                    } else {
+
+                        self.targets = automatedTargets;
+
+                    }
 
                     self.saveTargets();
 

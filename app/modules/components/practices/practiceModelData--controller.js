@@ -135,11 +135,23 @@ angular.module('FieldDoc')
 
                     });
 
-                    automatedTargets.forEach(function(newTarget) {
+                    //
+                    // If the practice has existing targets, update their values.
+                    // 
 
-                        self.syncTarget(self.targets, newTarget);
+                    if (self.targets.length) {
 
-                    });
+                        automatedTargets.forEach(function(newTarget) {
+
+                            self.syncTarget(self.targets, newTarget);
+
+                        });
+
+                    } else {
+
+                        self.targets = automatedTargets;
+
+                    }
 
                     self.saveTargets();
 
