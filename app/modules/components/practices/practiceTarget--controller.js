@@ -134,35 +134,13 @@ angular.module('FieldDoc')
 
                     self.modelTargets.forEach(function(metric) {
 
-                        if (metric.name.indexOf('nitrogen') > 0) {
+                        if (successResponse.hasOwnProperty(metric.model_key)) {
 
-                            metric.value = successResponse.tn_lbs_reduced;
-
-                            self.targets.active.push({
-                                name: metric.name,
-                                value: successResponse.tn_lbs_reduced,
-                                metric_id: metric.id,
-                                metric: metric
-                            });
-
-                        } else if (metric.name.indexOf('phosphorus') > 0) {
-
-                            metric.value = successResponse.tp_lbs_reduced;
+                            metric.value = successResponse[metric.model_key];
 
                             self.targets.active.push({
                                 name: metric.name,
-                                value: successResponse.tp_lbs_reduced,
-                                metric_id: metric.id,
-                                metric: metric
-                            });
-
-                        } else {
-
-                            metric.value = successResponse.tss_lbs_reduced;
-
-                            self.targets.active.push({
-                                name: metric.name,
-                                value: successResponse.tss_lbs_reduced,
+                                value: metric.value,
                                 metric_id: metric.id,
                                 metric: metric
                             });
