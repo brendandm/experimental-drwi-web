@@ -120,44 +120,44 @@ angular.module('FieldDoc')
 
             };
 
-            self.runModel = function() {
+            // self.runModel = function() {
 
-                var data = {
-                    practice_code: self.practice.category.model_key,
-                    geometry: self.practice.geometry,
-                    units: $filter('convertArea')(self.practice.area, 'acre')
-                };
+            //     var data = {
+            //         practice_code: self.practice.category.model_key,
+            //         geometry: self.practice.geometry,
+            //         units: $filter('convertArea')(self.practice.area, 'acre')
+            //     };
 
-                Model.cast({}, data).$promise.then(function(successResponse) {
+            //     Model.cast({}, data).$promise.then(function(successResponse) {
 
-                    console.log('Run model successResponse', successResponse);
+            //         console.log('Run model successResponse', successResponse);
 
-                    self.modelTargets.forEach(function(metric) {
+            //         self.modelTargets.forEach(function(metric) {
 
-                        if (successResponse.hasOwnProperty(metric.model_key)) {
+            //             if (successResponse.hasOwnProperty(metric.model_key)) {
 
-                            metric.value = successResponse[metric.model_key];
+            //                 metric.value = successResponse[metric.model_key];
 
-                            self.targets.active.push({
-                                name: metric.name,
-                                value: metric.value,
-                                metric_id: metric.id,
-                                metric: metric
-                            });
+            //                 self.targets.active.push({
+            //                     name: metric.name,
+            //                     value: metric.value,
+            //                     metric_id: metric.id,
+            //                     metric: metric
+            //                 });
 
-                        }
+            //             }
 
-                    });
+            //         });
 
-                    self.modelTargets = [];
+            //         self.modelTargets = [];
 
-                }, function(errorResponse) {
+            //     }, function(errorResponse) {
 
-                    console.log('Run model errorResponse', errorResponse);
+            //         console.log('Run model errorResponse', errorResponse);
 
-                });
+            //     });
 
-            };
+            // };
 
             self.loadPractice = function() {
 

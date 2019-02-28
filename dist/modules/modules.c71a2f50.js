@@ -83,7 +83,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1551310764523})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1551375770935})
 
 ;
 /**
@@ -16130,24 +16130,13 @@ angular.module('FieldDoc')
 
             self.loadMatrix = function() {
 
-                //
-                // Assign practice to a scoped variable
-                //
                 Practice.targetMatrix({
                     id: $route.current.params.practiceId
                 }).$promise.then(function(successResponse) {
 
-                    self.targets = successResponse;
+                    console.log('self.loadMatrix.successResponse', successResponse);
 
-                    var activeDomain = [];
-
-                    self.targets.active.forEach(function(target) {
-
-                        activeDomain.push(target.metric.id);
-
-                    });
-
-                    self.loadModel(activeDomain);
+                    self.targets = successResponse.active || [];
 
                 }).catch(function(errorResponse) {
 
@@ -16179,6 +16168,8 @@ angular.module('FieldDoc')
 
             self.saveInputs = function() {
 
+                console.log('self.saveInputs.run');
+
                 self.modelInputs.practice_code = self.practice.category.model_key;
 
                 $http({
@@ -16187,39 +16178,24 @@ angular.module('FieldDoc')
                     data: self.modelInputs
                 }).then(function successCallback(successResponse) {
 
-                    console.log('Run model successResponse', successResponse);
+                    console.log('self.saveInputs.successResponse', successResponse);
 
-                    self.modelTargets.forEach(function(metric) {
+                    var automatedTargets = [];
 
-                        if (metric.name.indexOf('nitrogen') > 0) {
+                    self.model.metrics.forEach(function(metric) {
 
-                            metric.value = successResponse.tn_lbs_reduced;
+                        if (successResponse.data.hasOwnProperty(metric.model_key)) {
 
-                            self.targets.active.push({
+                            console.log(
+                                'self.saveInputs.metricMatch',
+                                successResponse.data[metric.model_key],
+                                metric.model_key);
+
+                            metric.value = successResponse.data[metric.model_key];
+
+                            automatedTargets.push({
                                 name: metric.name,
-                                value: successResponse.tn_lbs_reduced,
-                                metric_id: metric.id,
-                                metric: metric
-                            });
-
-                        } else if (metric.name.indexOf('phosphorus') > 0) {
-
-                            metric.value = successResponse.tp_lbs_reduced;
-
-                            self.targets.active.push({
-                                name: metric.name,
-                                value: successResponse.tp_lbs_reduced,
-                                metric_id: metric.id,
-                                metric: metric
-                            });
-
-                        } else {
-
-                            metric.value = successResponse.tss_lbs_reduced;
-
-                            self.targets.active.push({
-                                name: metric.name,
-                                value: successResponse.tss_lbs_reduced,
+                                value: metric.value,
                                 metric_id: metric.id,
                                 metric: metric
                             });
@@ -16228,11 +16204,41 @@ angular.module('FieldDoc')
 
                     });
 
-                    self.modelTargets = [];
+                    automatedTargets.forEach(function(newTarget) {
+
+                        self.syncTarget(self.targets, newTarget);
+
+                    });
+
+                    self.saveTargets();
 
                 }, function errorCallback(errorResponse) {
 
-                    console.log('Run model errorResponse', errorResponse);
+                    console.log('self.saveInputs.errorResponse', errorResponse);
+
+                });
+
+            };
+
+            self.syncTarget = function(baseList, newTarget) {
+
+                console.log(
+                    'self.syncTargets.params',
+                    baseList,
+                    newTarget);
+
+                baseList.forEach(function(target) {
+
+                    if (target.metric.id === newTarget.metric_id) {
+
+                        console.log(
+                            'self.syncTargets.metricMatch',
+                            target.metric.id,
+                            newTarget.metric_id);
+
+                        target.value = newTarget.value;
+
+                    }
 
                 });
 
@@ -16372,20 +16378,17 @@ angular.module('FieldDoc')
 
                 self.practice = data.properties || data;
 
+                if (self.practice.model_inputs) {
+
+                    self.modelInputs = JSON.parse(self.practice.model_inputs);
+
+                }
+
                 self.tempTargets = self.practice.targets || [];
 
                 self.status.processing = false;
 
                 self.tplUrl = self.practice.category.model_tpl_url + '?t=' + Date.now();
-
-                //               $http({
-                //   method : 'GET',
-                //     url : self.practice.category.model_tpl_url
-                // }).then(function mySuccess(response) {
-                //   $scope.myWelcome = response.data;
-                // }, function myError(response) {
-                //   $scope.myWelcome = response.statusText;
-                // });
 
             };
 
@@ -16398,6 +16401,7 @@ angular.module('FieldDoc')
                     'last_modified_by',
                     'organization',
                     'tags',
+                    'targets',
                     'tasks'
                 ];
 
@@ -16441,19 +16445,8 @@ angular.module('FieldDoc')
                 console.log('self.savePractice.Practice', Practice);
 
                 var data = {
-                    targets: self.targets.active.slice(0)
+                    targets: self.targets
                 };
-
-                self.targets.inactive.forEach(function(item) {
-
-                    if (item.action &&
-                        item.action === 'remove') {
-
-                        data.targets.push(item);
-
-                    }
-
-                });
 
                 Practice.updateMatrix({
                     id: +self.practice.id
@@ -16469,6 +16462,8 @@ angular.module('FieldDoc')
                     $timeout(self.closeAlerts, 2000);
 
                     self.status.processing = false;
+
+                    self.savePractice();
 
                 }).catch(function(error) {
 
@@ -16497,7 +16492,9 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.practice);
 
-                self.practice.targets = self.processTargets(self.tempTargets);
+                // self.practice.targets = self.processTargets(self.tempTargets);
+
+                self.practice.model_inputs = JSON.stringify(self.modelInputs);
 
                 console.log('self.savePractice.practice', self.practice);
 
@@ -16519,6 +16516,8 @@ angular.module('FieldDoc')
                     $timeout(self.closeAlerts, 2000);
 
                     self.status.processing = false;
+
+                    self.loadMatrix();
 
                 }).catch(function(error) {
 
@@ -16616,6 +16615,8 @@ angular.module('FieldDoc')
                     };
 
                     self.loadPractice();
+
+                    self.loadMatrix();
 
                     self.loadModel();
 
@@ -18208,66 +18209,44 @@ angular.module('FieldDoc')
 
             };
 
-            self.runModel = function() {
+            // self.runModel = function() {
 
-                var data = {
-                    practice_code: self.practice.category.model_key,
-                    geometry: self.practice.geometry,
-                    units: $filter('convertArea')(self.practice.area, 'acre')
-                };
+            //     var data = {
+            //         practice_code: self.practice.category.model_key,
+            //         geometry: self.practice.geometry,
+            //         units: $filter('convertArea')(self.practice.area, 'acre')
+            //     };
 
-                Model.cast({}, data).$promise.then(function(successResponse) {
+            //     Model.cast({}, data).$promise.then(function(successResponse) {
 
-                    console.log('Run model successResponse', successResponse);
+            //         console.log('Run model successResponse', successResponse);
 
-                    self.modelTargets.forEach(function(metric) {
+            //         self.modelTargets.forEach(function(metric) {
 
-                        if (metric.name.indexOf('nitrogen') > 0) {
+            //             if (successResponse.hasOwnProperty(metric.model_key)) {
 
-                            metric.value = successResponse.tn_lbs_reduced;
+            //                 metric.value = successResponse[metric.model_key];
 
-                            self.targets.active.push({
-                                name: metric.name,
-                                value: successResponse.tn_lbs_reduced,
-                                metric_id: metric.id,
-                                metric: metric
-                            });
+            //                 self.targets.active.push({
+            //                     name: metric.name,
+            //                     value: metric.value,
+            //                     metric_id: metric.id,
+            //                     metric: metric
+            //                 });
 
-                        } else if (metric.name.indexOf('phosphorus') > 0) {
+            //             }
 
-                            metric.value = successResponse.tp_lbs_reduced;
+            //         });
 
-                            self.targets.active.push({
-                                name: metric.name,
-                                value: successResponse.tp_lbs_reduced,
-                                metric_id: metric.id,
-                                metric: metric
-                            });
+            //         self.modelTargets = [];
 
-                        } else {
+            //     }, function(errorResponse) {
 
-                            metric.value = successResponse.tss_lbs_reduced;
+            //         console.log('Run model errorResponse', errorResponse);
 
-                            self.targets.active.push({
-                                name: metric.name,
-                                value: successResponse.tss_lbs_reduced,
-                                metric_id: metric.id,
-                                metric: metric
-                            });
+            //     });
 
-                        }
-
-                    });
-
-                    self.modelTargets = [];
-
-                }, function(errorResponse) {
-
-                    console.log('Run model errorResponse', errorResponse);
-
-                });
-
-            };
+            // };
 
             self.loadPractice = function() {
 
