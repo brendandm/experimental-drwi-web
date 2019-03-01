@@ -83,7 +83,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1551403387116})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1551468220089})
 
 ;
 /**
@@ -6107,7 +6107,9 @@ angular.module('FieldDoc')
 
                     Utility.processMetrics(successResponse.features);
 
-                    self.metrics = successResponse.features;
+                    self.metrics = Utility.groupByModel(successResponse.features);
+
+                    console.log('self.metrics', self.metrics);
 
                 }, function(errorResponse) {
 
@@ -10715,7 +10717,9 @@ angular.module('FieldDoc')
 
                         Utility.processMetrics(successResponse.features);
 
-                        self.metrics = successResponse.features;
+                        self.metrics = Utility.groupByModel(successResponse.features);
+
+                        console.log('self.metrics', self.metrics);
 
                     }, function(errorResponse) {
 
@@ -15264,15 +15268,17 @@ angular.module('FieldDoc')
                         id: self.practice.id
                     }).$promise.then(function(successResponse) {
 
-                        console.log('Project metrics', successResponse);
+                        console.log('Practice metrics', successResponse);
 
                         Utility.processMetrics(successResponse.features);
 
-                        self.metrics = successResponse.features;
+                        self.metrics = Utility.groupByModel(successResponse.features);
+
+                        console.log('self.metrics', self.metrics);
 
                     }, function(errorResponse) {
 
-                        console.log('errorResponse', errorResponse);
+                        console.log('Practice metrics errorResponse', errorResponse);
 
                     });
 
@@ -22605,7 +22611,9 @@ angular.module('FieldDoc')
 
                         Utility.processMetrics(successResponse.features);
 
-                        self.metrics = successResponse.features;
+                        self.metrics = Utility.groupByModel(successResponse.features);
+
+                        console.log('self.metrics', self.metrics);
 
                     }, function(errorResponse) {
 
@@ -32255,6 +32263,49 @@ angular.module('FieldDoc')
                 });
 
                 return arr;
+
+            },
+            groupByModel: function(arr) {
+
+                var index = {
+                    'has_models': false,
+                    'generic': [],
+                    'models': {}
+                };
+
+                arr.forEach(function(datum) {
+
+                    if (!datum.model || typeof datum.model === 'undefined') {
+
+                        index.generic.push(datum);
+
+                    } else {
+
+                        var key = 'model_' + datum.model.id;
+
+                        if (index.models.hasOwnProperty(key) &&
+                            Array.isArray(index.models[key].collection)) {
+
+                            index.models[key].collection.push(datum);
+
+                        } else {
+
+                            index.has_models = true;
+
+                            index.models[key] = {
+                                'datum': datum.model,
+                                'collection': [
+                                    datum
+                                ]
+                            }
+
+                        }
+
+                    }
+
+                });
+
+                return index;
 
             }
         };

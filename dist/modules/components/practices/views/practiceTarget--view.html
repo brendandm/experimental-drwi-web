@@ -12,24 +12,43 @@
 
             <p>The metrics listed here are associated with the <strong>{{ page.practice.site.name }}</strong> site. Assign targets to this practice by entering a numeric value for one or more metrics.</p>
 
-            <div data-ng-if="page.modelTargets && page.modelTargets.length">
+            <div data-ng-if="page.model && page.model.id">
 
-                <h2>Modeled targets</h2>
+                <h2>Modeled metrics</h2>
 
-                <p>This conservation practice is linked to an automated model that calculates estimated nutrient and sediment reductions. Click the button below to generate estimated reductions for your planned implementation.</p>
+                <p data-ng-if="!page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ page.model.id }}" title="{{ page.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. As you add categorical and spatial data to this practice, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and valid data for this practice type.</p>
 
-                <div class="save--action--wrapper save--action--bottom" style="padding: 0 0 1em; justify-content: flex-start;" data-ng-if="page.practice.category.model_tpl_url">
-                    
-                    <p>FieldDoc needs additional data in order to perform automated metric calculations for this practice. <a href="/practices/{{ page.practice.id }}/model-data">Click here to get started.</a></p>
+                <p data-ng-if="page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ page.model.id }}" title="{{ page.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. When you add the required inputs, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and/or valid data for this practice type. <a href="/practices/{{ page.practice.id }}/model-data">Click here to add or modify model inputs.</a></p>
 
-                </div>
+                <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
-                <ul class="target-lst">
-                    <li data-ng-repeat="target in page.modelTargets">
-                        <div>{{ target.name }}</div>
-                        <input type="number" class="form-control" data-ng-model="target.value" id="name-active-{{ $index }}" name="name-active-{{ $index }}" placeholder="0" step="0.0001" min="0" autocomplete="off" disabled readonly />
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 1em;" data-ng-repeat="metric in page.model.metrics | orderBy:'name'">
+
+                        <div class="card--content">
+
+                            <div class="name" style="border-bottom: none;">
+                                <span>{{ metric.name || 'Un-named' }}</span>
+                                <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="metric.unit">{{ metric.unit.symbol }} &middot; {{ metric.unit.plural }}</span>
+                                <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="!metric.unit">Unit-less</span>
+                            </div>
+
+                            <div class="body" data-ng-if="metric.description">
+
+                                <p>{{ metric.description | truncate:80 }}</p>
+
+                            </div>
+
+                        </div>
+
                     </li>
+
                 </ul>
+
+                <!-- <ul class="target-lst">
+                    <li data-ng-repeat="metric in page.model.metrics">
+                        <div>{{ metric.name }}</div>
+                    </li>
+                </ul> -->
 
             </div>
 

@@ -312,7 +312,9 @@
 
                         Utility.processMetrics(successResponse.features);
 
-                        self.metrics = successResponse.features;
+                        self.metrics = Utility.groupByModel(successResponse.features);
+
+                        console.log('self.metrics', self.metrics);
 
                     }, function(errorResponse) {
 
