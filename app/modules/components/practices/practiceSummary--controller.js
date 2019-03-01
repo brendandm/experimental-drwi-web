@@ -370,15 +370,19 @@
                         id: self.practice.id
                     }).$promise.then(function(successResponse) {
 
-                        console.log('Project metrics', successResponse);
+                        console.log('Practice metrics', successResponse);
 
                         Utility.processMetrics(successResponse.features);
 
-                        self.metrics = successResponse.features;
+                        Utility.groupByModel(successResponse.features);
+
+                        self.metrics = Utility.groupByModel(successResponse.features);
+
+                        console.log('self.metrics', self.metrics);
 
                     }, function(errorResponse) {
 
-                        console.log('errorResponse', errorResponse);
+                        console.log('Practice metrics errorResponse', errorResponse);
 
                     });
 

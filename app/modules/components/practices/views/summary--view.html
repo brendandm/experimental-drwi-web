@@ -95,7 +95,61 @@
 
                         <h2>Metrics</h2>
 
-                        <table class="table table-practices with-metrics" data-ng-if="page.metrics">
+                        <div data-ng-if="page.metrics && page.metrics.has_models">
+
+                            <table class="table table-practices with-metrics" data-ng-repeat="model in page.metrics.models">
+
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <strong>{{ model.datum.name }}</strong>
+                                            <p style="color: #616161; margin: 0; padding-top: 2em; font-size: 0.9em;">
+                                                The following metric values were generated using data and algorithms supplied by the {{ model.datum.name }} model. You can find more information about this model <a href="/models/{{ model.datum.id }}">here</a>.
+                                            </p>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th class="table-column-wide table-metrics-header">&nbsp;</th>
+                                        <th class="table-metrics-header">Estimated value</th>
+                                        <th class="table-metrics-header">Estimated progress</th>
+                                        <th>&nbsp;</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="metrics">
+                                    <tr class="metrics--metric" data-ng-repeat="metric in model.collection track by $index" data-ng-click="page.showMetricModal(metric)">
+                                        <td class="table-column-wide">
+                                            <p class="metric--title">
+                                                {{ metric.name }}
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
+                                                of {{ metric.self_target | number:2 }}</span>
+                                        </td>
+                                        <td>
+                                            <strong class="metrics--metric--percentage">
+                                                {{ metric.selfProgress.value * 100 | number:1 }}%
+                                            </strong>
+                                        </td>
+                                        <td>
+                                            <progress-arc
+                                                size="32"
+                                                stroke="#2196F3"
+                                                stroke-width="4"
+                                                complete="metric.selfProgress.arcValue"
+                                                counter-clockwise="false"
+                                                background="rgba(0,0,0,0.2)">
+                                            </progress-arc>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                        <table class="table table-practices with-metrics" data-ng-if="page.metrics && page.metrics.generic.length">
 
                             <thead>
                                 <tr>
@@ -107,7 +161,7 @@
                             </thead>
 
                             <tbody class="metrics">
-                                <tr class="metrics--metric" data-ng-repeat="metric in page.metrics track by $index" data-ng-click="page.showMetricModal(metric)">
+                                <tr class="metrics--metric" data-ng-repeat="metric in page.metrics.generic track by $index" data-ng-click="page.showMetricModal(metric)">
                                     <td class="table-column-wide">
                                         <p class="metric--title">
                                             {{ metric.name }}

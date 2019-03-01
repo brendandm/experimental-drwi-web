@@ -182,6 +182,49 @@ angular.module('FieldDoc')
 
                 return arr;
 
+            },
+            groupByModel: function(arr) {
+
+                var index = {
+                    'has_models': false,
+                    'generic': [],
+                    'models': {}
+                };
+
+                arr.forEach(function(datum) {
+
+                    if (!datum.model || typeof datum.model === 'undefined') {
+
+                        index.generic.push(datum);
+
+                    } else {
+
+                        var key = 'model_' + datum.model.id;
+
+                        if (index.models.hasOwnProperty(key) &&
+                            Array.isArray(index.models[key].collection)) {
+
+                            index.models[key].collection.push(datum);
+
+                        } else {
+
+                            index.has_models = true;
+
+                            index.models[key] = {
+                                'datum': datum.model,
+                                'collection': [
+                                    datum
+                                ]
+                            }
+
+                        }
+
+                    }
+
+                });
+
+                return index;
+
             }
         };
 
