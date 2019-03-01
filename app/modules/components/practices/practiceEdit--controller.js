@@ -120,6 +120,12 @@ angular.module('FieldDoc')
 
                     console.log('self.practiceTypes', successResponse);
 
+                    successResponse.features.forEach(function(item) {
+
+                        item.category = item.group;
+
+                    });
+
                     self.practiceTypes = successResponse.features;
 
                     self.showElements();

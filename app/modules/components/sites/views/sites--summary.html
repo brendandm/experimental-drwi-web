@@ -32,7 +32,7 @@
 
                     <article class="pad space-right shadow reveal fade-in t0">
 
-                        <h1>{{ page.site.name }}</h1>
+                        <h1>{{ page.site.name || 'Un-named' }}</h1>
 
                         <p data-ng-if="page.site.id && page.site.last_modified_by.first_name && page.site.last_modified_by.last_name" class="label">
                             Last modified by {{ page.site.last_modified_by.first_name }} {{ page.site.last_modified_by.last_name }} on {{ page.site.modified_on | date:'medium' }}
@@ -43,7 +43,7 @@
                         </p>
 
                         <p>
-                            <strong>Project:</strong> <a href="{{ page.site.links.project.html }}">{{ page.project.name }}</a>
+                            <strong>Project:</strong> <a href="{{ page.site.links.project.html }}">{{ page.project.name || 'Un-named' }}</a>
                         </p>
 
                         <p data-ng-if="page.site.area && page.site.area > 0">
