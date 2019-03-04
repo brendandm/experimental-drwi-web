@@ -83,7 +83,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1551723880223})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1551737213829})
 
 ;
 /**
@@ -1555,6 +1555,16 @@ angular.module('FieldDoc')
 
         };
 
+        self.processMetrics = function(arr) {
+
+            Utility.processMetrics(arr);
+
+            self.metrics = Utility.groupByModel(arr);
+
+            console.log('self.metrics', self.metrics);
+
+        };
+
         self.loadMetrics = function(arr, options) {
 
             if (options) {
@@ -1568,7 +1578,7 @@ angular.module('FieldDoc')
 
                         console.log('granteeResponse', successResponse);
 
-                        self.metrics = Utility.processMetrics(successResponse.features);
+                        self.processMetrics(successResponse.features);
 
                     }, function(errorResponse) {
 
@@ -1585,7 +1595,7 @@ angular.module('FieldDoc')
 
                         console.log('granteeResponse', successResponse);
 
-                        self.metrics = Utility.processMetrics(successResponse.features);
+                        self.processMetrics(successResponse.features);
 
                     }, function(errorResponse) {
 
@@ -1602,7 +1612,7 @@ angular.module('FieldDoc')
 
                         console.log('granteeResponse', successResponse);
 
-                        self.metrics = Utility.processMetrics(successResponse.features);
+                        self.processMetrics(successResponse.features);
 
                     }, function(errorResponse) {
 
@@ -1619,7 +1629,7 @@ angular.module('FieldDoc')
 
                         console.log('granteeResponse', successResponse);
 
-                        self.metrics = Utility.processMetrics(successResponse.features);
+                        self.processMetrics(successResponse.features);
 
                     }, function(errorResponse) {
 
@@ -1657,7 +1667,7 @@ angular.module('FieldDoc')
 
                     console.log('Dashboard.progress.successResponse', successResponse);
 
-                    self.metrics = Utility.processMetrics(successResponse.features);
+                    self.processMetrics(successResponse.features);
 
                 }, function(errorResponse) {
 

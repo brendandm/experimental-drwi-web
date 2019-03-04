@@ -510,6 +510,16 @@ angular.module('FieldDoc')
 
         };
 
+        self.processMetrics = function(arr) {
+
+            Utility.processMetrics(arr);
+
+            self.metrics = Utility.groupByModel(arr);
+
+            console.log('self.metrics', self.metrics);
+
+        };
+
         self.loadMetrics = function(arr, options) {
 
             if (options) {
@@ -523,7 +533,7 @@ angular.module('FieldDoc')
 
                         console.log('granteeResponse', successResponse);
 
-                        self.metrics = Utility.processMetrics(successResponse.features);
+                        self.processMetrics(successResponse.features);
 
                     }, function(errorResponse) {
 
@@ -540,7 +550,7 @@ angular.module('FieldDoc')
 
                         console.log('granteeResponse', successResponse);
 
-                        self.metrics = Utility.processMetrics(successResponse.features);
+                        self.processMetrics(successResponse.features);
 
                     }, function(errorResponse) {
 
@@ -557,7 +567,7 @@ angular.module('FieldDoc')
 
                         console.log('granteeResponse', successResponse);
 
-                        self.metrics = Utility.processMetrics(successResponse.features);
+                        self.processMetrics(successResponse.features);
 
                     }, function(errorResponse) {
 
@@ -574,7 +584,7 @@ angular.module('FieldDoc')
 
                         console.log('granteeResponse', successResponse);
 
-                        self.metrics = Utility.processMetrics(successResponse.features);
+                        self.processMetrics(successResponse.features);
 
                     }, function(errorResponse) {
 
@@ -612,7 +622,7 @@ angular.module('FieldDoc')
 
                     console.log('Dashboard.progress.successResponse', successResponse);
 
-                    self.metrics = Utility.processMetrics(successResponse.features);
+                    self.processMetrics(successResponse.features);
 
                 }, function(errorResponse) {
 

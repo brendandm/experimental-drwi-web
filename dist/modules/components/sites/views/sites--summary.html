@@ -258,27 +258,9 @@
 
                         <div class="card--content">
 
-                            <!-- <div class="name">
-                                        <span>{{ practice.properties.name || practice.properties.category || 'Un-named' }}</span>
-                                    </div> -->
-
-                            <!-- <img data-ng-if="practice.staticURL" data-ng-src="{{ practice.staticURL }}" width="auto" height="auto" />
-
-                            <img data-ng-if="!practice.geometry && page.site.geometry" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/geojson({{ page.site.geometry }})/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
-
-                            <img data-ng-if="!practice.geometry && !page.site.geometry" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,5/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" /> -->
-
                             <div style="position:relative;">
                                 <leaflet id="practice-geography-preview-{{ $index }}" style="width: 100%; height: 200px;" defaults="page.previewMap.defaults" layers="page.previewMap.layers" bounds="practice.bounds" geojson="practice.geojson"></leaflet>
                             </div>
-
-                            <!-- <div style="position:relative;" data-ng-if="!practice.geometry && page.site.geometry">
-                                <leaflet id="geography-preview-{{ geography.id }}" style="width: 100%; height: 200px;" defaults="page.map.defaults" layers="page.map.layers" bounds="page.site.bounds" geojson="page.geojson"></leaflet>
-                            </div>
-
-                            <div style="position:relative;" data-ng-if="!practice.geometry && !page.site.geometry">
-                                <leaflet id="geography-preview-{{ geography.id }}" style="width: 100%; height: 200px;" defaults="page.map.defaults" layers="page.map.layers" bounds="practice.bounds" geojson="practice.geojson"></leaflet>
-                            </div> -->
 
                             <div class="name" style="background: #fff;">
                                 <span>{{ practice.properties.name || practice.properties.category || 'Un-named' }}</span>
@@ -297,7 +279,7 @@
                                         </a>
                                     </div>
                                 </div>
-                                <p>{{ (practice.properties.description || practice.properties.annotation) | truncate:80 }}</p>
+                                <p>{{ (practice.properties.description || practice.properties.annotation || 'No description') | truncate:80 }}</p>
                                 <div class="actions">
                                     <a class="snapshot--title" href="/practices/{{ practice.properties.id }}" title="Practice summary">
                                         <i class="material-icons">
