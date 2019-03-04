@@ -38,6 +38,12 @@ angular.module('FieldDoc')
                 loading: true
             };
 
+            self.print = function() {
+
+                $window.print();
+
+            };
+
             self.showElements = function() {
 
                 $timeout(function() {

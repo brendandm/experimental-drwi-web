@@ -30,6 +30,12 @@
                     processing: false
                 };
 
+                self.print = function() {
+
+                    $window.print();
+
+                };
+
                 self.showElements = function() {
 
                     $timeout(function() {

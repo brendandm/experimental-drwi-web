@@ -30,6 +30,16 @@
 
             <form role="form" class="form" style="position:relative;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePractice();" autocomplete="off">
 
+                <!-- Practice Type -->
+
+                <div class="form-element">
+                    <span class="meta-label"><b>Practice type</b></span>
+                    <input id="practice_type_id" name="practice_type_id" type="text" data-ng-model="page.practice.properties.category.properties.name" disabled readonly />
+                    <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
+                        {{ page.practice.properties.category.properties.description }}
+                    </p>
+                </div>
+
                 <div class="form-element">
 
                     <span class="meta-label"><b>Address</b></span>

@@ -99,10 +99,17 @@
 
                                 <div class="card--content">
 
-                                    <label class="name" for="practice-{{ practice.id }}" style="flex-flow: column; align-items: flex-start;">
+                                    <div class="name" style="flex-flow: column; align-items: flex-start;">
+                                        <label for="practice-{{ practice.id }}">
+                                            {{ practice.name }}
+                                        </label>
+                                        <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
+                                    </div>
+
+                                    <!-- <label class="name" for="practice-{{ practice.id }}" style="flex-flow: column; align-items: flex-start;">
                                         {{ practice.name }}
                                         <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
-                                    </label>
+                                    </label> -->
 
                                     <div class="body">
                                         <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (practice.description || 'No description') }}</p>

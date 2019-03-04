@@ -405,6 +405,13 @@
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
+                <a href="#" data-ng-click="page.print()">
+                    <i class="material-icons">
+                        print
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
                 <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.site.id && page.deletionTarget.collection === 'site'">
                     <p>Do you want to delete this site?</p>
                     <div class="actions">

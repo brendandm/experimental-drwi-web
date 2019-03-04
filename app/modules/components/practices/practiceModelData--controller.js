@@ -9,7 +9,7 @@ angular.module('FieldDoc')
     .controller('PracticeModelDataController',
         function($scope, Account, $location, $log, Practice, practice,
             $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            MetricType, Model, $filter, $http) {
+            MetricType, Model, $filter, $http, $window, GenericFile) {
 
             var self = this;
 
@@ -428,6 +428,80 @@ angular.module('FieldDoc')
                     self.status.processing = false;
 
                 });
+
+            };
+
+            self.uploadAttachment = function() {
+
+                if (!self.fileAttachment ||
+                    !self.fileAttachment.length) {
+
+                    self.alerts = [{
+                        'type': 'error',
+                        'flag': 'Error!',
+                        'msg': 'Please select a file.',
+                        'prompt': 'OK'
+                    }];
+
+                    $timeout(self.closeAlerts, 2000);
+
+                    return false;
+
+                }
+
+                self.progressMessage = 'Uploading your file...';
+
+                var fileData = new FormData();
+
+                fileData.append('file', self.fileAttachment[0]);
+
+                console.log('fileData', fileData);
+
+                try {
+
+                    GenericFile.upload({}, fileData, function(successResponse) {
+
+                        console.log('successResponse', successResponse);
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Upload successful.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
+                        self.modelInputs.attachment_url = successResponse.file_url;
+
+                        self.savePractice();
+
+                    }, function(errorResponse) {
+
+                        console.log('Upload error', errorResponse);
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'The file could not be processed.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
+                    });
+
+                } catch (error) {
+
+                    console.log('File upload error', error);
+
+                }
+
+            };
+
+            self.openAttachment = function(url) {
+
+                $window.open(url, '_blank');
 
             };
 
