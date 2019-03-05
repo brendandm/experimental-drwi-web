@@ -47,11 +47,15 @@
 
                     <p class="reveal fade-in t0" style="font-style: normal; font-size: 1em; color: #616161;" data-ng-if="page.modes.list">Add projects to this dashboard by selecting them from your collection below. If you want to create a dashboard for all of your projects, activate the “Select all” switch. Please keep in mind that this is a fixed set of projects — FieldDoc won’t include new projects you create unless the “Select all” option is turned on.</p>
 
-                    <p class="reveal fade-in t0" style="font-style: normal; font-size: 1em; color: #616161;" data-ng-if="page.modes.filter">Search for practices, programs, organizations, and/or tags to use as project filters. When you add a filter, FieldDoc automatically includes <strong>any</strong> projects that match your filter combination. With filters turned on, you won’t need to manually add projects to this dashboard.</p>
+                    <p class="reveal fade-in t0" style="font-style: normal; font-size: 1em; color: #616161;" data-ng-if="page.modes.filter">Search for practices, programs, organizations, and/or tags to use as project filters. When you add a filter, FieldDoc automatically includes <strong>any</strong> projects that match your filter combination. With filters turned on, you won’t need to manually add projects to this dashboard.
+
+                    <p class="reveal fade-in t0" style="font-style: normal; font-size: 1em; color: #616161;" data-ng-if="page.modes.filter">
+                        Please keep in mind that some filter combinations will produce an empty project list.
+                    </p>
 
                 </div>
 
-                <div class="filter--ui" data-ng-if="page.modes.filter">
+                <div class="filter--ui" data-ng-if="page.modes.filter && page.filters.categories">
 
                     <div class="filter--controls">
 
@@ -65,23 +69,34 @@
 
                         </div>
 
-                        <div class="filter--group">
-                            <div class="filter--pill" data-ng-repeat="filter in page.activeFilters">
-                                <div>
-                                    <span class="category {{ filter.category }}">{{ filter.subcategory || filter.category }}</span>
-                                    <span>{{ filter.name }}</span>
-                                </div>
-                                <div data-ng-click="page.clearFilter(filter, $index)">
-                                    <i class="material-icons">
-                                        remove_circle
-                                    </i>
+                        <div style="margin: 2em 0;" data-ng-repeat="category in page.filters.categories">
+
+                            <p style="font-style: normal; font-size: 1em; color: #212121; margin: 0 0 2em;" data-ng-if="category.collection.length">
+                                <strong>{{ category.name | capitalAttribute }}</strong>
+                            </p>
+
+                            <div class="filter--group">
+                                <div class="filter--pill" data-ng-repeat="filter in category.collection">
+                                    <div style="display: flex; flex-flow: column; align-items: center; justify-content: center;" data-ng-if="category.name !== 'tag' && category.name !== 'practice type' && category.name !== 'program'">
+                                        <span style="color: #616161;">{{ filter.name }}</span>
+                                    </div>
+                                    <div data-ng-if="category.name === 'tag' || category.name === 'practice type' || category.name === 'program'">
+                                        <span class="category {{ filter.category }}">{{ filter.subcategory || filter.category }}</span>
+                                        <span style="color: #616161;">{{ filter.name }}</span>
+                                    </div>
+                                    <div data-ng-click="page.clearFilter(filter, $index)" style="color: #bdbdbd;">
+                                        <i class="material-icons">
+                                            remove_circle
+                                        </i>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
 
                     </div>
 
-                    <div class="filter--actions" data-ng-if="page.activeFilters && page.activeFilters.length">
+                    <div class="filter--actions" data-ng-if="page.filters && page.filters.length">
                         <button class="clear" type="button" data-ng-click="page.clearAllFilters()" title="Clear all filters">
                             Clear all
                         </button>

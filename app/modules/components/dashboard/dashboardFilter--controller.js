@@ -7,8 +7,8 @@
  */
 angular.module('FieldDoc')
     .controller('DashboardFilterController',
-        function($scope, Account, $location, $log, Dashboard, dashboard,
-            $rootScope, $route, user, FilterStore, $timeout, SearchService) {
+        function($scope, Account, $location, $log, Dashboard, $rootScope,
+            $route, user, $timeout, SearchService, Utility) {
 
             var self = this;
 
@@ -30,8 +30,6 @@ angular.module('FieldDoc')
                 filter: false,
                 list: false
             };
-
-            self.activeFilters = [];
 
             self.alerts = [];
 
@@ -58,10 +56,6 @@ angular.module('FieldDoc')
                 self.deletionTarget = null;
 
             };
-
-            $scope.filterStore = FilterStore;
-
-            console.log('self.filterStore', self.filterStore);
 
             self.loadDashboard = function() {
 
@@ -128,6 +122,14 @@ angular.module('FieldDoc')
 
             };
 
+            self.processFilters = function(arr) {
+
+                self.filters = Utility.groupByCategory(arr);
+
+                console.log('self.processFilters', self.filters);
+
+            };
+
             self.loadFilters = function() {
 
                 //
@@ -137,7 +139,7 @@ angular.module('FieldDoc')
                     id: $route.current.params.dashboardId
                 }).$promise.then(function(successResponse) {
 
-                    self.activeFilters = successResponse.features;
+                    self.processFilters(successResponse.features);
 
                 }).catch(function(errorResponse) {
 
@@ -165,8 +167,6 @@ angular.module('FieldDoc')
 
                     self.dashboardObject.user_only = false;
 
-                    // self.dashboardObject.select_all = false;
-
                     self.dashboardObject.projects = [];
 
                 }
@@ -193,36 +193,48 @@ angular.module('FieldDoc')
 
             self.addFilter = function(item, model, label) {
 
+                console.log('self.addFilter', self.filters, item, model, label);
+
                 var match = false;
 
-                self.activeFilters.forEach(function(datum) {
+                if (self.filters.categories[item.category] &&
+                    Array.isArray(self.filters.categories[item.category].collection)) {
 
-                    if (datum.id === item.id &&
-                        datum.category === item.category) {
+                    self.filters.categories[item.category].collection.forEach(function(datum) {
 
-                        match = true;
+                        if (datum.id === item.id &&
+                            datum.category === item.category) {
+
+                            match = true;
+
+                        }
+
+                    });
+
+                    if (!match) {
+
+                        self.filters.categories[item.category].collection.push(item);
 
                     }
 
-                });
+                } else {
 
-                if (!match) {
-
-                    self.activeFilters.push(item);
+                    self.filters.categories[item.category] = {
+                        'name': item.category,
+                        'collection': [
+                            item
+                        ]
+                    }
 
                 }
+
+                self.query = undefined;
 
             };
 
             self.clearFilter = function(obj, index) {
 
-                self.activeFilters.splice(index, 1);
-
-                // var filters = [];
-
-                // self.activeFilters.forEach
-
-                // FilterStore.clearItem(obj);
+                self.filters.categories[obj.category].collection.splice(index, 1);
 
             };
 
@@ -232,9 +244,9 @@ angular.module('FieldDoc')
                 // Remove all stored filter objects
                 //
 
-                // FilterStore.clearAll();
+                self.filters = Utility.groupByCategory([]);
 
-                self.activeFilters = [];
+                console.log('self.clearAllFilters', self.filters);
 
             };
 
@@ -256,19 +268,13 @@ angular.module('FieldDoc')
 
                 switch (category) {
 
-                    // case 'geography':
-
-                    //     self.updateCollection(obj, 'geographies');
-
-                    //     break;
-
                     case 'organization':
 
                         self.updateCollection(obj, 'organizations');
 
                         break;
 
-                    case 'practice':
+                    case 'practice type':
 
                         self.updateCollection(obj, 'practices');
 
@@ -279,18 +285,6 @@ angular.module('FieldDoc')
                         self.updateCollection(obj, 'programs');
 
                         break;
-
-                    // case 'project':
-
-                    //     self.updateCollection(obj, 'projects');
-
-                    //     break;
-
-                    // case 'status':
-
-                    //     self.updateCollection(obj, 'statuses');
-
-                    //     break;
 
                     case 'tag':
 
@@ -308,41 +302,19 @@ angular.module('FieldDoc')
 
             };
 
-            self.extractFilter = function(key, data) {
-
-                console.log('extractFilter', key, data);
-
-                data.forEach(function(datum) {
-
-                    self.activeFilters.push({
-                        id: datum.id,
-                        name: datum.properties.name || datum.name,
-                        category: self.parseKey(key)
-                    });
-
-                });
-
-            };
-
             self.parseKey = function(obj, pluralize) {
 
                 var keyMap = {
                     plural: {
-                        // 'geography': 'geographies',
                         'organization': 'organizations',
                         'practice': 'practices',
                         'program': 'programs',
-                        // 'project': 'projects',
-                        // 'status': 'statuses',
                         'tag': 'tags'
                     },
                     single: {
-                        // 'geographies': 'geography',
                         'organizations': 'organization',
                         'practices': 'practice',
                         'programs': 'program',
-                        // 'projects': 'project',
-                        // 'statuses': 'status',
                         'tags': 'tag'
                     }
                 };
@@ -367,12 +339,6 @@ angular.module('FieldDoc')
                 }).$promise.then(function(response) {
 
                     console.log('SearchService response', response);
-
-                    // response.results.forEach(function(result) {
-
-                    //     result.category = null;
-
-                    // });
 
                     return response.results.slice(0, 5);
 
@@ -430,13 +396,25 @@ angular.module('FieldDoc')
 
             };
 
-            self.processRelations = function(arr) {
+            self.processCollection = function(arr) {
 
                 arr.forEach(function(filter) {
 
-                    console.log('processRelations', filter, filter.category);
+                    console.log('self.processCollection', filter, filter.category);
 
                     self.transformRelation(filter, filter.category);
+
+                });
+
+            };
+
+            self.processRelations = function(obj) {
+
+                angular.forEach(obj, function(value, key) {
+
+                    console.log('self.processRelations', value, key);
+
+                    self.processCollection(value.collection);
 
                 });
 
@@ -519,7 +497,7 @@ angular.module('FieldDoc')
 
                     self.dashboardObject.projects = [];
 
-                    self.processRelations(self.activeFilters);
+                    self.processRelations(self.filters.categories);
 
                 }
 
@@ -644,14 +622,6 @@ angular.module('FieldDoc')
 
             };
 
-            // $scope.$watch('filterStore.index', function(newVal) {
-
-            //     console.log('Updated filterStore', newVal);
-
-            //     self.activeFilters = newVal;
-
-            // });
-
             //
             // Verify Account information for proper UI element display
             //
@@ -668,8 +638,6 @@ angular.module('FieldDoc')
                     };
 
                     self.loadDashboard();
-
-                    // self.loadProjects();
 
                     //
                     // Setup page meta data

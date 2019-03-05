@@ -43,11 +43,11 @@
 
                     <div class="stat--block" data-ng-if="page.card.featureType === 'dashboard' || page.card.featureType === 'geography'">
                         <span class="label">Projects</span>
-                        <span class="total--projects">{{ page.filteredProjects.length | number }}</span>
+                        <span class="total--projects">{{ (page.summary.project_count || 0) | number }}</span>
                     </div>
                     <div class="stat--block" data-ng-if="page.card.featureType === 'dashboard' || page.card.featureType === 'geography'">
                         <span class="label">Grantees</span>
-                        <span class="total--projects">{{ page.filteredProjects.length | number }}</span>
+                        <span class="total--projects">{{ (page.summary.organization_count || 0) | number }}</span>
                     </div>
                     <div class="stat--block" data-ng-if="page.card.featureType === 'project'">
                         <span class="label">Sites</span>
@@ -181,7 +181,7 @@
                                             <p style="font-size: 0.8em; text-transform: uppercase; opacity: 0.6; letter-spacing: 0.05em; margin: 1em 0 0; color: #fafafa;">
                                                 <strong>{{ model.datum.name }}</strong>
                                             </p>
-                                            <p style="color: #e0e0e0; margin: 0; padding-top: 2em; font-size: 0.9em;">
+                                            <p style="margin: 0; padding-top: 2em; font-size: 0.9em; color: #f9f9f9; opacity: 0.8;">
                                                 The following metric values were generated using data and algorithms supplied by the {{ model.datum.name }} model. You can find more information about this model <a href="/models/{{ model.datum.id }}">here</a>.
                                             </p>
                                         </th>
@@ -207,7 +207,7 @@
                                         </td>
                                         <td data-ng-if="!metric.context_target" style="color: #e0e0e0;">
                                             <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
-                                                of {{ metric.target | number:2 }}</span>
+                                                of {{ (metric.target || metric.self_target) | number:2 }}</span>
                                         </td>
                                         <td style="color: #e0e0e0;">
                                             <strong class="metrics--metric--percentage">
@@ -254,7 +254,7 @@
                                     </td>
                                     <td data-ng-if="!metric.context_target" style="color: #e0e0e0;">
                                         <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
-                                            of {{ metric.target | number:2 }}</span>
+                                            of {{ (metric.target || metric.self_target) | number:2 }}</span>
                                     </td>
                                     <td style="color: #e0e0e0;">
                                         <strong class="metrics--metric--percentage">

@@ -1156,6 +1156,8 @@ angular.module('FieldDoc')
 
             self.filteredProjects = data.features;
 
+            self.summary = data.summary;
+
             self.processLocations(data.features);
 
             self.loadMetrics(self.filteredProjects);

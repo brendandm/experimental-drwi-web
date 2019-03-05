@@ -225,6 +225,49 @@ angular.module('FieldDoc')
 
                 return index;
 
+            },
+            groupByCategory: function(arr) {
+
+                var index = {
+                    'has_categories': false,
+                    'generic': [],
+                    'categories': {}
+                };
+
+                arr.forEach(function(datum) {
+
+                    if (!datum.category || typeof datum.category === 'undefined') {
+
+                        index.generic.push(datum);
+
+                    } else {
+
+                        var key = datum.category;
+
+                        if (index.categories.hasOwnProperty(key) &&
+                            Array.isArray(index.categories[key].collection)) {
+
+                            index.categories[key].collection.push(datum);
+
+                        } else {
+
+                            index.has_categories = true;
+
+                            index.categories[key] = {
+                                'name': datum.category,
+                                'collection': [
+                                    datum
+                                ]
+                            }
+
+                        }
+
+                    }
+
+                });
+
+                return index;
+
             }
         };
 

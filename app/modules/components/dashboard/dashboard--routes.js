@@ -143,13 +143,13 @@ angular.module('FieldDoc')
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
-                    dashboard: function($route, $location, Dashboard) {
+                    // dashboard: function($route, $location, Dashboard) {
 
-                        return Dashboard.get({
-                            id: $route.current.params.dashboardId
-                        });
+                    //     return Dashboard.get({
+                    //         id: $route.current.params.dashboardId
+                    //     });
 
-                    },
+                    // },
                     user: function(Account, $rootScope, $document) {
 
                         $rootScope.targetPath = document.location.pathname;
