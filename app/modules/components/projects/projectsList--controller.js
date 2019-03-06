@@ -264,6 +264,8 @@ angular.module('FieldDoc')
 
                     self.projects = successResponse.features;
 
+                    self.count = successResponse.count;
+
                     if (!$scope.projectStore.projects.length) {
 
                         $scope.projectStore.setProjects(successResponse.features);

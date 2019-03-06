@@ -83,7 +83,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1551820645059})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.chesapeakecommons.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1551861599979})
 
 ;
 /**
@@ -4126,11 +4126,31 @@ angular.module('FieldDoc')
 
             };
 
-            self.processMetrics = function(list) {
+            // self.processMetrics = function(list) {
+
+            //     var _list = [];
+
+            //     angular.forEach(list, function(item) {
+
+            //         var _datum = {};
+
+            //         if (item.id && item.selected) {
+            //             _datum.id = item.id;
+            //         }
+
+            //         _list.push(_datum);
+
+            //     });
+
+            //     return _list;
+
+            // };
+
+            self.processCollection = function(arr) {
 
                 var _list = [];
 
-                angular.forEach(list, function(item) {
+                arr.forEach(function(item) {
 
                     var _datum = {};
 
@@ -4146,27 +4166,51 @@ angular.module('FieldDoc')
 
             };
 
-            // self.loadFeatures = function(programId) {
+            self.processMetrics = function(obj) {
 
-            //     var params = {
-            //         program: programId
-            //     };
+                var collection = self.processCollection(obj.generic);
 
-            //     MetricType.collection(params).$promise.then(function(successResponse) {
+                // angular.forEach(obj.generic, function(item) {
 
-            //         console.log('successResponse', successResponse);
+                //     var _datum = {};
 
-            //         successResponse.features.forEach(function(feature) {
+                //     if (item.id && item.selected) {
+                //         _datum.id = item.id;
+                //     }
 
-            //             self.addMetric(feature);
+                //     _list.push(_datum);
 
-            //         });
+                // });
 
-            //     }, function(errorResponse) {
+                angular.forEach(obj.models, function(value, key) {
 
-            //         console.log('errorResponse', errorResponse);
+                    collection = collection.concat(self.processCollection(value.collection));
 
-            //         self.showElements();
+                });
+
+                return collection;
+
+            };
+
+            // self.processCollection = function(arr) {
+
+            //     arr.forEach(function(filter) {
+
+            //         console.log('self.processCollection', filter, filter.category);
+
+            //         self.transformRelation(filter, filter.category);
+
+            //     });
+
+            // };
+
+            // self.processRelations = function(obj) {
+
+            //     angular.forEach(obj, function(value, key) {
+
+            //         console.log('self.processRelations', value, key);
+
+            //         self.processCollection(value.collection);
 
             //     });
 
@@ -5394,6 +5438,8 @@ angular.module('FieldDoc')
                     });
 
                     self.projects = successResponse.features;
+
+                    self.count = successResponse.count;
 
                     if (!$scope.projectStore.projects.length) {
 
