@@ -242,7 +242,7 @@
                             </thead>
 
                             <tbody class="metrics">
-                                <tr class="metrics--metric" data-ng-repeat="metric in page.metrics track by $index" data-ng-click="page.showMetricModal(metric)">
+                                <tr class="metrics--metric" data-ng-repeat="metric in page.metrics.generic track by $index" data-ng-click="page.showMetricModal(metric)">
                                     <td class="table-column-wide">
                                         <p class="metric--title" style="color: #e0e0e0;">
                                             {{ metric.name }}
