@@ -35,12 +35,7 @@ angular
             // Allow loading from API endpoints.
             'http://localhost:4000/v1/tpl/**',
             'https://dev.dnr.fielddoc.chesapeakecommons.org/**',
-            'https://dnr.fielddoc.org/**',
-        ]);
-
-        // The blacklist overrides the whitelist so the open redirect here is blocked.
-        $sceDelegateProvider.resourceUrlBlacklist([
-            'http://myapp.example.com/clickThru**'
+            'https://dnr.fielddoc.org/**'
         ]);
 
     });

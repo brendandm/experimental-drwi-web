@@ -6,11 +6,23 @@
 
     <div class="content--container" style="border-right: 1px solid #e0e0e0;">
 
-        <h1 class="inset">{{ page.practice.name || 'Un-named' }} &middot; Model inputs</h1>
+        <h1 class="inset">{{ page.practice.name || 'Un-named' }} &middot; Legacy data</h1>
 
         <div class="main--ui target-ui reveal fade-in t0">
 
-            <div data-ng-include src="page.tplUrl"></div>
+            <form class="form" role="form">
+
+                <div class="form-element" data-ng-repeat="(key, value) in page.modelInputs">
+
+                    <label for="{{ key }}-field" class="meta-label">
+                        <strong>{{ key | capitalAttribute }}</strong>
+                    </label>
+
+                    <input type="number" class="form-control" id="{{ key }}-field" name="{{ key }}-field" value="{{ value }}" placeholder="&hellip;" disabled readonly />
+
+                </div>
+
+            </form>
 
         </div>
 

@@ -12,11 +12,17 @@
 
             return function(string) {
 
-                string.replace(/_/gi, ' ');
+                if (typeof string === 'string') {
 
-                if (string && string.length > 0) {
+                    var normalizedString = string.replace(/_/gi, ' ');
 
-                    return string.charAt(0).toUpperCase() + string.slice(1);
+                    if (normalizedString && normalizedString.length > 0) {
+
+                        return normalizedString.charAt(0).toUpperCase() + normalizedString.slice(1);
+
+                    }
+
+                    return normalizedString;
 
                 }
 
