@@ -311,6 +311,29 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            .when('/practices/:practiceId/legacy-data', {
+                templateUrl: '/modules/components/practices/views/practiceLegacyData--view.html?t=' + environment.version,
+                controller: 'PracticeLegacyDataController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    practice: function(Practice, $route) {
+                        return Practice.get({
+                            'id': $route.current.params.practiceId
+                        });
+                    }
+                }
+            })
             .when('/practices/:practiceId/targets', {
                 templateUrl: '/modules/components/practices/views/practiceTarget--view.html?t=' + environment.version,
                 controller: 'PracticeTargetController',

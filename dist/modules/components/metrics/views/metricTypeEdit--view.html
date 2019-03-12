@@ -27,6 +27,9 @@
                         <div class="form-element">
                             <span class="meta-label"><b>Name</b></span>
                             <input type="text" data-ng-model="page.metricType.name" class="form-control animate" id="name" name="name" placeholder="Metric name" required="required" />
+                            <p style="color: #9e9e9e; font-size: 0.9em; font-style: normal; margin-top: 0.5em;" data-ng-if="page.metricType.automated">
+                                This is an automated metric and cannot be removed or disabled. Please <a href="mailto:support@fielddoc.org">contact the FieldDoc team</a> if you have questions or need help managing this metric.
+                            </p>
                         </div>
 
                         <!-- Metric Target -->
@@ -103,7 +106,7 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit">
+            <li data-ng-if="page.permissions.can_edit && !page.metricType.automated">
                 <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
                     <p>Do you want to delete this metric type?</p>
                     <div class="actions">

@@ -95,6 +95,10 @@
 
                         <h2>Metrics</h2>
 
+                        <p style="color: #616161; margin: 0; padding: 2em; font-size: 0.9em;" data-ng-if="page.practice.legacy_self_id && page.practice.legacy_self_id > 0">
+                            The practice data you entered into the old version of FieldDoc can be viewed <a href="/practices/{{ page.practice.id }}/legacy-data">here</a>. Please <a href="mailto:support@fielddoc.org">contact the FieldDoc team</a> if you have questions or need help managing this practice.
+                        </p>
+
                         <div data-ng-if="page.metrics && page.metrics.has_models">
 
                             <table class="table table-practices with-metrics" data-ng-repeat="model in page.metrics.models">

@@ -84,7 +84,7 @@
                                         edit
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="#" title="Delete metric" data-ng-click="page.confirmDelete(metric)" data-ng-if="$root.user.properties.id === metric.creator.id || $root.user.properties.organization_id === metric.organization.id || $root.user.properties.is_admin">
+                                    <a class="snapshot--title" href="#" title="Delete metric" data-ng-click="page.confirmDelete(metric)" data-ng-if="($root.user.properties.id === metric.creator.id || $root.user.properties.organization_id === metric.organization.id || $root.user.properties.is_admin) && !metric.automated && !metric.locked">
                                         <i class="material-icons">
                                         delete
                                         </i>
