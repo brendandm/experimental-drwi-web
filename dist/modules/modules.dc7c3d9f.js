@@ -78,7 +78,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',castUrl:'https://cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1552423380268})
+.constant('environment', {name:'staging',apiUrl:'https://api.drwi.chesapeakecommons.org',castUrl:'https://cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://drwi.chesapeakecommons.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1552428151956})
 
 ;
 /**
@@ -185,7 +185,7 @@ angular.module('FieldDoc')
                 //
                 // Before showing the user the login page,
                 //
-                if (ipCookie('FIELDSTACKIO_SESSION')) {
+                if (ipCookie('FIELDDOC_SESSION')) {
 
                     var targetPath = $rootScope.targetPath;
 
@@ -241,8 +241,8 @@ angular.module('FieldDoc')
                             //
                             // Make sure our cookies for the Session are being set properly
                             //
-                            ipCookie.remove('FIELDSTACKIO_SESSION');
-                            ipCookie('FIELDSTACKIO_SESSION', successResponse.access_token, self.cookieOptions);
+                            ipCookie.remove('FIELDDOC_SESSION');
+                            ipCookie('FIELDDOC_SESSION', successResponse.access_token, self.cookieOptions);
 
                             //
                             // Make sure we also set the User ID Cookie, so we need to wait to
@@ -401,9 +401,9 @@ angular.module('FieldDoc')
 
                             } else {
 
-                                ipCookie.remove('FIELDSTACKIO_SESSION');
+                                ipCookie.remove('FIELDDOC_SESSION');
 
-                                ipCookie('FIELDSTACKIO_SESSION', response.access_token, self.cookieOptions);
+                                ipCookie('FIELDDOC_SESSION', response.access_token, self.cookieOptions);
 
                                 //
                                 // Make sure we also set the User ID Cookie, so we need to wait to
@@ -556,13 +556,13 @@ angular.module('FieldDoc')
             /**
              * Remove all cookies present for authentication
              */
-            ipCookie.remove('FIELDSTACKIO_SESSION');
-            ipCookie.remove('FIELDSTACKIO_SESSION', {
+            ipCookie.remove('FIELDDOC_SESSION');
+            ipCookie.remove('FIELDDOC_SESSION', {
                 path: '/'
             });
 
-            ipCookie.remove('FIELDSTACKIO_CURRENTUSER');
-            ipCookie.remove('FIELDSTACKIO_CURRENTUSER', {
+            ipCookie.remove('FIELDDOC_CURRENTUSER');
+            ipCookie.remove('FIELDDOC_CURRENTUSER', {
                 path: '/'
             });
 
@@ -684,7 +684,7 @@ angular.module('FieldDoc')
             return {
                 request: function(config) {
 
-                    var sessionCookie = ipCookie('FIELDSTACKIO_SESSION');
+                    var sessionCookie = ipCookie('FIELDDOC_SESSION');
 
                     //
                     // Configure our headers to contain the appropriate tags
@@ -711,13 +711,13 @@ angular.module('FieldDoc')
                         /**
                          * Remove all cookies present for authentication
                          */
-                        ipCookie.remove('FIELDSTACKIO_SESSION');
-                        ipCookie.remove('FIELDSTACKIO_SESSION', {
+                        ipCookie.remove('FIELDDOC_SESSION');
+                        ipCookie.remove('FIELDDOC_SESSION', {
                             path: '/'
                         });
 
-                        ipCookie.remove('FIELDSTACKIO_CURRENTUSER');
-                        ipCookie.remove('FIELDSTACKIO_CURRENTUSER', {
+                        ipCookie.remove('FIELDDOC_CURRENTUSER');
+                        ipCookie.remove('FIELDDOC_CURRENTUSER', {
                             path: '/'
                         });
 
@@ -31222,7 +31222,7 @@ angular
 
             Account.getUser = function() {
 
-                var userId = ipCookie('FIELDSTACKIO_CURRENTUSER');
+                var userId = ipCookie('FIELDDOC_CURRENTUSER');
 
                 if (!userId) {
                     return false;
@@ -31238,7 +31238,7 @@ angular
             Account.setUserId = function() {
                 var $promise = User.me(function(accountResponse) {
 
-                    ipCookie('FIELDSTACKIO_CURRENTUSER', accountResponse.id, {
+                    ipCookie('FIELDDOC_CURRENTUSER', accountResponse.id, {
                         path: '/',
                         expires: 2
                     });
@@ -31250,7 +31250,7 @@ angular
             };
 
             Account.hasToken = function() {
-                if (ipCookie('FIELDSTACKIO_CURRENTUSER') && ipCookie('FIELDSTACKIO_SESSION')) {
+                if (ipCookie('FIELDDOC_CURRENTUSER') && ipCookie('FIELDDOC_SESSION')) {
                     return true;
                 }
 
@@ -32316,7 +32316,7 @@ angular
             });
 
             Security.has_token = function() {
-                return (ipCookie('FIELDSTACKIO_SESSION')) ? true : false;
+                return (ipCookie('FIELDDOC_SESSION')) ? true : false;
             };
 
             return Security;

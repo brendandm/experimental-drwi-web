@@ -16,7 +16,7 @@
 
             Account.getUser = function() {
 
-                var userId = ipCookie('FIELDSTACKIO_CURRENTUSER');
+                var userId = ipCookie('FIELDDOC_CURRENTUSER');
 
                 if (!userId) {
                     return false;
@@ -32,7 +32,7 @@
             Account.setUserId = function() {
                 var $promise = User.me(function(accountResponse) {
 
-                    ipCookie('FIELDSTACKIO_CURRENTUSER', accountResponse.id, {
+                    ipCookie('FIELDDOC_CURRENTUSER', accountResponse.id, {
                         path: '/',
                         expires: 2
                     });
@@ -44,7 +44,7 @@
             };
 
             Account.hasToken = function() {
-                if (ipCookie('FIELDSTACKIO_CURRENTUSER') && ipCookie('FIELDSTACKIO_SESSION')) {
+                if (ipCookie('FIELDDOC_CURRENTUSER') && ipCookie('FIELDDOC_SESSION')) {
                     return true;
                 }
 

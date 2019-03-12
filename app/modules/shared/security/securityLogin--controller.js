@@ -27,7 +27,7 @@
                 //
                 // Before showing the user the login page,
                 //
-                if (ipCookie('FIELDSTACKIO_SESSION')) {
+                if (ipCookie('FIELDDOC_SESSION')) {
 
                     var targetPath = $rootScope.targetPath;
 
@@ -83,8 +83,8 @@
                             //
                             // Make sure our cookies for the Session are being set properly
                             //
-                            ipCookie.remove('FIELDSTACKIO_SESSION');
-                            ipCookie('FIELDSTACKIO_SESSION', successResponse.access_token, self.cookieOptions);
+                            ipCookie.remove('FIELDDOC_SESSION');
+                            ipCookie('FIELDDOC_SESSION', successResponse.access_token, self.cookieOptions);
 
                             //
                             // Make sure we also set the User ID Cookie, so we need to wait to

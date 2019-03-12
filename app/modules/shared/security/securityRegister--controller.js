@@ -87,9 +87,9 @@
 
                             } else {
 
-                                ipCookie.remove('FIELDSTACKIO_SESSION');
+                                ipCookie.remove('FIELDDOC_SESSION');
 
-                                ipCookie('FIELDSTACKIO_SESSION', response.access_token, self.cookieOptions);
+                                ipCookie('FIELDDOC_SESSION', response.access_token, self.cookieOptions);
 
                                 //
                                 // Make sure we also set the User ID Cookie, so we need to wait to

@@ -15,7 +15,7 @@
             return {
                 request: function(config) {
 
-                    var sessionCookie = ipCookie('FIELDSTACKIO_SESSION');
+                    var sessionCookie = ipCookie('FIELDDOC_SESSION');
 
                     //
                     // Configure our headers to contain the appropriate tags
@@ -42,13 +42,13 @@
                         /**
                          * Remove all cookies present for authentication
                          */
-                        ipCookie.remove('FIELDSTACKIO_SESSION');
-                        ipCookie.remove('FIELDSTACKIO_SESSION', {
+                        ipCookie.remove('FIELDDOC_SESSION');
+                        ipCookie.remove('FIELDDOC_SESSION', {
                             path: '/'
                         });
 
-                        ipCookie.remove('FIELDSTACKIO_CURRENTUSER');
-                        ipCookie.remove('FIELDSTACKIO_CURRENTUSER', {
+                        ipCookie.remove('FIELDDOC_CURRENTUSER');
+                        ipCookie.remove('FIELDDOC_CURRENTUSER', {
                             path: '/'
                         });
 

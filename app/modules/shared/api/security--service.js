@@ -33,7 +33,7 @@
             });
 
             Security.has_token = function() {
-                return (ipCookie('FIELDSTACKIO_SESSION')) ? true : false;
+                return (ipCookie('FIELDDOC_SESSION')) ? true : false;
             };
 
             return Security;

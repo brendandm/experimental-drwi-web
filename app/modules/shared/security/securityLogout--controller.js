@@ -14,13 +14,13 @@
             /**
              * Remove all cookies present for authentication
              */
-            ipCookie.remove('FIELDSTACKIO_SESSION');
-            ipCookie.remove('FIELDSTACKIO_SESSION', {
+            ipCookie.remove('FIELDDOC_SESSION');
+            ipCookie.remove('FIELDDOC_SESSION', {
                 path: '/'
             });
 
-            ipCookie.remove('FIELDSTACKIO_CURRENTUSER');
-            ipCookie.remove('FIELDSTACKIO_CURRENTUSER', {
+            ipCookie.remove('FIELDDOC_CURRENTUSER');
+            ipCookie.remove('FIELDDOC_CURRENTUSER', {
                 path: '/'
             });
 
