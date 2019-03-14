@@ -65,7 +65,7 @@ angular.module('FieldDoc')
 
                         });
 
-                    }, 4000);
+                    }, 2000);
 
                 }, function(errorResponse) {
 
