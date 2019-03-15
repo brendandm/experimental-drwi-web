@@ -78,7 +78,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1552514045267})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1552658522691})
 
 ;
 /**
@@ -9373,7 +9373,7 @@ angular.module('FieldDoc')
 
                         });
 
-                    }, 4000);
+                    }, 2000);
 
                 }, function(errorResponse) {
 
@@ -34134,5 +34134,27 @@ angular.module('FieldDoc')
             };
 
         });
+
+}());
+(function() {
+
+    'use strict';
+
+    angular.module('FieldDoc')
+        .filter('localTime', ['$filter', function($filter) {
+
+            return function(value) {
+
+                if (typeof value === 'string') {
+
+                    return moment.utc(value).local().format();
+
+                }
+
+                return value;
+
+            };
+
+        }]);
 
 }());
