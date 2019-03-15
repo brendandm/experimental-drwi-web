@@ -35,7 +35,7 @@
                         <h1>{{ page.project.name }}</h1>
 
                         <p data-ng-if="page.project.id && page.project.last_modified_by.first_name && page.project.last_modified_by.last_name" class="label modtime">
-                            Last modified by {{ page.project.last_modified_by.first_name }} {{ page.project.last_modified_by.last_name }} on {{ page.project.modified_on | localTime | date:'fullDate' }} at <span class="lowercase">{{ page.project.modified_on | localTime | date:'shortTime' }}</span>
+                            Last modified by {{ page.project.last_modified_by.first_name }} {{ page.project.last_modified_by.last_name }} on {{ page.project.modified_on | localTime | date:'fullDate' }} at <span class="lowercase">{{ page.project.modified_on | localTime | date:'h:mma' }}</span>
                         </p>
 
                         <p data-ng-if="page.project.program && page.project.program.id" class="label">
