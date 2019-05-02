@@ -8,7 +8,7 @@
      * @description
      */
     angular.module('FieldDoc')
-        .controller('SiteSummaryController',
+        .controller('SitePrintController',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
                 $route, nodes, user, Utility, site, Map, MapPreview, mapbox, leafletData,
                 leafletBoundsHelpers, Site, Project, practices, $interval, LayerService) {

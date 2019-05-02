@@ -111,7 +111,15 @@
 
                         console.log('Model.practiceTypes successResponse', successResponse);
 
-                        self.practiceTypes = successResponse.features;
+                        var practiceTypes = [];
+
+                        successResponse.features.forEach(function(feature) {
+
+                            practiceTypes.push(feature.practice);
+
+                        })
+
+                        self.practiceTypes = practiceTypes;
 
                     }, function(errorResponse) {
 

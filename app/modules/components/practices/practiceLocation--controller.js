@@ -36,36 +36,6 @@ angular.module('FieldDoc')
 
             self.map = JSON.parse(JSON.stringify(Map));
 
-            // url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-            //             options: {
-            //                 apikey: mapbox.access_token,
-            //                 mapid: 'mapbox.streets'
-            //             }
-
-            // self.map.layers.overlays = {
-            //     headwaters: {
-            //         name: 'Headwaters',
-            //         type: 'xyz',
-            //         visible: true,
-            //         url: 'http://api.tiles.mapbox.com/v4/fielddoc.3dp4i9y8/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZmllbGRkb2MiLCJhIjoiY2p1MW8zOHNyMDNwZTQ0bXlhMjNxaXVpMSJ9.0tUMQt2s0zd6DAthnmJItg',
-            //         // layerParams: {
-            //         //     layers: 'usa:states',
-            //         //     format: 'image/png',
-            //         //     transparent: true
-            //         // }
-            //         layerOptions: {},
-            //         layerParams: {}
-            //     }
-            // };
-
-            // layerOptions: {
-            //             layers: 'europe_wms:hs_srtm_europa',
-            //             format: 'image/png',
-            //             opacity: 0.25,
-            //             attribution: 'Hillshade layer by GIScience http://www.osm-wms.de',
-            //             crs: L.CRS.EPSG900913
-            //         }
-
             self.savedObjects = [];
 
             self.editableLayers = new L.FeatureGroup();

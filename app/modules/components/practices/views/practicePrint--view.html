@@ -8,7 +8,7 @@
 
         <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
             <div class="progress--container">
-                <p style="font-weight: bold;" class="color-pulse">Loading project data&hellip;</p>
+                <p style="font-weight: bold;" class="color-pulse">Loading practice data&hellip;</p>
             </div>
         </div>
 
@@ -20,7 +20,7 @@
                 </i>
             </p>
 
-            <p>This project is private.</p>
+            <p>This practice is private.</p>
 
         </section>
 
@@ -30,23 +30,35 @@
 
                 <div class="group">
 
+                    <!-- Descriptors -->
+
                     <article class="pad space-right shadow reveal fade-in t0">
 
-                        <h1>{{ page.project.name }}</h1>
+                        <h1>{{ page.practice.name || 'Un-named' }}</h1>
 
-                        <p data-ng-if="page.project.id && page.project.last_modified_by.first_name && page.project.last_modified_by.last_name" class="label modtime">
-                            Last modified by {{ page.project.last_modified_by.first_name }} {{ page.project.last_modified_by.last_name }} on {{ page.project.modified_on | localTime | date:'fullDate' }} at <span class="lowercase">{{ page.project.modified_on | localTime | date:'h:mma' }}</span>
+                        <p data-ng-if="page.practice.id && page.practice.last_modified_by.first_name && page.practice.last_modified_by.last_name" class="label modtime">
+                            Last modified by {{ page.practice.last_modified_by.first_name }} {{ page.practice.last_modified_by.last_name }} on {{ page.practice.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.practice.modified_on | localTime | date:'h:mma' }}</span>
                         </p>
 
-                        <p data-ng-if="page.project.program && page.project.program.id" class="label">
-                            <strong>Program:</strong> <a href="{{ page.project.links.program.html }}">{{ page.project.program.name }}</a>
+                        <p>
+                            <strong>Project:</strong> <a href="{{ page.practice.links.project.html }}">{{ page.practice.project.name || 'Un-named' }}</a>
                         </p>
 
-                        <p data-ng-if="page.area && page.area.value" class="label">
-                            <strong>Total area:</strong> {{ page.area.value | number:2 }} {{ page.area.unit }}s
+                        <p>
+                            <strong>Site:</strong> <a href="{{ page.practice.links.site.html }}">{{ page.practice.site.name || 'Un-named' }}</a>
                         </p>
 
-                        <p data-ng-bind-html="page.project.description"></p>
+                        <p>
+                            <strong>Practice Type:</strong> {{ page.practice.category.name }}
+                        </p>
+
+                        <p data-ng-if="page.practice.area && page.practice.area > 0">
+                            <strong>Area:</strong> {{ page.practice.area | convertArea:'acre' | number:2 }} acres</a>
+                        </p>
+
+                        <p data-ng-if="page.practice.description" data-ng-bind-html="page.practice.description"></p>
+
+                        <p data-ng-if="!page.practice.description">{{ page.practice.category.description }}</p>
 
                         <div data-ng-if="page.tags && page.tags.length">
 
@@ -71,8 +83,12 @@
 
                     </article>
 
-                    <div class="map--module shadow reveal fade-in t1" style="position:relative;">
-                        <leaflet id="project--map" class="map tall" center="page.map.center" defaults="page.map.defaults" bounds="page.map.bounds" markers="page.map.markers"></leaflet>
+                    <!-- Map -->
+
+                    <div class="shadow reveal fade-in t1" style="position:relative;">
+
+                        <leaflet id="practice--map" class="map tall" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers"></leaflet>
+
                     </div>
 
                 </div>
@@ -82,6 +98,10 @@
                     <section class="pad shadow">
 
                         <h2>Metrics</h2>
+
+                        <p style="color: #616161; margin: 0; padding: 2em; font-size: 0.9em;" data-ng-if="page.practice.legacy_self_id && page.practice.legacy_self_id > 0">
+                            The practice data you entered into the old version of FieldDoc can be viewed <a href="/practices/{{ page.practice.id }}/legacy-data">here</a>. Please <a href="mailto:support@fielddoc.org">contact the FieldDoc team</a> if you have questions or need help managing this practice.
+                        </p>
 
                         <div data-ng-if="page.metrics && page.metrics.has_models">
 
@@ -202,7 +222,7 @@
                         <div style="display: flex; flex-flow: row nowrap; justify-content: center; align-items: center; padding: 1em 0; width: 100%;">
 
                             <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center; ">
-                                <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Program progress</span>
+                                <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Site progress</span>
                                 <br />
                                 <progress-arc
                                     size="80"
@@ -212,11 +232,11 @@
                                     counter-clockwise="false"
                                     background="rgba(0,0,0,0.2)">
                                 </progress-arc>
-                                <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.target | number:2 }}</span>
+                                <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.context_target | number:2 }}</span>
                             </div>
 
                             <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center;">
-                                <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Project progress</span>
+                                <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Practice progress</span>
                                 <br />
                                 <progress-arc
                                     size="80"
@@ -242,28 +262,24 @@
 
             <section class="reveal fade-in t3" style="padding: 0;">
 
-                <h2>Sites</h2>
+                <h2>Reports</h2>
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="site in page.sites track by $index">
+                    <li class="card" data-ng-repeat="report in page.reports | orderBy:'report_date':false">
 
                         <div class="card--content">
 
-                            <div style="position:relative;">
-                                <leaflet id="site-geography-preview-{{ $index }}" style="width: 100%; height: 200px;" defaults="page.previewMap.defaults" layers="page.previewMap.layers" bounds="site.bounds" geojson="site.geojson"></leaflet>
-                            </div>
-
-                            <div class="name" style="background: #fff;">
-                                <span>{{ site.properties.name || 'Un-named' }}</span>
+                            <div class="name">
+                                <span>{{ report.measurement_period }}</span>
                             </div>
 
                             <div class="body">
 
-                                <div class="confirm--delete" data-ng-if="page.deletionTarget && page.deletionTarget.feature.properties.id === site.properties.id && page.deletionTarget.collection === 'site'">
-                                    <p>Do you want to delete this site?</p>
+                                <div class="confirm--delete" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === report.id && page.deletionTarget.collection === 'report'">
+                                    <p>Do you want to delete this report?</p>
                                     <div class="actions" style="flex: 0;">
-                                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('site', $index)">
+                                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('report', $index)">
                                             Yes
                                         </a>
                                         <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
@@ -271,30 +287,21 @@
                                         </a>
                                     </div>
                                 </div>
-                                <p>{{ (site.properties.description || 'No description') | truncate:80 }}</p>
+                                <p>{{ (report.notes || 'No notes recorded for this date') | truncate:80 }}</p>
                                 <div class="actions">
-                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}" title="Site summary">
-                                        <i class="material-icons">
-                                            dashboard
-                                        </i>
-                                    </a>
-                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/edit" title="Edit site" data-ng-if="page.permissions.can_edit">
+                                    <a class="snapshot--title" href="/reports/{{ report.id }}/edit" title="Edit report" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             edit
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/location" title="Edit location" data-ng-if="page.permissions.can_edit">
-                                        <i class="material-icons">
-                                            location_on
-                                        </i>
-                                    </a>
-                                    <a class="snapshot--title" href="#" title="Delete site" data-ng-click="page.confirmDelete(site, 'site')" data-ng-if="page.permissions.can_edit">
+                                    <a class="snapshot--title" href="#" title="Delete report" data-ng-click="page.confirmDelete(report, 'report')" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             delete
                                         </i>
                                     </a>
                                 </div>
-                                <span><time datetime="{{ site.properties.modified_on }}" title="{{ site.properties.modified_on }}">Last updated on {{ site.properties.modified_on | date : 'mediumDate' }}</time></span>
+                                <span><time datetime="{{ report.report_date }}" title="{{ report.report_date }}">
+                                        Created on {{ report.report_date | date }}</time></span>
                             </div>
 
                         </div>
@@ -304,7 +311,7 @@
                     <li class="card" data-ng-if="page.permissions.can_edit">
                         <div class="card--content">
                             <div class="body">
-                                <button type="button" class="snapshot--title" data-ng-click="page.createSite()" title="Create site">
+                                <button type="button" class="snapshot--title" data-ng-click="page.addReading('Installation')" title="Create report">
                                     <i class="material-icons">
                                         add
                                     </i>
@@ -324,73 +331,59 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li data-ng-class="{active: $root.toolbarState.dashboard}">
-                <a href="/projects/{{ page.project.id }}">
+                <a href="/practices/{{ page.practice.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <a href="/projects/{{ page.project.id }}/edit">
+                <a href="/practices/{{ page.practice.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.grant}">
-                <a href="/projects/{{ page.project.id }}/grant">
+            <li data-ng-if="page.permissions.can_edit && page.practice.category" data-ng-class="{active: $root.toolbarState.editLocation}">
+                <a href="/practices/{{ page.practice.id }}/location">
                     <i class="material-icons">
-                        account_balance
+                        location_on
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="/projects/{{ page.project.id }}/users">
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
+                <a href="/practices/{{ page.practice.id }}/photos">
                     <i class="material-icons">
-                        group
+                        insert_photo
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/projects/{{ page.project.id }}/partnerships">
+            <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
+                <a href="/practices/{{ page.practice.id }}/partnerships">
                     <i class="material-icons">
                         group_work
                     </i>
                 </a>
-            </li>
-            <!-- <li data-ng-if="page.permissions.can_edit">
-                <a href="/projects/{{ page.project.id }}/edit">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
             </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/projects/{{ page.project.id }}/targets">
+                <a href="/practices/{{ page.practice.id }}/targets">
                     <i class="material-icons">
                         multiline_chart
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/projects/{{ page.project.id }}/tags">
+                <a href="/practices/{{ page.practice.id }}/tags">
                     <i class="material-icons">
                         local_offer
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.print()">
-                    <i class="material-icons">
-                        print
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.project.id && page.deletionTarget.collection === 'project'">
-                    <p>Do you want to delete this project?</p>
+                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.practice.id && page.deletionTarget.collection === 'practice'">
+                    <p>Do you want to delete this practice?</p>
                     <div class="actions">
-                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('project')">
+                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('practice')">
                             Yes
                         </a>
                         <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
@@ -398,7 +391,7 @@
                         </a>
                     </div>
                 </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.project, 'project')">
+                <a href="#" data-ng-click="page.confirmDelete(page.practice, 'practice')">
                     <i class="material-icons">
                         delete
                     </i>

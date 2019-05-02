@@ -8,7 +8,7 @@
  * Controller of the FieldDoc
  */
 angular.module('FieldDoc')
-    .controller('ProjectSummaryController',
+    .controller('ProjectPrintController',
         function(Account, Notifications, $rootScope, Project, $routeParams,
             $scope, $location, Map, MapPreview, mapbox, Site, user, $window,
             leafletData, leafletBoundsHelpers, $timeout, Practice, project,
@@ -645,6 +645,7 @@ angular.module('FieldDoc')
             };
 
             self.fetchLayers = function(taskId) {
+
                 
                 LayerService.collection({
                     program: self.project.program_id
@@ -660,128 +661,37 @@ angular.module('FieldDoc')
 
                         console.log('Project.layers --> Create overlays object.');
 
-                        // self.map.layers.overlays = {};
-
-                        self.layers.sort(function(a, b) {
-
-                            return b.index < a.index;
-
-                        });
+                        self.map.layers.overlays = {};
 
                     }
 
-                    leafletData.getMap().then(function (map) {
+                    self.layers.forEach(function(layer) {
 
-                        var layerIndex = {};
+                        console.log(
+                            'Project.layers --> Add layer:',
+                            layer);
 
-                        L.mapbox.accessToken = 'pk.eyJ1IjoiZmllbGRkb2MiLCJhIjoiY2p1MW8zOHNyMDNwZTQ0bXlhMjNxaXVpMSJ9.0tUMQt2s0zd6DAthnmJItg';
+                        if (layer.tileset_url &&
+                            layer.api_token) {
 
-                        self.layers.forEach(function(layer) {
+                            var layerId = 'layer-' + layer.id;
+
+                            self.map.layers.overlays[layerId] = {
+                                name: layer.name,
+                                type: 'xyz',
+                                visible: true,
+                                url: [layer.tileset_url, '?access_token=', layer.api_token].join(''),
+                                layerOptions: {},
+                                layerParams: {}
+                            };
 
                             console.log(
-                                'Project.layers --> Add layer:',
-                                layer);
+                                'Practice.layers --> Added layer with id:',
+                                layerId);
 
-                            if (layer.tileset_url &&
-                                layer.api_token) {
-
-                                var layerId = 'layer-' + layer.id;
-
-                                // self.map.layers.overlays[layerId] = {
-                                //     name: layer.name,
-                                //     type: 'xyz',
-                                //     visible: true,
-                                //     url: [layer.tileset_url, '?access_token=', layer.api_token].join(''),
-                                //     layerOptions: {},
-                                //     layerParams: {}
-                                // };
-
-                                layerIndex[layer.name] = L.mapbox.styleLayer(layer.style_url);
-
-                                // L.mapbox.styleLayer(layer.style_url).addTo(map);
-
-                                console.log(
-                                    'Practice.layers --> Added layer with id:',
-                                    layerId);
-
-                            }
-
-                        });
-
-// id: 'mapbox://styles/mapbox/streets-v9',
-//                     src: 'https://api.mapbox.com/styles/v1/mapbox/streets-v9/static/-122.463,37.7648,10.05/300x200?access_token=' + mapbox.access_token
-//                 }, {
-//                     id: 'mapbox://styles/mapbox/satellite-v9',
-//                     src: 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/140.01,-21.24,3/300x200?access_token=' + mapbox.access_token
-//                 }, {
-//                     id: 'mapbox://styles/mapbox/satellite-streets-v9',
-//                     src: 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/-77.02361,38.89,13,0,0/300x200?access_token=' + mapbox.access_token
-//                 }, {
-//                     id: 'mapbox://styles/mapbox/outdoors-v9',
-//                     src: 'https://api.mapbox.com/styles/v1/mapbox/outdoors-v9/static/-121.7752,36.2514,14/300x200?access_token=' + mapbox.access_token
-//                 }, {
-//                     id: 'mapbox://styles/mapbox/light-v9',
-//                     src: 'https://api.mapbox.com/styles/v1/mapbox/light-v9/static/-73.985277,40.748333,11/300x200?access_token=' + mapbox.access_token
-//                 }, {
-//                     id: 'mapbox://styles/mapbox/dark-v9',
-//                     src: 'https://api.mapbox.com/styles/v1/mapbox/dark-v9/static/-71.09,42.36,11/300x200?access_token=' + mapbox.access_token
-//                 }];
-
-                        L.control.layers({
-                            'Streets': L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11').addTo(map),
-                            'Satellite': L.mapbox.styleLayer('mapbox://styles/mapbox/satellite-streets-v11'),
-                            'Outdoors': L.mapbox.styleLayer('mapbox://styles/mapbox/outdoors-v11')
-                        }, layerIndex).addTo(map);
-
-//                         L.control.layers({
-//     'Mapbox Streets': L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11').addTo(map),
-//     'Mapbox Light': L.mapbox.styleLayer('mapbox://styles/mapbox/light-v10')
-// }, {
-//     'Bike Stations': L.mapbox.tileLayer('examples.bike-locations'),
-//     'Bike Lanes': L.mapbox.tileLayer('examples.bike-lanes')
-// }).addTo(map);
-
-                        // leafletData.getLayers().then(function (layers) {
-
-                        //     _.each(layers.baselayers, function (layer) {
-
-                        //         map.removeLayer(layer);
-
-                        //     });
-
-                        //     map.addLayer(layers.baselayers[key]);
-
-                        // });
+                        }
 
                     });
-
-                    // self.layers.forEach(function(layer) {
-
-                    //     console.log(
-                    //         'Project.layers --> Add layer:',
-                    //         layer);
-
-                    //     if (layer.tileset_url &&
-                    //         layer.api_token) {
-
-                    //         var layerId = 'layer-' + layer.id;
-
-                    //         self.map.layers.overlays[layerId] = {
-                    //             name: layer.name,
-                    //             type: 'xyz',
-                    //             visible: true,
-                    //             url: [layer.tileset_url, '?access_token=', layer.api_token].join(''),
-                    //             layerOptions: {},
-                    //             layerParams: {}
-                    //         };
-
-                    //         console.log(
-                    //             'Practice.layers --> Added layer with id:',
-                    //             layerId);
-
-                    //     }
-
-                    // });
 
                 }, function(errorResponse) {
 
@@ -831,17 +741,6 @@ angular.module('FieldDoc')
 
                 self.displayModal = false;
 
-            };
-
-            $scope.changeBaseLayer = function (key) {
-                leafletData.getMap().then(function (map) {
-                    leafletData.getLayers().then(function (layers) {
-                        _.each(layers.baselayers, function (layer) {
-                            map.removeLayer(layer);
-                        });
-                        map.addLayer(layers.baselayers[key]);
-                    });
-                });
             };
 
             //

@@ -53,7 +53,7 @@ angular.module('FieldDoc')
 
                     },
                     project: function(Project, $route) {
-                        
+
                         var exclude = [
                             'centroid',
                             'creator',
@@ -62,7 +62,6 @@ angular.module('FieldDoc')
                             'geometry',
                             'members',
                             'metric_types',
-                            // 'partners',
                             'practices',
                             'practice_types',
                             'properties',
@@ -77,23 +76,57 @@ angular.module('FieldDoc')
                             id: $route.current.params.projectId,
                             exclude: exclude
                         });
-                        
+
                     },
-                    // metrics: function(Project, $route) {
-                    //     return Project.metrics({
-                    //         id: $route.current.params.projectId
-                    //     });
-                    // },
-                    // nodes: function(Site, $route) {
-                    //     return Site.nodes({
-                    //         id: $route.current.params.projectId
-                    //     });
-                    // },
-                    // outcomes: function(Project, $route) {
-                    //     return Project.outcomes({
-                    //         id: $route.current.params.projectId
-                    //     });
-                    // },
+                    sites: function(Project, $route) {
+                        return Project.sites({
+                            id: $route.current.params.projectId
+                        });
+                    }
+                }
+            })
+            .when('/projects/:projectId/print', {
+                templateUrl: '/modules/components/projects/views/projectPrint--view.html?t=' + environment.version,
+                controller: 'ProjectPrintController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    project: function(Project, $route) {
+
+                        var exclude = [
+                            'centroid',
+                            'creator',
+                            'dashboards',
+                            'extent',
+                            'geometry',
+                            'members',
+                            'metric_types',
+                            'practices',
+                            'practice_types',
+                            'properties',
+                            'tags',
+                            'targets',
+                            'tasks',
+                            'type',
+                            'sites'
+                        ].join(',');
+
+                        return Project.get({
+                            id: $route.current.params.projectId,
+                            exclude: exclude
+                        });
+
+                    },
                     sites: function(Project, $route) {
                         return Project.sites({
                             id: $route.current.params.projectId

@@ -71,8 +71,12 @@
 
                     </article>
 
+                </div>
+
+                <div class="group">
+
                     <div class="map--module shadow reveal fade-in t1" style="position:relative;">
-                        <leaflet id="project--map" class="map tall" center="page.map.center" defaults="page.map.defaults" bounds="page.map.bounds" markers="page.map.markers"></leaflet>
+                        <leaflet id="project--map" class="map tall" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds" markers="page.map.markers"></leaflet>
                     </div>
 
                 </div>
@@ -91,9 +95,6 @@
                                     <tr>
                                         <th>
                                             <strong>{{ model.datum.name }}</strong>
-                                            <p style="color: #616161; margin: 0; padding-top: 2em; font-size: 0.9em;">
-                                                The following metric values were generated using data and algorithms supplied by the {{ model.datum.name }} model. You can find more information about this model <a href="/models/{{ model.datum.id }}">here</a>.
-                                            </p>
                                         </th>
                                     </tr>
                                     <tr>
@@ -240,83 +241,6 @@
 
             </div>
 
-            <section class="reveal fade-in t3" style="padding: 0;">
-
-                <h2>Sites</h2>
-
-                <ul class="snapshot--cards list-unstyled">
-
-                    <li class="card" data-ng-repeat="site in page.sites track by $index">
-
-                        <div class="card--content">
-
-                            <div style="position:relative;">
-                                <leaflet id="site-geography-preview-{{ $index }}" style="width: 100%; height: 200px;" defaults="page.previewMap.defaults" layers="page.previewMap.layers" bounds="site.bounds" geojson="site.geojson"></leaflet>
-                            </div>
-
-                            <div class="name" style="background: #fff;">
-                                <span>{{ site.properties.name || 'Un-named' }}</span>
-                            </div>
-
-                            <div class="body">
-
-                                <div class="confirm--delete" data-ng-if="page.deletionTarget && page.deletionTarget.feature.properties.id === site.properties.id && page.deletionTarget.collection === 'site'">
-                                    <p>Do you want to delete this site?</p>
-                                    <div class="actions" style="flex: 0;">
-                                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('site', $index)">
-                                            Yes
-                                        </a>
-                                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
-                                            Cancel
-                                        </a>
-                                    </div>
-                                </div>
-                                <p>{{ (site.properties.description || 'No description') | truncate:80 }}</p>
-                                <div class="actions">
-                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}" title="Site summary">
-                                        <i class="material-icons">
-                                            dashboard
-                                        </i>
-                                    </a>
-                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/edit" title="Edit site" data-ng-if="page.permissions.can_edit">
-                                        <i class="material-icons">
-                                            edit
-                                        </i>
-                                    </a>
-                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/location" title="Edit location" data-ng-if="page.permissions.can_edit">
-                                        <i class="material-icons">
-                                            location_on
-                                        </i>
-                                    </a>
-                                    <a class="snapshot--title" href="#" title="Delete site" data-ng-click="page.confirmDelete(site, 'site')" data-ng-if="page.permissions.can_edit">
-                                        <i class="material-icons">
-                                            delete
-                                        </i>
-                                    </a>
-                                </div>
-                                <span><time datetime="{{ site.properties.modified_on }}" title="{{ site.properties.modified_on }}">Last updated on {{ site.properties.modified_on | date : 'mediumDate' }}</time></span>
-                            </div>
-
-                        </div>
-
-                    </li>
-
-                    <li class="card" data-ng-if="page.permissions.can_edit">
-                        <div class="card--content">
-                            <div class="body">
-                                <button type="button" class="snapshot--title" data-ng-click="page.createSite()" title="Create site">
-                                    <i class="material-icons">
-                                        add
-                                    </i>
-                                </button>
-                            </div>
-                        </div>
-                    </li>
-
-                </ul>
-
-            </section>
-
         </div>
 
     </div>
@@ -331,76 +255,9 @@
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <a href="/projects/{{ page.project.id }}/edit">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.grant}">
-                <a href="/projects/{{ page.project.id }}/grant">
-                    <i class="material-icons">
-                        account_balance
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <a href="/projects/{{ page.project.id }}/users">
-                    <i class="material-icons">
-                        group
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/projects/{{ page.project.id }}/partnerships">
-                    <i class="material-icons">
-                        group_work
-                    </i>
-                </a>
-            </li>
-            <!-- <li data-ng-if="page.permissions.can_edit">
-                <a href="/projects/{{ page.project.id }}/edit">
-                    <i class="material-icons">
-                        edit
-                    </i>
-                </a>
-            </li> -->
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/projects/{{ page.project.id }}/targets">
-                    <i class="material-icons">
-                        multiline_chart
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/projects/{{ page.project.id }}/tags">
-                    <i class="material-icons">
-                        local_offer
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
                 <a href="#" data-ng-click="page.print()">
                     <i class="material-icons">
                         print
-                    </i>
-                </a>
-            </li>
-            <li data-ng-if="page.permissions.can_edit">
-                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.project.id && page.deletionTarget.collection === 'project'">
-                    <p>Do you want to delete this project?</p>
-                    <div class="actions">
-                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('project')">
-                            Yes
-                        </a>
-                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
-                            Cancel
-                        </a>
-                    </div>
-                </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.project, 'project')">
-                    <i class="material-icons">
-                        delete
                     </i>
                 </a>
             </li>

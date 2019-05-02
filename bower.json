@@ -22,6 +22,7 @@
     "angular-save2pdf": "*",
     "leaflet-draw": ">=1.0.2",
     "angular-progress-arc": "^1.0.0",
+    "mapbox": "3.1.1",
     "tinycolor": "^1.4.1"
   },
   "devDependencies": {},
