@@ -10,7 +10,7 @@ angular.module('FieldDoc')
         function(Account, Image, leafletData, $location, $log, Map,
             mapbox, Media, Site, Practice, practice, $q, $rootScope, $route,
             $scope, $timeout, $interval, site, user, Shapefile,
-            leafletBoundsHelpers, Utility, Task) {
+            leafletBoundsHelpers, Utility, Task, LayerService) {
 
             var self = this;
 
@@ -35,6 +35,36 @@ angular.module('FieldDoc')
             };
 
             self.map = JSON.parse(JSON.stringify(Map));
+
+            // url: 'http://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
+            //             options: {
+            //                 apikey: mapbox.access_token,
+            //                 mapid: 'mapbox.streets'
+            //             }
+
+            // self.map.layers.overlays = {
+            //     headwaters: {
+            //         name: 'Headwaters',
+            //         type: 'xyz',
+            //         visible: true,
+            //         url: 'http://api.tiles.mapbox.com/v4/fielddoc.3dp4i9y8/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiZmllbGRkb2MiLCJhIjoiY2p1MW8zOHNyMDNwZTQ0bXlhMjNxaXVpMSJ9.0tUMQt2s0zd6DAthnmJItg',
+            //         // layerParams: {
+            //         //     layers: 'usa:states',
+            //         //     format: 'image/png',
+            //         //     transparent: true
+            //         // }
+            //         layerOptions: {},
+            //         layerParams: {}
+            //     }
+            // };
+
+            // layerOptions: {
+            //             layers: 'europe_wms:hs_srtm_europa',
+            //             format: 'image/png',
+            //             opacity: 0.25,
+            //             attribution: 'Hillshade layer by GIScience http://www.osm-wms.de',
+            //             crs: L.CRS.EPSG900913
+            //         }
 
             self.savedObjects = [];
 
@@ -265,6 +295,64 @@ angular.module('FieldDoc')
                 }, function(errorResponse) {
 
                     self.showElements();
+
+                });
+
+            };
+
+            self.fetchLayers = function(taskId) {
+
+                Practice.layers({
+                    id: $route.current.params.practiceId
+                }).$promise.then(function(successResponse) {
+
+                    console.log(
+                        'Practice.layers --> successResponse',
+                        successResponse);
+
+                    self.layers = successResponse.features;
+
+                    if (self.layers.length) {
+
+                        console.log('Practice.layers --> Create overlays object.');
+
+                        self.map.layers.overlays = {};
+
+                    }
+
+                    self.layers.forEach(function(layer) {
+
+                        console.log(
+                            'Practice.layers --> Add layer:',
+                            layer);
+
+                        if (layer.tileset_url &&
+                            layer.api_token) {
+
+                            var layerId = 'layer-' + layer.id;
+
+                            self.map.layers.overlays[layerId] = {
+                                name: layer.name,
+                                type: 'xyz',
+                                visible: true,
+                                url: [layer.tileset_url, '?access_token=', layer.api_token].join(''),
+                                layerOptions: {},
+                                layerParams: {}
+                            };
+
+                            console.log(
+                                'Practice.layers --> Added layer with id:',
+                                layerId);
+
+                        }
+
+                    });
+
+                }, function(errorResponse) {
+
+                    console.log(
+                        'Practice.layers --> errorResponse',
+                        errorResponse);
 
                 });
 
@@ -744,6 +832,8 @@ angular.module('FieldDoc')
                     self.loadSite();
 
                     self.fetchTasks();
+
+                    self.fetchLayers();
 
                 });
 

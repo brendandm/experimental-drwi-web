@@ -1,4 +1,4 @@
-(function() {
+ (function() {
 
     'use strict';
 
@@ -17,6 +17,11 @@
                 },
                 update: {
                     method: 'PATCH'
+                },
+                layers: {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/practice/:id/layers'),
+                    'isArray': false
                 },
                 'metrics': {
                     'method': 'GET',

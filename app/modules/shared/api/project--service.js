@@ -12,6 +12,11 @@
             return $resource(environment.apiUrl.concat('/v1/data/project/:id'), {
                 id: '@id'
             }, {
+                area: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/project/:id/area')
+                },
                 query: {
                     isArray: false
                 },

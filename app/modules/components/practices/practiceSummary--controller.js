@@ -3,7 +3,7 @@
     'use strict';
 
     /**
-     * @ngdoc function
+     * @ngdoc function 
      * @name
      * @description
      */
@@ -288,7 +288,7 @@
 
                         self.loadTags();
 
-                        self.loadModel();
+                        // self.loadModel();
 
                     }, function(errorResponse) {
 

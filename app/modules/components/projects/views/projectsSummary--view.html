@@ -42,6 +42,10 @@
                             <strong>Program:</strong> <a href="{{ page.project.links.program.html }}">{{ page.project.program.name }}</a>
                         </p>
 
+                        <p data-ng-if="page.area && page.area.value" class="label">
+                            <strong>Total area:</strong> {{ page.area.value | number:2 }} {{ page.area.unit }}s
+                        </p>
+
                         <p data-ng-bind-html="page.project.description"></p>
 
                         <div data-ng-if="page.tags && page.tags.length">

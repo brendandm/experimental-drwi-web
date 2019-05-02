@@ -109,30 +109,30 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/sites/:siteId/location', {
-                templateUrl: '/modules/components/sites/views/siteLocation--view.html?t=' + environment.version,
-                controller: 'SiteLocationController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account, $rootScope, $document) {
+            // .when('/sites/:siteId/location', {
+            //     templateUrl: '/modules/components/sites/views/siteLocation--view.html?t=' + environment.version,
+            //     controller: 'SiteLocationController',
+            //     controllerAs: 'page',
+            //     resolve: {
+            //         user: function(Account, $rootScope, $document) {
 
-                        $rootScope.targetPath = document.location.pathname;
+            //             $rootScope.targetPath = document.location.pathname;
 
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
+            //             if (Account.userObject && !Account.userObject.id) {
+            //                 return Account.getUser();
+            //             }
 
-                        return Account.userObject;
+            //             return Account.userObject;
 
-                    },
-                    site: function(Site, $route) {
-                        return Site.get({
-                            id: $route.current.params.siteId,
-                            format: 'geojson'
-                        });
-                    }
-                }
-            })
+            //         },
+            //         site: function(Site, $route) {
+            //             return Site.get({
+            //                 id: $route.current.params.siteId,
+            //                 format: 'geojson'
+            //             });
+            //         }
+            //     }
+            // })
             .when('/sites/:siteId/photos', {
                 templateUrl: '/modules/components/sites/views/sitePhoto--view.html?t=' + environment.version,
                 controller: 'SitePhotoController',
@@ -260,29 +260,29 @@ angular.module('FieldDoc')
 
                     }
                 }
-            })
-            .when('/sites/:siteId/targets', {
-                templateUrl: '/modules/components/sites/views/siteTarget--view.html?t=' + environment.version,
-                controller: 'SiteTargetController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account, $rootScope, $document) {
-
-                        $rootScope.targetPath = document.location.pathname;
-
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
-
-                        return Account.userObject;
-
-                    },
-                    site: function(Site, $route) {
-                        return Site.get({
-                            'id': $route.current.params.siteId
-                        });
-                    }
-                }
             });
+            // .when('/sites/:siteId/targets', {
+            //     templateUrl: '/modules/components/sites/views/siteTarget--view.html?t=' + environment.version,
+            //     controller: 'SiteTargetController',
+            //     controllerAs: 'page',
+            //     resolve: {
+            //         user: function(Account, $rootScope, $document) {
+
+            //             $rootScope.targetPath = document.location.pathname;
+
+            //             if (Account.userObject && !Account.userObject.id) {
+            //                 return Account.getUser();
+            //             }
+
+            //             return Account.userObject;
+
+            //         },
+            //         site: function(Site, $route) {
+            //             return Site.get({
+            //                 'id': $route.current.params.siteId
+            //             });
+            //         }
+            //     }
+            // });
 
     }]);
