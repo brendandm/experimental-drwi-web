@@ -270,63 +270,63 @@ angular.module('FieldDoc')
 
             };
 
-            self.fetchLayers = function(taskId) {
+            // self.fetchLayers = function(taskId) {
 
-                Practice.layers({
-                    id: $route.current.params.practiceId
-                }).$promise.then(function(successResponse) {
+            //     Practice.layers({
+            //         id: $route.current.params.practiceId
+            //     }).$promise.then(function(successResponse) {
 
-                    console.log(
-                        'Practice.layers --> successResponse',
-                        successResponse);
+            //         console.log(
+            //             'Practice.layers --> successResponse',
+            //             successResponse);
 
-                    self.layers = successResponse.features;
+            //         self.layers = successResponse.features;
 
-                    if (self.layers.length) {
+            //         if (self.layers.length) {
 
-                        console.log('Practice.layers --> Create overlays object.');
+            //             console.log('Practice.layers --> Create overlays object.');
 
-                        self.map.layers.overlays = {};
+            //             self.map.layers.overlays = {};
 
-                    }
+            //         }
 
-                    self.layers.forEach(function(layer) {
+            //         self.layers.forEach(function(layer) {
 
-                        console.log(
-                            'Practice.layers --> Add layer:',
-                            layer);
+            //             console.log(
+            //                 'Practice.layers --> Add layer:',
+            //                 layer);
 
-                        if (layer.tileset_url &&
-                            layer.api_token) {
+            //             if (layer.tileset_url &&
+            //                 layer.api_token) {
 
-                            var layerId = 'layer-' + layer.id;
+            //                 var layerId = 'layer-' + layer.id;
 
-                            self.map.layers.overlays[layerId] = {
-                                name: layer.name,
-                                type: 'xyz',
-                                visible: true,
-                                url: [layer.tileset_url, '?access_token=', layer.api_token].join(''),
-                                layerOptions: {},
-                                layerParams: {}
-                            };
+            //                 self.map.layers.overlays[layerId] = {
+            //                     name: layer.name,
+            //                     type: 'xyz',
+            //                     visible: true,
+            //                     url: [layer.tileset_url, '?access_token=', layer.api_token].join(''),
+            //                     layerOptions: {},
+            //                     layerParams: {}
+            //                 };
 
-                            console.log(
-                                'Practice.layers --> Added layer with id:',
-                                layerId);
+            //                 console.log(
+            //                     'Practice.layers --> Added layer with id:',
+            //                     layerId);
 
-                        }
+            //             }
 
-                    });
+            //         });
 
-                }, function(errorResponse) {
+            //     }, function(errorResponse) {
 
-                    console.log(
-                        'Practice.layers --> errorResponse',
-                        errorResponse);
+            //         console.log(
+            //             'Practice.layers --> errorResponse',
+            //             errorResponse);
 
-                });
+            //     });
 
-            };
+            // };
 
             self.fetchTasks = function(taskId) {
 
@@ -803,7 +803,7 @@ angular.module('FieldDoc')
 
                     self.fetchTasks();
 
-                    self.fetchLayers();
+                    // self.fetchLayers();
 
                 });
 

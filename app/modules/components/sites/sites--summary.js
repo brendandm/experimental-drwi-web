@@ -511,51 +511,70 @@
                     }).$promise.then(function(successResponse) {
 
                         console.log(
-                            'Site.layers --> successResponse',
+                            'self.fetchLayers --> successResponse',
                             successResponse);
 
                         self.layers = successResponse.features;
 
                         if (self.layers.length) {
 
-                            console.log('Site.layers --> Create overlays object.');
+                            console.log('self.fetchLayers --> Create overlays object.');
 
-                            self.map.layers.overlays = {};
+                            self.layers.sort(function(a, b) {
+
+                                return b.index < a.index;
+
+                            });
 
                         }
 
-                        self.layers.forEach(function(layer) {
+                        leafletData.getMap().then(function(map) {
 
                             console.log(
-                                'Site.layers --> Add layer:',
-                                layer);
+                                'self.fetchLayers --> map',
+                                map);
 
-                            if (layer.tileset_url &&
-                                layer.api_token) {
+                            var layerIndex = {};
 
-                                var layerId = 'layer-' + layer.id;
+                            L.mapbox.accessToken = 'pk.eyJ1IjoiZmllbGRkb2MiLCJhIjoiY2p1MW8zOHNyMDNwZTQ0bXlhMjNxaXVpMSJ9.0tUMQt2s0zd6DAthnmJItg';
 
-                                self.map.layers.overlays[layerId] = {
-                                    name: layer.name,
-                                    type: 'xyz',
-                                    visible: true,
-                                    url: [layer.tileset_url, '?access_token=', layer.api_token].join(''),
-                                    layerOptions: {},
-                                    layerParams: {}
-                                };
+                            self.layers.forEach(function(layer) {
 
                                 console.log(
-                                    'Site.layers --> Added layer with id:',
-                                    layerId);
+                                    'self.fetchLayers --> Add layer:',
+                                    layer);
 
-                            }
+                                if (layer.tileset_url &&
+                                    layer.api_token) {
+
+                                    var layerId = 'layer-' + layer.id;
+
+                                    layerIndex[layer.name] = L.mapbox.styleLayer(layer.style_url);
+
+                                    console.log(
+                                        'self.fetchLayers --> Added layer with id:',
+                                        layerId);
+
+                                }
+
+                            });
+
+                            console.log(
+                                'self.fetchLayers --> layerIndex',
+                                layerIndex);
+
+                            L.control.layers({
+                                'Streets': L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11').addTo(map),
+                                'Satellite': L.mapbox.styleLayer('mapbox://styles/mapbox/satellite-streets-v11'),
+                                'Outdoors': L.mapbox.styleLayer('mapbox://styles/mapbox/outdoors-v11')
+                            }, layerIndex).addTo(map);
 
                         });
 
                     }, function(errorResponse) {
 
                         console.log(
-                            'Site.layers --> errorResponse',
+                            'self.fetchLayers --> errorResponse',
                             errorResponse);
 
                     });

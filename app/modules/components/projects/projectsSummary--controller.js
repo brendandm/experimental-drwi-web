@@ -632,8 +632,6 @@ angular.module('FieldDoc')
 
                     if (feature.geometry !== null) {
 
-                        // feature.staticURL = self.buildStaticMapURL(feature.geometry);
-
                         feature.geojson = self.buildFeature(feature.geometry);
 
                         feature.bounds = self.transformBounds(feature);
@@ -660,8 +658,6 @@ angular.module('FieldDoc')
 
                         console.log('Project.layers --> Create overlays object.');
 
-                        // self.map.layers.overlays = {};
-
                         self.layers.sort(function(a, b) {
 
                             return b.index < a.index;
@@ -687,18 +683,7 @@ angular.module('FieldDoc')
 
                                 var layerId = 'layer-' + layer.id;
 
-                                // self.map.layers.overlays[layerId] = {
-                                //     name: layer.name,
-                                //     type: 'xyz',
-                                //     visible: true,
-                                //     url: [layer.tileset_url, '?access_token=', layer.api_token].join(''),
-                                //     layerOptions: {},
-                                //     layerParams: {}
-                                // };
-
                                 layerIndex[layer.name] = L.mapbox.styleLayer(layer.style_url);
-
-                                // L.mapbox.styleLayer(layer.style_url).addTo(map);
 
                                 console.log(
                                     'Practice.layers --> Added layer with id:',
@@ -708,80 +693,13 @@ angular.module('FieldDoc')
 
                         });
 
-// id: 'mapbox://styles/mapbox/streets-v9',
-//                     src: 'https://api.mapbox.com/styles/v1/mapbox/streets-v9/static/-122.463,37.7648,10.05/300x200?access_token=' + mapbox.access_token
-//                 }, {
-//                     id: 'mapbox://styles/mapbox/satellite-v9',
-//                     src: 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/140.01,-21.24,3/300x200?access_token=' + mapbox.access_token
-//                 }, {
-//                     id: 'mapbox://styles/mapbox/satellite-streets-v9',
-//                     src: 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/-77.02361,38.89,13,0,0/300x200?access_token=' + mapbox.access_token
-//                 }, {
-//                     id: 'mapbox://styles/mapbox/outdoors-v9',
-//                     src: 'https://api.mapbox.com/styles/v1/mapbox/outdoors-v9/static/-121.7752,36.2514,14/300x200?access_token=' + mapbox.access_token
-//                 }, {
-//                     id: 'mapbox://styles/mapbox/light-v9',
-//                     src: 'https://api.mapbox.com/styles/v1/mapbox/light-v9/static/-73.985277,40.748333,11/300x200?access_token=' + mapbox.access_token
-//                 }, {
-//                     id: 'mapbox://styles/mapbox/dark-v9',
-//                     src: 'https://api.mapbox.com/styles/v1/mapbox/dark-v9/static/-71.09,42.36,11/300x200?access_token=' + mapbox.access_token
-//                 }];
-
                         L.control.layers({
                             'Streets': L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11').addTo(map),
                             'Satellite': L.mapbox.styleLayer('mapbox://styles/mapbox/satellite-streets-v11'),
                             'Outdoors': L.mapbox.styleLayer('mapbox://styles/mapbox/outdoors-v11')
                         }, layerIndex).addTo(map);
 
-//                         L.control.layers({
-//     'Mapbox Streets': L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11').addTo(map),
-//     'Mapbox Light': L.mapbox.styleLayer('mapbox://styles/mapbox/light-v10')
-// }, {
-//     'Bike Stations': L.mapbox.tileLayer('examples.bike-locations'),
-//     'Bike Lanes': L.mapbox.tileLayer('examples.bike-lanes')
-// }).addTo(map);
-
-                        // leafletData.getLayers().then(function (layers) {
-
-                        //     _.each(layers.baselayers, function (layer) {
-
-                        //         map.removeLayer(layer);
-
-                        //     });
-
-                        //     map.addLayer(layers.baselayers[key]);
-
-                        // });
-
                     });
-
-                    // self.layers.forEach(function(layer) {
-
-                    //     console.log(
-                    //         'Project.layers --> Add layer:',
-                    //         layer);
-
-                    //     if (layer.tileset_url &&
-                    //         layer.api_token) {
-
-                    //         var layerId = 'layer-' + layer.id;
-
-                    //         self.map.layers.overlays[layerId] = {
-                    //             name: layer.name,
-                    //             type: 'xyz',
-                    //             visible: true,
-                    //             url: [layer.tileset_url, '?access_token=', layer.api_token].join(''),
-                    //             layerOptions: {},
-                    //             layerParams: {}
-                    //         };
-
-                    //         console.log(
-                    //             'Practice.layers --> Added layer with id:',
-                    //             layerId);
-
-                    //     }
-
-                    // });
 
                 }, function(errorResponse) {
 

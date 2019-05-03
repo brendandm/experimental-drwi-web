@@ -27,9 +27,11 @@
             'leafletBoundsHelpers',
             'Practice',
             'practice',
+            'LayerService',
             function(Account, $location, $timeout, $log, Report, $rootScope,
                 $route, Utility, user, Project, Site, $window, Map, mapbox,
-                leafletData, leafletBoundsHelpers, Practice, practice) {
+                leafletData, leafletBoundsHelpers, Practice, practice,
+                LayerService) {
 
                 var self = this,
                     practiceId = $route.current.params.practiceId;
@@ -288,6 +290,8 @@
 
                         self.loadTags();
 
+                        self.fetchLayers();
+
                         // self.loadModel();
 
                     }, function(errorResponse) {
@@ -401,6 +405,75 @@
                     self.selectedMetric = null;
 
                     self.displayModal = false;
+
+                };
+
+                self.fetchLayers = function(taskId) {
+
+                    LayerService.collection({
+                        program: self.practice.project.program_id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log(
+                            'Practice.layers --> successResponse',
+                            successResponse);
+
+                        self.layers = successResponse.features;
+
+                        if (self.layers.length) {
+
+                            console.log('Practice.layers --> Create overlays object.');
+
+                            self.layers.sort(function(a, b) {
+
+                                return b.index < a.index;
+
+                            });
+
+                        }
+
+                        leafletData.getMap().then(function(map) {
+
+                            var layerIndex = {};
+
+                            L.mapbox.accessToken = 'pk.eyJ1IjoiZmllbGRkb2MiLCJhIjoiY2p1MW8zOHNyMDNwZTQ0bXlhMjNxaXVpMSJ9.0tUMQt2s0zd6DAthnmJItg';
+
+                            self.layers.forEach(function(layer) {
+
+                                console.log(
+                                    'Practice.layers --> Add layer:',
+                                    layer);
+
+                                if (layer.tileset_url &&
+                                    layer.api_token) {
+
+                                    var layerId = 'layer-' + layer.id;
+
+                                    layerIndex[layer.name] = L.mapbox.styleLayer(layer.style_url);
+
+                                    console.log(
+                                        'Practice.layers --> Added layer with id:',
+                                        layerId);
+
+                                }
+
+                            });
+
+                            L.control.layers({
+                                'Streets': L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11').addTo(map),
+                                'Satellite': L.mapbox.styleLayer('mapbox://styles/mapbox/satellite-streets-v11'),
+                                'Outdoors': L.mapbox.styleLayer('mapbox://styles/mapbox/outdoors-v11')
+                            }, layerIndex).addTo(map);
+
+                        });
+
+                    }, function(errorResponse) {
+
+                        console.log(
+                            'Practice.layers --> errorResponse',
+                            errorResponse);
+
+                    });
 
                 };
 
