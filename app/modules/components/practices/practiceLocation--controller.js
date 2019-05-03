@@ -990,6 +990,22 @@ angular.module('FieldDoc')
 
                     self.map.addControl(fullScreen, 'top-left');
 
+                    // 
+                    // Add geocoder
+                    // 
+
+                    var geocoder = new MapboxGeocoder({
+                        accessToken: mapboxgl.accessToken,
+                        mapboxgl: mapboxgl
+                    });
+ 
+                    document.getElementById('geocoder').appendChild(geocoder.onAdd(self.map));
+
+                    // self.map.addControl(new MapboxGeocoder({
+                    //     accessToken: mapboxgl.accessToken,
+                    //     mapboxgl: mapboxgl
+                    // }));
+
                     self.populateMap(self.map, self.practice);
 
                     self.map.on('draw.create', self.updateGeometry);
