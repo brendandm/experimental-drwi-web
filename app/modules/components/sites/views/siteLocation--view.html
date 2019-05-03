@@ -8,7 +8,7 @@
 
         <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
             <div class="progress--container">
-                <p style="font-weight: bold;" class="color-pulse">Loading practice location&hellip;</p>
+                <p style="font-weight: bold;" class="color-pulse">Loading site location&hellip;</p>
             </div>
         </div>
 
@@ -20,25 +20,15 @@
                 </i>
             </p>
 
-            <p>This practice is private.</p>
+            <p>This site is private.</p>
 
         </section>
 
-        <h1 class="inset reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">Edit location</h1>
+        <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">Edit location</h1>
 
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
 
-            <form role="form" class="form" style="position:relative;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePractice();" autocomplete="off">
-
-                <!-- Practice Type -->
-
-                <div class="form-element">
-                    <span class="meta-label"><b>Practice type</b></span>
-                    <input id="practice_type_id" name="practice_type_id" type="text" data-ng-model="page.practice.properties.category.properties.name" disabled readonly />
-                    <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
-                        {{ page.practice.properties.category.properties.description }}
-                    </p>
-                </div>
+            <form role="form" class="form" id="form--SiteLocation" name="form--SiteLocation" style="position: relative;" data-ng-submit="page.saveSite()" autocomplete="off">
 
                 <div class="form-element">
 
@@ -50,9 +40,7 @@
 
                 <div style="position:relative; border-radius: 4px; overflow: hidden;">
 
-                    <!-- <leaflet id="practice--map" class="map tall" style="border-radius: 4px; overflow: hidden;" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet> -->
-
-                    <div id="practice--map" class="map tall" style="border-radius: 4px; overflow: hidden;"></div>
+                    <leaflet id="site--map" class="map tall" style="border-radius: 4px; overflow: hidden;" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
 
                     <div style="background: #fff;" class="progress--modal" data-ng-if="page.progressValue && page.progressValue > 0">
                         <div class="progress--container">
@@ -80,7 +68,7 @@
 
                     <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">Regardless of type, file uploads cannot exceed 100MB. For shapefile archives, this is the maximum total size of all <strong>un-compressed</strong> files.</p>
 
-                    <!-- <p style="font-style: normal; font-size: 1em; margin-top: 1em;">
+                    <!-- <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
                         <strong>Upload an ESRI Shapefile</strong>
                     </p>
                     <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">In addition to the mandatory .shp, .shx, and .dbf files, your archive must include a .prj file that describes the coordinate system and projection.</p>
@@ -107,49 +95,49 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li>
-                <a href="/practices/{{ page.practice.id }}">
+                <a href="/sites/{{ page.site.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/practices/{{ page.practice.id }}/edit">
+                <a href="/sites/{{ page.site.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
-                <a href="/practices/{{ page.practice.id }}/location">
+                <a href="/sites/{{ page.site.id }}/location">
                     <i class="material-icons">
                         location_on
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
-                <a href="/practices/{{ page.practice.id }}/photos">
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.viewGeographies}">
+                <a href="/sites/{{ page.site.id }}/geographies">
                     <i class="material-icons">
-                        insert_photo
+                        public
                     </i>
                 </a>
             </li>
-            <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/practices/{{ page.practice.id }}/partnerships">
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
+                <a href="/sites/{{ page.site.id }}/partnerships">
                     <i class="material-icons">
                         group_work
                     </i>
                 </a>
-            </li> -->
+            </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/practices/{{ page.practice.id }}/targets">
+                <a href="/sites/{{ page.site.id }}/targets">
                     <i class="material-icons">
                         multiline_chart
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/practices/{{ page.practice.id }}/tags">
+                <a href="/sites/{{ page.site.id }}/tags">
                     <i class="material-icons">
                         local_offer
                     </i>
@@ -157,9 +145,9 @@
             </li>
             <li data-ng-if="page.permissions.can_edit">
                 <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
-                    <p>Do you want to delete this practice?</p>
+                    <p>Do you want to delete this site?</p>
                     <div class="actions">
-                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature()">
+                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('site')">
                             Yes
                         </a>
                         <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
@@ -167,7 +155,7 @@
                         </a>
                     </div>
                 </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.practice)">
+                <a href="#" data-ng-click="page.confirmDelete(page.site, 'site')">
                     <i class="material-icons">
                         delete
                     </i>
