@@ -24,5 +24,9 @@ angular.module('Mapbox')
                 'name': 'Outdoors',
                 'url': 'mapbox://styles/mapbox/outdoors-v11'
             }
-        ]
+        ],
+        defaultOptions: {
+            center: [0, 0], // starting position [lng, lat]
+            zoom: 4 // starting zoom
+        }
     });

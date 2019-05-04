@@ -955,16 +955,33 @@ angular.module('FieldDoc')
 
             };
 
+            self.switchMapStyle = function(styleId, index) {
+
+                console.log('self.switchMapStyle --> styleId', styleId);
+
+                console.log('self.switchMapStyle --> index', index);
+
+                self.map.setStyle(self.mapStyles[index].url);
+
+                self.showLayerOptions = !self.showLayerOptions;
+
+            };
+
             self.createMap = function() {
+
+                self.mapStyles = mapbox.baseStyles;
+
+                self.activeStyle = 0;
 
                 mapboxgl.accessToken = mapbox.accessToken;
 
-                self.map = new mapboxgl.Map({
-                    container: 'practice--map', // container id
-                    style: mapbox.baseStyles[0].url,
-                    center: [0, 0], // starting position [lng, lat]
-                    zoom: 4 // starting zoom
-                });
+                var options = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+
+                options.container = 'practice--map';
+
+                options.style = self.mapStyles[0].url;
+
+                self.map = new mapboxgl.Map(options);
 
                 self.map.on('load', function () {
 
