@@ -161,7 +161,7 @@ angular.module('FieldDoc')
 
                         self.loadArea();
 
-                        self.fetchLayers();
+                        // self.fetchLayers();
 
                     }
 
@@ -544,16 +544,16 @@ angular.module('FieldDoc')
                 }).$promise.then(function(successResponse) {
 
                     console.log(
-                        'Project.layers --> successResponse',
+                        'self.fetchLayers --> successResponse',
                         successResponse);
 
-                    self.layers = successResponse.features;
+                    // self.layers = successResponse.features;
 
-                    if (self.layers.length) {
+                    if (successResponse.features.length) {
 
-                        console.log('Project.layers --> Create overlays object.');
+                        console.log('self.fetchLayers --> Sorting layers.');
 
-                        self.layers.sort(function(a, b) {
+                        successResponse.features.sort(function(a, b) {
 
                             return b.index < a.index;
 
@@ -561,45 +561,127 @@ angular.module('FieldDoc')
 
                     }
 
-                    leafletData.getMap().then(function(map) {
+                    successResponse.features.forEach(function(feature) {
 
-                        var layerIndex = {};
+                        console.log(
+                            'self.fetchLayers --> feature',
+                            feature);
 
-                        L.mapbox.accessToken = 'pk.eyJ1IjoiZmllbGRkb2MiLCJhIjoiY2p1MW8zOHNyMDNwZTQ0bXlhMjNxaXVpMSJ9.0tUMQt2s0zd6DAthnmJItg';
+                        var spec = feature.layer_spec || {};
 
-                        self.layers.forEach(function(layer) {
+                        console.log(
+                            'self.fetchLayers --> spec',
+                            spec);
 
-                            console.log(
-                                'Project.layers --> Add layer:',
-                                layer);
+                        feature.spec = JSON.parse(spec);
 
-                            if (layer.tileset_url &&
-                                layer.api_token) {
+                        console.log(
+                            'self.fetchLayers --> feature.spec',
+                            feature.spec);
 
-                                var layerId = 'layer-' + layer.id;
+                        if (feature.spec.id) {
 
-                                layerIndex[layer.name] = L.mapbox.styleLayer(layer.style_url);
+                            try {
+
+                                self.map.addLayer(feature.spec);
+
+                            } catch (error) {
 
                                 console.log(
-                                    'Practice.layers --> Added layer with id:',
-                                    layerId);
+                                    'self.fetchLayers --> error',
+                                    error);
 
                             }
 
-                        });
+                        }
 
-                        L.control.layers({
-                            'Streets': L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11').addTo(map),
-                            'Satellite': L.mapbox.styleLayer('mapbox://styles/mapbox/satellite-streets-v11'),
-                            'Outdoors': L.mapbox.styleLayer('mapbox://styles/mapbox/outdoors-v11')
-                        }, layerIndex).addTo(map);
+                        feature.selected = false;
 
                     });
+
+                    // if (successResponse.features.length) {
+
+                    //     console.log('self.fetchLayers --> Sorting layers.');
+
+                    //     successResponse.features.sort(function(a, b) {
+
+                    //         return b.index < a.index;
+
+                    //     });
+
+                    // }
+
+                    self.layers = successResponse.features;
+
+                    console.log(
+                        'self.fetchLayers --> self.layers',
+                        self.layers);
+
+                    // self.layers.forEach(function(feature) {
+
+                    //     var spec = JSON.parse(feature.layer_spec);
+
+                    //     self.map.addLayer(spec);
+
+                        // self.map.addLayer({
+                        //     'id': 'terrain-data', // layerId
+                        //     'type': 'line', // layerType
+                        //     'source': {
+                        //         type: 'vector',
+                        //         url: 'mapbox://mapbox.mapbox-terrain-v2'
+                        //     }, // source
+                        //     'source-layer': 'contour', // sourceLayer
+                        //     'layout': {
+                        //         'line-join': 'round',
+                        //         'line-cap': 'round'
+                        //     }, // layout
+                        //     'paint': {
+                        //         'line-color': '#ff69b4',
+                        //         'line-width': 1
+                        //     } // paint
+                        // });
+
+                    // });
+
+                    // leafletData.getMap().then(function(map) {
+
+                    //     var layerIndex = {};
+
+                    //     L.mapbox.accessToken = 'pk.eyJ1IjoiZmllbGRkb2MiLCJhIjoiY2p1MW8zOHNyMDNwZTQ0bXlhMjNxaXVpMSJ9.0tUMQt2s0zd6DAthnmJItg';
+
+                    //     self.layers.forEach(function(layer) {
+
+                    //         console.log(
+                    //             'self.fetchLayers --> Add layer:',
+                    //             layer);
+
+                    //         if (layer.tileset_url &&
+                    //             layer.api_token) {
+
+                    //             var layerId = 'layer-' + layer.id;
+
+                    //             layerIndex[layer.name] = L.mapbox.styleLayer(layer.style_url);
+
+                    //             console.log(
+                    //                 'Practice.layers --> Added layer with id:',
+                    //                 layerId);
+
+                    //         }
+
+                    //     });
+
+                    //     L.control.layers({
+                    //         'Streets': L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11').addTo(map),
+                    //         'Satellite': L.mapbox.styleLayer('mapbox://styles/mapbox/satellite-streets-v11'),
+                    //         'Outdoors': L.mapbox.styleLayer('mapbox://styles/mapbox/outdoors-v11')
+                    //     }, layerIndex).addTo(map);
+
+                    // });
 
                 }, function(errorResponse) {
 
                     console.log(
-                        'Project.layers --> errorResponse',
+                        'self.fetchLayers --> errorResponse',
                         errorResponse);
 
                 });
@@ -648,7 +730,7 @@ angular.module('FieldDoc')
 
             self.populateMap = function(map, feature) {
 
-                console.log('feature.extent', feature.extent);
+                console.log('self.populateMap --> feature', feature);
 
                 if (feature.extent !== null &&
                     typeof feature.extent !== 'undefined') {
@@ -660,6 +742,35 @@ angular.module('FieldDoc')
                     });
 
                 }
+
+            };
+
+            self.toggleLayer = function(layer) {
+
+                console.log('self.toggleLayer --> layer', layer);
+
+                var layerId = layer.spec.id;
+
+                var visibility = self.map.getLayoutProperty(layerId, 'visibility');
+
+                if (visibility === 'visible') {
+
+                    self.map.setLayoutProperty(layerId, 'visibility', 'none');
+
+                } else {
+
+                    self.map.setLayoutProperty(layerId, 'visibility', 'visible');
+
+                }
+
+                // if (layer.style_url) {
+
+                //     self.map.addSource(layer.source_id, {
+                //         type: layer.source_type,
+                //         url: layer.source_url
+                //     });
+
+                // }
 
             };
 
@@ -720,6 +831,8 @@ angular.module('FieldDoc')
                     self.map.addControl(fullScreen, 'top-left');
 
                     self.populateMap(self.map, self.project);
+
+                    self.fetchLayers();
 
                 });
 

@@ -370,7 +370,7 @@
   top: 0;
   right: 42px;
   //height: auto;
-  width: auto;
+  //width: auto;
   display: flex;
   flex-flow: column;
   padding: 0;
@@ -383,10 +383,16 @@
   z-index: 3;
 }
 
+.mapboxgl-layer-ctrl .layer-group .layers {
+  border-top: 1px solid #E0E0E0;
+}
+
 .mapboxgl-layer-ctrl .layer-group label {
   position: relative;
   display: flex;
   flex-flow: row nowrap;
+  flex-grow: 1;
+  flex-shrink: 0;
   align-items: center;
   padding: 0.5em 0.75em;
   background: #fff;
@@ -407,6 +413,12 @@
 .mapboxgl-layer-ctrl .layer-group .active,
 .mapboxgl-layer-ctrl .layer-group label:hover {
   background: #f0f0f0;
+}
+
+.mapboxgl-layer-ctrl .layer-group label span {
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 0;
 }
 
 .mapboxgl-layer-ctrl .layer-group label input {

@@ -58,7 +58,7 @@ angular.module('FieldDoc')
                             'centroid',
                             'creator',
                             'dashboards',
-                            'extent',
+                            // 'extent',
                             'geometry',
                             'members',
                             'metric_types',
