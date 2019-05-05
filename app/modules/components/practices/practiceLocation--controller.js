@@ -30,13 +30,21 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                    self.createMap();
+                    if (self.map) {
+
+                        self.populateMap(self.map, self.practice);
+
+                    } else {
+
+                        self.createMap();
+
+                    }
 
                 }, 1000);
 
             };
 
-            self.map = {};
+            self.map = undefined;
 
             self.editableLayers = new L.FeatureGroup();
 
@@ -132,64 +140,6 @@ angular.module('FieldDoc')
                 });
 
             };
-
-            // self.fetchLayers = function(taskId) {
-
-            //     Practice.layers({
-            //         id: $route.current.params.practiceId
-            //     }).$promise.then(function(successResponse) {
-
-            //         console.log(
-            //             'Practice.layers --> successResponse',
-            //             successResponse);
-
-            //         self.layers = successResponse.features;
-
-            //         if (self.layers.length) {
-
-            //             console.log('Practice.layers --> Create overlays object.');
-
-            //             self.map.layers.overlays = {};
-
-            //         }
-
-            //         self.layers.forEach(function(layer) {
-
-            //             console.log(
-            //                 'Practice.layers --> Add layer:',
-            //                 layer);
-
-            //             if (layer.tileset_url &&
-            //                 layer.api_token) {
-
-            //                 var layerId = 'layer-' + layer.id;
-
-            //                 self.map.layers.overlays[layerId] = {
-            //                     name: layer.name,
-            //                     type: 'xyz',
-            //                     visible: true,
-            //                     url: [layer.tileset_url, '?access_token=', layer.api_token].join(''),
-            //                     layerOptions: {},
-            //                     layerParams: {}
-            //                 };
-
-            //                 console.log(
-            //                     'Practice.layers --> Added layer with id:',
-            //                     layerId);
-
-            //             }
-
-            //         });
-
-            //     }, function(errorResponse) {
-
-            //         console.log(
-            //             'Practice.layers --> errorResponse',
-            //             errorResponse);
-
-            //     });
-
-            // };
 
             self.fetchTasks = function(taskId) {
 
@@ -529,6 +479,8 @@ angular.module('FieldDoc')
 
                 console.log('practice.geometry', practice.geometry);
 
+                self.drawControls.deleteAll();
+
                 if (practice.geometry !== null &&
                     typeof practice.geometry !== 'undefined') {
 
@@ -573,13 +525,19 @@ angular.module('FieldDoc')
                     // });
 
                     var feature = {
-                        id: 'unique-id',
+                        id: 'practice-' + practice.id,
                         type: 'Feature',
                         properties: {},
                         geometry: practice.geometry
                     };
 
                     self.drawControls.add(feature);
+
+                    self.drawControls.changeMode(
+                        'direct_select',
+                        {
+                            featureId: 'practice-' + practice.id
+                        });
 
                 }
 

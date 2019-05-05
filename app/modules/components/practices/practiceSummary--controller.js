@@ -48,6 +48,36 @@
                     loading: true
                 };
 
+                self.print = function() {
+
+                    $window.print();
+
+                };
+
+                self.showElements = function() {
+
+                    $timeout(function() {
+
+                        self.status.loading = false;
+
+                        self.status.processing = false;
+
+                        $timeout(function() {
+
+                            if (!self.mapOptions) {
+
+                                self.mapOptions = self.getMapOptions();
+
+                            }
+
+                            self.createMap(self.mapOptions);
+
+                        }, 500);
+
+                    }, 1000);
+
+                };
+
                 self.alerts = [];
 
                 function closeAlerts() {
@@ -256,47 +286,19 @@
 
                         $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
-                        //
-                        // If a valid practice geometry is present, add it to the map
-                        // and track the object in `self.savedObjects`.
-                        //
-
-                        if (self.practice.geometry !== null &&
-                            typeof self.practice.geometry !== 'undefined') {
-
-                            leafletData.getMap('practice--map').then(function(map) {
-
-                                self.practiceExtent = new L.FeatureGroup();
-
-                                self.setGeoJsonLayer(self.practice.geometry, self.practiceExtent);
-
-                                map.fitBounds(self.practiceExtent.getBounds(), {
-                                    maxZoom: 18
-                                });
-
-                            });
-
-                            self.map.geojson = {
-                                data: self.practice.geometry
-                            };
-
-                        }
-
-                        self.status.loading = false;
-
                         self.loadReports();
 
                         self.loadMetrics();
 
                         self.loadTags();
 
-                        self.fetchLayers();
-
-                        // self.loadModel();
+                        self.showElements();
 
                     }, function(errorResponse) {
 
                         self.status.loading = false;
+
+                        self.showElements();
 
                     });
 
@@ -408,6 +410,59 @@
 
                 };
 
+                self.addLayers = function(arr) {
+
+                    arr.forEach(function(feature) {
+
+                        console.log(
+                            'self.addLayers --> feature',
+                            feature);
+
+                        var spec = feature.layer_spec || {};
+
+                        console.log(
+                            'self.addLayers --> spec',
+                            spec);
+
+                        feature.spec = JSON.parse(spec);
+
+                        console.log(
+                            'self.addLayers --> feature.spec',
+                            feature.spec);
+
+                        if (!feature.selected ||
+                            typeof feature.selected === 'undefined') {
+
+                            feature.selected = false;
+
+                        } else {
+
+                            feature.spec.layout.visibility = 'visible';
+
+                        }
+
+                        if (feature.spec.id) {
+
+                            try {
+
+                                self.map.addLayer(feature.spec);
+
+                            } catch (error) {
+
+                                console.log(
+                                    'self.addLayers --> error',
+                                    error);
+
+                            }
+
+                        }
+
+                    });
+
+                    return arr;
+
+                };
+
                 self.fetchLayers = function(taskId) {
 
                     LayerService.collection({
@@ -415,16 +470,14 @@
                     }).$promise.then(function(successResponse) {
 
                         console.log(
-                            'Practice.layers --> successResponse',
+                            'self.fetchLayers --> successResponse',
                             successResponse);
 
-                        self.layers = successResponse.features;
+                        if (successResponse.features.length) {
 
-                        if (self.layers.length) {
+                            console.log('self.fetchLayers --> Sorting layers.');
 
-                            console.log('Practice.layers --> Create overlays object.');
-
-                            self.layers.sort(function(a, b) {
+                            successResponse.features.sort(function(a, b) {
 
                                 return b.index < a.index;
 
@@ -432,97 +485,56 @@
 
                         }
 
-                        leafletData.getMap().then(function(map) {
+                        self.addLayers(successResponse.features);
 
-                            var layerIndex = {};
+                        self.layers = successResponse.features;
 
-                            L.mapbox.accessToken = 'pk.eyJ1IjoiZmllbGRkb2MiLCJhIjoiY2p1MW8zOHNyMDNwZTQ0bXlhMjNxaXVpMSJ9.0tUMQt2s0zd6DAthnmJItg';
-
-                            self.layers.forEach(function(layer) {
-
-                                console.log(
-                                    'Practice.layers --> Add layer:',
-                                    layer);
-
-                                if (layer.tileset_url &&
-                                    layer.api_token) {
-
-                                    var layerId = 'layer-' + layer.id;
-
-                                    layerIndex[layer.name] = L.mapbox.styleLayer(layer.style_url);
-
-                                    console.log(
-                                        'Practice.layers --> Added layer with id:',
-                                        layerId);
-
-                                }
-
-                            });
-
-                            L.control.layers({
-                                'Streets': L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11').addTo(map),
-                                'Satellite': L.mapbox.styleLayer('mapbox://styles/mapbox/satellite-streets-v11'),
-                                'Outdoors': L.mapbox.styleLayer('mapbox://styles/mapbox/outdoors-v11')
-                            }, layerIndex).addTo(map);
-
-                        });
+                        console.log(
+                            'self.fetchLayers --> self.layers',
+                            self.layers);
 
                     }, function(errorResponse) {
 
                         console.log(
-                            'Practice.layers --> errorResponse',
+                            'self.fetchLayers --> errorResponse',
                             errorResponse);
 
                     });
 
                 };
 
-                self.populateMap = function(map, practice) {
+                self.populateMap = function(map, feature, attribute) {
 
-                    console.log('practice.geometry', practice.geometry);
+                    console.log('self.populateMap --> feature', feature);
 
-                    if (practice.geometry !== null &&
-                        typeof practice.geometry !== 'undefined') {
+                    if (feature[attribute] !== null &&
+                        typeof feature[attribute] !== 'undefined') {
 
-                        var bounds = turf.bbox(practice.geometry);
+                        var bounds = turf.bbox(feature[attribute]);
 
                         map.fitBounds(bounds, {
                             padding: 40
                         });
 
-                        // map.addLayer({
-                        //     'id': 'practice',
-                        //     'type': 'fill',
-                        //     'source': {
-                        //         'type': 'geojson',
-                        //         'data': {
-                        //             'type': 'Feature',
-                        //             'geometry': practice.geometry
-                        //         }
-                        //     },
-                        //     'layout': {},
-                        //     'paint': {
-                        //         'fill-color': '#06aadf',
-                        //         'fill-opacity': 0.4
-                        //     }
-                        // });
+                    }
 
-                        // map.addLayer({
-                        //     'id': 'practice-outline',
-                        //     'type': 'line',
-                        //     'source': {
-                        //         'type': 'geojson',
-                        //         'data': {
-                        //             'type': 'Feature',
-                        //             'geometry': practice.geometry
-                        //         }
-                        //     },
-                        //     'layout': {},
-                        //     'paint': {
-                        //         'line-color': 'rgba(6, 170, 223, 0.8)',
-                        //         'line-width': 2
-                        //     }
-                        // });
+                };
+
+                self.toggleLayer = function(layer) {
+
+                    console.log('self.toggleLayer --> layer', layer);
+
+                    var layerId = layer.spec.id;
+
+                    var visibility = self.map.getLayoutProperty(layerId, 'visibility');
+
+                    if (visibility === 'visible') {
+
+                        self.map.setLayoutProperty(layerId, 'visibility', 'none');
+
+                    } else {
+
+                        self.map.setLayoutProperty(layerId, 'visibility', 'visible');
 
                     }
 
@@ -534,23 +546,79 @@
 
                     console.log('self.switchMapStyle --> index', index);
 
-                    self.map.setStyle(self.mapStyles[index].url);
+                    var center = self.map.getCenter();
+
+                    var zoom = self.map.getZoom();
+
+                    if (center.lng && center.lat) {
+
+                        self.mapOptions.center = [center.lng, center.lat];
+
+                    }
+
+                    if (zoom) {
+
+                        self.mapOptions.zoom = zoom;
+
+                    }
+
+                    self.mapOptions.style = self.mapStyles[index].url;
+
+                    self.map.remove();
+
+                    self.createMap(self.mapOptions);
+
+                    // self.map = new mapboxgl.Map(self.mapOptions);
+
+                    // self.map.on('load', function() {
+
+                    //     self.addLayers(self.layers);
+
+                    // });
+
+                    // self.addLayers(self.layers);
 
                 };
 
-                self.createMap = function() {
+                self.getMapOptions = function() {
 
                     self.mapStyles = mapbox.baseStyles;
+
+                    console.log(
+                        'self.createMap --> mapStyles',
+                        self.mapStyles);
 
                     self.activeStyle = 0;
 
                     mapboxgl.accessToken = mapbox.accessToken;
 
-                    var options = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+                    console.log(
+                        'self.createMap --> accessToken',
+                        mapboxgl.accessToken);
 
-                    options.container = 'project--map';
+                    self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
 
-                    options.style = self.mapStyles[0].url;
+                    self.mapOptions.container = 'primary--map';
+
+                    self.mapOptions.style = self.mapStyles[0].url;
+
+                    return self.mapOptions;
+
+                };
+
+                self.createMap = function(options) {
+
+                    if (!options) return;
+
+                    console.log('self.createMap --> Starting...');
+
+                    var tgt = document.querySelector('.map');
+
+                    console.log(
+                        'self.createMap --> tgt',
+                        tgt);
+
+                    console.log('self.createMap --> options', options);
 
                     self.map = new mapboxgl.Map(options);
 
@@ -564,18 +632,17 @@
 
                         self.map.addControl(fullScreen, 'top-left');
 
-                        // 
-                        // Add geocoder
-                        // 
+                        self.populateMap(self.map, self.practice, 'geometry');
 
-                        var geocoder = new MapboxGeocoder({
-                            accessToken: mapboxgl.accessToken,
-                            mapboxgl: mapboxgl
-                        });
+                        if (self.layers && self.layers.length) {
 
-                        document.getElementById('geocoder').appendChild(geocoder.onAdd(self.map));
+                            self.addLayers(self.layers);
 
-                        // self.populateMap(self.map, self.practice);
+                        } else {
+
+                            self.fetchLayers();
+
+                        }
 
                     });
 

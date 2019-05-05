@@ -127,32 +127,6 @@ angular.module('FieldDoc')
 
                         $rootScope.page.title = 'Project Summary';
 
-                        // leafletData.getMap('project--map').then(function(map) {
-
-                        //     var southWest = L.latLng(25.837377, -124.211606),
-                        //         northEast = L.latLng(49.384359, -67.158958),
-                        //         bounds = L.latLngBounds(southWest, northEast);
-
-                        //     self.projectExtent = new L.FeatureGroup();
-
-                        //     if (self.project.extent) {
-
-                        //         self.setGeoJsonLayer(self.project.extent, self.projectExtent);
-
-                        //         map.fitBounds(self.projectExtent.getBounds(), {
-                        //             maxZoom: 18
-                        //         });
-
-                        //     } else {
-
-                        //         map.fitBounds(bounds, {
-                        //             maxZoom: 18
-                        //         });
-
-                        //     }
-
-                        // });
-
                         self.loadMetrics();
 
                         self.loadSites();
@@ -160,8 +134,6 @@ angular.module('FieldDoc')
                         self.loadTags();
 
                         self.loadArea();
-
-                        // self.fetchLayers();
 
                     }
 
@@ -457,70 +429,6 @@ angular.module('FieldDoc')
 
             };
 
-            self.transformBounds = function(obj) {
-
-                var xRange = [],
-                    yRange = [],
-                    southWest,
-                    northEast,
-                    bounds;
-
-                if (Array.isArray(obj.bounds.coordinates[0])) {
-
-                    obj.bounds.coordinates[0].forEach(function(coords) {
-
-                        xRange.push(coords[0]);
-
-                        yRange.push(coords[1]);
-
-                    });
-
-                    // 
-                    // Add padding to bounds coordinates
-                    // 
-
-                    southWest = [
-                        Math.min.apply(null, yRange) - 0.001,
-                        Math.min.apply(null, xRange) - 0.001
-                    ];
-
-                    northEast = [
-                        Math.max.apply(null, yRange) + 0.001,
-                        Math.max.apply(null, xRange) + 0.001
-                    ];
-
-                    bounds = leafletBoundsHelpers.createBoundsFromArray([
-                        southWest,
-                        northEast
-                    ]);
-
-                } else {
-
-                    // 
-                    // Add padding to bounds coordinates
-                    // 
-
-                    southWest = [
-                        obj.bounds.coordinates[1] - 0.001,
-                        obj.bounds.coordinates[0] - 0.001
-                    ];
-
-                    northEast = [
-                        obj.bounds.coordinates[1] + 0.001,
-                        obj.bounds.coordinates[0] + 0.001
-                    ];
-
-                    bounds = leafletBoundsHelpers.createBoundsFromArray([
-                        southWest,
-                        northEast
-                    ]);
-
-                }
-
-                return bounds;
-
-            };
-
             self.processCollection = function(arr) {
 
                 arr.forEach(function(feature) {
@@ -529,11 +437,64 @@ angular.module('FieldDoc')
 
                         feature.geojson = self.buildFeature(feature.geometry);
 
-                        feature.bounds = self.transformBounds(feature);
+                        feature.bounds = turf.bbox(feature.geometry);
 
                     }
 
                 });
+
+            };
+
+            self.addLayers = function(arr) {
+
+                arr.forEach(function(feature) {
+
+                    console.log(
+                        'self.addLayers --> feature',
+                        feature);
+
+                    var spec = feature.layer_spec || {};
+
+                    console.log(
+                        'self.addLayers --> spec',
+                        spec);
+
+                    feature.spec = JSON.parse(spec);
+
+                    console.log(
+                        'self.addLayers --> feature.spec',
+                        feature.spec);
+
+                    if (feature.spec.id) {
+
+                        try {
+
+                            self.map.addLayer(feature.spec);
+
+                        } catch (error) {
+
+                            console.log(
+                                'self.addLayers --> error',
+                                error);
+
+                        }
+
+                    }
+
+                    if (!feature.selected ||
+                        typeof feature.selected === 'undefined') {
+
+                        feature.selected = false;
+
+                    } else {
+
+                        feature.spec.layout.visibility = 'visible';
+
+                    }
+
+                });
+
+                return arr;
 
             };
 
@@ -547,8 +508,6 @@ angular.module('FieldDoc')
                         'self.fetchLayers --> successResponse',
                         successResponse);
 
-                    // self.layers = successResponse.features;
-
                     if (successResponse.features.length) {
 
                         console.log('self.fetchLayers --> Sorting layers.');
@@ -561,122 +520,13 @@ angular.module('FieldDoc')
 
                     }
 
-                    successResponse.features.forEach(function(feature) {
-
-                        console.log(
-                            'self.fetchLayers --> feature',
-                            feature);
-
-                        var spec = feature.layer_spec || {};
-
-                        console.log(
-                            'self.fetchLayers --> spec',
-                            spec);
-
-                        feature.spec = JSON.parse(spec);
-
-                        console.log(
-                            'self.fetchLayers --> feature.spec',
-                            feature.spec);
-
-                        if (feature.spec.id) {
-
-                            try {
-
-                                self.map.addLayer(feature.spec);
-
-                            } catch (error) {
-
-                                console.log(
-                                    'self.fetchLayers --> error',
-                                    error);
-
-                            }
-
-                        }
-
-                        feature.selected = false;
-
-                    });
-
-                    // if (successResponse.features.length) {
-
-                    //     console.log('self.fetchLayers --> Sorting layers.');
-
-                    //     successResponse.features.sort(function(a, b) {
-
-                    //         return b.index < a.index;
-
-                    //     });
-
-                    // }
+                    self.addLayers(successResponse.features);
 
                     self.layers = successResponse.features;
 
                     console.log(
                         'self.fetchLayers --> self.layers',
                         self.layers);
-
-                    // self.layers.forEach(function(feature) {
-
-                    //     var spec = JSON.parse(feature.layer_spec);
-
-                    //     self.map.addLayer(spec);
-
-                        // self.map.addLayer({
-                        //     'id': 'terrain-data', // layerId
-                        //     'type': 'line', // layerType
-                        //     'source': {
-                        //         type: 'vector',
-                        //         url: 'mapbox://mapbox.mapbox-terrain-v2'
-                        //     }, // source
-                        //     'source-layer': 'contour', // sourceLayer
-                        //     'layout': {
-                        //         'line-join': 'round',
-                        //         'line-cap': 'round'
-                        //     }, // layout
-                        //     'paint': {
-                        //         'line-color': '#ff69b4',
-                        //         'line-width': 1
-                        //     } // paint
-                        // });
-
-                    // });
-
-                    // leafletData.getMap().then(function(map) {
-
-                    //     var layerIndex = {};
-
-                    //     L.mapbox.accessToken = 'pk.eyJ1IjoiZmllbGRkb2MiLCJhIjoiY2p1MW8zOHNyMDNwZTQ0bXlhMjNxaXVpMSJ9.0tUMQt2s0zd6DAthnmJItg';
-
-                    //     self.layers.forEach(function(layer) {
-
-                    //         console.log(
-                    //             'self.fetchLayers --> Add layer:',
-                    //             layer);
-
-                    //         if (layer.tileset_url &&
-                    //             layer.api_token) {
-
-                    //             var layerId = 'layer-' + layer.id;
-
-                    //             layerIndex[layer.name] = L.mapbox.styleLayer(layer.style_url);
-
-                    //             console.log(
-                    //                 'Practice.layers --> Added layer with id:',
-                    //                 layerId);
-
-                    //         }
-
-                    //     });
-
-                    //     L.control.layers({
-                    //         'Streets': L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11').addTo(map),
-                    //         'Satellite': L.mapbox.styleLayer('mapbox://styles/mapbox/satellite-streets-v11'),
-                    //         'Outdoors': L.mapbox.styleLayer('mapbox://styles/mapbox/outdoors-v11')
-                    //     }, layerIndex).addTo(map);
-
-                    // });
 
                 }, function(errorResponse) {
 
@@ -728,14 +578,14 @@ angular.module('FieldDoc')
 
             };
 
-            self.populateMap = function(map, feature) {
+            self.populateMap = function(map, feature, attribute) {
 
                 console.log('self.populateMap --> feature', feature);
 
-                if (feature.extent !== null &&
-                    typeof feature.extent !== 'undefined') {
+                if (feature[attribute] !== null &&
+                    typeof feature[attribute] !== 'undefined') {
 
-                    var bounds = turf.bbox(feature.extent);
+                    var bounds = turf.bbox(feature[attribute]);
 
                     map.fitBounds(bounds, {
                         padding: 40
@@ -763,15 +613,6 @@ angular.module('FieldDoc')
 
                 }
 
-                // if (layer.style_url) {
-
-                //     self.map.addSource(layer.source_id, {
-                //         type: layer.source_type,
-                //         url: layer.source_url
-                //     });
-
-                // }
-
             };
 
             self.switchMapStyle = function(styleId, index) {
@@ -780,15 +621,19 @@ angular.module('FieldDoc')
 
                 console.log('self.switchMapStyle --> index', index);
 
-                self.map.setStyle(self.mapStyles[index].url);
+                self.map.remove();
+
+                self.mapOptions.style = self.mapStyles[index].url
+
+                self.map = new mapboxgl.Map(self.mapOptions);
+
+                self.addLayers(self.layers);
 
             };
 
             self.createMap = function() {
 
                 console.log('self.createMap --> Starting...');
-
-                // var tgt = document.getElementById('project--map');
 
                 var tgt = document.querySelector('.map');
 
@@ -810,15 +655,15 @@ angular.module('FieldDoc')
                     'self.createMap --> accessToken',
                     mapboxgl.accessToken);
 
-                var options = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+                self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
 
-                options.container = 'project--map';
+                self.mapOptions.container = 'primary--map';
 
-                options.style = self.mapStyles[0].url;
+                self.mapOptions.style = self.mapStyles[0].url;
 
-                console.log('self.createMap --> options', options);
+                console.log('self.createMap --> self.mapOptions', self.mapOptions);
 
-                self.map = new mapboxgl.Map(options);
+                self.map = new mapboxgl.Map(self.mapOptions);
 
                 self.map.on('load', function() {
 
@@ -830,7 +675,7 @@ angular.module('FieldDoc')
 
                     self.map.addControl(fullScreen, 'top-left');
 
-                    self.populateMap(self.map, self.project);
+                    self.populateMap(self.map, self.project, 'extent');
 
                     self.fetchLayers();
 

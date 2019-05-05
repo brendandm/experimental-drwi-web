@@ -369,6 +369,7 @@
   position: absolute;
   top: 0;
   right: 42px;
+  min-width: 160px;
   //height: auto;
   //width: auto;
   display: flex;
@@ -419,6 +420,11 @@
   display: flex;
   flex-grow: 1;
   flex-shrink: 0;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-right: 1em;
 }
 
 .mapboxgl-layer-ctrl .layer-group label input {

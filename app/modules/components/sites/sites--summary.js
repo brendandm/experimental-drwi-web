@@ -44,6 +44,12 @@
 
                         self.status.processing = false;
 
+                        $timeout(function() {
+
+                            self.createMap();
+
+                        }, 500);
+
                     }, 1000);
 
                 };
@@ -335,8 +341,6 @@
 
                         self.loadTags();
 
-                        self.fetchLayers();
-
                         self.showElements();
 
                     });
@@ -514,13 +518,11 @@
                             'self.fetchLayers --> successResponse',
                             successResponse);
 
-                        self.layers = successResponse.features;
+                        if (successResponse.features.length) {
 
-                        if (self.layers.length) {
+                            console.log('self.fetchLayers --> Sorting layers.');
 
-                            console.log('self.fetchLayers --> Create overlays object.');
-
-                            self.layers.sort(function(a, b) {
+                            successResponse.features.sort(function(a, b) {
 
                                 return b.index < a.index;
 
@@ -528,48 +530,49 @@
 
                         }
 
-                        leafletData.getMap().then(function(map) {
+                        successResponse.features.forEach(function(feature) {
 
                             console.log(
-                                'self.fetchLayers --> map',
-                                map);
+                                'self.fetchLayers --> feature',
+                                feature);
 
-                            var layerIndex = {};
+                            var spec = feature.layer_spec || {};
 
-                            L.mapbox.accessToken = 'pk.eyJ1IjoiZmllbGRkb2MiLCJhIjoiY2p1MW8zOHNyMDNwZTQ0bXlhMjNxaXVpMSJ9.0tUMQt2s0zd6DAthnmJItg';
+                            console.log(
+                                'self.fetchLayers --> spec',
+                                spec);
 
-                            self.layers.forEach(function(layer) {
+                            feature.spec = JSON.parse(spec);
 
-                                console.log(
-                                    'self.fetchLayers --> Add layer:',
-                                    layer);
+                            console.log(
+                                'self.fetchLayers --> feature.spec',
+                                feature.spec);
 
-                                if (layer.tileset_url &&
-                                    layer.api_token) {
+                            if (feature.spec.id) {
 
-                                    var layerId = 'layer-' + layer.id;
+                                try {
 
-                                    layerIndex[layer.name] = L.mapbox.styleLayer(layer.style_url);
+                                    self.map.addLayer(feature.spec);
+
+                                } catch (error) {
 
                                     console.log(
-                                        'self.fetchLayers --> Added layer with id:',
-                                        layerId);
+                                        'self.fetchLayers --> error',
+                                        error);
 
                                 }
 
-                            });
+                            }
 
-                            console.log(
-                                'self.fetchLayers --> layerIndex',
-                                layerIndex);
-
-                            L.control.layers({
-                                'Streets': L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v11').addTo(map),
-                                'Satellite': L.mapbox.styleLayer('mapbox://styles/mapbox/satellite-streets-v11'),
-                                'Outdoors': L.mapbox.styleLayer('mapbox://styles/mapbox/outdoors-v11')
-                            }, layerIndex).addTo(map);
+                            feature.selected = false;
 
                         });
+
+                        self.layers = successResponse.features;
+
+                        console.log(
+                            'self.fetchLayers --> self.layers',
+                            self.layers);
 
                     }, function(errorResponse) {
 
@@ -618,6 +621,105 @@
                     self.selectedMetric = null;
 
                     self.displayModal = false;
+
+                };
+
+                self.populateMap = function(map, feature, attribute) {
+
+                    console.log('self.populateMap --> feature', feature);
+
+                    if (feature[attribute] !== null &&
+                        typeof feature[attribute] !== 'undefined') {
+
+                        var bounds = turf.bbox(feature[attribute]);
+
+                        map.fitBounds(bounds, {
+                            padding: 40
+                        });
+
+                    }
+
+                };
+
+                self.toggleLayer = function(layer) {
+
+                    console.log('self.toggleLayer --> layer', layer);
+
+                    var layerId = layer.spec.id;
+
+                    var visibility = self.map.getLayoutProperty(layerId, 'visibility');
+
+                    if (visibility === 'visible') {
+
+                        self.map.setLayoutProperty(layerId, 'visibility', 'none');
+
+                    } else {
+
+                        self.map.setLayoutProperty(layerId, 'visibility', 'visible');
+
+                    }
+
+                };
+
+                self.switchMapStyle = function(styleId, index) {
+
+                    console.log('self.switchMapStyle --> styleId', styleId);
+
+                    console.log('self.switchMapStyle --> index', index);
+
+                    self.map.setStyle(self.mapStyles[index].url);
+
+                };
+
+                self.createMap = function() {
+
+                    console.log('self.createMap --> Starting...');
+
+                    var tgt = document.querySelector('.map');
+
+                    console.log(
+                        'self.createMap --> tgt',
+                        tgt);
+
+                    self.mapStyles = mapbox.baseStyles;
+
+                    console.log(
+                        'self.createMap --> mapStyles',
+                        self.mapStyles);
+
+                    self.activeStyle = 0;
+
+                    mapboxgl.accessToken = mapbox.accessToken;
+
+                    console.log(
+                        'self.createMap --> accessToken',
+                        mapboxgl.accessToken);
+
+                    var options = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+
+                    options.container = 'primary--map';
+
+                    options.style = self.mapStyles[0].url;
+
+                    console.log('self.createMap --> options', options);
+
+                    self.map = new mapboxgl.Map(options);
+
+                    self.map.on('load', function() {
+
+                        var nav = new mapboxgl.NavigationControl();
+
+                        self.map.addControl(nav, 'top-left');
+
+                        var fullScreen = new mapboxgl.FullscreenControl();
+
+                        self.map.addControl(fullScreen, 'top-left');
+
+                        self.populateMap(self.map, self.site, 'geometry');
+
+                        self.fetchLayers();
+
+                    });
 
                 };
 
