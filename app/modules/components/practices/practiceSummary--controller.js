@@ -477,6 +477,110 @@
 
                 };
 
+                self.populateMap = function(map, practice) {
+
+                    console.log('practice.geometry', practice.geometry);
+
+                    if (practice.geometry !== null &&
+                        typeof practice.geometry !== 'undefined') {
+
+                        var bounds = turf.bbox(practice.geometry);
+
+                        map.fitBounds(bounds, {
+                            padding: 40
+                        });
+
+                        // map.addLayer({
+                        //     'id': 'practice',
+                        //     'type': 'fill',
+                        //     'source': {
+                        //         'type': 'geojson',
+                        //         'data': {
+                        //             'type': 'Feature',
+                        //             'geometry': practice.geometry
+                        //         }
+                        //     },
+                        //     'layout': {},
+                        //     'paint': {
+                        //         'fill-color': '#06aadf',
+                        //         'fill-opacity': 0.4
+                        //     }
+                        // });
+
+                        // map.addLayer({
+                        //     'id': 'practice-outline',
+                        //     'type': 'line',
+                        //     'source': {
+                        //         'type': 'geojson',
+                        //         'data': {
+                        //             'type': 'Feature',
+                        //             'geometry': practice.geometry
+                        //         }
+                        //     },
+                        //     'layout': {},
+                        //     'paint': {
+                        //         'line-color': 'rgba(6, 170, 223, 0.8)',
+                        //         'line-width': 2
+                        //     }
+                        // });
+
+                    }
+
+                };
+
+                self.switchMapStyle = function(styleId, index) {
+
+                    console.log('self.switchMapStyle --> styleId', styleId);
+
+                    console.log('self.switchMapStyle --> index', index);
+
+                    self.map.setStyle(self.mapStyles[index].url);
+
+                };
+
+                self.createMap = function() {
+
+                    self.mapStyles = mapbox.baseStyles;
+
+                    self.activeStyle = 0;
+
+                    mapboxgl.accessToken = mapbox.accessToken;
+
+                    var options = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+
+                    options.container = 'project--map';
+
+                    options.style = self.mapStyles[0].url;
+
+                    self.map = new mapboxgl.Map(options);
+
+                    self.map.on('load', function() {
+
+                        var nav = new mapboxgl.NavigationControl();
+
+                        self.map.addControl(nav, 'top-left');
+
+                        var fullScreen = new mapboxgl.FullscreenControl();
+
+                        self.map.addControl(fullScreen, 'top-left');
+
+                        // 
+                        // Add geocoder
+                        // 
+
+                        var geocoder = new MapboxGeocoder({
+                            accessToken: mapboxgl.accessToken,
+                            mapboxgl: mapboxgl
+                        });
+
+                        document.getElementById('geocoder').appendChild(geocoder.onAdd(self.map));
+
+                        // self.populateMap(self.map, self.practice);
+
+                    });
+
+                };
+
                 //
                 // Verify Account information for proper UI element display
                 //

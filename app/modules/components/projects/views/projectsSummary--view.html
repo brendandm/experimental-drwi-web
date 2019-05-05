@@ -72,7 +72,20 @@
                     </article>
 
                     <div class="map--module shadow reveal fade-in t1" style="position:relative;">
-                        <leaflet id="project--map" class="map tall" center="page.map.center" defaults="page.map.defaults" bounds="page.map.bounds" markers="page.map.markers"></leaflet>
+                        <div id="project--map" class="map tall" style="border-radius: 4px; overflow: hidden;">
+                            <div class="mapboxgl-layer-ctrl" data-ng-click="page.showLayerOptions = !page.showLayerOptions">
+                                <i class="material-icons">
+                                    layers
+                                </i>
+                                <div class="layer-group" data-ng-show="page.showLayerOptions">
+                                    <form>
+                                        <label data-ng-repeat="style in page.mapStyles" data-ng-class="{'active': page.activeStyle === $index}">
+                                            <input type="radio" id="base-style-{{ $index }}" name="active-style" data-ng-model="page.activeStyle" data-ng-value="{{ $index }}" data-ng-change="page.switchMapStyle(style, $index)"><span> {{ style.name }}</span>
+                                        </label>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>

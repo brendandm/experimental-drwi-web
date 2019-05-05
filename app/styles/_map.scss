@@ -358,6 +358,10 @@
   background: #fff;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
   z-index: 3;
 }
 

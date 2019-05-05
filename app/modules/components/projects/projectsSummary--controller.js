@@ -26,13 +26,25 @@ angular.module('FieldDoc')
 
             $rootScope.page = {};
 
-            self.map = JSON.parse(JSON.stringify(Map));
+            self.map = {};
 
             self.previewMap = JSON.parse(JSON.stringify(MapPreview));
 
-            self.map.markers = {};
-
             console.log('self.map', self.map);
+
+            self.alerts = [];
+
+            function closeAlerts() {
+
+                self.alerts = [];
+
+            }
+
+            function closeRoute() {
+
+                $location.path('/projects');
+
+            }
 
             self.status = {
                 loading: true
@@ -52,40 +64,13 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
+                    $timeout(function() {
+
+                        self.createMap();
+
+                    }, 500);
+
                 }, 1000);
-
-            };
-
-            //draw tools
-            function addNonGroupLayers(sourceLayer, targetGroup) {
-
-                if (sourceLayer instanceof L.LayerGroup) {
-
-                    sourceLayer.eachLayer(function(layer) {
-
-                        addNonGroupLayers(layer, targetGroup);
-
-                    });
-
-                } else {
-
-                    targetGroup.addLayer(sourceLayer);
-
-                }
-
-            }
-
-            self.setGeoJsonLayer = function(data, layerGroup, clearLayers) {
-
-                if (clearLayers) {
-
-                    layerGroup.clearLayers();
-
-                }
-
-                var featureGeometry = L.geoJson(data, {});
-
-                addNonGroupLayers(featureGeometry, layerGroup);
 
             };
 
@@ -142,31 +127,31 @@ angular.module('FieldDoc')
 
                         $rootScope.page.title = 'Project Summary';
 
-                        leafletData.getMap('project--map').then(function(map) {
+                        // leafletData.getMap('project--map').then(function(map) {
 
-                            var southWest = L.latLng(25.837377, -124.211606),
-                                northEast = L.latLng(49.384359, -67.158958),
-                                bounds = L.latLngBounds(southWest, northEast);
+                        //     var southWest = L.latLng(25.837377, -124.211606),
+                        //         northEast = L.latLng(49.384359, -67.158958),
+                        //         bounds = L.latLngBounds(southWest, northEast);
 
-                            self.projectExtent = new L.FeatureGroup();
+                        //     self.projectExtent = new L.FeatureGroup();
 
-                            if (self.project.extent) {
+                        //     if (self.project.extent) {
 
-                                self.setGeoJsonLayer(self.project.extent, self.projectExtent);
+                        //         self.setGeoJsonLayer(self.project.extent, self.projectExtent);
 
-                                map.fitBounds(self.projectExtent.getBounds(), {
-                                    maxZoom: 18
-                                });
+                        //         map.fitBounds(self.projectExtent.getBounds(), {
+                        //             maxZoom: 18
+                        //         });
 
-                            } else {
+                        //     } else {
 
-                                map.fitBounds(bounds, {
-                                    maxZoom: 18
-                                });
+                        //         map.fitBounds(bounds, {
+                        //             maxZoom: 18
+                        //         });
 
-                            }
+                        //     }
 
-                        });
+                        // });
 
                         self.loadMetrics();
 
@@ -192,86 +177,6 @@ angular.module('FieldDoc')
 
             };
 
-            self.submitProject = function() {
-
-                if (!self.project.organization_id) {
-                    $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.");
-                    return;
-                }
-
-                var _project = new Project({
-                    "id": self.project.id,
-                    "properties": {
-                        "workflow_state": "Submitted"
-                    }
-                });
-
-                _project.$update(function(successResponse) {
-                    self.project = successResponse;
-                }, function(errorResponse) {
-
-                });
-            };
-
-            self.fundProject = function() {
-
-                if (!self.project.organization_id) {
-                    $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.");
-                    return;
-                }
-
-                var _project = new Project({
-                    "id": self.project.id,
-                    "properties": {
-                        "workflow_state": "Funded"
-                    }
-                });
-
-                _project.$update(function(successResponse) {
-                    self.project = successResponse;
-                }, function(errorResponse) {
-
-                });
-            };
-
-            self.completeProject = function() {
-
-                if (!self.project.organization_id) {
-                    $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.");
-                    return;
-                }
-
-                var _project = new Project({
-                    "id": self.project.id,
-                    "properties": {
-                        "workflow_state": "Completed"
-                    }
-                });
-
-                _project.$update(function(successResponse) {
-                    self.project = successResponse;
-                }, function(errorResponse) {
-
-                });
-            };
-
-            self.rollbackProjectSubmission = function() {
-
-                var _project = new Project({
-                    "id": self.project.id,
-                    "properties": {
-                        "workflow_state": "Draft"
-                    }
-                });
-
-                _project.$update(function(successResponse) {
-                    self.project = successResponse;
-                }, function(errorResponse) {
-
-                });
-
-            };
-
             self.createSite = function() {
 
                 self.site = new Site({
@@ -290,20 +195,6 @@ angular.module('FieldDoc')
                 });
 
             };
-
-            self.alerts = [];
-
-            function closeAlerts() {
-
-                self.alerts = [];
-
-            }
-
-            function closeRoute() {
-
-                $location.path('/projects');
-
-            }
 
             self.confirmDelete = function(obj, targetCollection) {
 
@@ -456,27 +347,31 @@ angular.module('FieldDoc')
 
                     self.sites = successResponse.features;
 
-                    leafletData.getMap('project--map').then(function(map) {
+                    // 
+                    // TODO: Add sites to GL map
+                    // 
 
-                        self.projectExtent.clearLayers();
+                    // leafletData.getMap('project--map').then(function(map) {
 
-                        self.sites.forEach(function(feature) {
+                    //     self.projectExtent.clearLayers();
 
-                            if (feature.geometry) {
+                    //     self.sites.forEach(function(feature) {
 
-                                self.setGeoJsonLayer(feature.geometry, self.projectExtent);
+                    //         if (feature.geometry) {
 
-                            }
+                    //             self.setGeoJsonLayer(feature.geometry, self.projectExtent);
 
-                        });
+                    //         }
 
-                        map.fitBounds(self.projectExtent.getBounds(), {
-                            maxZoom: 18
-                        });
+                    //     });
 
-                        self.projectExtent.addTo(map);
+                    //     map.fitBounds(self.projectExtent.getBounds(), {
+                    //         maxZoom: 18
+                    //     });
 
-                    });
+                    //     self.projectExtent.addTo(map);
+
+                    // });
 
                 }, function(errorResponse) {
 
@@ -643,7 +538,7 @@ angular.module('FieldDoc')
             };
 
             self.fetchLayers = function(taskId) {
-                
+
                 LayerService.collection({
                     program: self.project.program_id
                 }).$promise.then(function(successResponse) {
@@ -666,7 +561,7 @@ angular.module('FieldDoc')
 
                     }
 
-                    leafletData.getMap().then(function (map) {
+                    leafletData.getMap().then(function(map) {
 
                         var layerIndex = {};
 
@@ -751,15 +646,83 @@ angular.module('FieldDoc')
 
             };
 
-            $scope.changeBaseLayer = function (key) {
-                leafletData.getMap().then(function (map) {
-                    leafletData.getLayers().then(function (layers) {
-                        _.each(layers.baselayers, function (layer) {
-                            map.removeLayer(layer);
-                        });
-                        map.addLayer(layers.baselayers[key]);
+            self.populateMap = function(map, feature) {
+
+                console.log('feature.extent', feature.extent);
+
+                if (feature.extent !== null &&
+                    typeof feature.extent !== 'undefined') {
+
+                    var bounds = turf.bbox(feature.extent);
+
+                    map.fitBounds(bounds, {
+                        padding: 40
                     });
+
+                }
+
+            };
+
+            self.switchMapStyle = function(styleId, index) {
+
+                console.log('self.switchMapStyle --> styleId', styleId);
+
+                console.log('self.switchMapStyle --> index', index);
+
+                self.map.setStyle(self.mapStyles[index].url);
+
+            };
+
+            self.createMap = function() {
+
+                console.log('self.createMap --> Starting...');
+
+                // var tgt = document.getElementById('project--map');
+
+                var tgt = document.querySelector('.map');
+
+                console.log(
+                    'self.createMap --> tgt',
+                    tgt);
+
+                self.mapStyles = mapbox.baseStyles;
+
+                console.log(
+                    'self.createMap --> mapStyles',
+                    self.mapStyles);
+
+                self.activeStyle = 0;
+
+                mapboxgl.accessToken = mapbox.accessToken;
+
+                console.log(
+                    'self.createMap --> accessToken',
+                    mapboxgl.accessToken);
+
+                var options = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+
+                options.container = 'project--map';
+
+                options.style = self.mapStyles[0].url;
+
+                console.log('self.createMap --> options', options);
+
+                self.map = new mapboxgl.Map(options);
+
+                self.map.on('load', function() {
+
+                    var nav = new mapboxgl.NavigationControl();
+
+                    self.map.addControl(nav, 'top-left');
+
+                    var fullScreen = new mapboxgl.FullscreenControl();
+
+                    self.map.addControl(fullScreen, 'top-left');
+
+                    self.populateMap(self.map, self.project);
+
                 });
+
             };
 
             //
@@ -782,10 +745,6 @@ angular.module('FieldDoc')
                     };
 
                     self.loadProject();
-
-                    // self.loadMetrics();
-
-                    // self.loadOutcomes();
 
                 });
 
