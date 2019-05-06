@@ -490,40 +490,6 @@ angular.module('FieldDoc')
                         padding: 40
                     });
 
-                    // map.addLayer({
-                    //     'id': 'practice',
-                    //     'type': 'fill',
-                    //     'source': {
-                    //         'type': 'geojson',
-                    //         'data': {
-                    //             'type': 'Feature',
-                    //             'geometry': practice.geometry
-                    //         }
-                    //     },
-                    //     'layout': {},
-                    //     'paint': {
-                    //         'fill-color': '#06aadf',
-                    //         'fill-opacity': 0.4
-                    //     }
-                    // });
-
-                    // map.addLayer({
-                    //     'id': 'practice-outline',
-                    //     'type': 'line',
-                    //     'source': {
-                    //         'type': 'geojson',
-                    //         'data': {
-                    //             'type': 'Feature',
-                    //             'geometry': practice.geometry
-                    //         }
-                    //     },
-                    //     'layout': {},
-                    //     'paint': {
-                    //         'line-color': 'rgba(6, 170, 223, 0.8)',
-                    //         'line-width': 2
-                    //     }
-                    // });
-
                     var feature = {
                         id: 'practice-' + practice.id,
                         type: 'Feature',
@@ -534,7 +500,7 @@ angular.module('FieldDoc')
                     self.drawControls.add(feature);
 
                     self.drawControls.changeMode(
-                        'direct_select',
+                        'simple_select',
                         {
                             featureId: 'practice-' + practice.id
                         });

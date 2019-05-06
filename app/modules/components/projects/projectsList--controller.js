@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('ProjectsController',
         function(Account, $location, $log, Project,
-            projects, $rootScope, $scope, Site, user,
+            projects, $rootScope, $scope, Site, user, mapbox,
             ProjectStore, FilterStore, $interval, $timeout, Utility) {
 
             $scope.filterStore = FilterStore;
@@ -44,6 +44,24 @@ angular.module('FieldDoc')
                 $timeout(function() {
 
                     self.status.loading = false;
+
+                    self.status.processing = false;
+
+                    // $timeout(function() {
+
+                    //     if (!self.mapOptions) {
+
+                    //         self.mapOptions = self.getMapOptions();
+
+                    //     }
+
+                    //     if (self.projects && self.projects.length) {
+
+                    //         self.addMapPreviews(self.projects);
+
+                    //     }
+
+                    // }, 500);
 
                 }, 1000);
 
@@ -281,6 +299,87 @@ angular.module('FieldDoc')
                     self.showElements();
 
                 });
+
+            };
+
+            self.addMapPreviews = function(arr) {
+
+                var interactions = [
+                    'scrollZoom',
+                    'boxZoom',
+                    'dragRotate',
+                    'dragPan',
+                    'keyboard',
+                    'doubleClickZoom',
+                    'touchZoomRotate'
+                ];
+
+                arr.forEach(function(feature, index) {
+
+                    var localOptions = JSON.parse(JSON.stringify(self.mapOptions));
+
+                    localOptions.style = self.mapStyles[0].url;
+
+                    localOptions.container = 'project-geography-preview-' + index;
+
+                    var previewMap = new mapboxgl.Map(localOptions);
+
+                    previewMap.on('load', function() {
+
+                        interactions.forEach(function(behavior) {
+
+                            previewMap[behavior].disable();
+
+                        });
+
+                        self.populateMap(previewMap, feature, 'extent');
+
+                    });
+
+                });
+
+            };
+
+            self.populateMap = function(map, feature, attribute) {
+
+                console.log('self.populateMap --> feature', feature);
+
+                if (feature[attribute] !== null &&
+                    typeof feature[attribute] !== 'undefined') {
+
+                    var bounds = turf.bbox(feature[attribute]);
+
+                    map.fitBounds(bounds, {
+                        padding: 40
+                    });
+
+                }
+
+            };
+
+            self.getMapOptions = function() {
+
+                self.mapStyles = mapbox.baseStyles;
+
+                console.log(
+                    'self.createMap --> mapStyles',
+                    self.mapStyles);
+
+                self.activeStyle = 0;
+
+                mapboxgl.accessToken = mapbox.accessToken;
+
+                console.log(
+                    'self.createMap --> accessToken',
+                    mapboxgl.accessToken);
+
+                self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+
+                self.mapOptions.container = 'primary--map';
+
+                self.mapOptions.style = self.mapStyles[0].url;
+
+                return self.mapOptions;
 
             };
 

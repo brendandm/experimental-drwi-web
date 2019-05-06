@@ -26,11 +26,7 @@ angular.module('FieldDoc')
 
             $rootScope.page = {};
 
-            self.map = {};
-
-            self.previewMap = JSON.parse(JSON.stringify(MapPreview));
-
-            console.log('self.map', self.map);
+            self.map = undefined;
 
             self.alerts = [];
 
@@ -66,7 +62,19 @@ angular.module('FieldDoc')
 
                     $timeout(function() {
 
-                        self.createMap();
+                        if (!self.mapOptions) {
+
+                            self.mapOptions = self.getMapOptions();
+
+                        }
+
+                        self.createMap(self.mapOptions);
+
+                        if (self.sites && self.sites.length) {
+
+                            self.addMapPreviews(self.sites);
+
+                        }
 
                     }, 500);
 
@@ -303,47 +311,7 @@ angular.module('FieldDoc')
 
                     console.log('Project sites', successResponse);
 
-                    successResponse.features.forEach(function(feature) {
-
-                        if (feature.geometry) {
-
-                            feature.staticURL = self.buildStaticMapURL(feature.geometry);
-
-                            feature.geojson = self.buildFeature(feature.geometry);
-
-                            feature.bounds = self.transformBounds(feature.properties);
-
-                        }
-
-                    });
-
                     self.sites = successResponse.features;
-
-                    // 
-                    // TODO: Add sites to GL map
-                    // 
-
-                    // leafletData.getMap('project--map').then(function(map) {
-
-                    //     self.projectExtent.clearLayers();
-
-                    //     self.sites.forEach(function(feature) {
-
-                    //         if (feature.geometry) {
-
-                    //             self.setGeoJsonLayer(feature.geometry, self.projectExtent);
-
-                    //         }
-
-                    //     });
-
-                    //     map.fitBounds(self.projectExtent.getBounds(), {
-                    //         maxZoom: 18
-                    //     });
-
-                    //     self.projectExtent.addTo(map);
-
-                    // });
 
                 }, function(errorResponse) {
 
@@ -445,6 +413,44 @@ angular.module('FieldDoc')
 
             };
 
+            self.addMapPreviews = function(arr) {
+
+                var interactions = [
+                    'scrollZoom',
+                    'boxZoom',
+                    'dragRotate',
+                    'dragPan',
+                    'keyboard',
+                    'doubleClickZoom',
+                    'touchZoomRotate'
+                ];
+
+                arr.forEach(function(feature, index) {
+
+                    var localOptions = JSON.parse(JSON.stringify(self.mapOptions));
+
+                    localOptions.style = self.mapStyles[0].url;
+
+                    localOptions.container = 'site-geography-preview-' + index;
+
+                    var previewMap = new mapboxgl.Map(localOptions);
+
+                    previewMap.on('load', function() {
+
+                        interactions.forEach(function(behavior) {
+
+                            previewMap[behavior].disable();
+
+                        });
+
+                        self.populateMap(previewMap, feature, 'geometry');
+
+                    });
+
+                });
+
+            };
+
             self.addLayers = function(arr) {
 
                 arr.forEach(function(feature) {
@@ -465,6 +471,17 @@ angular.module('FieldDoc')
                         'self.addLayers --> feature.spec',
                         feature.spec);
 
+                    if (!feature.selected ||
+                        typeof feature.selected === 'undefined') {
+
+                        feature.selected = false;
+
+                    } else {
+
+                        feature.spec.layout.visibility = 'visible';
+
+                    }
+
                     if (feature.spec.id) {
 
                         try {
@@ -478,17 +495,6 @@ angular.module('FieldDoc')
                                 error);
 
                         }
-
-                    }
-
-                    if (!feature.selected ||
-                        typeof feature.selected === 'undefined') {
-
-                        feature.selected = false;
-
-                    } else {
-
-                        feature.spec.layout.visibility = 'visible';
 
                     }
 
@@ -621,25 +627,31 @@ angular.module('FieldDoc')
 
                 console.log('self.switchMapStyle --> index', index);
 
+                var center = self.map.getCenter();
+
+                var zoom = self.map.getZoom();
+
+                if (center.lng && center.lat) {
+
+                    self.mapOptions.center = [center.lng, center.lat];
+
+                }
+
+                if (zoom) {
+
+                    self.mapOptions.zoom = zoom;
+
+                }
+
+                self.mapOptions.style = self.mapStyles[index].url;
+
                 self.map.remove();
 
-                self.mapOptions.style = self.mapStyles[index].url
-
-                self.map = new mapboxgl.Map(self.mapOptions);
-
-                self.addLayers(self.layers);
+                self.createMap(self.mapOptions);
 
             };
 
-            self.createMap = function() {
-
-                console.log('self.createMap --> Starting...');
-
-                var tgt = document.querySelector('.map');
-
-                console.log(
-                    'self.createMap --> tgt',
-                    tgt);
+            self.getMapOptions = function() {
 
                 self.mapStyles = mapbox.baseStyles;
 
@@ -661,9 +673,25 @@ angular.module('FieldDoc')
 
                 self.mapOptions.style = self.mapStyles[0].url;
 
-                console.log('self.createMap --> self.mapOptions', self.mapOptions);
+                return self.mapOptions;
 
-                self.map = new mapboxgl.Map(self.mapOptions);
+            };
+
+            self.createMap = function(options) {
+
+                if (!options) return;
+
+                console.log('self.createMap --> Starting...');
+
+                var tgt = document.querySelector('.map');
+
+                console.log(
+                    'self.createMap --> tgt',
+                    tgt);
+
+                console.log('self.createMap --> options', options);
+
+                self.map = new mapboxgl.Map(options);
 
                 self.map.on('load', function() {
 
@@ -677,7 +705,15 @@ angular.module('FieldDoc')
 
                     self.populateMap(self.map, self.project, 'extent');
 
-                    self.fetchLayers();
+                    if (self.layers && self.layers.length) {
+
+                        self.addLayers(self.layers);
+
+                    } else {
+
+                        self.fetchLayers();
+
+                    }
 
                 });
 

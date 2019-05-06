@@ -516,6 +516,44 @@
                             padding: 40
                         });
 
+                        map.addLayer({
+                            'id': 'practice',
+                            'type': 'fill',
+                            'source': {
+                                'type': 'geojson',
+                                'data': {
+                                    'type': 'Feature',
+                                    'geometry': feature[attribute]
+                                }
+                            },
+                            'layout': {
+                                'visibility': 'visible'
+                            },
+                            'paint': {
+                                'fill-color': '#06aadf',
+                                'fill-opacity': 0.4
+                            }
+                        });
+
+                        map.addLayer({
+                            'id': 'practice-outline',
+                            'type': 'line',
+                            'source': {
+                                'type': 'geojson',
+                                'data': {
+                                    'type': 'Feature',
+                                    'geometry': feature[attribute]
+                                }
+                            },
+                            'layout': {
+                                'visibility': 'visible'
+                            },
+                            'paint': {
+                                'line-color': 'rgba(6, 170, 223, 0.8)',
+                                'line-width': 2
+                            }
+                        });
+
                     }
 
                 };
@@ -567,16 +605,6 @@
                     self.map.remove();
 
                     self.createMap(self.mapOptions);
-
-                    // self.map = new mapboxgl.Map(self.mapOptions);
-
-                    // self.map.on('load', function() {
-
-                    //     self.addLayers(self.layers);
-
-                    // });
-
-                    // self.addLayers(self.layers);
 
                 };
 
