@@ -71,6 +71,18 @@ angular.module('FieldDoc')
 
                     self.progressValue = 0;
 
+                    $timeout(function() {
+
+                        if (!self.mapOptions) {
+
+                            self.mapOptions = self.getMapOptions();
+
+                        }
+
+                        self.createMap(self.mapOptions);
+
+                    }, 500);
+
                 }, delay);
 
             }
@@ -92,81 +104,13 @@ angular.module('FieldDoc')
 
         self.card = {};
 
-        // self.cardTpl = {
-        //     featureType: 'program',
-        //     featureTabLabel: 'Projects',
-        //     feature: null,
-        //     heading: 'Delaware River Watershed Initiative',
-        //     yearsActive: '2013 - 2018',
-        //     funding: '$2.65 million',
-        //     url: 'https://4states1source.org',
-        //     resourceUrl: null,
-        //     linkTarget: '_blank',
-        //     description: 'The Delaware River Watershed Initiative is a cross-cutting collaboration working to conserve and restore the streams that supply drinking water to 15 million people in New York, New Jersey, Pennsylvania and Delaware.',
-        // };
-
-        // self.card = self.cardTpl;
-
         self.historyItem = null;
 
         self.historyIndex = [];
 
         self.project = {};
 
-        self.map = JSON.parse(JSON.stringify(Map));
-
-        self.map.layers = {
-            baselayers: {
-                streets: {
-                    name: 'Streets',
-                    type: 'xyz',
-                    url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-                    layerOptions: {
-                        apikey: mapbox.access_token,
-                        mapid: 'mapbox.streets',
-                        attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>'
-                    }
-                },
-                terrain: {
-                    name: 'Terrain',
-                    type: 'xyz',
-                    url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-                    layerOptions: {
-                        apikey: mapbox.access_token,
-                        mapid: 'mapbox.run-bike-hike',
-                        attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>'
-                    }
-                },
-                satellite: {
-                    name: 'Satellite',
-                    type: 'xyz',
-                    url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-                    layerOptions: {
-                        apikey: mapbox.access_token,
-                        mapid: 'mapbox.streets-satellite',
-                        attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>'
-                    }
-                }
-            }
-        };
-
-        self.map.markers = {};
-
-        self.map.layers.overlays = {
-            projects: {
-                type: 'group',
-                name: 'projects',
-                visible: true,
-                layerOptions: {
-                    showOnSelector: false
-                },
-                layerParams: {
-                    showOnSelector: false
-                }
-            }
-        };
-
-        console.log('self.map', self.map);
+        self.map = undefined;
 
         self.popupTemplate = function(feature) {
 
@@ -218,11 +162,11 @@ angular.module('FieldDoc')
 
             self.map.geojson.data = self.geographies;
 
-            leafletData.getMap('dashboard--map').then(function(map) {
+            leafletData.getMap('primary--map').then(function(map) {
 
                 map.closePopup();
 
-                leafletData.getLayers('dashboard--map').then(function(layers) {
+                leafletData.getLayers('primary--map').then(function(layers) {
 
                     console.log('leafletData.getLayers', layers);
 
@@ -234,7 +178,7 @@ angular.module('FieldDoc')
 
                 });
 
-                leafletData.getGeoJSON('dashboard--map').then(function(geoJsonLayer) {
+                leafletData.getGeoJSON('primary--map').then(function(geoJsonLayer) {
 
                     console.log('geoJsonLayer', geoJsonLayer);
 
@@ -254,7 +198,7 @@ angular.module('FieldDoc')
 
             var geoJsonLayer = L.geoJson(feature, {});
 
-            leafletData.getMap('dashboard--map').then(function(map) {
+            leafletData.getMap('primary--map').then(function(map) {
 
                 map.fitBounds(geoJsonLayer.getBounds(), {
                     maxZoom: 18
@@ -384,7 +328,7 @@ angular.module('FieldDoc')
 
                     self.removeMarkerPopups();
 
-                    leafletData.getMap('dashboard--map').then(function(map) {
+                    leafletData.getMap('primary--map').then(function(map) {
 
                         if (popup) {
 
@@ -407,7 +351,7 @@ angular.module('FieldDoc')
 
                     console.log(layer.feature.properties.name);
 
-                    leafletData.getMap('dashboard--map').then(function(map) {
+                    leafletData.getMap('primary--map').then(function(map) {
 
                         if (popup) {
 
@@ -430,61 +374,61 @@ angular.module('FieldDoc')
 
                 self.geographies = successResponse;
 
-                self.map.geojson = {
-                    data: successResponse,
-                    onEachFeature: onEachFeature,
-                    style: {
-                        color: '#00D',
-                        fillColor: 'red',
-                        weight: 2.0,
-                        opacity: 0.6,
-                        fillOpacity: 0.2
-                    }
-                };
+                // self.map.geojson = {
+                //     data: successResponse,
+                //     onEachFeature: onEachFeature,
+                //     style: {
+                //         color: '#00D',
+                //         fillColor: 'red',
+                //         weight: 2.0,
+                //         opacity: 0.6,
+                //         fillOpacity: 0.2
+                //     }
+                // };
 
                 //
                 // Fit map bounds to GeoJSON
                 //
 
-                self.resetMapExtent();
+                // self.resetMapExtent();
 
                 //
                 // Set up layer visibility logic
                 //
 
-                leafletData.getMap('dashboard--map').then(function(map) {
+                // leafletData.getMap('primary--map').then(function(map) {
 
-                    map.on('zoomend', function(event) {
+                //     map.on('zoomend', function(event) {
 
-                        var zoomLevel = map.getZoom();
+                //         var zoomLevel = map.getZoom();
 
-                        leafletData.getLayers('dashboard--map').then(function(layers) {
+                //         leafletData.getLayers('primary--map').then(function(layers) {
 
-                            console.log('leafletData.getLayers', layers);
+                //             console.log('leafletData.getLayers', layers);
 
-                            if (zoomLevel > 15) {
+                //             if (zoomLevel > 15) {
 
-                                map.removeLayer(layers.baselayers.streets);
+                //                 map.removeLayer(layers.baselayers.streets);
 
-                                map.removeLayer(layers.baselayers.terrain);
+                //                 map.removeLayer(layers.baselayers.terrain);
 
-                                map.addLayer(layers.baselayers.satellite);
+                //                 map.addLayer(layers.baselayers.satellite);
 
-                            } else {
+                //             } else {
 
-                                map.removeLayer(layers.baselayers.satellite);
+                //                 map.removeLayer(layers.baselayers.satellite);
 
-                                map.removeLayer(layers.baselayers.terrain);
+                //                 map.removeLayer(layers.baselayers.terrain);
 
-                                map.addLayer(layers.baselayers.streets);
+                //                 map.addLayer(layers.baselayers.streets);
 
-                            }
+                //             }
 
-                        });
+                //         });
 
-                    });
+                //     });
 
-                });
+                // });
 
                 self.loadBaseProjects();
 
@@ -840,7 +784,7 @@ angular.module('FieldDoc')
 
                 self.practices = successResponse;
 
-                leafletData.getMap('dashboard--map').then(function(map) {
+                leafletData.getMap('primary--map').then(function(map) {
 
                     map.closePopup();
 
@@ -1158,11 +1102,11 @@ angular.module('FieldDoc')
 
             self.summary = data.summary;
 
-            self.processLocations(data.features);
+            // self.processLocations(data.features);
 
             self.loadMetrics(self.filteredProjects);
 
-            self.zoomToProjects();
+            // self.zoomToProjects();
 
         };
 
@@ -1241,9 +1185,9 @@ angular.module('FieldDoc')
 
         };
 
-        $scope.$on('leafletDirectiveMarker.dashboard--map.click', function(event, args) {
+        $scope.$on('leafletDirectiveMarker.primary--map.click', function(event, args) {
 
-            console.log('leafletDirectiveMarker.dashboard--map.click', event, args);
+            console.log('leafletDirectiveMarker.primary--map.click', event, args);
 
             var project = self.filteredProjects.filter(function(datum) {
 
@@ -1253,15 +1197,15 @@ angular.module('FieldDoc')
 
             })[0];
 
-            console.log('leafletDirectiveMarker.dashboard--map.click.project', project);
+            console.log('leafletDirectiveMarker.primary--map.click.project', project);
 
             self.setMarkerFocus(project, 'project', true);
 
         });
 
-        $scope.$on('leafletDirectiveMarker.dashboard--map.mouseover', function(event, args) {
+        $scope.$on('leafletDirectiveMarker.primary--map.mouseover', function(event, args) {
 
-            console.log('leafletDirectiveMarker.dashboard--map.mouseover', event, args);
+            console.log('leafletDirectiveMarker.primary--map.mouseover', event, args);
 
             var project = self.filteredProjects.filter(function(datum) {
 
@@ -1331,6 +1275,135 @@ angular.module('FieldDoc')
                 });
 
             }
+
+        };
+
+        self.populateMap = function(map, feature, attribute) {
+
+            console.log('self.populateMap --> feature', feature);
+
+            var geojson = attribute ? feature[attribute] : feature;
+
+            if (geojson !== null &&
+                typeof geojson !== 'undefined') {
+
+                var bounds = turf.bbox(geojson);
+
+                map.fitBounds(bounds, {
+                    padding: 40
+                });
+
+                self.processLocations(map, geojson.features);
+
+            }
+
+        };
+
+        self.toggleLayer = function(layer) {
+
+            console.log('self.toggleLayer --> layer', layer);
+
+            var layerId = layer.spec.id;
+
+            var visibility = self.map.getLayoutProperty(layerId, 'visibility');
+
+            if (visibility === 'visible') {
+
+                self.map.setLayoutProperty(layerId, 'visibility', 'none');
+
+            } else {
+
+                self.map.setLayoutProperty(layerId, 'visibility', 'visible');
+
+            }
+
+        };
+
+        self.switchMapStyle = function(styleId, index) {
+
+            console.log('self.switchMapStyle --> styleId', styleId);
+
+            console.log('self.switchMapStyle --> index', index);
+
+            var center = self.map.getCenter();
+
+            var zoom = self.map.getZoom();
+
+            if (center.lng && center.lat) {
+
+                self.mapOptions.center = [center.lng, center.lat];
+
+            }
+
+            if (zoom) {
+
+                self.mapOptions.zoom = zoom;
+
+            }
+
+            self.mapOptions.style = self.mapStyles[index].url;
+
+            self.map.remove();
+
+            self.createMap(self.mapOptions);
+
+        };
+
+        self.getMapOptions = function() {
+
+            self.mapStyles = mapbox.baseStyles;
+
+            console.log(
+                'self.createMap --> mapStyles',
+                self.mapStyles);
+
+            self.activeStyle = 0;
+
+            mapboxgl.accessToken = mapbox.accessToken;
+
+            console.log(
+                'self.createMap --> accessToken',
+                mapboxgl.accessToken);
+
+            self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+
+            self.mapOptions.container = 'primary--map';
+
+            self.mapOptions.style = self.mapStyles[0].url;
+
+            return self.mapOptions;
+
+        };
+
+        self.createMap = function(options) {
+
+            if (!options) return;
+
+            console.log('self.createMap --> Starting...');
+
+            var tgt = document.querySelector('.map');
+
+            console.log(
+                'self.createMap --> tgt',
+                tgt);
+
+            console.log('self.createMap --> options', options);
+
+            self.map = new mapboxgl.Map(options);
+
+            self.map.on('load', function() {
+
+                var nav = new mapboxgl.NavigationControl();
+
+                self.map.addControl(nav, 'top-left');
+
+                var fullScreen = new mapboxgl.FullscreenControl();
+
+                self.map.addControl(fullScreen, 'top-left');
+
+                self.populateMap(self.map, self.featureCollection);
+
+            });
 
         };
 

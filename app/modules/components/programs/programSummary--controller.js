@@ -506,38 +506,6 @@
 
                         self.processLocations(map, geojson.features);
 
-                        // map.addLayer({
-                        //     'id': 'geography',
-                        //     'type': 'fill',
-                        //     'source': {
-                        //         'type': 'geojson',
-                        //         'data': geojson
-                        //     },
-                        //     'layout': {
-                        //         'visibility': 'visible'
-                        //     },
-                        //     'paint': {
-                        //         'fill-color': '#06aadf',
-                        //         'fill-opacity': 0.4
-                        //     }
-                        // });
-
-                        // map.addLayer({
-                        //     'id': 'geography-outline',
-                        //     'type': 'line',
-                        //     'source': {
-                        //         'type': 'geojson',
-                        //         'data': geojson
-                        //     },
-                        //     'layout': {
-                        //         'visibility': 'visible'
-                        //     },
-                        //     'paint': {
-                        //         'line-color': 'rgba(6, 170, 223, 0.8)',
-                        //         'line-width': 2
-                        //     }
-                        // });
-
                     }
 
                 };
