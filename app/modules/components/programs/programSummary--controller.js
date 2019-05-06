@@ -225,39 +225,64 @@
 
                 };
 
-                self.processLocations = function(features) {
+                self.processLocations = function(map, features) {
 
-                    self.map.markers = {};
+                    console.log(
+                        'self.processLocations --> features',
+                        features);
+
+                    // self.map.markers = {};
 
                     features.forEach(function(feature, index) {
-
-                        // var centroid = feature.geometry;
-
-                        // console.log('centroid', centroid);
 
                         if (feature.geometry &&
                             feature.geometry.coordinates) {
 
-                            self.map.markers['project_' + index] = {
-                                lat: feature.geometry.coordinates[1],
-                                lng: feature.geometry.coordinates[0],
-                                layer: 'projects',
-                                focus: false,
-                                icon: {
-                                    type: 'div',
-                                    className: 'project--marker',
-                                    iconSize: [24, 24],
-                                    popupAnchor: [0, 0],
-                                    html: ''
-                                },
-                                message: self.popupTemplate(feature)
-                            };
+                            var tpl = self.popupTemplate(feature);
+
+                            var popup = new mapboxgl.Popup()
+                                .setLngLat(feature.geometry.coordinates)
+                                .setHTML(tpl);
+
+                            var markerEl = document.createElement('div');
+
+                            markerEl.className = 'project--marker';
+
+                            new mapboxgl.Marker(markerEl)
+                                .setLngLat(feature.geometry.coordinates)
+                                .setPopup(popup) // sets a popup on this marker
+                                .addTo(map);
+
+                            //                         var el = document.createElement('div');
+                            // el.id = 'marker';
+
+                            // var centroid = feature.geometry;
+
+                            // console.log('centroid', centroid);
+
+                            // if (feature.geometry &&
+                            //     feature.geometry.coordinates) {
+
+                            //     self.map.markers['project_' + index] = {
+                            //         lat: feature.geometry.coordinates[1],
+                            //         lng: feature.geometry.coordinates[0],
+                            //         layer: 'projects',
+                            //         focus: false,
+                            //         icon: {
+                            //             type: 'div',
+                            //             className: 'project--marker',
+                            //             iconSize: [24, 24],
+                            //             popupAnchor: [0, 0],
+                            //             html: ''
+                            //         },
+                            //         message: self.popupTemplate(feature)
+                            //     };
 
                         }
 
                     });
 
-                    console.log('self.map.markers', self.map.markers);
+                    // console.log('self.map.markers', self.map.markers);
 
                 };
 
@@ -478,6 +503,8 @@
                         map.fitBounds(bounds, {
                             padding: 40
                         });
+
+                        self.processLocations(map, geojson.features);
 
                         // map.addLayer({
                         //     'id': 'geography',
