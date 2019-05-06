@@ -231,8 +231,6 @@
                         'self.processLocations --> features',
                         features);
 
-                    // self.map.markers = {};
-
                     features.forEach(function(feature, index) {
 
                         if (feature.geometry &&
@@ -250,39 +248,12 @@
 
                             new mapboxgl.Marker(markerEl)
                                 .setLngLat(feature.geometry.coordinates)
-                                .setPopup(popup) // sets a popup on this marker
+                                .setPopup(popup)
                                 .addTo(map);
-
-                            //                         var el = document.createElement('div');
-                            // el.id = 'marker';
-
-                            // var centroid = feature.geometry;
-
-                            // console.log('centroid', centroid);
-
-                            // if (feature.geometry &&
-                            //     feature.geometry.coordinates) {
-
-                            //     self.map.markers['project_' + index] = {
-                            //         lat: feature.geometry.coordinates[1],
-                            //         lng: feature.geometry.coordinates[0],
-                            //         layer: 'projects',
-                            //         focus: false,
-                            //         icon: {
-                            //             type: 'div',
-                            //             className: 'project--marker',
-                            //             iconSize: [24, 24],
-                            //             popupAnchor: [0, 0],
-                            //             html: ''
-                            //         },
-                            //         message: self.popupTemplate(feature)
-                            //     };
 
                         }
 
                     });
-
-                    // console.log('self.map.markers', self.map.markers);
 
                 };
 

@@ -114,47 +114,48 @@ angular.module('FieldDoc')
 
         self.popupTemplate = function(feature) {
 
+            var id = feature.properties.id || feature.id;
+
+            var name = feature.properties.name || feature.name;
+
             return '<div class=\"project--popup\">' +
-                '<div class=\"marker--title border--right\">' + feature.name + '</div>' +
-                '<a href=\"projects/' + feature.id + '\">' +
+                '<div class=\"marker--title border--right\">' + name + '</div>' +
+                '<a href=\"projects/' + id + '\">' +
                 '<i class=\"material-icons\">keyboard_arrow_right</i>' +
                 '</a>' +
                 '</div>';
 
         };
 
-        self.processLocations = function(features) {
+        self.processLocations = function(map, features) {
 
-            self.map.markers = {};
+            console.log(
+                'self.processLocations --> features',
+                features);
 
-            features.forEach(function(feature) {
+            features.forEach(function(feature, index) {
 
-                var centroid = feature.centroid;
+                if (feature.geometry &&
+                    feature.geometry.coordinates) {
 
-                console.log('centroid', centroid);
+                    var tpl = self.popupTemplate(feature);
 
-                if (centroid) {
+                    var popup = new mapboxgl.Popup()
+                        .setLngLat(feature.geometry.coordinates)
+                        .setHTML(tpl);
 
-                    self.map.markers['project_' + feature.id] = {
-                        lat: centroid.coordinates[1],
-                        lng: centroid.coordinates[0],
-                        layer: 'projects',
-                        focus: false,
-                        icon: {
-                            type: 'div',
-                            className: 'project--marker',
-                            iconSize: [24, 24],
-                            popupAnchor: [-2, -10],
-                            html: ''
-                        },
-                        message: self.popupTemplate(feature)
-                    };
+                    var markerEl = document.createElement('div');
+
+                    markerEl.className = 'project--marker';
+
+                    new mapboxgl.Marker(markerEl)
+                        .setLngLat(feature.geometry.coordinates)
+                        .setPopup(popup)
+                        .addTo(map);
 
                 }
 
             });
-
-            console.log('self.map.markers', self.map.markers);
 
         };
 
@@ -1098,9 +1099,16 @@ angular.module('FieldDoc')
 
         self.processProjectData = function(data) {
 
+            var featureCollection = {
+                type: 'FeatureCollection',
+                features: data.features
+            };
+
+            self.projectCollection = featureCollection;
+
             self.filteredProjects = data.features;
 
-            self.summary = data.summary;
+            self.summary = data.properties;
 
             // self.processLocations(data.features);
 
@@ -1120,22 +1128,17 @@ angular.module('FieldDoc')
 
                 self.dashboardObject = successResponse;
 
+                // self.summary = self.dashboardObject.summary;
+
                 self.cardTpl = {
                     featureType: 'dashboard',
                     featureTabLabel: 'Projects',
                     feature: null,
                     heading: self.dashboardObject.name,
-                    // yearsActive: '2013 - 2018',
-                    // funding: '$2.65 million',
-                    // url: 'https://4states1source.org',
-                    // resourceUrl: null,
-                    // linkTarget: '_blank',
                     description: self.dashboardObject.description
                 };
 
                 self.card = self.cardTpl;
-
-                // self.loadBaseProjects();
 
                 self.loadGeographies();
 
@@ -1149,7 +1152,9 @@ angular.module('FieldDoc')
 
         self.loadBaseProjects = function() {
 
-            baseProjects.$promise.then(function(successResponse) {
+            Dashboard.pointLayer({
+                id: self.dashboardObject.id
+            }).$promise.then(function(successResponse) {
 
                 console.log('self.loadBaseProjects.successResponse', successResponse);
 
@@ -1203,21 +1208,21 @@ angular.module('FieldDoc')
 
         });
 
-        $scope.$on('leafletDirectiveMarker.primary--map.mouseover', function(event, args) {
+        // $scope.$on('leafletDirectiveMarker.primary--map.mouseover', function(event, args) {
 
-            console.log('leafletDirectiveMarker.primary--map.mouseover', event, args);
+        //     console.log('leafletDirectiveMarker.primary--map.mouseover', event, args);
 
-            var project = self.filteredProjects.filter(function(datum) {
+        //     var project = self.filteredProjects.filter(function(datum) {
 
-                var id = +(args.modelName.split('project_')[1]);
+        //         var id = +(args.modelName.split('project_')[1]);
 
-                return datum.id === id;
+        //         return datum.id === id;
 
-            })[0];
+        //     })[0];
 
-            self.setMarkerFocus(project, 'project');
+        //     self.setMarkerFocus(project, 'project');
 
-        });
+        // });
 
         self.showMetricModal = function(metric) {
 
@@ -1393,6 +1398,13 @@ angular.module('FieldDoc')
 
             self.map.on('load', function() {
 
+                var geocoder = new MapboxGeocoder({
+                    accessToken: mapboxgl.accessToken,
+                    mapboxgl: mapboxgl
+                });
+
+                self.map.addControl(geocoder, 'top-left');
+
                 var nav = new mapboxgl.NavigationControl();
 
                 self.map.addControl(nav, 'top-left');
@@ -1401,7 +1413,7 @@ angular.module('FieldDoc')
 
                 self.map.addControl(fullScreen, 'top-left');
 
-                self.populateMap(self.map, self.featureCollection);
+                self.populateMap(self.map, self.projectCollection);
 
             });
 
