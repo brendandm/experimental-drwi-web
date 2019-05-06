@@ -143,12 +143,12 @@
                                             <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
                                                 of {{ metric.self_target | number:2 }}</span>
                                         </td>
-                                        <td>
+                                        <td data-ng-if="metric.show_progress">
                                             <strong class="metrics--metric--percentage">
                                                 {{ metric.selfProgress.value * 100 | number:1 }}%
                                             </strong>
                                         </td>
-                                        <td>
+                                        <td data-ng-if="metric.show_progress">
                                             <progress-arc
                                                 size="32"
                                                 stroke="#2196F3"
@@ -375,13 +375,13 @@
                     </i>
                 </a>
             </li>
-            <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
                 <a href="/sites/{{ page.site.id }}/location">
                     <i class="material-icons">
                         location_on
                     </i>
                 </a>
-            </li> -->
+            </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.viewGeographies}">
                 <a href="/sites/{{ page.site.id }}/geographies">
                     <i class="material-icons">

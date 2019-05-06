@@ -11,7 +11,7 @@
         .controller('SiteGeographyController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
                 $route, nodes, user, Utility, site, Site, Practice, MapPreview,
-                leafletBoundsHelpers, $interval) {
+                leafletBoundsHelpers, $interval, mapbox) {
 
                 var self = this;
 
@@ -37,6 +37,22 @@
                         self.status.loading = false;
 
                         self.status.processing = false;
+
+                        $timeout(function() {
+
+                            if (!self.mapOptions) {
+
+                                self.mapOptions = self.getMapOptions();
+
+                            }
+
+                            if (self.nodeCollection) {
+
+                                self.parseNodes(self.nodeCollection);
+
+                            }
+
+                        }, 500);
 
                     }, 1000);
 
@@ -232,42 +248,7 @@
 
                 };
 
-                self.transformBounds = function(obj) {
-
-                    var xRange = [],
-                        yRange = [],
-                        southWest,
-                        northEast,
-                        bounds;
-
-                    obj.bounds.coordinates[0].forEach(function(coords) {
-
-                        xRange.push(coords[0]);
-
-                        yRange.push(coords[1]);
-
-                    });
-
-                    southWest = [
-                        Math.min.apply(null, yRange),
-                        Math.min.apply(null, xRange)
-                    ];
-
-                    northEast = [
-                        Math.max.apply(null, yRange),
-                        Math.max.apply(null, xRange)
-                    ];
-
-                    bounds = leafletBoundsHelpers.createBoundsFromArray([
-                        southWest,
-                        northEast
-                    ]);
-
-                    return bounds;
-
-                };
-
-                self.processCollection = function(arr) {
+                self.processCollection = function(collection, arr) {
 
                     arr.forEach(function(feature) {
 
@@ -276,8 +257,6 @@
                             feature.staticURL = self.buildStaticMapURL(feature.geometry);
 
                             feature.geojson = self.buildFeature(feature.geometry);
-
-                            feature.bounds = self.transformBounds(feature);
 
                         }
 
@@ -289,6 +268,16 @@
                         }
 
                     });
+
+                    if (collection === 'watersheds') {
+
+                        Utility.sortCollection(arr, 'classification');
+
+                    } else {
+
+                        Utility.sortCollection(arr, 'name');
+
+                    }
 
                 };
 
@@ -337,15 +326,17 @@
                                 if (successResponse.hasOwnProperty(collection) &&
                                     Array.isArray(successResponse[collection])) {
 
-                                    self.processCollection(successResponse[collection]);
+                                    self.processCollection(
+                                        collection,
+                                        successResponse[collection]);
 
                                 }
 
                             }
 
-                            self.nodes = successResponse;
+                            self.nodeCollection = successResponse;
 
-                            console.log('self.nodes', self.nodes);
+                            console.log('self.nodeCollection', self.nodeCollection);
 
                             self.showElements();
 
@@ -356,6 +347,146 @@
                         });
 
                     });
+
+                };
+
+                self.getMapOptions = function() {
+
+                    self.mapStyles = mapbox.baseStyles;
+
+                    console.log(
+                        'self.getMapOptions --> mapStyles',
+                        self.mapStyles);
+
+                    self.activeStyle = 0;
+
+                    mapboxgl.accessToken = mapbox.accessToken;
+
+                    console.log(
+                        'self.getMapOptions --> accessToken',
+                        mapboxgl.accessToken);
+
+                    self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+
+                    self.mapOptions.container = 'primary--map';
+
+                    self.mapOptions.style = self.mapStyles[0].url;
+
+                    return self.mapOptions;
+
+                };
+
+                self.parseNodes = function(data) {
+
+                    for (var key in data) {
+
+                        if (data.hasOwnProperty(key) &&
+                            Array.isArray(data[key])) {
+
+                            self.addMapPreviews(key, data[key]);
+
+                        }
+
+                    }
+
+                };
+
+                self.addMapPreviews = function(key, arr) {
+
+                    console.log('self.addMapPreviews --> key', key);
+
+                    console.log('self.addMapPreviews --> arr', arr);
+
+                    var interactions = [
+                        'scrollZoom',
+                        'boxZoom',
+                        'dragRotate',
+                        'dragPan',
+                        'keyboard',
+                        'doubleClickZoom',
+                        'touchZoomRotate'
+                    ];
+
+                    arr.forEach(function(feature, index) {
+
+                        var localOptions = JSON.parse(JSON.stringify(self.mapOptions));
+
+                        localOptions.style = self.mapStyles[0].url;
+
+                        localOptions.container = key + '-preview-' + index;
+
+                        var previewMap = new mapboxgl.Map(localOptions);
+
+                        previewMap.on('load', function() {
+
+                            interactions.forEach(function(behavior) {
+
+                                previewMap[behavior].disable();
+
+                            });
+
+                            self.populateMap(previewMap, feature, 'geometry');
+
+                        });
+
+                    });
+
+                };
+
+                self.populateMap = function(map, feature, attribute) {
+
+                    console.log('self.populateMap --> feature', feature);
+
+                    var bounds;
+
+                    if (feature[attribute] !== null &&
+                        typeof feature[attribute] !== 'undefined') {
+
+                        bounds = turf.bbox(feature[attribute]);
+
+                        map.fitBounds(bounds, {
+                            padding: 40
+                        });
+
+                        map.addLayer({
+                            'id': 'geography-preview',
+                            'type': 'fill',
+                            'source': {
+                                'type': 'geojson',
+                                'data': {
+                                    'type': 'Feature',
+                                    'geometry': feature[attribute]
+                                }
+                            },
+                            'layout': {
+                                'visibility': 'visible'
+                            },
+                            'paint': {
+                                'fill-color': '#06aadf',
+                                'fill-opacity': 0.4
+                            }
+                        });
+
+                        map.addLayer({
+                            'id': 'geography-preview-outline',
+                            'type': 'line',
+                            'source': {
+                                'type': 'geojson',
+                                'data': {
+                                    'type': 'Feature',
+                                    'geometry': feature[attribute]
+                                }
+                            },
+                            'layout': {
+                                'visibility': 'visible'
+                            },
+                            'paint': {
+                                'line-color': 'rgba(6, 170, 223, 0.8)',
+                                'line-width': 2
+                            }
+                        });
+
+                    }
 
                 };
 

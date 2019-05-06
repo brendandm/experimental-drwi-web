@@ -215,7 +215,7 @@ angular.module('FieldDoc')
                                 'collection': [
                                     datum
                                 ]
-                            }
+                            };
 
                         }
 
@@ -258,7 +258,7 @@ angular.module('FieldDoc')
                                 'collection': [
                                     datum
                                 ]
-                            }
+                            };
 
                         }
 
@@ -267,6 +267,29 @@ angular.module('FieldDoc')
                 });
 
                 return index;
+
+            },
+            sortCollection: function(arr, key) {
+
+                arr.sort(function compare(a, b) {
+
+                    if (a[key] < b[key]) {
+
+                        return -1;
+
+                    }
+
+                    if (a[key] > b[key]) {
+
+                        return 1;
+
+                    }
+
+                    return 0;
+
+                });
+
+                return arr;
 
             }
         };

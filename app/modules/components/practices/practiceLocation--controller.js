@@ -22,6 +22,10 @@ angular.module('FieldDoc')
                 loading: true
             };
 
+            self.map = undefined;
+
+            $rootScope.page = {};
+
             self.showElements = function() {
 
                 $timeout(function() {
@@ -30,25 +34,23 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                    if (self.map) {
+                    $timeout(function() {
 
-                        self.populateMap(self.map, self.practice);
+                        if (self.map) {
 
-                    } else {
+                            self.populateMap(self.map, self.practice);
 
-                        self.createMap();
+                        } else {
 
-                    }
+                            self.createMap();
+
+                        }
+
+                    }, 500);
 
                 }, 1000);
 
             };
-
-            self.map = undefined;
-
-            self.editableLayers = new L.FeatureGroup();
-
-            $rootScope.page = {};
 
             self.loadSite = function() {
 
@@ -78,7 +80,7 @@ angular.module('FieldDoc')
 
                     if (self.site.geometry) {
 
-                        leafletData.getMap('practice--map').then(function(map) {
+                        leafletData.getMap('primary--map').then(function(map) {
 
                             var siteExtent = new L.FeatureGroup();
 
@@ -566,7 +568,7 @@ angular.module('FieldDoc')
 
                 var options = JSON.parse(JSON.stringify(mapbox.defaultOptions));
 
-                options.container = 'practice--map';
+                options.container = 'primary--map';
 
                 options.style = self.mapStyles[0].url;
 
