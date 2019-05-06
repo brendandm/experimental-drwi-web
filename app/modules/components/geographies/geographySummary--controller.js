@@ -50,11 +50,11 @@
 
                             self.createMap(self.mapOptions);
 
-                            if (self.sites && self.sites.length) {
+                            // if (self.sites && self.sites.length) {
 
-                                self.addMapPreviews(self.sites);
+                            //     self.addMapPreviews(self.sites);
 
-                            }
+                            // }
 
                         }, 500);
 
@@ -197,30 +197,6 @@
                         self.permissions.can_delete = successResponse.permissions.write;
 
                         $rootScope.page.title = self.geography.name;
-
-                        //
-                        // If a valid geography geometry is present, add it to the map
-                        // and track the object in `self.savedObjects`.
-                        //
-
-                        if (self.geography.geometry !== null &&
-                            typeof self.geography.geometry !== 'undefined') {
-
-                            leafletData.getMap('geography--map').then(function(map) {
-
-                                self.geographyExtent = new L.FeatureGroup();
-
-                                self.setGeoJsonLayer(self.geography.geometry, self.geographyExtent);
-
-                                self.map.bounds = Utility.transformBounds(self.geography.extent);
-
-                            });
-
-                            self.map.geojson = {
-                                data: self.geography.geometry
-                            };
-
-                        }
 
                         self.loadMetrics();
 
@@ -405,6 +381,44 @@
 
                         map.fitBounds(bounds, {
                             padding: 40
+                        });
+
+                        map.addLayer({
+                            'id': 'geography',
+                            'type': 'fill',
+                            'source': {
+                                'type': 'geojson',
+                                'data': {
+                                    'type': 'Feature',
+                                    'geometry': feature[attribute]
+                                }
+                            },
+                            'layout': {
+                                'visibility': 'visible'
+                            },
+                            'paint': {
+                                'fill-color': '#06aadf',
+                                'fill-opacity': 0.4
+                            }
+                        });
+
+                        map.addLayer({
+                            'id': 'geography-outline',
+                            'type': 'line',
+                            'source': {
+                                'type': 'geojson',
+                                'data': {
+                                    'type': 'Feature',
+                                    'geometry': feature[attribute]
+                                }
+                            },
+                            'layout': {
+                                'visibility': 'visible'
+                            },
+                            'paint': {
+                                'line-color': 'rgba(6, 170, 223, 0.8)',
+                                'line-width': 2
+                            }
                         });
 
                     }
