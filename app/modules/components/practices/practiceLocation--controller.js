@@ -327,26 +327,6 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.practice);
 
-                if (self.savedObjects.length) {
-
-                    self.savedObjects.forEach(function(object) {
-
-                        console.log('Iterating self.savedObjects', object);
-
-                        if (object.geoJson.geometry) {
-
-                            self.practice.geometry = object.geoJson.geometry;
-
-                        } else {
-
-                            self.practice.geometry = object.geoJson;
-
-                        }
-
-                    });
-
-                }
-
                 self.practice.$update().then(function(successResponse) {
 
                     self.alerts = [{
