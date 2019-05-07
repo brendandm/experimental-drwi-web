@@ -29,14 +29,12 @@
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-    <!-- build:css(.) /styles/vendor.css -->
-    <link rel="stylesheet" href="assets/css/mapbox-gl.css" />
-    <link rel="stylesheet" href="assets/css/mapbox-gl-draw.css" />
-    <link rel="stylesheet" href="assets/css/mapbox-gl-geocoder.css" />
-    <!-- endbuild -->
+    <link rel="stylesheet" href="/styles/mapbox-gl.css" />
+    <link rel="stylesheet" href="/styles/mapbox-gl-draw.css" />
+    <link rel="stylesheet" href="/styles/mapbox-gl-geocoder.css" />
 
     <!-- build:css(.tmp) /styles/main.css -->
-    <link href="/styles/main.css" rel="stylesheet" media="screen" />
+    <link rel="stylesheet" href="/styles/main.css" media="screen" />
     <!-- endbuild -->
 
     <link href="/styles/print.css" rel="stylesheet" media="print" />
@@ -102,11 +100,11 @@
 
         <!-- build:js({.tmp,app}) /modules/modules.js -->
 
-        <script src="assets/js/turf.min.js"></script>
+        <script src="modules/shared/turf/turf.min.js"></script>
 
-        <script src="assets/js/mapbox-gl.js"></script>
-        <script src="assets/js/mapbox-gl-draw.js"></script>
-        <script src="assets/js/mapbox-gl-geocoder.min.js"></script>
+        <script src="modules/shared/mapboxgl/mapbox-gl.js"></script>
+        <script src="modules/shared/mapboxgl/mapbox-gl-draw.js"></script>
+        <script src="modules/shared/mapboxgl/mapbox-gl-geocoder.min.js"></script>
 
         <script src="modules/shared/typeahead/ui-bootstrap-typeahead-tpls-2.5.0.min.js"></script>
 
