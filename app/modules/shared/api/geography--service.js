@@ -44,6 +44,11 @@
                     'url': environment.apiUrl.concat('/v1/geography/:id/outcomes'),
                     'isArray': false
                 },
+                pointLayer: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/geography/:id/point-layer')
+                },
                 progress: {
                     method: 'GET',
                     isArray: false,

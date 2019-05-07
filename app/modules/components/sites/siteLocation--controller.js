@@ -41,7 +41,7 @@
 
                         $timeout(function() {
 
-                            if (self.map) {
+                            if (typeof self.map !== 'undefined') {
 
                                 self.populateMap(self.map, self.site, 'geometry');
 
@@ -419,6 +419,12 @@
 
                     console.log('self.populateMap --> feature', feature);
 
+                    if (self.drawControls) {
+
+                        self.drawControls.deleteAll();
+
+                    }
+
                     if (feature[attribute] !== null &&
                         typeof feature[attribute] !== 'undefined') {
 
@@ -428,19 +434,23 @@
                             padding: 40
                         });
 
-                        var editableLayer = {
-                            id: 'practice-' + feature.id,
-                            type: 'Feature',
-                            properties: {},
-                            geometry: feature[attribute]
-                        };
+                        if (self.drawControls) {
 
-                        self.drawControls.add(editableLayer);
+                            var editableLayer = {
+                                id: 'practice-' + feature.id,
+                                type: 'Feature',
+                                properties: {},
+                                geometry: feature[attribute]
+                            };
 
-                        self.drawControls.changeMode(
-                            'simple_select', {
-                                featureId: 'feature-' + feature.id
-                            });
+                            self.drawControls.add(editableLayer);
+
+                            self.drawControls.changeMode(
+                                'simple_select', {
+                                    featureId: 'feature-' + feature.id
+                                });
+
+                        }
 
                     }
 
@@ -472,6 +482,8 @@
                     } else {
 
                         self.roundedArea = null;
+
+                        self.site.geometry = null;
 
                         if (e.type !== 'draw.delete') {
 

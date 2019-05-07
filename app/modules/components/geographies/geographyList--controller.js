@@ -11,7 +11,7 @@
         .controller('GeographyListController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
                 $route, geographies, user, Utility, GeographyService,
-                $interval, Shapefile, GeographyType, Task) {
+                $interval, Shapefile, GeographyType, Task, mapbox) {
 
                 var self = this;
 
@@ -22,10 +22,6 @@
                 };
 
                 $rootScope.page = {};
-
-                self.map = JSON.parse(JSON.stringify(MapPreview));
-
-                console.log('self.map', self.map);
 
                 self.status = {
                     loading: true,
@@ -39,6 +35,22 @@
                         self.status.loading = false;
 
                         self.status.processing = false;
+
+                        $timeout(function() {
+
+                            if (!self.mapOptions) {
+
+                                self.mapOptions = self.getMapOptions();
+
+                            }
+
+                            if (self.geographies && self.geographies.length) {
+
+                                self.addMapPreviews(self.geographies);
+
+                            }
+
+                        }, 500);
 
                     }, 1000);
 
@@ -185,7 +197,7 @@
 
                         }
 
-                        feature.bounds = Utility.transformBounds(feature.bounds);
+                        feature.bounds = turf.bbox(feature.bounds);
 
                         if (feature.code !== null &&
                             typeof feature.code === 'string') {
@@ -203,21 +215,6 @@
                 self.createGeography = function() {
 
                     $location.path('/geographies/collection/new');
-
-                    // self.geography = new GeographyService({
-                    //     'program_id': self.programId,
-                    //     'organization_id': $rootScope.user.properties.organization_id
-                    // });
-
-                    // self.geography.$save(function(successResponse) {
-
-                    //     $location.path('/geographies/' + successResponse.id + '/edit');
-
-                    // }, function(errorResponse) {
-
-                    //     console.error('Unable to create a new geography, please try again later.');
-
-                    // });
 
                 };
 
@@ -549,6 +546,150 @@
                     });
 
                     return _programs;
+
+                };
+
+                // 
+                // Map functionality
+                // 
+
+                self.getMapOptions = function() {
+
+                    self.mapStyles = mapbox.baseStyles;
+
+                    console.log(
+                        'self.getMapOptions --> mapStyles',
+                        self.mapStyles);
+
+                    self.activeStyle = 0;
+
+                    mapboxgl.accessToken = mapbox.accessToken;
+
+                    console.log(
+                        'self.getMapOptions --> accessToken',
+                        mapboxgl.accessToken);
+
+                    self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+
+                    self.mapOptions.container = 'primary--map';
+
+                    self.mapOptions.style = self.mapStyles[0].url;
+
+                    return self.mapOptions;
+
+                };
+
+                self.addMapPreviews = function(arr) {
+
+                    console.log('self.addMapPreviews --> arr', arr);
+
+                    var interactions = [
+                        'scrollZoom',
+                        'boxZoom',
+                        'dragRotate',
+                        'dragPan',
+                        'keyboard',
+                        'doubleClickZoom',
+                        'touchZoomRotate'
+                    ];
+
+                    arr.forEach(function(feature, index) {
+
+                        console.log(
+                            'self.addMapPreviews --> feature, index',
+                            feature,
+                            index);
+
+                        var localOptions = JSON.parse(JSON.stringify(self.mapOptions));
+
+                        localOptions.style = self.mapStyles[0].url;
+
+                        localOptions.container = 'geography-preview-' + index;
+
+                        var previewMap = new mapboxgl.Map(localOptions);
+
+                        previewMap.on('load', function() {
+
+                            interactions.forEach(function(behavior) {
+
+                                previewMap[behavior].disable();
+
+                            });
+
+                            console.log(
+                                'self.addMapPreviews --> ',
+                                'Add feature to map preview.');
+
+                            console.log(
+                                'self.addMapPreviews --> previewMap',
+                                previewMap);
+
+                            console.log(
+                                'self.addMapPreviews --> feature',
+                                feature);
+
+                            self.populateMap(previewMap, feature, null, true);
+
+                        });
+
+                    });
+
+                };
+
+                self.populateMap = function(map, feature, attribute) {
+
+                    console.log('self.populateMap --> feature', feature);
+
+                    var bounds;
+
+                    if (feature[attribute] !== null &&
+                        typeof feature[attribute] !== 'undefined') {
+
+                        bounds = turf.bbox(feature[attribute]);
+
+                        map.fitBounds(bounds, {
+                            padding: 40
+                        });
+
+                        map.addLayer({
+                            'id': 'geography-preview',
+                            'type': 'fill',
+                            'source': {
+                                'type': 'geojson',
+                                'data': {
+                                    'type': 'Feature',
+                                    'geometry': feature[attribute]
+                                }
+                            },
+                            'layout': {
+                                'visibility': 'visible'
+                            },
+                            'paint': {
+                                'fill-color': '#06aadf',
+                                'fill-opacity': 0.4
+                            }
+                        });
+
+                        map.addLayer({
+                            'id': 'geography-preview-outline',
+                            'type': 'line',
+                            'source': {
+                                'type': 'geojson',
+                                'data': {
+                                    'type': 'Feature',
+                                    'geometry': feature[attribute]
+                                }
+                            },
+                            'layout': {
+                                'visibility': 'visible'
+                            },
+                            'paint': {
+                                'line-color': 'rgba(6, 170, 223, 0.8)',
+                                'line-width': 2
+                            }
+                        });
+
+                    }
 
                 };
 

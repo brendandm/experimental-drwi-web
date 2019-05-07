@@ -99,6 +99,8 @@ angular.module('FieldDoc')
 
                     self.practice = successResponse;
 
+                    self.practiceType = successResponse.properties.category.properties || successResponse.category;
+
                     if (!successResponse.permissions.read &&
                         !successResponse.permissions.write) {
 
@@ -110,8 +112,6 @@ angular.module('FieldDoc')
 
                     self.permissions.can_edit = successResponse.permissions.write;
                     self.permissions.can_delete = successResponse.permissions.write;
-
-                    self.practiceType = successResponse.category;
 
                     $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
@@ -338,6 +338,8 @@ angular.module('FieldDoc')
 
                     $timeout(closeAlerts, 2000);
 
+                    self.practiceType = successResponse.category;
+
                     self.showElements();
 
                 }, function(errorResponse) {
@@ -443,7 +445,11 @@ angular.module('FieldDoc')
 
                 console.log('practice.geometry', practice.geometry);
 
-                self.drawControls.deleteAll();
+                if (self.drawControls) {
+
+                    self.drawControls.deleteAll();
+
+                }
 
                 if (practice.geometry !== null &&
                     typeof practice.geometry !== 'undefined') {
@@ -454,20 +460,24 @@ angular.module('FieldDoc')
                         padding: 40
                     });
 
-                    var feature = {
-                        id: 'practice-' + practice.id,
-                        type: 'Feature',
-                        properties: {},
-                        geometry: practice.geometry
-                    };
+                    if (self.drawControls) {
 
-                    self.drawControls.add(feature);
+                        var feature = {
+                            id: 'practice-' + practice.id,
+                            type: 'Feature',
+                            properties: {},
+                            geometry: practice.geometry
+                        };
 
-                    self.drawControls.changeMode(
-                        'simple_select',
-                        {
-                            featureId: 'practice-' + practice.id
-                        });
+                        self.drawControls.add(feature);
+
+                        self.drawControls.changeMode(
+                            'simple_select',
+                            {
+                                featureId: 'practice-' + practice.id
+                            });
+
+                    }
 
                 }
 
@@ -499,6 +509,8 @@ angular.module('FieldDoc')
                 } else {
 
                     self.roundedArea = null;
+
+                    self.practice.geometry = null;
 
                     if (e.type !== 'draw.delete') {
 
