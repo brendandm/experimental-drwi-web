@@ -270,6 +270,8 @@ angular.module('FieldDoc')
 
                 user.$promise.then(function(userResponse) {
 
+                    console.log('$rootScope.user', userResponse);
+
                     $rootScope.user = Account.userObject = userResponse;
 
                     self.permissions = {
