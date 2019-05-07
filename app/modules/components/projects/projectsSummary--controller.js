@@ -51,7 +51,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.showElements = function() {
+            self.showElements = function(createMap) {
 
                 $timeout(function() {
 
@@ -59,23 +59,27 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                    $timeout(function() {
+                    if (createMap) {
 
-                        if (!self.mapOptions) {
+                        $timeout(function() {
 
-                            self.mapOptions = self.getMapOptions();
+                            if (!self.mapOptions) {
 
-                        }
+                                self.mapOptions = self.getMapOptions();
 
-                        self.createMap(self.mapOptions);
+                            }
 
-                        if (self.sites && self.sites.length) {
+                            self.createMap(self.mapOptions);
 
-                            self.addMapPreviews(self.sites);
+                            if (self.sites && self.sites.length) {
 
-                        }
+                                self.addMapPreviews(self.sites);
 
-                    }, 500);
+                            }
+
+                        }, 500);
+
+                    }
 
                 }, 1000);
 
@@ -119,6 +123,8 @@ angular.module('FieldDoc')
 
                         self.makePrivate = true;
 
+                        self.showElements(false);
+
                     } else {
 
                         self.permissions.can_edit = successResponse.permissions.write;
@@ -144,13 +150,13 @@ angular.module('FieldDoc')
 
                     }
 
-                    self.showElements();
+                    // self.showElements();
 
                 }).catch(function(errorResponse) {
 
                     console.log('loadProject.errorResponse', errorResponse);
 
-                    self.showElements();
+                    self.showElements(false);
 
                 });
 
@@ -306,15 +312,30 @@ angular.module('FieldDoc')
 
             self.loadSites = function() {
 
+                console.log('self.loadSites --> Starting...');
+
                 sites.$promise.then(function(successResponse) {
 
-                    console.log('Project sites', successResponse);
+                    console.log('Project sites --> ', successResponse);
 
                     self.sites = successResponse.features;
+
+                    // var siteCollection = {
+                    //     'type': 'FeatureCollection',
+                    //     'features': self.sites
+                    // };
+
+                    self.showElements(true);
+
+                    // self.populateMap(self.map, siteCollection, null, true);
+
+                    // self.addMapPreviews(self.sites);
 
                 }, function(errorResponse) {
 
                     console.log('loadSites.errorResponse', errorResponse);
+
+                    self.showElements(false);
 
                 });
 
@@ -414,6 +435,8 @@ angular.module('FieldDoc')
 
             self.addMapPreviews = function(arr) {
 
+                console.log('self.addMapPreviews --> arr', arr);
+
                 var interactions = [
                     'scrollZoom',
                     'boxZoom',
@@ -425,6 +448,11 @@ angular.module('FieldDoc')
                 ];
 
                 arr.forEach(function(feature, index) {
+
+                    console.log(
+                        'self.addMapPreviews --> feature, index',
+                        feature,
+                        index);
 
                     var localOptions = JSON.parse(JSON.stringify(self.mapOptions));
 
@@ -442,7 +470,19 @@ angular.module('FieldDoc')
 
                         });
 
-                        self.populateMap(previewMap, feature, 'geometry');
+                        console.log(
+                            'self.addMapPreviews --> ',
+                            'Add feature to map preview.');
+
+                        console.log(
+                            'self.addMapPreviews --> previewMap',
+                            previewMap);
+
+                        console.log(
+                            'self.addMapPreviews --> feature',
+                            feature);
+
+                        self.populateMap(previewMap, feature, null, true);
 
                     });
 
@@ -583,18 +623,92 @@ angular.module('FieldDoc')
 
             };
 
-            self.populateMap = function(map, feature, attribute) {
+            self.populateMap = function(map, feature, attribute, addToMap) {
 
                 console.log('self.populateMap --> feature', feature);
 
-                if (feature[attribute] !== null &&
-                    typeof feature[attribute] !== 'undefined') {
+                var geojson = attribute ? feature[attribute] : feature;
 
-                    var bounds = turf.bbox(feature[attribute]);
+                if (geojson !== null &&
+                    typeof geojson !== 'undefined') {
+
+                    var bounds = turf.bbox(geojson);
 
                     map.fitBounds(bounds, {
                         padding: 40
                     });
+
+                    if (!addToMap) {
+
+                        return;
+
+                    } else {
+
+                        map.addLayer({
+                            'id': 'feature-' + Date.now(),
+                            'type': 'fill',
+                            'source': {
+                                'type': 'geojson',
+                                'data': geojson
+                            },
+                            'layout': {
+                                'visibility': 'visible'
+                            },
+                            'paint': {
+                                'fill-color': '#06aadf',
+                                'fill-opacity': 0.4
+                            }
+                        });
+
+                        map.addLayer({
+                            'id': 'feature-outline-' + Date.now(),
+                            'type': 'line',
+                            'source': {
+                                'type': 'geojson',
+                                'data': geojson
+                            },
+                            'layout': {
+                                'visibility': 'visible'
+                            },
+                            'paint': {
+                                'line-color': 'rgba(6, 170, 223, 0.8)',
+                                'line-width': 2
+                            }
+                        });
+
+                    }
+
+                    // map.addLayer({
+                    //     'id': 'feature-' + Date.now(),
+                    //     'type': 'fill',
+                    //     'source': {
+                    //         'type': 'geojson',
+                    //         'data': geojson
+                    //     },
+                    //     'layout': {
+                    //         'visibility': 'visible'
+                    //     },
+                    //     'paint': {
+                    //         'fill-color': '#06aadf',
+                    //         'fill-opacity': 0.4
+                    //     }
+                    // });
+
+                    // map.addLayer({
+                    //     'id': 'feature-outline-' + Date.now(),
+                    //     'type': 'line',
+                    //     'source': {
+                    //         'type': 'geojson',
+                    //         'data': geojson
+                    //     },
+                    //     'layout': {
+                    //         'visibility': 'visible'
+                    //     },
+                    //     'paint': {
+                    //         'line-color': 'rgba(6, 170, 223, 0.8)',
+                    //         'line-width': 2
+                    //     }
+                    // });
 
                 }
 
@@ -702,7 +816,13 @@ angular.module('FieldDoc')
 
                     self.map.addControl(fullScreen, 'top-left');
 
-                    self.populateMap(self.map, self.project, 'extent');
+                    var projectExtent = {
+                        'type': 'Feature',
+                        'geometry': self.project.extent,
+                        'properties': {}
+                    };
+
+                    self.populateMap(self.map, projectExtent, null, false);
 
                     if (self.layers && self.layers.length) {
 
@@ -713,6 +833,27 @@ angular.module('FieldDoc')
                         self.fetchLayers();
 
                     }
+
+                    if (self.sites && Array.isArray(self.sites)) {
+
+                        var siteCollection = {
+                            'type': 'FeatureCollection',
+                            'features': self.sites
+                        };
+
+                        self.populateMap(self.map, siteCollection, null, true);
+
+                    }
+
+                    // if (!self.sites || !Array.isArray(self.sites)) {
+
+                    //     $timeout(function() {
+
+                    //         self.loadSites();
+
+                    //     }, 1000);
+
+                    // }
 
                 });
 
