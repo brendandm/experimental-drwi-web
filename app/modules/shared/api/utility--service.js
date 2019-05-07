@@ -8,7 +8,7 @@
  * Provider in the FieldDoc.
  */
 angular.module('FieldDoc')
-    .service('Utility', function(leafletBoundsHelpers, Map) {
+    .service('Utility', function() {
 
         return {
             machineName: function(name) {
@@ -65,56 +65,7 @@ angular.module('FieldDoc')
             },
             transformBounds: function(obj) {
 
-                var xRange = [],
-                    yRange = [],
-                    southWest,
-                    northEast,
-                    bounds;
-
-                if (obj &&
-                    obj.coordinates &&
-                    Array.isArray(obj.coordinates)) {
-
-                    try {
-
-                        obj.coordinates[0].forEach(function(coords) {
-
-                            xRange.push(coords[0]);
-
-                            yRange.push(coords[1]);
-
-                        });
-
-                    } catch (error) {
-
-                        xRange.push(obj.coordinates[0]);
-
-                        yRange.push(obj.coordinates[1]);
-
-                    }
-
-                    southWest = [
-                        Math.min.apply(null, yRange),
-                        Math.min.apply(null, xRange)
-                    ];
-
-                    northEast = [
-                        Math.max.apply(null, yRange),
-                        Math.max.apply(null, xRange)
-                    ];
-
-                    bounds = leafletBoundsHelpers.createBoundsFromArray([
-                        southWest,
-                        northEast
-                    ]);
-
-                } else {
-
-                    bounds = Map.bounds;
-
-                }
-
-                return bounds;
+                return [];
 
             },
             buildStaticMapURL: function(geometry) {
