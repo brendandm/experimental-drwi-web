@@ -11,7 +11,7 @@
         .controller('LayerCreateController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
                 $route, geographies, user, Utility, LayerService,
-                MapPreview, leafletBoundsHelpers, $interval, Shapefile,
+                MapPreview,$interval, Shapefile,
                 LayerType, Task) {
 
                 var self = this;

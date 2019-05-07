@@ -85,55 +85,6 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/projects/:projectId/print', {
-                templateUrl: '/modules/components/projects/views/projectPrint--view.html?t=' + environment.version,
-                controller: 'ProjectPrintController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account, $rootScope, $document) {
-
-                        $rootScope.targetPath = document.location.pathname;
-
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
-
-                        return Account.userObject;
-
-                    },
-                    project: function(Project, $route) {
-
-                        var exclude = [
-                            'centroid',
-                            'creator',
-                            'dashboards',
-                            'extent',
-                            'geometry',
-                            'members',
-                            'metric_types',
-                            'practices',
-                            'practice_types',
-                            'properties',
-                            'tags',
-                            'targets',
-                            'tasks',
-                            'type',
-                            'sites'
-                        ].join(',');
-
-                        return Project.get({
-                            id: $route.current.params.projectId,
-                            exclude: exclude
-                        });
-
-                    },
-                    sites: function(Project, $route) {
-                        return Project.sites({
-                            id: $route.current.params.projectId
-                        });
-                    }
-                }
-            })
             .when('/projects/collection/new', {
                 templateUrl: '/modules/components/projects/views/projectsCreate--view.html?t=' + environment.version,
                 controller: 'ProjectCreateController',

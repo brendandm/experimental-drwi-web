@@ -7,7 +7,7 @@
  */
 angular.module('FieldDoc')
     .controller('GeographyEditController',
-        function(Account, leafletData, $location, $log, GeographyService, GeographyType, geography,
+        function(Account,$location, $log, GeographyService, GeographyType, geography,
             $q, $rootScope, $route, $scope, $timeout, $interval, user) {
 
             var self = this;

@@ -7,10 +7,10 @@
  */
 angular.module('FieldDoc')
     .controller('PracticeLocationController',
-        function(Account, Image, leafletData, $location, $log, Map,
+        function(Account, Image,$location, $log, Map,
             mapbox, Media, Site, Practice, practice, $q, $rootScope, $route,
             $scope, $timeout, $interval, site, user, Shapefile,
-            leafletBoundsHelpers, Utility, Task, LayerService) {
+           Utility, Task, LayerService) {
 
             var self = this;
 
@@ -77,24 +77,6 @@ angular.module('FieldDoc')
                     console.log('self.site', successResponse);
 
                     self.site = successResponse;
-
-                    if (self.site.geometry) {
-
-                        leafletData.getMap('primary--map').then(function(map) {
-
-                            var siteExtent = new L.FeatureGroup();
-
-                            var siteGeometry = L.geoJson(successResponse, {});
-
-                            siteExtent.addLayer(siteGeometry);
-
-                            map.fitBounds(siteExtent.getBounds(), {
-                                maxZoom: 18
-                            });
-
-                        });
-
-                    }
 
                     self.loadPractice();
 

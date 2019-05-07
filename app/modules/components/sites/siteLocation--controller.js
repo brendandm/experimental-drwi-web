@@ -11,9 +11,9 @@
      */
     angular.module('FieldDoc')
         .controller('SiteLocationController',
-            function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
-                Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope, $timeout,
-                $interval, user, Shapefile, Utility, Task) {
+            function(Account, environment, $http, $location, Map, mapbox,
+                Notifications, Site, site, $rootScope, $route, $scope,
+                $timeout, $interval, user, Shapefile, Utility, Task) {
 
                 var self = this;
 

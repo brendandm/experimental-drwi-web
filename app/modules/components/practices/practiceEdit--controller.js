@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('PracticeEditController', function(Account, Image, leafletData, $location,
+    .controller('PracticeEditController', function(Account, Image,$location,
         $log, Media, Practice, PracticeType, practice, $q, $rootScope, $route,
         $scope, $timeout, $interval, site, user, Utility) {
 

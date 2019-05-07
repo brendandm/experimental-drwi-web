@@ -7,7 +7,7 @@
  */
 angular.module('FieldDoc')
     .controller('LayerEditController',
-        function(Account, leafletData, $location, $log, LayerService, LayerType, layer,
+        function(Account,$location, $log, LayerService, LayerType, layer,
             $q, $rootScope, $route, $scope, $timeout, $interval, user) {
 
             var self = this;

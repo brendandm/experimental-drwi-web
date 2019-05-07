@@ -10,8 +10,8 @@
     angular.module('FieldDoc')
         .controller('WatershedSummaryController',
             function(Account, $location, $window, $timeout, $rootScope, $scope, $route,
-                user, Utility, metrics, outcomes, watershed, Map, mapbox, leafletData,
-                leafletBoundsHelpers, Watershed, $interval) {
+                user, Utility, metrics, outcomes, watershed, Map, mapbox,
+               Watershed, $interval) {
 
                 var self = this;
 

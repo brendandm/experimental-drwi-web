@@ -20,15 +20,13 @@
             '$window',
             'Map',
             'mapbox',
-            'leafletData',
-            'leafletBoundsHelpers',
             'Program',
             'Project',
             'program',
             'LayerService',
             function(Account, $location, $timeout, $log, $rootScope,
-                $route, Utility, user, $window, Map, mapbox, leafletData,
-                leafletBoundsHelpers, Program, Project, program, LayerService) {
+                $route, Utility, user, $window, Map, mapbox,
+                Program, Project, program, LayerService) {
 
                 var self = this;
 

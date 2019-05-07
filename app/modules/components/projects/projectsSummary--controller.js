@@ -11,7 +11,7 @@ angular.module('FieldDoc')
     .controller('ProjectSummaryController',
         function(Account, Notifications, $rootScope, Project, $routeParams,
             $scope, $location, Map, MapPreview, mapbox, Site, user, $window,
-            leafletData, leafletBoundsHelpers, $timeout, Practice, project,
+          $timeout, Practice, project,
             sites, Utility, $interval, LayerService) {
 
             var self = this;

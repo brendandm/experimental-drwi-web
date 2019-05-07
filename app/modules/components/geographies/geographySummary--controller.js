@@ -10,8 +10,8 @@
     angular.module('FieldDoc')
         .controller('GeographySummaryController',
             function(Account, $location, $window, $timeout, $rootScope, $scope, $route,
-                user, Utility, geography, Map, mapbox, leafletData, LayerService,
-                leafletBoundsHelpers, GeographyService, $interval) {
+                user, Utility, geography, Map, mapbox,LayerService,
+               GeographyService, $interval) {
 
                 var self = this;
 

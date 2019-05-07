@@ -75,7 +75,25 @@
 
                     <div class="map--module shadow reveal fade-in t1" style="position:relative;">
 
-                        <leaflet id="geography--map" class="map tall" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds"></leaflet>
+                        <div id="primary--map" class="map tall" style="border-radius: 4px; overflow: hidden;">
+                            <div class="mapboxgl-layer-ctrl" data-ng-click="page.showLayerOptions = !page.showLayerOptions" title="Switch layers">
+                                <i class="material-icons">
+                                    layers
+                                </i>
+                                <div class="layer-group" data-ng-show="page.showLayerOptions">
+                                    <form>
+                                        <label data-ng-repeat="style in page.mapStyles" data-ng-class="{'active': page.activeStyle === $index}" title="{{ style.name }}">
+                                            <input type="radio" id="base-style-{{ $index }}" name="active-style" data-ng-model="page.activeStyle" data-ng-value="{{ $index }}" data-ng-change="page.switchMapStyle(style, $index)"><span> {{ style.name }}</span>
+                                        </label>
+                                    </form>
+                                    <form class="layers" data-ng-show="page.layers && page.layers.length">
+                                        <label for="layer-{{ $index }}" data-ng-repeat="layer in page.layers" data-ng-class="{'active': layer.selected}" title="{{ layer.name }}">
+                                            <input type="checkbox" id="layer-{{ $index }}" name="layer-{{ $index }}" data-ng-model="layer.selected" data-ng-value="{{ $index }}" data-ng-change="page.toggleLayer(layer)"><span> {{ layer.name }}</span>
+                                        </label>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
 
@@ -132,8 +150,8 @@
                                     <tr>
                                         <th class="table-column-wide table-metrics-header">&nbsp;</th>
                                         <th class="table-metrics-header">Estimated value</th>
-                                        <th class="table-metrics-header">Estimated progress</th>
-                                        <th>&nbsp;</th>
+                                        <th class="table-metrics-header" data-ng-if="model.datum.show_progress">Estimated progress</th>
+                                        <th data-ng-if="model.datum.show_progress">&nbsp;</th>
                                     </tr>
                                 </thead>
 
@@ -145,15 +163,15 @@
                                             </p>
                                         </td>
                                         <td>
-                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
-                                                of {{ metric.self_target | number:2 }}</span>
+                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
+                                                <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ metric.self_target | number:2 }}</span>
                                         </td>
-                                        <td>
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
                                             <strong class="metrics--metric--percentage">
                                                 {{ metric.selfProgress.value * 100 | number:1 }}%
                                             </strong>
                                         </td>
-                                        <td>
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
                                             <progress-arc
                                                 size="32"
                                                 stroke="#2196F3"

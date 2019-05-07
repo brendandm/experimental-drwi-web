@@ -11,7 +11,7 @@
         .controller('SiteGeographyController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
                 $route, nodes, user, Utility, site, Site, Practice, MapPreview,
-                leafletBoundsHelpers, $interval, mapbox) {
+               $interval, mapbox) {
 
                 var self = this;
 

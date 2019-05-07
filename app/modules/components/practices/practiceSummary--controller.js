@@ -23,15 +23,12 @@
             '$window',
             'Map',
             'mapbox',
-            'leafletData',
-            'leafletBoundsHelpers',
             'Practice',
             'practice',
             'LayerService',
             function(Account, $location, $timeout, $log, Report, $rootScope,
                 $route, Utility, user, Project, Site, $window, Map, mapbox,
-                leafletData, leafletBoundsHelpers, Practice, practice,
-                LayerService) {
+                Practice, practice, LayerService) {
 
                 var self = this,
                     practiceId = $route.current.params.practiceId;

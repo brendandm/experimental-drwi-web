@@ -35,29 +35,6 @@ angular.module('FieldDoc')
                     }
                 }
             })
-            .when('/practices/:practiceId/print', {
-                templateUrl: '/modules/components/practices/views/practicePrint--view.html?t=' + environment.version,
-                controller: 'PracticePrintController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account, $rootScope, $document) {
-
-                        $rootScope.targetPath = document.location.pathname;
-
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
-
-                        return Account.userObject;
-
-                    },
-                    practice: function(Practice, $route) {
-                        return Practice.get({
-                            id: $route.current.params.practiceId
-                        });
-                    }
-                }
-            })
             .when('/reports/:reportId/edit', {
                 templateUrl: '/modules/components/practices/views/edit--view.html?t=' + environment.version,
                 controller: 'ReportEditController',

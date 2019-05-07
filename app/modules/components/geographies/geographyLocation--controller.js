@@ -11,7 +11,7 @@
      */
     angular.module('FieldDoc')
         .controller('GeographyLocationController',
-            function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
+            function(Account, environment, $http, $location,
                 Map, mapbox, Notifications, GeographyService, geography, $rootScope, $route,
                 $scope, $timeout, $interval, user, Shapefile, Utility, Task) {
 

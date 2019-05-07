@@ -10,8 +10,8 @@
     angular.module('FieldDoc')
         .controller('CountySummaryController',
             function(Account, $location, $window, $timeout, $rootScope, $scope, $route,
-                user, Utility, metrics, outcomes, county, Map, mapbox, leafletData,
-                leafletBoundsHelpers, County, $interval) {
+                user, Utility, metrics, outcomes, county, Map, mapbox,
+               County, $interval) {
 
                 var self = this;
 

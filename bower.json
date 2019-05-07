@@ -9,7 +9,6 @@
     "angular-sanitize": "1.2.0",
     "angular-touch": "1.2.0",
     "angular-route": "1.2.0",
-    "angular-leaflet-directive": "0.10.0",
     "angular-cookie": "4.0.6",
     "angularjs-geolocation": "0.1.1",
     "susy": "2.1.3",
@@ -20,9 +19,7 @@
     "angular-aria": "1.3.0",
     "angular-moment": "0.8.2",
     "angular-save2pdf": "*",
-    "leaflet-draw": ">=1.0.2",
     "angular-progress-arc": "^1.0.0",
-    "mapbox": "3.1.1",
     "tinycolor": "^1.4.1"
   },
   "devDependencies": {},

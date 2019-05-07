@@ -10,8 +10,8 @@
     angular.module('FieldDoc')
         .controller('LayerSummaryController',
             function(Account, $location, $window, $timeout, $rootScope, $scope, $route,
-                user, Utility, layer, Map, mapbox, leafletData,
-                leafletBoundsHelpers, LayerService, $interval) {
+                user, Utility, layer, Map, mapbox,
+               LayerService, $interval) {
 
                 var self = this;
 

@@ -1,0 +1,21 @@
+<div class="map--module shadow reveal fade-in t1" style="position:relative;">
+    <div id="primary--map" class="map tall" style="border-radius: 4px; overflow: hidden;">
+        <div class="mapboxgl-layer-ctrl" data-ng-click="page.showLayerOptions = !page.showLayerOptions" title="Switch layers">
+            <i class="material-icons">
+                layers
+            </i>
+            <div class="layer-group" data-ng-show="page.showLayerOptions">
+                <form>
+                    <label data-ng-repeat="style in page.mapStyles" data-ng-class="{'active': page.activeStyle === $index}" title="{{ style.name }}">
+                        <input type="radio" id="base-style-{{ $index }}" name="active-style" data-ng-model="page.activeStyle" data-ng-value="{{ $index }}" data-ng-change="page.switchMapStyle(style, $index)"><span> {{ style.name }}</span>
+                    </label>
+                </form>
+                <form class="layers" data-ng-show="page.layers && page.layers.length">
+                    <label for="layer-{{ $index }}" data-ng-repeat="layer in page.layers" data-ng-class="{'active': layer.selected}" title="{{ layer.name }}">
+                        <input type="checkbox" id="layer-{{ $index }}" name="layer-{{ $index }}" data-ng-model="layer.selected" data-ng-value="{{ $index }}" data-ng-change="page.toggleLayer(layer)"><span> {{ layer.name }}</span>
+                    </label>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
