@@ -18,14 +18,13 @@
             'Utility',
             'user',
             '$window',
-            'Map',
             'mapbox',
             'Model',
             'Project',
             'model',
             function(Account, $location, $timeout, $log, $rootScope,
-                $route, Utility, user, $window, Map, mapbox,
-               Model, Project, model) {
+                $route, Utility, user, $window, mapbox, Model,
+                Project, model) {
 
                 var self = this;
 

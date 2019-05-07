@@ -8,6 +8,4 @@
  * Main module of the application.
  */
 angular
-  .module('Mapbox', [
-    'leaflet-directive'
-  ]);
+  .module('Mapbox', []);

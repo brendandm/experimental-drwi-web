@@ -10,8 +10,8 @@
     angular.module('FieldDoc')
         .controller('SiteGeographyController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
-                $route, nodes, user, Utility, site, Site, Practice, MapPreview,
-               $interval, mapbox) {
+                $route, nodes, user, Utility, site, Site, Practice,
+                $interval, mapbox) {
 
                 var self = this;
 
@@ -21,7 +21,7 @@
 
                 $rootScope.page = {};
 
-                self.map = MapPreview;
+                self.map = undefined;
 
                 console.log('self.map', self.map);
 

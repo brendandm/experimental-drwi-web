@@ -6,10 +6,12 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('DashboardController', function(Account, $location, $log, $interval, $timeout, Project, Map,
-        baseProjects, $rootScope, $scope, Site,
-        MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox,
-        Practice, GeographyService, dashboard, $routeParams, Dashboard, Utility, user) {
+    .controller('DashboardController', function(
+        Account, $location, $log, $interval, $timeout, Project,
+        baseProjects, $rootScope, $scope, Site, MetricService,
+        OutcomeService, ProjectStore, FilterStore, geographies,
+        mapbox, Practice, GeographyService, dashboard,
+        $routeParams, Dashboard, Utility, user) {
 
         $scope.filterStore = FilterStore;
 

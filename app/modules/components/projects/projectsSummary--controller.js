@@ -10,9 +10,8 @@
 angular.module('FieldDoc')
     .controller('ProjectSummaryController',
         function(Account, Notifications, $rootScope, Project, $routeParams,
-            $scope, $location, Map, MapPreview, mapbox, Site, user, $window,
-          $timeout, Practice, project,
-            sites, Utility, $interval, LayerService) {
+            $scope, $location, mapbox, Site, user, $window, $timeout,
+            Practice, project, sites, Utility, $interval, LayerService) {
 
             var self = this;
 

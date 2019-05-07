@@ -11,8 +11,7 @@
         .controller('GeographyListController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
                 $route, geographies, user, Utility, GeographyService,
-                MapPreview,$interval, Shapefile,
-                GeographyType, Task) {
+                $interval, Shapefile, GeographyType, Task) {
 
                 var self = this;
 

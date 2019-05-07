@@ -7,10 +7,10 @@
  */
 angular.module('FieldDoc')
     .controller('PracticeLocationController',
-        function(Account, Image,$location, $log, Map,
-            mapbox, Media, Site, Practice, practice, $q, $rootScope, $route,
+        function(Account, Image, $location, $log, mapbox, Media,
+            Site, Practice, practice, $q, $rootScope, $route,
             $scope, $timeout, $interval, site, user, Shapefile,
-           Utility, Task, LayerService) {
+            Utility, Task, LayerService) {
 
             var self = this;
 

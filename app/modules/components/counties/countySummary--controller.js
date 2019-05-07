@@ -10,8 +10,7 @@
     angular.module('FieldDoc')
         .controller('CountySummaryController',
             function(Account, $location, $window, $timeout, $rootScope, $scope, $route,
-                user, Utility, metrics, outcomes, county, Map, mapbox,
-               County, $interval) {
+                user, Utility, metrics, outcomes, county, mapbox, County, $interval) {
 
                 var self = this;
 
@@ -21,23 +20,7 @@
 
                 $rootScope.page = {};
 
-                self.map = JSON.parse(JSON.stringify(Map));
-
-                self.map.layers = {
-                    baselayers: {
-                        streets: {
-                            name: 'Streets',
-                            type: 'xyz',
-                            url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-                            layerOptions: {
-                                apikey: mapbox.access_token,
-                                mapid: 'mapbox.streets',
-                                attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>',
-                                showOnSelector: false
-                            }
-                        }
-                    }
-                };
+                self.map = undefined;
 
                 self.status = {
                     loading: true,

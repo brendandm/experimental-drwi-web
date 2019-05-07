@@ -10,8 +10,8 @@
     angular.module('FieldDoc')
         .controller('SiteSummaryController',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
-                $route, nodes, user, Utility, site, Map, MapPreview, mapbox,
-               Site, Project, practices, $interval, LayerService) {
+                $route, nodes, user, Utility, site, mapbox, Site, Project, practices,
+                $interval, LayerService) {
 
                 var self = this;
 
@@ -21,9 +21,7 @@
 
                 $rootScope.page = {};
 
-                self.map = JSON.parse(JSON.stringify(Map));
-
-                self.previewMap = JSON.parse(JSON.stringify(MapPreview));
+                self.map = undefined;
 
                 self.status = {
                     loading: true,

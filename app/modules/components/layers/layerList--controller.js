@@ -10,9 +10,8 @@
     angular.module('FieldDoc')
         .controller('LayerListController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
-                $route, geographies, user, Utility, LayerService,
-                MapPreview,$interval, Shapefile,
-                LayerType, Task) {
+                $route, geographies, user, Utility, LayerService, $interval,
+                Shapefile, LayerType, Task) {
 
                 var self = this;
 

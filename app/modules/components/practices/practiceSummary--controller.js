@@ -21,13 +21,12 @@
             'Project',
             'Site',
             '$window',
-            'Map',
             'mapbox',
             'Practice',
             'practice',
             'LayerService',
             function(Account, $location, $timeout, $log, Report, $rootScope,
-                $route, Utility, user, Project, Site, $window, Map, mapbox,
+                $route, Utility, user, Project, Site, $window, mapbox,
                 Practice, practice, LayerService) {
 
                 var self = this,
@@ -39,7 +38,7 @@
 
                 $rootScope.page = {};
 
-                self.map = JSON.parse(JSON.stringify(Map));
+                self.map = undefined;
 
                 self.status = {
                     loading: true

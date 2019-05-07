@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1557205194906})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1557207156565})
 
 ;
 /**
@@ -1093,10 +1093,12 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-    .controller('DashboardController', function(Account, $location, $log, $interval, $timeout, Project, Map,
-        baseProjects, $rootScope, $scope, Site,
-        MetricService, OutcomeService, ProjectStore, FilterStore, geographies, mapbox,
-        Practice, GeographyService, dashboard, $routeParams, Dashboard, Utility, user) {
+    .controller('DashboardController', function(
+        Account, $location, $log, $interval, $timeout, Project,
+        baseProjects, $rootScope, $scope, Site, MetricService,
+        OutcomeService, ProjectStore, FilterStore, geographies,
+        mapbox, Practice, GeographyService, dashboard,
+        $routeParams, Dashboard, Utility, user) {
 
         $scope.filterStore = FilterStore;
 
@@ -5731,9 +5733,8 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('ProjectSummaryController',
         function(Account, Notifications, $rootScope, Project, $routeParams,
-            $scope, $location, Map, MapPreview, mapbox, Site, user, $window,
-          $timeout, Practice, project,
-            sites, Utility, $interval, LayerService) {
+            $scope, $location, mapbox, Site, user, $window, $timeout,
+            Practice, project, sites, Utility, $interval, LayerService) {
 
             var self = this;
 
@@ -10479,8 +10480,8 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('SiteSummaryController',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
-                $route, nodes, user, Utility, site, Map, MapPreview, mapbox,
-               Site, Project, practices, $interval, LayerService) {
+                $route, nodes, user, Utility, site, mapbox, Site, Project, practices,
+                $interval, LayerService) {
 
                 var self = this;
 
@@ -10490,9 +10491,7 @@ angular.module('FieldDoc')
 
                 $rootScope.page = {};
 
-                self.map = JSON.parse(JSON.stringify(Map));
-
-                self.previewMap = JSON.parse(JSON.stringify(MapPreview));
+                self.map = undefined;
 
                 self.status = {
                     loading: true,
@@ -11303,8 +11302,8 @@ angular.module('FieldDoc')
      */
     angular.module('FieldDoc')
         .controller('SiteEditController',
-            function(Account, environment, $http, $location,
-                Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope,
+            function(Account, environment, $http, $location, mapbox,
+                Notifications, Site, site, $rootScope, $route, $scope,
                 $timeout, $interval, user, Shapefile, Utility) {
 
                 var self = this;
@@ -11578,9 +11577,10 @@ angular.module('FieldDoc')
      */
     angular.module('FieldDoc')
         .controller('SiteLocationController',
-            function(Account, environment, $http, $location, Map, mapbox,
-                Notifications, Site, site, $rootScope, $route, $scope,
-                $timeout, $interval, user, Shapefile, Utility, Task) {
+            function(Account, environment, $http, $location, mapbox,
+                Notifications, Site, site, $rootScope, $route,
+                $scope, $timeout, $interval, user, Shapefile,
+                Utility, Task) {
 
                 var self = this;
 
@@ -13046,8 +13046,8 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('SiteGeographyController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
-                $route, nodes, user, Utility, site, Site, Practice, MapPreview,
-               $interval, mapbox) {
+                $route, nodes, user, Utility, site, Site, Practice,
+                $interval, mapbox) {
 
                 var self = this;
 
@@ -13057,7 +13057,7 @@ angular.module('FieldDoc')
 
                 $rootScope.page = {};
 
-                self.map = MapPreview;
+                self.map = undefined;
 
                 console.log('self.map', self.map);
 
@@ -14800,13 +14800,12 @@ angular.module('FieldDoc')
             'Project',
             'Site',
             '$window',
-            'Map',
             'mapbox',
             'Practice',
             'practice',
             'LayerService',
             function(Account, $location, $timeout, $log, Report, $rootScope,
-                $route, Utility, user, Project, Site, $window, Map, mapbox,
+                $route, Utility, user, Project, Site, $window, mapbox,
                 Practice, practice, LayerService) {
 
                 var self = this,
@@ -14818,7 +14817,7 @@ angular.module('FieldDoc')
 
                 $rootScope.page = {};
 
-                self.map = JSON.parse(JSON.stringify(Map));
+                self.map = undefined;
 
                 self.status = {
                     loading: true
@@ -15486,10 +15485,10 @@ angular.module('FieldDoc')
  */
 angular.module('FieldDoc')
     .controller('PracticeLocationController',
-        function(Account, Image,$location, $log, Map,
-            mapbox, Media, Site, Practice, practice, $q, $rootScope, $route,
+        function(Account, Image, $location, $log, mapbox, Media,
+            Site, Practice, practice, $q, $rootScope, $route,
             $scope, $timeout, $interval, site, user, Shapefile,
-           Utility, Task, LayerService) {
+            Utility, Task, LayerService) {
 
             var self = this;
 
@@ -17545,9 +17544,10 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-    .controller('PracticePhotoController', function(Account, Image,$location, $log, Map,
-        mapbox, Media, Practice, practice, $q, $rootScope, $route,
-        $scope, $timeout, $interval, site, user, Utility) {
+    .controller('PracticePhotoController', function(
+        Account, Image, $location, $log, mapbox, Media, Practice,
+        practice, $q, $rootScope, $route, $scope, $timeout,
+        $interval, site, user, Utility) {
 
         var self = this;
 
@@ -21407,8 +21407,7 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('CountySummaryController',
             function(Account, $location, $window, $timeout, $rootScope, $scope, $route,
-                user, Utility, metrics, outcomes, county, Map, mapbox,
-               County, $interval) {
+                user, Utility, metrics, outcomes, county, mapbox, County, $interval) {
 
                 var self = this;
 
@@ -21418,23 +21417,7 @@ angular.module('FieldDoc')
 
                 $rootScope.page = {};
 
-                self.map = JSON.parse(JSON.stringify(Map));
-
-                self.map.layers = {
-                    baselayers: {
-                        streets: {
-                            name: 'Streets',
-                            type: 'xyz',
-                            url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-                            layerOptions: {
-                                apikey: mapbox.access_token,
-                                mapid: 'mapbox.streets',
-                                attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>',
-                                showOnSelector: false
-                            }
-                        }
-                    }
-                };
+                self.map = undefined;
 
                 self.status = {
                     loading: true,
@@ -21659,9 +21642,9 @@ angular.module('FieldDoc')
      */
     angular.module('FieldDoc')
         .controller('WatershedSummaryController',
-            function(Account, $location, $window, $timeout, $rootScope, $scope, $route,
-                user, Utility, metrics, outcomes, watershed, Map, mapbox,
-               Watershed, $interval) {
+            function(Account, $location, $window, $timeout, $rootScope,
+                $scope, $route, user, Utility, metrics, outcomes,
+                watershed, mapbox, Watershed, $interval) {
 
                 var self = this;
 
@@ -21671,23 +21654,7 @@ angular.module('FieldDoc')
 
                 $rootScope.page = {};
 
-                self.map = JSON.parse(JSON.stringify(Map));
-
-                self.map.layers = {
-                    baselayers: {
-                        streets: {
-                            name: 'Streets',
-                            type: 'xyz',
-                            url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-                            layerOptions: {
-                                apikey: mapbox.access_token,
-                                mapid: 'mapbox.streets',
-                                attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>',
-                                showOnSelector: false
-                            }
-                        }
-                    }
-                };
+                self.map = undefined;
 
                 self.status = {
                     loading: true,
@@ -22116,8 +22083,7 @@ angular.module('FieldDoc')
         .controller('GeographyCreateController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
                 $route, geographies, user, Utility, GeographyService,
-                MapPreview,$interval, Shapefile,
-                GeographyType, Task) {
+                $interval, Shapefile, GeographyType, Task) {
 
                 var self = this;
 
@@ -22639,8 +22605,7 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('GeographySummaryController',
             function(Account, $location, $window, $timeout, $rootScope, $scope, $route,
-                user, Utility, geography, Map, mapbox,LayerService,
-               GeographyService, $interval) {
+                user, Utility, geography, mapbox, LayerService, GeographyService, $interval) {
 
                 var self = this;
 
@@ -23209,8 +23174,7 @@ angular.module('FieldDoc')
         .controller('GeographyListController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
                 $route, geographies, user, Utility, GeographyService,
-                MapPreview,$interval, Shapefile,
-                GeographyType, Task) {
+                $interval, Shapefile, GeographyType, Task) {
 
                 var self = this;
 
@@ -23800,8 +23764,8 @@ angular.module('FieldDoc')
      */
     angular.module('FieldDoc')
         .controller('GeographyLocationController',
-            function(Account, environment, $http, $location,
-                Map, mapbox, Notifications, GeographyService, geography, $rootScope, $route,
+            function(Account, environment, $http, $location, mapbox,
+                Notifications, GeographyService, geography, $rootScope, $route,
                 $scope, $timeout, $interval, user, Shapefile, Utility, Task) {
 
                 var self = this;
@@ -23833,62 +23797,7 @@ angular.module('FieldDoc')
 
                 };
 
-                self.map = JSON.parse(JSON.stringify(Map));
-
-                self.map.layers = {
-                    baselayers: {
-                        streets: {
-                            name: 'Streets',
-                            type: 'xyz',
-                            url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-                            layerOptions: {
-                                apikey: mapbox.access_token,
-                                mapid: 'mapbox.streets',
-                                attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>',
-                                showOnSelector: false
-                            }
-                        }
-                    }
-                };
-
-                self.savedObjects = [];
-
-                self.editableLayers = new L.FeatureGroup();
-
-                function addNonGroupLayers(sourceLayer, targetGroup) {
-
-                    if (sourceLayer instanceof L.LayerGroup) {
-
-                        sourceLayer.eachLayer(function(layer) {
-
-                            addNonGroupLayers(layer, targetGroup);
-
-                        });
-
-                    } else {
-
-                        targetGroup.addLayer(sourceLayer);
-
-                    }
-
-                }
-
-                self.setGeoJsonLayer = function(data) {
-
-                    self.editableLayers.clearLayers();
-
-                    var geographyGeometry = L.geoJson(data, {});
-
-                    addNonGroupLayers(geographyGeometry, self.editableLayers);
-
-                    self.savedObjects = [{
-                        id: self.editableLayers._leaflet_id,
-                        geoJson: data
-                    }];
-
-                    console.log('self.savedObjects', self.savedObjects);
-
-                };
+                self.map = undefined;
 
                 self.fetchTasks = function(taskId) {
 
@@ -25103,9 +25012,8 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('LayerCreateController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
-                $route, geographies, user, Utility, LayerService,
-                MapPreview,$interval, Shapefile,
-                LayerType, Task) {
+                $route, geographies, user, Utility, LayerService, $interval,
+                Shapefile, LayerType, Task) {
 
                 var self = this;
 
@@ -25627,8 +25535,7 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('LayerSummaryController',
             function(Account, $location, $window, $timeout, $rootScope, $scope, $route,
-                user, Utility, layer, Map, mapbox,
-               LayerService, $interval) {
+                user, Utility, layer, mapbox, LayerService, $interval) {
 
                 var self = this;
 
@@ -25995,9 +25902,8 @@ angular.module('FieldDoc')
     angular.module('FieldDoc')
         .controller('LayerListController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
-                $route, geographies, user, Utility, LayerService,
-                MapPreview,$interval, Shapefile,
-                LayerType, Task) {
+                $route, geographies, user, Utility, LayerService, $interval,
+                Shapefile, LayerType, Task) {
 
                 var self = this;
 
@@ -27045,15 +26951,14 @@ angular.module('FieldDoc')
             'Utility',
             'user',
             '$window',
-            'Map',
             'mapbox',
             'Program',
             'Project',
             'program',
             'LayerService',
             function(Account, $location, $timeout, $log, $rootScope,
-                $route, Utility, user, $window, Map, mapbox,
-                Program, Project, program, LayerService) {
+                $route, Utility, user, $window, mapbox, Program,
+                Project, program, LayerService) {
 
                 var self = this;
 
@@ -31439,14 +31344,13 @@ angular.module('FieldDoc')
             'Utility',
             'user',
             '$window',
-            'Map',
             'mapbox',
             'Model',
             'Project',
             'model',
             function(Account, $location, $timeout, $log, $rootScope,
-                $route, Utility, user, $window, Map, mapbox,
-               Model, Project, model) {
+                $route, Utility, user, $window, mapbox, Model,
+                Project, model) {
 
                 var self = this;
 
@@ -31885,430 +31789,7 @@ angular.module('FieldDoc')
  * Main module of the application.
  */
 angular
-  .module('Mapbox', [
-    'leaflet-directive'
-  ]);
-
-'use strict';
-
-/*jshint camelcase: false */
-
-/**
- * @ngdoc directive
- * @name managerApp.directive:mapboxGeocoder
- * @description
- *   The Mapbox Geocoder directive enables developers to quickly add inline
- *   geocoding capabilities to any HTML <input> or <textarea>
- */
-angular.module('Mapbox')
-  .directive('mapboxGeocoder', ['$compile', '$http', '$templateCache', '$timeout', 'mapbox', 'geocoding', 'TemplateLoader', function ($compile, $http, $templateCache, $timeout, mapbox, geocoding, TemplateLoader) {
-
-    return {
-        restrict: 'A',
-        scope: {
-          mapboxGeocoderDirection: '=?',
-          mapboxGeocoderQuery: '=',
-          mapboxGeocoderResponse: '=',
-          mapboxGeocoderResults: '=?',
-          mapboxGeocoderAppend: '=?'
-        },
-        link: function(scope, element, attrs) {
-
-          //
-          // Setup up our timeout and the Template we will use for display the
-          // results from the Mapbox Geocoding API back to the user making the
-          // Request
-          //
-          var timeout;
-
-          //
-          // Take the template that we loaded into $templateCache and pull
-          // out the HTML that we need to create our drop down menu that
-          // holds our Mapbox Geocoding API results
-          //
-          TemplateLoader.get('/modules/shared/mapbox/geocoderResults--view.html')
-            .success(function(templateResult) {
-              element.after($compile(templateResult)(scope));
-            });
-
-          //
-          // This tells us if we are using the Forward, Reverse, or Batch
-          // Geocoder provided by the Mapbox Geocoding API
-          //
-          scope.mapboxGeocoderDirection = (scope.mapboxGeocoderDirection) ? scope.mapboxGeocoderDirection: 'forward';
-
-          //
-          // Keep an eye on the Query model so that when it's updated we can
-          // execute a the Reuqest agains the Mapbox Geocoding API
-          //
-          scope.$watch('mapboxGeocoderQuery', function(query) {
-
-            var query_ = (scope.mapboxGeocoderAppend) ? query + ' ' + scope.mapboxGeocoderAppend : query;
-
-            //
-            // If the user types, make sure we cancel and restart the timeout
-            //
-            $timeout.cancel(timeout);
-
-            //
-            // If the user stops typing for 500 ms then we need to go ahead and
-            // execute the query against the Mapbox Geocoding API
-            //
-            timeout = $timeout(function () {
-
-              //
-              // The Mapbox Geocoding Service in our application provides us
-              // with a deferred promise with our Mapbox Geocoding API request
-              // so that we can handle the results of that request however we
-              // need to.
-              //
-              if (query && !scope.mapboxGeocoderResponse) {
-                var results = geocoding[scope.mapboxGeocoderDirection](query_).success(function(results) {
-                  scope.mapboxGeocoderResults = results;
-                });
-              }
-
-            }, 500);
-
-          });
-
-          //
-          // Geocoded Address Selection
-          //
-          scope.address = {
-            select: function(selectedValue) {
-
-              //
-              // Assign the selected value to back to our scope. The developer
-              // should be able to use the results however they like. For
-              // instance they may need to use the `Response` from this request
-              // to perform a query against another database for geolookup or
-              // save this value to the database.
-              //
-              scope.mapboxGeocoderQuery = selectedValue.place_name;
-              scope.mapboxGeocoderResponse = selectedValue;
-
-              //
-              // Once we're finished we need to make sure we empty the result
-              // list. An empty result list will be hidden.
-              //
-              scope.mapboxGeocoderResults = null;
-            }
-          };
-
-        }
-    };
-  }]);
-
-'use strict';
-
-/**
- * @ngdoc service
- *
- * @name cleanWaterCommunitiesApp.Geocode
- *
- * @description
- *   The Geocode Service provides access to the Mapbox Geocoding API
- *
- * @see https://www.mapbox.com/developers/api/geocoding/
- */
-angular.module('Mapbox')
-  .service('geocoding', ['$http', 'mapbox', function Navigation($http, mapbox) {
-    return {
-
-      /**
-       * Retrieve a list of possible geocoded address from the Mapbox Geocoding
-       * API, based on user input.
-       *
-       * @param (string) requestedLocation
-       *    A simple string containing the information you wish to check
-       *    against the Mapbox Geocoding API
-       *
-       * @return (object) featureCollection
-       *    A valid GeoJSON Feature Collection containing a list of matched
-       *    addresses and their associated geographic information
-       *
-       * @see https://www.mapbox.com/developers/api/geocoding/
-       *
-       */
-      forward: function(requestedLocation) {
-
-        //
-        // Check to make sure that the string is not empty prior to submitting
-        // it to the Mapbox Geocoding API
-        //
-        if (!requestedLocation) {
-          return;
-        }
-
-        //
-        // Created a valid Mapbox Geocoding API compatible URL
-        //
-        var mapboxGeocodingAPI = mapbox.geocodingUrl.concat(requestedLocation, '.json');
-
-        //
-        // Send a GET request to the Mapbox Geocoding API containing valid user
-        // input
-        //
-        var promise = $http.get(mapboxGeocodingAPI, {
-          params: {
-            'callback': 'JSON_CALLBACK',
-            'access_token': mapbox.access_token
-          }
-        })
-          .success(function(featureCollection) {
-            return featureCollection;
-          })
-          .error(function(data) {
-            console.error('Mapbox Geocoding API could not return any results based on your input', data);
-          });
-
-        //
-        // Always return Requests in angular.services as a `promise`
-        //
-        return promise;
-      },
-
-      /**
-       * Retrieve a list of possible addresses from the Mapbox Geocoding
-       * API, based on user input.
-       *
-       * @param (array) requestedCoordinates
-       *    A two value array containing the longitude and latitude respectively
-       *
-       *    Example:
-       *    [
-       *       '<LONGITUDE>',
-       *       '<LATITUDE>',
-       *    ]
-       *
-       * @return (object) featureCollection
-       *    A valid GeoJSON Feature Collection containing a list of matched
-       *    addresses and their associated geographic information
-       *
-       * @see https://www.mapbox.com/developers/api/geocoding/
-       *
-       */
-      reverse: function(requestedCoordinates) {
-
-        //
-        // Check to make sure that the string is not empty prior to submitting
-        // it to the Mapbox Geocoding API
-        //
-        if (!requestedCoordinates) {
-          return;
-        }
-
-        //
-        // Created a valid Mapbox Geocoding API compatible URL
-        //
-        var mapboxGeocodingAPI = mapbox.geocodingUrl.concat(requestedCoordinates[0], ',', requestedCoordinates[1], '.json');
-
-        //
-        // Send a GET request to the Mapbox Geocoding API containing valid user
-        // input
-        //
-        var promise = $http.get(mapboxGeocodingAPI, {
-          params: {
-            'callback': 'JSON_CALLBACK',
-            'access_token': mapbox.access_token
-          }
-        })
-          .success(function(featureCollection) {
-            //
-            // Return the valid GeoJSON FeatureCollection sent by Mapbox to
-            // the module requesting the data with this Service
-            //
-            return featureCollection;
-          })
-          .error(function(data) {
-            console.error('Mapbox Geocoding API could not return any results based on your input', data);
-          });
-
-        //
-        // Always return Requests in angular.services as a `promise`
-        //
-        return promise;
-      },
-
-      /**
-       * Retrieve a list of possible geocoded address from the Mapbox Geocoding
-       * API, based on user input.
-       *
-       * @param (array) requestedQueries
-       *    An array of up to 50 queries to perform. Each individual query
-       *    should be a simple string containing the information you wish to
-       *    check against the Mapbox Geocoding API
-       *
-       * @return (object) featureCollection
-       *    A valid GeoJSON Feature Collection containing a list of matched
-       *    addresses and their associated geographic information
-       *
-       * @see https://www.mapbox.com/developers/api/geocoding/
-       *
-       */
-      batch: function(requestedQueries) {
-        console.log('Mapbox Geocoding Batch Geocoding not implemented, see https://www.mapbox.com/developers/api/geocoding/ for more information.');
-      }
-    };
-
-  }]);
-
-'use strict';
-
-/**
- * @ngdoc service
- * @name cleanWaterCommunitiesApp.GeometryService
- * @description
- *
- */
-angular.module('Mapbox')
-  .service('mapboxGeometry', ['$http', 'leafletData', function Navigation($http, leafletData) {
-
-    var L = L;
-
-    return {
-      drawGeoJSON: function(geojson, featureGroup, layerStyle, appendToLayer) {
-
-        var self = this;
-
-        leafletData.getMap().then(function(map) {
-          //
-          // Reset the FeatureGroup because we don't want multiple parcels drawn on the map
-          //
-          map.removeLayer(featureGroup);
-
-          //
-          // Convert the GeoJSON to a layer and add it to our FeatureGroup
-          //
-          // $scope.geojsonToLayer(geojson, featureGroup);
-          self.geojsonToLayer(geojson, featureGroup);
-
-          //
-          // Add the FeatureGroup to the map
-          //
-          map.addLayer(featureGroup);
-        });
-      },
-      /**
-       * Convert a valid GeoJSON object to a valid Leaflet/Mapbox layer so that
-       * it can be displayed on a Leaflet Map
-       *
-       * @param (object) geojsonObject
-       *    A valid GeoJson object
-       *
-       *    @see http://geojson.org/geojson-spec.html#geojson-objects
-       *
-       * @param (object) targetLayer
-       *    A valid Leaflet LayerGroup or FeatureGroup
-       *
-       *    @see http://leafletjs.com/reference.html#layergroup
-       *    @see http://leafletjs.com/reference.html#featuregroup
-       *
-       * @param (object) layerStyle
-       *
-       * @param (boolean) appendToLayer
-       *    If set to `true` the object will be appended to the Group and keep
-       *    all the other objects that alread exist within the provided Group,
-       *    defaults to clearning all content from provided Group
-       *
-       * @return (implicit)
-       *    Adds the requested GeoJSON to the provided layer
-       *
-       * @required This function requires that Leaflet be loaded into this
-       *           application and depends on the AngularLeafletDirective
-       *
-       */
-      geojsonToLayer: function(geojsonObject, targetLayer, layerStyle, appendToLayer) {
-
-        //
-        // Should this GeoJSON object be appended to all existing Features or
-        // should it replace all other objects?
-        //
-        // Defaults to clearing the layer and adding only the new geojsonObject
-        // defined in the function arguments
-        //
-        if (!appendToLayer) {
-          targetLayer.clearLayers();
-        }
-
-        //
-        // Determine if the user has defined styles to be applied to this layer
-        // if not, then use our default polygon outline
-        //
-        layerStyle = (layerStyle) ? layerStyle: {
-          stroke: true,
-          fill: false,
-          weight: 3,
-          opacity: 1,
-          color: 'rgb(255,255,255)',
-          lineCap: 'square'
-        };
-
-        //
-        // Make sure the GeoJSON object is added to the layer with appropriate styles
-        //
-        L.geoJson(geojsonObject, {
-          style: layerStyle
-        }).eachLayer(function(newLayer) {
-          newLayer.addTo(targetLayer);
-          newLayer.bindPopup('<strong>' + newLayer.feature.properties.owner.properties.first_name + '</strong> reported on ' + newLayer.feature.properties.report_date + '<br /><small><a href="/reports/' + newLayer.feature.id + '">View Report</a></small>');
-        });
-
-      },
-      /**
-       * Retrieve a list of possible matching geometries based on user defined
-       * geometry passed from application
-       *
-       * @param (array) requestedLocation
-       *    A simple object containing a longitude and latitude.
-       *
-       *    @see http://leafletjs.com/reference.html#latlng-l.latlng
-       *
-       * @return (object) featureCollection
-       *    A valid GeoJSON Feature Collection containing a list of matched
-       *    addresses and their associated geographic information
-       *
-       */
-      intersects: function(requestedLocation, collection) {
-
-        // //
-        // // Check to make sure that the string is not empty prior to submitting
-        // // it to the Mapbox Geocoding API
-        // //
-        // if (!requestedLocation) {
-        //   return;
-        // }
-
-        // //
-        // // Created a valid Mapbox Geocoding API compatible URL
-        // //
-        // var ccGeometryAPI = commonscloud.baseurl.concat(collection, '/', 'intersects', '.geojson');
-
-        // //
-        // // Send a GET request to the Mapbox Geocoding API containing valid user
-        // // input
-        // //
-        // var promise = $http.get(ccGeometryAPI, {
-        //   params: {
-        //     'callback': 'JSON_CALLBACK',
-        //     'geometry': requestedLocation.lng + ' ' + requestedLocation.lat
-        //   }
-        // })
-        //   .success(function(featureCollection) {
-        //     return featureCollection;
-        //   })
-        //   .error(function(data) {
-        //     console.error('CommonsCloud Geospatial API could not return any results based on your input', data, requestedLocation);
-        //   });
-
-        // //
-        // // Always return Requests in angular.services as a `promise`
-        // //
-        // return promise;
-      },
-    };
-  }]);
+  .module('Mapbox', []);
 
 'use strict';
 
@@ -32579,101 +32060,6 @@ angular.module('Mapbox')
     };
   });
 
-'use strict';
-
-/**
- * @ngdoc service
- * @name managerApp.directive:Map
- * @description
- *   Assist Directives in loading templates
- */
-angular.module('Mapbox')
-    .service('MapPreview', function(mapbox) {
-
-        var MapPreview = {
-            defaults: {
-                attributionControl: false,
-                dragging: false,
-                doubleClickZoom: false,
-                scrollWheelZoom: false,
-                touchZoom: false,
-                tap: false,
-                maxZoom: 18,
-                zoomControl: false
-            },
-            layers: {
-                baselayers: {
-                    streets: {
-                        name: 'Streets',
-                        type: 'xyz',
-                        url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-                        layerOptions: {
-                            apikey: mapbox.access_token,
-                            mapid: 'mapbox.streets',
-                            // attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>',
-                            showOnSelector: false
-                        }
-                    }
-                }
-            },
-            center: {
-                lat: 39.828175,
-                lng: -98.5795,
-                zoom: 4
-            },
-            styles: {
-                icon: {
-                    parcel: {
-                        iconUrl: '/images/pin-l+cc0000.png?access_token=' + mapbox.access_token,
-                        iconRetinaUrl: '/images/pin-l+cc0000@2x.png?access_token=' + mapbox.access_token,
-                        iconSize: [35, 90],
-                        iconAnchor: [18, 44],
-                        popupAnchor: [0, 0]
-                    }
-                },
-                polygon: {
-                    parcel: {
-                        stroke: true,
-                        fill: false,
-                        weight: 3,
-                        opacity: 1,
-                        color: 'rgb(255,255,255)',
-                        lineCap: 'square'
-                    },
-                    canopy: {
-                        stroke: false,
-                        fill: true,
-                        weight: 3,
-                        opacity: 1,
-                        color: 'rgb(0,204,34)',
-                        lineCap: 'square',
-                        fillOpacity: 0.6
-                    },
-                    impervious: {
-                        stroke: false,
-                        fill: true,
-                        weight: 3,
-                        opacity: 1,
-                        color: 'rgb(204,0,0)',
-                        lineCap: 'square',
-                        fillOpacity: 0.6
-                    }
-                }
-            },
-            marker: {},
-            geojson: {}
-        };
-
-        var southWest = L.latLng(25.837377, -124.211606),
-            northEast = L.latLng(49.384359, -67.158958),
-            bounds = L.latLngBounds(southWest, northEast);
-
-        console.log('United States bounds', bounds);
-
-        MapPreview.bounds = bounds;
-
-        return MapPreview;
-    });
 (function() {
 
   'use strict';
