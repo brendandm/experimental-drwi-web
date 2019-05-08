@@ -51,7 +51,7 @@ angular.module('FieldDoc')
                     // Setup page meta data
                     //
                     $rootScope.page = {
-                        'title': 'Profile Organization'
+                        'title': 'Organization Profile'
                     };
 
                     //
@@ -77,57 +77,19 @@ angular.module('FieldDoc')
 
             }
 
-            self.saveOrganization = function() {
-
-                self.status.processing = true;
-
-                Organization.update({
-                    id: self.organization.id
-                }, self.organization).$promise.then(function(successResponse) {
-
-                    self.status.processing = false;
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Organization profile updated.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(closeAlerts, 2000);
-
-                    self.parseFeature(successResponse);
-
-                }, function(errorResponse) {
-
-                    self.status.processing = false;
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Unable to update organization profile.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(closeAlerts, 2000);
-
-                });
-
-            };
-
             self.parseFeature = function(data) {
 
-                self.organization = data.properties;
+                self.organizationProfile = data.properties;
+                console.log(self.organizationProfile.description)
+           //     delete self.organizationProfile.creator;
+           //     delete self.organizationProfile.last_modified_by;
+           //     delete self.organizationProfile.dashboards;
 
-                delete self.organization.creator;
-                delete self.organization.last_modified_by;
-                delete self.organization.dashboards;
-
-                console.log('self.organization', self.organization);
+                console.log('self.organizationProfile', self.organizationProfile);
 
             };
 
-            self.loadOrganization = function(organizationId, postAssigment) {
+           self.loadOrganization = function(organizationId, postAssigment) {
 
                 Organization.get({
                     id: organizationId
@@ -142,7 +104,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
-                            'msg': 'Successfully added you to ' + self.organization.name + '.',
+                            'msg': 'Successfully added you to ' + self.organizationProfile.name + '.',
                             'prompt': 'OK'
                         }];
 
@@ -160,96 +122,11 @@ angular.module('FieldDoc')
 
                 });
 
-            };
+           };
 
-            self.updateRelation = function(organizationId) {
+            self.loadOrganizationProjects = function(){
 
-                var _user = new User({
-                    'id': self.user.id,
-                    'first_name': self.user.properties.first_name,
-                    'last_name': self.user.properties.last_name,
-                    'organization_id': organizationId
-                });
+            }
 
-                _user.$update(function(successResponse) {
-
-                    self.status.processing = false;
-
-                    self.user = successResponse;
-
-                    if (self.user.properties.organization) {
-
-                        self.loadOrganization(self.user.properties.organization_id, true);
-
-                    }
-
-                }, function(errorResponse) {
-
-                    self.status.processing = false;
-
-                });
-
-            };
-
-            self.assignOrganization = function() {
-
-                console.log('self.organizationSelection', self.organizationSelection);
-
-                self.status.processing = true;
-
-                if (typeof self.organizationSelection === 'string') {
-
-                    var _organization = new Organization({
-                        'name': self.organizationSelection
-                    });
-
-                    _organization.$save(function(successResponse) {
-
-                        self.parseFeature(successResponse);
-
-                        self.alerts = [{
-                            'type': 'success',
-                            'flag': 'Success!',
-                            'msg': 'Successfully created ' + self.organization.name + '.',
-                            'prompt': 'OK'
-                        }];
-
-                        $timeout(closeAlerts, 2000);
-
-                        self.updateRelation(self.organization.id);
-
-                    }, function(errorResponse) {
-
-                        self.status.processing = false;
-
-                    });
-
-                } else {
-
-                    self.updateRelation(self.organizationSelection.id);
-
-                }
-
-            };
-
-            self.searchOrganizations = function(value) {
-
-                return SearchService.organization({
-                    q: value
-                }).$promise.then(function(response) {
-
-                    console.log('SearchService.organization response', response);
-
-                    response.results.forEach(function(result) {
-
-                        result.category = null;
-
-                    });
-
-                    return response.results.slice(0, 5);
-
-                });
-
-            };
 
         });
