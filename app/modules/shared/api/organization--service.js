@@ -18,6 +18,12 @@
                 update: {
                     method: 'PATCH'
                 }
+                ,
+                profile: {
+                    isArray: false,
+                    method: 'GET',
+                    url: environment.apiUrl.concat('/v1/organization_profile/:id')
+                }
             });
         });
 
