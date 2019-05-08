@@ -6,10 +6,67 @@
 
     <div class="content--container">
 
-        <h1 class="inset">Organization</h1>
+        <h1 class="inset">{{page.organizationProfile.name}}</h1>
 
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading">
+            <div class="add--new--wrapper ng-scope" data-ng-if="!$root.user.properties.is_manager">
+                <span>Edit organization</span>
+                <a class="add--new--btn" href="/organization" data-ng-class="{viewing: $root.viewState.organizationProfile}">
+                    <i class="material-icons">
+                    edit
+                    </i>
+                </a>
+            </div>
+            <section class="reveal fade-in t0 ng-scope" style="padding: 1em 0 0;">
+                <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
+                    <strong>Description</strong>
+                </p>
+                <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+                    {{page.organizationProfile.description}}
+                </p>
 
+                <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
+                    <strong>Website</strong>
+                </p>
+                <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+                    {{page.organizationProfile.website}}
+                </p>
+
+                <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
+                    <strong>Email</strong>
+                </p>
+                <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+                    {{page.organizationProfile.email}}
+                </p>
+
+                <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
+                    <strong>Last Modified</strong>
+                </p>
+                <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+                    {{page.organizationProfile.modified_on}}
+                </p>
+
+            </section>
+            <section class="reveal fade-in t0 ng-scope" style="padding: 1em 0 0;">
+                <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
+                    <strong>Projects</strong>
+                </p>
+                <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+                    PROJECTS WILL GO HERE !
+                </p>
+            </section>
+              <section class="reveal fade-in t0 ng-scope" style="padding: 1em 0 0;">
+                <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
+                    <strong>Members</strong>
+                </p>
+                <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+                    MEMBERS  WILL GO HERE !
+                </p>
+            </section>
+
+
+
+        <!--
             <form role="form" class="form snackbar-container" method="POST" id="form" name="form" data-ng-submit="page.saveOrganization()">
 
                 <div class="form-element">
@@ -47,7 +104,7 @@
                 </div>
 
             </form>
-
+        -->
         </div>
 
     </div>
