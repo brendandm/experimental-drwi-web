@@ -114,22 +114,96 @@ angular.module('FieldDoc')
 
         self.map = undefined;
 
-        self.popupTemplate = function(feature) {
+        self.extentHistory = [];
+
+        self.layerIndex = [];
+
+        self.popupIndex = [];
+
+        self.siteIndex = {};
+
+        self.removePopups = function() {
+
+            self.popupIndex.forEach(function(obj) {
+
+                obj.remove();
+
+            });
+
+        };
+
+        self.popupTemplate = function(collection, feature) {
+
+            console.log(
+                'self.popupTemplate --> collection',
+                collection);
+
+            console.log(
+                'self.popupTemplate --> feature',
+                feature);
 
             var id = feature.properties.id || feature.id;
 
             var name = feature.properties.name || feature.name;
 
-            return '<div class=\"project--popup\">' +
-                '<div class=\"marker--title border--right\">' + name + '</div>' +
-                '<a href=\"projects/' + id + '\">' +
-                '<i class=\"material-icons\">keyboard_arrow_right</i>' +
-                '</a>' +
-                '</div>';
+            var nextPath = $location.path() + '?' + collection + '=' + id;
+
+            var tpl;
+
+            if (collection === 'project') {
+
+                tpl = '<div class=\"project--popup\">' +
+                    '<div class=\"title--group\">' +
+                    '<div class=\"marker--title border--right\">' + name + '</div>' +
+                    '<a href=\"projects/' + id + '\">' +
+                    '<i class=\"material-icons\">keyboard_arrow_right</i>' +
+                    '</a>' +
+                    '</div>' +
+                    // '<view-features data-collection=\"' + collection + '\" data-id=\"' + id + '\"></view-features>' +
+                    '<a class=\"marker--title view-features\" href=\"' + nextPath + '\">View sites</a>' +
+                    '</div>';
+
+            } else if (collection === 'site') {
+
+                tpl = '<div class=\"project--popup\">' +
+                    '<div class=\"title--group\">' +
+                    '<div class=\"marker--title border--right\">' + name + '</div>' +
+                    '<a href=\"sites/' + id + '\">' +
+                    '<i class=\"material-icons\">keyboard_arrow_right</i>' +
+                    '</a>' +
+                    '</div>' +
+                    '<a class=\"marker--title view-features\" href=\"' + nextPath + '\">View practices</a>' +
+                    '</div>';
+
+            } else if (collection === 'practice') {
+
+                tpl = '<div class=\"project--popup\">' +
+                    '<div class=\"title--group\">' +
+                    '<div class=\"marker--title border--right\">' + name + '</div>' +
+                    '<a href=\"practices/' + id + '\">' +
+                    '<i class=\"material-icons\">keyboard_arrow_right</i>' +
+                    '</a>' +
+                    '</div>' +
+                    '</div>';
+
+            } else {
+
+                tpl = '<div class=\"project--popup\">' +
+                    '<div class=\"title--group\">' +
+                    '<div class=\"marker--title border--right\">' + name + '</div>' +
+                    '<a href=\"geographies/' + id + '\">' +
+                    '<i class=\"material-icons\">keyboard_arrow_right</i>' +
+                    '</a>' +
+                    '</div>' +
+                    '</div>';
+
+            }
+
+            return tpl;
 
         };
 
-        self.processLocations = function(map, features) {
+        self.processLocations = function(map, collection, features) {
 
             console.log(
                 'self.processLocations --> features',
@@ -140,11 +214,13 @@ angular.module('FieldDoc')
                 if (feature.geometry &&
                     feature.geometry.coordinates) {
 
-                    var tpl = self.popupTemplate(feature);
+                    var tpl = self.popupTemplate(collection, feature);
 
                     var popup = new mapboxgl.Popup()
                         .setLngLat(feature.geometry.coordinates)
                         .setHTML(tpl);
+
+                    self.popupIndex.push(popup);
 
                     var markerEl = document.createElement('div');
 
@@ -163,51 +239,14 @@ angular.module('FieldDoc')
 
         self.resetMapExtent = function() {
 
-            self.map.geojson.data = self.geographies;
+            console.log(
+                'self.resetMapExtent --> Starting...');
 
-            leafletData.getMap('primary--map').then(function(map) {
+            if (self.map) {
 
-                map.closePopup();
+                self.removePopups();
 
-                leafletData.getLayers('primary--map').then(function(layers) {
-
-                    console.log('leafletData.getLayers', layers);
-
-                    map.removeLayer(layers.baselayers.satellite);
-
-                    map.removeLayer(layers.baselayers.terrain);
-
-                    map.addLayer(layers.baselayers.streets);
-
-                });
-
-                leafletData.getGeoJSON('primary--map').then(function(geoJsonLayer) {
-
-                    console.log('geoJsonLayer', geoJsonLayer);
-
-                    map.fitBounds(geoJsonLayer.getBounds(), {
-                        maxZoom: 18
-                    });
-
-                });
-
-            });
-
-        };
-
-        self.setMapBoundsToFeature = function(feature) {
-
-            console.log('setMapBoundsToFeature', feature);
-
-            var geoJsonLayer = L.geoJson(feature, {});
-
-            leafletData.getMap('primary--map').then(function(map) {
-
-                map.fitBounds(geoJsonLayer.getBounds(), {
-                    maxZoom: 18
-                });
-
-            });
+            }
 
         };
 
@@ -215,159 +254,110 @@ angular.module('FieldDoc')
         // Load custom geographies
         //
 
-        function onEachFeature(feature, layer) {
+        self.setActiveFeature = function(collection, feature) {
 
-            console.log('onEachFeature', feature, layer);
+            console.log(
+                'self.setActiveFeature --> collection',
+                collection);
 
-            var popup;
+            console.log(
+                'self.setActiveFeature --> feature',
+                feature);
 
-            layer.on({
+            if (collection === 'site') {
 
-                click: function() {
+                self.activeSite = feature;
 
-                    console.log(layer.feature.properties.name);
+                self.card = {
+                    featureType: 'site',
+                    featureTabLabel: 'Practices',
+                    feature: feature.properties,
+                    heading: feature.properties.name,
+                    yearsActive: '2018',
+                    funding: '$100k',
+                    url: '/sites/' + feature.properties.id,
+                    description: feature.properties.description,
+                    linkTarget: '_self'
+                };
 
-                    self.setMapBoundsToFeature(layer.feature);
+                self.loadSitePractices(layer.feature.properties);
 
-                    if (layer.feature.properties.feature_type === 'site') {
+                self.loadMetrics(null, {
+                    collection: 'site',
+                    featureId: feature.properties.id
+                });
 
-                        self.activeSite = feature;
+                self.loadTags('site', feature.properties.id);
 
-                        self.card = {
-                            featureType: 'site',
-                            featureTabLabel: 'Practices',
-                            feature: feature.properties,
-                            heading: feature.properties.name,
-                            yearsActive: '2018',
-                            funding: '$100k',
-                            url: '/sites/' + feature.properties.id,
-                            description: feature.properties.description,
-                            linkTarget: '_self'
-                        };
+                //
+                // Set value of `self.historyItem`
+                //
 
-                        self.loadSitePractices(layer.feature.properties);
+                self.historyItem = {
+                    feature: self.activeProject,
+                    label: self.activeProject.properties.name,
+                    geoJson: self.activeProject,
+                    type: 'project'
+                };
 
-                        self.loadMetrics(null, {
-                            collection: 'site',
-                            featureId: feature.properties.id
-                        });
+            } else if (collection === 'geography') {
 
-                        self.loadTags('site', feature.properties.id);
+                self.setGeoFilter(layer.feature.properties);
 
-                        //
-                        // Set value of `self.historyItem`
-                        //
+                self.card = {
+                    featureType: 'geography',
+                    featureTabLabel: 'Projects',
+                    feature: feature.properties,
+                    heading: feature.properties.name,
+                    yearsActive: '2013-2018',
+                    funding: '$50k',
+                    url: 'geographies/' + feature.properties.id,
+                    description: feature.properties.description,
+                    linkTarget: '_self'
+                };
 
-                        self.historyItem = {
-                            feature: self.activeProject,
-                            label: self.activeProject.properties.name,
-                            geoJson: self.activeProject,
-                            type: 'project'
-                        };
+                self.loadMetrics(null, {
+                    collection: 'geography',
+                    featureId: feature.properties.id
+                });
 
-                    } else if (layer.feature.properties.feature_type === 'geography') {
+                self.loadTags('geography', feature.properties.id);
 
-                        self.setGeoFilter(layer.feature.properties);
+            } else if (collection === 'practice') {
 
-                        self.card = {
-                            featureType: 'geography',
-                            featureTabLabel: 'Projects',
-                            feature: feature.properties,
-                            heading: feature.properties.name,
-                            yearsActive: '2013-2018',
-                            funding: '$50k',
-                            url: 'geographies/' + feature.properties.id,
-                            description: feature.properties.description,
-                            linkTarget: '_self'
-                        };
+                self.loadMetrics(null, {
+                    collection: 'practice',
+                    featureId: feature.properties.id
+                });
 
-                        self.loadMetrics(null, {
-                            collection: 'geography',
-                            featureId: feature.properties.id
-                        });
+                self.loadTags('practice', feature.properties.id);
 
-                        self.loadTags('geography', feature.properties.id);
+                self.card = {
+                    featureType: 'practice',
+                    featureTabLabel: null,
+                    feature: feature.properties,
+                    heading: feature.properties.name,
+                    yearsActive: null,
+                    funding: null,
+                    url: '/practices/' + feature.properties.id,
+                    description: feature.properties.description,
+                    linkTarget: '_self'
+                };
 
-                    } else if (layer.feature.properties.feature_type === 'practice') {
+                //
+                // Set value of `self.historyItem`
+                //
 
-                        self.loadMetrics(null, {
-                            collection: 'practice',
-                            featureId: feature.properties.id
-                        });
+                self.historyItem = {
+                    feature: self.activeSite,
+                    label: self.activeSite.properties.name,
+                    geoJson: self.activeSite,
+                    type: 'site'
+                };
 
-                        self.loadTags('practice', feature.properties.id);
+            }
 
-                        self.card = {
-                            featureType: 'practice',
-                            featureTabLabel: null,
-                            feature: feature.properties,
-                            heading: feature.properties.name,
-                            yearsActive: null,
-                            funding: null,
-                            url: '/practices/' + feature.properties.id,
-                            description: feature.properties.description,
-                            linkTarget: '_self'
-                        };
-
-                        //
-                        // Set value of `self.historyItem`
-                        //
-
-                        self.historyItem = {
-                            feature: self.activeSite,
-                            label: self.activeSite.properties.name,
-                            geoJson: self.activeSite,
-                            type: 'site'
-                        };
-
-                    }
-
-                },
-                mouseover: function(event) {
-
-                    console.log('onEachFeature.mouseover', event);
-
-                    console.log(layer.feature.properties.name);
-
-                    self.removeMarkerPopups();
-
-                    leafletData.getMap('primary--map').then(function(map) {
-
-                        if (popup) {
-
-                            map.closePopup(popup);
-
-                        }
-
-                        popup = L.popup()
-                            .setLatLng(event.latlng)
-                            .setContent('<div class=\"marker--title\">' + feature.properties.name + '</div>');
-
-                        popup.openOn(map);
-
-                    });
-
-                },
-                mouseout: function(event) {
-
-                    console.log('onEachFeature.mouseout', event);
-
-                    console.log(layer.feature.properties.name);
-
-                    leafletData.getMap('primary--map').then(function(map) {
-
-                        if (popup) {
-
-                            map.closePopup(popup);
-
-                        }
-
-                    });
-
-                }
-
-            });
-        }
+        };
 
         self.loadGeographies = function() {
 
@@ -375,63 +365,7 @@ angular.module('FieldDoc')
 
                 console.log('geographies.successResponse', successResponse);
 
-                self.geographies = successResponse;
-
-                // self.map.geojson = {
-                //     data: successResponse,
-                //     onEachFeature: onEachFeature,
-                //     style: {
-                //         color: '#00D',
-                //         fillColor: 'red',
-                //         weight: 2.0,
-                //         opacity: 0.6,
-                //         fillOpacity: 0.2
-                //     }
-                // };
-
-                //
-                // Fit map bounds to GeoJSON
-                //
-
-                // self.resetMapExtent();
-
-                //
-                // Set up layer visibility logic
-                //
-
-                // leafletData.getMap('primary--map').then(function(map) {
-
-                //     map.on('zoomend', function(event) {
-
-                //         var zoomLevel = map.getZoom();
-
-                //         leafletData.getLayers('primary--map').then(function(layers) {
-
-                //             console.log('leafletData.getLayers', layers);
-
-                //             if (zoomLevel > 15) {
-
-                //                 map.removeLayer(layers.baselayers.streets);
-
-                //                 map.removeLayer(layers.baselayers.terrain);
-
-                //                 map.addLayer(layers.baselayers.satellite);
-
-                //             } else {
-
-                //                 map.removeLayer(layers.baselayers.satellite);
-
-                //                 map.removeLayer(layers.baselayers.terrain);
-
-                //                 map.addLayer(layers.baselayers.streets);
-
-                //             }
-
-                //         });
-
-                //     });
-
-                // });
+                self.geographies = successResponse.features;
 
                 self.loadBaseProjects();
 
@@ -581,106 +515,6 @@ angular.module('FieldDoc')
 
         };
 
-        self.search = {
-            query: '',
-            execute: function(page) {
-
-                //
-                // Get all of our existing URL Parameters so that we can
-                // modify them to meet our goals
-                //
-
-                var q = {
-                    filters: [{
-                        'and': [{
-                            name: 'name',
-                            op: 'ilike',
-                            val: '%' + self.search.query + '%'
-                        }]
-                    }],
-                    order_by: [{
-                        field: 'created_on',
-                        direction: 'desc'
-                    }]
-                };
-
-                if (self.filters.active.workflow_state !== null) {
-                    console.log('add workflow state filter');
-
-                    q.filters.push({
-                        'name': 'workflow_state',
-                        'op': 'like',
-                        'val': self.filters.active.workflow_state
-                    });
-                }
-
-                if (self.filters.active.year && self.filters.active.year.year) {
-                    q.filters.push({
-                        'name': 'created_on',
-                        'op': 'gte',
-                        'val': self.filters.active.year.year + '-01-01'
-                    });
-                    q.filters.push({
-                        'name': 'created_on',
-                        'op': 'lte',
-                        'val': self.filters.active.year.year + '-12-31'
-                    });
-                }
-
-                Project.query({
-                    'q': q,
-                    'page': (page ? page : 1)
-                }).$promise.then(function(successResponse) {
-
-                    console.log('successResponse', successResponse);
-
-                    self.projects = successResponse;
-
-                }, function(errorResponse) {
-
-                    console.log('errorResponse', errorResponse);
-
-                });
-
-            },
-            paginate: function(pageNumber) {
-
-                //
-                // Get all of our existing URL Parameters so that we can
-                // modify them to meet our goals
-                //
-                self.search.execute(pageNumber);
-            },
-            clear: function() {
-
-                // $location.path('/projects/').search('');
-
-                self.q = {};
-
-                self.filteredProjects = self.projects;
-
-                self.processLocations(self.filteredProjects);
-
-            }
-        };
-
-        //
-        // Set Default Search Filter value
-        //
-        if (self.search && self.search.query === '') {
-
-            var searchParams = $location.search(),
-                q = angular.fromJson(searchParams.q);
-
-            if (q && q.filters && q.filters.length) {
-                angular.forEach(q.filters[0].and, function(filter) {
-                    if (filter.name === 'name') {
-                        self.search.query = filter.val.replace(/%/g, '');
-                    }
-                });
-            }
-        }
-
         self.removeMarkerPopups = function() {
 
             for (var key in self.map.markers) {
@@ -695,117 +529,160 @@ angular.module('FieldDoc')
 
         };
 
-        self.setMarkerFocus = function(feature, collection, setFilter) {
+        self.loadFeatures = function(collection, featureId) {
 
-            if (collection === 'project') {
+            console.log(
+                'self.loadFeatures --> collection',
+                collection);
 
-                var markerId = 'project_' + feature.id,
-                    marker = self.map.markers[markerId];
-
-                console.log('setMarkerFocus', markerId, self.map.markers[markerId]);
-
-                self.removeMarkerPopups();
-
-                if (marker) {
-
-                    self.map.markers[markerId].focus = true;
-
-                    if (setFilter) {
-
-                        self.setProjectFilter(feature);
-
-                    }
-
-                }
-
-            } else {
-
-                if (collection === 'practice') {
-
-                    self.map.geojson.data = self.practices;
-
-                }
-
-                self.setMapBoundsToFeature(feature);
-
-            }
+            console.log(
+                'self.loadFeatures --> featureId',
+                featureId);
 
         };
 
-        self.clearMarkerFocus = function(feature) {
+        self.loadProjectSites = function(featureId) {
 
-            var markerId = 'project_' + feature.id,
-                marker = self.map.markers[markerId];
+            console.log(
+                'self.loadProjectSites --> featureId',
+                featureId);
 
-            if (marker) {
+            if (self.map) {
 
-                self.map.markers[markerId].focus = false;
+                self.removePopups();
 
             }
 
-            console.log('clearMarkerFocus', markerId, self.map.markers[markerId]);
+            var matches = self.baseProjects.filter(function(feature) {
 
-        };
+                if (feature.properties.id === featureId) {
 
-        self.loadProjectSites = function(obj) {
+                    return true;
 
-            Dashboard.projectSites({
-                id: obj.id
-            }).$promise.then(function(successResponse) {
+                }
 
-                console.log('projectSiteResponse', successResponse);
-
-                self.sites = successResponse;
-
-                self.map.geojson = {
-                    data: successResponse,
-                    onEachFeature: onEachFeature,
-                    style: {
-                        color: '#00D',
-                        fillColor: 'red',
-                        weight: 2.0,
-                        opacity: 0.6,
-                        fillOpacity: 0.2
-                    }
-                };
-
-            }, function(errorResponse) {
-
-                console.log('errorResponse', errorResponse);
+                return false;
 
             });
 
+            if (matches.length) {
+
+                var targetProject = matches[0];
+
+                self.setProjectFilter(targetProject);
+
+                // self.card = {
+                //     featureType: 'project',
+                //     featureTabLabel: 'Sites',
+                //     feature: self.activeProject.properties,
+                //     heading: self.activeProject.properties.name,
+                //     yearsActive: '2018',
+                //     funding: '$100k',
+                //     url: 'projects/' + self.activeProject.properties.id,
+                //     description: self.activeProject.properties.description,
+                //     linkTarget: '_self'
+                // };
+
+                // self.loadMetrics(null, {
+                //     collection: 'project',
+                //     featureId: self.activeProject.properties.id
+                // });
+
+                // self.loadTags('project', self.activeProject.properties.id);
+
+                Dashboard.projectSites({
+                    id: featureId
+                }).$promise.then(function(successResponse) {
+
+                    console.log('projectSiteResponse', successResponse);
+
+                    var mappedSites = [];
+
+                    successResponse.features.forEach(function(feature) {
+
+                        if (feature.geometry &&
+                            feature.geometry.coordinates) {
+
+                            mappedSites.push(feature);
+
+                        }
+
+                    });
+
+                    if (mappedSites.length) {
+
+                        var featureCollection = {
+                            'type': 'FeatureCollection',
+                            'features': mappedSites
+                        }
+
+                        self.populateMap(
+                            self.map,
+                            'site',
+                            featureId,
+                            featureCollection,
+                            null,
+                            true);
+
+                    }
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
+
+            }
+
         };
 
-        self.loadSitePractices = function(obj) {
+        self.loadSitePractices = function(featureId) {
+
+            console.log(
+                'self.loadSitePractices --> featureId',
+                featureId);
+
+            if (self.map) {
+
+                self.removePopups();
+
+            }
 
             Dashboard.sitePractices({
-                id: obj.id
+                id: featureId
             }).$promise.then(function(successResponse) {
 
                 console.log('sitePracticeResponse', successResponse);
 
-                self.practices = successResponse;
+                var mappedPractices = [];
 
-                leafletData.getMap('primary--map').then(function(map) {
+                successResponse.features.forEach(function(feature) {
 
-                    map.closePopup();
+                    if (feature.geometry &&
+                        feature.geometry.coordinates) {
 
-                    self.setMapBoundsToFeature(successResponse);
+                        mappedPractices.push(feature);
+
+                    }
 
                 });
 
-                self.map.geojson = {
-                    data: successResponse,
-                    onEachFeature: onEachFeature,
-                    style: {
-                        color: '#00D',
-                        fillColor: 'red',
-                        weight: 2.0,
-                        opacity: 0.6,
-                        fillOpacity: 0.2
+                if (mappedPractices.length) {
+
+                    var featureCollection = {
+                        'type': 'FeatureCollection',
+                        'features': mappedPractices
                     }
-                };
+
+                    self.populateMap(
+                        self.map,
+                        'practice',
+                        featureId,
+                        featureCollection,
+                        null,
+                        true);
+
+                }
 
             }, function(errorResponse) {
 
@@ -845,24 +722,24 @@ angular.module('FieldDoc')
 
                     self.setProjectFilter(self.activeProject.properties);
 
-                    self.card = {
-                        featureType: 'project',
-                        featureTabLabel: 'Sites',
-                        feature: self.activeProject.properties,
-                        heading: self.activeProject.properties.name,
-                        yearsActive: '2018',
-                        funding: '$100k',
-                        url: 'projects/' + self.activeProject.properties.id,
-                        description: self.activeProject.properties.description,
-                        linkTarget: '_self'
-                    };
+                    // self.card = {
+                    //     featureType: 'project',
+                    //     featureTabLabel: 'Sites',
+                    //     feature: self.activeProject.properties,
+                    //     heading: self.activeProject.properties.name,
+                    //     yearsActive: '2018',
+                    //     funding: '$100k',
+                    //     url: 'projects/' + self.activeProject.properties.id,
+                    //     description: self.activeProject.properties.description,
+                    //     linkTarget: '_self'
+                    // };
 
-                    self.loadMetrics(null, {
-                        collection: 'project',
-                        featureId: self.activeProject.properties.id
-                    });
+                    // self.loadMetrics(null, {
+                    //     collection: 'project',
+                    //     featureId: self.activeProject.properties.id
+                    // });
 
-                    self.loadTags('project', self.activeProject.properties.id);
+                    // self.loadTags('project', self.activeProject.properties.id);
 
                     break;
 
@@ -870,7 +747,7 @@ angular.module('FieldDoc')
 
                     self.map.geojson.data = self.activeSite;
 
-                    self.setMapBoundsToFeature(self.activeSite);
+                    // self.setMapBoundsToFeature(self.activeSite);
 
                     // self.practices = null;
 
@@ -914,31 +791,21 @@ angular.module('FieldDoc')
 
         };
 
-        self.setProjectFilter = function(obj) {
+        self.setProjectFilter = function(feature) {
 
-            //
-            // Fit map bounds to GeoJSON
-            //
+            console.log(
+                'self.setProjectFilter --> feature',
+                feature);
 
-            var feature = {
-                type: 'Feature',
-                properties: obj,
-                geometry: obj.extent
-            };
+            // FilterStore.clearAll();
 
-            self.setMapBoundsToFeature(feature);
+            // var _filterObject = {
+            //     id: obj.id,
+            //     name: obj.name,
+            //     category: 'project'
+            // };
 
-            self.loadProjectSites(obj);
-
-            FilterStore.clearAll();
-
-            var _filterObject = {
-                id: obj.id,
-                name: obj.name,
-                category: 'project'
-            };
-
-            FilterStore.addItem(_filterObject);
+            // FilterStore.addItem(_filterObject);
 
             //
             // Load project progress
@@ -946,14 +813,14 @@ angular.module('FieldDoc')
 
             self.loadMetrics(null, {
                 collection: 'project',
-                featureId: obj.id
+                featureId: feature.properties.id
             });
 
             //
             // Load project tags
             //
 
-            self.loadTags('project', obj.id);
+            self.loadTags('project', feature.properties.id);
 
             //
             // Set value of `self.historyItem`
@@ -980,11 +847,11 @@ angular.module('FieldDoc')
                 featureType: 'project',
                 featureTabLabel: 'Sites',
                 feature: feature,
-                heading: obj.name,
+                heading: feature.properties.name,
                 yearsActive: '2018',
                 funding: '$100k',
-                url: 'projects/' + obj.id,
-                description: obj.description,
+                url: 'projects/' + feature.properties.id,
+                description: feature.properties.description,
                 linkTarget: '_self'
             };
 
@@ -1078,27 +945,6 @@ angular.module('FieldDoc')
 
         };
 
-        self.zoomToProjects = function() {
-
-            var featureCollection = {
-                type: 'FeatureCollection',
-                features: []
-            };
-
-            self.filteredProjects.forEach(function(feature) {
-
-                featureCollection.features.push({
-                    type: 'Feature',
-                    properties: {},
-                    geometry: feature.extent
-                });
-
-            });
-
-            self.setMapBoundsToFeature(featureCollection);
-
-        };
-
         self.processProjectData = function(data) {
 
             var featureCollection = {
@@ -1112,11 +958,7 @@ angular.module('FieldDoc')
 
             self.summary = data.properties;
 
-            // self.processLocations(data.features);
-
             self.loadMetrics(self.filteredProjects);
-
-            // self.zoomToProjects();
 
         };
 
@@ -1192,40 +1034,6 @@ angular.module('FieldDoc')
 
         };
 
-        $scope.$on('leafletDirectiveMarker.primary--map.click', function(event, args) {
-
-            console.log('leafletDirectiveMarker.primary--map.click', event, args);
-
-            var project = self.filteredProjects.filter(function(datum) {
-
-                var id = +(args.modelName.split('project_')[1]);
-
-                return datum.id === id;
-
-            })[0];
-
-            console.log('leafletDirectiveMarker.primary--map.click.project', project);
-
-            self.setMarkerFocus(project, 'project', true);
-
-        });
-
-        // $scope.$on('leafletDirectiveMarker.primary--map.mouseover', function(event, args) {
-
-        //     console.log('leafletDirectiveMarker.primary--map.mouseover', event, args);
-
-        //     var project = self.filteredProjects.filter(function(datum) {
-
-        //         var id = +(args.modelName.split('project_')[1]);
-
-        //         return datum.id === id;
-
-        //     })[0];
-
-        //     self.setMarkerFocus(project, 'project');
-
-        // });
-
         self.showMetricModal = function(metric) {
 
             console.log('self.showMetricModal', metric);
@@ -1285,22 +1093,154 @@ angular.module('FieldDoc')
 
         };
 
-        self.populateMap = function(map, feature, attribute) {
+        self.addGeographyLayer = function(map, arr) {
+
+            console.log(
+                'self.addGeographyLayer --> arr',
+                arr);
+
+            if (!arr || !arr.length) return;
+
+            var featureCollection = turf.featureCollection(arr);
+
+            self.populateMap(
+                map,
+                'geography',
+                null,
+                featureCollection,
+                null,
+                false);
+
+        };
+
+        self.populateMap = function(map, collection, collectionId, feature, attribute, fitBounds) {
+
+            console.log('self.populateMap --> collection', collection);
+
+            console.log('self.populateMap --> collectionId', collectionId);
 
             console.log('self.populateMap --> feature', feature);
+
+            collectionId = collectionId || Date.now();
 
             var geojson = attribute ? feature[attribute] : feature;
 
             if (geojson !== null &&
                 typeof geojson !== 'undefined') {
 
-                var bounds = turf.bbox(geojson);
+                if (fitBounds) {
 
-                map.fitBounds(bounds, {
-                    padding: 40
-                });
+                    var bounds = turf.bbox(geojson);
 
-                self.processLocations(map, geojson.features);
+                    map.fitBounds(bounds, {
+                        padding: 40
+                    });
+
+                    // 
+                    // Prepend `bounds` to extent history array.
+                    // 
+
+                    self.extentHistory.unshift(bounds);
+
+                    console.log('self.extentHistory', self.extentHistory);
+
+                }
+
+                if (collection === 'project') {
+
+                    self.processLocations(map, 'project', geojson.features);
+
+                }
+
+                if (collection === 'geography' ||
+                    collection === 'practice' ||
+                    collection === 'site') {
+
+                    var layerId = collection + '-collection-' + collectionId;
+
+                    var fillColor,
+                        lineColor;
+
+                    if (collection === 'practice') {
+
+                        fillColor = '#df063e';
+
+                        lineColor = 'rgba(223, 6, 62, 0.8)';
+
+                    } else if (collection === 'site') {
+
+                        fillColor = '#06aadf';
+
+                        lineColor = 'rgba(6, 170, 223, 0.8)';
+
+                    } else {
+
+                        fillColor = '#fbb03b';
+
+                        lineColor = 'rgba(251, 176, 59, 0.8)';
+
+                    }
+
+                    if (self.layerIndex.indexOf(layerId) < 0) {
+
+                        self.layerIndex.push(layerId);
+
+                        map.addLayer({
+                            'id': layerId,
+                            'type': 'fill',
+                            'source': {
+                                'type': 'geojson',
+                                'data': geojson
+                            },
+                            'layout': {
+                                'visibility': 'visible'
+                            },
+                            'paint': {
+                                'fill-color': fillColor,
+                                'fill-opacity': 0.4
+                            }
+                        });
+
+                        map.addLayer({
+                            'id': collection + '-collection-outline-' + Date.now(),
+                            'type': 'line',
+                            'source': {
+                                'type': 'geojson',
+                                'data': geojson
+                            },
+                            'layout': {
+                                'visibility': 'visible'
+                            },
+                            'paint': {
+                                'line-color': lineColor,
+                                'line-width': 2
+                            }
+                        });
+
+                        map.on('click', layerId, function (e) {
+
+                            // 
+                            // Remove open popups
+                            // 
+
+                            self.removePopups();
+
+                            var tpl = self.popupTemplate(collection, e.features[0]);
+
+                            var popup = new mapboxgl.Popup()
+                                .setLngLat(e.lngLat)
+                                .setHTML(tpl)
+                                .addTo(map);
+
+                            self.popupIndex.push(popup);
+
+                            self.setActiveFeature(collection, e.features[0]);
+
+                        });
+
+                    }
+
+                }
 
             }
 
@@ -1415,12 +1355,114 @@ angular.module('FieldDoc')
 
                 self.map.addControl(fullScreen, 'top-left');
 
-                self.populateMap(self.map, self.projectCollection);
+                // 
+                // Add geography layer first
+                // 
+
+                self.addGeographyLayer(self.map, self.geographies);
+
+                // 
+                // Add project markers
+                // 
+
+                self.populateMap(
+                    self.map,
+                    'project',
+                    null,
+                    self.projectCollection,
+                    null,
+                    true);
+
+                self.inspectSearchParams();
 
             });
 
         };
 
         self.loadDashboard();
+
+        self.inspectSearchParams = function(params) {
+
+            console.log(
+                'self.inspectSearchParams --> params',
+                params);
+
+            params = params || $location.search();
+
+            var keys = Object.keys(params);
+
+            if (keys.indexOf('project') >= 0) {
+
+                var projectId = params.project;
+
+                console.log(
+                    'self.inspectSearchParams --> projectId',
+                    projectId);
+
+                if (projectId) {
+
+                    self.loadProjectSites(+projectId);
+
+                }
+
+            } else if (keys.indexOf('site') >= 0) {
+
+                var siteId = params.site;
+
+                console.log(
+                    'self.inspectSearchParams --> siteId',
+                    siteId);
+
+                if (siteId) {
+
+                    self.loadSitePractices(+siteId);
+
+                }
+
+            } else {
+
+                if (self.map &&
+                    self.extentHistory.length) {
+
+                    var bounds;
+
+                    if (self.extentHistory.length === 1) {
+
+                        bounds = self.extentHistory[0];
+
+                    } else {
+
+                        bounds = self.extentHistory.pop();
+
+                    }
+
+                    self.map.fitBounds(bounds, {
+                        padding: 40
+                    });
+
+                    console.log(
+                        'self.inspectSearchParams --> self.extentHistory',
+                        self.extentHistory)
+
+                }
+
+            }
+
+        };
+
+        // 
+        // Observe internal route changes. Note that `reloadOnSearch`
+        // must be set to `false`.
+        // 
+        // See: https://stackoverflow.com/questions/15093916
+        // 
+
+        $scope.$on('$routeUpdate', function() {
+
+            var params = $location.search();
+
+            self.inspectSearchParams(params);
+
+        });
 
     });

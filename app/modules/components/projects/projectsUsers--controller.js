@@ -73,7 +73,8 @@
                 self.searchUsers = function(value) {
 
                     return SearchService.user({
-                        q: value
+                        q: value,
+                        scope: 'user'
                     }).$promise.then(function(response) {
 
                         console.log('SearchService response', response);

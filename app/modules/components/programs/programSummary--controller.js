@@ -214,10 +214,12 @@
                 self.popupTemplate = function(feature) {
 
                     return '<div class=\"project--popup\">' +
+                        '<div class=\"title--group\">' +
                         '<div class=\"marker--title border--right\">' + feature.properties.name + '</div>' +
                         '<a href=\"projects/' + feature.properties.id + '\">' +
                         '<i class=\"material-icons\">keyboard_arrow_right</i>' +
                         '</a>' +
+                        '</div>' +
                         '</div>';
 
                 };
