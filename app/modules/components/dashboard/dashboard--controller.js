@@ -128,6 +128,8 @@ angular.module('FieldDoc')
 
         self.practiceIndex = {};
 
+        self.projectIndex = {};
+
         self.removeMarkers = function() {
 
             self.markerIndex.forEach(function(obj) {
@@ -219,16 +221,27 @@ angular.module('FieldDoc')
 
         };
 
-        self.processLocations = function(map, collection, features) {
+        self.processLocations = function(map, collection, features, spatialProperty) {
 
             console.log(
                 'self.processLocations --> features',
                 features);
 
+            spatialProperty = spatialProperty || 'geometry';
+
             features.forEach(function(feature, index) {
 
-                if (feature.geometry &&
-                    feature.geometry.coordinates) {
+                if (feature[spatialProperty] &&
+                    feature[spatialProperty].coordinates) {
+
+                    // var geoJson = {
+                    //     'type': 'Feature',
+                    //     'geometry': feature[spatialProperty]
+                    // };
+
+                    // delete feature[spatialProperty];
+
+                    // geoJson.properties = feature;
 
                     var tpl = self.popupTemplate(collection, feature);
 
@@ -248,6 +261,8 @@ angular.module('FieldDoc')
                         .addTo(map);
 
                     self.markerIndex.push(marker);
+
+                    self.projectIndex[feature.properties.id] = feature;
 
                 }
 
@@ -603,23 +618,25 @@ angular.module('FieldDoc')
 
             }
 
-            var matches = self.baseProjects.filter(function(feature) {
+            // var matches = self.baseProjects.filter(function(feature) {
 
-                if (feature.properties.id === featureId) {
+            //     if (feature.properties.id === featureId) {
 
-                    return true;
+            //         return true;
 
-                }
+            //     }
 
-                return false;
+            //     return false;
 
-            });
+            // });
 
-            if (matches.length) {
+            var match = self.projectIndex[featureId];
 
-                var targetProject = matches[0];
+            if (match && match.geometry) {
 
-                self.setProjectFilter(targetProject);
+                // var targetProject = matches[0];
+
+                self.setProjectFilter(match);
 
                 Dashboard.projectSites({
                     id: featureId
@@ -1131,11 +1148,49 @@ angular.module('FieldDoc')
 
         };
 
+        self.toGeoJson = function(arr, spatialProperty) {
+
+            console.log(
+                'self.toGeoJson --> arr',
+                arr);
+
+            console.log(
+                'self.toGeoJson --> spatialProperty',
+                spatialProperty);
+
+            var validFeatures = [];
+
+            spatialProperty = spatialProperty || 'geometry';
+
+            arr.forEach(function(feature, index) {
+
+                if (feature[spatialProperty] &&
+                    feature[spatialProperty].coordinates) {
+
+                    var geoJson = {
+                        'type': 'Feature',
+                        'geometry': feature[spatialProperty]
+                    };
+
+                    delete feature[spatialProperty];
+
+                    geoJson.properties = feature;
+
+                    validFeatures.push(geoJson);
+
+                }
+
+            });
+
+            return validFeatures;
+
+        };
+
         self.processProjectData = function(data) {
 
             var featureCollection = {
                 type: 'FeatureCollection',
-                features: data.features
+                features: self.toGeoJson(data.features, 'centroid')
             };
 
             self.projectCollection = featureCollection;
@@ -1182,7 +1237,7 @@ angular.module('FieldDoc')
 
         self.loadBaseProjects = function() {
 
-            Dashboard.pointLayer({
+            Dashboard.projects({
                 id: self.dashboardObject.id
             }).$promise.then(function(successResponse) {
 
@@ -1334,7 +1389,11 @@ angular.module('FieldDoc')
 
                 if (collection === 'project') {
 
-                    self.processLocations(map, 'project', geojson.features);
+                    self.processLocations(
+                        map,
+                        'project',
+                        geojson.features,
+                        'geometry');
 
                 }
 
@@ -1591,7 +1650,17 @@ angular.module('FieldDoc')
 
                 if (Number.isInteger(projectId)) {
 
-                    self.loadProjectSites(projectId);
+                    if (self.projectIndex.hasOwnProperty(projectId)) {
+
+                        var activeProject = self.projectIndex[projectId];
+
+                        self.setActiveFeature('project', activeProject);
+
+                        self.loadProjectSites(projectId);
+
+                    }
+
+                    // self.loadProjectSites(projectId);
 
                 }
 

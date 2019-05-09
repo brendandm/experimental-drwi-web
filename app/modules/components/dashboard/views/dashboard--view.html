@@ -53,6 +53,10 @@
                         <span class="label">Sites</span>
                         <span class="total--projects">{{ page.activeProject.properties.sites.length | number }}</span>
                     </div>
+                    <div class="stat--block" data-ng-if="page.card.featureType === 'project'">
+                        <span class="label">Practices</span>
+                        <span class="total--projects">{{ page.activeProject.properties.practices.length | number }}</span>
+                    </div>
                     <div class="stat--block" data-ng-if="page.card.featureType === 'site'">
                         <span class="label">Practices</span>
                         <span class="total--projects">{{ page.activeSite.properties.practices.length | number }}</span>
