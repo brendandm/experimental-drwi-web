@@ -21,6 +21,8 @@ angular.module('FieldDoc')
 
         var self = this;
 
+        self.dashboardId = $routeParams.dashboardId;
+
         self.status = {
             loading: true
         };
@@ -262,7 +264,17 @@ angular.module('FieldDoc')
 
                 self.removePopups();
 
+                // self.populateMap(
+                //     self.map,
+                //     'project',
+                //     null,
+                //     self.projectCollection,
+                //     null,
+                //     true);
+
             }
+
+            $location.search({});
 
         };
 
@@ -292,7 +304,7 @@ angular.module('FieldDoc')
 
             } else {
 
-                params.forward = true;
+                params.forward = 'true';
 
             }
 
@@ -565,20 +577,6 @@ angular.module('FieldDoc')
 
         };
 
-        self.removeMarkerPopups = function() {
-
-            for (var key in self.map.markers) {
-
-                if (self.map.markers.hasOwnProperty(key)) {
-
-                    self.map.markers[key].focus = false;
-
-                }
-
-            }
-
-        };
-
         self.loadFeatures = function(collection, featureId) {
 
             console.log(
@@ -709,7 +707,7 @@ angular.module('FieldDoc')
                 'sites'
             ].join(',');
 
-            Practice.get({
+            Practice.publicFeature({
                 id: featureId,
                 exclude: exclude
             }).$promise.then(function(successResponse) {
@@ -749,7 +747,7 @@ angular.module('FieldDoc')
                     self.populateMap(
                         self.map,
                         'practice',
-                        null,
+                        successResponse.id,
                         featureCollection,
                         null,
                         true);
@@ -800,7 +798,7 @@ angular.module('FieldDoc')
                 'sites'
             ].join(',');
 
-            Site.get({
+            Site.publicFeature({
                 id: featureId,
                 exclude: exclude
             }).$promise.then(function(successResponse) {
@@ -838,7 +836,7 @@ angular.module('FieldDoc')
                 self.populateMap(
                     self.map,
                     'site',
-                    null,
+                    successResponse.id,
                     featureCollection,
                     null,
                     true);
@@ -1346,6 +1344,10 @@ angular.module('FieldDoc')
 
                     var layerId = collection + '-collection-' + collectionId;
 
+                    console.log(
+                        'self.populateMap --> layerId',
+                        layerId);
+
                     var fillColor,
                         lineColor;
 
@@ -1581,35 +1583,35 @@ angular.module('FieldDoc')
 
             if (keys.indexOf('project') >= 0) {
 
-                var projectId = params.project;
+                var projectId = +params.project;
 
                 console.log(
                     'self.inspectSearchParams --> projectId',
                     projectId);
 
-                if (projectId) {
+                if (Number.isInteger(projectId)) {
 
-                    self.loadProjectSites(+projectId);
+                    self.loadProjectSites(projectId);
 
                 }
 
             } else if (keys.indexOf('site') >= 0) {
 
-                var siteId = params.site;
+                var siteId = +params.site;
 
                 console.log(
                     'self.inspectSearchParams --> siteId',
                     siteId);
 
-                if (siteId) {
+                if (Number.isInteger(siteId)) {
 
                     if (!self.siteIndex.hasOwnProperty(siteId)) {
 
-                        self.loadSite(+siteId);
+                        self.loadSite(siteId);
 
                     } else {
 
-                        self.loadSitePractices(+siteId);
+                        self.loadSitePractices(siteId);
 
                     }
 
@@ -1617,25 +1619,42 @@ angular.module('FieldDoc')
 
             } else if (keys.indexOf('practice') >= 0) {
 
-                var practiceId = params.practice;
+                var practiceId = +params.practice;
 
                 console.log(
                     'self.inspectSearchParams --> practiceId',
                     practiceId);
 
-                if (practiceId) {
+                if (Number.isInteger(practiceId)) {
 
                     // var activePractice = self.practiceIndex(practiceId);
 
                     if (!self.practiceIndex.hasOwnProperty(practiceId)) {
 
-                        self.loadPractice(+practiceId);
+                        self.loadPractice(practiceId);
 
                     } else {
 
                         var activePractice = self.practiceIndex[practiceId];
 
                         self.setActiveFeature('practice', activePractice);
+
+                        var featureCollection = turf.featureCollection([
+                            activePractice]);
+
+                        self.populateMap(
+                            self.map,
+                            'practice',
+                            practiceId,
+                            featureCollection,
+                            null,
+                            true);
+
+                        if (self.markerIndex.length) {
+
+                            self.removeMarkers();
+
+                        }
 
                     }
 

@@ -58,6 +58,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/site/:id/progress')
                 },
+                publicFeature: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/site/:id')
+                },
                 tags: {
                     method: 'GET',
                     isArray: false,

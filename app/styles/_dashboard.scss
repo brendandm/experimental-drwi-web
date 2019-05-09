@@ -40,24 +40,27 @@
 
             .reset--extent {
                 position: absolute;
-                height: 36px;
-                width: 36px;
-                top: 56px;
+                top: 52px;
                 right: 10px;
+                height: 30px;
+                width: 30px;
                 display: flex;
-                flex-flow: column;
+                flex-flow: colum;
                 justify-content: center;
                 align-items: center;
-                appearance: none;
-                cursor: pointer;
-                border: 0 none;
+                padding: 0;
                 outline: none;
-                color: #333;
-                font-size: 1em;
-                background: #fff;
+                border: 0;
+                box-sizing: border-box;
                 border-radius: 4px;
-                box-shadow: 0 1px 5px rgba(0,0,0,0.65);
-                z-index: 99;
+                background: #fff;
+                box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+                cursor: pointer;
+                user-select: none;
+                -moz-user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
+                z-index: 3;
             }
 
         }

@@ -51,11 +51,52 @@
                     </div>
                     <div class="stat--block" data-ng-if="page.card.featureType === 'project'">
                         <span class="label">Sites</span>
-                        <span class="total--projects">{{ page.sites.features.length | number }}</span>
+                        <span class="total--projects">{{ page.activeProject.properties.sites.length | number }}</span>
                     </div>
                     <div class="stat--block" data-ng-if="page.card.featureType === 'site'">
                         <span class="label">Practices</span>
-                        <span class="total--projects">{{ page.practices.features.length | number }}</span>
+                        <span class="total--projects">{{ page.activeSite.properties.practices.length | number }}</span>
+                    </div>
+
+                </div>
+
+                <div style="margin-bottom: 1em;" class="link--group" data-ng-if="page.card.featureType === 'practice' && page.activePractice.properties.area">
+
+                    <div class="stat--block">
+                        <!-- <span class="label">Area</span> -->
+                        <span>{{ page.activePractice.properties.area | convertArea:'acre' | number:2 }} acres</span>
+                    </div>
+
+                </div>
+
+                <div style="margin-bottom: 1em;" class="link--group" data-ng-if="page.card.featureType === 'site' && page.activeSite.properties.area">
+
+                    <div class="stat--block">
+                        <!-- <span class="label">Area</span> -->
+                        <span>{{ page.activeSite.properties.area | convertArea:'acre' | number:2 }} acres</span>
+                    </div>
+
+                </div>
+
+                <div style="margin-bottom: 1em;" class="link--group" data-ng-if="page.card.featureType === 'site'">
+
+                    <div class="stat--block">
+                        <span class="label">Project</span>
+                        <a href="/dashboards/{{ page.dashboardId }}?project={{ page.activeSite.properties.project.id }}">{{ page.activeSite.properties.project.name }}</a>
+                    </div>
+
+                </div>
+
+                <div style="margin-bottom: 1em;" class="link--group" data-ng-if="page.card.featureType === 'practice'">
+
+                    <div class="stat--block">
+                        <span class="label">Project</span>
+                        <a href="/dashboards/{{ page.dashboardId }}?project={{ page.activePractice.properties.project.id }}">{{ page.activePractice.properties.project.name }}</a>
+                    </div>
+
+                    <div class="stat--block">
+                        <span class="label">Site</span>
+                        <a href="/dashboards/{{ page.dashboardId }}?site={{ page.activePractice.properties.site.id }}">{{ page.activePractice.properties.site.name }}</a>
                     </div>
 
                 </div>
@@ -87,7 +128,7 @@
 
             <!-- Back navigation -->
 
-            <div class="navigation--control" data-ng-if="page.historyItem.label">
+            <!-- <div class="navigation--control" data-ng-if="page.historyItem.label">
                 <button class="navigate--up" type="button" data-ng-click="page.navigateBack(page.historyItem.type)">
                     <i class="material-icons">
                         keyboard_arrow_left
@@ -96,7 +137,7 @@
                 <div class="navigate--label">
                     {{ page.historyItem.label }}
                 </div>
-            </div>
+            </div> -->
 
             <div class="tab--controls">
 
@@ -290,7 +331,7 @@
 
             <button class="reset--extent" type="button" data-ng-click="page.resetMapExtent()" title="Global view">
                 <i class="material-icons">
-                    refresh
+                    public
                 </i>
             </button>
 
