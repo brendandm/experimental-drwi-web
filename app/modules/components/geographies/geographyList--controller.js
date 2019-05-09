@@ -36,21 +36,21 @@
 
                         self.status.processing = false;
 
-                        $timeout(function() {
+                        // $timeout(function() {
 
-                            if (!self.mapOptions) {
+                        //     if (!self.mapOptions) {
 
-                                self.mapOptions = self.getMapOptions();
+                        //         self.mapOptions = self.getMapOptions();
 
-                            }
+                        //     }
 
-                            if (self.geographies && self.geographies.length) {
+                        //     if (self.geographies && self.geographies.length) {
 
-                                self.addMapPreviews(self.geographies);
+                        //         self.addMapPreviews(self.geographies);
 
-                            }
+                        //     }
 
-                        }, 500);
+                        // }, 500);
 
                     }, 1000);
 
@@ -220,28 +220,41 @@
 
                 self.buildFilter = function() {
 
+                    console.log(
+                        'self.buildFilter --> self.selectedProgram',
+                        self.selectedProgram);
+
                     var params = $location.search(),
                         data = {
-                            t: Date.now(),
                             exclude_geometry: 'true'
                         };
 
-                    if (self.selectedProgram &&
-                        typeof self.selectedProgram.id !== 'undefined' &&
-                        self.selectedProgram.id > 0) {
+                    if (self.selectedProgram !== null &&
+                        typeof self.selectedProgram !== 'undefined' &&
+                        self.selectedProgram === 0) {
 
-                        data.program = self.selectedProgram.id;
+                        $location.search(data);
 
-                        $location.search('program', self.selectedProgram.id);
+                    } else if (self.selectedProgram !== null &&
+                        typeof self.selectedProgram !== 'undefined' &&
+                        self.selectedProgram > 0) {
+
+                        data.program = self.selectedProgram;
+
+                        data.prog_only = 'true';
+
+                        $location.search(data);
 
                     } else if (params.program !== null &&
                         typeof params.program !== 'undefined') {
 
                         data.program = params.program;
 
+                        data.prog_only = 'true';
+
                     } else {
 
-                        $location.search({});
+                        $location.search(data);
 
                     }
 
@@ -290,12 +303,12 @@
 
                     self.batchDelete = false;
 
-                    if (self.selectedProgram &&
-                        typeof self.selectedProgram.id !== 'undefined' &&
-                        self.selectedProgram.id > 0) {
+                    if (self.selectedProgram !== null &&
+                        typeof self.selectedProgram !== 'undefined' &&
+                        self.selectedProgram > 0) {
 
                         GeographyService.batchDelete({
-                            program: self.selectedProgram.id
+                            program: self.selectedProgram
                         }).$promise.then(function(successResponse) {
 
                             console.log('successResponse', successResponse);
@@ -536,20 +549,6 @@
 
                 };
 
-                self.extractPrograms = function(user) {
-
-                    var _programs = [];
-
-                    user.properties.programs.forEach(function(program) {
-
-                        _programs.push(program.properties);
-
-                    });
-
-                    return _programs;
-
-                };
-
                 // 
                 // Map functionality
                 // 
@@ -694,6 +693,51 @@
 
                 };
 
+                // 
+                // Observe internal route changes. Note that `reloadOnSearch`
+                // must be set to `false`.
+                // 
+                // See: https://stackoverflow.com/questions/15093916
+                // 
+
+                self.inspectSearchParams = function(params) {
+
+                    console.log(
+                        'self.inspectSearchParams --> params',
+                        params);
+
+                    params = params || $location.search();
+
+                    var keys = Object.keys(params);
+
+                    // if (keys.indexOf('program') >= 0) {
+
+                    //     var programId = +params.program;
+
+                    //     console.log(
+                    //         'self.inspectSearchParams --> programId',
+                    //         programId);
+
+                    //     if (Number.isInteger(programId)) {
+
+                    //         self.loadFeatures(programId);
+
+                    //     }
+
+                    // }
+
+                    self.loadFeatures();
+
+                };
+
+                $scope.$on('$routeUpdate', function() {
+
+                    var params = $location.search();
+
+                    self.inspectSearchParams(params);
+
+                });
+
                 //
                 // Verify Account information for proper UI element display
                 //
@@ -709,13 +753,16 @@
                             account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                         };
 
-                        self.programs = self.extractPrograms($rootScope.user);
+                        var programs = Utility.extractUserPrograms($rootScope.user);
 
-                        if ($rootScope.user.properties.programs.length) {
+                        programs.unshift({
+                            id: 0,
+                            name: 'All programs'
+                        });
 
-                            self.selectedProgram = $rootScope.user.properties.programs[0];
+                        self.programs = programs;
 
-                        }
+                        self.selectedProgram = self.programs[0].id;
 
                         self.loadGroups();
 

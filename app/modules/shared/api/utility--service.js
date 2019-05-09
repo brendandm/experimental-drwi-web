@@ -280,6 +280,25 @@ angular.module('FieldDoc')
 
                 });
 
+            },
+            extractUserPrograms: function(user) {
+
+                var _programs = [];
+
+                user.properties.programs.forEach(function(program) {
+
+                    _programs.push(program.properties);
+
+                });
+
+                _programs.sort(function(a, b) {
+
+                    return a.id > b.id;
+
+                });
+
+                return _programs;
+
             }
         };
 

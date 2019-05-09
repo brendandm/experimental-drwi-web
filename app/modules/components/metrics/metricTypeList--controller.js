@@ -146,13 +146,19 @@ angular.module('FieldDoc')
                 var params = $location.search(),
                     data = {};
 
-                if (self.selectedProgram &&
-                    typeof self.selectedProgram.id !== 'undefined' &&
-                    self.selectedProgram.id > 0) {
+                if (self.selectedProgram !== null &&
+                        typeof self.selectedProgram !== 'undefined' &&
+                        self.selectedProgram === 0) {
+
+                        $location.search(data);
+
+                } else if (self.selectedProgram !== null &&
+                    typeof self.selectedProgram !== 'undefined' &&
+                    self.selectedProgram > 0) {
 
                     console.log('self.selectedProgram', self.selectedProgram);
 
-                    data.program = self.selectedProgram.id;
+                    data.program = self.selectedProgram;
 
                     data.prog_only = 'true';
 
@@ -198,6 +204,35 @@ angular.module('FieldDoc')
 
             };
 
+            // 
+            // Observe internal route changes. Note that `reloadOnSearch`
+            // must be set to `false`.
+            // 
+            // See: https://stackoverflow.com/questions/15093916
+            // 
+
+            self.inspectSearchParams = function(params) {
+
+                console.log(
+                    'self.inspectSearchParams --> params',
+                    params);
+
+                params = params || $location.search();
+
+                var keys = Object.keys(params);
+
+                self.loadFeatures();
+
+            };
+
+            $scope.$on('$routeUpdate', function() {
+
+                var params = $location.search();
+
+                self.inspectSearchParams(params);
+
+            });
+
             //
             // Verify Account information for proper UI element display
             //
@@ -211,11 +246,16 @@ angular.module('FieldDoc')
                         isLoggedIn: Account.hasToken()
                     };
 
-                    if ($rootScope.user.properties.programs.length) {
+                    var programs = Utility.extractUserPrograms($rootScope.user);
 
-                        // self.selectedProgram = $rootScope.user.properties.programs[0];
+                    programs.unshift({
+                        id: 0,
+                        name: 'All programs'
+                    });
 
-                    }
+                    self.programs = programs;
+
+                    self.selectedProgram = self.programs[0].id;
 
                     self.loadFeatures();
 

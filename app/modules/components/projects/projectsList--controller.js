@@ -243,13 +243,19 @@ angular.module('FieldDoc')
                 var params = $location.search(),
                     data = {};
 
-                if (self.selectedProgram &&
-                    typeof self.selectedProgram.id !== 'undefined' &&
-                    self.selectedProgram.id > 0) {
+                if (self.selectedProgram !== null &&
+                    typeof self.selectedProgram !== 'undefined' &&
+                    self.selectedProgram === 0) {
 
-                    data.program = self.selectedProgram.id;
+                    $location.search(data);
 
-                    $location.search('program', self.selectedProgram.id);
+                } else if (self.selectedProgram !== null &&
+                    typeof self.selectedProgram !== 'undefined' &&
+                    self.selectedProgram > 0) {
+
+                    data.program = self.selectedProgram;
+
+                    $location.search('program', self.selectedProgram);
 
                 } else if (params.program !== null &&
                     typeof params.program !== 'undefined') {
@@ -383,6 +389,35 @@ angular.module('FieldDoc')
 
             };
 
+            // 
+            // Observe internal route changes. Note that `reloadOnSearch`
+            // must be set to `false`.
+            // 
+            // See: https://stackoverflow.com/questions/15093916
+            // 
+
+            self.inspectSearchParams = function(params) {
+
+                console.log(
+                    'self.inspectSearchParams --> params',
+                    params);
+
+                params = params || $location.search();
+
+                var keys = Object.keys(params);
+
+                self.loadProjects();
+
+            };
+
+            $scope.$on('$routeUpdate', function() {
+
+                var params = $location.search();
+
+                self.inspectSearchParams(params);
+
+            });
+
             //
             // Verify Account information for proper UI element display
             //
@@ -396,31 +431,20 @@ angular.module('FieldDoc')
                         isLoggedIn: Account.hasToken()
                     };
 
+                    var programs = Utility.extractUserPrograms($rootScope.user);
+
+                    programs.unshift({
+                        id: 0,
+                        name: 'All programs'
+                    });
+
+                    self.programs = programs;
+
+                    self.selectedProgram = self.programs[0].id;
+
                     //
                     // Project functionality
                     //
-
-                    if ($rootScope.user.properties.programs.length) {
-
-                        var programs = [];
-
-                        $rootScope.user.properties.programs.forEach(function(item) {
-
-                            programs.push(item.properties);
-
-                        });
-
-                        programs.sort(function(a, b) {
-
-                            return a.id > b.id;
-
-                        });
-
-                        self.programs = programs;
-
-                        self.selectedProgram = self.programs[0];
-
-                    }
 
                     self.loadProjects();
 
