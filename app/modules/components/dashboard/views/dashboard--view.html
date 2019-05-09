@@ -60,7 +60,7 @@
 
                 </div>
 
-                <p>{{ page.card.description }}</p>
+                <p>{{ page.card.description || 'No description provided' }}</p>
 
                 <div data-ng-if="page.tags && page.tags.length">
 
@@ -288,7 +288,7 @@
 
         <div class="map--container">
 
-            <button class="reset--extent" type="button" data-ng-click="page.resetMapExtent()" title="Reset map extent">
+            <button class="reset--extent" type="button" data-ng-click="page.resetMapExtent()" title="Global view">
                 <i class="material-icons">
                     refresh
                 </i>

@@ -242,6 +242,36 @@ angular.module('FieldDoc')
 
                 return arr;
 
+            },
+            scrubFeature: function(feature, excludedKeys) {
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
+
             }
         };
 
