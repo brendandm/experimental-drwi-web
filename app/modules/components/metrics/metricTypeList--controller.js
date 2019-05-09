@@ -26,6 +26,8 @@ angular.module('FieldDoc')
                 title: 'Metric Types'
             };
 
+            self.selectedProgram = undefined;
+
             self.status = {
                 loading: true
             };
@@ -152,13 +154,17 @@ angular.module('FieldDoc')
 
                     data.program = self.selectedProgram.id;
 
-                    $location.search('program', self.selectedProgram.id);
+                    data.prog_only = 'true';
+
+                    $location.search(data);
 
                 } else if (!self.metrics &&
                     params.program !== null &&
                     typeof params.program !== 'undefined') {
 
                     data.program = params.program;
+
+                    data.prog_only = 'true';
 
                 }
 
@@ -207,7 +213,7 @@ angular.module('FieldDoc')
 
                     if ($rootScope.user.properties.programs.length) {
 
-                        self.selectedProgram = $rootScope.user.properties.programs[0];
+                        // self.selectedProgram = $rootScope.user.properties.programs[0];
 
                     }
 

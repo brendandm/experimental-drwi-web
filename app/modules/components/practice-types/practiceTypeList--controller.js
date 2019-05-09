@@ -150,12 +150,16 @@ angular.module('FieldDoc')
 
                     data.program = self.selectedProgram.id;
 
-                    $location.search('program', self.selectedProgram.id);
+                    data.prog_only = 'true';
+
+                    $location.search(data);
 
                 } else if (params.program !== null &&
                     typeof params.program !== 'undefined') {
 
                     data.program = params.program;
+
+                    data.prog_only = 'true';
 
                 } else {
 

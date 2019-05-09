@@ -222,7 +222,8 @@
 
                     var params = $location.search(),
                         data = {
-                            t: Date.now()
+                            t: Date.now(),
+                            exclude_geometry: 'true'
                         };
 
                     if (self.selectedProgram &&

@@ -16,7 +16,7 @@
 
         <div class="main--ui">
 
-            <div class="add--new--wrapper" data-ng-if="!$root.user.properties.is_manager">
+            <div class="add--new--wrapper">
                 <span>Create metric</span>
                 <a class="add--new--btn" href="#" data-ng-click="page.createMetricType()">
                     <i class="material-icons">
@@ -25,11 +25,21 @@
                 </a>
             </div>
 
-            <input type="text" class="search-bar list-filter reveal fade-in t0" data-ng-if="!page.status.loading" data-ng-model="page.q" placeholder="Search your metrics">
+            <div class="collection-filter-ctrl reveal fade-in t0" data-ng-if="!page.status.loading">
 
-            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">You have <strong>{{ (page.featureCount | number) || 0 }}</strong> <ng-pluralize count="page.featureCount" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize>.</p>
+                <input type="text" class="search-bar list-filter" data-ng-model="page.q" placeholder="Search your metrics">
 
-            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There <ng-pluralize count="page.featureCount" when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{ (page.featureCount | number) || 0 }}</strong> <ng-pluralize count="page.featureCount" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize> in this program.</p>
+                <button data-ng-click="page.showFilterModal = !page.showFilterModal" title="Add filters">
+                    <i class="material-icons">
+                        filter_list
+                    </i>
+                </button>
+
+            </div>
+
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && !page.selectedProgram">You have <strong>{{ (page.featureCount | number) || 0 }}</strong> <ng-pluralize count="page.featureCount" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize>.</p>
+
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && page.selectedProgram && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There <ng-pluralize count="page.featureCount" when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{ (page.featureCount | number) || 0 }}</strong> <ng-pluralize count="page.featureCount" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize> in this program.</p>
 
             <div class="collection-filter" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager) && $root.user.properties.programs.length">
                 <form name="myForm">
@@ -49,7 +59,7 @@
 
                 <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;" data-ng-if="!page.status.loadingFeatures">
 
-                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms;" data-ng-repeat="metric in page.metrics | orderBy:'-modified_on' | filter: page.q">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 50 }}ms;" data-ng-repeat="metric in page.metrics | orderBy:'-modified_on' | filter: page.q">
 
                         <div class="card--content">
 
@@ -79,7 +89,7 @@
                                         metric
                                         </i>
                                     </a> -->
-                                    <a class="snapshot--title" href="/metric-types/{{ metric.id }}/edit" title="Edit metric" data-ng-if="$root.user.properties.id === metric.creator.id || $root.user.properties.organization_id === metric.organization.id || $root.user.properties.is_admin">
+                                    <a class="snapshot--title" href="/metric-types/{{ metric.id }}/edit" title="Edit metric" data-ng-if="$root.user.properties.id === metric.creator.id || $root.user.properties.organization_id === metric.organization.id || $root.user.properties.is_admin || $root.user.properties.is_manager">
                                         <i class="material-icons">
                                         edit
                                         </i>
