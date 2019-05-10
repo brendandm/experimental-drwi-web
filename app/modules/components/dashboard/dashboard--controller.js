@@ -130,6 +130,8 @@ angular.module('FieldDoc')
 
         self.projectIndex = {};
 
+        self.geographyIndex = {};
+
         self.removeMarkers = function() {
 
             self.markerIndex.forEach(function(obj) {
@@ -445,6 +447,12 @@ angular.module('FieldDoc')
                 console.log('geographies.successResponse', successResponse);
 
                 self.geographies = successResponse.features;
+
+                self.geographies.forEach(function(feature) {
+
+                    self.geographyIndex[feature.properties.id] = feature;
+
+                });
 
                 self.loadBaseProjects();
 
@@ -1727,6 +1735,49 @@ angular.module('FieldDoc')
                             self.map,
                             'practice',
                             practiceId,
+                            featureCollection,
+                            null,
+                            true);
+
+                        if (self.markerIndex.length) {
+
+                            self.removeMarkers();
+
+                        }
+
+                    }
+
+                }
+
+            } else if (keys.indexOf('geography') >= 0) {
+
+                var geoId = +params.geography;
+
+                console.log(
+                    'self.inspectSearchParams --> geoId',
+                    geoId);
+
+                if (Number.isInteger(geoId)) {
+
+                    // var activePractice = self.practiceIndex(practiceId);
+
+                    if (!self.geographyIndex.hasOwnProperty(geoId)) {
+
+                        // self.loadPractice(practiceId);
+
+                    } else {
+
+                        var activeGeography = self.geographyIndex[geoId];
+
+                        self.setActiveFeature('geography', activeGeography);
+
+                        var featureCollection = turf.featureCollection([
+                            activeGeography]);
+
+                        self.populateMap(
+                            self.map,
+                            'geography',
+                            geoId,
                             featureCollection,
                             null,
                             true);
