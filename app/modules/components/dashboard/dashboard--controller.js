@@ -289,6 +289,8 @@ angular.module('FieldDoc')
 
             }
 
+            self.clearAllFilters();
+
             $location.search({});
 
         };
@@ -580,7 +582,9 @@ angular.module('FieldDoc')
 
                     console.log('Dashboard.progress.successResponse', successResponse);
 
-                    self.processMetrics(successResponse.features);
+                    self.baseMetrics = successResponse.features;
+
+                    self.processMetrics(self.baseMetrics);
 
                 }, function(errorResponse) {
 
@@ -1108,7 +1112,7 @@ angular.module('FieldDoc')
             // Reset map extent
             //
 
-            self.resetMapExtent();
+            // self.resetMapExtent();
 
             //
             // Reset metadata card values
@@ -1133,6 +1137,12 @@ angular.module('FieldDoc')
             //
 
             self.activeSite = null;
+
+            // 
+            // Remove displayed tags
+            // 
+
+            self.tags = undefined;
 
             //
             // Refresh project list
@@ -1197,7 +1207,9 @@ angular.module('FieldDoc')
 
             self.filteredProjects = data.features;
 
-            self.summary = data.properties;
+            // self.summary = data.properties;
+
+            self.summary = data.summary;
 
             self.loadMetrics(self.filteredProjects);
 
@@ -1757,6 +1769,11 @@ angular.module('FieldDoc')
                     if (self.baseProjects &&
                         self.baseProjects.length) {
 
+                        console.log(
+                            'self.inspectSearchParams -->',
+                            ' Reset to base projects.',
+                            self.baseProjects);
+
                         // self.processLocations(
                         //     self.map,
                         //     'project',
@@ -1771,6 +1788,17 @@ angular.module('FieldDoc')
                             true);
 
                         self.clearAllFilters();
+
+                        if (self.baseMetrics) {
+
+                            console.log(
+                                'self.inspectSearchParams -->',
+                                ' Reset to base metrics.',
+                                self.baseMetrics);
+
+                            self.processMetrics(self.baseMetrics);
+
+                        }
 
                     }
 
