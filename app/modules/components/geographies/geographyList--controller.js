@@ -23,6 +23,16 @@
 
                 $rootScope.page = {};
 
+                self.showModal = {
+                    category: false,
+                    program: false
+                };
+
+                self.filters = {
+                    category: undefined,
+                    program: undefined
+                };
+
                 self.status = {
                     loading: true,
                     processing: false
@@ -35,22 +45,6 @@
                         self.status.loading = false;
 
                         self.status.processing = false;
-
-                        // $timeout(function() {
-
-                        //     if (!self.mapOptions) {
-
-                        //         self.mapOptions = self.getMapOptions();
-
-                        //     }
-
-                        //     if (self.geographies && self.geographies.length) {
-
-                        //         self.addMapPreviews(self.geographies);
-
-                        //     }
-
-                        // }, 500);
 
                     }, 1000);
 
@@ -134,84 +128,6 @@
 
                 };
 
-                self.buildStaticMapURL = function(geometry) {
-
-                    var styledFeature = {
-                        "type": "Feature",
-                        "geometry": geometry,
-                        "properties": {
-                            "marker-size": "small",
-                            "marker-color": "#2196F3",
-                            "stroke": "#2196F3",
-                            "stroke-opacity": 1.0,
-                            "stroke-width": 2,
-                            "fill": "#2196F3",
-                            "fill-opacity": 0.5
-                        }
-                    };
-
-                    // Build static map URL for Mapbox API
-
-                    return 'https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
-
-                };
-
-                self.buildFeature = function(geometry) {
-
-                    var styleProperties = {
-                        color: "#2196F3",
-                        opacity: 1.0,
-                        weight: 2,
-                        fillColor: "#2196F3",
-                        fillOpacity: 0.5
-                    };
-
-                    return {
-                        data: {
-                            "type": "Feature",
-                            "geometry": geometry,
-                            "properties": {
-                                "marker-size": "small",
-                                "marker-color": "#2196F3",
-                                "stroke": "#2196F3",
-                                "stroke-opacity": 1.0,
-                                "stroke-width": 2,
-                                "fill": "#2196F3",
-                                "fill-opacity": 0.5
-                            }
-                        },
-                        style: styleProperties
-                    };
-
-                };
-
-                self.processCollection = function(arr) {
-
-                    arr.forEach(function(feature) {
-
-                        if (feature.geometry !== null) {
-
-                            feature.staticURL = self.buildStaticMapURL(feature.geometry);
-
-                            feature.geojson = self.buildFeature(feature.geometry);
-
-                        }
-
-                        feature.bounds = turf.bbox(feature.bounds);
-
-                        if (feature.code !== null &&
-                            typeof feature.code === 'string') {
-
-                            feature.classification = feature.code.length;
-
-                        }
-
-                        console.log('feature', feature);
-
-                    });
-
-                };
-
                 self.createGeography = function() {
 
                     $location.path('/geographies/collection/new');
@@ -221,67 +137,140 @@
                 self.buildFilter = function() {
 
                     console.log(
-                        'self.buildFilter --> self.selectedProgram',
-                        self.selectedProgram);
+                        'self.buildFilter --> Starting...',);
 
-                    var params = $location.search(),
-                        data = {
-                            exclude_geometry: 'true'
-                        };
+                    var data = {
+                        combine: 'true',
+                        exclude_geometry: 'true'
+                    };
 
-                    if (self.selectedProgram !== null &&
-                        typeof self.selectedProgram !== 'undefined' &&
-                        self.selectedProgram === 0) {
+                    // if (collection && featureId) {
 
-                        $location.search(data);
+                    //     data[collection] = featureId;
 
-                    } else if (self.selectedProgram !== null &&
-                        typeof self.selectedProgram !== 'undefined' &&
-                        self.selectedProgram > 0) {
+                    //     if (collection === 'program') {
 
-                        data.program = self.selectedProgram;
+                    //         data.prog_only = 'true';
 
-                        data.prog_only = 'true';
+                    //     }
 
-                        $location.search(data);
+                    // }
 
-                    } else if (params.program !== null &&
-                        typeof params.program !== 'undefined') {
+                    var numericFilters = [
+                        'category',
+                        'program'
+                    ];
 
-                        data.program = params.program;
+                    for (var key in self.filters) {
 
-                        data.prog_only = 'true';
+                        if (self.filters.hasOwnProperty(key)) {
 
-                    } else {
+                            if (numericFilters.indexOf(key) >= 0) {
 
-                        $location.search(data);
+                                var filterVal = +self.filters[key];
 
-                    }
+                                if (Number.isInteger(filterVal) &&
+                                    filterVal > 0) {
 
-                    return data;
+                                    data[key] = filterVal;
 
-                };
+                                    // if (key === 'program') {
 
-                self.loadFeatures = function() {
+                                    //     data.prog_only = 'true';
 
-                    var params = self.buildFilter();
+                                    // }
 
-                    GeographyService.collection(params).$promise.then(function(successResponse) {
+                                }
 
-                        console.log('successResponse', successResponse);
+                            } else {
 
-                        for (var collection in successResponse) {
-
-                            if (successResponse.hasOwnProperty(collection) &&
-                                Array.isArray(successResponse[collection])) {
-
-                                self.processCollection(successResponse[collection]);
+                                data[key] = params[key];
 
                             }
 
                         }
 
-                        self.featureCount = successResponse.count;
+                    }
+
+                    // data[collection] = featureId;
+
+                    // if (collection === 'program') {
+
+                    //     data.prog_only = 'true';
+
+                    // }
+
+                    // if (updateLocation) {
+
+                    //     $location.search(data);
+
+                    // } else {
+
+                    //     return data;
+
+                    // }
+
+                    $location.search(data);
+
+                    // if (self.selectedProgram !== null &&
+                    //     typeof self.selectedProgram !== 'undefined' &&
+                    //     self.selectedProgram === 0) {
+
+                    //     $location.search(data);
+
+                    // } else if (self.selectedProgram !== null &&
+                    //     typeof self.selectedProgram !== 'undefined' &&
+                    //     self.selectedProgram > 0) {
+
+                    //     data.program = self.selectedProgram;
+
+                    //     data.prog_only = 'true';
+
+                    //     $location.search(data);
+
+                    // } else if (params.program !== null &&
+                    //     typeof params.program !== 'undefined') {
+
+                    //     data.program = params.program;
+
+                    //     data.prog_only = 'true';
+
+                    // } else {
+
+                    //     $location.search(data);
+
+                    // }
+
+                    return data;
+
+                };
+
+                self.loadFeatures = function(params) {
+
+                    console.log(
+                        'self.loadFeatures --> params',
+                        params);
+
+                    // var params = self.buildFilter();
+
+                    GeographyService.collection(params).$promise.then(function(successResponse) {
+
+                        console.log('successResponse', successResponse);
+
+                        // for (var collection in successResponse) {
+
+                        //     if (successResponse.hasOwnProperty(collection) &&
+                        //         Array.isArray(successResponse[collection])) {
+
+                        //         self.processCollection(successResponse[collection]);
+
+                        //     }
+
+                        // }
+
+                        // self.featureCount = successResponse.count;
+
+                        self.summary = successResponse.summary;
 
                         self.geographies = successResponse.features;
 
@@ -393,13 +382,26 @@
 
                         console.log('GeographyType.collection response', response);
 
+                        var categories = [];
+
                         response.features.forEach(function(result) {
 
-                            result.category = null;
+                            delete result.category;
+
+                            categories.push(result);
+
+                            // result.category = null;
 
                         });
 
-                        self.geographyGroups = response.features;
+                        categories.unshift({
+                            id: 0,
+                            name: 'All categories'
+                        });
+
+                        self.geographyGroups = categories;
+
+                        self.filters.category = self.geographyGroups[0].id;
 
                         // return response.features.slice(0, 5);
 
@@ -429,7 +431,9 @@
 
                         if (self.pendingTasks.length < 1) {
 
-                            self.loadFeatures();
+                            // self.loadFeatures();
+
+                            self.inspectSearchParams();
 
                             $interval.cancel(self.taskPoll);
 
@@ -700,15 +704,29 @@
                 // See: https://stackoverflow.com/questions/15093916
                 // 
 
-                self.inspectSearchParams = function(params) {
+                self.inspectSearchParams = function(forceFilter) {
+
+                    var params = $location.search();
 
                     console.log(
                         'self.inspectSearchParams --> params',
                         params);
 
-                    params = params || $location.search();
-
                     var keys = Object.keys(params);
+
+                    console.log(
+                        'self.inspectSearchParams --> keys',
+                        keys);
+
+                    if (!keys.length || forceFilter) {
+
+                        params = self.buildFilter();
+
+                        console.log(
+                            'self.inspectSearchParams --> params(2)',
+                            params);
+
+                    }
 
                     // if (keys.indexOf('program') >= 0) {
 
@@ -726,17 +744,48 @@
 
                     // }
 
-                    self.loadFeatures();
+                    // self.filters = params;
+
+                    var numericFilters = [
+                        'category',
+                        'program'
+                    ];
+
+                    for (var key in params) {
+
+                        if (self.filters.hasOwnProperty(key)) {
+
+                            if (numericFilters.indexOf(key) >= 0) {
+
+                                var filterVal = +params[key];
+
+                                if (Number.isInteger(filterVal)) {
+
+                                    self.filters[key] = filterVal;
+
+                                }
+
+                            } else {
+
+                                self.filters[key] = params[key];
+
+                            }
+
+                        }
+
+                    }
+
+                    self.loadFeatures(params);
 
                 };
 
-                $scope.$on('$routeUpdate', function() {
+                // $scope.$on('$routeUpdate', function() {
 
-                    var params = $location.search();
+                    // var params = $location.search();
 
-                    self.inspectSearchParams(params);
+                    // self.inspectSearchParams();
 
-                });
+                // });
 
                 //
                 // Verify Account information for proper UI element display
@@ -762,13 +811,15 @@
 
                         self.programs = programs;
 
-                        self.selectedProgram = self.programs[0].id;
+                        self.filters.program = self.programs[0].id;
 
                         self.loadGroups();
 
-                        self.loadFeatures();
+                        // self.loadFeatures();
 
                         self.fetchTasks();
+
+                        self.inspectSearchParams();
 
                     });
 
