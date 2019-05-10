@@ -62,6 +62,10 @@ angular.module('FieldDoc')
 
                         self.loadOrganization(self.user.properties.organization_id);
 
+                        self.loadOrganizationProjects(self.user.properties.organization_id);
+
+                        self.loadOrganizationMembers(self.user.properties.organization_id);
+
                     } else {
 
                         self.status.loading = false;
@@ -81,17 +85,13 @@ angular.module('FieldDoc')
 
                 self.organizationProfile = data.properties;
                 console.log(self.organizationProfile.description)
-           //     delete self.organizationProfile.creator;
-           //     delete self.organizationProfile.last_modified_by;
-           //     delete self.organizationProfile.dashboards;
-
                 console.log('self.organizationProfile', self.organizationProfile);
 
             };
 
            self.loadOrganization = function(organizationId, postAssigment) {
 
-                Organization.get({
+                Organization.profile({
                     id: organizationId
                 }).$promise.then(function(successResponse) {
 
@@ -124,9 +124,84 @@ angular.module('FieldDoc')
 
            };
 
-            self.loadOrganizationProjects = function(){
+            self.loadOrganizationProjects = function(organizationId, postAssigment) {
 
-            }
+                Organization.projects({
+                    id: organizationId
+                }).$promise.then(function(successResponse) {
 
+                    console.log('self.organizationProjects', successResponse);
+
+                    self.organizationProjects = successResponse.properties;
+
+                    self.projects = successResponse.properties;
+
+                    self.projectCount = successResponse.count;
+
+                    if (postAssigment) {
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Successfully added you to ' + self.organizationProfile.name + '.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                    }
+
+                    self.status.loading = false;
+
+                }, function(errorResponse) {
+
+                    console.error('Unable to load organization.');
+
+                    self.status.loading = false;
+
+                });
+
+           };
+
+
+
+            self.loadOrganizationMembers = function(organizationId, postAssigment) {
+
+                Organization.members({
+                    id: organizationId
+                }).$promise.then(function(successResponse) {
+
+                    console.log('self.organizationMembers', successResponse);
+
+                     self.organizationMembers = successResponse.properties;
+
+                     self.members = successResponse.properties;
+
+                     self.memberCount = successResponse.count;
+
+                    if (postAssigment) {
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Successfully added you to ' + self.organizationProfile.name + '.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                    }
+
+                    self.status.loading = false;
+
+                }, function(errorResponse) {
+
+                    console.error('Unable to load organization.');
+
+                    self.status.loading = false;
+
+                });
+
+           };
 
         });
