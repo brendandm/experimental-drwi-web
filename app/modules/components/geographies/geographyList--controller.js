@@ -33,6 +33,11 @@
                     program: undefined
                 };
 
+                self.numericFilters = [
+                    'category',
+                    'program'
+                ];
+
                 self.status = {
                     loading: true,
                     processing: false
@@ -137,35 +142,18 @@
                 self.buildFilter = function() {
 
                     console.log(
-                        'self.buildFilter --> Starting...',);
+                        'self.buildFilter --> Starting...');
 
                     var data = {
                         combine: 'true',
                         exclude_geometry: 'true'
                     };
 
-                    // if (collection && featureId) {
-
-                    //     data[collection] = featureId;
-
-                    //     if (collection === 'program') {
-
-                    //         data.prog_only = 'true';
-
-                    //     }
-
-                    // }
-
-                    var numericFilters = [
-                        'category',
-                        'program'
-                    ];
-
                     for (var key in self.filters) {
 
                         if (self.filters.hasOwnProperty(key)) {
 
-                            if (numericFilters.indexOf(key) >= 0) {
+                            if (self.numericFilters.indexOf(key) >= 0) {
 
                                 var filterVal = +self.filters[key];
 
@@ -174,17 +162,11 @@
 
                                     data[key] = filterVal;
 
-                                    // if (key === 'program') {
-
-                                    //     data.prog_only = 'true';
-
-                                    // }
-
                                 }
 
                             } else {
 
-                                data[key] = params[key];
+                                data[key] = self.filters[key];
 
                             }
 
@@ -192,54 +174,7 @@
 
                     }
 
-                    // data[collection] = featureId;
-
-                    // if (collection === 'program') {
-
-                    //     data.prog_only = 'true';
-
-                    // }
-
-                    // if (updateLocation) {
-
-                    //     $location.search(data);
-
-                    // } else {
-
-                    //     return data;
-
-                    // }
-
                     $location.search(data);
-
-                    // if (self.selectedProgram !== null &&
-                    //     typeof self.selectedProgram !== 'undefined' &&
-                    //     self.selectedProgram === 0) {
-
-                    //     $location.search(data);
-
-                    // } else if (self.selectedProgram !== null &&
-                    //     typeof self.selectedProgram !== 'undefined' &&
-                    //     self.selectedProgram > 0) {
-
-                    //     data.program = self.selectedProgram;
-
-                    //     data.prog_only = 'true';
-
-                    //     $location.search(data);
-
-                    // } else if (params.program !== null &&
-                    //     typeof params.program !== 'undefined') {
-
-                    //     data.program = params.program;
-
-                    //     data.prog_only = 'true';
-
-                    // } else {
-
-                    //     $location.search(data);
-
-                    // }
 
                     return data;
 
@@ -256,19 +191,6 @@
                     GeographyService.collection(params).$promise.then(function(successResponse) {
 
                         console.log('successResponse', successResponse);
-
-                        // for (var collection in successResponse) {
-
-                        //     if (successResponse.hasOwnProperty(collection) &&
-                        //         Array.isArray(successResponse[collection])) {
-
-                        //         self.processCollection(successResponse[collection]);
-
-                        //     }
-
-                        // }
-
-                        // self.featureCount = successResponse.count;
 
                         self.summary = successResponse.summary;
 
@@ -728,34 +650,11 @@
 
                     }
 
-                    // if (keys.indexOf('program') >= 0) {
-
-                    //     var programId = +params.program;
-
-                    //     console.log(
-                    //         'self.inspectSearchParams --> programId',
-                    //         programId);
-
-                    //     if (Number.isInteger(programId)) {
-
-                    //         self.loadFeatures(programId);
-
-                    //     }
-
-                    // }
-
-                    // self.filters = params;
-
-                    var numericFilters = [
-                        'category',
-                        'program'
-                    ];
-
                     for (var key in params) {
 
                         if (self.filters.hasOwnProperty(key)) {
 
-                            if (numericFilters.indexOf(key) >= 0) {
+                            if (self.numericFilters.indexOf(key) >= 0) {
 
                                 var filterVal = +params[key];
 
@@ -781,9 +680,9 @@
 
                 // $scope.$on('$routeUpdate', function() {
 
-                    // var params = $location.search();
+                // var params = $location.search();
 
-                    // self.inspectSearchParams();
+                // self.inspectSearchParams();
 
                 // });
 

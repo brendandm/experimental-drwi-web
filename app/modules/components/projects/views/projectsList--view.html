@@ -26,10 +26,10 @@
             </div>
 
             <p class="reveal fade-in t0" data-ng-if="!page.status.loading && page.summary.total">There <ng-pluralize count="page.summary.total" when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{ (page.summary.total | number) || 0 }}</strong>
-                <ng-pluralize count="page.summary.total" when="{'one': 'geography','other': 'geographies'}"></ng-pluralize> in your collection.
+                <ng-pluralize count="page.summary.total" when="{'one': 'project','other': 'projects'}"></ng-pluralize> in your collection.
             </p>
 
-            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && ((page.filters.category > 1) || (page.filters.program > 1))">
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && (page.summary.matches !== page.summary.total)">
                 Showing
                 <strong>{{ (page.summary.matches | number) || 0 }} </strong>
                 filtered
@@ -70,7 +70,7 @@
                         </i>
                     </button>
                     <form name="collection-filter-form" class="collection-filter-modal" style="width: auto;" data-ng-if="page.showModal.organization">
-                        <label data-ng-repeat="organization in page.organizations" data-ng-class="{'active': page.filters.organization === organization.id}" title="{{ organization.name }}">
+                        <label data-ng-repeat="organization in page.summary.organizations | orderBy:'name'" data-ng-class="{'active': page.filters.organization === organization.id}" title="{{ organization.name }}">
                             <span class="input-mask" data-ng-if="page.filters.organization === organization.id">
                                 <i class="material-icons">
                                     radio_button_checked
@@ -94,7 +94,7 @@
                         </i>
                     </button>
                     <form name="collection-filter-form" class="collection-filter-modal" style="width: auto;" data-ng-if="page.showModal.tag">
-                        <label data-ng-repeat="tag in page.tags" data-ng-class="{'active': page.filters.tag === tag.id}" title="{{ tag.name }}">
+                        <label data-ng-repeat="tag in page.tags | orderBy:'name'" data-ng-class="{'active': page.filters.tag === tag.id}" title="{{ tag.name }}">
                             <span class="input-mask" data-ng-if="page.filters.tag === tag.id">
                                 <i class="material-icons">
                                     radio_button_checked
