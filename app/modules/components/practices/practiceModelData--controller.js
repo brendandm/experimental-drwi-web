@@ -62,7 +62,8 @@ angular.module('FieldDoc')
             self.loadMatrix = function() {
 
                 Practice.targetMatrix({
-                    id: $route.current.params.practiceId
+                    id: $route.current.params.practiceId,
+                    simple_bool: 'true'
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.loadMatrix.successResponse', successResponse);

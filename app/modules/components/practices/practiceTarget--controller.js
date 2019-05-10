@@ -63,7 +63,8 @@ angular.module('FieldDoc')
                 // Assign practice to a scoped variable
                 //
                 Practice.targetMatrix({
-                    id: $route.current.params.practiceId
+                    id: $route.current.params.practiceId,
+                    simple_bool: 'true'
                 }).$promise.then(function(successResponse) {
 
                     self.targets = successResponse;

@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1557504921842})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1557507972614})
 
 ;
 /**
@@ -7758,7 +7758,8 @@ angular.module('FieldDoc')
                 // Assign project to a scoped variable
                 //
                 Project.targetMatrix({
-                    id: $route.current.params.projectId
+                    id: $route.current.params.projectId,
+                    simple_bool: 'true'
                 }).$promise.then(function(successResponse) {
 
                     self.targets = successResponse;
@@ -17019,7 +17020,8 @@ angular.module('FieldDoc')
             self.loadMatrix = function() {
 
                 Practice.targetMatrix({
-                    id: $route.current.params.practiceId
+                    id: $route.current.params.practiceId,
+                    simple_bool: 'true'
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.loadMatrix.successResponse', successResponse);
@@ -19129,7 +19131,8 @@ angular.module('FieldDoc')
                 // Assign practice to a scoped variable
                 //
                 Practice.targetMatrix({
-                    id: $route.current.params.practiceId
+                    id: $route.current.params.practiceId,
+                    simple_bool: 'true'
                 }).$promise.then(function(successResponse) {
 
                     self.targets = successResponse;
@@ -19933,7 +19936,8 @@ angular.module('FieldDoc')
                     // Assign practice to a scoped variable
                     //
                     Report.targetMatrix({
-                        id: self.report.id
+                        id: self.report.id,
+                        simple_bool: 'true'
                     }).$promise.then(function(successResponse) {
 
                         self.targets = successResponse;
