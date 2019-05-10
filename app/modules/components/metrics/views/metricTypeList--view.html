@@ -25,7 +25,11 @@
                 </a>
             </div>
 
-            <input type="text" class="search-bar list-filter reveal fade-in t0" data-ng-if="!page.status.loading" data-ng-model="page.q" placeholder="Search your practices">
+            <div class="collection-search reveal fade-in t0">
+
+                <input type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search your metrics">
+
+            </div>
 
             <p class="reveal fade-in t0" data-ng-if="!page.status.loading && page.summary.total">There <ng-pluralize count="page.summary.total" when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{ (page.summary.total | number) || 0 }}</strong>
                 <ng-pluralize count="page.summary.total" when="{'one': 'metric','other': 'metrics'}"></ng-pluralize> in your collection.
@@ -70,7 +74,7 @@
 
                 <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;" data-ng-if="!page.status.loadingFeatures">
 
-                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 50 }}ms;" data-ng-repeat="metric in page.metrics | orderBy:'-modified_on' | filter: page.q">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 50 }}ms;" data-ng-repeat="metric in page.metrics | orderBy:'-modified_on' | filter: page.queryToken">
 
                         <div class="card--content">
 

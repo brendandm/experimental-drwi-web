@@ -1300,3 +1300,15 @@ form[role="form"] {
   margin-right: 2em;
   //font-weight: bold;
 }
+
+.collection-search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  input {
+    border-radius: 2em;
+    background: #fff !important;
+  }
+
+}
