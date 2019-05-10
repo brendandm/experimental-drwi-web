@@ -51,15 +51,15 @@
                     </div>
                     <div class="stat--block" data-ng-if="page.card.featureType === 'project'">
                         <span class="label">Sites</span>
-                        <span class="total--projects">{{ page.activeProject.properties.sites.length | number }}</span>
+                        <span class="total--projects">{{ (page.activeProject.properties.sites.length | number) || 'None' }}</span>
                     </div>
                     <div class="stat--block" data-ng-if="page.card.featureType === 'project'">
                         <span class="label">Practices</span>
-                        <span class="total--projects">{{ page.activeProject.properties.practices.length | number }}</span>
+                        <span class="total--projects">{{ (page.activeProject.properties.practices.length | number) || 'None' }}</span>
                     </div>
                     <div class="stat--block" data-ng-if="page.card.featureType === 'site'">
                         <span class="label">Practices</span>
-                        <span class="total--projects">{{ page.activeSite.properties.practices.length | number }}</span>
+                        <span class="total--projects">{{ (page.activeSite.properties.practices.length | number) || 'None' }}</span>
                     </div>
 
                 </div>
@@ -215,6 +215,12 @@
                 <section id="sites">
 
                     <div class="list" style="padding: 0 2em;">
+
+                        <div data-ng-if="!page.metrics || (!page.metrics.generic.length && !page.metrics.has_models)" style="padding: 4em 0; text-align: center;">
+
+                            <p style="margin: 0; font-size: 0.9em; color: #f9f9f9; opacity: 0.8;">No metric progress to report.</p>
+
+                        </div>
 
                         <div data-ng-if="page.metrics && page.metrics.has_models">
 

@@ -115,7 +115,8 @@ angular.module('FieldDoc')
 
                 PracticeType.collection({
                     program: self.practice.project.program_id,
-                    limit: 500
+                    limit: 500,
+                    simple_bool: 'true'
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.practiceTypes', successResponse);

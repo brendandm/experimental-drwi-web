@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1557486254633})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1557504921842})
 
 ;
 /**
@@ -1217,6 +1217,8 @@ angular.module('FieldDoc')
 
         self.projectIndex = {};
 
+        self.geographyIndex = {};
+
         self.removeMarkers = function() {
 
             self.markerIndex.forEach(function(obj) {
@@ -1376,6 +1378,8 @@ angular.module('FieldDoc')
 
             }
 
+            self.clearAllFilters();
+
             $location.search({});
 
         };
@@ -1531,6 +1535,12 @@ angular.module('FieldDoc')
 
                 self.geographies = successResponse.features;
 
+                self.geographies.forEach(function(feature) {
+
+                    self.geographyIndex[feature.properties.id] = feature;
+
+                });
+
                 self.loadBaseProjects();
 
             }, function(errorResponse) {
@@ -1667,7 +1677,9 @@ angular.module('FieldDoc')
 
                     console.log('Dashboard.progress.successResponse', successResponse);
 
-                    self.processMetrics(successResponse.features);
+                    self.baseMetrics = successResponse.features;
+
+                    self.processMetrics(self.baseMetrics);
 
                 }, function(errorResponse) {
 
@@ -2195,7 +2207,7 @@ angular.module('FieldDoc')
             // Reset map extent
             //
 
-            self.resetMapExtent();
+            // self.resetMapExtent();
 
             //
             // Reset metadata card values
@@ -2220,6 +2232,12 @@ angular.module('FieldDoc')
             //
 
             self.activeSite = null;
+
+            // 
+            // Remove displayed tags
+            // 
+
+            self.tags = undefined;
 
             //
             // Refresh project list
@@ -2284,7 +2302,9 @@ angular.module('FieldDoc')
 
             self.filteredProjects = data.features;
 
-            self.summary = data.properties;
+            // self.summary = data.properties;
+
+            self.summary = data.summary;
 
             self.loadMetrics(self.filteredProjects);
 
@@ -2816,6 +2836,49 @@ angular.module('FieldDoc')
 
                 }
 
+            } else if (keys.indexOf('geography') >= 0) {
+
+                var geoId = +params.geography;
+
+                console.log(
+                    'self.inspectSearchParams --> geoId',
+                    geoId);
+
+                if (Number.isInteger(geoId)) {
+
+                    // var activePractice = self.practiceIndex(practiceId);
+
+                    if (!self.geographyIndex.hasOwnProperty(geoId)) {
+
+                        // self.loadPractice(practiceId);
+
+                    } else {
+
+                        var activeGeography = self.geographyIndex[geoId];
+
+                        self.setActiveFeature('geography', activeGeography);
+
+                        var featureCollection = turf.featureCollection([
+                            activeGeography]);
+
+                        self.populateMap(
+                            self.map,
+                            'geography',
+                            geoId,
+                            featureCollection,
+                            null,
+                            true);
+
+                        if (self.markerIndex.length) {
+
+                            self.removeMarkers();
+
+                        }
+
+                    }
+
+                }
+
             } else {
 
                 if (self.map &&
@@ -2844,6 +2907,11 @@ angular.module('FieldDoc')
                     if (self.baseProjects &&
                         self.baseProjects.length) {
 
+                        console.log(
+                            'self.inspectSearchParams -->',
+                            ' Reset to base projects.',
+                            self.baseProjects);
+
                         // self.processLocations(
                         //     self.map,
                         //     'project',
@@ -2858,6 +2926,17 @@ angular.module('FieldDoc')
                             true);
 
                         self.clearAllFilters();
+
+                        if (self.baseMetrics) {
+
+                            console.log(
+                                'self.inspectSearchParams -->',
+                                ' Reset to base metrics.',
+                                self.baseMetrics);
+
+                            self.processMetrics(self.baseMetrics);
+
+                        }
 
                     }
 
@@ -15104,7 +15183,8 @@ angular.module('FieldDoc')
 
                 PracticeType.collection({
                     program: self.practice.project.program_id,
-                    limit: 500
+                    limit: 500,
+                    simple_bool: 'true'
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.practiceTypes', successResponse);
