@@ -1178,7 +1178,7 @@ form[role="form"] {
       color: #0e8bb6;
     }
 
-    form {
+    .collection-filter-modal {
       position: absolute;
       top: 120%;
       left: 0;
@@ -1189,6 +1189,48 @@ form[role="form"] {
       background: #fff;
       border-radius: 4px;
       box-shadow: 0 1px 3px rgba(60,64,67, 0.3), 0 4px 8px 3px rgba(60,64,67, 0.15);
+
+      .prompt {
+        padding: 2em;
+        margin: 0;
+      }
+
+      .action-options {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        cursor: pointer;
+        user-select: none;
+        border-top: 1px solid #e0e0e0;
+
+        .confirm {
+          border-radius: 0 0 0 4px;
+        }
+
+        .cancel {
+          border-radius: 0 0 4px 0;
+        }
+
+        a,
+        button {
+          display: flex;
+          padding: 1em;
+          flex-grow: 1;
+          flex-shrink: 0;
+          flex-basis: 50%;
+          justify-content: center;
+          cursor: pointer;
+          background: #fff;
+          transition: all 0.2s cubic-bezier(0.4,0,0.2,1);
+          overflow: hidden;
+        }
+
+        a:hover,
+        button:hover {
+          background: #edf9fe;
+        }
+
+      }
 
       label {
         position: relative;
