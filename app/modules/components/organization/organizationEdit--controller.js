@@ -81,6 +81,8 @@ angular.module('FieldDoc')
 
                 self.status.processing = true;
 
+                self.scrubFeature(self.organization);
+
                 Organization.update({
                     id: self.organization.id
                 }, self.organization).$promise.then(function(successResponse) {
@@ -124,6 +126,46 @@ angular.module('FieldDoc')
                 delete self.organization.dashboards;
 
                 console.log('self.organization', self.organization);
+
+            };
+
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [
+                    'creator',
+                    'geometry',
+                    'tags',
+                    'tasks',
+                    'user',
+                    'projects'
+                ];
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
 
             };
 
