@@ -1,0 +1,26 @@
+//
+// _profile.scss
+//
+// This stylesheet is written in SASS(1) and contains site specific layout
+// elements.
+//
+// @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
+//
+
+  h2.flow2 {
+    display: flex;
+    width: 100%;
+    //background-color: #F2F2F2;
+    padding: 1em 0 1em 32px;
+    //font-size: 2em;
+    border-bottom: 1px solid rgb(216,216,216);
+    margin: 0;
+    font-weight: bold;
+  }
+
+  .flow2--features--container {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    padding: 0 0 0em;
+  }
