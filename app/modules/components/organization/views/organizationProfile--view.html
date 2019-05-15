@@ -8,7 +8,7 @@
 
         <h1 class="inset">{{page.organizationProfile.name}}</h1>
 
-        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading" style="border:1px solid red;">
+        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading" style="border:0px solid red;">
 
         <!--    <section class="reveal fade-in t0 ng-scope" style="padding: 1em 0 0;"> -->
                 <div class="add--new--wrapper"  data-ng-if="!$root.user.properties.is_manager">
@@ -19,38 +19,69 @@
                         </i>
                     </a>
                 </div>
-                <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
-                    <strong>Description</strong>
-                </p>
-                <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
-                    {{page.organizationProfile.description}}
-                </p>
+                <div class="flow2--field-container">
+                    <div class="flow2--left-field">
+                        <div style="float:left" ng-if="page.organizationProfile.description">
+                            <p class="flow2-h">
+                                <i>Description:</i>
+                            </p>
+                           <p class="flow2-b">
+                                {{page.organizationProfile.description}}
+                            </p>
+                        </div>
+                        <div style="float:left; margin-right:3em;" ng-if="page.organizationProfile.website">
 
-                <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
-                    <strong>Website</strong>
-                </p>
-                <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
-                    {{page.organizationProfile.website}}
-                </p>
+                                <p class="flow2-h">
+                                    <i>Website:</i>
+                                </p>
 
-                <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
-                    <strong>Email</strong>
-                </p>
-                <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
-                    {{page.organizationProfile.email}}
-                </p>
+                                <p class="flow2-b">
+                                    <a href="{{page.organizationProfile.website}}">{{page.organizationProfile.website}}</a>
+                                </p>
 
-                <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
-                    <strong>Last Modified</strong>
-                </p>
-                <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
-                    {{page.organizationProfile.modified_on}}
-                </p>
+                        </div>
+                        <div style="float:left" ng-if="page.organizationProfile.email">
+                            <p class="flow2-h">
+                                <i>Email:</i>
+                            </p>
+                            <p class="flow2-b">
+                                {{page.organizationProfile.email}}
+                            </p>
+                        </div>
+                        <div style="float:left; clear:left;" ng-if="page.organizationProfile.created_on">
+                            <p class="flow2-h">
+                                <i>Last Modified:</i>
+                            </p>
+                            <p class="flow2-b">
+                                {{page.organizationProfile.created_on}}
+                            </p>
+                        </div>
+<!--
+                         <p class="flow2">
+                            <i>Created</i>
+                        </p>
+                        <p class="flow2-b">
+                            {{page.organizationProfile.modified_on}}
+                        </p>
+-->
+                     </div>
+                    <div class="flow2--right-field">
+<!--
+                    <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
+                            <strong>Image</strong>
+                        </p>
+-->
+                        <img class='flow2--organizationImage' src="https://banner2.kisspng.com/20180417/kdw/kisspng-logo-brand-random-icons-5ad592f6abd5c5.7372008015239462307039.jpg">
 
-    <!--        </section> -->`
+
+                    </div>
+                </div>
+
+
+    <!--        </section> -->
         </div>
         <h2 class="flow2">Projects</h2>
-        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading" style="border:1px solid red;">
+        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading" style="border:0px solid red;">
             <div class="add--new--wrapper" >
                 <span>Create project</span>
                     <a class="add--new--btn" href="projects/collection/new">
@@ -78,7 +109,7 @@
                 </div>
 
 
-                <div class="flow2--features--container" data-ng-if="!page.status.loading" style="border:1px solid blue;">
+                <div class="flow2--features--container" data-ng-if="!page.status.loading" style="border:0px solid blue;">
 
                     <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
