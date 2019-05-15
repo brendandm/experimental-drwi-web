@@ -8,9 +8,9 @@
 
         <h1 class="inset">{{page.organizationProfile.name}}</h1>
 
-        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading">
+        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading" style="border:1px solid red;">
 
-            <section class="reveal fade-in t0 ng-scope" style="padding: 1em 0 0;">
+        <!--    <section class="reveal fade-in t0 ng-scope" style="padding: 1em 0 0;"> -->
                 <div class="add--new--wrapper"  data-ng-if="!$root.user.properties.is_manager">
                     <span>Edit organization</span>
                     <a class="add--new--btn" href="/organization" data-ng-class="{viewing: $root.viewState.organizationProfile}">
@@ -47,19 +47,20 @@
                     {{page.organizationProfile.modified_on}}
                 </p>
 
-            </section>
-
-
-            <section>
-                <h2 class="inset">Projects</h2>
-                <div class="add--new--wrapper" style="position:relative">
-                    <span>Create project</span>
+    <!--        </section> -->`
+        </div>
+        <h2 class="flow2">Projects</h2>
+        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading" style="border:1px solid red;">
+            <div class="add--new--wrapper" >
+                <span>Create project</span>
                     <a class="add--new--btn" href="projects/collection/new">
                         <i class="material-icons">
                         add
                         </i>
                     </a>
-                </div>
+            </div>
+           <!-- <section>
+            -->
 
                 <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">{{page.organizationProfile.name}} has <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
 
@@ -77,7 +78,7 @@
                 </div>
 
 
-                <div class="features--container" data-ng-if="!page.status.loading">
+                <div class="flow2--features--container" data-ng-if="!page.status.loading" style="border:1px solid blue;">
 
                     <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
@@ -133,14 +134,17 @@
                     </ul>
 
                 </div>
-            </section>
-            <section class="reveal fade-in t0 ng-scope" style="padding: 1em 0 0;">
-                <h2 class="inset">Members</h2>
-                 <div class="add--new--wrapper" style="position:relative">
-                    <span></span>
+       <!--     </section> -->
+        </div>
+        <h2 class="flow2">Members</h2>
+        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading">
+            <div class="add--new--wrapper" style="position:relative">
+                <span></span>
 
-                    </a>
-                </div>
+                </a>
+            </div>
+   <!--         <section class="reveal fade-in t0 ng-scope" style="padding: 1em 0 0;"> -->
+
                 <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">{{page.organizationProfile.name}} has <strong>{{ (page.members.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'member','other': 'members'}"></ng-pluralize>.</p>
 
                 <div class="features--container" data-ng-if="!page.status.loading">
@@ -171,7 +175,7 @@
 
                 </div>
 
-            </section>
+        <!--    </section> -->
 
         </div>
 
