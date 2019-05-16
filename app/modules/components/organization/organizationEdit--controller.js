@@ -8,9 +8,11 @@
 angular.module('FieldDoc')
     .controller('OrganizationEditViewController',
         function(Account, $location, $log, Notifications, $rootScope,
-            $route, user, User, Organization, SearchService, $timeout) {
+            $route, user, User, Organization, Image, SearchService, $timeout) {
 
             var self = this;
+
+            self.image = null;
 
             $rootScope.viewState = {
                 'organization': true
@@ -18,7 +20,10 @@ angular.module('FieldDoc')
 
             self.status = {
                 loading: true,
-                processing: false
+                processing: false,
+                image: {
+                    remove: false
+                }
             };
 
             self.alerts = [];
@@ -29,6 +34,10 @@ angular.module('FieldDoc')
 
             }
 
+            function closeAlertRedirection() {
+                self.alerts = [];
+                $location.path('/organizationProfile' );
+            }
             //
             // Assign project to a scoped variable
             //
@@ -83,11 +92,60 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.organization);
 
-                Organization.update({
+
+                if (self.image) {
+
+                        var fileData = new FormData();
+
+                        fileData.append('image', self.image);
+
+                        Image.upload({
+
+                        }, fileData).$promise.then(function(successResponse) {
+
+                            console.log('successResponse', successResponse);
+
+                         //   profile_.images = [{
+                         //       id: successResponse.id
+                         //   }];
+
+                            self.organization.picture = successResponse.original;
+                            console.log('self.organization.picture: '+self.organization.picture);
+                        //    profile_.$update(function(userResponse) {
+                        //        $rootScope.user = userRespo nse;
+                        //        $location.path('/profiles/' + $rootScope.user.id);
+                        //    });
+
+                            self.OrganizationUpdate();
+
+                        });
+
+                } else {
+                     self.OrganizationUpdate();
+                }
+                console.log("XX");
+                console.log(self.organization);
+
+            }
+
+            self.removeImage = function() {
+                 self.organization.picture = null;
+                 self.status.image.remove = true;
+
+                 self.OrganizationUpdate();
+            }
+
+            self.OrganizationUpdate = function(){
+
+                 self.scrubFeature(self.organization);
+
+                 Organization.update({
                     id: self.organization.id
                 }, self.organization).$promise.then(function(successResponse) {
 
                     self.status.processing = false;
+
+
 
                     self.alerts = [{
                         'type': 'success',
@@ -97,6 +155,7 @@ angular.module('FieldDoc')
                     }];
 
                     $timeout(closeAlerts, 2000);
+                //    $timeout(closeAlertRedirection, 2000);
 
                     self.parseFeature(successResponse);
 
@@ -117,17 +176,20 @@ angular.module('FieldDoc')
 
             };
 
-            self.parseFeature = function(data) {
 
-                self.organization = data.properties;
 
-                delete self.organization.creator;
-                delete self.organization.last_modified_by;
-                delete self.organization.dashboards;
+                self.parseFeature = function(data) {
 
-                console.log('self.organization', self.organization);
+                    self.organization = data.properties;
 
-            };
+                    delete self.organization.creator;
+                    delete self.organization.last_modified_by;
+                    delete self.organization.dashboards;
+
+                    console.log('self.organization', self.organization);
+                    console.log('Picture',self.organization.picture);
+
+                };
 
             self.scrubFeature = function(feature) {
 
