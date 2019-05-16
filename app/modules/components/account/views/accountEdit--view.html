@@ -12,6 +12,36 @@
 
             <form role="form" class="form reveal fade-in t0" method="POST" id="form" name="form" data-ng-submit="page.actions.save()">
 
+                <div>
+                    <div class="form-element" style="">
+                        <span class="meta-label" style="border:0px solid red; margin-top:-10px;"><b>Profile Image</b></span>
+                        <input style="height:100px;" type="file" class="form-control" id="org-image" name="org-image" file-model="page.image" />
+                        <p style="float:left; color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;" ng-if="!page.user.properties.picture">
+                        Choose a photo.
+                        </p>
+                        <p style="float:left; color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;" ng-if="page.user.properties.picture">
+                        Choose a new photo to replace the one below.
+                        </p>
+                    </div>
+
+                    <div style="border:0px solid blue;">
+                        <div class="form-element" style="margin-left:auto; margin-right:auto; margin-top:0em; width:70%; border: 0px solid red; margin-bottom:0px; padding-bottom:0.5em;" ng-if="page.user.properties.picture">
+                             <img class='' style="width:100%; height:auto;" src="{{page.user.properties.picture}}">
+                        </div>
+
+                        <div class="actions" style="margin-left:auto; margin-right:auto; width:70%; border:0px solid green; margin-bottom:1em; height:36px;" ng-if="page.user.properties.picture">
+
+                                <a class="snapshot--title" style="float:right;" href="#" title="Delete image" data-ng-click="page.removeImage()">
+                                   <i class="material-icons" style="color:#777777;">
+                                        delete
+                                    </i>
+                                </a>
+
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="form-element">
                     <span class="meta-label"><b>First name</b></span>
                     <input type="text" class="form-control form-control-half" id="first_name" name="first_name" placeholder="First Name" data-ng-model="page.user.properties.first_name" required="required" tabindex="2" />
