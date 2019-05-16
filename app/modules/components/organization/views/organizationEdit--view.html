@@ -10,6 +10,15 @@
 
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading">
 
+            <div class="add--new--wrapper"  data-ng-if="!$root.user.properties.is_manager">
+                    <span>Back to organization summary</span>
+                    <a class="add--new--btn" href="/organizationProfile" data-ng-class="{viewing: $root.viewState.organizationProfile}">
+                        <i class="material-icons">
+                        arrow_back
+                        </i>
+                    </a>
+                </div>
+
             <form role="form" class="form snackbar-container" method="POST" id="form" name="form" data-ng-submit="page.saveOrganization()">
 
                 <div class="form-element">
