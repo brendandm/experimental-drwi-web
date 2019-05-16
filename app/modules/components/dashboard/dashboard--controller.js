@@ -166,11 +166,22 @@ angular.module('FieldDoc')
 
             var name = feature.properties.name || feature.name;
 
-            var nextPath = $location.path() + '?' + collection + '=' + id;
+            var pathPrefix = $location.path().split('?')[0];
+
+            var nextPath;
 
             var tpl;
 
             if (collection === 'project') {
+
+                nextPath = [
+                    pathPrefix,
+                    '?',
+                    collection,
+                    '=',
+                    id,
+                    '&sites=true'
+                ].join('');
 
                 tpl = '<div class=\"project--popup\">' +
                     '<div class=\"title--group\">' +
@@ -184,6 +195,15 @@ angular.module('FieldDoc')
                     '</div>';
 
             } else if (collection === 'site') {
+
+                nextPath = [
+                    pathPrefix,
+                    '?',
+                    collection,
+                    '=',
+                    id,
+                    '&practices=true'
+                ].join('');
 
                 tpl = '<div class=\"project--popup\">' +
                     '<div class=\"title--group\">' +
@@ -319,15 +339,13 @@ angular.module('FieldDoc')
 
             if (params[collection] !== feature.properties.id) {
 
+                params = {};
+
                 params[collection] = feature.properties.id;
 
-            } else {
-
-                params.forward = 'true';
+                $location.search(params);
 
             }
-
-            $location.search(params);
 
             if (collection === 'site') {
 

@@ -69,6 +69,7 @@
 
                     var reservedProperties = [
                         'links',
+                        'map_options',
                         'permissions',
                         '$promise',
                         '$resolved'

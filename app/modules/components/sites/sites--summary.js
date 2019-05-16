@@ -749,6 +749,17 @@
 
                     self.mapOptions.style = self.mapStyles[0].url;
 
+                    if (self.site &&
+                        self.site.map_options) {
+
+                        if (self.site.map_options.hasOwnProperty('centroid')) {
+
+                            self.mapOptions.center = self.site.map_options.centroid.coordinates;
+
+                        }
+
+                    }
+
                     return self.mapOptions;
 
                 };

@@ -294,6 +294,7 @@ angular.module('FieldDoc')
 
                 var reservedProperties = [
                     'links',
+                    'map_options',
                     'permissions',
                     '$promise',
                     '$resolved'
@@ -545,6 +546,17 @@ angular.module('FieldDoc')
                 options.container = 'primary--map';
 
                 options.style = self.mapStyles[0].url;
+
+                if (self.practice &&
+                    self.practice.map_options) {
+
+                    if (self.practice.map_options.hasOwnProperty('centroid')) {
+
+                        self.mapOptions.center = self.practice.map_options.centroid.coordinates;
+
+                    }
+
+                }
 
                 self.map = new mapboxgl.Map(options);
 

@@ -552,6 +552,17 @@
 
                     self.mapOptions.style = self.mapStyles[0].url;
 
+                    if (self.program &&
+                        self.program.centroid) {
+
+                        if (self.program.hasOwnProperty('centroid')) {
+
+                            self.mapOptions.center = self.program.centroid.coordinates;
+
+                        }
+
+                    }
+
                     return self.mapOptions;
 
                 };

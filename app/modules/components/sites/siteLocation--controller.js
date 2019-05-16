@@ -229,6 +229,7 @@
 
                     var reservedProperties = [
                         'links',
+                        'map_options',
                         'permissions',
                         '$promise',
                         '$resolved'
@@ -518,6 +519,17 @@
                     options.container = 'primary--map';
 
                     options.style = self.mapStyles[0].url;
+
+                    if (self.site &&
+                        self.site.map_options) {
+
+                        if (self.site.map_options.hasOwnProperty('centroid')) {
+
+                            self.mapOptions.center = self.site.map_options.centroid.coordinates;
+
+                        }
+
+                    }
 
                     self.map = new mapboxgl.Map(options);
 

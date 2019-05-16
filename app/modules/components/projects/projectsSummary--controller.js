@@ -786,6 +786,19 @@ angular.module('FieldDoc')
 
                 self.mapOptions.style = self.mapStyles[0].url;
 
+                var program = self.project.program;
+
+                if (program &&
+                    program.centroid) {
+
+                    if (program.hasOwnProperty('centroid')) {
+
+                        self.mapOptions.center = program.centroid.coordinates;
+
+                    }
+
+                }
+
                 return self.mapOptions;
 
             };

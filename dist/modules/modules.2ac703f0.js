@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1557511538924})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1558031066862})
 
 ;
 /**
@@ -1253,11 +1253,22 @@ angular.module('FieldDoc')
 
             var name = feature.properties.name || feature.name;
 
-            var nextPath = $location.path() + '?' + collection + '=' + id;
+            var pathPrefix = $location.path().split('?')[0];
+
+            var nextPath;
 
             var tpl;
 
             if (collection === 'project') {
+
+                nextPath = [
+                    pathPrefix,
+                    '?',
+                    collection,
+                    '=',
+                    id,
+                    '&sites=true'
+                ].join('');
 
                 tpl = '<div class=\"project--popup\">' +
                     '<div class=\"title--group\">' +
@@ -1271,6 +1282,15 @@ angular.module('FieldDoc')
                     '</div>';
 
             } else if (collection === 'site') {
+
+                nextPath = [
+                    pathPrefix,
+                    '?',
+                    collection,
+                    '=',
+                    id,
+                    '&practices=true'
+                ].join('');
 
                 tpl = '<div class=\"project--popup\">' +
                     '<div class=\"title--group\">' +
@@ -1406,15 +1426,13 @@ angular.module('FieldDoc')
 
             if (params[collection] !== feature.properties.id) {
 
+                params = {};
+
                 params[collection] = feature.properties.id;
 
-            } else {
-
-                params.forward = 'true';
+                $location.search(params);
 
             }
-
-            $location.search(params);
 
             if (collection === 'site') {
 
@@ -6985,6 +7003,19 @@ angular.module('FieldDoc')
 
                 self.mapOptions.style = self.mapStyles[0].url;
 
+                var program = self.project.program;
+
+                if (program &&
+                    program.centroid) {
+
+                    if (program.hasOwnProperty('centroid')) {
+
+                        self.mapOptions.center = program.centroid.coordinates;
+
+                    }
+
+                }
+
                 return self.mapOptions;
 
             };
@@ -11838,6 +11869,17 @@ angular.module('FieldDoc')
 
                     self.mapOptions.style = self.mapStyles[0].url;
 
+                    if (self.site &&
+                        self.site.map_options) {
+
+                        if (self.site.map_options.hasOwnProperty('centroid')) {
+
+                            self.mapOptions.center = self.site.map_options.centroid.coordinates;
+
+                        }
+
+                    }
+
                     return self.mapOptions;
 
                 };
@@ -11979,6 +12021,7 @@ angular.module('FieldDoc')
 
                     var reservedProperties = [
                         'links',
+                        'map_options',
                         'permissions',
                         '$promise',
                         '$resolved'
@@ -12414,6 +12457,7 @@ angular.module('FieldDoc')
 
                     var reservedProperties = [
                         'links',
+                        'map_options',
                         'permissions',
                         '$promise',
                         '$resolved'
@@ -12703,6 +12747,17 @@ angular.module('FieldDoc')
                     options.container = 'primary--map';
 
                     options.style = self.mapStyles[0].url;
+
+                    if (self.site &&
+                        self.site.map_options) {
+
+                        if (self.site.map_options.hasOwnProperty('centroid')) {
+
+                            self.mapOptions.center = self.site.map_options.centroid.coordinates;
+
+                        }
+
+                    }
 
                     self.map = new mapboxgl.Map(options);
 
@@ -14422,6 +14477,7 @@ angular.module('FieldDoc')
 
                 var reservedProperties = [
                     'links',
+                    'map_options',
                     'permissions',
                     '$promise',
                     '$resolved'
@@ -15246,6 +15302,7 @@ angular.module('FieldDoc')
 
             var reservedProperties = [
                 'links',
+                'map_options',
                 'permissions',
                 '$promise',
                 '$resolved'
@@ -16038,6 +16095,17 @@ angular.module('FieldDoc')
 
                     self.mapOptions.style = self.mapStyles[0].url;
 
+                    if (self.practice &&
+                        self.practice.map_options) {
+
+                        if (self.practice.map_options.hasOwnProperty('centroid')) {
+
+                            self.mapOptions.center = self.practice.map_options.centroid.coordinates;
+
+                        }
+
+                    }
+
                     return self.mapOptions;
 
                 };
@@ -16405,6 +16473,7 @@ angular.module('FieldDoc')
 
                 var reservedProperties = [
                     'links',
+                    'map_options',
                     'permissions',
                     '$promise',
                     '$resolved'
@@ -16656,6 +16725,17 @@ angular.module('FieldDoc')
                 options.container = 'primary--map';
 
                 options.style = self.mapStyles[0].url;
+
+                if (self.practice &&
+                    self.practice.map_options) {
+
+                    if (self.practice.map_options.hasOwnProperty('centroid')) {
+
+                        self.mapOptions.center = self.practice.map_options.centroid.coordinates;
+
+                    }
+
+                }
 
                 self.map = new mapboxgl.Map(options);
 
@@ -18748,6 +18828,7 @@ angular.module('FieldDoc')
 
                 var reservedProperties = [
                     'links',
+                    'map_options',
                     'permissions',
                     '$promise',
                     '$resolved'
@@ -19465,6 +19546,7 @@ angular.module('FieldDoc')
 
                 var reservedProperties = [
                     'links',
+                    'map_options',
                     'permissions',
                     '$promise',
                     '$resolved'
@@ -28430,6 +28512,17 @@ angular.module('FieldDoc')
                     self.mapOptions.container = 'primary--map';
 
                     self.mapOptions.style = self.mapStyles[0].url;
+
+                    if (self.program &&
+                        self.program.centroid) {
+
+                        if (self.program.hasOwnProperty('centroid')) {
+
+                            self.mapOptions.center = self.program.centroid.coordinates;
+
+                        }
+
+                    }
 
                     return self.mapOptions;
 
