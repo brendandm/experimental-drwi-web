@@ -90,7 +90,7 @@ angular.module('FieldDoc')
                             console.log('successResponse', successResponse);
 
                             self.user.properties.picture = successResponse.original;
-                    
+
                             self.updateUser();
 
                         });
@@ -100,6 +100,12 @@ angular.module('FieldDoc')
                       }
 
 
+                },
+                removeImage: function (){
+                    self.user.properties.picture = null;
+                    self.status.image.remove = true;
+
+                    self.updateUser();
                 }
             };
 
