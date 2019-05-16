@@ -8,9 +8,11 @@
 angular.module('FieldDoc')
     .controller('AccountEditViewController',
         function(Account, $location, $log, Notifications, $rootScope,
-            $route, user, User, $timeout) {
+            $route, user, User, Image, $timeout) {
 
             var self = this;
+
+            self.image = null;
 
             $rootScope.viewState = {
                 'profile': true
@@ -18,7 +20,10 @@ angular.module('FieldDoc')
 
             self.status = {
                 loading: true,
-                processing: false
+                processing: false,
+                image: {
+                    remove: false
+                }
             };
 
             self.alerts = [];
@@ -70,16 +75,50 @@ angular.module('FieldDoc')
 
             self.actions = {
                 save: function() {
+                      self.status.processing = true;
 
-                    self.status.processing = true;
+                      if (self.image) {
+
+                        var fileData = new FormData();
+
+                        fileData.append('image', self.image);
+
+                        Image.upload({
+
+                        }, fileData).$promise.then(function(successResponse) {
+                            console.log('YO YO ');
+                            console.log('successResponse', successResponse);
+
+                            self.user.properties.picture = successResponse.original;
+                    
+                            self.updateUser();
+
+                        });
+
+                      } else {
+                             self.updateUser();
+                      }
+
+
+                }
+            };
+
+            self.updateUser = function(){
 
                     var _user = new User({
                         'id': self.user.id,
                         'first_name': self.user.properties.first_name,
-                        'last_name': self.user.properties.last_name
+                        'last_name': self.user.properties.last_name,
+                        'picture': self.user.properties.picture
                     });
 
                     _user.$update(function(successResponse) {
+
+                        console.log('successResponse', successResponse);
+
+                        self.user.properties = successResponse.properties;
+
+                        console.log('self.user.properties', self.user.properties )
 
                         self.status.processing = false;
 
@@ -94,6 +133,8 @@ angular.module('FieldDoc')
 
                     }, function(errorResponse) {
 
+                        console.log('errorResponse', errorResponse);
+
                         self.status.processing = false;
 
                         self.alerts = [{
@@ -107,7 +148,6 @@ angular.module('FieldDoc')
 
                     });
 
-                }
-            };
+            }
 
         });
