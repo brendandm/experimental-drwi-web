@@ -7,15 +7,17 @@
                     Home
                 </a>
             </li>
+            <!--
             <li>
                 <a href="/organization" data-ng-class="{viewing: $root.viewState.organization}">
                     Organization
                 </a>
             </li>
+            -->
             <!--START Working link for Organization Profile-->
              <li>
-                <a href="/organizationProfile" data-ng-class="{viewing: $root.viewState.organizationProfile}">
-                    Organization Profile
+                <a href="/organizationProfile" data-ng-class="{viewing: $root.viewState.organizationProfile || $root.viewState.organization}">
+                    Organization
                 </a>
             </li>
              <!--END Working link for Organization Profile-->
