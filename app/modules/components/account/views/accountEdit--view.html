@@ -10,6 +10,15 @@
 
         <div class="main--ui">
 
+             <div class="add--new--wrapper"  data-ng-if="!$root.user.properties.is_manager">
+                    <span>Back to profile</span>
+                    <a class="add--new--btn" href="/accountView" data-ng-class="{viewing: $root.viewState.accountView}">
+                        <i class="material-icons">
+                        arrow_back
+                        </i>
+                    </a>
+                </div>
+
             <form role="form" class="form reveal fade-in t0" method="POST" id="form" name="form" data-ng-submit="page.actions.save()">
 
                 <div>
@@ -51,7 +60,17 @@
                     <span class="meta-label"><b>Last name</b></span>
                     <input type="text" class="form-control form-control-half" id="last_name" name="last_name" placeholder="Last Name" data-ng-model="page.user.properties.last_name" required="required" tabindex="3" />
                 </div>
-
+                  <div class="form-element">
+                    <span class="meta-label"><b>Title</b></span>
+                    <input type="text" class="form-control form-control-half" id="title" name="title" placeholder="Title" data-ng-model="page.user.properties.title" tabindex="3" />
+                </div>
+                <div class="form-element">
+                    <span class="meta-label"><b>About me</b></span>
+                    <textarea rows="10" data-ng-model="page.user.properties.bio" class="form-control animate" msd-elastic id="bio" name="bio" placeholder="Say something about yourself.." maxlength="500">{{ page.user.properties.bio }}</textarea>
+                    <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
+                        Biographies may contain up to 500 characters, including spaces and punctuation. <strong>({{ (page.user.properties.bio.length || 0) | number }} used)</strong>
+                    </p>
+                </div>
                 <div class="form-element">
                     <span class="meta-label"><b>Email</b></span>
                     <input type="text" class="form-control" id="email" name="email" disabled="disabled" data-ng-model="page.user.properties.email" required="required" />
