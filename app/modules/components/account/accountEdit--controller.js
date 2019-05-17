@@ -115,7 +115,9 @@ angular.module('FieldDoc')
                         'id': self.user.id,
                         'first_name': self.user.properties.first_name,
                         'last_name': self.user.properties.last_name,
-                        'picture': self.user.properties.picture
+                        'picture': self.user.properties.picture,
+                        'bio': self.user.properties.bio,
+                        'title': self.user.properties.title
                     });
 
                     _user.$update(function(successResponse) {
