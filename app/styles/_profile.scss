@@ -48,6 +48,7 @@
     margin: auto;
     border: 0px solid pink;
     max-width: 48rem;
+
     width: 100%;
 
   }
@@ -142,10 +143,69 @@
     width:100%;
     height:auto;
     display:block;
+    border: 4px solid #e0e0e0;
+
+     &:hover {
+        box-shadow: 0 10px 20px rgba(0,0,0,0.08), 0 6px 6px rgba(0,0,0,0.12);
+      }
 
   }
   .flow2-text-container{
   }
+   .flow2-card{
+        margin-left:20px;
+        margin-right: 20px;
+        min-height: 240px;
+    flex-basis: 0;
+    flex-grow: 1;
+    padding-right: 1em;
+    padding-left: 1em;
+    box-sizing: border-box;
+    min-width: 200px;
+    max-width: 400px;
+   }
+
+
+   .flow2-card--content {
+      display: flex;
+      flex-flow: column;
+      width: 100%;
+      margin-bottom: 2em;
+      border-radius: 4px;
+      //box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      //box-shadow: 0 1px 1px 0 rgba(60,64,67,.08),0 1px 3px 1px rgba(60,64,67,.16);
+      overflow: hidden;
+      transition: all 250ms ease 0s;
+
+    //  &:hover {
+    //    box-shadow: 0 10px 20px rgba(0,0,0,0.08), 0 6px 6px rgba(0,0,0,0.12);
+    //  }
+
+      img {
+        width: 100%;
+      }
+
+      .name, .body {
+        width: 100%;
+        padding: 1em;
+        background: #f5f5f5;
+        border-bottom: 1px solid #e0e0e0;
+
+
+        span {
+          display: block;
+          width: 100%;
+          font-weight: bold;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          margin-right: 1em;
+          border:0px solid red;
+           text-align: center;
+        }
+
+      }
+    }
 
 
 @media only screen and (max-width: 1000px) {
@@ -153,20 +213,21 @@
     .flow2--left-field-profile {
         border : 0px solid red;
         width:100%;
-     #   margin-left:auto;
-     #   margin-right:auto;
+        margin-left:auto;
+        margin-right:auto;
         max-height: 310px;
+        display:block;
 
     }
     .flow2--left-field-profile > .user-avatar-wrapper{
-    #    width:50%;
-    #    margin-left:auto;
-    #    margin-right:auto;
+       # width:50%;
+        margin-left:auto;
+        margin-right:auto;
         border:0px solid green;
     }
     body > img.user--avatar{
         border-radius: 50%;
-        width:50%;
+      #  width:50%;
         height:auto;
         display:block;
 
@@ -178,8 +239,8 @@
 
     }
     body > .flow2--right-field-profile >  .flow2-profile{
-        border: 1px solid red;
+        border: 0px solid red;
         margin: 0 auto;
     }
 
-   }
+}
