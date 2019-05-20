@@ -65,14 +65,14 @@ angular.module('FieldDoc')
                             'practices',
                             'practice_types',
                             'properties',
-                            'tags',
+//                            'tags',
                             'targets',
                             'tasks',
                             'type',
                             'sites'
                         ].join(',');
 
-                        return Project.get({
+                        return Project.getSingle({
                             id: $route.current.params.projectId,
                             exclude: exclude
                         });

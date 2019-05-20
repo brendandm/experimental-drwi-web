@@ -208,38 +208,6 @@
 
                 };
 
-                function addNonGroupLayers(sourceLayer, targetGroup) {
-
-                    if (sourceLayer instanceof L.LayerGroup) {
-
-                        sourceLayer.eachLayer(function(layer) {
-
-                            addNonGroupLayers(layer, targetGroup);
-
-                        });
-
-                    } else {
-
-                        targetGroup.addLayer(sourceLayer);
-
-                    }
-
-                }
-
-                self.setGeoJsonLayer = function(data, layerGroup, clearLayers) {
-
-                    if (clearLayers) {
-
-                        layerGroup.clearLayers();
-
-                    }
-
-                    var featureGeometry = L.geoJson(data, {});
-
-                    addNonGroupLayers(featureGeometry, layerGroup);
-
-                };
-
                 self.loadReports = function() {
 
                     Practice.reports({
@@ -286,7 +254,9 @@
 
                         self.loadMetrics();
 
-                        self.loadTags();
+//                        self.loadTags();
+
+                        self.tags = Utility.processTags(self.practice.tags);
 
                         self.showElements();
 

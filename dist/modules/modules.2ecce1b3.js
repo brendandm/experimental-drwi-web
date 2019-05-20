@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1558031066862})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1558359064429})
 
 ;
 /**
@@ -1422,17 +1422,17 @@ angular.module('FieldDoc')
             // Update Window.location to preserve state
             // 
 
-            var params = $location.search();
-
-            if (params[collection] !== feature.properties.id) {
-
-                params = {};
-
-                params[collection] = feature.properties.id;
-
-                $location.search(params);
-
-            }
+//            var params = $location.search();
+//
+//            if (params[collection] !== feature.properties.id) {
+//
+//                params = {};
+//
+//                params[collection] = feature.properties.id;
+//
+//                $location.search(params);
+//
+//            }
 
             if (collection === 'site') {
 
@@ -5392,14 +5392,14 @@ angular.module('FieldDoc')
                             'practices',
                             'practice_types',
                             'properties',
-                            'tags',
+//                            'tags',
                             'targets',
                             'tasks',
                             'type',
                             'sites'
                         ].join(',');
 
-                        return Project.get({
+                        return Project.getSingle({
                             id: $route.current.params.projectId,
                             exclude: exclude
                         });
@@ -6361,11 +6361,13 @@ angular.module('FieldDoc')
 
                         self.loadSites();
 
-                        self.loadTags();
+//                        self.loadTags();
 
                         self.loadArea();
 
                     }
+
+                    self.tags = Utility.processTags(self.project.tags);
 
                     // self.showElements();
 
@@ -6557,6 +6559,23 @@ angular.module('FieldDoc')
                 });
 
             };
+
+//            self.processTags = function(arr) {
+//
+//                arr.forEach(function(tag) {
+//
+//                    if (tag.color &&
+//                        tag.color.length) {
+//
+//                        tag.lightColor = tinycolor(tag.color).lighten(5).toString();
+//
+//                    }
+//
+//                });
+//
+//                self.tags = arr;
+//
+//            };
 
             self.loadTags = function() {
 
@@ -10915,7 +10934,7 @@ angular.module('FieldDoc')
                             });
                         },
                         site: function(Site, $route) {
-                            return Site.get({
+                            return Site.getSingle({
                                 id: $route.current.params.siteId
                             });
                         }
@@ -11415,7 +11434,9 @@ angular.module('FieldDoc')
 
                         self.loadMetrics();
 
-                        self.loadTags();
+//                        self.loadTags();
+
+                        self.tags = Utility.processTags(self.site.tags);
 
                         // self.showElements();
 
@@ -14828,7 +14849,7 @@ angular.module('FieldDoc')
 
                     },
                     practice: function(Practice, $route) {
-                        return Practice.get({
+                        return Practice.getSingle({
                             id: $route.current.params.practiceId
                         });
                     }
@@ -15677,38 +15698,6 @@ angular.module('FieldDoc')
 
                 };
 
-                function addNonGroupLayers(sourceLayer, targetGroup) {
-
-                    if (sourceLayer instanceof L.LayerGroup) {
-
-                        sourceLayer.eachLayer(function(layer) {
-
-                            addNonGroupLayers(layer, targetGroup);
-
-                        });
-
-                    } else {
-
-                        targetGroup.addLayer(sourceLayer);
-
-                    }
-
-                }
-
-                self.setGeoJsonLayer = function(data, layerGroup, clearLayers) {
-
-                    if (clearLayers) {
-
-                        layerGroup.clearLayers();
-
-                    }
-
-                    var featureGeometry = L.geoJson(data, {});
-
-                    addNonGroupLayers(featureGeometry, layerGroup);
-
-                };
-
                 self.loadReports = function() {
 
                     Practice.reports({
@@ -15755,7 +15744,9 @@ angular.module('FieldDoc')
 
                         self.loadMetrics();
 
-                        self.loadTags();
+//                        self.loadTags();
+
+                        self.tags = Utility.processTags(self.practice.tags);
 
                         self.showElements();
 
@@ -34070,6 +34061,11 @@ angular
                 'query': {
                     'isArray': false
                 },
+                getSingle: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id')
+                },
                 update: {
                     method: 'PATCH'
                 },
@@ -34126,7 +34122,7 @@ angular
                 publicFeature: {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/practice/:id')
+                    url: environment.apiUrl.concat('/v1/practice/:id/public')
                 },
                 tags: {
                     method: 'GET',
@@ -34430,6 +34426,11 @@ angular
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/projects')
                 },
+                getSingle: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/project/:id')
+                },
                 'summary': {
                     isArray: false,
                     method: 'GET',
@@ -34649,6 +34650,11 @@ angular
                 'query': {
                     isArray: false
                 },
+                getSingle: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/site/:id')
+                },
                 'summary': {
                     isArray: false,
                     method: 'GET',
@@ -34695,7 +34701,7 @@ angular
                 publicFeature: {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/site/:id')
+                    url: environment.apiUrl.concat('/v1/site/:id/public')
                 },
                 tags: {
                     method: 'GET',
@@ -35054,6 +35060,22 @@ angular.module('FieldDoc')
                 });
 
                 return _programs;
+
+            },
+            processTags: function(arr) {
+
+                arr.forEach(function(tag) {
+
+                    if (tag.color &&
+                        tag.color.length) {
+
+                        tag.lightColor = tinycolor(tag.color).lighten(5).toString();
+
+                    }
+
+                });
+
+                return arr;
 
             }
         };

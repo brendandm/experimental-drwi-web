@@ -299,6 +299,22 @@ angular.module('FieldDoc')
 
                 return _programs;
 
+            },
+            processTags: function(arr) {
+
+                arr.forEach(function(tag) {
+
+                    if (tag.color &&
+                        tag.color.length) {
+
+                        tag.lightColor = tinycolor(tag.color).lighten(5).toString();
+
+                    }
+
+                });
+
+                return arr;
+
             }
         };
 

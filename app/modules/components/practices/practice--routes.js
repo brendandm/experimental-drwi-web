@@ -29,7 +29,7 @@ angular.module('FieldDoc')
 
                     },
                     practice: function(Practice, $route) {
-                        return Practice.get({
+                        return Practice.getSingle({
                             id: $route.current.params.practiceId
                         });
                     }

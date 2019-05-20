@@ -42,7 +42,7 @@ angular.module('FieldDoc')
                             });
                         },
                         site: function(Site, $route) {
-                            return Site.get({
+                            return Site.getSingle({
                                 id: $route.current.params.siteId
                             });
                         }

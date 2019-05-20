@@ -144,11 +144,13 @@ angular.module('FieldDoc')
 
                         self.loadSites();
 
-                        self.loadTags();
+//                        self.loadTags();
 
                         self.loadArea();
 
                     }
+
+                    self.tags = Utility.processTags(self.project.tags);
 
                     // self.showElements();
 
@@ -340,6 +342,23 @@ angular.module('FieldDoc')
                 });
 
             };
+
+//            self.processTags = function(arr) {
+//
+//                arr.forEach(function(tag) {
+//
+//                    if (tag.color &&
+//                        tag.color.length) {
+//
+//                        tag.lightColor = tinycolor(tag.color).lighten(5).toString();
+//
+//                    }
+//
+//                });
+//
+//                self.tags = arr;
+//
+//            };
 
             self.loadTags = function() {
 

@@ -335,17 +335,17 @@ angular.module('FieldDoc')
             // Update Window.location to preserve state
             // 
 
-            var params = $location.search();
-
-            if (params[collection] !== feature.properties.id) {
-
-                params = {};
-
-                params[collection] = feature.properties.id;
-
-                $location.search(params);
-
-            }
+//            var params = $location.search();
+//
+//            if (params[collection] !== feature.properties.id) {
+//
+//                params = {};
+//
+//                params[collection] = feature.properties.id;
+//
+//                $location.search(params);
+//
+//            }
 
             if (collection === 'site') {
 

@@ -15,6 +15,11 @@
                 'query': {
                     'isArray': false
                 },
+                getSingle: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id')
+                },
                 update: {
                     method: 'PATCH'
                 },
@@ -71,7 +76,7 @@
                 publicFeature: {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/practice/:id')
+                    url: environment.apiUrl.concat('/v1/practice/:id/public')
                 },
                 tags: {
                     method: 'GET',

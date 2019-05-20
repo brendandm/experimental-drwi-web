@@ -25,6 +25,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/projects')
                 },
+                getSingle: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/project/:id')
+                },
                 'summary': {
                     isArray: false,
                     method: 'GET',

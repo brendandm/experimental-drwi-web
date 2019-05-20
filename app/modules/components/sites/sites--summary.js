@@ -295,7 +295,9 @@
 
                         self.loadMetrics();
 
-                        self.loadTags();
+//                        self.loadTags();
+
+                        self.tags = Utility.processTags(self.site.tags);
 
                         // self.showElements();
 
