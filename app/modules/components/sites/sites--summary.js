@@ -494,7 +494,7 @@
                             'self.addLayers --> spec',
                             spec);
 
-                        feature.spec = JSON.parse(spec);
+                        feature.spec = spec;
 
                         console.log(
                             'self.addLayers --> feature.spec',

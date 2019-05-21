@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1558455664018})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1558457659267})
 
 ;
 /**
@@ -6740,7 +6740,7 @@ angular.module('FieldDoc')
                         'self.addLayers --> spec',
                         spec);
 
-                    feature.spec = JSON.parse(spec);
+                    feature.spec = spec;
 
                     console.log(
                         'self.addLayers --> feature.spec',
@@ -11633,7 +11633,7 @@ angular.module('FieldDoc')
                             'self.addLayers --> spec',
                             spec);
 
-                        feature.spec = JSON.parse(spec);
+                        feature.spec = spec;
 
                         console.log(
                             'self.addLayers --> feature.spec',
@@ -15886,7 +15886,7 @@ angular.module('FieldDoc')
                             'self.addLayers --> spec',
                             spec);
 
-                        feature.spec = JSON.parse(spec);
+                        feature.spec = spec;
 
                         console.log(
                             'self.addLayers --> feature.spec',
@@ -28344,7 +28344,7 @@ angular.module('FieldDoc')
                             'self.addLayers --> spec',
                             spec);
 
-                        feature.spec = JSON.parse(spec);
+                        feature.spec = spec;
 
                         console.log(
                             'self.addLayers --> feature.spec',
