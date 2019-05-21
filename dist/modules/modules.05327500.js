@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1558360918626})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.chesapeakecommons.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1558455664018})
 
 ;
 /**
@@ -11893,7 +11893,10 @@ angular.module('FieldDoc')
                     if (self.site &&
                         self.site.map_options) {
 
-                        if (self.site.map_options.hasOwnProperty('centroid')) {
+                        var mapOptions = self.site.map_options;
+
+                        if (mapOptions.hasOwnProperty('centroid') &&
+                            mapOptions.centroid !== null) {
 
                             self.mapOptions.center = self.site.map_options.centroid.coordinates;
 
@@ -12772,7 +12775,10 @@ angular.module('FieldDoc')
                     if (self.site &&
                         self.site.map_options) {
 
-                        if (self.site.map_options.hasOwnProperty('centroid')) {
+                        var mapOptions = self.site.map_options;
+
+                        if (mapOptions.hasOwnProperty('centroid') &&
+                            mapOptions.centroid !== null) {
 
                             self.mapOptions.center = self.site.map_options.centroid.coordinates;
 
@@ -16089,7 +16095,10 @@ angular.module('FieldDoc')
                     if (self.practice &&
                         self.practice.map_options) {
 
-                        if (self.practice.map_options.hasOwnProperty('centroid')) {
+                        var mapOptions = self.practice.map_options;
+
+                        if (mapOptions.hasOwnProperty('centroid') &&
+                            mapOptions.centroid !== null) {
 
                             self.mapOptions.center = self.practice.map_options.centroid.coordinates;
 
@@ -16720,7 +16729,10 @@ angular.module('FieldDoc')
                 if (self.practice &&
                     self.practice.map_options) {
 
-                    if (self.practice.map_options.hasOwnProperty('centroid')) {
+                    var mapOptions = self.practice.map_options;
+
+                    if (mapOptions.hasOwnProperty('centroid') &&
+                        mapOptions.centroid !== null) {
 
                         self.mapOptions.center = self.practice.map_options.centroid.coordinates;
 
@@ -29377,7 +29389,8 @@ angular.module('FieldDoc')
             var excludedKeys = [
                 'creator',
                 'geometry',
-                'last_modified_by'
+                'last_modified_by',
+                'organization'
             ];
 
             var reservedProperties = [

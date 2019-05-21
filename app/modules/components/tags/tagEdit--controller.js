@@ -126,7 +126,8 @@ angular.module('FieldDoc')
             var excludedKeys = [
                 'creator',
                 'geometry',
-                'last_modified_by'
+                'last_modified_by',
+                'organization'
             ];
 
             var reservedProperties = [

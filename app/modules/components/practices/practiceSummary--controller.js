@@ -599,7 +599,10 @@
                     if (self.practice &&
                         self.practice.map_options) {
 
-                        if (self.practice.map_options.hasOwnProperty('centroid')) {
+                        var mapOptions = self.practice.map_options;
+
+                        if (mapOptions.hasOwnProperty('centroid') &&
+                            mapOptions.centroid !== null) {
 
                             self.mapOptions.center = self.practice.map_options.centroid.coordinates;
 

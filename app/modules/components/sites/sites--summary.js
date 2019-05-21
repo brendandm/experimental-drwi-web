@@ -754,7 +754,10 @@
                     if (self.site &&
                         self.site.map_options) {
 
-                        if (self.site.map_options.hasOwnProperty('centroid')) {
+                        var mapOptions = self.site.map_options;
+
+                        if (mapOptions.hasOwnProperty('centroid') &&
+                            mapOptions.centroid !== null) {
 
                             self.mapOptions.center = self.site.map_options.centroid.coordinates;
 
