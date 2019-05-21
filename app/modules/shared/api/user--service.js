@@ -21,6 +21,10 @@
         me: {
           method: 'GET',
           url: environment.apiUrl.concat('/v1/data/user/me')
+        },
+         member: {
+          method: 'GET',
+          url: environment.apiUrl.concat('/v1/data/user/member/:id')
         }
       });
     });
