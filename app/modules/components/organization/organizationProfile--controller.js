@@ -164,6 +164,20 @@ angular.module('FieldDoc')
            };
 
 
+            self.parseMembers = function(members){
+                     console.log('members', members);
+                     var i = 0;
+                     for (var m in members) {
+                        if(  self.organizationMembers[i].picture != null){
+                            var picture =   self.members[i].picture;
+                            console.log(self.members[i].picture);
+                            self.members[i].picture = picture.replace("original", "square");
+                            console.log(self.members[i].picture);
+
+                         }
+                        i++;
+                      }
+            }
 
             self.loadOrganizationMembers = function(organizationId, postAssigment) {
 
@@ -176,6 +190,8 @@ angular.module('FieldDoc')
                      self.organizationMembers = successResponse.properties;
 
                      self.members = successResponse.properties;
+
+                     self.parseMembers(self.members);
 
                      self.memberCount = successResponse.count;
 
