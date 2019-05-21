@@ -7,7 +7,7 @@
  */
 angular.module('FieldDoc')
     .controller('AccountEditViewController',
-        function(Account, $location, $log, Notifications, $rootScope,
+        function(Account, $location, $log, Notifications, $rootScope, $routeParams,
             $route, user, User, Image, $timeout) {
 
             var self = this;
@@ -33,6 +33,9 @@ angular.module('FieldDoc')
                 self.alerts = [];
 
             }
+             var featureId = $routeParams.id;
+               console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+            console.log("param1:",featureId);
 
             //
             // Assign project to a scoped variable
@@ -41,28 +44,39 @@ angular.module('FieldDoc')
             // Verify Account information for proper UI element display
             //
             if (Account.userObject && user) {
+             //   if(!featureId){
+                  console.log("feature id not set");
+                    user.$promise.then(function(userResponse) {
 
-                user.$promise.then(function(userResponse) {
+                        $rootScope.user = Account.userObject = self.user = userResponse;
 
-                    $rootScope.user = Account.userObject = self.user = userResponse;
+                        self.permissions = {
+                            isLoggedIn: Account.hasToken(),
+                            role: $rootScope.user.properties.roles[0],
+                            account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
+                        };
 
-                    self.permissions = {
-                        isLoggedIn: Account.hasToken(),
-                        role: $rootScope.user.properties.roles[0],
-                        account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
-                    };
+                        //
+                        // Setup page meta data
+                        //
+                        $rootScope.page = {
+                            'title': 'Profile'
+                        };
 
-                    //
-                    // Setup page meta data
-                    //
-                    $rootScope.page = {
-                        'title': 'Profile'
-                    };
+                        if(featureId && featureId != self.user.properties.id){
 
-                });
+                             self.actions.getMember();
+                        }else{
+                            console.log("NO");
+                        }
+
+
+                    });
 
 
             } else {
+
+
                 //
                 // If there is not Account.userObject and no user object, then the
                 // user is not properly authenticated and we should send them, at
@@ -74,6 +88,31 @@ angular.module('FieldDoc')
             }
 
             self.actions = {
+                getMember:function() {
+                       console.log("GetMember:");
+                      User.member({
+                            id: featureId
+                        }, self.member).$promise.then(function(successResponse) {
+
+                               self.member = successResponse;
+                               var picture = self.member.picture;
+                               self.member.picture = picture.replace("original", "square");
+
+                       }, function(errorResponse) {
+
+                            self.status.processing = false;
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Unable to update organization profile.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                        });
+                },
                 save: function() {
                       self.status.processing = true;
 
