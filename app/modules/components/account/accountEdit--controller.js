@@ -34,9 +34,7 @@ angular.module('FieldDoc')
 
             }
              var featureId = $routeParams.id;
-               console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
-            console.log("param1:",featureId);
-
+      
             //
             // Assign project to a scoped variable
             //
