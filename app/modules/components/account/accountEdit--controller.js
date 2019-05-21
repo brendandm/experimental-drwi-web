@@ -64,10 +64,7 @@ angular.module('FieldDoc')
                         if(featureId && featureId != self.user.properties.id){
 
                              self.actions.getMember();
-                        }else{
-                            console.log("NO");
                         }
-
 
                     });
 
@@ -103,7 +100,7 @@ angular.module('FieldDoc')
                             self.alerts = [{
                                 'type': 'success',
                                 'flag': 'Success!',
-                                'msg': 'Unable to update organization profile.',
+                                'msg': 'Could not retrieve profile.',
                                 'prompt': 'OK'
                             }];
 
