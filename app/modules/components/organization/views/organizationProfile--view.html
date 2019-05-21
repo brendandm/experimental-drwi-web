@@ -183,29 +183,30 @@
                     <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
                         <li class="flow2-card reveal fade-in" style="max-width:25%; display:block; border: 0px solid green; animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="member in page.members | orderBy:'-last_login_at' | filter: page.q">
-                          <!--  <a href="/accountView/{{member.id}}" data-ng-class="{viewing: $root.viewState.profile}">-->
+
                                 <div class="flow2-card--content" style="border: 0px solid red;" >
-                                   <div class="user-avatar-wrapper" style=" margin-left:auto; margin-right:auto;"  ng-if="member.picture">
-                                         <img class='user--avatar' style="clear:right;" src="{{member.picture}}">
-                                    </div>
-                                    <div class="user-avatar-wrapper" style="margin-left:auto; margin-right:auto;"  ng-if="!member.picture">
-                                         <img class='user--avatar' style="clear:right;" src="/images/avatar-Default-1024x.png">
-                                    </div>
+                                      <a href="/accountView/{{member.id}}" data-ng-class="{viewing: $root.viewState.profile}">
+                                        <div class="user-avatar-wrapper" style=" margin-left:auto; margin-right:auto;"  ng-if="member.picture">
+                                             <img class='user--avatar' style="clear:right;" src="{{member.picture}}">
+                                        </div>
+                                        <div class="user-avatar-wrapper" style="margin-left:auto; margin-right:auto;"  ng-if="!member.picture">
+                                             <img class='user--avatar' style="clear:right;" src="/images/avatar-Default-1024x.png">
+                                        </div>
+                                      </a>
+
+                                        <div class="name" style="display:block;  float: center; clear:left; background: #fff;">
+                                            <span>  {{ member.first_name }} {{ member.last_name }}</span>
+
+                                        </div>
+
+                                        <div class="body" style="display:block; border-bottom: 0px; float: left; clear:left; background: #fff;">
+                                             <span style=" font-weight: normal;"> {{ member.email }} </span>
 
 
-                                    <div class="name" style="display:block;  float: center; clear:left; background: #fff;">
-                                        <span>  {{ member.first_name }} {{ member.last_name }}</span>
-
-                                    </div>
-
-                                    <div class="body" style="display:block; border-bottom: 0px; float: left; clear:left; background: #fff;">
-                                         <span style=" font-weight: normal;"> {{ member.email }} </span>
-
-
-                                   </div>
+                                       </div>
 
                                 </div>
-                   <!--          </a> -->
+
                                 <div class="flow2-card--content" style="border: 0px solid red;" >
 
                         </li>
