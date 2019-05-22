@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1558467511017})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1558557586222})
 
 ;
 /**
@@ -12293,13 +12293,19 @@ angular.module('FieldDoc')
 
                         $timeout(function() {
 
+                            if (!self.mapOptions) {
+
+                                self.mapOptions = self.getMapOptions();
+
+                            }
+
                             if (typeof self.map !== 'undefined') {
 
                                 self.populateMap(self.map, self.site, 'geometry');
 
                             } else {
 
-                                self.createMap();
+                                self.createMap(self.mapOptions);
 
                             }
 
@@ -12758,19 +12764,27 @@ angular.module('FieldDoc')
 
                 };
 
-                self.createMap = function() {
+                self.getMapOptions = function() {
 
                     self.mapStyles = mapbox.baseStyles;
+
+                    console.log(
+                        'self.createMap --> mapStyles',
+                        self.mapStyles);
 
                     self.activeStyle = 0;
 
                     mapboxgl.accessToken = mapbox.accessToken;
 
-                    var options = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+                    console.log(
+                        'self.createMap --> accessToken',
+                        mapboxgl.accessToken);
 
-                    options.container = 'primary--map';
+                    self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
 
-                    options.style = self.mapStyles[0].url;
+                    self.mapOptions.container = 'primary--map';
+
+                    self.mapOptions.style = self.mapStyles[0].url;
 
                     if (self.site &&
                         self.site.map_options) {
@@ -12785,6 +12799,16 @@ angular.module('FieldDoc')
                         }
 
                     }
+
+                    return self.mapOptions;
+
+                };
+
+                self.createMap = function(options) {
+
+                    if (!options) return;
+
+                    console.log('self.createMap --> Starting...');
 
                     self.map = new mapboxgl.Map(options);
 
@@ -16215,13 +16239,19 @@ angular.module('FieldDoc')
 
                     $timeout(function() {
 
+                        if (!self.mapOptions) {
+
+                            self.mapOptions = self.getMapOptions();
+
+                        }
+
                         if (self.map) {
 
                             self.populateMap(self.map, self.practice);
 
                         } else {
 
-                            self.createMap();
+                            self.createMap(self.mapOptions);
 
                         }
 
@@ -16712,19 +16742,27 @@ angular.module('FieldDoc')
 
             };
 
-            self.createMap = function() {
+            self.getMapOptions = function() {
 
                 self.mapStyles = mapbox.baseStyles;
+
+                console.log(
+                    'self.createMap --> mapStyles',
+                    self.mapStyles);
 
                 self.activeStyle = 0;
 
                 mapboxgl.accessToken = mapbox.accessToken;
 
-                var options = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+                console.log(
+                    'self.createMap --> accessToken',
+                    mapboxgl.accessToken);
 
-                options.container = 'primary--map';
+                self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
 
-                options.style = self.mapStyles[0].url;
+                self.mapOptions.container = 'primary--map';
+
+                self.mapOptions.style = self.mapStyles[0].url;
 
                 if (self.practice &&
                     self.practice.map_options) {
@@ -16739,6 +16777,16 @@ angular.module('FieldDoc')
                     }
 
                 }
+
+                return self.mapOptions;
+
+            };
+
+            self.createMap = function(options) {
+
+                if (!options) return;
+
+                console.log('self.createMap --> Starting...');
 
                 self.map = new mapboxgl.Map(options);
 
