@@ -181,8 +181,7 @@
 
                         self.geography = successResponse;
 
-                        if (successResponse.permissions.read &&
-                            successResponse.permissions.write) {
+                        if (successResponse.permissions.read) {
 
                             self.makePrivate = false;
 
