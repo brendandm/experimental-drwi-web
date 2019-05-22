@@ -312,58 +312,56 @@
                 </ul>
 
             </section>
-            <h2 class="">Partners</h2>
-            <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading">
-                <div class="add--new--wrapper" style="position:relative">
-                  <span></span>
+            <section class="reveal fade-in t3" style="padding: 0;">
+                <h2 class="">Partners</h2>
+                <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading">
+                    <div class="add--new--wrapper" style="position:relative">
+                      <span></span>
 
-                     </a>
-                </div>
-             <!--         <section class="reveal fade-in t0 ng-scope" style="padding: 1em 0 0;"> -->
+                         </a>
+                    </div>
 
-                <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">{{page.project.name}} has <strong>{{ (page.partnerships.length | number) || 0 }}</strong> <ng-pluralize count="page.partnerships.length" when="{'one': 'partnership','other': 'partnerships'}"></ng-pluralize>.</p>
+                    <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">{{page.project.name}} has <strong>{{ (page.partnerships.length | number) || 0 }}</strong> <ng-pluralize count="page.partnerships.length" when="{'one': 'partnership','other': 'partnerships'}"></ng-pluralize>.</p>
 
-                <div class="features--container" data-ng-if="!page.status.loading">
+                    <div class="features--container" data-ng-if="!page.status.loading">
 
-                    <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
+                        <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
-                        <li class="flow2-card reveal fade-in" style="position:relative; max-width:25%; display:block; border: 1px solid green; animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="partner in page.partnerships | orderBy:'-created_on' | filter: page.q">
+                            <li class="flow2-card reveal fade-in" style=" padding-left:0; padding-bottom:2em; position:relative; max-width:25%; display:block; border: 0px solid green; animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="partner in page.partnerships | orderBy:'-created_on' | filter: page.q">
 
-                                <div class="flow2-card--content" style="position:relative; border: 0px solid red;" >
+                                    <div class="flow2-card--content" style="max-width:400px; width: 100%;height: 100%; display:table; border: 0px solid red;" >
 
-                                    <div>
 
-                                        <div class="partner-logo-wrapper" style="; margin-left:auto; margin-right:auto;"  ng-if="partner.organization.picture">
-                                             <img class='partner-logo' style="clear:right;" src="{{partner.organization.picture}}">
-                                        </div>
-                                        <div class="partner-logo-wrapper" style="margin-left:auto; margin-right:auto;"  ng-if="!partner.organization.picture">
-                                             <img class='partner-logo' style="clear:right;" src="/images/partner-Default-1024x.png">
-                                        </div>
+                                              <div class="partner-logo-wrapper" style="width: 100%; height:inherit;display:table-cell; vertical-align:middle; border: 0px solid purple; margin-left:auto; margin-right:auto;"  ng-if="partner.organization.picture">
+                                                     <img class='partner-logo' style="" src="{{partner.organization.picture}}">
+                                                </div>
+                                                 <div class="partner-logo-wrapper" style="height:inherit;display:table-cell; vertical-align:middle; border: 0px solid purple; margin-left:auto; margin-right:auto;"   ng-if="!partner.organization.picture">
+                                                     <img class='partner-logo' style="clear:right;" src="/images/partner-Default-1024x.png">
+                                                </div>
 
                                     </div>
-
-
-
-
-
-                                </div>
-
-                                <div class="partner_name" style="position:absolute; bottom:0; border-bottom:1px ; display:block;  float: center; clear:left; background: #fff;">
-                                            <span>  {{ partner.organization.name }}</span>
-
+                                     <div class="partner_name" style="max-width:400px;  margin-top: -2em; clear:both;  border-bottom:1px ; display:block;  float: center; ">
+                                            <span>{{ partner.organization.name }}</span>
                                         </div>
 
-                                <div class="flow2-card--content" style="border: 0px solid red;" >
 
-                        </li>
 
-                    </ul>
 
-                </div>
 
-             <!--    </section> -->
+                            </li>
+                            <li class="" style="height:1px; overflow:hidden; min-width:25% max-width:25%; display:block; border: 0px solid green;">
+                            </li>
 
-             </div>
+
+                        </ul>
+
+                    </div>
+                 </div>
+            </section>
+        </div>
+
+
+
 
         </div>
 
