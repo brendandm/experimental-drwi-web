@@ -176,7 +176,7 @@
             </div>
    <!--         <section class="reveal fade-in t0 ng-scope" style="padding: 1em 0 0;"> -->
 
-                <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">{{page.organizationProfile.name}} has <strong>{{ (page.members.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'member','other': 'members'}"></ng-pluralize>.</p>
+                <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">{{page.organizationProfile.name}} has <strong>{{ (page.members.length | number) || 0 }}</strong> <ng-pluralize count="page.members.length" when="{'one': 'member','other': 'members'}"></ng-pluralize>.</p>
 
                 <div class="features--container" data-ng-if="!page.status.loading">
 
