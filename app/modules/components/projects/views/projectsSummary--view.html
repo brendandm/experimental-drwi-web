@@ -327,9 +327,9 @@
 
                         <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
-                            <li class="flow2-card reveal fade-in" style=" padding-left:0; padding-bottom:2em; position:relative; max-width:25%; display:block; border: 0px solid green; animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="partner in page.partnerships | orderBy:'-created_on' | filter: page.q">
+                            <li class="flow2-card reveal fade-in" style=" padding-left:0; padding-bottom:2em; position:relative; display:block; border: 0px solid green; animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="partner in page.partnerships | orderBy:'-created_on' | filter: page.q">
 
-                                    <div class="flow2-card--content" style="max-width:400px; width: 100%;height: 100%; display:table; border: 0px solid red;" >
+                                    <div class="flow2-card--content" style="width: 100%;height: 100%; display:table; border: 0px solid red;" >
 
 
                                               <div class="partner-logo-wrapper" style="width: 100%; height:inherit;display:table-cell; vertical-align:middle; border: 0px solid purple; margin-left:auto; margin-right:auto;"  ng-if="partner.organization.picture">
@@ -349,8 +349,7 @@
 
 
                             </li>
-                            <li class="" style="height:1px; overflow:hidden; min-width:25% max-width:25%; display:block; border: 0px solid green;">
-                            </li>
+
 
 
                         </ul>
