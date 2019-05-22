@@ -174,6 +174,8 @@ angular.module('FieldDoc')
 
                         self.loadTags();
 
+                        self.loadPartnerships();
+
                     }
 
                     self.showElements();
@@ -659,6 +661,29 @@ angular.module('FieldDoc')
                 self.selectedMetric = null;
 
                 self.displayModal = false;
+
+            };
+
+
+            self.loadPartnerships = function() {
+
+                Project.partnerships({
+                    id: self.project.id
+                }).$promise.then(function(successResponse) {
+
+                    self.partnerships = successResponse.features;
+
+                    console.log("self.partnerships",self.partnerships)
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    $log.error('Unable to load project partnerships.');
+
+                    self.showElements();
+
+                });
 
             };
 
