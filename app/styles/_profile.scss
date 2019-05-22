@@ -152,12 +152,13 @@
   }
   .flow2-text-container{
   }
+
    .flow2-card{
         margin-left:20px;
         margin-right: 20px;
         min-height: 240px;
-    flex-basis: 0;
-    flex-grow: 1;
+    flex-basis: 20%;
+    flex-grow: 0;
     display: flex;
     flex-direction: column;
     justify-content: center;
