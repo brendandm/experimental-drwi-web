@@ -39,21 +39,7 @@
 
                         }
                     }
-                }),
-              $routeProvider
-                .when('/accountView/:id', {
-                    templateUrl: '/modules/components/account/views/accountView--view.html?t=' + environment.version,
-                    controller: 'AccountEditViewController',
-                    controllerAs: 'page',
-                    resolve: {
-                        user: function(Account, $rootScope, $document) {
 
-                            $rootScope.targetPath = document.location.pathname;
-
-                            return Account.getUser();
-
-                        }
-                    }
                 });
 
         });
