@@ -185,13 +185,27 @@
                         <li class="flow2-card reveal fade-in" style="max-width:25%; display:block; border: 0px solid green; animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="member in page.members | orderBy:'-last_login_at' | filter: page.q">
 
                                 <div class="flow2-card--content" style="border: 0px solid red;" >
-                                      <a href="/profile/{{member.id}}" data-ng-class="{viewing: $root.viewState.profile}">
+
+
+                                      <a href="/accountView/" data-ng-class="{viewing: $root.viewState.profile}" data-ng-if="member.id == page.user.properties.id && !$root.user.properties.is_manager">
+
                                         <div class="user-avatar-wrapper" style=" margin-left:auto; margin-right:auto;"  ng-if="member.picture">
                                              <img class='user--avatar' style="clear:right;" src="{{member.picture}}">
                                         </div>
                                         <div class="user-avatar-wrapper" style="margin-left:auto; margin-right:auto;"  ng-if="!member.picture">
                                              <img class='user--avatar' style="clear:right;" src="/images/avatar-Default-1024x.png">
                                         </div>
+
+                                      </a>
+                                    <a href="/profile/{{member.id}}" data-ng-class="{viewing: $root.viewState.profile}" data-ng-if="member.id != page.user.properties.id">
+
+                                        <div class="user-avatar-wrapper" style=" margin-left:auto; margin-right:auto;"  ng-if="member.picture">
+                                             <img class='user--avatar' style="clear:right;" src="{{member.picture}}">
+                                        </div>
+                                        <div class="user-avatar-wrapper" style="margin-left:auto; margin-right:auto;"  ng-if="!member.picture">
+                                             <img class='user--avatar' style="clear:right;" src="/images/avatar-Default-1024x.png">
+                                        </div>
+
                                       </a>
 
                                         <div class="name" style="display:block;  float: center; clear:left; background: #fff;">
