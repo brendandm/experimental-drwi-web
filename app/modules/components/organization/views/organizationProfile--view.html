@@ -185,7 +185,7 @@
                         <li class="flow2-card reveal fade-in" style="max-width:25%; display:block; border: 0px solid green; animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="member in page.members | orderBy:'-last_login_at' | filter: page.q">
 
                                 <div class="flow2-card--content" style="border: 0px solid red;" >
-                                      <a href="/accountView/{{member.id}}" data-ng-class="{viewing: $root.viewState.profile}">
+                                      <a href="/profile/{{member.id}}" data-ng-class="{viewing: $root.viewState.profile}">
                                         <div class="user-avatar-wrapper" style=" margin-left:auto; margin-right:auto;"  ng-if="member.picture">
                                              <img class='user--avatar' style="clear:right;" src="{{member.picture}}">
                                         </div>
