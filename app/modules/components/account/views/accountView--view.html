@@ -5,73 +5,7 @@
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
 
-      <div class="content--container" ng-if="page.member">
-
-        <h1 class="inset">Profile</h1>
-
-        <div class="main--ui">
-
-
-             <div class="flow2--profile-container reveal fade-in" style="">
-                  <div class="flow2--left-field-profile" style="">
-
-                       <div class="user-avatar-wrapper" style=""  ng-if="page.member.picture">
-                             <img class='user--avatar' style="" src="{{page.member.picture}}">
-
-                        </div>
-                      <div class="user-avatar-wrapper" style=""  ng-if="!page.member.picture">
-                                 <img class='user--avatar' style="" src="/images/avatar-Default-1024x.png">
-                          <!-- <i class="material-icons">
-                                person
-                            </i> -->
-
-                        </div>
-
-
-                    </div>
-
-                    <div class="flow2--right-field-profile" style="">
-                        <div class='flow2-text-container' style="float:left;" >
-
-                           <h2 class="flow2-profile" style="">
-                                       {{page.member.first_name}}  {{page.member.last_name}}
-                            </h2>
-                        </div>
-                        <div style="float:left; margin-right:3em; clear:left;" ng-if="page.member.title">
-
-                                <p class="flow2-b">
-                                   {{page.member.title}}
-                                </p>
-
-                        </div>
-                        <div style="float:left; clear:left;" ng-if="page.member.email">
-
-                            <p class="flow2-b">
-                                {{page.member.email}}
-                            </p>
-                        </div>
-                        <div style="float:left; clear:left;" ng-if="page.member.bio">
-
-                            <p class="flow2-b">
-                                {{page.user.properties.bio}}
-                            </p>
-                        </div>
-
-                     </div>
-
-                </div>
-
-
-        </div>
-
-
-    </div>
-
-
-
-
-
-    <div class="content--container" ng-if="!page.member">
+    <div class="content--container">
 
         <h1 class="inset">My Profile</h1>
 
