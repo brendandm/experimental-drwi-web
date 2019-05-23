@@ -61,10 +61,7 @@ angular.module('FieldDoc')
                             'title': 'Profile'
                         };
 
-                        if(featureId && featureId != self.user.properties.id){
 
-                             self.actions.getMember();
-                        }
 
                     });
 
@@ -83,31 +80,7 @@ angular.module('FieldDoc')
             }
 
             self.actions = {
-                getMember:function() {
-                       console.log("GetMember:");
-                      User.member({
-                            id: featureId
-                        }, self.member).$promise.then(function(successResponse) {
 
-                               self.member = successResponse;
-                               var picture = self.member.picture;
-                               self.member.picture = picture.replace("original", "square");
-
-                       }, function(errorResponse) {
-
-                            self.status.processing = false;
-
-                            self.alerts = [{
-                                'type': 'success',
-                                'flag': 'Success!',
-                                'msg': 'Could not retrieve profile.',
-                                'prompt': 'OK'
-                            }];
-
-                            $timeout(closeAlerts, 2000);
-
-                        });
-                },
                 save: function() {
                       self.status.processing = true;
 
