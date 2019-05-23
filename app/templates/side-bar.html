@@ -20,12 +20,16 @@
                     Organization
                 </a>
             </li>
+
              <!--END Working link for Organization Profile-->
             <li>
-                <a href="/accountView" data-ng-class="{viewing: $root.viewState.profile}">
+               <!-- <a href="/profile/{{page.user.properties.id}}" data-ng-class="{viewing: $root.viewState.profile}">
+               -->
+                <a href="/accountView/" data-ng-class="{viewing: $root.viewState.profile}">
                     Profile
                 </a>
             </li>
+
             <li style="border-top: 1px solid #e0e0e0;">
                 <a href="/projects" data-ng-class="{viewing: $root.viewState.project}">
                     Projects
