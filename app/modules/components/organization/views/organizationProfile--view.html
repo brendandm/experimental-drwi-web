@@ -21,7 +21,7 @@
                 </div>
                 <div class="flow2--field-container">
                     <div class="flow2--left-field">
-                        <div style="float:left" ng-if="page.organizationProfile.description">
+                        <div class="flow2--profileItem" ng-if="page.organizationProfile.description">
                             <p class="flow2-h">
                                 <i>Description:</i>
                             </p>
@@ -29,7 +29,7 @@
                                 {{page.organizationProfile.description}}
                             </p>
                         </div>
-                        <div style="float:left; margin-right:3em; clear:left;" ng-if="page.organizationProfile.website">
+                        <div class="flow2--profileItem" style="margin-right:3em; clear:left;" ng-if="page.organizationProfile.website">
 
                                 <p class="flow2-h">
                                     <i>Website:</i>
@@ -40,7 +40,7 @@
                                 </p>
 
                         </div>
-                        <div style="float:left" ng-if="page.organizationProfile.email">
+                        <div class="flow2--profileItem" ng-if="page.organizationProfile.email">
                             <p class="flow2-h">
                                 <i>Email:</i>
                             </p>
@@ -48,7 +48,7 @@
                                 {{page.organizationProfile.email}}
                             </p>
                         </div>
-                        <div style="float:left; clear:left;" ng-if="page.organizationProfile.created_on">
+                        <div class="flow2--profileItem" style="clear:left;" ng-if="page.organizationProfile.created_on">
                             <p class="flow2-h">
                                 <i>Last Modified:</i>
                             </p>
@@ -56,23 +56,10 @@
                                 {{page.organizationProfile.created_on}}
                             </p>
                         </div>
-<!--
-                         <p class="flow2">
-                            <i>Created</i>
-                        </p>
-                        <p class="flow2-b">
-                            {{page.organizationProfile.modified_on}}
-                        </p>
--->
+
                      </div>
                     <div class="flow2--right-field">
-<!--
-                    <p style="font-style: normal; font-size: 1em; margin-top: 1.5em;">
-                            <strong>Image</strong>
-                        </p>
--->
-                        <img class='flow2--organizationImage' src="{{page.organizationProfile.picture}}">
-
+                         <img class='flow2--organizationImage' src="{{page.organizationProfile.picture}}">
 
                     </div>
                 </div>
@@ -109,7 +96,7 @@
                 </div>
 
 
-                <div class="flow2--features--container" data-ng-if="!page.status.loading" style="border:0px solid blue;">
+                <div class="features--container" data-ng-if="!page.status.loading" style="border:0px solid blue;">
 
                     <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
