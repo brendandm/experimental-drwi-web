@@ -12,7 +12,7 @@
 
              <div class="add--new--wrapper"  data-ng-if="!$root.user.properties.is_manager">
                     <span>Back to profile</span>
-                    <a class="add--new--btn" href="/accountView" data-ng-class="{viewing: $root.viewState.accountView}">
+                    <a class="add--new--btn" href="/profile/" data-ng-class="{viewing: $root.viewState.accountView}">
                         <i class="material-icons">
                         arrow_back
                         </i>
@@ -24,11 +24,11 @@
                 <div>
                     <div class="form-element" style="">
                         <span class="meta-label" style="border:0px solid red; margin-top:-10px;"><b>Profile Image</b></span>
-                        <input style="" type="file" class="form-control" id="org-image" name="org-image" file-model="page.image" />
+                        <input class="flow2--profile-edit-image-text" file-model="page.image" />
                         <p style="float:left; color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;" ng-if="!page.user.properties.picture">
                         Choose a photo.
                         </p>
-                        <p style="float:left; color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;" ng-if="page.user.properties.picture">
+                        <p class="flow2--profile-edit-image-text" ng-if="page.user.properties.picture">
                         Choose a new photo to replace the one below.
                         </p>
                     </div>
