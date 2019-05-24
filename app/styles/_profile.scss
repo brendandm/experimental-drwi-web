@@ -19,7 +19,6 @@
   }
    h2.flow2-profile {
     display: flex;
-    width: 100%;
     //background-color: #F2F2F2;
     padding: 0em 0 0em 0px;
     //font-size: 2em;
@@ -60,6 +59,14 @@
     width: 100%;
 
   }
+
+   .flow2--profile-edit-image-text{
+        float:left;
+        color: #616161;
+        font-size: 0.9em;
+        font-style: normal;
+        margin-top: 0.5em;
+   }
 
   .flow2--left-field{
     width:57%;
@@ -125,7 +132,7 @@
       font-size: 0.9em;
       margin-top: 1em;
   }
-  p.flow2-b {
+  .flow2-b {
       font-style: normal;
       font-size: 1em;
       margin-top: 0.5em;
@@ -138,14 +145,14 @@
 
   div.user-avatar-wrapper{
     width:100%;
-    display:block;
-    margin: auto;
-    margin-left:0;
-    margin-right:auto;
-    margin-top:0em;
     border: 0px solid red;
     margin-bottom:0px;
     padding-bottom:0.5em;
+
+    display: flex;
+  align-items: center;
+  justify-content: center;
+
   }
   img.user--avatar{
     border-radius: 50%;
@@ -160,6 +167,8 @@
 
   }
   .flow2-text-container{
+        float:left;
+        clear:left;
   }
 
    .flow2-card{
@@ -242,6 +251,10 @@
 
       }
 
+
+
+
+
   div.partner-logo-wrapper{
     width:100%;
     height: 100%;
@@ -275,17 +288,36 @@
         margin-top: 1em;
     }
 
+
+     .user--avatar{
+        margin-left:auto;
+        margin-right:auto;
+
+    }
+
+    .flow2--right-field-profile {
+
+        width:100%;
+    height: 100%;
+    float: none;
+    padding-right: 1em;
+
+
+
+    }
+
     .flow2--left-field-profile {
         border : 0px solid red;
         width:100%;
-        margin-left:auto;
+         margin-left:auto;
         margin-right:auto;
+        float: none;
         max-height: 310px;
         display:block;
 
     }
     .flow2--left-field-profile > .user-avatar-wrapper{
-
+        width:100%;
         margin-left:auto;
         margin-right:auto;
         border:0px solid green;
@@ -298,14 +330,27 @@
 
     }
     .flow2-text-container {
-
+        float:none;
+        margin-left: auto;
+        margin-right: auto;
         border:0px solid blue;
         width: 100%;
 
     }
-    body > .flow2--right-field-profile >  .flow2-profile{
+    h2.flow2-profile{
+        float: center;
+        display: block;
+        margin-left: auto;
+        margin-right:auto;
+        text-align: center;
         border: 0px solid red;
-        margin: 0 auto;
+
+    }
+    .flow2-b{
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+
     }
 
 }
