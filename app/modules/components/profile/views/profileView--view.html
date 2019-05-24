@@ -7,9 +7,19 @@
 
       <div class="content--container" >
 
-        <h1 class="inset">Profile</h1>
+        <h1 class="inset"  data-ng-if="page.member.id == page.user.properties.id || $root.user.properties.is_admin" ng-cloak>My Profile</h1>
+          <h1 class="inset"  data-ng-if="page.member.id != page.user.properties.id" ng-cloak>Profile</h1>
 
-        <div class="main--ui">
+        <div class="main--ui eveal fade-in">
+
+          <div class="add--new--wrapper reveal fade-in"  data-ng-if="page.member.id == page.user.properties.id || $root.user.properties.is_admin">
+                    <span>Edit profile</span>
+                    <a class="add--new--btn" href="/account" data-ng-class="{viewing: $root.viewState.accountEdit}">
+                        <i class="material-icons">
+                        edit
+                        </i>
+                    </a>
+                </div>
 
 
              <div class="flow2--profile-container reveal fade-in" style="">
