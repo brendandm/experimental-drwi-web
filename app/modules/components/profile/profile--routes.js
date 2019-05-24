@@ -25,6 +25,21 @@
 
                         }
                     }
+                }),
+                $routeProvider
+                .when('/profile/', {
+                    templateUrl: '/modules/components/profile/views/profileView--view.html?t=' + environment.version,
+                    controller: 'ProfileViewController',
+                    controllerAs: 'page',
+                    resolve: {
+                        user: function(Account, $rootScope, $document) {
+
+                            $rootScope.targetPath = document.location.pathname;
+
+                            return Account.getUser();
+
+                        }
+                    }
                 });
 
         });
