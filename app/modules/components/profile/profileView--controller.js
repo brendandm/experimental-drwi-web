@@ -61,9 +61,15 @@ angular.module('FieldDoc')
                             'title': 'Profile'
                         };
 
+                        if(featureId && featureId != self.user.properties.id){
+                               self.actions.getMember();
+                        }else{
+                            self.member = self.user.properties;
+                            var picture = self.member.picture;
+                            self.member.picture = picture.replace("original", "square");
+                        }
 
 
-                           self.actions.getMember();
 
 
                     });
@@ -87,7 +93,7 @@ angular.module('FieldDoc')
                        console.log("GetMember:");
                       Profile.member({
                             id: featureId
-                        }, self.member).$promise.then(function(successResponse) {
+                        }).$promise.then(function(successResponse) {
 
                                self.member = successResponse;
                                var picture = self.member.picture;
