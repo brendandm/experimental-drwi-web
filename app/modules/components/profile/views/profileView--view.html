@@ -41,28 +41,28 @@
                     </div>
 
                     <div class="flow2--right-field-profile" style="">
-                        <div class='flow2-text-container' style="float:left;" >
+                        <div class='flow2-text-container' style="" >
 
                            <h2 class="flow2-profile" style="">
                                        {{page.member.first_name}}  {{page.member.last_name}}
                             </h2>
                         </div>
-                        <div style="float:left; margin-right:3em; clear:left;" ng-if="page.member.title">
+                        <div class='flow2-text-container' style="margin-right:3em;" ng-if="page.member.title">
 
                                 <p class="flow2-b">
                                    {{page.member.title}}
                                 </p>
 
                         </div>
-                        <div style="float:left; clear:left;" ng-if="page.member.email">
+                        <div class='flow2-text-container' ng-if="page.member.email">
 
                             <p class="flow2-b">
                                 {{page.member.email}}
                             </p>
                         </div>
-                        <div style="float:left; clear:left;" ng-if="page.member.bio">
+                        <div class='flow2-text-container' ng-if="page.member.bio">
 
-                            <p class="flow2-b">
+                            <p class="flow2-b" style="text-align: justify;  text-align-last: center; ">
                                 {{page.user.properties.bio}}
                             </p>
                         </div>
