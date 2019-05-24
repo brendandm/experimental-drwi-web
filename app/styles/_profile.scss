@@ -31,6 +31,14 @@
     font-weight: bold;
   }
 
+
+
+   .flow2--profileItem{
+    float: left;
+   }
+
+
+
   .flow2--features--container {
     display: flex;
     flex-flow: column;
@@ -61,6 +69,7 @@
     border: 0px solid green;
     min-width:350px;
     margin-right:10px;
+    padding-right: 1.5em;
   }
 
 
@@ -253,6 +262,18 @@
 
 
 @media only screen and (max-width: 1000px) {
+     .flow2--left-field{
+        width:100%;
+     }
+     .flow2--right-field{
+        width:100%;
+     }
+
+    .flow2--organizationImage{
+        margin-left:auto;
+        margin-right:auto;
+        margin-top: 1em;
+    }
 
     .flow2--left-field-profile {
         border : 0px solid red;
