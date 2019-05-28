@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1558561871831})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1559087831050})
 
 ;
 /**
@@ -19278,7 +19278,7 @@ angular.module('FieldDoc')
 
                     });
 
-                    self.loadModel(activeDomain);
+                    self.loadModels(activeDomain);
 
                 }).catch(function(errorResponse) {
 
@@ -19288,11 +19288,11 @@ angular.module('FieldDoc')
 
             };
 
-            self.loadModel = function(activeDomain) {
+            self.loadModels = function(activeDomain) {
 
-                console.log('self.loadModel.activeDomain', activeDomain);
+                console.log('self.loadModels.activeDomain', activeDomain);
 
-                Practice.model({
+                Practice.models({
                     id: $route.current.params.practiceId
                 }).$promise.then(function(successResponse) {
 
@@ -19300,15 +19300,19 @@ angular.module('FieldDoc')
 
                     var modelTargets = [];
 
-                    self.model = successResponse;
+                    self.models = successResponse.features;
 
-                    self.model.metrics.forEach(function(metric) {
+                    self.models.forEach(function(model) {
 
-                        if (activeDomain.indexOf(metric.id) < 0) {
+                        model.metrics.forEach(function(metric) {
 
-                            modelTargets.push(metric);
+                            if (activeDomain.indexOf(metric.id) < 0) {
 
-                        }
+                                modelTargets.push(metric);
+
+                            }
+
+                        });
 
                     });
 
@@ -19814,7 +19818,7 @@ angular.module('FieldDoc')
 
                     self.loadMatrix();
 
-                    // self.loadModel();
+                    // self.loadModels();
 
                     //
                     // Setup page meta data
@@ -34169,10 +34173,10 @@ angular
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_custom'),
                     'isArray': false
                 },
-                model: {
+                models: {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/practice/:id/model')
+                    url: environment.apiUrl.concat('/v1/practice/:id/models')
                 },
                 progress: {
                     method: 'GET',

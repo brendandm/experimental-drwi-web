@@ -63,10 +63,10 @@
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_custom'),
                     'isArray': false
                 },
-                model: {
+                models: {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/practice/:id/model')
+                    url: environment.apiUrl.concat('/v1/practice/:id/models')
                 },
                 progress: {
                     method: 'GET',
