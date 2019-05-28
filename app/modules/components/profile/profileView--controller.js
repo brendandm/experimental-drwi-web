@@ -53,7 +53,7 @@ angular.module('FieldDoc')
                             role: $rootScope.user.properties.roles[0],
                             account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                         };
-
+                        console.log(" self.permissions", self.permissions);
                         //
                         // Setup page meta data
                         //
@@ -96,8 +96,10 @@ angular.module('FieldDoc')
                         }).$promise.then(function(successResponse) {
 
                                self.member = successResponse;
-                               var picture = self.member.picture;
-                               self.member.picture = picture.replace("original", "square");
+                               if(self.member.picture){
+                                   var picture = self.member.picture;
+                                   self.member.picture = picture.replace("original", "square");
+                               }
 
                        }, function(errorResponse) {
 
