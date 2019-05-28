@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('OrganizationProfileViewController',
         function(Account, $location, $log, Notifications, $rootScope,
-            $route, user, User, Organization, SearchService, $timeout) {
+            $route, $routeParams, user, User, Organization, SearchService, $timeout) {
 
             var self = this;
 
@@ -29,6 +29,8 @@ angular.module('FieldDoc')
 
             }
 
+            var featureId = $routeParams.id;
+
             //
             // Assign project to a scoped variable
             //
@@ -40,13 +42,13 @@ angular.module('FieldDoc')
                 user.$promise.then(function(userResponse) {
 
                     $rootScope.user = Account.userObject = self.user = userResponse;
-
+                    console.log('userResponse',userResponse);
                     self.permissions = {
                         isLoggedIn: Account.hasToken(),
                         role: $rootScope.user.properties.roles[0],
                         account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                     };
-
+                    console.log(" self.permissions", self.permissions);
                     //
                     // Setup page meta data
                     //
@@ -57,8 +59,15 @@ angular.module('FieldDoc')
                     //
                     // Load organization data
                     //
+                    if(featureId && featureId != self.user.properties.organization) {
+                         self.loadOrganization(featureId);
 
-                    if (self.user.properties.organization) {
+                         self.loadOrganizationProjects(featureId);
+
+                         self.loadOrganizationMembers(featureId);
+                    }
+
+                    else if (self.user.properties.organization) {
 
                         self.loadOrganization(self.user.properties.organization_id);
 
@@ -71,6 +80,8 @@ angular.module('FieldDoc')
                         self.status.loading = false;
 
                     }
+
+
 
                 });
 
@@ -86,6 +97,9 @@ angular.module('FieldDoc')
                 self.organizationProfile = data.properties;
                 console.log(self.organizationProfile.description)
                 console.log('self.organizationProfile', self.organizationProfile);
+
+                     console.log("page.organizationProfile.id", self.organizationProfile.id);
+                    console.log("page.user.properties.organization",self.user.properties.organization.id);
 
             };
 
