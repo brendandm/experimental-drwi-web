@@ -1388,7 +1388,7 @@ angular.module('FieldDoc')
                 null,
                 featureCollection,
                 null,
-                true);
+                false);
 
         };
 
@@ -1609,6 +1609,28 @@ angular.module('FieldDoc')
 
         };
 
+        self.setDefaultExtent = function(map) {
+
+            if (self.dashboardObject.extent !== null &&
+                typeof self.dashboardObject.extent !== 'undefined') {
+
+                var bounds = turf.bbox(self.dashboardObject.extent);
+
+                map.fitBounds(bounds, {
+                    padding: 40
+                });
+
+                //
+                // Prepend `bounds` to extent history array.
+                //
+
+                self.extentHistory.unshift(bounds);
+
+                console.log('self.extentHistory', self.extentHistory);
+
+            }
+        };
+
         self.createMap = function(options) {
 
             if (!options) return;
@@ -1642,6 +1664,12 @@ angular.module('FieldDoc')
 
                 self.map.addControl(fullScreen, 'top-left');
 
+                //
+                // Set default map extent
+                //
+
+                self.setDefaultExtent(self.map);
+
                 // 
                 // Add geography layer first
                 // 
@@ -1652,7 +1680,7 @@ angular.module('FieldDoc')
                 // Add project markers
                 //
 
-                var fitProjects = self.geographies.length ? false : true;
+//                var fitProjects = self.geographies.length ? false : true;
 
                 self.populateMap(
                     self.map,
@@ -1660,7 +1688,7 @@ angular.module('FieldDoc')
                     null,
                     self.projectCollection,
                     null,
-                    fitProjects);
+                    false);
 
                 self.inspectSearchParams();
 
