@@ -36,10 +36,10 @@
 
                         <h1>{{ page.geography.name || 'Un-named' }}</h1>
 
-                        <p>
+                        <p data-ng-if="page.geography && page.geography.links.programs.length">
                             <strong>Programs:</strong>
-                            <span data-ng-href="program in page.geography.links.programs">
-                                <a href="{{ program.link.html }}">{{ program.name }}</a><br/>
+                            <span data-ng-repeat="datum in page.geography.links.programs">
+                                <a href="{{ datum.link.html }}">{{ datum.name }}</a><br/>
                             </span>
                         </p>
 
