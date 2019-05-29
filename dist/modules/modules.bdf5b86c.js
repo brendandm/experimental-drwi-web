@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1559087831050})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1559089694389})
 
 ;
 /**
@@ -28336,15 +28336,21 @@ angular.module('FieldDoc')
 
                         console.log('Program metrics', successResponse);
 
-                        successResponse.features.forEach(function(metric) {
+//                        successResponse.features.forEach(function(metric) {
+//
+//                            var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
+//
+//                            metric.percentComplete = _percentComplete;
+//
+//                        });
+//
+//                        self.metrics = successResponse.features;
 
-                            var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
+                        Utility.processMetrics(successResponse.features);
 
-                            metric.percentComplete = _percentComplete;
+                        self.metrics = Utility.groupByModel(successResponse.features);
 
-                        });
-
-                        self.metrics = successResponse.features;
+                        console.log('self.metrics', self.metrics);
 
                     }, function(errorResponse) {
 

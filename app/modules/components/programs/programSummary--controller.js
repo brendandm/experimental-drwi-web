@@ -321,15 +321,21 @@
 
                         console.log('Program metrics', successResponse);
 
-                        successResponse.features.forEach(function(metric) {
+//                        successResponse.features.forEach(function(metric) {
+//
+//                            var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
+//
+//                            metric.percentComplete = _percentComplete;
+//
+//                        });
+//
+//                        self.metrics = successResponse.features;
 
-                            var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
+                        Utility.processMetrics(successResponse.features);
 
-                            metric.percentComplete = _percentComplete;
+                        self.metrics = Utility.groupByModel(successResponse.features);
 
-                        });
-
-                        self.metrics = successResponse.features;
+                        console.log('self.metrics', self.metrics);
 
                     }, function(errorResponse) {
 

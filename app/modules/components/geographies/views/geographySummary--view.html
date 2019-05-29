@@ -37,7 +37,10 @@
                         <h1>{{ page.geography.name || 'Un-named' }}</h1>
 
                         <p>
-                            <strong>Program:</strong> <a href="{{ page.geography.links.program.html }}">{{ page.geography.program.name }}</a>
+                            <strong>Programs:</strong>
+                            <span data-ng-href="program in page.geography.links.programs">
+                                <a href="{{ program.link.html }}">{{ program.name }}</a><br/>
+                            </span>
                         </p>
 
                         <p>
