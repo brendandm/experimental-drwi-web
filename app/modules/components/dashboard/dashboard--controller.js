@@ -1388,7 +1388,7 @@ angular.module('FieldDoc')
                 null,
                 featureCollection,
                 null,
-                false);
+                true);
 
         };
 

@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1559090739574})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1559092734910})
 
 ;
 /**
@@ -2475,7 +2475,7 @@ angular.module('FieldDoc')
                 null,
                 featureCollection,
                 null,
-                false);
+                true);
 
         };
 
