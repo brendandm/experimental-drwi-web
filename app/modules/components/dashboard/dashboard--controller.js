@@ -1884,7 +1884,7 @@ angular.module('FieldDoc')
                             null,
                             self.projectCollection,
                             null,
-                            true);
+                            false);
 
                         self.clearAllFilters();
 
