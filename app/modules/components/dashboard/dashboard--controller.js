@@ -1650,7 +1650,9 @@ angular.module('FieldDoc')
 
                 // 
                 // Add project markers
-                // 
+                //
+
+                var fitProjects = self.geographies.length ? false : true;
 
                 self.populateMap(
                     self.map,
@@ -1658,7 +1660,7 @@ angular.module('FieldDoc')
                     null,
                     self.projectCollection,
                     null,
-                    true);
+                    fitProjects);
 
                 self.inspectSearchParams();
 

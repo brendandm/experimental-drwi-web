@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1559092734910})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1559093280089})
 
 ;
 /**
@@ -2737,7 +2737,9 @@ angular.module('FieldDoc')
 
                 // 
                 // Add project markers
-                // 
+                //
+
+                var fitProjects = self.geographies.length ? false : true;
 
                 self.populateMap(
                     self.map,
@@ -2745,7 +2747,7 @@ angular.module('FieldDoc')
                     null,
                     self.projectCollection,
                     null,
-                    true);
+                    fitProjects);
 
                 self.inspectSearchParams();
 
