@@ -20,7 +20,7 @@
                     </a>
                 </div>
                 <div class="flow2--field-container">
-                    <div class="flow2--left-field">
+                    <div class="flow2--left-field" style="border: 1px solid red">
                         <div class="flow2--profileItem" ng-if="page.organizationProfile.description">
                             <p class="flow2-h">
                                 <i>Description:</i>
@@ -58,8 +58,10 @@
                         </div>
 
                      </div>
-                    <div class="flow2--right-field">
-                         <img class='flow2--organizationImage' src="{{page.organizationProfile.picture}}">
+                    <div class="flow2--right-field" style="display:block; border: 0px solid red">
+
+                           <img class='flow2--organizationImage'  ng-if="page.organizationProfile.picture" src="{{page.organizationProfile.picture}}">
+                            <img class='flow2--organizationImage'  ng-if="!page.organizationProfile.picture" src="/images/partner-Default-1024x.png">
 
                     </div>
                 </div>
@@ -67,8 +69,8 @@
 
     <!--        </section> -->
         </div>
-        <h2 class="flow2">Projects</h2>
-        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading" style="border:0px solid red;">
+        <h2 class="flow2" style="display:block" ng-if="page.projects.length">Projects</h2>
+        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && page.projects.length" style="border:0px solid red;">
             <div class="add--new--wrapper" data-ng-if="$root.user.properties.is_admin || page.organizationProfile.id == page.user.properties.organization.id">
                 <span>Create project</span>
                     <a class="add--new--btn" href="projects/collection/new">
