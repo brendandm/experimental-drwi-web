@@ -114,14 +114,16 @@
 
   .flow2--organizationImage{
 
-       display: block;
+       display:block;
        width: auto;
+       align: middle;
        min-width: 150px;
        max-width: 300px;
        height: auto;
        min-height: 150px;
        max-height: 300px;
-       margin: auto;
+       margin-left: auto;
+       margin-right: auto;
        margin-bottom:3em;
 
   }
