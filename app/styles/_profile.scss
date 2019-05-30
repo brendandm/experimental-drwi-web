@@ -69,9 +69,10 @@
    }
 
   .flow2--left-field{
+    display: block;
     width:57%;
     float: left;
-    height: 100%;
+    overflow: auto;
     max-height: 550px;
     border: 0px solid green;
     min-width:350px;
