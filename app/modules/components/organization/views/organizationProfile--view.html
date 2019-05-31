@@ -35,7 +35,7 @@
                                     <i>Website:</i>
                                 </p>
 
-                                <p class="flow2-b">
+                                <p class="flow2-b" style="text-overflow:ellipsis">
                                     <a href="{{page.organizationProfile.website}}">{{page.organizationProfile.website}}</a>
                                 </p>
 
@@ -82,20 +82,13 @@
            <!-- <section>
             -->
 
-                <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">{{page.organizationProfile.name}} has <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>.</p>
-
-                <p data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There <ng-pluralize count="page.projects.length" when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{ (page.count | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize> linked to the <strong>{{ page.selectedProgram.name }}</strong> program.</p>
-
-                <div class="collection-filter" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">
-                    <form name="myForm">
-                        <label for="programFilter"><strong>Filter by program:</strong></label>
-                        <select name="programFilter" id="programFilter"
-                            data-ng-options="program.name for program in page.programs track by program.id"
-                            data-ng-model="page.selectedProgram"
-                            data-ng-change="page.loadProjects()">
-                        </select>
-                    </form>
-                </div>
+                <p data-ng-if="!page.status.loading && page.organizationProfile.id == page.user.properties.organization.id">{{page.organizationProfile.name}} has
+                    <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>
+                </p>
+            
+             <p data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager) && page.organizationProfile.id != page.user.properties.organization.id">There <ng-pluralize count="page.projects.length" when="{'one': 'is','other': 'are'}"></ng-pluralize>
+                    <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize> in programs that you manage.
+                </p>
 
 
                 <div class="features--container" data-ng-if="!page.status.loading" style="border:0px solid blue;">
