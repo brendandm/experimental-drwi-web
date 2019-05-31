@@ -101,6 +101,8 @@ angular.module('FieldDoc')
                                    self.member.picture = picture.replace("original", "square");
                                }
 
+                                 self.status.loading = false;
+
                        }, function(errorResponse) {
 
                             self.status.processing = false;
@@ -113,6 +115,8 @@ angular.module('FieldDoc')
                             }];
 
                             $timeout(closeAlerts, 2000);
+
+                              self.status.loading = false;
 
                         });
                 }
