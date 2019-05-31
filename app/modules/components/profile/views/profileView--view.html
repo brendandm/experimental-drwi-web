@@ -3,11 +3,13 @@
 <main class="site--content--flow fluid-content clearfix distinguish">
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
-
-
-      <div class="content--container" >
-
-        <h1 class="inset"  data-ng-if="page.member.id == page.user.properties.id || $root.user.properties.is_admin" ng-cloak>My Profile</h1>
+      <div class="content--container" ng-if="!page.member.id">
+            <div class="main--ui eveal fade-in">
+                <p>You cannot view this member profile.</p>
+            </div>
+      </div>
+      <div class="content--container" ng-if="page.member.id">
+        <h1 class="inset"  data-ng-if="page.member.id == page.user.properties.id" ng-cloak>My Profile</h1>
           <h1 class="inset"  data-ng-if="page.member.id != page.user.properties.id" ng-cloak>Profile</h1>
 
         <div class="main--ui eveal fade-in">
