@@ -85,7 +85,7 @@
                 <p data-ng-if="!page.status.loading && page.organizationProfile.id == page.user.properties.organization.id">{{page.organizationProfile.name}} has
                     <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize>
                 </p>
-            
+
              <p data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager) && page.organizationProfile.id != page.user.properties.organization.id">There <ng-pluralize count="page.projects.length" when="{'one': 'is','other': 'are'}"></ng-pluralize>
                     <strong>{{ (page.projects.length | number) || 0 }}</strong> <ng-pluralize count="page.projects.length" when="{'one': 'project','other': 'projects'}"></ng-pluralize> in programs that you manage.
                 </p>
@@ -169,7 +169,7 @@
                                 <div class="flow2-card--content" style="border: 0px solid red;" >
 
 
-                                      <a href="/profile/" data-ng-class="{viewing: $root.viewState.profile}" data-ng-if="member.id == page.user.properties.id && !$root.user.properties.is_manager">
+                                      <a href="/profile/" data-ng-class="{viewing: $root.viewState.profile}" data-ng-if="member.id == page.user.properties.id">
 
                                         <div class="user-avatar-wrapper" style=" margin-left:auto; margin-right:auto;"  ng-if="member.picture">
                                              <img class='user--avatar' style="clear:right;" src="{{member.picture}}">
