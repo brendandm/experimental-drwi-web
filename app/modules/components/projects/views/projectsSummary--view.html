@@ -329,11 +329,11 @@
 
                             <li class="flow2-card reveal fade-in" style=" padding-left:0; padding-bottom:2em; position:relative; display:block; border: 0px solid green; animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="partner in page.partnerships | orderBy:'-created_on' | filter: page.q">
 
-                                    <div class="flow2-card--content" style="width: 100%;height: 100%; display:table; border: 1px solid red; " >
+                                    <div class="flow2-card--content" style="width: 100%;height: 100%; display:table; border: 0px solid red; " >
 
                                         <a href="/organizationProfile/{{partner.organization.id}}" style="display: table-cell; vertical-align: middle;">
-                                              <div class="partner-logo-wrapper" style="border: 1px solid purple; "   ng-if="partner.organization.picture">
-                                                     <img class='partner-logo' style="width: 100%; height: auto; max-width:100%" src="{{partner.organization.picture}}">
+                                              <div class="partner-logo-wrapper" style="border: 0px solid purple; "   ng-if="partner.organization.picture">
+                                                     <img class='partner-logo' style="width: 100%; height: auto;" src="{{partner.organization.picture}}">
                                                 </div>
                                                  <div class="partner-logo-wrapper" style="border: 0px solid purple;"   ng-if="!partner.organization.picture">
                                                      <img class='partner-logo' style="clear:right;" src="/images/partner-Default-1024x.png">
