@@ -3,6 +3,8 @@
 <main class="site--content--flow fluid-content clearfix distinguish">
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
+
+
       <div class="content--container"  data-ng-if="!page.status.loading && !page.member.id">
             <section class="privacy-message reveal fade-in t0">
                 <div class="main--ui eveal fade-in">
@@ -15,6 +17,7 @@
                 <p>You do not have permission to view this profile.</p>
             </div>
           </section>
+      </div>
       <div class="content--container" ng-if="page.member.id">
         <h1 class="inset"  data-ng-if="page.member.id == page.user.properties.id" ng-cloak>My Profile</h1>
           <h1 class="inset"  data-ng-if="page.member.id != page.user.properties.id" ng-cloak>Profile</h1>
