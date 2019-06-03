@@ -38,30 +38,63 @@
 
                             <form role="form" class="form" style="overflow: visible;" id="form--{{ group.id }}" name="form--dashboard-filter" data-ng-submit="page.saveFeature()" autocomplete="off">
 
-                                <h2>
-                                    {{ group.name }}
-                                </h2>
+                                <div data-ng-if="group.internal && ($root.user.properties.organization_id === group.organization.id)">
 
-                                <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+                                    <h2>
+                                        {{ group.name }}
+                                    </h2>
 
-                                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="tag in group.tags | orderBy:'-modified_on' | filter: page.q">
+                                    <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
-                                        <div class="card--content">
+                                        <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="tag in group.tags | orderBy:'-modified_on' | filter: page.q">
 
-                                            <label class="name" for="group-{{ tag.id }}">
-                                                {{ tag.name }}
-                                                <input type="radio" id="group-{{ tag.id }}" name="group-{{ group.id }}" data-ng-model="page.groupTags[group.id]" data-ng-value="tag" data-ng-checked="page.groupTags[group.id].id === tag.id" data-ng-change="page.manageGroup(group, tag)" />
-                                            </label>
+                                            <div class="card--content">
 
-                                            <div class="body">
-                                                <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (tag.description || 'No description') }}</p>
+                                                <label class="name" for="group-{{ tag.id }}">
+                                                    {{ tag.name }}
+                                                    <input type="radio" id="group-{{ tag.id }}" name="group-{{ group.id }}" data-ng-model="page.groupTags[group.id]" data-ng-value="tag" data-ng-checked="page.groupTags[group.id].id === tag.id" data-ng-change="page.manageGroup(group, tag)" />
+                                                </label>
+
+                                                <div class="body">
+                                                    <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (tag.description || 'No description') }}</p>
+                                                </div>
+
                                             </div>
 
-                                        </div>
+                                        </li>
 
-                                    </li>
+                                    </ul>
 
-                                </ul>
+                                </div>
+
+                                <div data-ng-if="!group.internal">
+
+                                    <h2>
+                                        {{ group.name }}
+                                    </h2>
+
+                                    <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+
+                                        <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="tag in group.tags | orderBy:'-modified_on' | filter: page.q">
+
+                                            <div class="card--content">
+
+                                                <label class="name" for="group-{{ tag.id }}">
+                                                    {{ tag.name }}
+                                                    <input type="radio" id="group-{{ tag.id }}" name="group-{{ group.id }}" data-ng-model="page.groupTags[group.id]" data-ng-value="tag" data-ng-checked="page.groupTags[group.id].id === tag.id" data-ng-change="page.manageGroup(group, tag)" />
+                                                </label>
+
+                                                <div class="body">
+                                                    <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (tag.description || 'No description') }}</p>
+                                                </div>
+
+                                            </div>
+
+                                        </li>
+
+                                    </ul>
+
+                                </div>
 
                             </form>
 
