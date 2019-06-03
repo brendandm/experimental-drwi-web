@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1559334049724})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1559580135531})
 
 ;
 /**
@@ -17198,17 +17198,17 @@ angular.module('FieldDoc')
 
             };
 
-            self.loadModel = function(activeDomain) {
+            self.loadModels = function(activeDomain) {
 
                 console.log('self.loadModel.activeDomain', activeDomain);
 
-                Practice.model({
+                Practice.models({
                     id: $route.current.params.practiceId
                 }).$promise.then(function(successResponse) {
 
                     console.log('Practice model successResponse', successResponse);
 
-                    self.model = successResponse;
+                    self.models = successResponse.features;
 
                 }, function(errorResponse) {
 
@@ -17224,61 +17224,72 @@ angular.module('FieldDoc')
 
                 self.modelInputs.practice_code = self.practice.category.model_key;
 
-                $http({
-                    method: 'POST',
-                    url: self.model.api_url,
-                    data: self.modelInputs
-                }).then(function successCallback(successResponse) {
+                self.models.forEach(function(feature, index) {
 
-                    console.log('self.saveInputs.successResponse', successResponse);
+                    console.log(
+                    'self.saveInputs --> model',
+                    feature,
+                    index);
 
-                    var automatedTargets = [];
+                    $http({
+                        method: 'POST',
+                        url: feature.model.api_url,
+                        data: self.modelInputs
+                    }).then(function successCallback(successResponse) {
 
-                    self.model.metrics.forEach(function(metric) {
+                        console.log(
+                        'self.saveInputs.successResponse',
+                        successResponse);
 
-                        if (successResponse.data.hasOwnProperty(metric.model_key)) {
+                        var automatedTargets = [];
 
-                            console.log(
-                                'self.saveInputs.metricMatch',
-                                successResponse.data[metric.model_key],
-                                metric.model_key);
+                        feature.metrics.forEach(function(metric) {
 
-                            metric.value = successResponse.data[metric.model_key];
+                            if (successResponse.data.hasOwnProperty(metric.model_key)) {
 
-                            automatedTargets.push({
-                                name: metric.name,
-                                value: metric.value,
-                                metric_id: metric.id,
-                                metric: metric
-                            });
+                                console.log(
+                                    'self.saveInputs.metricMatch',
+                                    successResponse.data[metric.model_key],
+                                    metric.model_key);
 
-                        }
+                                metric.value = successResponse.data[metric.model_key];
 
-                    });
+                                automatedTargets.push({
+                                    name: metric.name,
+                                    value: metric.value,
+                                    metric_id: metric.id,
+                                    metric: metric
+                                });
 
-                    //
-                    // If the practice has existing targets, update their values.
-                    // 
-
-                    if (self.targets.length) {
-
-                        automatedTargets.forEach(function(newTarget) {
-
-                            self.syncTarget(self.targets, newTarget);
+                            }
 
                         });
 
-                    } else {
+                        //
+                        // If the practice has existing targets, update their values.
+                        //
 
-                        self.targets = automatedTargets;
+                        if (self.targets.length) {
 
-                    }
+                            automatedTargets.forEach(function(newTarget) {
 
-                    self.saveTargets();
+                                self.syncTarget(self.targets, newTarget);
 
-                }, function errorCallback(errorResponse) {
+                            });
 
-                    console.log('self.saveInputs.errorResponse', errorResponse);
+                        } else {
+
+                            self.targets = automatedTargets;
+
+                        }
+
+                        self.saveTargets();
+
+                    }, function errorCallback(errorResponse) {
+
+                        console.log('self.saveInputs.errorResponse', errorResponse);
+
+                    });
 
                 });
 
@@ -17758,7 +17769,7 @@ angular.module('FieldDoc')
 
                     self.loadMatrix();
 
-                    self.loadModel();
+                    self.loadModels();
 
                     //
                     // Setup page meta data
