@@ -54,7 +54,7 @@
                                         dashboard
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="/programs/{{ program.id }}/edit" title="Edit program">
+                                    <a class="snapshot--title" href="/programs/{{ program.id }}/edit" title="Edit program" >
                                         <i class="material-icons">
                                         edit
                                         </i>
@@ -124,12 +124,12 @@
                                         dashboard
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="/projects/{{ project.id }}/edit" title="Edit project">
+                                    <a class="snapshot--title" href="/projects/{{ project.id }}/edit" title="Edit project" data-ng-if="$root.user.properties.is_admin || project.organization.id == page.user.properties.organization.id">
                                         <i class="material-icons">
                                         edit
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="#" title="Delete project" data-ng-click="page.confirmDelete(project, 'project')">
+                                    <a class="snapshot--title" href="#" title="Delete project" data-ng-click="page.confirmDelete(project, 'project')" data-ng-if="$root.user.properties.is_admin || project.organization.id == page.user.properties.organization.id"">
                                         <i class="material-icons">
                                         delete
                                         </i>
