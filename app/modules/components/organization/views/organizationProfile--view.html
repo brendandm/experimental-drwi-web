@@ -126,12 +126,12 @@
                                             dashboard
                                             </i>
                                         </a>
-                                        <a class="snapshot--title" href="/projects/{{ project.id }}/edit" title="Edit project">
+                                        <a class="snapshot--title" href="/projects/{{ project.id }}/edit" title="Edit project" data-ng-if="$root.user.properties.is_admin || page.organizationProfile.id == page.user.properties.organization.id">
                                             <i class="material-icons">
                                             edit
                                             </i>
                                         </a>
-                                        <a class="snapshot--title" href="#" title="Delete project" data-ng-click="page.confirmDelete(project)">
+                                        <a class="snapshot--title" href="#" title="Delete project" data-ng-click="page.confirmDelete(project)" data-ng-if="$root.user.properties.is_admin || page.organizationProfile.id == page.user.properties.organization.id">
                                             <i class="material-icons">
                                             delete
                                             </i>
