@@ -8,7 +8,15 @@
  * Provider in the FieldDoc.
  */
 angular.module('FieldDoc')
-    .service('Utility', function(leafletBoundsHelpers, Map) {
+    .service('Utility', function() {
+
+        Number.isInteger = Number.isInteger || function(value) {
+
+            return (typeof value === 'number' && 
+                    isFinite(value) && 
+                    Math.floor(value) === value);
+            
+        };
 
         return {
             machineName: function(name) {
@@ -65,56 +73,7 @@ angular.module('FieldDoc')
             },
             transformBounds: function(obj) {
 
-                var xRange = [],
-                    yRange = [],
-                    southWest,
-                    northEast,
-                    bounds;
-
-                if (obj &&
-                    obj.coordinates &&
-                    Array.isArray(obj.coordinates)) {
-
-                    try {
-
-                        obj.coordinates[0].forEach(function(coords) {
-
-                            xRange.push(coords[0]);
-
-                            yRange.push(coords[1]);
-
-                        });
-
-                    } catch (error) {
-
-                        xRange.push(obj.coordinates[0]);
-
-                        yRange.push(obj.coordinates[1]);
-
-                    }
-
-                    southWest = [
-                        Math.min.apply(null, yRange),
-                        Math.min.apply(null, xRange)
-                    ];
-
-                    northEast = [
-                        Math.max.apply(null, yRange),
-                        Math.max.apply(null, xRange)
-                    ];
-
-                    bounds = leafletBoundsHelpers.createBoundsFromArray([
-                        southWest,
-                        northEast
-                    ]);
-
-                } else {
-
-                    bounds = Map.bounds;
-
-                }
-
-                return bounds;
+                return [];
 
             },
             buildStaticMapURL: function(geometry) {
@@ -215,7 +174,7 @@ angular.module('FieldDoc')
                                 'collection': [
                                     datum
                                 ]
-                            }
+                            };
 
                         }
 
@@ -258,7 +217,7 @@ angular.module('FieldDoc')
                                 'collection': [
                                     datum
                                 ]
-                            }
+                            };
 
                         }
 
@@ -267,6 +226,94 @@ angular.module('FieldDoc')
                 });
 
                 return index;
+
+            },
+            sortCollection: function(arr, key) {
+
+                arr.sort(function compare(a, b) {
+
+                    if (a[key] < b[key]) {
+
+                        return -1;
+
+                    }
+
+                    if (a[key] > b[key]) {
+
+                        return 1;
+
+                    }
+
+                    return 0;
+
+                });
+
+                return arr;
+
+            },
+            scrubFeature: function(feature, excludedKeys) {
+
+                var reservedProperties = [
+                    'links',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
+
+            },
+            extractUserPrograms: function(user) {
+
+                var _programs = [];
+
+                user.properties.programs.forEach(function(program) {
+
+                    _programs.push(program.properties);
+
+                });
+
+                _programs.sort(function(a, b) {
+
+                    return a.id > b.id;
+
+                });
+
+                return _programs;
+
+            },
+            processTags: function(arr) {
+
+                arr.forEach(function(tag) {
+
+                    if (tag.color &&
+                        tag.color.length) {
+
+                        tag.lightColor = tinycolor(tag.color).lighten(5).toString();
+
+                    }
+
+                });
+
+                return arr;
 
             }
         };

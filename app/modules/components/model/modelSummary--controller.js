@@ -18,16 +18,13 @@
             'Utility',
             'user',
             '$window',
-            'Map',
             'mapbox',
-            'leafletData',
-            'leafletBoundsHelpers',
             'Model',
             'Project',
             'model',
             function(Account, $location, $timeout, $log, $rootScope,
-                $route, Utility, user, $window, Map, mapbox, leafletData,
-                leafletBoundsHelpers, Model, Project, model) {
+                $route, Utility, user, $window, mapbox, Model,
+                Project, model) {
 
                 var self = this;
 
@@ -111,7 +108,15 @@
 
                         console.log('Model.practiceTypes successResponse', successResponse);
 
-                        self.practiceTypes = successResponse.features;
+                        var practiceTypes = [];
+
+                        successResponse.features.forEach(function(feature) {
+
+                            practiceTypes.push(feature.practice);
+
+                        })
+
+                        self.practiceTypes = practiceTypes;
 
                     }, function(errorResponse) {
 

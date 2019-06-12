@@ -18,16 +18,14 @@
             'Utility',
             'user',
             '$window',
-            'Map',
             'mapbox',
-            'leafletData',
-            'leafletBoundsHelpers',
             'Program',
             'Project',
             'program',
+            'LayerService',
             function(Account, $location, $timeout, $log, $rootScope,
-                $route, Utility, user, $window, Map, mapbox, leafletData,
-                leafletBoundsHelpers, Program, Project, program) {
+                $route, Utility, user, $window, mapbox, Program,
+                Project, program, LayerService) {
 
                 var self = this;
 
@@ -43,50 +41,7 @@
 
                 $rootScope.page = {};
 
-                self.map = JSON.parse(JSON.stringify(Map));
-
-                self.map.markers = {};
-
-                self.map.layers = {
-                    baselayers: {
-                        streets: {
-                            name: 'Streets',
-                            type: 'xyz',
-                            url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-                            layerOptions: {
-                                apikey: mapbox.access_token,
-                                mapid: 'mapbox.streets',
-                                attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>',
-                                showOnSelector: false
-                            }
-                        }
-                    }
-                };
-
-                self.map.layers.overlays = {
-                    projects: {
-                        type: 'group',
-                        name: 'projects',
-                        visible: true,
-                        layerOptions: {
-                            showOnSelector: false
-                        },
-                        layerParams: {
-                            showOnSelector: false
-                        }
-                    }
-                };
-
-                // self.map.defaults = {
-                //     // doubleClickZoom: false,
-                //     // dragging: false,
-                //     // keyboard: false,
-                //     scrollWheelZoom: false,
-                //     // tap: false,
-                //     // touchZoom: false,
-                //     maxZoom: 19,
-                //     // zoomControl: false
-                // };
+                self.map = undefined;
 
                 self.status = {
                     loading: true
@@ -105,6 +60,36 @@
                     $location.path(self.program.links.site.html);
 
                 }
+
+                self.showElements = function() {
+
+                    $timeout(function() {
+
+                        self.status.loading = false;
+
+                        self.status.processing = false;
+
+                        $timeout(function() {
+
+                            if (!self.mapOptions) {
+
+                                self.mapOptions = self.getMapOptions();
+
+                            }
+
+                            self.createMap(self.mapOptions);
+
+                            // if (self.sites && self.sites.length) {
+
+                            //     self.addMapPreviews(self.sites);
+
+                            // }
+
+                        }, 500);
+
+                    }, 1000);
+
+                };
 
                 self.confirmDelete = function(obj, targetCollection) {
 
@@ -226,82 +211,48 @@
 
                 };
 
-                function addNonGroupLayers(sourceLayer, targetGroup) {
-
-                    if (sourceLayer instanceof L.LayerGroup) {
-
-                        sourceLayer.eachLayer(function(layer) {
-
-                            addNonGroupLayers(layer, targetGroup);
-
-                        });
-
-                    } else {
-
-                        targetGroup.addLayer(sourceLayer);
-
-                    }
-
-                }
-
-                self.setGeoJsonLayer = function(data, layerGroup, clearLayers) {
-
-                    if (clearLayers) {
-
-                        layerGroup.clearLayers();
-
-                    }
-
-                    var featureGeometry = L.geoJson(data, {});
-
-                    addNonGroupLayers(featureGeometry, layerGroup);
-
-                };
-
                 self.popupTemplate = function(feature) {
 
                     return '<div class=\"project--popup\">' +
+                        '<div class=\"title--group\">' +
                         '<div class=\"marker--title border--right\">' + feature.properties.name + '</div>' +
                         '<a href=\"projects/' + feature.properties.id + '\">' +
                         '<i class=\"material-icons\">keyboard_arrow_right</i>' +
                         '</a>' +
+                        '</div>' +
                         '</div>';
 
                 };
 
-                self.processLocations = function(features) {
+                self.processLocations = function(map, features) {
 
-                    self.map.markers = {};
+                    console.log(
+                        'self.processLocations --> features',
+                        features);
 
                     features.forEach(function(feature, index) {
-
-                        // var centroid = feature.geometry;
-
-                        // console.log('centroid', centroid);
 
                         if (feature.geometry &&
                             feature.geometry.coordinates) {
 
-                            self.map.markers['project_' + index] = {
-                                lat: feature.geometry.coordinates[1],
-                                lng: feature.geometry.coordinates[0],
-                                layer: 'projects',
-                                focus: false,
-                                icon: {
-                                    type: 'div',
-                                    className: 'project--marker',
-                                    iconSize: [24, 24],
-                                    popupAnchor: [0, 0],
-                                    html: ''
-                                },
-                                message: self.popupTemplate(feature)
-                            };
+                            var tpl = self.popupTemplate(feature);
+
+                            var popup = new mapboxgl.Popup()
+                                .setLngLat(feature.geometry.coordinates)
+                                .setHTML(tpl);
+
+                            var markerEl = document.createElement('div');
+
+                            markerEl.className = 'project--marker';
+
+                            new mapboxgl.Marker(markerEl)
+                                .setLngLat(feature.geometry.coordinates)
+                                .setPopup(popup)
+                                .addTo(map);
 
                         }
 
                     });
-
-                    console.log('self.map.markers', self.map.markers);
 
                 };
 
@@ -370,15 +321,21 @@
 
                         console.log('Program metrics', successResponse);
 
-                        successResponse.features.forEach(function(metric) {
+//                        successResponse.features.forEach(function(metric) {
+//
+//                            var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
+//
+//                            metric.percentComplete = _percentComplete;
+//
+//                        });
+//
+//                        self.metrics = successResponse.features;
 
-                            var _percentComplete = +((metric.current_value / metric.target) * 100).toFixed(0);
+                        Utility.processMetrics(successResponse.features);
 
-                            metric.percentComplete = _percentComplete;
+                        self.metrics = Utility.groupByModel(successResponse.features);
 
-                        });
-
-                        self.metrics = successResponse.features;
+                        console.log('self.metrics', self.metrics);
 
                     }, function(errorResponse) {
 
@@ -396,33 +353,263 @@
 
                         console.log('Program projects', successResponse);
 
-                        var geoJsonLayer = L.geoJson(successResponse, {});
+                        self.featureCollection = {
+                            'type': 'FeatureCollection',
+                            'features': successResponse.features
+                        };
 
-                        leafletData.getMap('program--map').then(function(map) {
+                        // self.processLocations(successResponse.features);
 
-                            map.fitBounds(geoJsonLayer.getBounds(), {
-                                maxZoom: 18
-                            });
-
-                        });
-
-                        self.processLocations(successResponse.features);
-
-                        // self.map.geojson = {
-                        //     data: successResponse,
-                        //     // onEachFeature: onEachFeature,
-                        //     style: {
-                        //         color: '#00D',
-                        //         fillColor: 'red',
-                        //         weight: 2.0,
-                        //         opacity: 0.6,
-                        //         fillOpacity: 0.2
-                        //     }
-                        // };
+                        self.showElements();
 
                     }, function(errorResponse) {
 
                         console.log('errorResponse', errorResponse);
+
+                        self.showElements();
+
+                    });
+
+                };
+
+                self.addLayers = function(arr) {
+
+                    arr.forEach(function(feature) {
+
+                        console.log(
+                            'self.addLayers --> feature',
+                            feature);
+
+                        var spec = feature.layer_spec || {};
+
+                        console.log(
+                            'self.addLayers --> spec',
+                            spec);
+
+                        feature.spec = spec;
+
+                        console.log(
+                            'self.addLayers --> feature.spec',
+                            feature.spec);
+
+                        if (!feature.selected ||
+                            typeof feature.selected === 'undefined') {
+
+                            feature.selected = false;
+
+                        } else {
+
+                            feature.spec.layout.visibility = 'visible';
+
+                        }
+
+                        if (feature.spec.id) {
+
+                            try {
+
+                                self.map.addLayer(feature.spec);
+
+                            } catch (error) {
+
+                                console.log(
+                                    'self.addLayers --> error',
+                                    error);
+
+                            }
+
+                        }
+
+                    });
+
+                    return arr;
+
+                };
+
+                self.fetchLayers = function(taskId) {
+
+                    LayerService.collection({
+                        program: self.program.id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log(
+                            'self.fetchLayers --> successResponse',
+                            successResponse);
+
+                        if (successResponse.features.length) {
+
+                            console.log('self.fetchLayers --> Sorting layers.');
+
+                            successResponse.features.sort(function(a, b) {
+
+                                return b.index < a.index;
+
+                            });
+
+                        }
+
+                        self.addLayers(successResponse.features);
+
+                        self.layers = successResponse.features;
+
+                        console.log(
+                            'self.fetchLayers --> self.layers',
+                            self.layers);
+
+                    }, function(errorResponse) {
+
+                        console.log(
+                            'self.fetchLayers --> errorResponse',
+                            errorResponse);
+
+                    });
+
+                };
+
+                self.populateMap = function(map, feature, attribute) {
+
+                    console.log('self.populateMap --> feature', feature);
+
+                    var geojson = attribute ? feature[attribute] : feature;
+
+                    if (geojson !== null &&
+                        typeof geojson !== 'undefined') {
+
+                        var bounds = turf.bbox(geojson);
+
+                        map.fitBounds(bounds, {
+                            padding: 40
+                        });
+
+                        self.processLocations(map, geojson.features);
+
+                    }
+
+                };
+
+                self.toggleLayer = function(layer) {
+
+                    console.log('self.toggleLayer --> layer', layer);
+
+                    var layerId = layer.spec.id;
+
+                    var visibility = self.map.getLayoutProperty(layerId, 'visibility');
+
+                    if (visibility === 'visible') {
+
+                        self.map.setLayoutProperty(layerId, 'visibility', 'none');
+
+                    } else {
+
+                        self.map.setLayoutProperty(layerId, 'visibility', 'visible');
+
+                    }
+
+                };
+
+                self.switchMapStyle = function(styleId, index) {
+
+                    console.log('self.switchMapStyle --> styleId', styleId);
+
+                    console.log('self.switchMapStyle --> index', index);
+
+                    var center = self.map.getCenter();
+
+                    var zoom = self.map.getZoom();
+
+                    if (center.lng && center.lat) {
+
+                        self.mapOptions.center = [center.lng, center.lat];
+
+                    }
+
+                    if (zoom) {
+
+                        self.mapOptions.zoom = zoom;
+
+                    }
+
+                    self.mapOptions.style = self.mapStyles[index].url;
+
+                    self.map.remove();
+
+                    self.createMap(self.mapOptions);
+
+                };
+
+                self.getMapOptions = function() {
+
+                    self.mapStyles = mapbox.baseStyles;
+
+                    console.log(
+                        'self.createMap --> mapStyles',
+                        self.mapStyles);
+
+                    self.activeStyle = 0;
+
+                    mapboxgl.accessToken = mapbox.accessToken;
+
+                    console.log(
+                        'self.createMap --> accessToken',
+                        mapboxgl.accessToken);
+
+                    self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+
+                    self.mapOptions.container = 'primary--map';
+
+                    self.mapOptions.style = self.mapStyles[0].url;
+
+                    if (self.program &&
+                        self.program.centroid) {
+
+                        if (self.program.hasOwnProperty('centroid')) {
+
+                            self.mapOptions.center = self.program.centroid.coordinates;
+
+                        }
+
+                    }
+
+                    return self.mapOptions;
+
+                };
+
+                self.createMap = function(options) {
+
+                    if (!options) return;
+
+                    console.log('self.createMap --> Starting...');
+
+                    var tgt = document.querySelector('.map');
+
+                    console.log(
+                        'self.createMap --> tgt',
+                        tgt);
+
+                    console.log('self.createMap --> options', options);
+
+                    self.map = new mapboxgl.Map(options);
+
+                    self.map.on('load', function() {
+
+                        var nav = new mapboxgl.NavigationControl();
+
+                        self.map.addControl(nav, 'top-left');
+
+                        var fullScreen = new mapboxgl.FullscreenControl();
+
+                        self.map.addControl(fullScreen, 'top-left');
+
+                        self.populateMap(self.map, self.featureCollection);
+
+                        if (self.layers && self.layers.length) {
+
+                            self.addLayers(self.layers);
+
+                        } else {
+
+                            self.fetchLayers();
+
+                        }
 
                     });
 

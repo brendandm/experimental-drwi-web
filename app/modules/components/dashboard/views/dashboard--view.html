@@ -51,16 +51,61 @@
                     </div>
                     <div class="stat--block" data-ng-if="page.card.featureType === 'project'">
                         <span class="label">Sites</span>
-                        <span class="total--projects">{{ page.sites.features.length | number }}</span>
+                        <span class="total--projects">{{ (page.activeProject.properties.sites.length | number) || 'None' }}</span>
+                    </div>
+                    <div class="stat--block" data-ng-if="page.card.featureType === 'project'">
+                        <span class="label">Practices</span>
+                        <span class="total--projects">{{ (page.activeProject.properties.practices.length | number) || 'None' }}</span>
                     </div>
                     <div class="stat--block" data-ng-if="page.card.featureType === 'site'">
                         <span class="label">Practices</span>
-                        <span class="total--projects">{{ page.practices.features.length | number }}</span>
+                        <span class="total--projects">{{ (page.activeSite.properties.practices.length | number) || 'None' }}</span>
                     </div>
 
                 </div>
 
-                <p>{{ page.card.description }}</p>
+                <div style="margin-bottom: 1em;" class="link--group" data-ng-if="page.card.featureType === 'practice' && page.activePractice.properties.area">
+
+                    <div class="stat--block">
+                        <!-- <span class="label">Area</span> -->
+                        <span>{{ page.activePractice.properties.area | convertArea:'acre' | number:2 }} acres</span>
+                    </div>
+
+                </div>
+
+                <div style="margin-bottom: 1em;" class="link--group" data-ng-if="page.card.featureType === 'site' && page.activeSite.properties.area">
+
+                    <div class="stat--block">
+                        <!-- <span class="label">Area</span> -->
+                        <span>{{ page.activeSite.properties.area | convertArea:'acre' | number:2 }} acres</span>
+                    </div>
+
+                </div>
+
+                <div style="margin-bottom: 1em;" class="link--group" data-ng-if="page.card.featureType === 'site'">
+
+                    <div class="stat--block">
+                        <span class="label">Project</span>
+                        <a href="/dashboards/{{ page.dashboardId }}?project={{ page.activeSite.properties.project.id }}">{{ page.activeSite.properties.project.name }}</a>
+                    </div>
+
+                </div>
+
+                <div style="margin-bottom: 1em;" class="link--group" data-ng-if="page.card.featureType === 'practice'">
+
+                    <div class="stat--block">
+                        <span class="label">Project</span>
+                        <a href="/dashboards/{{ page.dashboardId }}?project={{ page.activePractice.properties.project.id }}">{{ page.activePractice.properties.project.name }}</a>
+                    </div>
+
+                    <div class="stat--block">
+                        <span class="label">Site</span>
+                        <a href="/dashboards/{{ page.dashboardId }}?site={{ page.activePractice.properties.site.id }}">{{ page.activePractice.properties.site.name }}</a>
+                    </div>
+
+                </div>
+
+                <p>{{ page.card.description || 'No description provided' }}</p>
 
                 <div data-ng-if="page.tags && page.tags.length">
 
@@ -87,7 +132,7 @@
 
             <!-- Back navigation -->
 
-            <div class="navigation--control" data-ng-if="page.historyItem.label">
+            <!-- <div class="navigation--control" data-ng-if="page.historyItem.label">
                 <button class="navigate--up" type="button" data-ng-click="page.navigateBack(page.historyItem.type)">
                     <i class="material-icons">
                         keyboard_arrow_left
@@ -96,7 +141,7 @@
                 <div class="navigate--label">
                     {{ page.historyItem.label }}
                 </div>
-            </div>
+            </div> -->
 
             <div class="tab--controls">
 
@@ -171,6 +216,12 @@
 
                     <div class="list" style="padding: 0 2em;">
 
+                        <div data-ng-if="!page.metrics || (!page.metrics.generic.length && !page.metrics.has_models)" style="padding: 4em 0; text-align: center;">
+
+                            <p style="margin: 0; font-size: 0.9em; color: #f9f9f9; opacity: 0.8;">No metric progress to report.</p>
+
+                        </div>
+
                         <div data-ng-if="page.metrics && page.metrics.has_models">
 
                             <table class="table table-practices with-metrics" data-ng-repeat="model in page.metrics.models">
@@ -189,8 +240,8 @@
                                     <tr>
                                         <th class="table-column-wide table-metrics-header">&nbsp;</th>
                                         <th class="table-metrics-header" style="color: #e0e0e0;">Estimated value</th>
-                                        <th class="table-metrics-header" style="color: #e0e0e0;">Estimated progress</th>
-                                        <th>&nbsp;</th>
+                                        <th class="table-metrics-header" style="color: #e0e0e0;" data-ng-if="model.datum.show_progress">Estimated progress</th>
+                                        <th data-ng-if="model.datum.show_progress">&nbsp;</th>
                                     </tr>
                                 </thead>
 
@@ -202,19 +253,19 @@
                                             </p>
                                         </td>
                                         <td data-ng-if="metric.context_target" style="color: #e0e0e0;">
-                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
-                                                of {{ metric.context_target | number:2 }}</span>
+                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
+                                                <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ metric.context_target | number:2 }}</span>
                                         </td>
                                         <td data-ng-if="!metric.context_target" style="color: #e0e0e0;">
-                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
-                                                of {{ (metric.target || metric.self_target) | number:2 }}</span>
+                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
+                                                <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ metric.target | number:2 }}</span>
                                         </td>
-                                        <td style="color: #e0e0e0;">
+                                        <td style="color: #e0e0e0;" data-ng-if="model.datum.show_progress">
                                             <strong class="metrics--metric--percentage">
                                                 {{ metric.contextProgress.value * 100 | number:1 }}%
                                             </strong>
                                         </td>
-                                        <td>
+                                        <td data-ng-if="model.datum.show_progress">
                                             <progress-arc
                                                 size="32"
                                                 stroke="#2196F3"
@@ -231,7 +282,7 @@
 
                         </div>
 
-                        <table class="table table-practices with-metrics" style="border-top: 1px solid #e0e0e0;" data-ng-if="page.metrics && page.metrics.generic.length">
+                        <table class="table table-practices with-metrics" data-ng-if="page.metrics && page.metrics.generic.length">
                             <thead>
                                 <tr>
                                     <th class="table-column-wide table-metrics-header" style="color: #e0e0e0;">&nbsp;</th>
@@ -288,13 +339,31 @@
 
         <div class="map--container">
 
-            <button class="reset--extent" type="button" data-ng-click="page.resetMapExtent()" title="Reset map extent">
+            <button class="reset--extent" type="button" data-ng-click="page.resetMapExtent()" title="Global view">
                 <i class="material-icons">
-                    refresh
+                    public
                 </i>
             </button>
 
-            <leaflet id="dashboard--map" class="map" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds" markers="page.map.markers" geojson="page.map.geojson"></leaflet>
+            <div id="primary--map" class="map tall">
+                <div class="mapboxgl-layer-ctrl" data-ng-click="page.showLayerOptions = !page.showLayerOptions" title="Switch layers">
+                    <i class="material-icons">
+                        layers
+                    </i>
+                    <div class="layer-group" data-ng-show="page.showLayerOptions">
+                        <form>
+                            <label data-ng-repeat="style in page.mapStyles" data-ng-class="{'active': page.activeStyle === $index}" title="{{ style.name }}">
+                                <input type="radio" id="base-style-{{ $index }}" name="active-style" data-ng-model="page.activeStyle" data-ng-value="{{ $index }}" data-ng-change="page.switchMapStyle(style, $index)"><span> {{ style.name }}</span>
+                            </label>
+                        </form>
+                        <form class="layers" data-ng-show="page.layers && page.layers.length">
+                            <label for="layer-{{ $index }}" data-ng-repeat="layer in page.layers" data-ng-class="{'active': layer.selected}" title="{{ layer.name }}">
+                                <input type="checkbox" id="layer-{{ $index }}" name="layer-{{ $index }}" data-ng-model="layer.selected" data-ng-value="{{ $index }}" data-ng-change="page.toggleLayer(layer)"><span> {{ layer.name }}</span>
+                            </label>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
         </div>
 

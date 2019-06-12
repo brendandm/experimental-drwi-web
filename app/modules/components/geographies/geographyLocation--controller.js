@@ -11,8 +11,8 @@
      */
     angular.module('FieldDoc')
         .controller('GeographyLocationController',
-            function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
-                Map, mapbox, Notifications, GeographyService, geography, $rootScope, $route,
+            function(Account, environment, $http, $location, mapbox,
+                Notifications, GeographyService, geography, $rootScope, $route,
                 $scope, $timeout, $interval, user, Shapefile, Utility, Task) {
 
                 var self = this;
@@ -44,62 +44,7 @@
 
                 };
 
-                self.map = JSON.parse(JSON.stringify(Map));
-
-                self.map.layers = {
-                    baselayers: {
-                        streets: {
-                            name: 'Streets',
-                            type: 'xyz',
-                            url: 'https://api.tiles.mapbox.com/v4/{mapid}/{z}/{x}/{y}.png?access_token={apikey}',
-                            layerOptions: {
-                                apikey: mapbox.access_token,
-                                mapid: 'mapbox.streets',
-                                attribution: '© <a href=\"https://www.mapbox.com/about/maps/\">Mapbox</a> © <a href=\"http://www.openstreetmap.org/copyright\">OpenStreetMap</a> <strong><a href=\"https://www.mapbox.com/map-feedback/\" target=\"_blank\">Improve this map</a></strong>',
-                                showOnSelector: false
-                            }
-                        }
-                    }
-                };
-
-                self.savedObjects = [];
-
-                self.editableLayers = new L.FeatureGroup();
-
-                function addNonGroupLayers(sourceLayer, targetGroup) {
-
-                    if (sourceLayer instanceof L.LayerGroup) {
-
-                        sourceLayer.eachLayer(function(layer) {
-
-                            addNonGroupLayers(layer, targetGroup);
-
-                        });
-
-                    } else {
-
-                        targetGroup.addLayer(sourceLayer);
-
-                    }
-
-                }
-
-                self.setGeoJsonLayer = function(data) {
-
-                    self.editableLayers.clearLayers();
-
-                    var geographyGeometry = L.geoJson(data, {});
-
-                    addNonGroupLayers(geographyGeometry, self.editableLayers);
-
-                    self.savedObjects = [{
-                        id: self.editableLayers._leaflet_id,
-                        geoJson: data
-                    }];
-
-                    console.log('self.savedObjects', self.savedObjects);
-
-                };
+                self.map = undefined;
 
                 self.fetchTasks = function(taskId) {
 

@@ -12,7 +12,6 @@ angular
         'ngSanitize',
         'ngTouch',
         'ipCookie',
-        'leaflet-directive',
         'angularFileUpload',
         'geolocation',
         'monospaced.elastic',

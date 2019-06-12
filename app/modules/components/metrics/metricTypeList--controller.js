@@ -26,6 +26,18 @@ angular.module('FieldDoc')
                 title: 'Metric Types'
             };
 
+            self.showModal = {
+                program: false
+            };
+
+            self.filters = {
+                program: undefined
+            };
+
+            self.numericFilters = [
+                'program'
+            ];
+
             self.status = {
                 loading: true
             };
@@ -141,42 +153,53 @@ angular.module('FieldDoc')
 
             self.buildFilter = function() {
 
-                var params = $location.search(),
-                    data = {};
+                console.log(
+                    'self.buildFilter --> Starting...');
 
-                if (self.selectedProgram &&
-                    typeof self.selectedProgram.id !== 'undefined' &&
-                    self.selectedProgram.id > 0) {
+                var data = {
+                    combine: 'true'
+                };
 
-                    console.log('self.selectedProgram', self.selectedProgram);
+                for (var key in self.filters) {
 
-                    data.program = self.selectedProgram.id;
+                    if (self.filters.hasOwnProperty(key)) {
 
-                    $location.search('program', self.selectedProgram.id);
+                        if (self.numericFilters.indexOf(key) >= 0) {
 
-                } else if (!self.metrics &&
-                    params.program !== null &&
-                    typeof params.program !== 'undefined') {
+                            var filterVal = +self.filters[key];
 
-                    data.program = params.program;
+                            if (Number.isInteger(filterVal) &&
+                                filterVal > 0) {
+
+                                data[key] = filterVal;
+
+                            }
+
+                        } else {
+
+                            data[key] = self.filters[key];
+
+                        }
+
+                    }
 
                 }
+
+                $location.search(data);
 
                 return data;
 
             };
 
-            self.loadFeatures = function() {
+            self.loadFeatures = function(params) {
 
                 self.status.loadingFeatures = true;
-
-                var params = self.buildFilter();
 
                 MetricType.collection(params).$promise.then(function(successResponse) {
 
                     console.log('successResponse', successResponse);
 
-                    self.featureCount = successResponse.count;
+                    self.summary = successResponse.summary;
 
                     self.metrics = successResponse.features;
 
@@ -189,6 +212,69 @@ angular.module('FieldDoc')
                     self.showElements();
 
                 });
+
+            };
+
+            // 
+            // Observe internal route changes. Note that `reloadOnSearch`
+            // must be set to `false`.
+            // 
+            // See: https://stackoverflow.com/questions/15093916
+            // 
+
+            self.inspectSearchParams = function(forceFilter) {
+
+                var params = $location.search();
+
+                console.log(
+                    'self.inspectSearchParams --> params',
+                    params);
+
+                var keys = Object.keys(params);
+
+                console.log(
+                    'self.inspectSearchParams --> keys',
+                    keys);
+
+                if (!keys.length || forceFilter) {
+
+                    params = self.buildFilter();
+
+                    console.log(
+                        'self.inspectSearchParams --> params(2)',
+                        params);
+
+                }
+
+                for (var key in params) {
+
+                    if (self.filters.hasOwnProperty(key)) {
+
+                        if (self.numericFilters.indexOf(key) >= 0) {
+
+                            var filterVal = +params[key];
+
+                            console.log(
+                                'self.inspectSearchParams --> filterVal',
+                                filterVal);
+
+                            if (Number.isInteger(filterVal)) {
+
+                                self.filters[key] = filterVal;
+
+                            }
+
+                        } else {
+
+                            self.filters[key] = params[key];
+
+                        }
+
+                    }
+
+                }
+
+                self.loadFeatures(params);
 
             };
 
@@ -205,13 +291,18 @@ angular.module('FieldDoc')
                         isLoggedIn: Account.hasToken()
                     };
 
-                    if ($rootScope.user.properties.programs.length) {
+                    var programs = Utility.extractUserPrograms($rootScope.user);
 
-                        self.selectedProgram = $rootScope.user.properties.programs[0];
+                    programs.unshift({
+                        id: 0,
+                        name: 'All programs'
+                    });
 
-                    }
+                    self.programs = programs;
 
-                    self.loadFeatures();
+                    self.filters.program = self.programs[0].id;
+
+                    self.inspectSearchParams();
 
                 });
 

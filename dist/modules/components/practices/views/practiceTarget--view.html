@@ -12,43 +12,43 @@
 
             <p>The metrics listed here are associated with the <strong>{{ page.practice.site.name }}</strong> site. Assign targets to this practice by entering a numeric value for one or more metrics.</p>
 
-            <div data-ng-if="page.model && page.model.id">
+            <div data-ng-if="page.models.length">
 
                 <h2>Modeled metrics</h2>
 
-                <p data-ng-if="!page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ page.model.id }}" title="{{ page.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. As you add categorical and spatial data to this practice, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and valid data for this practice type.</p>
+                <div data-ng-repeat="model in page.models">
 
-                <p data-ng-if="page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ page.model.id }}" title="{{ page.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. When you add the required inputs, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and/or valid data for this practice type. <a href="/practices/{{ page.practice.id }}/model-data">Click here to add or modify model inputs.</a></p>
+                    <p><strong>{{ model.model.name }}</strong></p>
 
-                <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
+                    <p data-ng-if="!page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. As you add categorical and spatial data to this practice, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and valid data for this practice type.</p>
 
-                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 1em;" data-ng-repeat="metric in page.model.metrics | orderBy:'name'">
+                    <p data-ng-if="page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. When you add the required inputs, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and/or valid data for this practice type. <a href="/practices/{{ page.practice.id }}/model-data">Click here to add or modify model inputs.</a></p>
 
-                        <div class="card--content">
+                    <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
-                            <div class="name" style="border-bottom: none;">
-                                <span>{{ metric.name || 'Un-named' }}</span>
-                                <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="metric.unit">{{ metric.unit.symbol }} &middot; {{ metric.unit.plural }}</span>
-                                <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="!metric.unit">Unit-less</span>
+                        <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 1em;" data-ng-repeat="metric in model.metrics | orderBy:'name'">
+
+                            <div class="card--content">
+
+                                <div class="name" style="border-bottom: none;">
+                                    <span>{{ metric.name || 'Un-named' }}</span>
+                                    <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="metric.unit">{{ metric.unit.symbol }} &middot; {{ metric.unit.plural }}</span>
+                                    <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="!metric.unit">Unit-less</span>
+                                </div>
+
+                                <div class="body" data-ng-if="metric.description">
+
+                                    <p>{{ metric.description | truncate:80 }}</p>
+
+                                </div>
+
                             </div>
 
-                            <div class="body" data-ng-if="metric.description">
+                        </li>
 
-                                <p>{{ metric.description | truncate:80 }}</p>
+                    </ul>
 
-                            </div>
-
-                        </div>
-
-                    </li>
-
-                </ul>
-
-                <!-- <ul class="target-lst">
-                    <li data-ng-repeat="metric in page.model.metrics">
-                        <div>{{ metric.name }}</div>
-                    </li>
-                </ul> -->
+                </div>
 
             </div>
 

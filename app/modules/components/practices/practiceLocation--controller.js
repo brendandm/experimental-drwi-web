@@ -7,10 +7,10 @@
  */
 angular.module('FieldDoc')
     .controller('PracticeLocationController',
-        function(Account, Image, leafletData, $location, $log, Map,
-            mapbox, Media, Site, Practice, practice, $q, $rootScope, $route,
+        function(Account, Image, $location, $log, mapbox, Media,
+            Site, Practice, practice, $q, $rootScope, $route,
             $scope, $timeout, $interval, site, user, Shapefile,
-            leafletBoundsHelpers, Utility, Task) {
+            Utility, Task, LayerService) {
 
             var self = this;
 
@@ -22,6 +22,10 @@ angular.module('FieldDoc')
                 loading: true
             };
 
+            self.map = undefined;
+
+            $rootScope.page = {};
+
             self.showElements = function() {
 
                 $timeout(function() {
@@ -30,110 +34,29 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
+                    $timeout(function() {
+
+                        if (!self.mapOptions) {
+
+                            self.mapOptions = self.getMapOptions();
+
+                        }
+
+                        if (self.map) {
+
+                            self.populateMap(self.map, self.practice);
+
+                        } else {
+
+                            self.createMap(self.mapOptions);
+
+                        }
+
+                    }, 500);
+
                 }, 1000);
 
             };
-
-            self.map = JSON.parse(JSON.stringify(Map));
-
-            self.savedObjects = [];
-
-            self.editableLayers = new L.FeatureGroup();
-
-            //
-            // Set default image path for Leaflet iconography
-            //
-
-            L.Icon.Default.imagePath = '/images/leaflet';
-
-            function addNonGroupLayers(sourceLayer, targetGroup) {
-                if (sourceLayer instanceof L.LayerGroup) {
-                    sourceLayer.eachLayer(function(layer) {
-                        addNonGroupLayers(layer, targetGroup);
-                    });
-                } else {
-                    targetGroup.addLayer(sourceLayer);
-                }
-            }
-
-            self.setGeoJsonLayer = function(data) {
-
-                self.editableLayers.clearLayers();
-
-                var siteGeometry = L.geoJson(data, {});
-
-                addNonGroupLayers(siteGeometry, self.editableLayers);
-
-                self.savedObjects = [{
-                    id: self.editableLayers._leaflet_id,
-                    geoJson: data
-                }];
-
-                console.log('self.savedObjects', self.savedObjects);
-
-            };
-
-            //
-            // We use this function for handle any type of geographic change, whether
-            // through the map or through the fields
-            //
-
-            self.processPin = function(coordinates, zoom) {
-
-                if (coordinates.lat === null || coordinates.lat === undefined || coordinates.lng === null || coordinates.lng === undefined) {
-                    return;
-                }
-
-                self.map.center = {
-                    lat: coordinates.lat,
-                    lng: coordinates.lng,
-                    zoom: (zoom < 10) ? 10 : zoom
-                };
-
-                self.showGeocoder = false;
-            };
-
-            //
-            // Empty Geocode object
-            //
-            // We need to have an empty geocode object so that we can fill it in later
-            // in the address geocoding process. This allows us to pass the results along
-            // to the Form Submit function we have in place below.
-            //
-            self.geocode = {};
-
-            //
-            // When the user has selected a response, we need to perform a few extra
-            // tasks so that our scope is updated properly.
-            //
-
-            $scope.$watch(angular.bind(this, function() {
-                return this.geocode.response;
-            }), function(response) {
-
-                //
-                // Only execute the following block of code if the user has geocoded an
-                // address. This block of code expects this to be a single feature from a
-                // Carmen GeoJSON object.
-                //
-                // @see https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
-                //
-                if (response) {
-
-                    self.processPin({
-                        lat: response.geometry.coordinates[1],
-                        lng: response.geometry.coordinates[0]
-                    }, 16);
-
-                    self.geocode = {
-                        query: null,
-                        response: null
-                    };
-                }
-
-            });
-
-            $rootScope.page = {};
 
             self.loadSite = function() {
 
@@ -161,24 +84,6 @@ angular.module('FieldDoc')
 
                     self.site = successResponse;
 
-                    if (self.site.geometry) {
-
-                        leafletData.getMap('practice--map').then(function(map) {
-
-                            var siteExtent = new L.FeatureGroup();
-
-                            var siteGeometry = L.geoJson(successResponse, {});
-
-                            siteExtent.addLayer(siteGeometry);
-
-                            map.fitBounds(siteExtent.getBounds(), {
-                                maxZoom: 18
-                            });
-
-                        });
-
-                    }
-
                     self.loadPractice();
 
                 }, function(errorResponse) {
@@ -200,6 +105,8 @@ angular.module('FieldDoc')
 
                     self.practice = successResponse;
 
+                    self.practiceType = successResponse.properties.category.properties || successResponse.category;
+
                     if (!successResponse.permissions.read &&
                         !successResponse.permissions.write) {
 
@@ -212,53 +119,7 @@ angular.module('FieldDoc')
                     self.permissions.can_edit = successResponse.permissions.write;
                     self.permissions.can_delete = successResponse.permissions.write;
 
-                    delete self.practice.organization;
-                    delete self.practice.project;
-                    delete self.practice.site;
-
-                    self.practiceType = successResponse.category;
-
                     $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
-
-                    //
-                    // If a valid practice geometry is present, add it to the map
-                    // and track the object in `self.savedObjects`.
-                    //
-
-                    if (self.practice.geometry !== null &&
-                        typeof self.practice.geometry !== 'undefined') {
-
-                        //Added by Lin 
-                        leafletData.getMap('practice--map').then(function(map) {
-
-                            self.practiceExtent = new L.FeatureGroup();
-
-                            self.setGeoJsonLayer(self.practice.geometry);
-
-                            map.fitBounds(self.editableLayers.getBounds(), {
-                                maxZoom: 18
-                            });
-
-                        });
-
-                        self.map.geojson = {
-                            data: self.practice.geometry
-                        };
-
-                        self.savedObjects = [{
-                            id: self.editableLayers._leaflet_id,
-                            geoJson: self.practice.geometry
-                        }];
-
-                        console.log('self.practice.geometry', self.practice.geometry);
-
-                        console.log('self.savedObjects', self.savedObjects);
-
-                        var rawGeometry = self.practice.geometry;
-
-                        console.log('rawGeometry', rawGeometry);
-
-                    }
 
                     self.showElements();
 
@@ -410,29 +271,68 @@ angular.module('FieldDoc')
 
             };
 
+            self.scrubFeature = function(feature) {
+
+                var excludedKeys = [
+                    'allocations',
+                    'creator',
+                    'dashboards',
+                    'geographies',
+                    // 'geometry',
+                    'last_modified_by',
+                    'members',
+                    'metrics',
+                    'metric_types',
+                    'organization',
+                    'partners',
+                    'partnerships',
+                    'practices',
+                    'practice_types',
+                    'program',
+                    'project',
+                    'reports',
+                    'sites',
+                    'status',
+                    'tags',
+                    'tasks',
+                    'users'
+                ];
+
+                var reservedProperties = [
+                    'links',
+                    'map_options',
+                    'permissions',
+                    '$promise',
+                    '$resolved'
+                ];
+
+                excludedKeys.forEach(function(key) {
+
+                    if (feature.properties) {
+
+                        delete feature.properties[key];
+
+                    } else {
+
+                        delete feature[key];
+
+                    }
+
+                });
+
+                reservedProperties.forEach(function(key) {
+
+                    delete feature[key];
+
+                });
+
+            };
+
             self.savePractice = function() {
 
                 self.status.processing = true;
 
-                if (self.savedObjects.length) {
-
-                    self.savedObjects.forEach(function(object) {
-
-                        console.log('Iterating self.savedObjects', object);
-
-                        if (object.geoJson.geometry) {
-
-                            self.practice.geometry = object.geoJson.geometry;
-
-                        } else {
-
-                            self.practice.geometry = object.geoJson;
-
-                        }
-
-                    });
-
-                }
+                self.scrubFeature(self.practice);
 
                 self.practice.$update().then(function(successResponse) {
 
@@ -444,6 +344,8 @@ angular.module('FieldDoc')
                     }];
 
                     $timeout(closeAlerts, 2000);
+
+                    self.practiceType = successResponse.category;
 
                     self.showElements();
 
@@ -546,184 +448,189 @@ angular.module('FieldDoc')
 
             };
 
-            //
-            // Define a layer to add geometries to later
-            //
-            var featureGroup = new L.FeatureGroup();
+            self.populateMap = function(map, practice) {
 
-            //
-            // Convert a GeoJSON Feature Collection to a valid Leaflet Layer
-            //
-            self.geojsonToLayer = function(geojson, layer) {
-                layer.clearLayers();
+                console.log('practice.geometry', practice.geometry);
 
-                function add(l) {
-                    l.addTo(layer);
+                if (self.drawControls) {
+
+                    self.drawControls.deleteAll();
+
                 }
 
-                //
-                // Make sure the GeoJSON object is added to the layer with appropriate styles
-                //
-                L.geoJson(geojson, {
-                    style: {
-                        stroke: true,
-                        fill: false,
-                        weight: 2,
-                        opacity: 1,
-                        color: 'rgb(255,255,255)',
-                        lineCap: 'square'
+                if (practice.geometry !== null &&
+                    typeof practice.geometry !== 'undefined') {
+
+                    var bounds = turf.bbox(practice.geometry);
+
+                    map.fitBounds(bounds, {
+                        padding: 40
+                    });
+
+                    if (self.drawControls) {
+
+                        var feature = {
+                            id: 'practice-' + practice.id,
+                            type: 'Feature',
+                            properties: {},
+                            geometry: practice.geometry
+                        };
+
+                        self.drawControls.add(feature);
+
+                        self.drawControls.changeMode(
+                            'simple_select',
+                            {
+                                featureId: 'practice-' + practice.id
+                            });
+
                     }
-                }).eachLayer(add);
+
+                }
+
             };
 
-            //
-            // Define our map interactions via the Angular Leaflet Directive
-            //
-            leafletData.getMap('practice--map').then(function(map) {
+            self.updateGeometry = function updateArea(e) {
 
-                //
-                // Add draw toolbar
-                //
+                var data = self.drawControls.getAll();
 
-                var drawControls = new L.Control.Draw({
-                    draw: {
-                        circle: false,
-                        circlemarker: false,
-                        rectangle: false
-                    },
-                    edit: {
-                        featureGroup: self.editableLayers
+                console.log('self.updateGeometry --> data', data);
+
+                if (data.features.length > 0) {
+
+                    var area = turf.area(data);
+
+                    // Convert area to square meters (acres?)
+                    // restrict to area to 2 decimal points
+
+                    self.roundedArea = Math.round(area*100)/100;
+
+                    var feature = data.features[0];
+
+                    if (feature.geometry) {
+
+                        self.practice.geometry = feature.geometry;
+
                     }
-                });
 
-                console.log('drawControls', drawControls);
+                } else {
 
-                map.addControl(drawControls);
+                    self.roundedArea = null;
 
-                var drawnItems = drawControls.options.edit.featureGroup;
+                    self.practice.geometry = null;
 
-                // map.fitBounds(self.editableLayers.getBounds());
+                    if (e.type !== 'draw.delete') {
 
-                // if (drawnItems.getLayers().length > 1) {
+                        alert('Use the draw tools to draw a polygon!');
 
-                //     map.fitBounds(drawnItems.getBounds());
+                    };
 
-                // }
+                }
 
-                // Init the map with the saved elements
-                var printLayers = function() {
-                    // console.log("After: ");
-                    map.eachLayer(function(layer) {
-                        console.log('Existing layer', layer);
-                    });
-                };
+            };
 
-                drawnItems.addTo(map);
-                printLayers();
+            self.switchMapStyle = function(styleId, index) {
 
-                map.on('draw:created', function(e) {
+                console.log('self.switchMapStyle --> styleId', styleId);
 
-                    var layer = e.layer;
+                console.log('self.switchMapStyle --> index', index);
 
-                    //
-                    // Sites must only have one geometry feature
-                    //
+                self.map.setStyle(self.mapStyles[index].url);
 
-                    drawnItems.clearLayers();
-                    drawnItems.addLayer(layer);
-                    console.log('Layer added', JSON.stringify(layer.toGeoJSON()));
+            };
 
-                    self.savedObjects = [{
-                        id: layer._leaflet_id,
-                        geoJson: layer.toGeoJSON()
-                    }];
+            self.getMapOptions = function() {
 
-                });
+                self.mapStyles = mapbox.baseStyles;
 
-                map.on('draw:edited', function(e) {
+                console.log(
+                    'self.createMap --> mapStyles',
+                    self.mapStyles);
 
-                    var layers = e.layers;
+                self.activeStyle = 0;
 
-                    console.log('map.draw:edited', layers);
+                mapboxgl.accessToken = mapbox.accessToken;
 
-                    layers.eachLayer(function(layer) {
+                console.log(
+                    'self.createMap --> accessToken',
+                    mapboxgl.accessToken);
 
-                        self.savedObjects = [{
-                            id: layer._leaflet_id,
-                            geoJson: layer.toGeoJSON()
-                        }];
+                self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
 
-                        console.log('Layer changed', layer._leaflet_id, JSON.stringify(layer.toGeoJSON()));
+                self.mapOptions.container = 'primary--map';
 
-                    });
+                self.mapOptions.style = self.mapStyles[0].url;
 
-                });
+                if (self.practice &&
+                    self.practice.map_options) {
 
-                map.on('draw:deleted', function(e) {
+                    var mapOptions = self.practice.map_options;
 
-                    var layers = e.layers;
+                    if (mapOptions.hasOwnProperty('centroid') &&
+                        mapOptions.centroid !== null) {
 
-                    layers.eachLayer(function(layer) {
+                        self.mapOptions.center = self.practice.map_options.centroid.coordinates;
 
-                        for (var i = 0; i < self.savedObjects.length; i++) {
-                            if (self.savedObjects[i].id == layer._leaflet_id) {
-                                self.savedObjects.splice(i, 1);
-                            }
+                    }
+
+                }
+
+                return self.mapOptions;
+
+            };
+
+            self.createMap = function(options) {
+
+                if (!options) return;
+
+                console.log('self.createMap --> Starting...');
+
+                self.map = new mapboxgl.Map(options);
+
+                self.map.on('load', function () {
+
+                    self.drawControls = new MapboxDraw({
+                        displayControlsDefault: false,
+                        controls: {
+                            line_string: true,
+                            point: true,
+                            polygon: true,
+                            trash: true
                         }
-
-                        console.log('Layer removed', JSON.stringify(layer.toGeoJSON()));
-
                     });
 
-                    self.savedObjects = [];
+                    console.log('drawControls', self.drawControls);
 
-                    console.log('Saved objects', self.savedObjects);
+                    self.map.addControl(self.drawControls);
+
+                    var nav = new mapboxgl.NavigationControl();
+
+                    self.map.addControl(nav, 'top-left');
+
+                    var fullScreen = new mapboxgl.FullscreenControl();
+
+                    self.map.addControl(fullScreen, 'top-left');
+
+                    // 
+                    // Add geocoder
+                    // 
+
+                    var geocoder = new MapboxGeocoder({
+                        accessToken: mapboxgl.accessToken,
+                        mapboxgl: mapboxgl
+                    });
+ 
+                    document.getElementById('geocoder').appendChild(geocoder.onAdd(self.map));
+
+                    self.populateMap(self.map, self.practice);
+
+                    self.map.on('draw.create', self.updateGeometry);
+                    self.map.on('draw.delete', self.updateGeometry);
+                    self.map.on('draw.update', self.updateGeometry);
 
                 });
 
-                map.on('layeradd', function(e) {
-
-                    console.log('map:layeradd', e);
-
-                    if (e.layer.getBounds) {
-
-                        map.fitBounds(e.layer.getBounds(), {
-                            padding: [20, 20],
-                            maxZoom: 18
-                        });
-
-                    }
-
-                });
-
-                map.on('zoomend', function(e) {
-
-                    console.log('map:zoomend', map.getZoom());
-
-                });
-
-                //
-                // Update the pin and segment information when the user clicks on the map
-                // or drags the pin to a new location
-                //
-                $scope.$on('leafletDirectiveMap.click', function(event, args) {
-                    self.processPin(args.leafletEvent.latlng, map._zoom);
-                });
-
-                $scope.$on('leafletDirectiveMap.dblclick', function(event, args) {
-                    self.processPin(args.leafletEvent.latlng, map._zoom + 1);
-                });
-
-                $scope.$on('leafletDirectiveMarker.dragend', function(event, args) {
-                    self.processPin(args.leafletEvent.target._latlng, map._zoom);
-                });
-
-                $scope.$on('leafletDirectiveMarker.dblclick', function(event, args) {
-                    var zoom = map._zoom + 1;
-                    map.setZoom(zoom);
-                });
-
-            });
+            };
 
             //
             // Verify Account information for proper UI element display
@@ -741,9 +648,13 @@ angular.module('FieldDoc')
                         can_edit: true
                     };
 
+                    // self.createMap();
+
                     self.loadSite();
 
                     self.fetchTasks();
+
+                    // self.fetchLayers();
 
                 });
 

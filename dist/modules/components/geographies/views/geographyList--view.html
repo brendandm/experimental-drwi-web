@@ -25,40 +25,86 @@
                 </a>
             </div>
 
-            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager && page.geographies.length">You have <strong>{{ page.featureCount | number }}</strong>
-                <ng-pluralize count="page.featureCount" when="{'one': 'geography','other': 'geographies'}"></ng-pluralize>.
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && page.summary.total">There <ng-pluralize count="page.summary.total" when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{ (page.summary.total | number) || 0 }}</strong>
+                <ng-pluralize count="page.summary.total" when="{'one': 'geography','other': 'geographies'}"></ng-pluralize> in your collection.
             </p>
 
-            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">There <ng-pluralize count="page.featureCount" when="{'one': 'is','other': 'are'}"></ng-pluralize> <strong>{{ (page.featureCount | number) || 0 }}</strong>
-                <ng-pluralize count="page.featureCount" when="{'one': 'geography','other': 'geographies'}"></ng-pluralize> in this program.
+            <p class="reveal fade-in t0" data-ng-if="!page.status.loading && ((page.filters.category > 1) || (page.filters.program > 1))">
+                Showing
+                <strong>{{ (page.summary.matches | number) || 0 }} </strong>
+                filtered
+                <ng-pluralize count="page.summary.matches" when="{'one': 'match','other': 'matches'}"></ng-pluralize>.
             </p>
 
-            <div class="collection-filter" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">
-                <form name="myForm" style="width: auto;">
-                    <label for="programFilter"><strong>Filter by program:</strong></label>
-                    <select name="programFilter" id="programFilter"
-                        data-ng-options="program.properties.name for program in $root.user.properties.programs track by program.id"
-                        data-ng-model="page.selectedProgram"
-                        data-ng-change="page.loadFeatures()">
-                    </select>
-                </form>
-                <button type="reset" data-ng-click="page.batchDelete = !page.batchDelete">
-                    <i class="material-icons">
-                        delete_sweep
-                    </i>
-                </button>
-            </div>
+            <div class="collection-filter-group" data-ng-if="!page.status.loading && ($root.user.properties.is_admin || $root.user.properties.is_manager)">
 
-            <div class="delete-collection-modal" data-ng-if="page.batchDelete">
-                <p>Do you want to delete these geographies? This action cannot be undone.</p>
-                <div class="actions" style="flex: 0;">
-                    <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteCollection()">
-                        Yes
-                    </a>
-                    <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.batchDelete = !page.batchDelete">
-                        Cancel
-                    </a>
+                <div class="collection-filter drop-down program">
+                    <button type="button" data-ng-class="{'open-btn': (page.showModal.program || (page.filters.program > 0))}" data-ng-click="page.showModal.program = !page.showModal.program">
+                        Programs&nbsp;
+                        <i class="material-icons">
+                            arrow_drop_down
+                        </i>
+                    </button>
+                    <form name="collection-filter-form" class="collection-filter-modal" style="width: auto;" data-ng-if="page.showModal.program">
+                        <label data-ng-repeat="program in page.programs" data-ng-class="{'active': page.filters.program === program.id}" title="{{ program.name }}">
+                            <span class="input-mask" data-ng-if="page.filters.program === program.id">
+                                <i class="material-icons">
+                                    radio_button_checked
+                                </i>
+                            </span>
+                            <span class="input-mask" data-ng-if="page.filters.program !== program.id">
+                                <i class="material-icons">
+                                    radio_button_unchecked
+                                </i>
+                            </span>
+                            <input type="radio" id="program-option-{{ program.id }}" name="active-program" data-ng-model="page.filters.program" data-ng-value="{{ program.id }}" data-ng-change="page.inspectSearchParams(true)"><span> {{ program.name }}</span>
+                        </label>
+                    </form>
                 </div>
+
+                <div class="collection-filter drop-down category">
+                    <button type="button" data-ng-class="{'open-btn': (page.showModal.category || (page.filters.category > 0))}" data-ng-click="page.showModal.category = !page.showModal.category">
+                        Categories&nbsp;
+                        <i class="material-icons">
+                            arrow_drop_down
+                        </i>
+                    </button>
+                    <form name="collection-filter-form" class="collection-filter-modal" style="width: auto;" data-ng-if="page.showModal.category">
+                        <label data-ng-repeat="category in page.geographyGroups" data-ng-class="{'active': page.filters.category === category.id}" title="{{ category.name }}">
+                            <span class="input-mask" data-ng-if="page.filters.category === category.id">
+                                <i class="material-icons">
+                                    radio_button_checked
+                                </i>
+                            </span>
+                            <span class="input-mask" data-ng-if="page.filters.category !== category.id">
+                                <i class="material-icons">
+                                    radio_button_unchecked
+                                </i>
+                            </span>
+                            <input type="radio" id="category-option-{{ category.id }}" name="active-category" data-ng-model="page.filters.category" data-ng-value="{{ category.id }}" data-ng-change="page.inspectSearchParams(true)"><span> {{ category.name }}</span>
+                        </label>
+                    </form>
+                </div>
+
+                <div class="collection-filter drop-down batch-delete">
+                    <button type="reset" data-ng-click="page.batchDelete = !page.batchDelete">
+                        <i class="material-icons">
+                            delete_sweep
+                        </i>
+                    </button>
+                    <div class="collection-filter-modal" data-ng-if="page.batchDelete">
+                        <p class="prompt">Do you want to delete these geographies? This action cannot be undone.</p>
+                        <div class="action-options">
+                            <a class="snapshot--title confirm" href="#" title="Delete forever" data-ng-click="page.deleteCollection()">
+                                Confirm
+                            </a>
+                            <a class="snapshot--title cancel" href="#" title="Cancel" data-ng-click="page.batchDelete = !page.batchDelete">
+                                Cancel
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <section class="reveal fade-in t0" style="padding: 1em 0 0;" data-ng-if="!page.status.loading && page.pendingTasks.length">
@@ -176,11 +222,13 @@
 
                         <div class="card--content">
 
-                            <div style="position:relative;">
-                                <leaflet id="geography-preview-{{ geography.id }}" style="width: 100%; height: 200px;" defaults="page.map.defaults" layers="page.map.layers" bounds="geography.bounds" geojson="geography.geojson"></leaflet>
-                            </div>
+                            <!-- <div style="position:relative;">
 
-                            <div class="name" style="background: #fff;">
+                                <div id="geography-preview-{{ $index }}" style="width: 100%; height: 200px;"></div>
+
+                            </div> -->
+
+                            <div class="name">
                                 <span>{{ geography.name || 'Un-named' }}</span>
                                 <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;">{{ geography.category || 'Un-categorized' }}</span>
                             </div>

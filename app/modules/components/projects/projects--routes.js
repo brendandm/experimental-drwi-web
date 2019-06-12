@@ -53,47 +53,31 @@ angular.module('FieldDoc')
 
                     },
                     project: function(Project, $route) {
-                        
+
                         var exclude = [
                             'centroid',
                             'creator',
                             'dashboards',
-                            'extent',
+                            // 'extent',
                             'geometry',
                             'members',
                             'metric_types',
-                            // 'partners',
                             'practices',
                             'practice_types',
                             'properties',
-                            'tags',
+//                            'tags',
                             'targets',
                             'tasks',
                             'type',
                             'sites'
                         ].join(',');
 
-                        return Project.get({
+                        return Project.getSingle({
                             id: $route.current.params.projectId,
                             exclude: exclude
                         });
-                        
+
                     },
-                    // metrics: function(Project, $route) {
-                    //     return Project.metrics({
-                    //         id: $route.current.params.projectId
-                    //     });
-                    // },
-                    // nodes: function(Site, $route) {
-                    //     return Site.nodes({
-                    //         id: $route.current.params.projectId
-                    //     });
-                    // },
-                    // outcomes: function(Project, $route) {
-                    //     return Project.outcomes({
-                    //         id: $route.current.params.projectId
-                    //     });
-                    // },
                     sites: function(Project, $route) {
                         return Project.sites({
                             id: $route.current.params.projectId

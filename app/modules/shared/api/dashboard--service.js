@@ -55,6 +55,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/dashboard/:id/outcomes')
                 },
+                pointLayer: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/dashboard/:id/point-layer')
+                },
                 progress: {
                     method: 'GET',
                     isArray: false,

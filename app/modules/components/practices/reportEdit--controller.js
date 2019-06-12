@@ -236,7 +236,8 @@
                     // Assign practice to a scoped variable
                     //
                     Report.targetMatrix({
-                        id: self.report.id
+                        id: self.report.id,
+                        simple_bool: 'true'
                     }).$promise.then(function(successResponse) {
 
                         self.targets = successResponse;

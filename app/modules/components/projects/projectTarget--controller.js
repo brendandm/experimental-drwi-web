@@ -63,7 +63,8 @@ angular.module('FieldDoc')
                 // Assign project to a scoped variable
                 //
                 Project.targetMatrix({
-                    id: $route.current.params.projectId
+                    id: $route.current.params.projectId,
+                    simple_bool: 'true'
                 }).$promise.then(function(successResponse) {
 
                     self.targets = successResponse;

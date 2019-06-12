@@ -1,4 +1,4 @@
-(function() {
+ (function() {
 
     'use strict';
 
@@ -15,8 +15,18 @@
                 'query': {
                     'isArray': false
                 },
+                getSingle: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id')
+                },
                 update: {
                     method: 'PATCH'
+                },
+                layers: {
+                    'method': 'GET',
+                    'url': environment.apiUrl.concat('/v1/practice/:id/layers'),
+                    'isArray': false
                 },
                 'metrics': {
                     'method': 'GET',
@@ -53,15 +63,20 @@
                     'url': environment.apiUrl.concat('/v1/data/practice/:id/readings_custom'),
                     'isArray': false
                 },
-                model: {
+                models: {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/practice/:id/model')
+                    url: environment.apiUrl.concat('/v1/practice/:id/models')
                 },
                 progress: {
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice/:id/progress')
+                },
+                publicFeature: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/:id/public')
                 },
                 tags: {
                     method: 'GET',

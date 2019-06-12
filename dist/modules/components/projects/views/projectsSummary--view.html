@@ -42,6 +42,10 @@
                             <strong>Program:</strong> <a href="{{ page.project.links.program.html }}">{{ page.project.program.name }}</a>
                         </p>
 
+                        <p data-ng-if="page.area && page.area.value" class="label">
+                            <strong>Total area:</strong> {{ page.area.value | number:2 }} {{ page.area.unit }}s
+                        </p>
+
                         <p data-ng-bind-html="page.project.description"></p>
 
                         <div data-ng-if="page.tags && page.tags.length">
@@ -67,8 +71,32 @@
 
                     </article>
 
+                    <!-- <div class="map--module shadow reveal fade-in t1" style="position:relative;" data-ng-include="'/templates/primaryMap--view.html'"></div> -->
+
                     <div class="map--module shadow reveal fade-in t1" style="position:relative;">
-                        <leaflet id="project--map" class="map tall" center="page.map.center" defaults="page.map.defaults" layers="page.map.layers" bounds="page.map.bounds" markers="page.map.markers"></leaflet>
+                        <div id="primary--map" class="map tall" style="border-radius: 4px; overflow: hidden;">
+                            <div class="mapboxgl-layer-ctrl" data-ng-click="page.showLayerOptions = !page.showLayerOptions" title="Switch layers">
+                                <i class="material-icons">
+                                    layers
+                                </i>
+                                <div class="layer-group" data-ng-show="page.showLayerOptions">
+                                    <form>
+                                        <label data-ng-repeat="style in page.mapStyles" data-ng-class="{'active': page.activeStyle === $index}" title="{{ style.name }}">
+                                            <input type="radio" id="base-style-{{ $index }}" name="active-style" data-ng-model="page.activeStyle" data-ng-value="{{ $index }}" data-ng-change="page.switchMapStyle(style, $index)"><span> {{ style.name }}</span>
+                                        </label>
+                                    </form>
+                                    <form class="layers" data-ng-show="page.layers && page.layers.length">
+                                        <label for="layer-{{ $index }}" data-ng-repeat="layer in page.layers" data-ng-class="{'active': layer.selected}" title="{{ layer.name }}">
+                                            <input type="checkbox" id="layer-{{ $index }}" name="layer-{{ $index }}" data-ng-model="layer.selected" data-ng-value="{{ $index }}" data-ng-change="page.toggleLayer(layer)">
+                                            <span> {{ layer.name }}</span>
+                                            <div class="symbol-group" data-ng-if="layer.symbol && layer.symbol.colors">
+                                                <div class="color" data-ng-repeat="color in layer.symbol.colors" style="background: {{ color }};"></div>
+                                            </div>
+                                        </label>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -95,33 +123,64 @@
                                     <tr>
                                         <th class="table-column-wide table-metrics-header">&nbsp;</th>
                                         <th class="table-metrics-header">Estimated value</th>
-                                        <th class="table-metrics-header">Estimated progress</th>
-                                        <th>&nbsp;</th>
+                                        <th class="table-metrics-header" data-ng-if="model.datum.show_progress">Estimated progress</th>
+                                        <th data-ng-if="model.datum.show_progress">&nbsp;</th>
                                     </tr>
                                 </thead>
 
-                                <tbody class="metrics">
-                                    <tr class="metrics--metric" data-ng-repeat="metric in model.collection track by $index" data-ng-click="page.showMetricModal(metric)">
+                                <tbody class="metrics" data-ng-repeat="metric in model.collection track by $index">
+                                    <tr class="metrics--metric" data-ng-click="page.showMetricModal(metric)">
                                         <td class="table-column-wide">
                                             <p class="metric--title">
                                                 {{ metric.name }}
                                             </p>
                                         </td>
                                         <td>
-                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
-                                                of {{ metric.self_target | number:2 }}</span>
+                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
+                                                <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ metric.self_target | number:2 }}</span>
                                         </td>
-                                        <td>
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
                                             <strong class="metrics--metric--percentage">
                                                 {{ metric.selfProgress.value * 100 | number:1 }}%
                                             </strong>
                                         </td>
-                                        <td>
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
                                             <progress-arc
                                                 size="32"
                                                 stroke="#2196F3"
                                                 stroke-width="4"
                                                 complete="metric.selfProgress.arcValue"
+                                                counter-clockwise="false"
+                                                background="rgba(0,0,0,0.2)">
+                                            </progress-arc>
+                                        </td>
+                                    </tr>
+                                    <tr class="metrics--metric" style="opacity: 0.72;" data-ng-repeat="geography in metric.geographies">
+                                        <td class="table-column-wide">
+                                            <a class="metric--title" style="display: flex; flex-flow: row nowrap; align-items: center; padding-left: 2em;" data-ng-href="/geographies/{{ geography.id }}">
+                                                <i class="material-icons">
+                                                    public
+                                                </i>
+                                                &nbsp;
+                                                {{ geography.name }}
+                                                <span data-ng-if="geography.category">&nbsp;&middot; {{ geography.category }}</span>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
+                                                <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ geography.target | number:2 }}</span>
+                                        </td>
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                            <strong class="metrics--metric--percentage">
+                                                {{ geography.progress | number:1 }}%
+                                            </strong>
+                                        </td>
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                            <progress-arc
+                                                size="32"
+                                                stroke="#2196F3"
+                                                stroke-width="4"
+                                                complete="geography.arc_value"
                                                 counter-clockwise="false"
                                                 background="rgba(0,0,0,0.2)">
                                             </progress-arc>
@@ -144,7 +203,7 @@
                                 </tr>
                             </thead>
 
-                            <tbody class="metrics">
+                            <!-- <tbody class="metrics">
                                 <tr class="metrics--metric" data-ng-repeat="metric in page.metrics.generic track by $index" data-ng-click="page.showMetricModal(metric)">
                                     <td class="table-column-wide">
                                         <p class="metric--title">
@@ -166,6 +225,66 @@
                                             stroke="#2196F3"
                                             stroke-width="4"
                                             complete="metric.selfProgress.arcValue"
+                                            counter-clockwise="false"
+                                            background="rgba(0,0,0,0.2)">
+                                        </progress-arc>
+                                    </td>
+                                </tr>
+                            </tbody> -->
+
+                            <tbody class="metrics" data-ng-repeat="metric in page.metrics.generic track by $index">
+                                <tr class="metrics--metric" data-ng-click="page.showMetricModal(metric)">
+                                    <td class="table-column-wide">
+                                        <p class="metric--title">
+                                            {{ metric.name }}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
+                                            <span class="metrics--metric--rollup--label" data-ng-if="metric.show_progress">of {{ metric.self_target | number:2 }}</span>
+                                    </td>
+                                    <td data-ng-if="metric.show_progress">
+                                        <strong class="metrics--metric--percentage">
+                                            {{ metric.selfProgress.value * 100 | number:1 }}%
+                                        </strong>
+                                    </td>
+                                    <td data-ng-if="metric.show_progress">
+                                        <progress-arc
+                                            size="32"
+                                            stroke="#2196F3"
+                                            stroke-width="4"
+                                            complete="metric.selfProgress.arcValue"
+                                            counter-clockwise="false"
+                                            background="rgba(0,0,0,0.2)">
+                                        </progress-arc>
+                                    </td>
+                                </tr>
+                                <tr class="metrics--metric" style="opacity: 0.72;" data-ng-repeat="geography in metric.geographies">
+                                    <td class="table-column-wide">
+                                        <p class="metric--title" style="display: flex; flex-flow: row nowrap; align-items: center; padding-left: 2em;">
+                                            <i class="material-icons">
+                                                public
+                                            </i>
+                                            &nbsp;
+                                            {{ geography.name }}
+                                            <span data-ng-if="geography.category">&nbsp;&middot; {{ geography.category }}</span>
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
+                                            <span class="metrics--metric--rollup--label" data-ng-if="metric.show_progress">of {{ geography.target | number:2 }}</span>
+                                    </td>
+                                    <td data-ng-if="metric.show_progress">
+                                        <strong class="metrics--metric--percentage">
+                                            {{ geography.progress | number:1 }}%
+                                        </strong>
+                                    </td>
+                                    <td data-ng-if="metric.show_progress">
+                                        <progress-arc
+                                            size="32"
+                                            stroke="#2196F3"
+                                            stroke-width="4"
+                                            complete="geography.arc_value"
                                             counter-clockwise="false"
                                             background="rgba(0,0,0,0.2)">
                                         </progress-arc>
@@ -247,7 +366,11 @@
                         <div class="card--content">
 
                             <div style="position:relative;">
-                                <leaflet id="site-geography-preview-{{ $index }}" style="width: 100%; height: 200px;" defaults="page.previewMap.defaults" layers="page.previewMap.layers" bounds="site.bounds" geojson="site.geojson"></leaflet>
+
+                                <div id="site-geography-preview-{{ $index }}" style="width: 100%; height: 200px;"></div>
+
+                                <!-- <leaflet id="site-geography-preview-{{ $index }}" style="width: 100%; height: 200px;" defaults="page.previewMap.defaults" layers="page.previewMap.layers" bounds="site.bounds" geojson="site.geojson"></leaflet> -->
+
                             </div>
 
                             <div class="name" style="background: #fff;">

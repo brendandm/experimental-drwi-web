@@ -28,18 +28,8 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    // metrics: function(Practice, $route) {
-                    //     return Practice.metrics({
-                    //         id: $route.current.params.practiceId
-                    //     });
-                    // },
-                    // outcomes: function(Practice, $route) {
-                    //     return Practice.outcomes({
-                    //         id: $route.current.params.practiceId
-                    //     });
-                    // },
                     practice: function(Practice, $route) {
-                        return Practice.get({
+                        return Practice.getSingle({
                             id: $route.current.params.practiceId
                         });
                     }
@@ -61,11 +51,6 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    // practice: function(Practice, $route) {
-                    //     return Practice.get({
-                    //         id: $route.current.params.practiceId
-                    //     });
-                    // },
                     report: function(Report, $route) {
                         return Report.get({
                             id: $route.current.params.reportId
@@ -76,22 +61,11 @@ angular.module('FieldDoc')
                             id: $route.current.params.reportId
                         });
                     },
-                    // metric_types: function(MetricType, $route) {
-                    //     return MetricType.query({
-                    //         results_per_page: 500
-                    //     });
-                    // },
                     monitoring_types: function(MonitoringType, $route) {
                         return MonitoringType.query({
                             results_per_page: 500
                         });
                     }
-                    // unit_types: function(UnitType, $route) {
-                    //     return UnitType.query({
-                    //         results_per_page: 500
-                    //     });
-                    // }
-
                 }
             })
             .when('/practices/:practiceId/edit', {
@@ -117,19 +91,12 @@ angular.module('FieldDoc')
                         });
 
                     },
-                    // practiceTypes: function(PracticeType, $route) {
-
-                    //     return PracticeType.collection({
-                    //         practice: $route.current.params.practiceId
-                    //     });
-
-                    // },
                     practice: function(Practice, $route) {
 
                         return Practice.get({
                             id: $route.current.params.practiceId
                         });
-                        
+
                     }
                 }
             })
@@ -216,7 +183,6 @@ angular.module('FieldDoc')
                             'geometry',
                             'members',
                             'metric_types',
-                            // 'partners',
                             'practices',
                             'practice_types',
                             'properties',
@@ -273,7 +239,6 @@ angular.module('FieldDoc')
                             'practices',
                             'practice_types',
                             'properties',
-                            // 'tags',
                             'targets',
                             'tasks',
                             'type',

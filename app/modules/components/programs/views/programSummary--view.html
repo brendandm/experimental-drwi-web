@@ -54,7 +54,29 @@
 
                     <div style="position:relative;">
 
-                        <leaflet id="program--map" class="map tall" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers" markers="page.map.markers"></leaflet>
+                        <div id="primary--map" class="map tall" style="border-radius: 4px; overflow: hidden;">
+                            <div class="mapboxgl-layer-ctrl" data-ng-click="page.showLayerOptions = !page.showLayerOptions" title="Switch layers">
+                                <i class="material-icons">
+                                    layers
+                                </i>
+                                <div class="layer-group" data-ng-show="page.showLayerOptions">
+                                    <form>
+                                        <label data-ng-repeat="style in page.mapStyles" data-ng-class="{'active': page.activeStyle === $index}" title="{{ style.name }}">
+                                            <input type="radio" id="base-style-{{ $index }}" name="active-style" data-ng-model="page.activeStyle" data-ng-value="{{ $index }}" data-ng-change="page.switchMapStyle(style, $index)"><span> {{ style.name }}</span>
+                                        </label>
+                                    </form>
+                                    <form class="layers" data-ng-show="page.layers && page.layers.length">
+                                        <label for="layer-{{ $index }}" data-ng-repeat="layer in page.layers" data-ng-class="{'active': layer.selected}" title="{{ layer.name }}">
+                                            <input type="checkbox" id="layer-{{ $index }}" name="layer-{{ $index }}" data-ng-model="layer.selected" data-ng-value="{{ $index }}" data-ng-change="page.toggleLayer(layer)">
+                                            <span> {{ layer.name }}</span>
+                                            <div class="symbol-group" data-ng-if="layer.symbol && layer.symbol.colors">
+                                                <div class="color" data-ng-repeat="color in layer.symbol.colors" style="background: {{ color }};"></div>
+                                            </div>
+                                        </label>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
 
@@ -66,59 +88,101 @@
 
                         <h2>Metrics</h2>
 
-                        <div data-ng-if="page.metrics">
+                        <div data-ng-if="page.metrics && page.metrics.has_models">
 
-                            <section id="sites">
+                            <table class="table table-practices with-metrics" data-ng-repeat="model in page.metrics.models">
 
-                                <div class="list">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <strong>{{ model.datum.name }}</strong>
+                                            <p style="color: #616161; margin: 0; padding-top: 2em; font-size: 0.9em;">
+                                                The following metric values were generated using data and algorithms supplied by the {{ model.datum.name }} model. You can find more information about this model <a href="/models/{{ model.datum.id }}">here</a>.
+                                            </p>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th class="table-column-wide table-metrics-header">&nbsp;</th>
+                                        <th class="table-metrics-header">Estimated value</th>
+                                        <th class="table-metrics-header" data-ng-if="model.datum.show_progress">Estimated progress</th>
+                                        <th data-ng-if="model.datum.show_progress">&nbsp;</th>
+                                    </tr>
+                                </thead>
 
-                                    <table class="table table-practices with-metrics" data-ng-if="page.metrics">
+                                <tbody class="metrics">
+                                    <tr class="metrics--metric" data-ng-repeat="metric in model.collection track by $index" data-ng-click="page.showMetricModal(metric)">
+                                        <td class="table-column-wide">
+                                            <p class="metric--title">
+                                                {{ metric.name }}
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
+                                                <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ metric.self_target | number:2 }}</span>
+                                        </td>
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                            <strong class="metrics--metric--percentage">
+                                                {{ metric.selfProgress.value * 100 | number:1 }}%
+                                            </strong>
+                                        </td>
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                            <progress-arc
+                                                size="32"
+                                                stroke="#2196F3"
+                                                stroke-width="4"
+                                                complete="metric.selfProgress.arcValue"
+                                                counter-clockwise="false"
+                                                background="rgba(0,0,0,0.2)">
+                                            </progress-arc>
+                                        </td>
+                                    </tr>
+                                </tbody>
 
-                                        <thead>
-                                            <tr>
-                                                <th class="table-column-wide table-metrics-header">&nbsp;</th>
-                                                <th class="table-metrics-header">Installed To-Date</th>
-                                                <th class="table-metrics-header">% Installed</th>
-                                                <th>&nbsp;</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody class="metrics">
-                                            <tr class="metrics--metric" data-ng-repeat="metric in page.metrics track by $index">
-                                                <td class="table-column-wide">
-                                                    <p class="metric--title">
-                                                        {{ metric.name }}
-                                                    </p>
-                                                </td>
-                                                <td>
-                                                    <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
-                                                        of {{ metric.target | number:2 }}</span>
-                                                </td>
-                                                <td>
-                                                    <strong class="metrics--metric--percentage">
-                                                        {{ metric.percentComplete }}%
-                                                    </strong>
-                                                </td>
-                                                <td>
-                                                    <progress-arc
-                                                        size="32"
-                                                        stroke="#2196F3"
-                                                        stroke-width="4"
-                                                        complete="(metric.current_value/metric.target)"
-                                                        counter-clockwise="false"
-                                                        background="rgba(0,0,0,0.2)">
-                                                    </progress-arc>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-
-                                    </table>
-
-                                </div>
-
-                            </section>
+                            </table>
 
                         </div>
+
+                        <table class="table table-practices with-metrics" style="border-top: 1px solid #e0e0e0;" data-ng-if="page.metrics && page.metrics.generic.length">
+
+                            <thead>
+                                <tr>
+                                    <th class="table-column-wide table-metrics-header">&nbsp;</th>
+                                    <th class="table-metrics-header">Installed To-Date</th>
+                                    <th class="table-metrics-header">% Installed</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="metrics">
+                                <tr class="metrics--metric" data-ng-repeat="metric in page.metrics.generic track by $index" data-ng-click="page.showMetricModal(metric)">
+                                    <td class="table-column-wide">
+                                        <p class="metric--title">
+                                            {{ metric.name }}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
+                                            of {{ metric.self_target | number:2 }}</span>
+                                    </td>
+                                    <td>
+                                        <strong class="metrics--metric--percentage">
+                                            {{ metric.selfProgress.value * 100 | number:1 }}%
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <progress-arc
+                                            size="32"
+                                            stroke="#2196F3"
+                                            stroke-width="4"
+                                            complete="metric.selfProgress.arcValue"
+                                            counter-clockwise="false"
+                                            background="rgba(0,0,0,0.2)">
+                                        </progress-arc>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
 
                     </section>
 

@@ -63,7 +63,8 @@ angular.module('FieldDoc')
                 // Assign practice to a scoped variable
                 //
                 Practice.targetMatrix({
-                    id: $route.current.params.practiceId
+                    id: $route.current.params.practiceId,
+                    simple_bool: 'true'
                 }).$promise.then(function(successResponse) {
 
                     self.targets = successResponse;
@@ -76,7 +77,7 @@ angular.module('FieldDoc')
 
                     });
 
-                    self.loadModel(activeDomain);
+                    self.loadModels(activeDomain);
 
                 }).catch(function(errorResponse) {
 
@@ -86,11 +87,11 @@ angular.module('FieldDoc')
 
             };
 
-            self.loadModel = function(activeDomain) {
+            self.loadModels = function(activeDomain) {
 
-                console.log('self.loadModel.activeDomain', activeDomain);
+                console.log('self.loadModels.activeDomain', activeDomain);
 
-                Practice.model({
+                Practice.models({
                     id: $route.current.params.practiceId
                 }).$promise.then(function(successResponse) {
 
@@ -98,15 +99,19 @@ angular.module('FieldDoc')
 
                     var modelTargets = [];
 
-                    self.model = successResponse;
+                    self.models = successResponse.features;
 
-                    self.model.metrics.forEach(function(metric) {
+                    self.models.forEach(function(model) {
 
-                        if (activeDomain.indexOf(metric.id) < 0) {
+                        model.metrics.forEach(function(metric) {
 
-                            modelTargets.push(metric);
+                            if (activeDomain.indexOf(metric.id) < 0) {
 
-                        }
+                                modelTargets.push(metric);
+
+                            }
+
+                        });
 
                     });
 
@@ -395,6 +400,7 @@ angular.module('FieldDoc')
 
                 var reservedProperties = [
                     'links',
+                    'map_options',
                     'permissions',
                     '$promise',
                     '$resolved'
@@ -611,7 +617,7 @@ angular.module('FieldDoc')
 
                     self.loadMatrix();
 
-                    // self.loadModel();
+                    // self.loadModels();
 
                     //
                     // Setup page meta data

@@ -11,8 +11,7 @@
         .controller('GeographyListController',
             function(Account, $location, $window, $timeout, $rootScope, $scope,
                 $route, geographies, user, Utility, GeographyService,
-                MapPreview, leafletBoundsHelpers, $interval, Shapefile,
-                GeographyType, Task) {
+                $interval, Shapefile, GeographyType, Task, mapbox) {
 
                 var self = this;
 
@@ -24,9 +23,20 @@
 
                 $rootScope.page = {};
 
-                self.map = JSON.parse(JSON.stringify(MapPreview));
+                self.showModal = {
+                    category: false,
+                    program: false
+                };
 
-                console.log('self.map', self.map);
+                self.filters = {
+                    category: undefined,
+                    program: undefined
+                };
+
+                self.numericFilters = [
+                    'category',
+                    'program'
+                ];
 
                 self.status = {
                     loading: true,
@@ -123,155 +133,66 @@
 
                 };
 
-                self.buildStaticMapURL = function(geometry) {
-
-                    var styledFeature = {
-                        "type": "Feature",
-                        "geometry": geometry,
-                        "properties": {
-                            "marker-size": "small",
-                            "marker-color": "#2196F3",
-                            "stroke": "#2196F3",
-                            "stroke-opacity": 1.0,
-                            "stroke-width": 2,
-                            "fill": "#2196F3",
-                            "fill-opacity": 0.5
-                        }
-                    };
-
-                    // Build static map URL for Mapbox API
-
-                    return 'https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
-
-                };
-
-                self.buildFeature = function(geometry) {
-
-                    var styleProperties = {
-                        color: "#2196F3",
-                        opacity: 1.0,
-                        weight: 2,
-                        fillColor: "#2196F3",
-                        fillOpacity: 0.5
-                    };
-
-                    return {
-                        data: {
-                            "type": "Feature",
-                            "geometry": geometry,
-                            "properties": {
-                                "marker-size": "small",
-                                "marker-color": "#2196F3",
-                                "stroke": "#2196F3",
-                                "stroke-opacity": 1.0,
-                                "stroke-width": 2,
-                                "fill": "#2196F3",
-                                "fill-opacity": 0.5
-                            }
-                        },
-                        style: styleProperties
-                    };
-
-                };
-
-                self.processCollection = function(arr) {
-
-                    arr.forEach(function(feature) {
-
-                        if (feature.geometry !== null) {
-
-                            feature.staticURL = self.buildStaticMapURL(feature.geometry);
-
-                            feature.geojson = self.buildFeature(feature.geometry);
-
-                        }
-
-                        feature.bounds = Utility.transformBounds(feature.bounds);
-
-                        if (feature.code !== null &&
-                            typeof feature.code === 'string') {
-
-                            feature.classification = feature.code.length;
-
-                        }
-
-                        console.log('feature', feature);
-
-                    });
-
-                };
-
                 self.createGeography = function() {
 
                     $location.path('/geographies/collection/new');
-
-                    // self.geography = new GeographyService({
-                    //     'program_id': self.programId,
-                    //     'organization_id': $rootScope.user.properties.organization_id
-                    // });
-
-                    // self.geography.$save(function(successResponse) {
-
-                    //     $location.path('/geographies/' + successResponse.id + '/edit');
-
-                    // }, function(errorResponse) {
-
-                    //     console.error('Unable to create a new geography, please try again later.');
-
-                    // });
 
                 };
 
                 self.buildFilter = function() {
 
-                    var params = $location.search(),
-                        data = {
-                            t: Date.now()
-                        };
+                    console.log(
+                        'self.buildFilter --> Starting...');
 
-                    if (self.selectedProgram &&
-                        typeof self.selectedProgram.id !== 'undefined' &&
-                        self.selectedProgram.id > 0) {
+                    var data = {
+                        combine: 'true',
+                        exclude_geometry: 'true'
+                    };
 
-                        data.program = self.selectedProgram.id;
+                    for (var key in self.filters) {
 
-                        $location.search('program', self.selectedProgram.id);
+                        if (self.filters.hasOwnProperty(key)) {
 
-                    } else if (params.program !== null &&
-                        typeof params.program !== 'undefined') {
+                            if (self.numericFilters.indexOf(key) >= 0) {
 
-                        data.program = params.program;
+                                var filterVal = +self.filters[key];
 
-                    } else {
+                                if (Number.isInteger(filterVal) &&
+                                    filterVal > 0) {
 
-                        $location.search({});
+                                    data[key] = filterVal;
 
-                    }
+                                }
 
-                    return data;
+                            } else {
 
-                };
-
-                self.loadFeatures = function() {
-
-                    var params = self.buildFilter();
-
-                    GeographyService.collection(params).$promise.then(function(successResponse) {
-
-                        console.log('successResponse', successResponse);
-
-                        for (var collection in successResponse) {
-
-                            if (successResponse.hasOwnProperty(collection) &&
-                                Array.isArray(successResponse[collection])) {
-
-                                self.processCollection(successResponse[collection]);
+                                data[key] = self.filters[key];
 
                             }
 
                         }
 
-                        self.featureCount = successResponse.count;
+                    }
+
+                    $location.search(data);
+
+                    return data;
+
+                };
+
+                self.loadFeatures = function(params) {
+
+                    console.log(
+                        'self.loadFeatures --> params',
+                        params);
+
+                    // var params = self.buildFilter();
+
+                    GeographyService.collection(params).$promise.then(function(successResponse) {
+
+                        console.log('successResponse', successResponse);
+
+                        self.summary = successResponse.summary;
 
                         self.geographies = successResponse.features;
 
@@ -293,12 +214,12 @@
 
                     self.batchDelete = false;
 
-                    if (self.selectedProgram &&
-                        typeof self.selectedProgram.id !== 'undefined' &&
-                        self.selectedProgram.id > 0) {
+                    if (self.selectedProgram !== null &&
+                        typeof self.selectedProgram !== 'undefined' &&
+                        self.selectedProgram > 0) {
 
                         GeographyService.batchDelete({
-                            program: self.selectedProgram.id
+                            program: self.selectedProgram
                         }).$promise.then(function(successResponse) {
 
                             console.log('successResponse', successResponse);
@@ -383,13 +304,26 @@
 
                         console.log('GeographyType.collection response', response);
 
+                        var categories = [];
+
                         response.features.forEach(function(result) {
 
-                            result.category = null;
+                            delete result.category;
+
+                            categories.push(result);
+
+                            // result.category = null;
 
                         });
 
-                        self.geographyGroups = response.features;
+                        categories.unshift({
+                            id: 0,
+                            name: 'All categories'
+                        });
+
+                        self.geographyGroups = categories;
+
+                        self.filters.category = self.geographyGroups[0].id;
 
                         // return response.features.slice(0, 5);
 
@@ -419,7 +353,9 @@
 
                         if (self.pendingTasks.length < 1) {
 
-                            self.loadFeatures();
+                            // self.loadFeatures();
+
+                            self.inspectSearchParams();
 
                             $interval.cancel(self.taskPoll);
 
@@ -539,19 +475,216 @@
 
                 };
 
-                self.extractPrograms = function(user) {
+                // 
+                // Map functionality
+                // 
 
-                    var _programs = [];
+                self.getMapOptions = function() {
 
-                    user.properties.programs.forEach(function(program) {
+                    self.mapStyles = mapbox.baseStyles;
 
-                        _programs.push(program.properties);
+                    console.log(
+                        'self.getMapOptions --> mapStyles',
+                        self.mapStyles);
+
+                    self.activeStyle = 0;
+
+                    mapboxgl.accessToken = mapbox.accessToken;
+
+                    console.log(
+                        'self.getMapOptions --> accessToken',
+                        mapboxgl.accessToken);
+
+                    self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+
+                    self.mapOptions.container = 'primary--map';
+
+                    self.mapOptions.style = self.mapStyles[0].url;
+
+                    return self.mapOptions;
+
+                };
+
+                self.addMapPreviews = function(arr) {
+
+                    console.log('self.addMapPreviews --> arr', arr);
+
+                    var interactions = [
+                        'scrollZoom',
+                        'boxZoom',
+                        'dragRotate',
+                        'dragPan',
+                        'keyboard',
+                        'doubleClickZoom',
+                        'touchZoomRotate'
+                    ];
+
+                    arr.forEach(function(feature, index) {
+
+                        console.log(
+                            'self.addMapPreviews --> feature, index',
+                            feature,
+                            index);
+
+                        var localOptions = JSON.parse(JSON.stringify(self.mapOptions));
+
+                        localOptions.style = self.mapStyles[0].url;
+
+                        localOptions.container = 'geography-preview-' + index;
+
+                        var previewMap = new mapboxgl.Map(localOptions);
+
+                        previewMap.on('load', function() {
+
+                            interactions.forEach(function(behavior) {
+
+                                previewMap[behavior].disable();
+
+                            });
+
+                            console.log(
+                                'self.addMapPreviews --> ',
+                                'Add feature to map preview.');
+
+                            console.log(
+                                'self.addMapPreviews --> previewMap',
+                                previewMap);
+
+                            console.log(
+                                'self.addMapPreviews --> feature',
+                                feature);
+
+                            self.populateMap(previewMap, feature, null, true);
+
+                        });
 
                     });
 
-                    return _programs;
+                };
+
+                self.populateMap = function(map, feature, attribute) {
+
+                    console.log('self.populateMap --> feature', feature);
+
+                    var bounds;
+
+                    if (feature[attribute] !== null &&
+                        typeof feature[attribute] !== 'undefined') {
+
+                        bounds = turf.bbox(feature[attribute]);
+
+                        map.fitBounds(bounds, {
+                            padding: 40
+                        });
+
+                        map.addLayer({
+                            'id': 'geography-preview',
+                            'type': 'fill',
+                            'source': {
+                                'type': 'geojson',
+                                'data': {
+                                    'type': 'Feature',
+                                    'geometry': feature[attribute]
+                                }
+                            },
+                            'layout': {
+                                'visibility': 'visible'
+                            },
+                            'paint': {
+                                'fill-color': '#06aadf',
+                                'fill-opacity': 0.4
+                            }
+                        });
+
+                        map.addLayer({
+                            'id': 'geography-preview-outline',
+                            'type': 'line',
+                            'source': {
+                                'type': 'geojson',
+                                'data': {
+                                    'type': 'Feature',
+                                    'geometry': feature[attribute]
+                                }
+                            },
+                            'layout': {
+                                'visibility': 'visible'
+                            },
+                            'paint': {
+                                'line-color': 'rgba(6, 170, 223, 0.8)',
+                                'line-width': 2
+                            }
+                        });
+
+                    }
 
                 };
+
+                // 
+                // Observe internal route changes. Note that `reloadOnSearch`
+                // must be set to `false`.
+                // 
+                // See: https://stackoverflow.com/questions/15093916
+                // 
+
+                self.inspectSearchParams = function(forceFilter) {
+
+                    var params = $location.search();
+
+                    console.log(
+                        'self.inspectSearchParams --> params',
+                        params);
+
+                    var keys = Object.keys(params);
+
+                    console.log(
+                        'self.inspectSearchParams --> keys',
+                        keys);
+
+                    if (!keys.length || forceFilter) {
+
+                        params = self.buildFilter();
+
+                        console.log(
+                            'self.inspectSearchParams --> params(2)',
+                            params);
+
+                    }
+
+                    for (var key in params) {
+
+                        if (self.filters.hasOwnProperty(key)) {
+
+                            if (self.numericFilters.indexOf(key) >= 0) {
+
+                                var filterVal = +params[key];
+
+                                if (Number.isInteger(filterVal)) {
+
+                                    self.filters[key] = filterVal;
+
+                                }
+
+                            } else {
+
+                                self.filters[key] = params[key];
+
+                            }
+
+                        }
+
+                    }
+
+                    self.loadFeatures(params);
+
+                };
+
+                // $scope.$on('$routeUpdate', function() {
+
+                // var params = $location.search();
+
+                // self.inspectSearchParams();
+
+                // });
 
                 //
                 // Verify Account information for proper UI element display
@@ -568,19 +701,24 @@
                             account: ($rootScope.account && $rootScope.account.length) ? $rootScope.account[0] : null
                         };
 
-                        self.programs = self.extractPrograms($rootScope.user);
+                        var programs = Utility.extractUserPrograms($rootScope.user);
 
-                        if ($rootScope.user.properties.programs.length) {
+                        programs.unshift({
+                            id: 0,
+                            name: 'All programs'
+                        });
 
-                            self.selectedProgram = $rootScope.user.properties.programs[0];
+                        self.programs = programs;
 
-                        }
+                        self.filters.program = self.programs[0].id;
 
                         self.loadGroups();
 
-                        self.loadFeatures();
+                        // self.loadFeatures();
 
                         self.fetchTasks();
+
+                        self.inspectSearchParams();
 
                     });
 

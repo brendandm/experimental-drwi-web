@@ -7,8 +7,8 @@
  */
 angular.module('FieldDoc')
     .controller('ProjectsController',
-        function(Account, $location, $log, Project,
-            projects, $rootScope, $scope, Site, user,
+        function(Account, $location, $log, Project, Tag,
+            projects, $rootScope, $scope, Site, user, mapbox,
             ProjectStore, FilterStore, $interval, $timeout, Utility) {
 
             $scope.filterStore = FilterStore;
@@ -35,6 +35,24 @@ angular.module('FieldDoc')
                 actions: []
             };
 
+            self.showModal = {
+                organization: false,
+                program: false,
+                tag: false
+            };
+
+            self.filters = {
+                organization: undefined,
+                program: undefined,
+                tag: undefined
+            };
+
+            self.numericFilters = [
+                'organization',
+                'program',
+                'tag'
+            ];
+
             self.status = {
                 loading: true
             };
@@ -44,6 +62,8 @@ angular.module('FieldDoc')
                 $timeout(function() {
 
                     self.status.loading = false;
+
+                    self.status.processing = false;
 
                 }, 1000);
 
@@ -127,87 +147,6 @@ angular.module('FieldDoc')
 
             };
 
-            self.search = {
-                query: '',
-                execute: function(page) {
-
-                    //
-                    // Get all of our existing URL Parameters so that we can
-                    // modify them to meet our goals
-                    //
-
-                    var q = {
-                        filters: [{
-                            'and': [{
-                                name: 'name',
-                                op: 'ilike',
-                                val: '%' + self.search.query + '%'
-                            }]
-                        }],
-                        order_by: [{
-                            field: 'created_on',
-                            direction: 'desc'
-                        }]
-                    };
-
-                    if (self.filters.active.workflow_state !== null) {
-                        console.log('add workflow state filter');
-
-                        q.filters.push({
-                            'name': 'workflow_state',
-                            'op': 'like',
-                            'val': self.filters.active.workflow_state
-                        });
-                    }
-
-                    if (self.filters.active.year && self.filters.active.year.year) {
-                        q.filters.push({
-                            'name': 'created_on',
-                            'op': 'gte',
-                            'val': self.filters.active.year.year + '-01-01'
-                        });
-                        q.filters.push({
-                            'name': 'created_on',
-                            'op': 'lte',
-                            'val': self.filters.active.year.year + '-12-31'
-                        });
-                    }
-
-                    Project.query({
-                        'q': q,
-                        'page': (page ? page : 1)
-                    }).$promise.then(function(successResponse) {
-
-                        console.log('successResponse', successResponse);
-
-                        self.projects = successResponse;
-
-                    }, function(errorResponse) {
-
-                        console.log('errorResponse', errorResponse);
-
-                    });
-
-                },
-                paginate: function(pageNumber) {
-
-                    //
-                    // Get all of our existing URL Parameters so that we can
-                    // modify them to meet our goals
-                    //
-                    self.search.execute(pageNumber);
-                },
-                clear: function() {
-
-                    self.q = {};
-
-                    self.filteredProjects = self.projects;
-
-                    self.processLocations(self.filteredProjects);
-
-                }
-            };
-
             self.createProject = function() {
 
                 $location.path('/projects/collection/new');
@@ -222,23 +161,39 @@ angular.module('FieldDoc')
 
             self.buildFilter = function() {
 
-                var params = $location.search(),
-                    data = {};
+                console.log(
+                    'self.buildFilter --> Starting...');
 
-                if (self.selectedProgram &&
-                    typeof self.selectedProgram.id !== 'undefined' &&
-                    self.selectedProgram.id > 0) {
+                var data = {
+                    combine: 'true'
+                };
 
-                    data.program = self.selectedProgram.id;
+                for (var key in self.filters) {
 
-                    $location.search('program', self.selectedProgram.id);
+                    if (self.filters.hasOwnProperty(key)) {
 
-                } else if (params.program !== null &&
-                    typeof params.program !== 'undefined') {
+                        if (self.numericFilters.indexOf(key) >= 0) {
 
-                    data.program = params.program;
+                            var filterVal = +self.filters[key];
+
+                            if (Number.isInteger(filterVal) &&
+                                filterVal > 0) {
+
+                                data[key] = filterVal;
+
+                            }
+
+                        } else {
+
+                            data[key] = self.filters[key];
+
+                        }
+
+                    }
 
                 }
+
+                $location.search(data);
 
                 return data;
 
@@ -264,7 +219,14 @@ angular.module('FieldDoc')
 
                     self.projects = successResponse.features;
 
-                    self.count = successResponse.count;
+                    // self.count = successResponse.count;
+
+                    self.summary = successResponse.summary;
+
+                    self.summary.organizations.unshift({
+                        id: 0,
+                        name: 'All organizations'
+                    });
 
                     if (!$scope.projectStore.projects.length) {
 
@@ -284,6 +246,175 @@ angular.module('FieldDoc')
 
             };
 
+            self.loadTags = function() {
+
+                Tag.collection({}).$promise.then(function(successResponse) {
+
+                    console.log('successResponse', successResponse);
+
+                    self.tags = successResponse.features;
+
+                    self.tags.unshift({
+                        id: 0,
+                        name: 'All tags'
+                    });
+
+                    self.filters.tag = self.tags[0].id;
+
+                    self.inspectSearchParams();
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
+
+            };
+
+            self.addMapPreviews = function(arr) {
+
+                var interactions = [
+                    'scrollZoom',
+                    'boxZoom',
+                    'dragRotate',
+                    'dragPan',
+                    'keyboard',
+                    'doubleClickZoom',
+                    'touchZoomRotate'
+                ];
+
+                arr.forEach(function(feature, index) {
+
+                    var localOptions = JSON.parse(JSON.stringify(self.mapOptions));
+
+                    localOptions.style = self.mapStyles[0].url;
+
+                    localOptions.container = 'project-geography-preview-' + index;
+
+                    var previewMap = new mapboxgl.Map(localOptions);
+
+                    previewMap.on('load', function() {
+
+                        interactions.forEach(function(behavior) {
+
+                            previewMap[behavior].disable();
+
+                        });
+
+                        self.populateMap(previewMap, feature, 'extent');
+
+                    });
+
+                });
+
+            };
+
+            self.populateMap = function(map, feature, attribute) {
+
+                console.log('self.populateMap --> feature', feature);
+
+                if (feature[attribute] !== null &&
+                    typeof feature[attribute] !== 'undefined') {
+
+                    var bounds = turf.bbox(feature[attribute]);
+
+                    map.fitBounds(bounds, {
+                        padding: 40
+                    });
+
+                }
+
+            };
+
+            self.getMapOptions = function() {
+
+                self.mapStyles = mapbox.baseStyles;
+
+                console.log(
+                    'self.createMap --> mapStyles',
+                    self.mapStyles);
+
+                self.activeStyle = 0;
+
+                mapboxgl.accessToken = mapbox.accessToken;
+
+                console.log(
+                    'self.createMap --> accessToken',
+                    mapboxgl.accessToken);
+
+                self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+
+                self.mapOptions.container = 'primary--map';
+
+                self.mapOptions.style = self.mapStyles[0].url;
+
+                return self.mapOptions;
+
+            };
+
+            // 
+            // Observe internal route changes. Note that `reloadOnSearch`
+            // must be set to `false`.
+            // 
+            // See: https://stackoverflow.com/questions/15093916
+            // 
+
+            self.inspectSearchParams = function(forceFilter) {
+
+                var params = $location.search();
+
+                console.log(
+                    'self.inspectSearchParams --> params',
+                    params);
+
+                var keys = Object.keys(params);
+
+                console.log(
+                    'self.inspectSearchParams --> keys',
+                    keys);
+
+                if (!keys.length || forceFilter) {
+
+                    params = self.buildFilter();
+
+                    console.log(
+                        'self.inspectSearchParams --> params(2)',
+                        params);
+
+                }
+
+                for (var key in params) {
+
+                    if (self.filters.hasOwnProperty(key)) {
+
+                        if (self.numericFilters.indexOf(key) >= 0) {
+
+                            var filterVal = +params[key];
+
+                            console.log(
+                                'self.inspectSearchParams --> filterVal',
+                                filterVal);
+
+                            if (Number.isInteger(filterVal)) {
+
+                                self.filters[key] = filterVal;
+
+                            }
+
+                        } else {
+
+                            self.filters[key] = params[key];
+
+                        }
+
+                    }
+
+                }
+
+                self.loadProjects(params);
+
+            };
+
             //
             // Verify Account information for proper UI element display
             //
@@ -299,33 +430,26 @@ angular.module('FieldDoc')
                         isLoggedIn: Account.hasToken()
                     };
 
+                    var programs = Utility.extractUserPrograms($rootScope.user);
+
+                    programs.unshift({
+                        id: 0,
+                        name: 'All programs'
+                    });
+
+                    self.programs = programs;
+
+                    self.filters.program = self.programs[0].id;
+
                     //
                     // Project functionality
                     //
 
-                    if ($rootScope.user.properties.programs.length) {
+                    // self.loadProjects();
 
-                        var programs = [];
+                    self.inspectSearchParams();
 
-                        $rootScope.user.properties.programs.forEach(function(item) {
-
-                            programs.push(item.properties);
-
-                        });
-
-                        programs.sort(function(a, b) {
-
-                            return a.id > b.id;
-
-                        });
-
-                        self.programs = programs;
-
-                        self.selectedProgram = self.programs[0];
-
-                    }
-
-                    self.loadProjects();
+                    self.loadTags();
 
                 });
 

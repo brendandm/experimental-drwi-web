@@ -11,8 +11,8 @@
      */
     angular.module('FieldDoc')
         .controller('SiteEditController',
-            function(Account, environment, $http, leafletData, leafletBoundsHelpers, $location,
-                Map, mapbox, Notifications, Site, site, $rootScope, $route, $scope,
+            function(Account, environment, $http, $location, mapbox,
+                Notifications, Site, site, $rootScope, $route, $scope,
                 $timeout, $interval, user, Shapefile, Utility) {
 
                 var self = this;
@@ -69,6 +69,7 @@
 
                     var reservedProperties = [
                         'links',
+                        'map_options',
                         'permissions',
                         '$promise',
                         '$resolved'

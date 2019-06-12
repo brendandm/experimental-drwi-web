@@ -40,24 +40,27 @@
 
             .reset--extent {
                 position: absolute;
-                height: 36px;
-                width: 36px;
-                top: 56px;
+                top: 52px;
                 right: 10px;
+                height: 30px;
+                width: 30px;
                 display: flex;
-                flex-flow: column;
+                flex-flow: colum;
                 justify-content: center;
                 align-items: center;
-                appearance: none;
-                cursor: pointer;
-                border: 0 none;
+                padding: 0;
                 outline: none;
-                color: #333;
-                font-size: 1em;
-                background: #fff;
+                border: 0;
+                box-sizing: border-box;
                 border-radius: 4px;
-                box-shadow: 0 1px 5px rgba(0,0,0,0.65);
-                z-index: 99;
+                background: #fff;
+                box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+                cursor: pointer;
+                user-select: none;
+                -moz-user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
+                z-index: 3;
             }
 
         }
@@ -100,7 +103,7 @@
             }
 
             .marker--title {
-                font-family: Georgia,Cambria,"Times New Roman",Times,serif;
+                //font-family: Georgia,Cambria,"Times New Roman",Times,serif;
                 padding: 10px;
             }
 
@@ -109,23 +112,23 @@
                 border-right: 1px solid #e0e0e0;
             }
 
-            .project--popup {
-                display: flex;
-                flex-flow: row nowrap;
-                align-items: center;
-
-                a {
-                    display: flex;
-                    flex-flow: column;
-                    justify-content: center;
-                    align-items: center;
+            //.project--popup {
+                //display: flex;
+                //flex-flow: row nowrap;
+                //align-items: center;
+                //
+                //a {
+                    //display: flex;
+                    //flex-flow: column;
+                    //justify-content: center;
+                    //align-items: center;
                     //margin-left: 1em;
-                    text-decoration: none;
-                    color: #123b9d;
-                    padding: 0 1em;
-                }
-
-            }
+                    //text-decoration: none;
+                    //color: #123b9d;
+                    //padding: 0 1em;
+                //}
+                //
+            //}
 
         }
 
@@ -1040,6 +1043,7 @@ input:checked + .slider:before {
         font-size: 1em;
         //padding: 0.5em 0.8em;
         margin-right: 1em;
+        margin-bottom: 1em;
         cursor: default;
 
         span {

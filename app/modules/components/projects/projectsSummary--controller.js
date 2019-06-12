@@ -10,9 +10,8 @@
 angular.module('FieldDoc')
     .controller('ProjectSummaryController',
         function(Account, Notifications, $rootScope, Project, $routeParams,
-            $scope, $location, Map, MapPreview, mapbox, Site, user, $window,
-            leafletData, leafletBoundsHelpers, $timeout, Practice, project,
-            sites, Utility, $interval) {
+            $scope, $location, mapbox, Site, user, $window, $timeout,
+            Practice, project, sites, Utility, $interval, LayerService) {
 
             var self = this;
 
@@ -26,13 +25,21 @@ angular.module('FieldDoc')
 
             $rootScope.page = {};
 
-            self.map = JSON.parse(JSON.stringify(Map));
+            self.map = undefined;
 
-            self.previewMap = JSON.parse(JSON.stringify(MapPreview));
+            self.alerts = [];
 
-            self.map.markers = {};
+            function closeAlerts() {
 
-            console.log('self.map', self.map);
+                self.alerts = [];
+
+            }
+
+            function closeRoute() {
+
+                $location.path('/projects');
+
+            }
 
             self.status = {
                 loading: true
@@ -44,7 +51,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.showElements = function() {
+            self.showElements = function(createMap) {
 
                 $timeout(function() {
 
@@ -52,40 +59,29 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
+                    if (createMap) {
+
+                        $timeout(function() {
+
+                            if (!self.mapOptions) {
+
+                                self.mapOptions = self.getMapOptions();
+
+                            }
+
+                            self.createMap(self.mapOptions);
+
+                            if (self.sites && self.sites.length) {
+
+                                self.addMapPreviews(self.sites);
+
+                            }
+
+                        }, 500);
+
+                    }
+
                 }, 1000);
-
-            };
-
-            //draw tools
-            function addNonGroupLayers(sourceLayer, targetGroup) {
-
-                if (sourceLayer instanceof L.LayerGroup) {
-
-                    sourceLayer.eachLayer(function(layer) {
-
-                        addNonGroupLayers(layer, targetGroup);
-
-                    });
-
-                } else {
-
-                    targetGroup.addLayer(sourceLayer);
-
-                }
-
-            }
-
-            self.setGeoJsonLayer = function(data, layerGroup, clearLayers) {
-
-                if (clearLayers) {
-
-                    layerGroup.clearLayers();
-
-                }
-
-                var featureGeometry = L.geoJson(data, {});
-
-                addNonGroupLayers(featureGeometry, layerGroup);
 
             };
 
@@ -127,6 +123,8 @@ angular.module('FieldDoc')
 
                         self.makePrivate = true;
 
+                        self.showElements(false);
+
                     } else {
 
                         self.permissions.can_edit = successResponse.permissions.write;
@@ -142,129 +140,25 @@ angular.module('FieldDoc')
 
                         $rootScope.page.title = 'Project Summary';
 
-                        leafletData.getMap('project--map').then(function(map) {
-
-                            var southWest = L.latLng(25.837377, -124.211606),
-                                northEast = L.latLng(49.384359, -67.158958),
-                                bounds = L.latLngBounds(southWest, northEast);
-
-                            self.projectExtent = new L.FeatureGroup();
-
-                            if (self.project.extent) {
-
-                                self.setGeoJsonLayer(self.project.extent, self.projectExtent);
-
-                                map.fitBounds(self.projectExtent.getBounds(), {
-                                    maxZoom: 18
-                                });
-
-                            } else {
-
-                                map.fitBounds(bounds, {
-                                    maxZoom: 18
-                                });
-
-                            }
-
-                        });
-
                         self.loadMetrics();
 
                         self.loadSites();
 
-                        self.loadTags();
+//                        self.loadTags();
 
-                        self.loadPartnerships();
+                        self.loadArea();
 
                     }
 
-                    self.showElements();
+                    self.tags = Utility.processTags(self.project.tags);
+
+                    // self.showElements();
 
                 }).catch(function(errorResponse) {
 
                     console.log('loadProject.errorResponse', errorResponse);
 
-                    self.showElements();
-
-                });
-
-            };
-
-            self.submitProject = function() {
-
-                if (!self.project.organization_id) {
-                    $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.");
-                    return;
-                }
-
-                var _project = new Project({
-                    "id": self.project.id,
-                    "properties": {
-                        "workflow_state": "Submitted"
-                    }
-                });
-
-                _project.$update(function(successResponse) {
-                    self.project = successResponse;
-                }, function(errorResponse) {
-
-                });
-            };
-
-            self.fundProject = function() {
-
-                if (!self.project.organization_id) {
-                    $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.");
-                    return;
-                }
-
-                var _project = new Project({
-                    "id": self.project.id,
-                    "properties": {
-                        "workflow_state": "Funded"
-                    }
-                });
-
-                _project.$update(function(successResponse) {
-                    self.project = successResponse;
-                }, function(errorResponse) {
-
-                });
-            };
-
-            self.completeProject = function() {
-
-                if (!self.project.organization_id) {
-                    $rootScope.notifications.warning("In order to submit your project, it must be associated with a Funder. Please edit your project and try again.");
-                    return;
-                }
-
-                var _project = new Project({
-                    "id": self.project.id,
-                    "properties": {
-                        "workflow_state": "Completed"
-                    }
-                });
-
-                _project.$update(function(successResponse) {
-                    self.project = successResponse;
-                }, function(errorResponse) {
-
-                });
-            };
-
-            self.rollbackProjectSubmission = function() {
-
-                var _project = new Project({
-                    "id": self.project.id,
-                    "properties": {
-                        "workflow_state": "Draft"
-                    }
-                });
-
-                _project.$update(function(successResponse) {
-                    self.project = successResponse;
-                }, function(errorResponse) {
+                    self.showElements(false);
 
                 });
 
@@ -288,20 +182,6 @@ angular.module('FieldDoc')
                 });
 
             };
-
-            self.alerts = [];
-
-            function closeAlerts() {
-
-                self.alerts = [];
-
-            }
-
-            function closeRoute() {
-
-                $location.path('/projects');
-
-            }
 
             self.confirmDelete = function(obj, targetCollection) {
 
@@ -434,55 +314,51 @@ angular.module('FieldDoc')
 
             self.loadSites = function() {
 
+                console.log('self.loadSites --> Starting...');
+
                 sites.$promise.then(function(successResponse) {
 
-                    console.log('Project sites', successResponse);
-
-                    successResponse.features.forEach(function(feature) {
-
-                        if (feature.geometry) {
-
-                            feature.staticURL = self.buildStaticMapURL(feature.geometry);
-
-                            feature.geojson = self.buildFeature(feature.geometry);
-
-                            feature.bounds = self.transformBounds(feature.properties);
-
-                        }
-
-                    });
+                    console.log('Project sites --> ', successResponse);
 
                     self.sites = successResponse.features;
 
-                    leafletData.getMap('project--map').then(function(map) {
+                    // var siteCollection = {
+                    //     'type': 'FeatureCollection',
+                    //     'features': self.sites
+                    // };
 
-                        self.projectExtent.clearLayers();
+                    self.showElements(true);
 
-                        self.sites.forEach(function(feature) {
+                    // self.populateMap(self.map, siteCollection, null, true);
 
-                            if (feature.geometry) {
-
-                                self.setGeoJsonLayer(feature.geometry, self.projectExtent);
-
-                            }
-
-                        });
-
-                        map.fitBounds(self.projectExtent.getBounds(), {
-                            maxZoom: 18
-                        });
-
-                        self.projectExtent.addTo(map);
-
-                    });
+                    // self.addMapPreviews(self.sites);
 
                 }, function(errorResponse) {
 
                     console.log('loadSites.errorResponse', errorResponse);
 
+                    self.showElements(false);
+
                 });
 
             };
+
+//            self.processTags = function(arr) {
+//
+//                arr.forEach(function(tag) {
+//
+//                    if (tag.color &&
+//                        tag.color.length) {
+//
+//                        tag.lightColor = tinycolor(tag.color).lighten(5).toString();
+//
+//                    }
+//
+//                });
+//
+//                self.tags = arr;
+//
+//            };
 
             self.loadTags = function() {
 
@@ -504,6 +380,24 @@ angular.module('FieldDoc')
                     });
 
                     self.tags = successResponse.features;
+
+                }, function(errorResponse) {
+
+                    console.log('errorResponse', errorResponse);
+
+                });
+
+            };
+
+            self.loadArea = function() {
+
+                Project.area({
+                    id: self.project.id
+                }).$promise.then(function(successResponse) {
+
+                    console.log('Project.area', successResponse);
+
+                    self.area = successResponse.area;
 
                 }, function(errorResponse) {
 
@@ -542,83 +436,167 @@ angular.module('FieldDoc')
 
             };
 
-            self.transformBounds = function(obj) {
-
-                var xRange = [],
-                    yRange = [],
-                    southWest,
-                    northEast,
-                    bounds;
-
-                if (Array.isArray(obj.bounds.coordinates[0])) {
-
-                    obj.bounds.coordinates[0].forEach(function(coords) {
-
-                        xRange.push(coords[0]);
-
-                        yRange.push(coords[1]);
-
-                    });
-
-                    // 
-                    // Add padding to bounds coordinates
-                    // 
-
-                    southWest = [
-                        Math.min.apply(null, yRange) - 0.001,
-                        Math.min.apply(null, xRange) - 0.001
-                    ];
-
-                    northEast = [
-                        Math.max.apply(null, yRange) + 0.001,
-                        Math.max.apply(null, xRange) + 0.001
-                    ];
-
-                    bounds = leafletBoundsHelpers.createBoundsFromArray([
-                        southWest,
-                        northEast
-                    ]);
-
-                } else {
-
-                    // 
-                    // Add padding to bounds coordinates
-                    // 
-
-                    southWest = [
-                        obj.bounds.coordinates[1] - 0.001,
-                        obj.bounds.coordinates[0] - 0.001
-                    ];
-
-                    northEast = [
-                        obj.bounds.coordinates[1] + 0.001,
-                        obj.bounds.coordinates[0] + 0.001
-                    ];
-
-                    bounds = leafletBoundsHelpers.createBoundsFromArray([
-                        southWest,
-                        northEast
-                    ]);
-
-                }
-
-                return bounds;
-
-            };
-
             self.processCollection = function(arr) {
 
                 arr.forEach(function(feature) {
 
                     if (feature.geometry !== null) {
 
-                        // feature.staticURL = self.buildStaticMapURL(feature.geometry);
-
                         feature.geojson = self.buildFeature(feature.geometry);
 
-                        feature.bounds = self.transformBounds(feature);
+                        feature.bounds = turf.bbox(feature.geometry);
 
                     }
+
+                });
+
+            };
+
+            self.addMapPreviews = function(arr) {
+
+                console.log('self.addMapPreviews --> arr', arr);
+
+                var interactions = [
+                    'scrollZoom',
+                    'boxZoom',
+                    'dragRotate',
+                    'dragPan',
+                    'keyboard',
+                    'doubleClickZoom',
+                    'touchZoomRotate'
+                ];
+
+                arr.forEach(function(feature, index) {
+
+                    console.log(
+                        'self.addMapPreviews --> feature, index',
+                        feature,
+                        index);
+
+                    var localOptions = JSON.parse(JSON.stringify(self.mapOptions));
+
+                    localOptions.style = self.mapStyles[0].url;
+
+                    localOptions.container = 'site-geography-preview-' + index;
+
+                    var previewMap = new mapboxgl.Map(localOptions);
+
+                    previewMap.on('load', function() {
+
+                        interactions.forEach(function(behavior) {
+
+                            previewMap[behavior].disable();
+
+                        });
+
+                        console.log(
+                            'self.addMapPreviews --> ',
+                            'Add feature to map preview.');
+
+                        console.log(
+                            'self.addMapPreviews --> previewMap',
+                            previewMap);
+
+                        console.log(
+                            'self.addMapPreviews --> feature',
+                            feature);
+
+                        self.populateMap(previewMap, feature, null, true);
+
+                    });
+
+                });
+
+            };
+
+            self.addLayers = function(arr) {
+
+                arr.forEach(function(feature) {
+
+                    console.log(
+                        'self.addLayers --> feature',
+                        feature);
+
+                    var spec = feature.layer_spec || {};
+
+                    console.log(
+                        'self.addLayers --> spec',
+                        spec);
+
+                    feature.spec = spec;
+
+                    console.log(
+                        'self.addLayers --> feature.spec',
+                        feature.spec);
+
+                    if (!feature.selected ||
+                        typeof feature.selected === 'undefined') {
+
+                        feature.selected = false;
+
+                    } else {
+
+                        feature.spec.layout.visibility = 'visible';
+
+                    }
+
+                    if (feature.spec.id) {
+
+                        try {
+
+                            self.map.addLayer(feature.spec);
+
+                        } catch (error) {
+
+                            console.log(
+                                'self.addLayers --> error',
+                                error);
+
+                        }
+
+                    }
+
+                });
+
+                return arr;
+
+            };
+
+            self.fetchLayers = function(taskId) {
+
+                LayerService.collection({
+                    program: self.project.program_id
+                }).$promise.then(function(successResponse) {
+
+                    console.log(
+                        'self.fetchLayers --> successResponse',
+                        successResponse);
+
+                    if (successResponse.features.length) {
+
+                        console.log('self.fetchLayers --> Sorting layers.');
+
+                        successResponse.features.sort(function(a, b) {
+
+                            return b.index < a.index;
+
+                        });
+
+                    }
+
+                    self.addLayers(successResponse.features);
+
+                    self.layers = successResponse.features;
+
+                    console.log(
+                        'self.fetchLayers --> self.layers',
+                        self.layers);
+
+                }, function(errorResponse) {
+
+                    console.log(
+                        'self.fetchLayers --> errorResponse',
+                        errorResponse);
 
                 });
 
@@ -664,24 +642,250 @@ angular.module('FieldDoc')
 
             };
 
+            self.populateMap = function(map, feature, attribute, addToMap) {
 
-            self.loadPartnerships = function() {
+                console.log('self.populateMap --> feature', feature);
 
-                Project.partnerships({
-                    id: self.project.id
-                }).$promise.then(function(successResponse) {
+                var geojson = attribute ? feature[attribute] : feature;
 
-                    self.partnerships = successResponse.features;
+                if (geojson !== null &&
+                    typeof geojson !== 'undefined') {
 
-                    console.log("self.partnerships",self.partnerships)
+                    var bounds = turf.bbox(geojson);
 
-                    self.showElements();
+                    map.fitBounds(bounds, {
+                        padding: 40
+                    });
 
-                }, function(errorResponse) {
+                    if (!addToMap) {
 
-                    $log.error('Unable to load project partnerships.');
+                        return;
 
-                    self.showElements();
+                    } else {
+
+                        map.addLayer({
+                            'id': 'feature-' + Date.now(),
+                            'type': 'fill',
+                            'source': {
+                                'type': 'geojson',
+                                'data': geojson
+                            },
+                            'layout': {
+                                'visibility': 'visible'
+                            },
+                            'paint': {
+                                'fill-color': '#06aadf',
+                                'fill-opacity': 0.4
+                            }
+                        });
+
+                        map.addLayer({
+                            'id': 'feature-outline-' + Date.now(),
+                            'type': 'line',
+                            'source': {
+                                'type': 'geojson',
+                                'data': geojson
+                            },
+                            'layout': {
+                                'visibility': 'visible'
+                            },
+                            'paint': {
+                                'line-color': 'rgba(6, 170, 223, 0.8)',
+                                'line-width': 2
+                            }
+                        });
+
+                    }
+
+                    // map.addLayer({
+                    //     'id': 'feature-' + Date.now(),
+                    //     'type': 'fill',
+                    //     'source': {
+                    //         'type': 'geojson',
+                    //         'data': geojson
+                    //     },
+                    //     'layout': {
+                    //         'visibility': 'visible'
+                    //     },
+                    //     'paint': {
+                    //         'fill-color': '#06aadf',
+                    //         'fill-opacity': 0.4
+                    //     }
+                    // });
+
+                    // map.addLayer({
+                    //     'id': 'feature-outline-' + Date.now(),
+                    //     'type': 'line',
+                    //     'source': {
+                    //         'type': 'geojson',
+                    //         'data': geojson
+                    //     },
+                    //     'layout': {
+                    //         'visibility': 'visible'
+                    //     },
+                    //     'paint': {
+                    //         'line-color': 'rgba(6, 170, 223, 0.8)',
+                    //         'line-width': 2
+                    //     }
+                    // });
+
+                }
+
+            };
+
+            self.toggleLayer = function(layer) {
+
+                console.log('self.toggleLayer --> layer', layer);
+
+                var layerId = layer.spec.id;
+
+                var visibility = self.map.getLayoutProperty(layerId, 'visibility');
+
+                if (visibility === 'visible') {
+
+                    self.map.setLayoutProperty(layerId, 'visibility', 'none');
+
+                } else {
+
+                    self.map.setLayoutProperty(layerId, 'visibility', 'visible');
+
+                }
+
+            };
+
+            self.switchMapStyle = function(styleId, index) {
+
+                console.log('self.switchMapStyle --> styleId', styleId);
+
+                console.log('self.switchMapStyle --> index', index);
+
+                var center = self.map.getCenter();
+
+                var zoom = self.map.getZoom();
+
+                if (center.lng && center.lat) {
+
+                    self.mapOptions.center = [center.lng, center.lat];
+
+                }
+
+                if (zoom) {
+
+                    self.mapOptions.zoom = zoom;
+
+                }
+
+                self.mapOptions.style = self.mapStyles[index].url;
+
+                self.map.remove();
+
+                self.createMap(self.mapOptions);
+
+            };
+
+            self.getMapOptions = function() {
+
+                self.mapStyles = mapbox.baseStyles;
+
+                console.log(
+                    'self.createMap --> mapStyles',
+                    self.mapStyles);
+
+                self.activeStyle = 0;
+
+                mapboxgl.accessToken = mapbox.accessToken;
+
+                console.log(
+                    'self.createMap --> accessToken',
+                    mapboxgl.accessToken);
+
+                self.mapOptions = JSON.parse(JSON.stringify(mapbox.defaultOptions));
+
+                self.mapOptions.container = 'primary--map';
+
+                self.mapOptions.style = self.mapStyles[0].url;
+
+                var program = self.project.program;
+
+                if (program &&
+                    program.centroid) {
+
+                    if (program.hasOwnProperty('centroid')) {
+
+                        self.mapOptions.center = program.centroid.coordinates;
+
+                    }
+
+                }
+
+                return self.mapOptions;
+
+            };
+
+            self.createMap = function(options) {
+
+                if (!options) return;
+
+                console.log('self.createMap --> Starting...');
+
+                var tgt = document.querySelector('.map');
+
+                console.log(
+                    'self.createMap --> tgt',
+                    tgt);
+
+                console.log('self.createMap --> options', options);
+
+                self.map = new mapboxgl.Map(options);
+
+                self.map.on('load', function() {
+
+                    var nav = new mapboxgl.NavigationControl();
+
+                    self.map.addControl(nav, 'top-left');
+
+                    var fullScreen = new mapboxgl.FullscreenControl();
+
+                    self.map.addControl(fullScreen, 'top-left');
+
+                    var projectExtent = {
+                        'type': 'Feature',
+                        'geometry': self.project.extent,
+                        'properties': {}
+                    };
+
+                    self.populateMap(self.map, projectExtent, null, false);
+
+                    if (self.layers && self.layers.length) {
+
+                        self.addLayers(self.layers);
+
+                    } else {
+
+                        self.fetchLayers();
+
+                    }
+
+                    if (self.sites && Array.isArray(self.sites)) {
+
+                        var siteCollection = {
+                            'type': 'FeatureCollection',
+                            'features': self.sites
+                        };
+
+                        self.populateMap(self.map, siteCollection, null, true);
+
+                    }
+
+                    // if (!self.sites || !Array.isArray(self.sites)) {
+
+                    //     $timeout(function() {
+
+                    //         self.loadSites();
+
+                    //     }, 1000);
+
+                    // }
 
                 });
 
@@ -707,10 +911,6 @@ angular.module('FieldDoc')
                     };
 
                     self.loadProject();
-
-                    // self.loadMetrics();
-
-                    // self.loadOutcomes();
 
                 });
 

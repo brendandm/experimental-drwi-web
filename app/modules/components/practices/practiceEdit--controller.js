@@ -1,4 +1,4 @@
-'use strict';
+ 'use strict';
 
 /**
  * @ngdoc function
@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('PracticeEditController', function(Account, Image, leafletData, $location,
+    .controller('PracticeEditController', function(Account, Image,$location,
         $log, Media, Practice, PracticeType, practice, $q, $rootScope, $route,
         $scope, $timeout, $interval, site, user, Utility) {
 
@@ -115,7 +115,9 @@ angular.module('FieldDoc')
 
                 PracticeType.collection({
                     program: self.practice.project.program_id,
-                    limit: 500
+                    limit: 500,
+                    simple_bool: 'true',
+                    minimal: 'true'
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.practiceTypes', successResponse);
@@ -175,6 +177,7 @@ angular.module('FieldDoc')
 
             var reservedProperties = [
                 'links',
+                'map_options',
                 'permissions',
                 '$promise',
                 '$resolved'

@@ -44,7 +44,9 @@
                         </a>
                     </h2>
 
-                    <p class="reveal fade-in t0" data-ng-if="group.selectable && ($root.user.properties.is_admin || $root.user.properties.is_manager)" style="font-style: normal; font-size: 1em; color: #616161;">This tag category is <strong>selectable</strong>. If added to one of your grant programs, grantees will be able to select a tag from this group when editing their projects.</p>
+                    <p class="reveal fade-in t0" data-ng-if="group.selectable && !group.internal && ($root.user.properties.is_admin || $root.user.properties.is_manager)" style="font-style: normal; font-size: 1em; color: #616161;">This tag category is <strong>selectable</strong>. If added to one of your grant programs, grantees will be able to select a tag from this group when editing their projects.</p>
+
+                    <p class="reveal fade-in t0" data-ng-if="group.internal && ($root.user.properties.organization_id === group.organization.id)" style="font-style: normal; font-size: 1em; color: #616161;">This tag category is <strong>internal to your organization</strong>. When added to a project, site, or practice, its tags will only be visible to you and other people in your organization.</p>
 
                     <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
@@ -107,6 +109,23 @@
                             <span class="meta-label"><b>Name</b></span>
                             <input type="text" data-ng-model="page.targetGroup.name" class="form-control animate" id="name" name="name" placeholder="Tag category name" />
                         </div>
+
+                        <!-- Internal Status -->
+
+                        <h2 data-ng-if="$root.user.properties.is_admin || $root.user.properties.is_manager">Internal</h2>
+
+                        <p class="reveal fade-in t0" data-ng-if="!page.targetGroup.internal && ($root.user.properties.is_admin || $root.user.properties.is_manager)" style="font-style: normal; font-size: 1em; color: #616161;">Activate this setting to keep use of this category inside your organization.</p>
+
+                        <div class="scope--control" data-ng-if="$root.user.properties.is_admin || $root.user.properties.is_manager">
+                            <span>Off</span>
+                            <label class="switch">
+                                <input class="inputdemo" type="checkbox" data-ng-model="page.targetGroup.internal" data-ng-checked="page.targetGroup.internal">
+                                <div class="slider round"></div>
+                            </label>
+                            <span data-ng-class="{on: page.targetGroup.internal}">On</span>
+                        </div>
+
+                        <p class="reveal fade-in t0" data-ng-if="page.targetGroup.internal && ($root.user.properties.is_admin || $root.user.properties.is_manager)" style="font-style: normal; font-size: 1em; color: #616161;">This tag category is <strong>internal to your organization</strong>. When added to a project, site, or practice, its tags will only be visible to you and other people in your organization.</p>
 
                         <!-- Reserved Status -->
 

@@ -15,7 +15,11 @@
     <!-- Page Title based on either the root site title or the page specific site title -->
     <title>FieldDoc | {{ $root.page.title || '' }}</title>
 
-    <link rel="stylesheet" type="text/css" href='//api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' />
+    <!-- Mapbox -->
+
+    <!--<script src='https://api.mapbox.com/mapbox.js/v3.2.0/mapbox.js'></script> -->
+    <!-- <link href='https://api.mapbox.com/mapbox.js/v3.2.0/mapbox.css' rel='stylesheet' /> -->
+    <!-- <link rel="stylesheet" type="text/css" href='//api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' /> -->
 
     <!-- Material icons -->
 
@@ -24,15 +28,13 @@
     <!-- <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' /> -->
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-    <!-- build:css(.) /styles/vendor.css -->
-    <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="bower_components/leaflet-draw/dist/leaflet.draw.css" />
-    <!-- endbower -->
-    <!-- endbuild -->
+
+    <link rel="stylesheet" href="/styles/mapbox-gl.css" />
+    <link rel="stylesheet" href="/styles/mapbox-gl-draw.css" />
+    <link rel="stylesheet" href="/styles/mapbox-gl-geocoder.css" />
 
     <!-- build:css(.tmp) /styles/main.css -->
-    <link href="/styles/main.css" rel="stylesheet" media="screen" />
+    <link rel="stylesheet" href="/styles/main.css" media="screen" />
     <!-- endbuild -->
 
     <link href="/styles/print.css" rel="stylesheet" media="print" />
@@ -79,8 +81,6 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/leaflet/dist/leaflet-src.js"></script>
-    <script src="bower_components/angular-leaflet-directive/dist/angular-leaflet-directive.js"></script>
     <script src="bower_components/angular-cookie/angular-cookie.js"></script>
     <script src="bower_components/angularjs-geolocation/src/geolocation.js"></script>
     <script src="bower_components/angular-elastic/elastic.js"></script>
@@ -93,13 +93,18 @@
     <script src="bower_components/jspdf/dist/jspdf.min.js"></script>
     <script src="bower_components/html2canvas/build/html2canvas.js"></script>
     <script src="bower_components/angular-save2pdf/angular-save2pdf.js"></script>
-    <script src="bower_components/leaflet-draw/dist/leaflet.draw.js"></script>
     <script src="bower_components/angular-progress-arc/angular-progress-arc.js"></script>
     <script src="bower_components/tinycolor/tinycolor.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) /modules/modules.js -->
+
+        <script src="modules/shared/turf/turf.min.js"></script>
+
+        <script src="modules/shared/mapboxgl/mapbox-gl.js"></script>
+        <script src="modules/shared/mapboxgl/mapbox-gl-draw.js"></script>
+        <script src="modules/shared/mapboxgl/mapbox-gl-geocoder.min.js"></script>
 
         <script src="modules/shared/typeahead/ui-bootstrap-typeahead-tpls-2.5.0.min.js"></script>
 
@@ -171,7 +176,6 @@
             <script src="modules/components/sites/sitePhoto--controller.js"></script>
             <script src="modules/components/sites/siteGeography--controller.js"></script>
             <script src="modules/components/sites/siteTag--controller.js"></script>
-            <script src="modules/components/sites/siteTarget--controller.js"></script>
 
             <!-- Practices Module -->
             <script src="modules/components/practices/practice--routes.js"></script>
@@ -215,6 +219,13 @@
             <script src="modules/components/geographies/geographyLocation--controller.js"></script>
             <script src="modules/components/geographies/geographyTarget--controller.js"></script>
 
+            <!-- Layer Module -->
+            <script src="modules/components/layers/layer--routes.js"></script>
+            <script src="modules/components/layers/layerCreate--controller.js"></script>
+            <script src="modules/components/layers/layerEdit--controller.js"></script>
+            <script src="modules/components/layers/layerSummary--controller.js"></script>
+            <script src="modules/components/layers/layerList--controller.js"></script>
+
             <!-- Program Module -->
             <script src="modules/components/programs/program--routes.js"></script>
             <script src="modules/components/programs/programEdit--controller.js"></script>
@@ -249,20 +260,11 @@
             <script src="modules/components/model/model--routes.js"></script>
             <script src="modules/components/model/modelSummary--controller.js"></script>
 
-            <!-- CommonsCloud Module -->
-            <script src="modules/shared/commons-cloud/configuration--constant.js"></script>
-            <script src="modules/shared/commons-cloud/geometry--service.js"></script>
-            <script src="modules/shared/commons-cloud/map--service.js"></script>
-
             <!-- Mapbox Module -->
             <script src="modules/shared/mapbox/mapbox--module.js"></script>
-            <script src="modules/shared/mapbox/geocoding--directive.js"></script>
-            <script src="modules/shared/mapbox/geocoding--service.js"></script>
-            <script src="modules/shared/mapbox/geometry--service.js"></script>
             <script src="modules/shared/mapbox/mapbox--constant.js"></script>
             <script src="modules/shared/mapbox/states--constant.js"></script>
             <script src="modules/shared/mapbox/template--service.js"></script>
-            <script src="modules/shared/mapbox/mapPreview--service.js"></script>
 
             <!-- Viable Modules -->
             <script src="modules/shared/mapboxgl/mapboxgl--module.js"></script>
@@ -290,6 +292,7 @@
             <script src="modules/shared/api/file--service.js"></script>
             <script src="modules/shared/api/filter--service.js"></script>
             <script src="modules/shared/api/geography--service.js"></script>
+            <script src="modules/shared/api/layer--service.js"></script>
             <script src="modules/shared/api/image--service.js"></script>
             <script src="modules/shared/api/media--service.js"></script>
             <script src="modules/shared/api/shapefile--service.js"></script>
@@ -340,6 +343,8 @@
             <script src="modules/shared/directives/organization/organization.js"></script>
 
             <script src="modules/shared/directives/search/search--directive.js"></script>
+
+            <script src="modules/shared/directives/viewFeatures--directive.js"></script>
 
             <script src="modules/shared/directives/viewFrame--directive.js"></script>
 

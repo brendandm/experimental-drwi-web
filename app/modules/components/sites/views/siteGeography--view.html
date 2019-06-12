@@ -26,18 +26,22 @@
 
         <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
 
-            <section style="padding: 0;" data-ng-if="!page.status.loading && page.nodes.geographies.length">
+            <section style="padding: 0;" data-ng-if="!page.status.loading && page.nodeCollection.geographies.length">
 
                 <h2>Target Areas</h2>
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="geography in page.nodes.geographies | orderBy: 'name'">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="geography in page.nodeCollection.geographies">
 
                         <div class="card--content">
 
                             <div style="position:relative;">
-                                <leaflet id="geography-preview-{{ geography.id }}" style="width: 100%; height: 200px;" defaults="page.map.defaults" layers="page.map.layers" bounds="geography.bounds" geojson="geography.geojson"></leaflet>
+
+                                <div id="geographies-preview-{{ $index }}" style="width: 100%; height: 200px;"></div>
+
+                                <!-- <leaflet id="geography-preview-{{ geography.id }}" style="width: 100%; height: 200px;" defaults="page.map.defaults" layers="page.map.layers" bounds="geography.bounds" geojson="geography.geojson"></leaflet> -->
+
                             </div>
 
                             <div class="name" style="background: #fff;">
@@ -86,18 +90,22 @@
 
             </section>
 
-            <section style="padding: 0;" data-ng-if="!page.status.loading && page.nodes.watersheds.length">
+            <section style="padding: 0;" data-ng-if="!page.status.loading && page.nodeCollection.watersheds.length">
 
                 <h2>Watersheds</h2>
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="geography in page.nodes.watersheds | orderBy: 'classification'">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="geography in page.nodeCollection.watersheds">
 
                         <div class="card--content">
 
                             <div style="position:relative;">
-                                <leaflet id="watershed-preview-{{ geography.id }}" style="width: 100%; height: 200px;" defaults="page.map.defaults" layers="page.map.layers" bounds="geography.bounds" geojson="geography.geojson"></leaflet>
+
+                                <div id="watersheds-preview-{{ $index }}" style="width: 100%; height: 200px;"></div>
+
+                                <!-- <leaflet id="watershed-preview-{{ geography.id }}" style="width: 100%; height: 200px;" defaults="page.map.defaults" layers="page.map.layers" bounds="geography.bounds" geojson="geography.geojson"></leaflet> -->
+
                             </div>
 
                             <div class="name" style="background: #fff;">
@@ -113,18 +121,22 @@
 
             </section>
 
-            <section style="padding: 0;" data-ng-if="!page.status.loading && page.nodes.counties.length">
+            <section style="padding: 0;" data-ng-if="!page.status.loading && page.nodeCollection.counties.length">
 
                 <h2>Counties</h2>
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="geography in page.nodes.counties | orderBy: 'name'">
+                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="geography in page.nodeCollection.counties">
 
                         <div class="card--content">
 
                             <div style="position:relative;">
-                                <leaflet id="county-preview-{{ geography.id }}" style="width: 100%; height: 200px;" defaults="page.map.defaults" layers="page.map.layers" bounds="geography.bounds" geojson="geography.geojson"></leaflet>
+
+                                <div id="counties-preview-{{ $index }}" style="width: 100%; height: 200px;"></div>
+
+                                <!-- <leaflet id="county-preview-{{ geography.id }}" style="width: 100%; height: 200px;" defaults="page.map.defaults" layers="page.map.layers" bounds="geography.bounds" geojson="geography.geojson"></leaflet> -->
+
                             </div>
 
                             <div class="name" style="background: #fff;">
@@ -180,13 +192,13 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
+            <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
                 <a href="/sites/{{ page.site.id }}/targets">
                     <i class="material-icons">
                         multiline_chart
                     </i>
                 </a>
-            </li>
+            </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
                 <a href="/sites/{{ page.site.id }}/tags">
                     <i class="material-icons">

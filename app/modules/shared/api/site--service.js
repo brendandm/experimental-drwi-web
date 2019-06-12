@@ -15,6 +15,11 @@
                 'query': {
                     isArray: false
                 },
+                getSingle: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/site/:id')
+                },
                 'summary': {
                     isArray: false,
                     method: 'GET',
@@ -57,6 +62,11 @@
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/site/:id/progress')
+                },
+                publicFeature: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/site/:id/public')
                 },
                 tags: {
                     method: 'GET',

@@ -31,7 +31,7 @@ angular.module('FieldDoc')
                     },
                     geographies: function(Program, $route, $rootScope, $location) {
 
-                        $location.search({});
+                        // $location.search({});
 
                         return [];
 
