@@ -148,6 +148,8 @@ angular.module('FieldDoc')
 
                         self.loadArea();
 
+                        self.loadPartnerships();
+
                     }
 
                     self.tags = Utility.processTags(self.project.tags);
@@ -890,6 +892,30 @@ angular.module('FieldDoc')
                 });
 
             };
+
+
+            self.loadPartnerships = function() {
+
+                Project.partnerships({
+                    id: self.project.id
+                }).$promise.then(function(successResponse) {
+
+                    self.partnerships = successResponse.features;
+
+                    console.log("self.partnerships",self.partnerships)
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    $log.error('Unable to load project partnerships.');
+
+                    self.showElements();
+
+                });
+
+            };
+
 
             //
             // Verify Account information for proper UI element display
