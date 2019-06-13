@@ -24,6 +24,18 @@
                 <div>
                     <div class="form-element" style="">
                         <span class="meta-label" style="border:0px solid red; margin-top:-10px;"><b>Profile Image</b></span>
+                        <input style="" type="file" class="form-control" id="profile-image" name="profile-image" file-model="page.image" />
+                        <p style="float:left; color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;" ng-if="!page.user.properties.picture">
+                        Choose a photo.
+                        </p>
+                        <p style="float:left; color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;" ng-if="page.user.properties.picture">
+                        Choose a new photo to replace the one below.
+                        </p>
+                    </div>
+
+
+             <!--       <div class="form-element" style="border: 1px solid red;">
+                        <span class="meta-label" style="border:0px solid red; margin-top:-10px;"><b>f Profile Image</b></span>
                         <input class="flow2--profile-edit-image-text" file-model="page.image" />
                         <p style="float:left; color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;" ng-if="!page.user.properties.picture">
                         Choose a photo.
@@ -32,7 +44,7 @@
                         Choose a new photo to replace the one below.
                         </p>
                     </div>
-
+            -->
                     <div style="border:0px solid blue;">
                         <div class="form-element" style="margin-left:auto; margin-right:auto; margin-top:0em; width:70%; border: 0px solid red; margin-bottom:0px; padding-bottom:0.5em;" ng-if="page.user.properties.picture">
                              <img class='user--avatar' style="width:100%; height:auto;" src="{{page.user.properties.picture}}">
