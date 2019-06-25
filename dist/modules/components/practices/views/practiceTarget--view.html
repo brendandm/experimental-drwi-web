@@ -64,6 +64,18 @@
                         </i>
                     </button>
                 </li>
+                <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;">
+                    <button type="button" class="add-item" data-ng-click="page.removeAll()" data-ng-disabled="page.status.processing">
+                        <i class="material-icons">
+                            delete_sweep
+                        </i>
+                    </button>
+                    <button type="button" class="add-item" style="margin-left: 1em;" data-ng-click="page.saveTargets()" data-ng-disabled="page.status.processing">
+                        <i class="material-icons">
+                            done
+                        </i>
+                    </button>
+                </li>
             </ul>
 
 <!--            <ul class="target-lst">-->
