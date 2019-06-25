@@ -205,6 +205,7 @@ angular.module('FieldDoc')
                     'geometry',
                     'last_modified_by',
                     'organization',
+                    'program',
                     'tags',
                     'tasks'
                 ];

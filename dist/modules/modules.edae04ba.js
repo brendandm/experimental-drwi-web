@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1561472945705})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1561482162035})
 
 ;
 /**
@@ -7542,6 +7542,7 @@ angular.module('FieldDoc')
                     'geometry',
                     'last_modified_by',
                     'organization',
+                    'program',
                     'tags',
                     'tasks'
                 ];
@@ -9517,6 +9518,7 @@ angular.module('FieldDoc')
                     'geometry',
                     'last_modified_by',
                     'organization',
+                    'program',
                     'tags',
                     'tasks'
                 ];
