@@ -64,7 +64,8 @@ angular.module('FieldDoc')
                 //
                 Practice.targetMatrix({
                     id: $route.current.params.practiceId,
-                    simple_bool: 'true'
+                    simple_bool: 'true',
+                    program: self.practice.project.program_id
                 }).$promise.then(function(successResponse) {
 
                     self.targets = successResponse;
@@ -201,6 +202,8 @@ angular.module('FieldDoc')
 
                     self.permissions.can_edit = successResponse.permissions.write;
                     self.permissions.can_delete = successResponse.permissions.write;
+
+                    self.loadMatrix();
 
                 }).catch(function(errorResponse) {
 
@@ -389,11 +392,15 @@ angular.module('FieldDoc')
             self.scrubFeature = function(feature) {
 
                 var excludedKeys = [
+                    'category',
                     'creator',
                     'extent',
                     'geometry',
                     'last_modified_by',
+                    'members',
                     'organization',
+                    'project',
+                    'site',
                     'tags',
                     'tasks'
                 ];
@@ -615,7 +622,7 @@ angular.module('FieldDoc')
 
                     self.loadPractice();
 
-                    self.loadMatrix();
+//                    self.loadMatrix();
 
                     // self.loadModels();
 

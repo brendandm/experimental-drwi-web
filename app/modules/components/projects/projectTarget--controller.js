@@ -64,7 +64,8 @@ angular.module('FieldDoc')
                 //
                 Project.targetMatrix({
                     id: $route.current.params.projectId,
-                    simple_bool: 'true'
+                    simple_bool: 'true',
+                    program: self.project.program_id
                 }).$promise.then(function(successResponse) {
 
                     self.targets = successResponse;
@@ -114,6 +115,8 @@ angular.module('FieldDoc')
 
                     self.permissions.can_edit = successResponse.permissions.write;
                     self.permissions.can_delete = successResponse.permissions.write;
+
+                    self.loadMatrix();
 
                 }).catch(function(errorResponse) {
 
@@ -527,7 +530,7 @@ angular.module('FieldDoc')
 
                     self.loadProject();
 
-                    self.loadMatrix();
+//                    self.loadMatrix();
 
                     //
                     // Setup page meta data

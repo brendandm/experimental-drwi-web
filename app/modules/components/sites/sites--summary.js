@@ -536,24 +536,13 @@
                 self.fetchLayers = function(taskId) {
 
                     LayerService.collection({
-                        program: self.site.project.program_id
+                        program: self.site.project.program_id,
+                        sort: 'index'
                     }).$promise.then(function(successResponse) {
 
                         console.log(
                             'self.fetchLayers --> successResponse',
                             successResponse);
-
-                        if (successResponse.features.length) {
-
-                            console.log('self.fetchLayers --> Sorting layers.');
-
-                            successResponse.features.sort(function(a, b) {
-
-                                return b.index < a.index;
-
-                            });
-
-                        }
 
                         self.addLayers(successResponse.features);
 

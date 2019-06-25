@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1559580736717})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1561472945705})
 
 ;
 /**
@@ -6812,24 +6812,13 @@ angular.module('FieldDoc')
             self.fetchLayers = function(taskId) {
 
                 LayerService.collection({
-                    program: self.project.program_id
+                    program: self.project.program_id,
+                    sort: 'index'
                 }).$promise.then(function(successResponse) {
 
                     console.log(
                         'self.fetchLayers --> successResponse',
                         successResponse);
-
-                    if (successResponse.features.length) {
-
-                        console.log('self.fetchLayers --> Sorting layers.');
-
-                        successResponse.features.sort(function(a, b) {
-
-                            return b.index < a.index;
-
-                        });
-
-                    }
 
                     self.addLayers(successResponse.features);
 
@@ -7839,7 +7828,8 @@ angular.module('FieldDoc')
                 //
                 Project.targetMatrix({
                     id: $route.current.params.projectId,
-                    simple_bool: 'true'
+                    simple_bool: 'true',
+                    program: self.project.program_id
                 }).$promise.then(function(successResponse) {
 
                     self.targets = successResponse;
@@ -7889,6 +7879,8 @@ angular.module('FieldDoc')
 
                     self.permissions.can_edit = successResponse.permissions.write;
                     self.permissions.can_delete = successResponse.permissions.write;
+
+                    self.loadMatrix();
 
                 }).catch(function(errorResponse) {
 
@@ -8302,7 +8294,7 @@ angular.module('FieldDoc')
 
                     self.loadProject();
 
-                    self.loadMatrix();
+//                    self.loadMatrix();
 
                     //
                     // Setup page meta data
@@ -8477,6 +8469,7 @@ angular.module('FieldDoc')
                         'geometry',
                         'last_modified_by',
                         'organization',
+                        'program',
                         'tags',
                         'tasks'
                     ];
@@ -11705,24 +11698,13 @@ angular.module('FieldDoc')
                 self.fetchLayers = function(taskId) {
 
                     LayerService.collection({
-                        program: self.site.project.program_id
+                        program: self.site.project.program_id,
+                        sort: 'index'
                     }).$promise.then(function(successResponse) {
 
                         console.log(
                             'self.fetchLayers --> successResponse',
                             successResponse);
-
-                        if (successResponse.features.length) {
-
-                            console.log('self.fetchLayers --> Sorting layers.');
-
-                            successResponse.features.sort(function(a, b) {
-
-                                return b.index < a.index;
-
-                            });
-
-                        }
 
                         self.addLayers(successResponse.features);
 
@@ -15982,24 +15964,13 @@ angular.module('FieldDoc')
                 self.fetchLayers = function(taskId) {
 
                     LayerService.collection({
-                        program: self.practice.project.program_id
+                        program: self.practice.project.program_id,
+                        sort: 'index'
                     }).$promise.then(function(successResponse) {
 
                         console.log(
                             'self.fetchLayers --> successResponse',
                             successResponse);
-
-                        if (successResponse.features.length) {
-
-                            console.log('self.fetchLayers --> Sorting layers.');
-
-                            successResponse.features.sort(function(a, b) {
-
-                                return b.index < a.index;
-
-                            });
-
-                        }
 
                         self.addLayers(successResponse.features);
 
@@ -19306,7 +19277,8 @@ angular.module('FieldDoc')
                 //
                 Practice.targetMatrix({
                     id: $route.current.params.practiceId,
-                    simple_bool: 'true'
+                    simple_bool: 'true',
+                    program: self.practice.project.program_id
                 }).$promise.then(function(successResponse) {
 
                     self.targets = successResponse;
@@ -19443,6 +19415,8 @@ angular.module('FieldDoc')
 
                     self.permissions.can_edit = successResponse.permissions.write;
                     self.permissions.can_delete = successResponse.permissions.write;
+
+                    self.loadMatrix();
 
                 }).catch(function(errorResponse) {
 
@@ -19631,11 +19605,15 @@ angular.module('FieldDoc')
             self.scrubFeature = function(feature) {
 
                 var excludedKeys = [
+                    'category',
                     'creator',
                     'extent',
                     'geometry',
                     'last_modified_by',
+                    'members',
                     'organization',
+                    'project',
+                    'site',
                     'tags',
                     'tasks'
                 ];
@@ -19857,7 +19835,7 @@ angular.module('FieldDoc')
 
                     self.loadPractice();
 
-                    self.loadMatrix();
+//                    self.loadMatrix();
 
                     // self.loadModels();
 
@@ -28135,12 +28113,6 @@ angular.module('FieldDoc')
 
                             self.createMap(self.mapOptions);
 
-                            // if (self.sites && self.sites.length) {
-
-                            //     self.addMapPreviews(self.sites);
-
-                            // }
-
                         }, 500);
 
                     }, 1000);
@@ -28484,24 +28456,13 @@ angular.module('FieldDoc')
                 self.fetchLayers = function(taskId) {
 
                     LayerService.collection({
-                        program: self.program.id
+                        program: self.program.id,
+                        sort: 'index'
                     }).$promise.then(function(successResponse) {
 
                         console.log(
                             'self.fetchLayers --> successResponse',
                             successResponse);
-
-                        if (successResponse.features.length) {
-
-                            console.log('self.fetchLayers --> Sorting layers.');
-
-                            successResponse.features.sort(function(a, b) {
-
-                                return b.index < a.index;
-
-                            });
-
-                        }
 
                         self.addLayers(successResponse.features);
 
