@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1562776945414})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1562781953874})
 
 ;
 /**
@@ -6724,7 +6724,7 @@ angular.module('FieldDoc')
 
                     localOptions.style = self.mapStyles[0].url;
 
-                    localOptions.container = 'site-geography-preview-' + index;
+                    localOptions.container = 'site-geography-preview-' + feature.properties.id;
 
                     var previewMap = new mapboxgl.Map(localOptions);
 
@@ -11620,11 +11620,16 @@ angular.module('FieldDoc')
 
                     arr.forEach(function(feature, index) {
 
+                        console.log(
+                            'self.addMapPreviews --> feature, index',
+                            feature,
+                            index);
+
                         var localOptions = JSON.parse(JSON.stringify(self.mapOptions));
 
                         localOptions.style = self.mapStyles[0].url;
 
-                        localOptions.container = 'practice-geography-preview-' + index;
+                        localOptions.container = 'practice-geography-preview-' + feature.properties.id;
 
                         var previewMap = new mapboxgl.Map(localOptions);
 

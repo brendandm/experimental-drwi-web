@@ -278,13 +278,13 @@
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="practice in page.practices | orderBy: '-properties.created_on' track by $index">
+                    <li class="card" data-ng-repeat="practice in page.practices track by $index">
 
                         <div class="card--content">
 
                             <div style="position:relative;">
 
-                                <div id="practice-geography-preview-{{ $index }}" style="width: 100%; height: 200px;"></div>
+                                <div id="practice-geography-preview-{{ practice.properties.id }}" style="width: 100%; height: 200px;"></div>
 
                                 <!-- <leaflet id="practice-geography-preview-{{ $index }}" style="width: 100%; height: 200px;" defaults="page.previewMap.defaults" layers="page.previewMap.layers" bounds="practice.bounds" geojson="practice.geojson"></leaflet> -->
 

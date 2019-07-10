@@ -477,7 +477,7 @@ angular.module('FieldDoc')
 
                     localOptions.style = self.mapStyles[0].url;
 
-                    localOptions.container = 'site-geography-preview-' + index;
+                    localOptions.container = 'site-geography-preview-' + feature.properties.id;
 
                     var previewMap = new mapboxgl.Map(localOptions);
 

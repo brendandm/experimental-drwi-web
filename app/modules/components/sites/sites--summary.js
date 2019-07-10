@@ -456,11 +456,16 @@
 
                     arr.forEach(function(feature, index) {
 
+                        console.log(
+                            'self.addMapPreviews --> feature, index',
+                            feature,
+                            index);
+
                         var localOptions = JSON.parse(JSON.stringify(self.mapOptions));
 
                         localOptions.style = self.mapStyles[0].url;
 
-                        localOptions.container = 'practice-geography-preview-' + index;
+                        localOptions.container = 'practice-geography-preview-' + feature.properties.id;
 
                         var previewMap = new mapboxgl.Map(localOptions);
 
