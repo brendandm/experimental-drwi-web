@@ -467,47 +467,123 @@
 
                         var bounds = turf.bbox(feature[attribute]);
 
+                        console.log(
+                            'self.populateMap --> bounds',
+                            bounds);
+
                         map.fitBounds(bounds, {
                             padding: 40
                         });
 
-                        map.addLayer({
-                            'id': 'practice',
-                            'type': 'fill',
-                            'source': {
-                                'type': 'geojson',
-                                'data': {
-                                    'type': 'Feature',
-                                    'geometry': feature[attribute]
-                                }
-                            },
-                            'layout': {
-                                'visibility': 'visible'
-                            },
-                            'paint': {
-                                'fill-color': '#06aadf',
-                                'fill-opacity': 0.4
-                            }
-                        });
+                        var geometry = feature[attribute];
 
-                        map.addLayer({
-                            'id': 'practice-outline',
-                            'type': 'line',
-                            'source': {
-                                'type': 'geojson',
-                                'data': {
-                                    'type': 'Feature',
-                                    'geometry': feature[attribute]
+                        if (geometry.type === 'Point') {
+
+                            var buffer = turf.buffer(
+                                geometry,
+                                0.5,
+                                {
+                                    units: 'kilometers'
+                                });
+
+                            bounds = turf.bbox(buffer);
+
+                            map.fitBounds(bounds, {
+                                padding: 40
+                            });
+
+                            map.addLayer({
+                                'id': 'practice',
+                                'type': 'circle',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': {
+                                        'type': 'Feature',
+                                        'geometry': feature[attribute]
+                                    }
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'circle-radius': 8,
+                                    'circle-color': '#06aadf',
+                                    'circle-stroke-color': 'rgba(6, 170, 223, 0.5)',
+                                    'circle-stroke-opacity': 1,
+                                    'circle-stroke-width': 4
                                 }
-                            },
-                            'layout': {
-                                'visibility': 'visible'
-                            },
-                            'paint': {
-                                'line-color': 'rgba(6, 170, 223, 0.8)',
-                                'line-width': 2
-                            }
-                        });
+//                                'paint': {
+//                                    'circle-radius': 8,
+//                                    'circle-color': '#fbb03b',
+//                                    'circle-stroke-color': 'rgba(251, 176, 59, 0.8)',
+//                                    'circle-stroke-opacity': 1,
+//                                    'circle-stroke-width': 4
+//                                }
+                            });
+
+//                            map.addLayer({
+//                                'id': 'practice',
+//                                'type': 'symbol',
+//                                'source': {
+//                                    'type': 'geojson',
+//                                    'data': {
+//                                        'type': 'Feature',
+//                                        'geometry': feature[attribute]
+//                                    }
+//                                },
+//                                'layout': {
+//                                    'visibility': 'visible',
+//                                    'icon-image': 'marker-15',
+//                                    'icon-size': 2
+//                                },
+//                                'paint': {
+//                                    'icon-color': '#fbb03b',
+//                                    'icon-halo-color': 'rgba(251, 176, 59, 0.8)',
+//                                    'icon-halo-width': 2
+//                                }
+//                            });
+
+                        } else {
+
+                            map.addLayer({
+                                'id': 'practice',
+                                'type': 'fill',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': {
+                                        'type': 'Feature',
+                                        'geometry': feature[attribute]
+                                    }
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'fill-color': '#06aadf',
+                                    'fill-opacity': 0.4
+                                }
+                            });
+
+                            map.addLayer({
+                                'id': 'practice-outline',
+                                'type': 'line',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': {
+                                        'type': 'Feature',
+                                        'geometry': feature[attribute]
+                                    }
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'line-color': 'rgba(6, 170, 223, 0.8)',
+                                    'line-width': 2
+                                }
+                            });
+
+                        }
 
                     }
 
