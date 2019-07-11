@@ -582,43 +582,107 @@
                             padding: 40
                         });
 
-                        map.addLayer({
-                            'id': 'site',
-                            'type': 'fill',
-                            'source': {
-                                'type': 'geojson',
-                                'data': {
-                                    'type': 'Feature',
-                                    'geometry': feature[attribute]
-                                }
-                            },
-                            'layout': {
-                                'visibility': 'visible'
-                            },
-                            'paint': {
-                                'fill-color': '#06aadf',
-                                'fill-opacity': 0.4
-                            }
-                        });
+                        var geometry = feature[attribute];
 
-                        map.addLayer({
-                            'id': 'site-outline',
-                            'type': 'line',
-                            'source': {
-                                'type': 'geojson',
-                                'data': {
-                                    'type': 'Feature',
-                                    'geometry': feature[attribute]
+                        if (geometry.type === 'Point') {
+
+                            var buffer = turf.buffer(
+                                geometry,
+                                0.5,
+                                {
+                                    units: 'kilometers'
+                                });
+
+                            bounds = turf.bbox(buffer);
+
+                            map.fitBounds(bounds, {
+                                padding: 40
+                            });
+
+                            map.addLayer({
+                                'id': 'site',
+                                'type': 'circle',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': {
+                                        'type': 'Feature',
+                                        'geometry': geometry
+                                    }
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'circle-radius': 8,
+                                    'circle-color': '#06aadf',
+                                    'circle-stroke-color': 'rgba(6, 170, 223, 0.5)',
+                                    'circle-stroke-opacity': 1,
+                                    'circle-stroke-width': 4
                                 }
-                            },
-                            'layout': {
-                                'visibility': 'visible'
-                            },
-                            'paint': {
-                                'line-color': 'rgba(6, 170, 223, 0.8)',
-                                'line-width': 2
-                            }
-                        });
+                            });
+
+                        } else if (geometry.type.indexOf('Line') >= 0) {
+
+                            map.addLayer({
+                                'id': 'site-line',
+                                'type': 'line',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': {
+                                        'type': 'Feature',
+                                        'geometry': geometry
+                                    }
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'line-color': 'rgba(6, 170, 223, 0.8)',
+                                    'line-width': 2
+                                }
+                            });
+
+                        } else {
+
+                            map.addLayer({
+                                'id': 'site',
+                                'type': 'fill',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': {
+                                        'type': 'Feature',
+                                        'geometry': geometry
+                                    }
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'fill-color': '#06aadf',
+                                    'fill-opacity': 0.4
+                                }
+                            });
+
+                            map.addLayer({
+                                'id': 'site-outline',
+                                'type': 'line',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': {
+                                        'type': 'Feature',
+                                        'geometry': geometry
+                                    }
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'line-color': 'rgba(6, 170, 223, 0.8)',
+                                    'line-width': 2
+                                }
+                            });
+
+                        }
 
                     } else {
 

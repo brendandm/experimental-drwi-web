@@ -501,7 +501,7 @@ angular.module('FieldDoc')
                             'self.addMapPreviews --> feature',
                             feature);
 
-                        self.populateMap(previewMap, feature, null, true);
+                        self.populateMap(previewMap, feature, 'geometry', true);
 
                     });
 
@@ -631,20 +631,33 @@ angular.module('FieldDoc')
 
             };
 
-            self.populateMap = function(map, feature, attribute, addToMap) {
+            self.populateMap = function(map, feature, attribute, addToMap, fitBounds) {
+
+                if (fitBounds === null ||
+                    typeof fitBounds === 'undefined') {
+
+                   fitBounds = true;
+
+                }
 
                 console.log('self.populateMap --> feature', feature);
 
                 var geojson = attribute ? feature[attribute] : feature;
+
+                console.log('self.populateMap --> geojson', geojson);
 
                 if (geojson !== null &&
                     typeof geojson !== 'undefined') {
 
                     var bounds = turf.bbox(geojson);
 
-                    map.fitBounds(bounds, {
-                        padding: 40
-                    });
+                    if (fitBounds) {
+
+                        map.fitBounds(bounds, {
+                            padding: 40
+                        });
+
+                    }
 
                     if (!addToMap) {
 
@@ -652,71 +665,111 @@ angular.module('FieldDoc')
 
                     } else {
 
-                        map.addLayer({
-                            'id': 'feature-' + Date.now(),
-                            'type': 'fill',
-                            'source': {
-                                'type': 'geojson',
-                                'data': geojson
-                            },
-                            'layout': {
-                                'visibility': 'visible'
-                            },
-                            'paint': {
-                                'fill-color': '#06aadf',
-                                'fill-opacity': 0.4
-                            }
-                        });
+                        var geometryType = geojson.geometry ? geojson.geometry.type : geojson.type;
 
-                        map.addLayer({
-                            'id': 'feature-outline-' + Date.now(),
-                            'type': 'line',
-                            'source': {
-                                'type': 'geojson',
-                                'data': geojson
-                            },
-                            'layout': {
-                                'visibility': 'visible'
-                            },
-                            'paint': {
-                                'line-color': 'rgba(6, 170, 223, 0.8)',
-                                'line-width': 2
+                        console.log(
+                            'self.populateMap --> geometryType',
+                            geometryType);
+
+                        if (geometryType === 'Point') {
+
+                            var buffer = turf.buffer(
+                                geojson,
+                                0.5,
+                                {
+                                    units: 'kilometers'
+                                });
+
+                            bounds = turf.bbox(buffer);
+
+                            if (fitBounds) {
+
+                                map.fitBounds(bounds, {
+                                    padding: 40
+                                });
+
                             }
-                        });
+
+                            map.addLayer({
+                                'id': 'feature-circle-' + Date.now(),
+                                'type': 'circle',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': {
+                                        'type': 'Feature',
+                                        'geometry': geojson
+                                    }
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'circle-radius': 8,
+                                    'circle-color': '#06aadf',
+                                    'circle-stroke-color': 'rgba(6, 170, 223, 0.5)',
+                                    'circle-stroke-opacity': 1,
+                                    'circle-stroke-width': 4
+                                }
+                            });
+
+                        } else if (geometryType.indexOf('Line') >= 0) {
+
+                            map.addLayer({
+                                'id': 'feature-line-' + Date.now(),
+                                'type': 'line',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': {
+                                        'type': 'Feature',
+                                        'geometry': geojson
+                                    }
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'line-color': 'rgba(6, 170, 223, 0.8)',
+                                    'line-width': 2
+                                }
+                            });
+
+                        } else {
+
+                            map.addLayer({
+                                'id': 'feature-' + Date.now(),
+                                'type': 'fill',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': geojson
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'fill-color': '#06aadf',
+                                    'fill-opacity': 0.4
+                                }
+                            });
+
+                            map.addLayer({
+                                'id': 'feature-outline-' + Date.now(),
+                                'type': 'line',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': geojson
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'line-color': 'rgba(6, 170, 223, 0.8)',
+                                    'line-width': 2
+                                }
+                            });
+
+                        }
 
                     }
-
-                    // map.addLayer({
-                    //     'id': 'feature-' + Date.now(),
-                    //     'type': 'fill',
-                    //     'source': {
-                    //         'type': 'geojson',
-                    //         'data': geojson
-                    //     },
-                    //     'layout': {
-                    //         'visibility': 'visible'
-                    //     },
-                    //     'paint': {
-                    //         'fill-color': '#06aadf',
-                    //         'fill-opacity': 0.4
-                    //     }
-                    // });
-
-                    // map.addLayer({
-                    //     'id': 'feature-outline-' + Date.now(),
-                    //     'type': 'line',
-                    //     'source': {
-                    //         'type': 'geojson',
-                    //         'data': geojson
-                    //     },
-                    //     'layout': {
-                    //         'visibility': 'visible'
-                    //     },
-                    //     'paint': {
-                    //         'line-color': 'rgba(6, 170, 223, 0.8)',
-                    //         'line-width': 2
-                    //     }
-                    // });
 
                 }
 
@@ -843,7 +896,11 @@ angular.module('FieldDoc')
                         'properties': {}
                     };
 
-                    self.populateMap(self.map, projectExtent, null, false);
+                    self.populateMap(
+                        self.map,
+                        self.project.extent,
+                        null,
+                        false);
 
                     if (self.layers && self.layers.length) {
 
@@ -862,7 +919,18 @@ angular.module('FieldDoc')
                             'features': self.sites
                         };
 
-                        self.populateMap(self.map, siteCollection, null, true);
+                        self.sites.forEach(function(feature) {
+
+                            self.populateMap(
+                                self.map,
+                                feature,
+                                'geometry',
+                                true,
+                                false);
+
+                        });
+
+//                        self.populateMap(self.map, siteCollection, null, true);
 
                     }
 

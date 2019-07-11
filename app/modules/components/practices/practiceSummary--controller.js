@@ -499,7 +499,7 @@
                                     'type': 'geojson',
                                     'data': {
                                         'type': 'Feature',
-                                        'geometry': feature[attribute]
+                                        'geometry': geometry
                                     }
                                 },
                                 'layout': {
@@ -512,36 +512,28 @@
                                     'circle-stroke-opacity': 1,
                                     'circle-stroke-width': 4
                                 }
-//                                'paint': {
-//                                    'circle-radius': 8,
-//                                    'circle-color': '#fbb03b',
-//                                    'circle-stroke-color': 'rgba(251, 176, 59, 0.8)',
-//                                    'circle-stroke-opacity': 1,
-//                                    'circle-stroke-width': 4
-//                                }
                             });
 
-//                            map.addLayer({
-//                                'id': 'practice',
-//                                'type': 'symbol',
-//                                'source': {
-//                                    'type': 'geojson',
-//                                    'data': {
-//                                        'type': 'Feature',
-//                                        'geometry': feature[attribute]
-//                                    }
-//                                },
-//                                'layout': {
-//                                    'visibility': 'visible',
-//                                    'icon-image': 'marker-15',
-//                                    'icon-size': 2
-//                                },
-//                                'paint': {
-//                                    'icon-color': '#fbb03b',
-//                                    'icon-halo-color': 'rgba(251, 176, 59, 0.8)',
-//                                    'icon-halo-width': 2
-//                                }
-//                            });
+                        } else if (geometry.type.indexOf('Line') >= 0) {
+
+                            map.addLayer({
+                                'id': 'practice-line',
+                                'type': 'line',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': {
+                                        'type': 'Feature',
+                                        'geometry': geometry
+                                    }
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'line-color': 'rgba(6, 170, 223, 0.8)',
+                                    'line-width': 2
+                                }
+                            });
 
                         } else {
 
@@ -552,7 +544,7 @@
                                     'type': 'geojson',
                                     'data': {
                                         'type': 'Feature',
-                                        'geometry': feature[attribute]
+                                        'geometry': geometry
                                     }
                                 },
                                 'layout': {
@@ -571,7 +563,7 @@
                                     'type': 'geojson',
                                     'data': {
                                         'type': 'Feature',
-                                        'geometry': feature[attribute]
+                                        'geometry': geometry
                                     }
                                 },
                                 'layout': {
