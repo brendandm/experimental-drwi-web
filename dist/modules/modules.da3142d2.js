@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1562781953874})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1562942799609})
 
 ;
 /**
@@ -6258,7 +6258,8 @@ angular.module('FieldDoc')
     .controller('ProjectSummaryController',
         function(Account, Notifications, $rootScope, Project, $routeParams,
             $scope, $location, mapbox, Site, user, $window, $timeout,
-            Practice, project, sites, Utility, $interval, LayerService) {
+            Practice, project, sites, Utility, $interval, LayerService,
+            MapManager) {
 
             var self = this;
 
@@ -6748,7 +6749,7 @@ angular.module('FieldDoc')
                             'self.addMapPreviews --> feature',
                             feature);
 
-                        self.populateMap(previewMap, feature, null, true);
+                        MapManager.addFeature(previewMap, feature, 'geometry', true);
 
                     });
 
@@ -6878,97 +6879,6 @@ angular.module('FieldDoc')
 
             };
 
-            self.populateMap = function(map, feature, attribute, addToMap) {
-
-                console.log('self.populateMap --> feature', feature);
-
-                var geojson = attribute ? feature[attribute] : feature;
-
-                if (geojson !== null &&
-                    typeof geojson !== 'undefined') {
-
-                    var bounds = turf.bbox(geojson);
-
-                    map.fitBounds(bounds, {
-                        padding: 40
-                    });
-
-                    if (!addToMap) {
-
-                        return;
-
-                    } else {
-
-                        map.addLayer({
-                            'id': 'feature-' + Date.now(),
-                            'type': 'fill',
-                            'source': {
-                                'type': 'geojson',
-                                'data': geojson
-                            },
-                            'layout': {
-                                'visibility': 'visible'
-                            },
-                            'paint': {
-                                'fill-color': '#06aadf',
-                                'fill-opacity': 0.4
-                            }
-                        });
-
-                        map.addLayer({
-                            'id': 'feature-outline-' + Date.now(),
-                            'type': 'line',
-                            'source': {
-                                'type': 'geojson',
-                                'data': geojson
-                            },
-                            'layout': {
-                                'visibility': 'visible'
-                            },
-                            'paint': {
-                                'line-color': 'rgba(6, 170, 223, 0.8)',
-                                'line-width': 2
-                            }
-                        });
-
-                    }
-
-                    // map.addLayer({
-                    //     'id': 'feature-' + Date.now(),
-                    //     'type': 'fill',
-                    //     'source': {
-                    //         'type': 'geojson',
-                    //         'data': geojson
-                    //     },
-                    //     'layout': {
-                    //         'visibility': 'visible'
-                    //     },
-                    //     'paint': {
-                    //         'fill-color': '#06aadf',
-                    //         'fill-opacity': 0.4
-                    //     }
-                    // });
-
-                    // map.addLayer({
-                    //     'id': 'feature-outline-' + Date.now(),
-                    //     'type': 'line',
-                    //     'source': {
-                    //         'type': 'geojson',
-                    //         'data': geojson
-                    //     },
-                    //     'layout': {
-                    //         'visibility': 'visible'
-                    //     },
-                    //     'paint': {
-                    //         'line-color': 'rgba(6, 170, 223, 0.8)',
-                    //         'line-width': 2
-                    //     }
-                    // });
-
-                }
-
-            };
-
             self.toggleLayer = function(layer) {
 
                 console.log('self.toggleLayer --> layer', layer);
@@ -7090,7 +7000,11 @@ angular.module('FieldDoc')
                         'properties': {}
                     };
 
-                    self.populateMap(self.map, projectExtent, null, false);
+                    MapManager.addFeature(
+                        self.map,
+                        self.project.extent,
+                        null,
+                        false);
 
                     if (self.layers && self.layers.length) {
 
@@ -7109,19 +7023,18 @@ angular.module('FieldDoc')
                             'features': self.sites
                         };
 
-                        self.populateMap(self.map, siteCollection, null, true);
+                        self.sites.forEach(function(feature) {
+
+                            MapManager.addFeature(
+                                self.map,
+                                feature,
+                                'geometry',
+                                true,
+                                false);
+
+                        });
 
                     }
-
-                    // if (!self.sites || !Array.isArray(self.sites)) {
-
-                    //     $timeout(function() {
-
-                    //         self.loadSites();
-
-                    //     }, 1000);
-
-                    // }
 
                 });
 
@@ -11175,7 +11088,7 @@ angular.module('FieldDoc')
         .controller('SiteSummaryController',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
                 $route, nodes, user, Utility, site, mapbox, Site, Project, practices,
-                $interval, LayerService) {
+                $interval, LayerService, MapManager) {
 
                 var self = this;
 
@@ -11641,7 +11554,11 @@ angular.module('FieldDoc')
 
                             });
 
-                            self.populateMap(previewMap, feature, 'geometry');
+                            MapManager.addFeature(
+                                previewMap,
+                                feature,
+                                'geometry',
+                                true);
 
                         });
 
@@ -11728,112 +11645,6 @@ angular.module('FieldDoc')
                             errorResponse);
 
                     });
-
-                };
-
-                self.populateMap = function(map, feature, attribute) {
-
-                    console.log('self.populateMap --> feature', feature);
-
-                    var bounds;
-
-                    if (feature[attribute] !== null &&
-                        typeof feature[attribute] !== 'undefined') {
-
-                        bounds = turf.bbox(feature[attribute]);
-
-                        map.fitBounds(bounds, {
-                            padding: 40
-                        });
-
-                        map.addLayer({
-                            'id': 'site',
-                            'type': 'fill',
-                            'source': {
-                                'type': 'geojson',
-                                'data': {
-                                    'type': 'Feature',
-                                    'geometry': feature[attribute]
-                                }
-                            },
-                            'layout': {
-                                'visibility': 'visible'
-                            },
-                            'paint': {
-                                'fill-color': '#06aadf',
-                                'fill-opacity': 0.4
-                            }
-                        });
-
-                        map.addLayer({
-                            'id': 'site-outline',
-                            'type': 'line',
-                            'source': {
-                                'type': 'geojson',
-                                'data': {
-                                    'type': 'Feature',
-                                    'geometry': feature[attribute]
-                                }
-                            },
-                            'layout': {
-                                'visibility': 'visible'
-                            },
-                            'paint': {
-                                'line-color': 'rgba(6, 170, 223, 0.8)',
-                                'line-width': 2
-                            }
-                        });
-
-                    } else {
-
-                        if (self.practices && self.practices.length) {
-
-                            var data = {
-                                'type': 'FeatureCollection',
-                                'features': self.practices
-                            };
-
-                            bounds = turf.bbox(data);
-
-                            map.fitBounds(bounds, {
-                                padding: 40
-                            });
-
-                            map.addLayer({
-                                'id': 'practices',
-                                'type': 'fill',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': data
-                                },
-                                'layout': {
-                                    'visibility': 'visible'
-                                },
-                                'paint': {
-                                    'fill-color': '#06aadf',
-                                    'fill-opacity': 0.4
-                                }
-                            });
-
-                            map.addLayer({
-                                'id': 'practice-outlines',
-                                'type': 'line',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': data
-                                },
-                                'layout': {
-                                    'visibility': 'visible'
-                                },
-                                'paint': {
-                                    'line-color': 'rgba(6, 170, 223, 0.8)',
-                                    'line-width': 2
-                                }
-                            });
-
-                        }
-
-                    }
 
                 };
 
@@ -11953,7 +11764,22 @@ angular.module('FieldDoc')
 
                         self.map.addControl(fullScreen, 'top-left');
 
-                        self.populateMap(self.map, self.site, 'geometry');
+                        var paintFeature = true;
+
+                        if (self.site &&
+                            self.site.geometry &&
+                            self.site.geometry.type === 'Point') {
+
+                            paintFeature = false;
+
+                        }
+
+                        MapManager.addFeature(
+                            self.map,
+                            self.site,
+                            'geometry',
+                            paintFeature,
+                            true);
 
                         if (self.layers && self.layers.length) {
 
@@ -11962,6 +11788,21 @@ angular.module('FieldDoc')
                         } else {
 
                             self.fetchLayers();
+
+                        }
+
+                        if (self.practices && Array.isArray(self.practices)) {
+
+                            self.practices.forEach(function(feature) {
+
+                                MapManager.addFeature(
+                                    self.map,
+                                    feature,
+                                    'geometry',
+                                    true,
+                                    false);
+
+                            });
 
                         }
 
@@ -15564,9 +15405,10 @@ angular.module('FieldDoc')
             'Practice',
             'practice',
             'LayerService',
+            'MapManager',
             function(Account, $location, $timeout, $log, Report, $rootScope,
                 $route, Utility, user, Project, Site, $window, mapbox,
-                Practice, practice, LayerService) {
+                Practice, practice, LayerService, MapManager) {
 
                 var self = this,
                     practiceId = $route.current.params.practiceId;
@@ -15997,61 +15839,6 @@ angular.module('FieldDoc')
 
                 };
 
-                self.populateMap = function(map, feature, attribute) {
-
-                    console.log('self.populateMap --> feature', feature);
-
-                    if (feature[attribute] !== null &&
-                        typeof feature[attribute] !== 'undefined') {
-
-                        var bounds = turf.bbox(feature[attribute]);
-
-                        map.fitBounds(bounds, {
-                            padding: 40
-                        });
-
-                        map.addLayer({
-                            'id': 'practice',
-                            'type': 'fill',
-                            'source': {
-                                'type': 'geojson',
-                                'data': {
-                                    'type': 'Feature',
-                                    'geometry': feature[attribute]
-                                }
-                            },
-                            'layout': {
-                                'visibility': 'visible'
-                            },
-                            'paint': {
-                                'fill-color': '#06aadf',
-                                'fill-opacity': 0.4
-                            }
-                        });
-
-                        map.addLayer({
-                            'id': 'practice-outline',
-                            'type': 'line',
-                            'source': {
-                                'type': 'geojson',
-                                'data': {
-                                    'type': 'Feature',
-                                    'geometry': feature[attribute]
-                                }
-                            },
-                            'layout': {
-                                'visibility': 'visible'
-                            },
-                            'paint': {
-                                'line-color': 'rgba(6, 170, 223, 0.8)',
-                                'line-width': 2
-                            }
-                        });
-
-                    }
-
-                };
-
                 self.toggleLayer = function(layer) {
 
                     console.log('self.toggleLayer --> layer', layer);
@@ -16168,7 +15955,12 @@ angular.module('FieldDoc')
 
                         self.map.addControl(fullScreen, 'top-left');
 
-                        self.populateMap(self.map, self.practice, 'geometry');
+                        MapManager.addFeature(
+                            self.map,
+                            self.practice,
+                            'geometry',
+                            true,
+                            true);
 
                         if (self.layers && self.layers.length) {
 
@@ -32899,58 +32691,401 @@ angular.module('MapboxGL')
     });
 (function() {
 
-  "use strict";
+    "use strict";
 
-  /**
-   * @ngdoc directive
-   * @name managerApp.directive:mapboxGeocoder
-   * @description
-   *   The Mapbox GL directive enables developers to quickly add Mapbox GL
-   *   maps to an angular project.
-   *
-   *   Example:
-   *   <mapboxgl id="map" class="mapboxgl-map"
-   *                          options="page.map.options" model="page.map.data">
-   *   </mapboxgl>
-   */
-  angular.module('MapboxGL')
-    .directive('mapboxgl', function ($log, $rootScope) {
+    /**
+     * @ngdoc directive
+     * @name managerApp.directive:mapboxGeocoder
+     * @description
+     *   The Mapbox GL directive enables developers to quickly add Mapbox GL
+     *   maps to an angular project.
+     *
+     *   Example:
+     *   <mapboxgl id="map" class="mapboxgl-map"
+     *                          options="page.map.options" model="page.map.data">
+     *   </mapboxgl>
+     */
+    angular.module('MapboxGL')
+        .directive('mapboxgl', function($log, $rootScope) {
 
-      return {
-          scope: {
-            options: '='
-          },
-          restrict: 'E',
-          link: function(scope, element, attrs) {
+            return {
+                scope: {
+                    options: '='
+                },
+                restrict: 'E',
+                link: function(scope, element, attrs) {
 
-            /**
-             * Give feedback that the MapboxGL Directive has loaded
-             */
-            $log.log('Loaded MapboxGL::viableMapboxglDirective')
+                    /**
+                     * Give feedback that the MapboxGL Directive has loaded
+                     */
+                    $log.log('Loaded MapboxGL::viableMapboxglDirective')
 
-            /**
-             * Instantiate a new MapboxGL Map object
-             */
-            var map = new mapboxgl.Map(scope.options);
+                    /**
+                     * Instantiate a new MapboxGL Map object
+                     */
+                    var map = new mapboxgl.Map(scope.options);
 
-            /**
-             * Assign MapboxGL Map object to `scope.model` when map has
-             * finished loading.
-             */
-            map.on('load', function () {
+                    /**
+                     * Assign MapboxGL Map object to `scope.model` when map has
+                     * finished loading.
+                     */
+                    map.on('load', function() {
 
-              $rootScope.$broadcast('mapboxgl.loaded', {
-                map: map
-              });
+                        $rootScope.$broadcast('mapboxgl.loaded', {
+                            map: map
+                        });
 
-            });
+                    });
 
-          }
-      };
-    });
+                }
+            };
+        });
 
 })();
+'use strict';
 
+/**
+ * @ngdoc service
+ * @name FieldDoc.template
+ * @description
+ * # template
+ * Provider in the FieldDoc.
+ */
+angular.module('FieldDoc')
+    .service('MapManager', function() {
+
+        return {
+            addLayers: function(map, arr) {
+
+                arr.forEach(function(feature) {
+
+                    console.log(
+                        'MapManager.addLayers --> feature',
+                        feature);
+
+                    var spec = feature.layer_spec || {};
+
+                    console.log(
+                        'MapManager.addLayers --> spec',
+                        spec);
+
+                    feature.spec = spec;
+
+                    console.log(
+                        'MapManager.addLayers --> feature.spec',
+                        feature.spec);
+
+                    if (!feature.selected ||
+                        typeof feature.selected === 'undefined') {
+
+                        feature.selected = false;
+
+                    } else {
+
+                        feature.spec.layout.visibility = 'visible';
+
+                    }
+
+                    if (feature.spec.id) {
+
+                        try {
+
+                            map.addLayer(feature.spec);
+
+                        } catch (error) {
+
+                            console.log(
+                                'MapManager.addLayers --> error',
+                                error);
+
+                        }
+
+                    }
+
+                });
+
+                return arr;
+
+            },
+            addFeature: function(map, feature, attribute, addToMap, fitBounds) {
+
+                if (fitBounds === null ||
+                    typeof fitBounds === 'undefined') {
+
+                    fitBounds = true;
+
+                }
+
+                console.log('MapManager.populateMap --> feature', feature);
+
+                var geojson = attribute ? feature[attribute] : feature;
+
+                console.log('MapManager.populateMap --> geojson', geojson);
+
+                if (geojson !== null &&
+                    typeof geojson !== 'undefined') {
+
+                    var geometryType = geojson.geometry ? geojson.geometry.type : geojson.type;
+
+                    console.log(
+                        'MapManager.populateMap --> geometryType',
+                        geometryType);
+
+                    var bounds = turf.bbox(geojson);
+
+                    if (geometryType === 'Point') {
+
+                        var buffer = turf.buffer(
+                            geojson,
+                            0.5, {
+                                units: 'kilometers'
+                            });
+
+                        bounds = turf.bbox(buffer);
+
+                    }
+
+                    if (fitBounds) {
+
+                        map.fitBounds(bounds, {
+                            padding: 40
+                        });
+
+                    }
+
+                    if (addToMap) {
+
+                        if (geometryType === 'Point') {
+
+                            map.addLayer({
+                                'id': 'feature-circle-' + Date.now(),
+                                'type': 'circle',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': {
+                                        'type': 'Feature',
+                                        'geometry': geojson
+                                    }
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'circle-radius': 8,
+                                    'circle-color': '#06aadf',
+                                    'circle-stroke-color': 'rgba(6, 170, 223, 0.5)',
+                                    'circle-stroke-opacity': 1,
+                                    'circle-stroke-width': 4
+                                }
+                            });
+
+                        } else if (geometryType.indexOf('Line') >= 0) {
+
+                            map.addLayer({
+                                'id': 'feature-line-' + Date.now(),
+                                'type': 'line',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': {
+                                        'type': 'Feature',
+                                        'geometry': geojson
+                                    }
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'line-color': 'rgba(6, 170, 223, 0.8)',
+                                    'line-width': 2
+                                }
+                            });
+
+                        } else {
+
+                            map.addLayer({
+                                'id': 'feature-' + Date.now(),
+                                'type': 'fill',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': geojson
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'fill-color': '#06aadf',
+                                    'fill-opacity': 0.4
+                                }
+                            });
+
+                            map.addLayer({
+                                'id': 'feature-outline-' + Date.now(),
+                                'type': 'line',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': geojson
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'line-color': 'rgba(6, 170, 223, 0.8)',
+                                    'line-width': 2
+                                }
+                            });
+
+                        }
+
+                    }
+
+                }
+
+            },
+            populateMap: function(map, feature, attribute, addToMap, fitBounds) {
+
+                if (fitBounds === null ||
+                    typeof fitBounds === 'undefined') {
+
+                    fitBounds = true;
+
+                }
+
+                console.log('MapManager.populateMap --> feature', feature);
+
+                var geojson = attribute ? feature[attribute] : feature;
+
+                console.log('MapManager.populateMap --> geojson', geojson);
+
+                if (geojson !== null &&
+                    typeof geojson !== 'undefined') {
+
+                    var bounds = turf.bbox(geojson);
+
+                    if (fitBounds) {
+
+                        map.fitBounds(bounds, {
+                            padding: 40
+                        });
+
+                    }
+
+                    if (!addToMap) {
+
+                        return;
+
+                    } else {
+
+                        var geometryType = geojson.geometry ? geojson.geometry.type : geojson.type;
+
+                        console.log(
+                            'MapManager.populateMap --> geometryType',
+                            geometryType);
+
+                        if (geometryType === 'Point') {
+
+                            var buffer = turf.buffer(
+                                geojson,
+                                0.5, {
+                                    units: 'kilometers'
+                                });
+
+                            bounds = turf.bbox(buffer);
+
+                            if (fitBounds) {
+
+                                map.fitBounds(bounds, {
+                                    padding: 40
+                                });
+
+                            }
+
+                            map.addLayer({
+                                'id': 'feature-circle-' + Date.now(),
+                                'type': 'circle',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': {
+                                        'type': 'Feature',
+                                        'geometry': geojson
+                                    }
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'circle-radius': 8,
+                                    'circle-color': '#06aadf',
+                                    'circle-stroke-color': 'rgba(6, 170, 223, 0.5)',
+                                    'circle-stroke-opacity': 1,
+                                    'circle-stroke-width': 4
+                                }
+                            });
+
+                        } else if (geometryType.indexOf('Line') >= 0) {
+
+                            map.addLayer({
+                                'id': 'feature-line-' + Date.now(),
+                                'type': 'line',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': {
+                                        'type': 'Feature',
+                                        'geometry': geojson
+                                    }
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'line-color': 'rgba(6, 170, 223, 0.8)',
+                                    'line-width': 2
+                                }
+                            });
+
+                        } else {
+
+                            map.addLayer({
+                                'id': 'feature-' + Date.now(),
+                                'type': 'fill',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': geojson
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'fill-color': '#06aadf',
+                                    'fill-opacity': 0.4
+                                }
+                            });
+
+                            map.addLayer({
+                                'id': 'feature-outline-' + Date.now(),
+                                'type': 'line',
+                                'source': {
+                                    'type': 'geojson',
+                                    'data': geojson
+                                },
+                                'layout': {
+                                    'visibility': 'visible'
+                                },
+                                'paint': {
+                                    'line-color': 'rgba(6, 170, 223, 0.8)',
+                                    'line-width': 2
+                                }
+                            });
+
+                        }
+
+                    }
+
+                }
+
+            }
+        };
+
+    });
 (function() {
 
   'use strict';

@@ -11,7 +11,8 @@ angular.module('FieldDoc')
     .controller('ProjectSummaryController',
         function(Account, Notifications, $rootScope, Project, $routeParams,
             $scope, $location, mapbox, Site, user, $window, $timeout,
-            Practice, project, sites, Utility, $interval, LayerService) {
+            Practice, project, sites, Utility, $interval, LayerService,
+            MapManager) {
 
             var self = this;
 
@@ -501,7 +502,7 @@ angular.module('FieldDoc')
                             'self.addMapPreviews --> feature',
                             feature);
 
-                        self.populateMap(previewMap, feature, 'geometry', true);
+                        MapManager.addFeature(previewMap, feature, 'geometry', true);
 
                     });
 
@@ -631,150 +632,6 @@ angular.module('FieldDoc')
 
             };
 
-            self.populateMap = function(map, feature, attribute, addToMap, fitBounds) {
-
-                if (fitBounds === null ||
-                    typeof fitBounds === 'undefined') {
-
-                   fitBounds = true;
-
-                }
-
-                console.log('self.populateMap --> feature', feature);
-
-                var geojson = attribute ? feature[attribute] : feature;
-
-                console.log('self.populateMap --> geojson', geojson);
-
-                if (geojson !== null &&
-                    typeof geojson !== 'undefined') {
-
-                    var bounds = turf.bbox(geojson);
-
-                    if (fitBounds) {
-
-                        map.fitBounds(bounds, {
-                            padding: 40
-                        });
-
-                    }
-
-                    if (!addToMap) {
-
-                        return;
-
-                    } else {
-
-                        var geometryType = geojson.geometry ? geojson.geometry.type : geojson.type;
-
-                        console.log(
-                            'self.populateMap --> geometryType',
-                            geometryType);
-
-                        if (geometryType === 'Point') {
-
-                            var buffer = turf.buffer(
-                                geojson,
-                                0.5,
-                                {
-                                    units: 'kilometers'
-                                });
-
-                            bounds = turf.bbox(buffer);
-
-                            if (fitBounds) {
-
-                                map.fitBounds(bounds, {
-                                    padding: 40
-                                });
-
-                            }
-
-                            map.addLayer({
-                                'id': 'feature-circle-' + Date.now(),
-                                'type': 'circle',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': {
-                                        'type': 'Feature',
-                                        'geometry': geojson
-                                    }
-                                },
-                                'layout': {
-                                    'visibility': 'visible'
-                                },
-                                'paint': {
-                                    'circle-radius': 8,
-                                    'circle-color': '#06aadf',
-                                    'circle-stroke-color': 'rgba(6, 170, 223, 0.5)',
-                                    'circle-stroke-opacity': 1,
-                                    'circle-stroke-width': 4
-                                }
-                            });
-
-                        } else if (geometryType.indexOf('Line') >= 0) {
-
-                            map.addLayer({
-                                'id': 'feature-line-' + Date.now(),
-                                'type': 'line',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': {
-                                        'type': 'Feature',
-                                        'geometry': geojson
-                                    }
-                                },
-                                'layout': {
-                                    'visibility': 'visible'
-                                },
-                                'paint': {
-                                    'line-color': 'rgba(6, 170, 223, 0.8)',
-                                    'line-width': 2
-                                }
-                            });
-
-                        } else {
-
-                            map.addLayer({
-                                'id': 'feature-' + Date.now(),
-                                'type': 'fill',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': geojson
-                                },
-                                'layout': {
-                                    'visibility': 'visible'
-                                },
-                                'paint': {
-                                    'fill-color': '#06aadf',
-                                    'fill-opacity': 0.4
-                                }
-                            });
-
-                            map.addLayer({
-                                'id': 'feature-outline-' + Date.now(),
-                                'type': 'line',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': geojson
-                                },
-                                'layout': {
-                                    'visibility': 'visible'
-                                },
-                                'paint': {
-                                    'line-color': 'rgba(6, 170, 223, 0.8)',
-                                    'line-width': 2
-                                }
-                            });
-
-                        }
-
-                    }
-
-                }
-
-            };
-
             self.toggleLayer = function(layer) {
 
                 console.log('self.toggleLayer --> layer', layer);
@@ -896,7 +753,7 @@ angular.module('FieldDoc')
                         'properties': {}
                     };
 
-                    self.populateMap(
+                    MapManager.addFeature(
                         self.map,
                         self.project.extent,
                         null,
@@ -921,7 +778,7 @@ angular.module('FieldDoc')
 
                         self.sites.forEach(function(feature) {
 
-                            self.populateMap(
+                            MapManager.addFeature(
                                 self.map,
                                 feature,
                                 'geometry',
@@ -930,19 +787,7 @@ angular.module('FieldDoc')
 
                         });
 
-//                        self.populateMap(self.map, siteCollection, null, true);
-
                     }
-
-                    // if (!self.sites || !Array.isArray(self.sites)) {
-
-                    //     $timeout(function() {
-
-                    //         self.loadSites();
-
-                    //     }, 1000);
-
-                    // }
 
                 });
 

@@ -25,9 +25,10 @@
             'Practice',
             'practice',
             'LayerService',
+            'MapManager',
             function(Account, $location, $timeout, $log, Report, $rootScope,
                 $route, Utility, user, Project, Site, $window, mapbox,
-                Practice, practice, LayerService) {
+                Practice, practice, LayerService, MapManager) {
 
                 var self = this,
                     practiceId = $route.current.params.practiceId;
@@ -458,129 +459,6 @@
 
                 };
 
-                self.populateMap = function(map, feature, attribute) {
-
-                    console.log('self.populateMap --> feature', feature);
-
-                    if (feature[attribute] !== null &&
-                        typeof feature[attribute] !== 'undefined') {
-
-                        var bounds = turf.bbox(feature[attribute]);
-
-                        console.log(
-                            'self.populateMap --> bounds',
-                            bounds);
-
-                        map.fitBounds(bounds, {
-                            padding: 40
-                        });
-
-                        var geometry = feature[attribute];
-
-                        if (geometry.type === 'Point') {
-
-                            var buffer = turf.buffer(
-                                geometry,
-                                0.5,
-                                {
-                                    units: 'kilometers'
-                                });
-
-                            bounds = turf.bbox(buffer);
-
-                            map.fitBounds(bounds, {
-                                padding: 40
-                            });
-
-                            map.addLayer({
-                                'id': 'practice',
-                                'type': 'circle',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': {
-                                        'type': 'Feature',
-                                        'geometry': geometry
-                                    }
-                                },
-                                'layout': {
-                                    'visibility': 'visible'
-                                },
-                                'paint': {
-                                    'circle-radius': 8,
-                                    'circle-color': '#06aadf',
-                                    'circle-stroke-color': 'rgba(6, 170, 223, 0.5)',
-                                    'circle-stroke-opacity': 1,
-                                    'circle-stroke-width': 4
-                                }
-                            });
-
-                        } else if (geometry.type.indexOf('Line') >= 0) {
-
-                            map.addLayer({
-                                'id': 'practice-line',
-                                'type': 'line',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': {
-                                        'type': 'Feature',
-                                        'geometry': geometry
-                                    }
-                                },
-                                'layout': {
-                                    'visibility': 'visible'
-                                },
-                                'paint': {
-                                    'line-color': 'rgba(6, 170, 223, 0.8)',
-                                    'line-width': 2
-                                }
-                            });
-
-                        } else {
-
-                            map.addLayer({
-                                'id': 'practice',
-                                'type': 'fill',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': {
-                                        'type': 'Feature',
-                                        'geometry': geometry
-                                    }
-                                },
-                                'layout': {
-                                    'visibility': 'visible'
-                                },
-                                'paint': {
-                                    'fill-color': '#06aadf',
-                                    'fill-opacity': 0.4
-                                }
-                            });
-
-                            map.addLayer({
-                                'id': 'practice-outline',
-                                'type': 'line',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': {
-                                        'type': 'Feature',
-                                        'geometry': geometry
-                                    }
-                                },
-                                'layout': {
-                                    'visibility': 'visible'
-                                },
-                                'paint': {
-                                    'line-color': 'rgba(6, 170, 223, 0.8)',
-                                    'line-width': 2
-                                }
-                            });
-
-                        }
-
-                    }
-
-                };
-
                 self.toggleLayer = function(layer) {
 
                     console.log('self.toggleLayer --> layer', layer);
@@ -697,7 +575,12 @@
 
                         self.map.addControl(fullScreen, 'top-left');
 
-                        self.populateMap(self.map, self.practice, 'geometry');
+                        MapManager.addFeature(
+                            self.map,
+                            self.practice,
+                            'geometry',
+                            true,
+                            true);
 
                         if (self.layers && self.layers.length) {
 

@@ -11,7 +11,7 @@
         .controller('SiteSummaryController',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
                 $route, nodes, user, Utility, site, mapbox, Site, Project, practices,
-                $interval, LayerService) {
+                $interval, LayerService, MapManager) {
 
                 var self = this;
 
@@ -477,7 +477,11 @@
 
                             });
 
-                            self.populateMap(previewMap, feature, 'geometry');
+                            MapManager.addFeature(
+                                previewMap,
+                                feature,
+                                'geometry',
+                                true);
 
                         });
 
@@ -564,176 +568,6 @@
                             errorResponse);
 
                     });
-
-                };
-
-                self.populateMap = function(map, feature, attribute) {
-
-                    console.log('self.populateMap --> feature', feature);
-
-                    var bounds;
-
-                    if (feature[attribute] !== null &&
-                        typeof feature[attribute] !== 'undefined') {
-
-                        bounds = turf.bbox(feature[attribute]);
-
-                        map.fitBounds(bounds, {
-                            padding: 40
-                        });
-
-                        var geometry = feature[attribute];
-
-                        if (geometry.type === 'Point') {
-
-                            var buffer = turf.buffer(
-                                geometry,
-                                0.5,
-                                {
-                                    units: 'kilometers'
-                                });
-
-                            bounds = turf.bbox(buffer);
-
-                            map.fitBounds(bounds, {
-                                padding: 40
-                            });
-
-                            map.addLayer({
-                                'id': 'site',
-                                'type': 'circle',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': {
-                                        'type': 'Feature',
-                                        'geometry': geometry
-                                    }
-                                },
-                                'layout': {
-                                    'visibility': 'visible'
-                                },
-                                'paint': {
-                                    'circle-radius': 8,
-                                    'circle-color': '#06aadf',
-                                    'circle-stroke-color': 'rgba(6, 170, 223, 0.5)',
-                                    'circle-stroke-opacity': 1,
-                                    'circle-stroke-width': 4
-                                }
-                            });
-
-                        } else if (geometry.type.indexOf('Line') >= 0) {
-
-                            map.addLayer({
-                                'id': 'site-line',
-                                'type': 'line',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': {
-                                        'type': 'Feature',
-                                        'geometry': geometry
-                                    }
-                                },
-                                'layout': {
-                                    'visibility': 'visible'
-                                },
-                                'paint': {
-                                    'line-color': 'rgba(6, 170, 223, 0.8)',
-                                    'line-width': 2
-                                }
-                            });
-
-                        } else {
-
-                            map.addLayer({
-                                'id': 'site',
-                                'type': 'fill',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': {
-                                        'type': 'Feature',
-                                        'geometry': geometry
-                                    }
-                                },
-                                'layout': {
-                                    'visibility': 'visible'
-                                },
-                                'paint': {
-                                    'fill-color': '#06aadf',
-                                    'fill-opacity': 0.4
-                                }
-                            });
-
-                            map.addLayer({
-                                'id': 'site-outline',
-                                'type': 'line',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': {
-                                        'type': 'Feature',
-                                        'geometry': geometry
-                                    }
-                                },
-                                'layout': {
-                                    'visibility': 'visible'
-                                },
-                                'paint': {
-                                    'line-color': 'rgba(6, 170, 223, 0.8)',
-                                    'line-width': 2
-                                }
-                            });
-
-                        }
-
-                    } else {
-
-                        if (self.practices && self.practices.length) {
-
-                            var data = {
-                                'type': 'FeatureCollection',
-                                'features': self.practices
-                            };
-
-                            bounds = turf.bbox(data);
-
-                            map.fitBounds(bounds, {
-                                padding: 40
-                            });
-
-                            map.addLayer({
-                                'id': 'practices',
-                                'type': 'fill',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': data
-                                },
-                                'layout': {
-                                    'visibility': 'visible'
-                                },
-                                'paint': {
-                                    'fill-color': '#06aadf',
-                                    'fill-opacity': 0.4
-                                }
-                            });
-
-                            map.addLayer({
-                                'id': 'practice-outlines',
-                                'type': 'line',
-                                'source': {
-                                    'type': 'geojson',
-                                    'data': data
-                                },
-                                'layout': {
-                                    'visibility': 'visible'
-                                },
-                                'paint': {
-                                    'line-color': 'rgba(6, 170, 223, 0.8)',
-                                    'line-width': 2
-                                }
-                            });
-
-                        }
-
-                    }
 
                 };
 
@@ -853,7 +687,22 @@
 
                         self.map.addControl(fullScreen, 'top-left');
 
-                        self.populateMap(self.map, self.site, 'geometry');
+                        var paintFeature = true;
+
+                        if (self.site &&
+                            self.site.geometry &&
+                            self.site.geometry.type === 'Point') {
+
+                            paintFeature = false;
+
+                        }
+
+                        MapManager.addFeature(
+                            self.map,
+                            self.site,
+                            'geometry',
+                            paintFeature,
+                            true);
 
                         if (self.layers && self.layers.length) {
 
@@ -862,6 +711,21 @@
                         } else {
 
                             self.fetchLayers();
+
+                        }
+
+                        if (self.practices && Array.isArray(self.practices)) {
+
+                            self.practices.forEach(function(feature) {
+
+                                MapManager.addFeature(
+                                    self.map,
+                                    feature,
+                                    'geometry',
+                                    true,
+                                    false);
+
+                            });
 
                         }
 
