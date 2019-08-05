@@ -68,7 +68,7 @@ module.exports = function(grunt) {
                 constants: {
                     environment: {
                         name: 'development',
-                        apiUrl: 'https://dev.api.fielddoc.chesapeakecommons.org',
+                        apiUrl: 'https://dev.api.fielddoc.org',
                         castUrl: 'https://dev.cast.fielddoc.chesapeakecommons.org',
                         dnrUrl: 'https://dev.dnr.fielddoc.chesapeakecommons.org',
                         siteUrl: 'https://dev.fielddoc.org',
