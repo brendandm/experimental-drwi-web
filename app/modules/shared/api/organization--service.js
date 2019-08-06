@@ -21,18 +21,18 @@
                 profile: {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/data/organization_profile/:id')
+                    url: environment.apiUrl.concat('/v1/organization/:id')
                 }
                 ,
                 projects: {
                     isArray: false,
                     method: 'GET',
-                    url: environment.apiUrl.concat('/v1/data/organization_projects/:id')
+                    url: environment.apiUrl.concat('/v1/organization/:id/projects')
                 },
                 members: {
                     isArray: false,
                     method: 'GET',
-                    url: environment.apiUrl.concat('/v1/data/organization_members/:id')
+                    url: environment.apiUrl.concat('/v1/organization/:id/members')
                 }
             });
         });
