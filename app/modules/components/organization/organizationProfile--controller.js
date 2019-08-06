@@ -203,7 +203,7 @@ angular.module('FieldDoc')
 
                      self.organizationMembers = successResponse.features;
 
-                     self.members = successResponse;
+                     self.members = successResponse.features;
 
                      self.parseMembers(self.members);
 
