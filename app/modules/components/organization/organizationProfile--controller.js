@@ -146,9 +146,9 @@ angular.module('FieldDoc')
 
                     console.log('self.organizationProjects', successResponse);
 
-                    self.organizationProjects = successResponse.properties;
+                    self.organizationProjects = successResponse.features;
 
-                    self.projects = successResponse.properties;
+                    self.projects = successResponse.features;
 
                     self.projectCount = successResponse.count;
 
@@ -201,9 +201,9 @@ angular.module('FieldDoc')
 
                     console.log('self.organizationMembers', successResponse);
 
-                     self.organizationMembers = successResponse.properties;
+                     self.organizationMembers = successResponse.features;
 
-                     self.members = successResponse.properties;
+                     self.members = successResponse;
 
                      self.parseMembers(self.members);
 
