@@ -94,7 +94,7 @@ angular.module('FieldDoc')
 
             self.parseFeature = function(data) {
 
-                self.organizationProfile = data.properties;
+                self.organizationProfile = data;
                 console.log(self.organizationProfile.description)
                 console.log('self.organizationProfile', self.organizationProfile);
 
