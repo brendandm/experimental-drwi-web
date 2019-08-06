@@ -73,8 +73,8 @@ angular.module('FieldDoc')
                             self.createMap(self.mapOptions);
 
                             if (self.sites && self.sites.length) {
-
-                                self.addMapPreviews(self.sites);
+                                self.createStaticMapURLs(self.sites);
+                         //       self.addMapPreviews(self.sites);
 
                             }
 
@@ -455,6 +455,56 @@ angular.module('FieldDoc')
 
             };
 
+            /*
+            createStaticMapUrls:
+                takes self.sites as self.sites as argument
+                iterates of self.sites
+                checks if project extent exists
+                checks if site geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
+                adds return to site[] as staticURL property
+                if no site geometry, adds default URL to site[].staticURL
+            */
+            self.createStaticMapURLs = function(arr){
+                console.log("createStaticMapURLS -> arr", arr)
+
+                arr.forEach(function(feature, index) {
+                     console.log(
+                        'self.createStaticMapUrls --> feature, index',
+                        feature,
+                        index);
+                     console.log();
+                         if (feature.properties.project.extent) {
+
+                            if(feature.geometry != null){
+
+                                feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
+
+                                console.log('feature.staticURL',feature.staticURL);
+
+                                self.sites[index].staticURL = feature.staticURL;
+
+                                console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
+
+                            }else{
+
+                                self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                                            '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                                        ].join('');
+
+                                console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
+                            }
+
+                        }
+
+                });
+
+            }
+
+            /*
+            addMapPreviews:
+                this func may now be defunct - review needed...
+            */
             self.addMapPreviews = function(arr) {
 
                 console.log('self.addMapPreviews --> arr', arr);
