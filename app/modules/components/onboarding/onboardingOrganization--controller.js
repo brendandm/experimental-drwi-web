@@ -92,7 +92,7 @@ angular.module('FieldDoc')
                         self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
-                            'msg': 'Successfully created ' + self.organization.name + '.',
+                            'msg': 'Successfully created ' + successResponse.properties.name + '.',
                             'prompt': 'OK'
                         }];
 

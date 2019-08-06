@@ -10,10 +10,11 @@
     angular.module('FieldDoc')
         .config(function($routeProvider, environment) {
 
-            $routeProvider
-                .when('/account', {
-                    templateUrl: '/modules/components/account/views/accountEdit--view.html?t=' + environment.version,
-                    controller: 'AccountEditViewController',
+
+              $routeProvider
+                .when('/profile/:id', {
+                    templateUrl: '/modules/components/profile/views/profileView--view.html?t=' + environment.version,
+                    controller: 'ProfileViewController',
                     controllerAs: 'page',
                     resolve: {
                         user: function(Account, $rootScope, $document) {
@@ -25,10 +26,10 @@
                         }
                     }
                 }),
-            $routeProvider
-                .when('/accountView', {
-                    templateUrl: '/modules/components/account/views/accountView--view.html?t=' + environment.version,
-                    controller: 'AccountEditViewController',
+                $routeProvider
+                .when('/profile/', {
+                    templateUrl: '/modules/components/profile/views/profileView--view.html?t=' + environment.version,
+                    controller: 'ProfileViewController',
                     controllerAs: 'page',
                     resolve: {
                         user: function(Account, $rootScope, $document) {
@@ -39,7 +40,6 @@
 
                         }
                     }
-
                 });
 
         });

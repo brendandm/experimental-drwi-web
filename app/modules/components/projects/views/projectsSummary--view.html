@@ -435,6 +435,56 @@
                 </ul>
 
             </section>
+            <section class="reveal fade-in t3" style="padding: 0;">
+                <h2 class="">Partners</h2>
+                <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading">
+                    <div class="add--new--wrapper" style="position:relative">
+                      <span></span>
+
+                         </a>
+                    </div>
+
+                    <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">{{page.project.name}} has <strong>{{ (page.partnerships.length | number) || 0 }}</strong> <ng-pluralize count="page.partnerships.length" when="{'one': 'partnership','other': 'partnerships'}"></ng-pluralize>.</p>
+
+                    <div class="features--container" data-ng-if="!page.status.loading">
+
+                        <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
+
+                            <li class="flow2-card reveal fade-in" style=" padding-left:0; padding-bottom:2em; position:relative; display:block; border: 0px solid green; animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="partner in page.partnerships | orderBy:'-created_on' | filter: page.q">
+
+                                    <div class="flow2-card--content" style="width: 100%;height: 100%; display:table; border: 0px solid red; " >
+
+                                        <a href="/organizationProfile/{{partner.organization.id}}" style="display: table-cell; vertical-align: middle;">
+                                              <div class="partner-logo-wrapper" style="border: 0px solid purple; "   ng-if="partner.organization.picture">
+                                                     <img class='partner-logo' style="width: 100%; height: auto;" src="{{partner.organization.picture}}">
+                                                </div>
+                                                 <div class="partner-logo-wrapper" style="border: 0px solid purple;"   ng-if="!partner.organization.picture">
+                                                     <img class='partner-logo' style="clear:right;" src="/images/partner-Default-1024x.png">
+                                                </div>
+                                        </a>
+
+                                    </div>
+                                     <div class="partner_name" style="max-width:400px;  margin-top: -2em; clear:both;  border-bottom:1px ; display:block;  float: center; ">
+                                            <span>{{ partner.organization.name }}</span>
+                                        </div>
+
+
+
+
+
+                            </li>
+
+
+
+                        </ul>
+
+                    </div>
+                 </div>
+            </section>
+        </div>
+
+
+
 
         </div>
 

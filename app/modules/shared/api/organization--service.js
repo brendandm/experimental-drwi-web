@@ -17,6 +17,22 @@
                 },
                 update: {
                     method: 'PATCH'
+                },
+                profile: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/data/organization_profile/:id')
+                }
+                ,
+                projects: {
+                    isArray: false,
+                    method: 'GET',
+                    url: environment.apiUrl.concat('/v1/data/organization_projects/:id')
+                },
+                members: {
+                    isArray: false,
+                    method: 'GET',
+                    url: environment.apiUrl.concat('/v1/data/organization_members/:id')
                 }
             });
         });
