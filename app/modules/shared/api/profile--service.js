@@ -21,7 +21,7 @@
         },
          member: {
           method: 'GET',
-          url: environment.apiUrl.concat('/v1/data/user/member/:id')
+          url: environment.apiUrl.concat('/v1/user/:id')
         }
       });
     });
