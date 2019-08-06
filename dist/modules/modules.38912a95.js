@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1565104875824})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1565105585638})
 
 ;
 /**
@@ -5630,9 +5630,9 @@ angular.module('FieldDoc')
 
                     console.log('self.organizationProjects', successResponse);
 
-                    self.organizationProjects = successResponse.properties;
+                    self.organizationProjects = successResponse.features;
 
-                    self.projects = successResponse.properties;
+                    self.projects = successResponse.features;
 
                     self.projectCount = successResponse.count;
 
@@ -5685,9 +5685,9 @@ angular.module('FieldDoc')
 
                     console.log('self.organizationMembers', successResponse);
 
-                     self.organizationMembers = successResponse.properties;
+                     self.organizationMembers = successResponse.features;
 
-                     self.members = successResponse.properties;
+                     self.members = successResponse;
 
                      self.parseMembers(self.members);
 
