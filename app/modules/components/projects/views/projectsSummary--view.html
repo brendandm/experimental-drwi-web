@@ -367,7 +367,13 @@
 
                             <div style="position:relative;">
 
-                                <div id="site-geography-preview-{{ site.properties.id }}" style="width: 100%; height: 200px;"></div>
+                              <img data-ng-if="site.staticURL" data-ng-src="{{ site.staticURL }}" width="auto" height="auto" />
+
+                                <div id="site-geography-preview-{{ $index }}" style="width: 100%; height: 200px;"></div>
+                                <img data-ng-if="!site.staticURL" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,5/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
+
+                                <!--<div id="site-geography-preview-{{ $index }}" style="width: 100%; height: 200px;"></div>-->
+
 
                                 <!-- <leaflet id="site-geography-preview-{{ $index }}" style="width: 100%; height: 200px;" defaults="page.previewMap.defaults" layers="page.previewMap.layers" bounds="site.bounds" geojson="site.geojson"></leaflet> -->
 
