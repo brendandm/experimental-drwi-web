@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1565098868128})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1565101465486})
 
 ;
 /**
@@ -35041,18 +35041,18 @@ angular
                 profile: {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/data/organization_profile/:id')
+                    url: environment.apiUrl.concat('/v1/organization/:id')
                 }
                 ,
                 projects: {
                     isArray: false,
                     method: 'GET',
-                    url: environment.apiUrl.concat('/v1/data/organization_projects/:id')
+                    url: environment.apiUrl.concat('/v1/organization/:id/projects')
                 },
                 members: {
                     isArray: false,
                     method: 'GET',
-                    url: environment.apiUrl.concat('/v1/data/organization_members/:id')
+                    url: environment.apiUrl.concat('/v1/organization/:id/members')
                 }
             });
         });
