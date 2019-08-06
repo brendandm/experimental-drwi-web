@@ -199,7 +199,8 @@ angular.module('FieldDoc')
                     'tags',
                     'tasks',
                     'user',
-                    'projects'
+                    'projects',
+                    'members'
                 ];
 
                 var reservedProperties = [
