@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1565187707026})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1565203176193})
 
 ;
 /**
@@ -5492,7 +5492,7 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('OrganizationProfileViewController',
         function(Project, Account, $location, $log, Notifications, $rootScope,
-            $route, $routeParams, user, User, Organization, SearchService, $timeout) {
+            $route, $routeParams, user, User, Organization, SearchService, $timeout, Utility) {
 
             var self = this;
 
@@ -5629,6 +5629,16 @@ angular.module('FieldDoc')
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.loadOrganizationProjects - >', successResponse);
+
+                    successResponse.features.forEach(function(feature) {
+
+                        if (feature.extent) {
+
+                            feature.staticURL = Utility.buildStaticMapURL(feature.extent);
+
+                        }
+
+                    });
 
                     self.organizationProjects = successResponse.features;
 
