@@ -192,7 +192,9 @@ angular.module('FieldDoc')
                     'last_modified_by',
                     'organization',
                     'tags',
-                    'tasks'
+                    'tasks',
+                    'centroid',
+                    'extent'
                 ];
 
                 var reservedProperties = [
