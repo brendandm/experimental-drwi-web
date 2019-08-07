@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('OrganizationProfileViewController',
         function(Project, Account, $location, $log, Notifications, $rootScope,
-            $route, $routeParams, user, User, Organization, SearchService, $timeout) {
+            $route, $routeParams, user, User, Organization, SearchService, $timeout, Utility) {
 
             var self = this;
 
@@ -145,6 +145,16 @@ angular.module('FieldDoc')
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.loadOrganizationProjects - >', successResponse);
+
+                    successResponse.features.forEach(function(feature) {
+
+                        if (feature.extent) {
+
+                            feature.staticURL = Utility.buildStaticMapURL(feature.extent);
+
+                        }
+
+                    });
 
                     self.organizationProjects = successResponse.features;
 
