@@ -144,11 +144,15 @@ angular.module('FieldDoc')
                     id: organizationId
                 }).$promise.then(function(successResponse) {
 
-                    console.log('self.organizationProjects', successResponse);
+                    console.log('self.loadOrganizationProjects - >', successResponse);
 
                     self.organizationProjects = successResponse.features;
 
+                    console.log('self.organizationProjects - >', self.organizationProjects);
+
                     self.projects = successResponse.features;
+
+                    console.log('self.projects', self.projects);
 
                     self.projectCount = successResponse.count;
 
