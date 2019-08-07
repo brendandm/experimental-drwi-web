@@ -194,7 +194,8 @@ angular.module('FieldDoc')
                     'tags',
                     'tasks',
                     'centroid',
-                    'extent'
+                    'extent',
+                    'program'
                 ];
 
                 var reservedProperties = [
