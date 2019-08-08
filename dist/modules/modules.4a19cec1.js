@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1565227195455})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1565227570304})
 
 ;
 /**
@@ -5544,6 +5544,8 @@ angular.module('FieldDoc')
                     // Load organization data
                     //
                     if(featureId && featureId != self.user.properties.organization) {
+                         console.log(0);
+
                          self.loadOrganization(featureId);
 
                          self.loadOrganizationProjects(featureId);
@@ -5552,6 +5554,7 @@ angular.module('FieldDoc')
                     }
 
                     else if (self.user.properties.organization) {
+                         console.log(1);
 
                         self.loadOrganization(self.user.properties.organization_id);
 
@@ -5560,6 +5563,7 @@ angular.module('FieldDoc')
                         self.loadOrganizationMembers(self.user.properties.organization_id);
 
                     } else {
+                         console.log(2);
 
                         self.status.loading = false;
 
