@@ -60,6 +60,8 @@ angular.module('FieldDoc')
                     // Load organization data
                     //
                     if(featureId && featureId != self.user.properties.organization) {
+                         console.log(0);
+
                          self.loadOrganization(featureId);
 
                          self.loadOrganizationProjects(featureId);
@@ -68,6 +70,7 @@ angular.module('FieldDoc')
                     }
 
                     else if (self.user.properties.organization) {
+                         console.log(1);
 
                         self.loadOrganization(self.user.properties.organization_id);
 
@@ -76,6 +79,7 @@ angular.module('FieldDoc')
                         self.loadOrganizationMembers(self.user.properties.organization_id);
 
                     } else {
+                         console.log(2);
 
                         self.status.loading = false;
 
