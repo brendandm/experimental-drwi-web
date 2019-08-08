@@ -33,7 +33,7 @@ angular
             'http://localhost:8000/**',
             // Allow loading from API endpoints.
             'http://localhost:4000/v1/tpl/**',
-            'https://dev.dnr.fielddoc.chesapeakecommons.org/**',
+            'https://dev.dnr.fielddoc.org/**',
             'https://dnr.fielddoc.org/**'
         ]);
 
