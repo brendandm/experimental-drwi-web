@@ -43,7 +43,6 @@
 
                 }
 
-
                 self.showElements = function() {
 
                     $timeout(function() {
@@ -74,14 +73,6 @@
                     }, 1000);
 
                 };
-
-                self.alerts = [];
-
-                function closeAlerts() {
-
-                    self.alerts = [];
-
-                }
 
                 function closeRoute() {
 
