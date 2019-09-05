@@ -34,6 +34,16 @@
 
                 };
 
+                /**/
+                 self.alerts = [];
+
+                function closeAlerts() {
+
+                    self.alerts = [];
+
+                }
+
+
                 self.showElements = function() {
 
                     $timeout(function() {
