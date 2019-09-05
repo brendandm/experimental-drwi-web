@@ -779,6 +779,105 @@
 
                 };
 
+
+                /*
+                */
+                self.uploadCollection = function() {
+
+                    if (!self.fileImport ||
+                        !self.fileImport.length) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Please select a file.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        return false;
+
+                    }
+
+                    if (self.fileImport) {
+
+                        var fileData = new FormData();
+
+                        fileData.append('file', self.fileImport[0]);
+
+                  /*      if (self.group) {
+
+                            if (self.group.id) {
+
+                                fileData.append('group', self.group.id);
+
+                            } else if (typeof self.group === 'string') {
+
+                                fileData.append('group', self.group);
+
+                            }
+
+                        }
+                  */
+
+                  /*
+                        if (self.program && self.program.id) {
+
+                            fileData.append('program', self.program.id);
+
+                        }
+                  */
+                        fileData.append('persist', true);
+
+                        console.log('fileData', fileData);
+
+                        $window.scrollTo(0, 0);
+
+                        Shapefile.upload({}, fileData, function(successResponse) {
+
+                            console.log('successResponse', successResponse);
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Upload complete. Processing data...',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                            if (successResponse.task) {
+
+                                self.pendingTasks = [
+                                    successResponse.task
+                                ];
+
+                            }
+
+                            $location.path('/geographies');
+
+                        }, function(errorResponse) {
+
+                            console.log('Upload error', errorResponse);
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'The file could not be processed.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                        });
+
+                    }
+
+                };
+                /*
+                */
+
                 //
                 // Verify Account information for proper UI element display
                 //
