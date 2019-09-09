@@ -61,9 +61,9 @@
                             }
 
                             self.createMap(self.mapOptions);
-                            console.log("ONE ONE");
+
                             if (self.practices && self.practices.length) {
-                                console.log("TWO TWO");
+
                             //    self.addMapPreviews(self.practices);
                                 self.createStaticMapURLs(self.practices);
 
@@ -872,13 +872,9 @@
 
                 self.hideTasks = function() {
 
-                    console.log("BELIEVE");
-
                     self.pendingTasks = [];
 
                     if (typeof self.taskPoll !== 'undefined') {
-
-                        console.log("HIDING TASK");
 
                         $interval.cancel(self.taskPoll);
 
@@ -902,8 +898,6 @@
                             if (response.status &&
                                 response.status === 'complete') {
 
-                                console.log("TASK SUCCESS");
-
                                 self.hideTasks();
 
                             }
@@ -921,8 +915,6 @@
                             self.pendingTasks = response.features;
 
                             if (self.pendingTasks.length < 1) {
-
-                                 console.log("CANCEL TASK");
 
                                 self.loadSite();
 
