@@ -11,7 +11,8 @@
         .controller('SiteSummaryController',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
                 $route, nodes, user, Utility, site, mapbox, Site, Project, practices,
-                $interval, LayerService, MapManager, Shapefile) {
+                $interval, LayerService, MapManager,
+                Shapefile, Task) {
 
                 var self = this;
 
@@ -60,9 +61,9 @@
                             }
 
                             self.createMap(self.mapOptions);
-
+                            console.log("ONE ONE");
                             if (self.practices && self.practices.length) {
-
+                                console.log("TWO TWO");
                             //    self.addMapPreviews(self.practices);
                                 self.createStaticMapURLs(self.practices);
 
@@ -453,6 +454,7 @@
                 if no site geometry, adds default URL to practices[].staticURL
             */
                 self.createStaticMapURLs = function(arr){
+
                     console.log("createStaticMapURLS -> arr", arr);
 
                     arr.forEach(function(feature, index) {
@@ -471,7 +473,7 @@
 
                                 self.practices[index].staticURL = feature.staticURL;
 
-                                console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
+                                console.log("self.sites"+index+".staticURL",self.practices[index].staticURL);
 
                             }else{
 
@@ -782,7 +784,7 @@
 
                 /*
                 */
-                self.uploadCollection = function() {
+                self.uploadShapefile = function() {
 
                     if (!self.fileImport ||
                         !self.fileImport.length) {
@@ -800,39 +802,23 @@
 
                     }
 
-                    if (self.fileImport) {
+                    self.progressMessage = 'Uploading your file...';
 
-                        var fileData = new FormData();
+                    var fileData = new FormData();
 
-                        fileData.append('file', self.fileImport[0]);
+                    fileData.append('file', self.fileImport[0]);
 
-                  /*      if (self.group) {
+                    fileData.append('feature_type', 'practice');
 
-                            if (self.group.id) {
+                    fileData.append('site_id', self.site.id);
 
-                                fileData.append('group', self.group.id);
+                    fileData.append('collection', true);
 
-                            } else if (typeof self.group === 'string') {
+                    fileData.append('project_id',self.site.project_id);
 
-                                fileData.append('group', self.group);
+                    console.log('fileData', fileData);
 
-                            }
-
-                        }
-                  */
-
-                  /*
-                        if (self.program && self.program.id) {
-
-                            fileData.append('program', self.program.id);
-
-                        }
-                  */
-                        fileData.append('persist', true);
-
-                        console.log('fileData', fileData);
-
-                        $window.scrollTo(0, 0);
+                    try {
 
                         Shapefile.upload({}, fileData, function(successResponse) {
 
@@ -855,7 +841,11 @@
 
                             }
 
-                            $location.path('/geographies');
+                            self.taskPoll = $interval(function() {
+
+                                self.fetchTasks(successResponse.task.id);
+
+                            }, 1000);
 
                         }, function(errorResponse) {
 
@@ -872,9 +862,80 @@
 
                         });
 
+                    } catch (error) {
+
+                        console.log('Shapefile upload error', error);
+
                     }
 
                 };
+
+                self.hideTasks = function() {
+
+                    console.log("BELIEVE");
+
+                    self.pendingTasks = [];
+
+                    if (typeof self.taskPoll !== 'undefined') {
+
+                        console.log("HIDING TASK");
+
+                        $interval.cancel(self.taskPoll);
+
+                    }
+
+                    self.loadSite();
+
+                };
+
+                self.fetchTasks = function(taskId) {
+
+                    if (taskId &&
+                        typeof taskId === 'number') {
+
+                        return Task.get({
+                            id: taskId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            if (response.status &&
+                                response.status === 'complete') {
+
+                                console.log("TASK SUCCESS");
+
+                                self.hideTasks();
+
+                            }
+
+                        });
+
+                    } else {
+
+                        return Practice.tasks({
+                            id: $route.current.params.practiceId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            self.pendingTasks = response.features;
+
+                            if (self.pendingTasks.length < 1) {
+
+                                 console.log("CANCEL TASK");
+
+                                self.loadSite();
+
+                                $interval.cancel(self.taskPoll);
+
+                            }
+
+                        });
+
+                    }
+
+                };
+
                 /*
                 */
 
