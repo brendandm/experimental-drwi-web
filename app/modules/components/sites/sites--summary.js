@@ -870,6 +870,10 @@
 
                 };
 
+                self.reloadPage = function (){
+                    location.reload();
+                };
+
                 self.hideTasks = function() {
 
                     self.pendingTasks = [];
@@ -879,8 +883,13 @@
                         $interval.cancel(self.taskPoll);
 
                     }
+                    $timeout(function() {
 
-                    self.loadSite();
+                          self.reloadPage();
+                    //    self.loadSite();
+
+                    }, 1000);
+
 
                 };
 
@@ -916,7 +925,15 @@
 
                             if (self.pendingTasks.length < 1) {
 
-                                self.loadSite();
+                                 console.log("FOUR FOUR");
+
+                                //self.loadSite();
+
+                                 $timeout(function() {
+                                     self.reloadPage();
+                                     //   self.loadSite();
+
+                                 }, 1000);
 
                                 $interval.cancel(self.taskPoll);
 
