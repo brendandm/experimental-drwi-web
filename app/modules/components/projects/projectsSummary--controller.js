@@ -875,6 +875,14 @@ angular.module('FieldDoc')
                 */
                 self.uploadShapefile = function() {
 
+                    /*Cast the file into an array
+                    could possibly remove this with reworks
+                    to the Upload directive
+                    */
+                    var tempFileImport = [];
+                    tempFileImport.push(self.fileImport);
+                    self.fileImport = tempFileImport;
+
                     if (!self.fileImport ||
                         !self.fileImport.length) {
 
