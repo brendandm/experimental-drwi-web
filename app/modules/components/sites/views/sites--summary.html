@@ -425,7 +425,7 @@
 
                 <form role="form" class="form" id="form--practice-collection" name="form--practice-collection"
                       style="position: relative; display:block; border:0px solid purple;
-                             width:100%; min-width:300px; max-width:1200px; " data-ng-submit="page.uploadShapefile()">
+                             width:100%; min-width:300px; max-width:1200px; " data-ng-submit="page.uploadShapefile()" >
 
                     <!-- Shapefile input -->
                     <div class="form-field" style="border:0px solid blue; float:left; display:inline block; width:100%;">
@@ -452,10 +452,11 @@
                            Refer to our help documentation for more guidance on batch imports and upload requirements.
 
                         </p>
+
+                        <input type="file" class="form-control" id="shapefile" name="shapefile" file-upload file-model="page.fileImport" />
                         <!--
-                        <input type="file" class="form-control" id="shapefile" name="shapefile" file-upload file-model="page.fileImport"  />
-                         -->
                          <input type="file" class="form-control" id="shapefile" name="shapefile" file-upload file-model="page.fileImport" file-on-change="page.uploadShapefile()" />
+                        -->
 
                         <!--
                         <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
@@ -473,7 +474,7 @@
                             <i class="material-icons" data-ng-if="page.status.processing">
                                 more_horiz
                             </i>
-                            <i class="material-icons" data-ng-if="!page.status.processing">
+                            <i class="material-icons" data-ng-if="!page.status.processing" >
                                 done
                             </i>
                         </button>

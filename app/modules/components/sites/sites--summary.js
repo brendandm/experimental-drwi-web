@@ -786,8 +786,18 @@
                 */
                 self.uploadShapefile = function() {
 
-                    if (!self.fileImport ||
-                        !self.fileImport.length) {
+
+                    /*Cast the file into an array
+                    could possibly remove this with reworks
+                    to the Upload directive
+                    */
+                    var tempFileImport = [];
+                    tempFileImport.push(self.fileImport);
+                    self.fileImport = tempFileImport;
+
+                    if (!self.fileImport  ||
+                        !self.fileImport.length
+                        ) {
 
                         self.alerts = [{
                             'type': 'error',
@@ -805,6 +815,8 @@
                     self.progressMessage = 'Uploading your file...';
 
                     var fileData = new FormData();
+
+
 
                     fileData.append('file', self.fileImport[0]);
 
