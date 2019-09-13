@@ -1007,7 +1007,7 @@ angular.module('FieldDoc')
 
                     } else {
 
-                        return Practice.tasks({
+                        return Site.tasks({
                             id: $route.current.params.practiceId
                         }).$promise.then(function(response) {
 
