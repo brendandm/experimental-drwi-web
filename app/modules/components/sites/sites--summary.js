@@ -252,7 +252,28 @@
                         // Load practices
                         //
 
-                        practices.$promise.then(function(successResponse) {
+                        self.loadPractices();
+
+                        self.loadMetrics();
+
+//                        self.loadTags();
+
+                        self.tags = Utility.processTags(self.site.tags);
+
+                        // self.showElements();
+
+                    });
+
+                };
+
+                self.loadPractices = function(){
+                     Site.practices({
+                            id: self.site.id,
+
+                            currentTime: Date.UTC()
+
+                        }).$promise.then(function(successResponse) {
+
                             console.log("PRACTICE RESPONSE");
 
                             self.practices = successResponse.features;
@@ -266,16 +287,6 @@
                             self.showElements();
 
                         });
-
-                        self.loadMetrics();
-
-//                        self.loadTags();
-
-                        self.tags = Utility.processTags(self.site.tags);
-
-                        // self.showElements();
-
-                    });
 
                 };
 
@@ -868,6 +879,8 @@
 
                             $timeout(closeAlerts, 2000);
 
+                            document.getElementById("shapefile").value = "";
+
                             if (successResponse.task) {
 
                                 self.pendingTasks = [
@@ -920,10 +933,11 @@
                     }
                     $timeout(function() {
 
-                          self.reloadPage();
+                          self.loadPractices();
+                    //      self.reloadPage();
                     //    self.loadSite();
 
-                    }, 2000);
+                    }, 500);
 
 
                 };
@@ -965,10 +979,11 @@
                                 //self.loadSite();
 
                                  $timeout(function() {
-                                     self.reloadPage();
+                                    self.loadPractices();
+                                   //  self.reloadPage();
                                    //     self.loadSite();
 
-                                 }, 2000);
+                                 }, 500);
 
                                 $interval.cancel(self.taskPoll);
 
