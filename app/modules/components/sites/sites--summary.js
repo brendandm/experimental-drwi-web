@@ -254,7 +254,70 @@
 
                         practices.$promise.then(function(successResponse) {
                             console.log("PRACTICE RESPONSE");
-                           
+
+                            self.practices = successResponse.features;
+
+                            console.log('self.practices', successResponse);
+
+                            self.showElements();
+
+                        }, function(errorResponse) {
+
+                            self.showElements();
+
+                        });
+
+                        self.loadMetrics();
+
+//                        self.loadTags();
+
+                        self.tags = Utility.processTags(self.site.tags);
+
+                        // self.showElements();
+
+                    });
+
+                };
+
+                self.loadSite = function() {
+
+                    console.log("LOAD SITE");
+
+                    site.$promise.then(function(successResponse) {
+
+                        console.log("SITE RESPONSE");
+
+                        console.log('self.site', successResponse);
+
+                        self.site = successResponse;
+
+                        if (successResponse.permissions.read &&
+                            successResponse.permissions.write) {
+
+                            self.makePrivate = false;
+
+                        } else {
+
+                            self.makePrivate = true;
+
+                        }
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
+
+                        $rootScope.page.title = self.site.name;
+
+                        self.project = successResponse.project;
+
+                        console.log('self.project', self.project);
+
+                        //
+                        // Load practices
+                        //
+
+                        practices.$promise.then(function(successResponse) {
+                            console.log("PRACTICE RESPONSE");
+
                             self.practices = successResponse.features;
 
                             console.log('self.practices', successResponse);
@@ -426,25 +489,15 @@
             */
                 self.createStaticMapURLs = function(arr){
 
-                    console.log("createStaticMapURLS -> arr", arr);
-
                     arr.forEach(function(feature, index) {
-                     console.log(
-                        'self.createStaticMapUrls --> feature, index',
-                        feature,
-                        index);
-                     console.log(feature.properties.project.extent);
+
                          if (feature.properties.project.extent) {
 
                             if(feature.geometry != null){
 
                                 feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
 
-                                console.log('feature.staticURL',feature.staticURL);
-
                                 self.practices[index].staticURL = feature.staticURL;
-
-                                console.log("self.sites"+index+".staticURL",self.practices[index].staticURL);
 
                             }else{
 
@@ -452,8 +505,6 @@
                                                             '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
                                                             'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
                                                         ].join('');
-
-                                console.log("self.practices"+index+".staticURL",self.practices[index].staticURL);
                             }
 
                         }
@@ -869,10 +920,10 @@
                     }
                     $timeout(function() {
 
-                    //      self.reloadPage();
-                        self.loadSite();
+                          self.reloadPage();
+                    //    self.loadSite();
 
-                    }, 1000);
+                    }, 2000);
 
 
                 };
@@ -914,10 +965,10 @@
                                 //self.loadSite();
 
                                  $timeout(function() {
-                                   //  self.reloadPage();
-                                        self.loadSite();
+                                     self.reloadPage();
+                                   //     self.loadSite();
 
-                                 }, 1000);
+                                 }, 2000);
 
                                 $interval.cancel(self.taskPoll);
 
