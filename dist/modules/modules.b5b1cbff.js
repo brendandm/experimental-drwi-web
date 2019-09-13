@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1568383476383})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1568408439075})
 
 ;
 /**
@@ -7023,7 +7023,13 @@ angular.module('FieldDoc')
 
                 console.log('self.loadSites --> Starting...');
 
-                sites.$promise.then(function(successResponse) {
+                Project.sites({
+
+                    id: self.project.id,
+
+                    currentTime: Date.UTC()
+
+                }).$promise.then(function(successResponse) {
 
                     console.log('Project sites --> ', successResponse);
 
@@ -7632,6 +7638,8 @@ angular.module('FieldDoc')
 
                             $timeout(closeAlerts, 2000);
 
+                            document.getElementById("shapefile").value = "";
+
                             if (successResponse.task) {
 
                                 self.pendingTasks = [
@@ -7680,8 +7688,8 @@ angular.module('FieldDoc')
                     }
 
                      $timeout(function() {
-                                     self.reloadPage();
-                                     //   self.loadSite();
+                                    // self.reloadPage();
+                                        self.loadSites();
 
                      }, 1000);
 
@@ -7709,7 +7717,7 @@ angular.module('FieldDoc')
 
                     } else {
 
-                        return Practice.tasks({
+                        return Site.tasks({
                             id: $route.current.params.practiceId
                         }).$promise.then(function(response) {
 
@@ -7721,8 +7729,8 @@ angular.module('FieldDoc')
 
 
                                  $timeout(function() {
-                                     self.reloadPage();
-                                     //   self.loadSite();
+                                    // self.reloadPage();
+                                        self.loadSites();
 
                                  }, 1000);
 
@@ -12285,7 +12293,28 @@ angular.module('FieldDoc')
                         // Load practices
                         //
 
-                        practices.$promise.then(function(successResponse) {
+                        self.loadPractices();
+
+                        self.loadMetrics();
+
+//                        self.loadTags();
+
+                        self.tags = Utility.processTags(self.site.tags);
+
+                        // self.showElements();
+
+                    });
+
+                };
+
+                self.loadPractices = function(){
+                     Site.practices({
+                            id: self.site.id,
+
+                            currentTime: Date.UTC()
+
+                        }).$promise.then(function(successResponse) {
+
                             console.log("PRACTICE RESPONSE");
 
                             self.practices = successResponse.features;
@@ -12299,16 +12328,6 @@ angular.module('FieldDoc')
                             self.showElements();
 
                         });
-
-                        self.loadMetrics();
-
-//                        self.loadTags();
-
-                        self.tags = Utility.processTags(self.site.tags);
-
-                        // self.showElements();
-
-                    });
 
                 };
 
@@ -12901,6 +12920,8 @@ angular.module('FieldDoc')
 
                             $timeout(closeAlerts, 2000);
 
+                            document.getElementById("shapefile").value = "";
+
                             if (successResponse.task) {
 
                                 self.pendingTasks = [
@@ -12953,10 +12974,11 @@ angular.module('FieldDoc')
                     }
                     $timeout(function() {
 
-                          self.reloadPage();
+                          self.loadPractices();
+                    //      self.reloadPage();
                     //    self.loadSite();
 
-                    }, 2000);
+                    }, 500);
 
 
                 };
@@ -12998,10 +13020,11 @@ angular.module('FieldDoc')
                                 //self.loadSite();
 
                                  $timeout(function() {
-                                     self.reloadPage();
+                                    self.loadPractices();
+                                   //  self.reloadPage();
                                    //     self.loadSite();
 
-                                 }, 2000);
+                                 }, 500);
 
                                 $interval.cancel(self.taskPoll);
 
