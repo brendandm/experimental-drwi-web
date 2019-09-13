@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1565901360448})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1568383476383})
 
 ;
 /**
@@ -6714,7 +6714,9 @@ angular.module('FieldDoc')
         function(Account, Notifications, $rootScope, Project, $routeParams,
             $scope, $location, mapbox, Site, user, $window, $timeout,
             Practice, project, sites, Utility, $interval, LayerService,
-            MapManager) {
+            MapManager,
+            Shapefile, Task
+            ) {
 
             var self = this;
 
@@ -7569,6 +7571,178 @@ angular.module('FieldDoc')
                 });
 
             };
+
+
+            /*
+                */
+                self.uploadShapefile = function() {
+
+                    /*Cast the file into an array
+                    could possibly remove this with reworks
+                    to the Upload directive
+                    */
+                    var tempFileImport = [];
+                    tempFileImport.push(self.fileImport);
+                    self.fileImport = tempFileImport;
+
+                    if (!self.fileImport ||
+                        !self.fileImport.length) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Please select a file.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        return false;
+
+                    }
+
+                    self.progressMessage = 'Uploading your file...';
+
+                    var fileData = new FormData();
+
+                    fileData.append('file', self.fileImport[0]);
+
+                    fileData.append('feature_type', 'site');
+
+                    //fileData.append('site_id', self.site.id);
+
+                    fileData.append('collection', true);
+
+                    fileData.append('project_id',self.project.id);
+
+                    console.log('fileData', fileData);
+
+                    try {
+
+                        Shapefile.upload({}, fileData, function(successResponse) {
+
+                            console.log('successResponse', successResponse);
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Upload complete. Processing data...',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                            if (successResponse.task) {
+
+                                self.pendingTasks = [
+                                    successResponse.task
+                                ];
+
+                            }
+
+                            self.taskPoll = $interval(function() {
+
+                                self.fetchTasks(successResponse.task.id);
+
+                            }, 1000);
+
+                        }, function(errorResponse) {
+
+                            console.log('Upload error', errorResponse);
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'The file could not be processed.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                        });
+
+                    } catch (error) {
+
+                        console.log('Shapefile upload error', error);
+
+                    }
+
+                };
+
+                self.hideTasks = function() {
+
+                    self.pendingTasks = [];
+
+                    if (typeof self.taskPoll !== 'undefined') {
+
+                        $interval.cancel(self.taskPoll);
+
+                    }
+
+                     $timeout(function() {
+                                     self.reloadPage();
+                                     //   self.loadSite();
+
+                     }, 1000);
+
+                };
+
+                self.fetchTasks = function(taskId) {
+
+                    if (taskId &&
+                        typeof taskId === 'number') {
+
+                        return Task.get({
+                            id: taskId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            if (response.status &&
+                                response.status === 'complete') {
+
+                                self.hideTasks();
+
+                            }
+
+                        });
+
+                    } else {
+
+                        return Practice.tasks({
+                            id: $route.current.params.practiceId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            self.pendingTasks = response.features;
+
+                            if (self.pendingTasks.length < 1) {
+
+
+                                 $timeout(function() {
+                                     self.reloadPage();
+                                     //   self.loadSite();
+
+                                 }, 1000);
+
+                                $interval.cancel(self.taskPoll);
+
+                            }
+
+                        });
+
+                    }
+
+                };
+
+                /*
+                */
+
+             self.reloadPage = function (){
+                    location.reload();
+                };
+
 
 
             //
@@ -11870,7 +12044,8 @@ angular.module('FieldDoc')
         .controller('SiteSummaryController',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
                 $route, nodes, user, Utility, site, mapbox, Site, Project, practices,
-                $interval, LayerService, MapManager) {
+                $interval, LayerService, MapManager,
+                Shapefile, Task) {
 
                 var self = this;
 
@@ -11892,6 +12067,15 @@ angular.module('FieldDoc')
                     $window.print();
 
                 };
+
+                /**/
+                 self.alerts = [];
+
+                function closeAlerts() {
+
+                    self.alerts = [];
+
+                }
 
                 self.showElements = function() {
 
@@ -11923,14 +12107,6 @@ angular.module('FieldDoc')
                     }, 1000);
 
                 };
-
-                self.alerts = [];
-
-                function closeAlerts() {
-
-                    self.alerts = [];
-
-                }
 
                 function closeRoute() {
 
@@ -12075,7 +12251,11 @@ angular.module('FieldDoc')
 
                 self.loadSite = function() {
 
+                    console.log("LOAD SITE");
+
                     site.$promise.then(function(successResponse) {
+
+                        console.log("SITE RESPONSE");
 
                         console.log('self.site', successResponse);
 
@@ -12106,40 +12286,70 @@ angular.module('FieldDoc')
                         //
 
                         practices.$promise.then(function(successResponse) {
+                            console.log("PRACTICE RESPONSE");
 
-                            // // console.log('self.practices', successResponse);
+                            self.practices = successResponse.features;
 
-                            // successResponse.features.forEach(function(feature) {
+                            console.log('self.practices', successResponse);
 
-                            //     if (feature.geometry) {
+                            self.showElements();
 
-                            //         feature.geojson = self.buildFeature(feature.geometry);
+                        }, function(errorResponse) {
 
-                            //         feature.bounds = turf.bbox(feature.geometry);
+                            self.showElements();
 
-                            //         // var styledFeature = {
-                            //         //     "type": "Feature",
-                            //         //     "geometry": feature.geometry,
-                            //         //     "properties": {
-                            //         //         "marker-size": "small",
-                            //         //         "marker-color": "#2196F3",
-                            //         //         "stroke": "#2196F3",
-                            //         //         "stroke-opacity": 1.0,
-                            //         //         "stroke-width": 2,
-                            //         //         "fill": "#2196F3",
-                            //         //         "fill-opacity": 0.5
-                            //         //     }
-                            //         // };
+                        });
 
-                            //         // // Build static map URL for Mapbox API
+                        self.loadMetrics();
 
-                            //         // var staticURL = 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
+//                        self.loadTags();
 
-                            //         // feature.staticURL = staticURL;
+                        self.tags = Utility.processTags(self.site.tags);
 
-                            //     }
+                        // self.showElements();
 
-                            // });
+                    });
+
+                };
+
+                self.loadSite = function() {
+
+                    console.log("LOAD SITE");
+
+                    site.$promise.then(function(successResponse) {
+
+                        console.log("SITE RESPONSE");
+
+                        console.log('self.site', successResponse);
+
+                        self.site = successResponse;
+
+                        if (successResponse.permissions.read &&
+                            successResponse.permissions.write) {
+
+                            self.makePrivate = false;
+
+                        } else {
+
+                            self.makePrivate = true;
+
+                        }
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
+
+                        $rootScope.page.title = self.site.name;
+
+                        self.project = successResponse.project;
+
+                        console.log('self.project', self.project);
+
+                        //
+                        // Load practices
+                        //
+
+                        practices.$promise.then(function(successResponse) {
+                            console.log("PRACTICE RESPONSE");
 
                             self.practices = successResponse.features;
 
@@ -12311,25 +12521,16 @@ angular.module('FieldDoc')
                 if no site geometry, adds default URL to practices[].staticURL
             */
                 self.createStaticMapURLs = function(arr){
-                    console.log("createStaticMapURLS -> arr", arr);
 
                     arr.forEach(function(feature, index) {
-                     console.log(
-                        'self.createStaticMapUrls --> feature, index',
-                        feature,
-                        index);
-                     console.log(feature.properties.project.extent);
+
                          if (feature.properties.project.extent) {
 
                             if(feature.geometry != null){
 
                                 feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
 
-                                console.log('feature.staticURL',feature.staticURL);
-
                                 self.practices[index].staticURL = feature.staticURL;
-
-                                console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
 
                             }else{
 
@@ -12337,8 +12538,6 @@ angular.module('FieldDoc')
                                                             '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
                                                             'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
                                                         ].join('');
-
-                                console.log("self.practices"+index+".staticURL",self.practices[index].staticURL);
                             }
 
                         }
@@ -12636,6 +12835,187 @@ angular.module('FieldDoc')
                     });
 
                 };
+
+
+            /*
+            START BATCH UPLOAD METHODS
+            */
+                self.uploadShapefile = function() {
+
+
+                    /*Cast the file into an array
+                    could possibly remove this with reworks
+                    to the Upload directive
+                    */
+                    var tempFileImport = [];
+                    tempFileImport.push(self.fileImport);
+                    self.fileImport = tempFileImport;
+
+                    if (!self.fileImport  ||
+                        !self.fileImport.length
+                        ) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Please select a file.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        return false;
+
+                    }
+
+                    self.progressMessage = 'Uploading your file...';
+
+                    var fileData = new FormData();
+
+
+
+                    fileData.append('file', self.fileImport[0]);
+
+                    fileData.append('feature_type', 'practice');
+
+                    fileData.append('site_id', self.site.id);
+
+                    fileData.append('collection', true);
+
+                    fileData.append('project_id',self.site.project_id);
+
+                    console.log('fileData', fileData);
+
+                    try {
+
+                        Shapefile.upload({}, fileData, function(successResponse) {
+
+                            console.log('successResponse', successResponse);
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Upload complete. Processing data...',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                            if (successResponse.task) {
+
+                                self.pendingTasks = [
+                                    successResponse.task
+                                ];
+
+                            }
+
+                            self.taskPoll = $interval(function() {
+
+                                self.fetchTasks(successResponse.task.id);
+
+                            }, 1000);
+
+                        }, function(errorResponse) {
+
+                            console.log('Upload error', errorResponse);
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'The file could not be processed.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                        });
+
+                    } catch (error) {
+
+                        console.log('Shapefile upload error', error);
+
+                    }
+
+                };
+
+                self.reloadPage = function (){
+                    location.reload();
+                };
+
+                self.hideTasks = function() {
+
+                    self.pendingTasks = [];
+
+                    if (typeof self.taskPoll !== 'undefined') {
+
+                        $interval.cancel(self.taskPoll);
+
+                    }
+                    $timeout(function() {
+
+                          self.reloadPage();
+                    //    self.loadSite();
+
+                    }, 2000);
+
+
+                };
+
+                self.fetchTasks = function(taskId) {
+
+                    if (taskId &&
+                        typeof taskId === 'number') {
+
+                        return Task.get({
+                            id: taskId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            if (response.status &&
+                                response.status === 'complete') {
+
+                                self.hideTasks();
+
+                            }
+
+                        });
+
+                    } else {
+
+                        return Practice.tasks({
+                            id: $route.current.params.practiceId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            self.pendingTasks = response.features;
+
+                            if (self.pendingTasks.length < 1) {
+
+                                 console.log("FOUR FOUR");
+
+                                //self.loadSite();
+
+                                 $timeout(function() {
+                                     self.reloadPage();
+                                   //     self.loadSite();
+
+                                 }, 2000);
+
+                                $interval.cancel(self.taskPoll);
+
+                            }
+
+                        });
+
+                    }
+
+                };
+
+            /*
+            END BATCH UPLOAD METHODS
+            */
 
                 //
                 // Verify Account information for proper UI element display
