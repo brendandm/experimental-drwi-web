@@ -321,7 +321,13 @@ angular.module('FieldDoc')
 
                 console.log('self.loadSites --> Starting...');
 
-                sites.$promise.then(function(successResponse) {
+                Project.sites({
+
+                    id: self.project.id,
+
+                    currentTime: Date.UTC()
+
+                }).$promise.then(function(successResponse) {
 
                     console.log('Project sites --> ', successResponse);
 
@@ -930,6 +936,8 @@ angular.module('FieldDoc')
 
                             $timeout(closeAlerts, 2000);
 
+                            document.getElementById("shapefile").value = "";
+
                             if (successResponse.task) {
 
                                 self.pendingTasks = [
@@ -978,8 +986,8 @@ angular.module('FieldDoc')
                     }
 
                      $timeout(function() {
-                                     self.reloadPage();
-                                     //   self.loadSite();
+                                    // self.reloadPage();
+                                        self.loadSites();
 
                      }, 1000);
 
@@ -1019,8 +1027,8 @@ angular.module('FieldDoc')
 
 
                                  $timeout(function() {
-                                     self.reloadPage();
-                                     //   self.loadSite();
+                                    // self.reloadPage();
+                                        self.loadSites();
 
                                  }, 1000);
 
