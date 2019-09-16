@@ -414,7 +414,9 @@
             </section>
 
 
-            <section class="reveal fade-in t0" style="padding: 1em 0 0; border:0px solid red; ">
+            <section class="reveal fade-in t0" style="padding: 1em 0 0; border:0px solid red; "
+                data-ng-if="$root.user.properties.is_admin || page.project.organization.id == page.user.properties.organization.id"
+            >
 
                 <form role="form" class="form" id="form--practice-collection" name="form--practice-collection"
                       style="position: relative; display:block; border:0px solid purple;
