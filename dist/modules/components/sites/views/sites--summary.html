@@ -415,7 +415,7 @@
 
 
             <section class="reveal fade-in t0" style="padding: 1em 0 0; border:0px solid red; "
-                data-ng-if="$root.user.properties.is_admin || page.project.organization.id == page.user.properties.organization.id"
+                data-ng-if="page.permissions.can_edit"
             >
 
                 <form role="form" class="form" id="form--practice-collection" name="form--practice-collection"
