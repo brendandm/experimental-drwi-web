@@ -1061,6 +1061,8 @@ angular.module('FieldDoc')
 
                     $rootScope.user = Account.userObject = userResponse;
 
+                    self.user = Account.userObject = userResponse;
+
                     self.permissions = {
                         isLoggedIn: Account.hasToken(),
                         role: $rootScope.user.properties.roles[0],
