@@ -337,6 +337,8 @@
 
                 };
 
+// init commit
+
                 self.loadMetrics = function() {
 
                     Practice.progress({
