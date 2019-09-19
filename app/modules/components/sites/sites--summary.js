@@ -520,7 +520,7 @@
 
                         }
 
-                });
+                    });
                 }
 
                 self.addMapPreviews = function(arr) {
