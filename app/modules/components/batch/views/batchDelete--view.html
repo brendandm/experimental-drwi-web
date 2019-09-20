@@ -82,7 +82,18 @@
              <!-- Selected Practices -->
             <section class="reveal fade-in t3" style="padding: 0;">
 
-                <h2>Practices</h2>
+                <h3>Selected for Delete</h3>
+
+                <div>
+                    <a class="snapshot--title" data-ng-click="page.removeAllFromDeleteQueue()" title="Add to batch delete">
+                       Deselect All
+                    </a>
+                    <a class="snapshot--title" data-ng-click="page.removeFromDeleteQueue(practice.properties.id)" title="Add to batch delete">
+                        <i class="material-icons">
+                            delete_sweep_circle
+                        </i>
+                    </a>
+                </div>
 
                 <ul class="snapshot--cards list-unstyled">
 
@@ -139,11 +150,24 @@
             <!-- Unselected Practices -->
             <section class="reveal fade-in t3" style="padding: 0;">
 
-                <h2>Practices</h2>
+                <h3>Available Practices</h3>
+
+                <div>
+                    <a class="snapshot--title" data-ng-click="page.addAllToDeleteQueue()" title="Add to batch delete">
+                       Select All
+                    </a>
+
+                </div>
+
+                 <div class="collection-search reveal fade-in t0">
+
+                     <input type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search your practice types">
+
+                </div>
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="practice in page.practices track by $index">
+                    <li class="card" data-ng-repeat="practice in page.unselectedFeatures | orderBy:'-modified_on' | filter: page.queryToken" >
 
                         <div class="card--content">
 
