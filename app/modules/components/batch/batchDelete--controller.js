@@ -225,6 +225,16 @@
                     console.log("self.unselectedFeatures -->",self.unselectedFeatures);
                 };
 
+                self.addAllToDeleteQueue = function(){
+                    self.selectedFeatures = self.selectedFeatures.concat(self.unselectedFeatures);
+                    self.unselectedFeatures = [];
+                };
+
+                self.removeAllFromDeleteQueue = function(){
+                    self.unselectedFeatures = self.unselectedFeatures.concat(self.selectedFeatures);
+                    self.selectedFeatures = [];
+                };
+
                 //
                 // Verify Account information for proper UI element display
                 //
