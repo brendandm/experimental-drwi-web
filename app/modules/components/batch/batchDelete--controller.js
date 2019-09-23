@@ -17,6 +17,9 @@
 
                 var self = this;
 
+                self.confirmBatchDelete = false;
+                self.toggleConfirmDelete = false;
+
                 self.unselectedFeatures = [];
                 self.selectedFeatures = [];
 
@@ -107,9 +110,16 @@
 
                             console.log('self.practices', successResponse);
 
-                            self.unselectedFeatures = self.practices;
+                            self.availableFeatures = self.practices;
 
-                            console.log('self.unselectedFeatures', self.unselectedFeatures);
+                            self.availableFeatures.forEach(function(feature, index) {
+                                console.log("index", index);
+                                var markedKey = "marked_for_deletion";
+                                var markedVal = false;
+                                self.availableFeatures[index][markedKey] = markedVal;
+                            });
+
+                            console.log('self.availableFeatures', self.availableFeatures);
 
                             self.showElements();
 
@@ -191,7 +201,20 @@
 
                 self.addToDeleteQueue = function(featureId){
                     console.log("ADDING PRACTICE "+featureId+" TO DELETE QUEUE");
-
+                      var i = 0
+                      self.availableFeatures.forEach(function(feature){
+                        if(feature.properties.id == featureId){
+                            console.log(featureId+" found in self.availableFeatures");
+                            self.availableFeatures[i].marked_for_deletion = true;
+                            var tempFeature = feature;
+                            self.selectedFeatures.push(tempFeature);
+                          //  self.unselectedFeatures.splice(i,1);
+                        }
+                        i = i+1;
+                    });
+                    console.log("self.selectedFeatures -->",self.selectedFeatures);
+                    console.log("self.availableFeatures -->",self.availableFeatures);
+                /*
                     var i = 0
 
                     self.unselectedFeatures.forEach(function(feature){
@@ -205,11 +228,30 @@
                     });
                     console.log("self.selectedFeatures -->",self.selectedFeatures);
                     console.log("self.unselectedFeatures -->",self.unselectedFeatures);
+                 */
                 };
 
                 self.removeFromDeleteQueue = function(featureId){
                      console.log("REMOVING PRACTICE "+featureId+" FROM DELETE QUEUE");
-
+                     var i = 0
+                     self.availableFeatures.forEach(function(feature){
+                        if(feature.properties.id == featureId){
+                            console.log(featureId+" found in self.availableFeatures");
+                            self.availableFeatures[i].marked_for_deletion = false;
+                           // self.selectedFeatures.splice(i,1);
+                          //  self.unselectedFeatures.splice(i,1);
+                        }
+                        i = i+1;
+                    });
+                    var i2 = 0;
+                    self.selectedFeatures.forEach(function(feature){
+                         if(feature.properties.id == featureId){
+                            self.selectedFeatures.splice(i2,1);
+                         }
+                         i2 = i2+1;
+                    });
+                     console.log("self.selectedFeatures -->",self.selectedFeatures);
+                    /*
                     var i = 0
 
                     self.selectedFeatures.forEach(function(feature){
@@ -223,6 +265,7 @@
                     });
                     console.log("self.selectedFeatures -->",self.selectedFeatures);
                     console.log("self.unselectedFeatures -->",self.unselectedFeatures);
+                    */
                 };
 
                 self.addAllToDeleteQueue = function(){
@@ -235,6 +278,11 @@
                     self.selectedFeatures = [];
                 };
 
+
+                self.toggleConfirmDeleteDialog = function(){
+                    console.log();
+                    self.toggleConfirmDelete = true;
+                };
 
                 self.batchDelete = function(){
                     console.log("self.site.id",self.site.id);
