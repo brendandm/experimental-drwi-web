@@ -13,7 +13,7 @@
         .controller('BatchDeleteController',
             function(Account, environment, $http, $location, mapbox,
                 Notifications, Site, site, $rootScope, $route, $scope,
-                $timeout, $interval, user, Utility) {
+                $timeout, $interval, user, Utility, Batch) {
 
                 var self = this;
 
@@ -233,6 +233,29 @@
                 self.removeAllFromDeleteQueue = function(){
                     self.unselectedFeatures = self.unselectedFeatures.concat(self.selectedFeatures);
                     self.selectedFeatures = [];
+                };
+
+
+                self.batchDelete = function(){
+                    console.log("self.site.id",self.site.id);
+
+                   var data  = {collection: self.selectedFeatures};
+
+                    Batch.batchDelete({
+                        featureType: 'site',
+                        id: self.site.id
+                    },data).$promise.then(function(successResponse) {
+
+                        console.log('Batch.practiceDelete', successResponse);
+
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+
                 };
 
                 //
