@@ -85,10 +85,10 @@
                 <h3>Selected for Delete</h3>
 
                 <div>
-                    <a class="snapshot--title" data-ng-click="page.removeAllFromDeleteQueue()" title="Add to batch delete">
+                    <a class="snapshot--title" data-ng-click="page.removeAllFromDeleteQueue()" title="Add all to batch delete">
                        Deselect All
                     </a>
-                    <a class="snapshot--title" data-ng-click="page.removeFromDeleteQueue(practice.properties.id)" title="Add to batch delete">
+                    <a class="snapshot--title" data-ng-click="page.batchDelete()" title="Delete all selected practices">
                         <i class="material-icons">
                             delete_sweep_circle
                         </i>
