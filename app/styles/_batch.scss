@@ -12,6 +12,36 @@
 
 }
 
+.multiSelect {
+  display: flex;
+  //  float:right !important;
+    text-align: right;
+  //  clear:left;
+ //   float:right;
+    display:inline-block;
+    position:relative;
+    width:60%;
+    min-width:300px;
+    border: 0px solid red;
+    padding: 30px 30px 20px 0px;
+
+    margin: 0 0% 0 0%;
+
+}
+
+.multiSelect a{
+    width: 30px;
+    height: 30px;
+    background-color:#999999;
+    border-radius:15px;
+    color:white;
+    padding: 0px 10px 0 10px;
+    margin: 0px 15px 15px 15px;
+}
+.multiSelect a:hover{
+    background-color:#666666;
+    color:white !important;
+}
 
 .delete--confirm--delete--popup {
   position: absolute;
