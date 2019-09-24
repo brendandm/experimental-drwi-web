@@ -213,7 +213,7 @@
                         }
                         i = i+1;
                     });
-                   
+
                     console.log("self.selectedFeatures -->",self.selectedFeatures);
                     console.log("self.availableFeatures -->",self.availableFeatures);
                 /*
@@ -235,6 +235,10 @@
 
                 self.removeFromDeleteQueue = function(featureId){
                      console.log("REMOVING PRACTICE "+featureId+" FROM DELETE QUEUE");
+                     /*below resetting of self.selected features is a hackaround for the
+                     commented out splice below, as it appeared to be
+                      also splicing available features after select all. Cause unknow*/
+                     self.selectedFeatures = [];
                      var i = 0
                      self.availableFeatures.forEach(function(feature){
                         if(feature.properties.id == featureId){
@@ -243,31 +247,25 @@
                            // self.selectedFeatures.splice(i,1);
                           //  self.unselectedFeatures.splice(i,1);
                         }
-                        i = i+1;
-                    });
-                    var i2 = 0;
-                    self.selectedFeatures.forEach(function(feature){
-                         if(feature.properties.id == featureId){
-                            self.selectedFeatures.splice(i2,1);
-                         }
-                         i2 = i2+1;
-                    });
-                     console.log("self.selectedFeatures -->",self.selectedFeatures);
-                    /*
-                    var i = 0
-
-                    self.selectedFeatures.forEach(function(feature){
-                        if(feature.properties.id == featureId){
-                            console.log(featureId+" found in self.selectedFeatures");
-                            var tempFeature = feature;
-                            self.unselectedFeatures.unshift(tempFeature);
-                            self.selectedFeatures.splice(i,1);
+                        if(self.availableFeatures[i].marked_for_deletion == true){
+                            self.selectedFeatures.push(self.availableFeatures[i]);
                         }
                         i = i+1;
                     });
-                    console.log("self.selectedFeatures -->",self.selectedFeatures);
-                    console.log("self.unselectedFeatures -->",self.unselectedFeatures);
+                  /*  var i2 = 0;
+                    self.selectedFeatures.forEach(function(feature){
+                         console.log("REMOVING PRACTICE "+featureId+" FROM selectedFeatures");
+                         if(feature.properties.id == featureId){
+                           // this line is causing issue
+                            self.selectedFeatures.splice(i2,1);
+
+                         }
+                         i2 = i2+1;
+                    });
                     */
+                     console.log("self.selectedFeatures -->",self.selectedFeatures);
+                     console.log("self.availableFeatures -->",self.availableFeatures);
+
                 };
 
                 self.addAllToDeleteQueue = function(){
