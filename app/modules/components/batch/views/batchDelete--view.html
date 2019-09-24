@@ -42,11 +42,11 @@
                         </p>
 
                          <p>
-                            <strong>Project:</strong> <a href="{{ page.site.links.project.html }}">{{ page.project.name || 'Un-named' }}</a>
+                            <strong>Project:</strong> <a href="{{ page.site.links.project.html }}">{{ page.site.properties.project.properties.name || 'Un-named' }}</a>
                         </p>
 
                         <p>
-                            <strong>Site:</strong> <a href="{{ page.site.links.project.html }}">{{ page.site.name || 'Un-named' }}</a>
+                            <strong>Site:</strong> <a href="{{ page.site.links.project.html }}">{{ page.site.properties.name || 'Un-named' }}</a>
                         </p>
 
                         <p data-ng-if="page.site.area && page.site.area > 0">
@@ -83,7 +83,9 @@
             <!-- Unselected Practices -->
             <section class="reveal fade-in t3" style="padding: 0;">
 
-                <h3>Available Practices</h3>
+                <p>
+                    Showing <b>{{ practiceList.length }}</b> of <b>{{ page.availableFeatures.length }}</b> total practices in site <b>{{page.site.properties.name}}</b>.
+                </p>
 
 
 
@@ -111,7 +113,7 @@
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="practice in page.availableFeatures | orderBy:'-modified_on' | filter: page.queryToken">
+                    <li class="card" data-ng-repeat="practice in practiceList = (page.availableFeatures | orderBy:'-modified_on' | filter: page.queryToken)">
 
                         <div class="card--content">
 
