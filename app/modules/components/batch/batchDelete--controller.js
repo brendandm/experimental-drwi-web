@@ -208,10 +208,12 @@
                             self.availableFeatures[i].marked_for_deletion = true;
                             var tempFeature = feature;
                             self.selectedFeatures.push(tempFeature);
+
                           //  self.unselectedFeatures.splice(i,1);
                         }
                         i = i+1;
                     });
+                   
                     console.log("self.selectedFeatures -->",self.selectedFeatures);
                     console.log("self.availableFeatures -->",self.availableFeatures);
                 /*
@@ -269,12 +271,21 @@
                 };
 
                 self.addAllToDeleteQueue = function(){
-                    self.selectedFeatures = self.selectedFeatures.concat(self.unselectedFeatures);
-                    self.unselectedFeatures = [];
+                    var i = 0
+                    self.availableFeatures.forEach(function(feature){
+                        self.availableFeatures[i].marked_for_deletion = true;
+                        i = i+1;
+                    });
+                    self.selectedFeatures = self.availableFeatures;
+
                 };
 
                 self.removeAllFromDeleteQueue = function(){
-                    self.unselectedFeatures = self.unselectedFeatures.concat(self.selectedFeatures);
+                   var i = 0
+                    self.availableFeatures.forEach(function(feature){
+                        self.availableFeatures[i].marked_for_deletion = false;
+                        i = i+1;
+                    });
                     self.selectedFeatures = [];
                 };
 
@@ -285,6 +296,7 @@
                 };
 
                 self.batchDelete = function(){
+                    self.toggleConfirmDelete = false;
                     console.log("self.site.id",self.site.id);
 
                    var data  = {collection: self.selectedFeatures};
@@ -296,13 +308,18 @@
 
                         console.log('Batch.practiceDelete', successResponse);
 
+                        self.selectedFeatures = [];
+                        self.loadPractices();
 
                     }, function(errorResponse) {
 
                         console.log('errorResponse', errorResponse);
 
                     });
+                };
 
+                self.cancelDelete = function(){
+                     self.toggleConfirmDelete = false;
 
                 };
 
