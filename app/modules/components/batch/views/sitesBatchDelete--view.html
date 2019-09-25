@@ -51,12 +51,12 @@
 
                         <p style="max-width:800px; text-align:justify">
                             <strong>Instructions:</strong><br>
-                            Select practices for deletion by
+                            Select one or more practices for deletion by
                             clicking the <sub><i class="material-icons" style="color:#666666; font-size:20px;"> delete</i></sub> at the bottom of the practice's thumbnail.
                             After making your selection,
                             click the <sub><i class="material-icons" style="color:#666666; font-size:20px;">delete_sweep</i></sub>
                             at the bottom of the page to start the deletion.
-                            Please note, deleting a practice or sites will also delete all reports thereunder.
+                            Please note, deleting a practice or practices will also delete all reports thereunder.
                         </p>
 
 
@@ -82,15 +82,14 @@
 
                      <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search your practices">
 
-                     <div class="multiSelect">
-                        <a data-ng-click="page.removeAllFromDeleteQueue()" title="Remove all from batch delete">
+                     <div class="collection-filter-group">
+                        <button data-ng-click="page.removeAllFromDeleteQueue()" title="Remove all from batch delete" style="margin-top:-15px; margin-left:30px;">
                             <nobr>Deselect All</nobr>
-                        </a>
-                        <a data-ng-click="page.addAllToDeleteQueue()" title="Add all to batch delete" style="margin-top:15px;" >
+                        </button>
+                        <button data-ng-click="page.addAllToDeleteQueue()" title="Add all to batch delete" style="margin-top:-15px; margin-left:30px;" >
                             <nobr>Select All</nobr>
-                        </a>
-
-                </div>
+                        </button>
+                     </div>
 
                 </div>
 
@@ -117,10 +116,33 @@
 
                                 <p>{{ (practice.properties.description || practice.properties.annotation || 'No description') | truncate:80 }}</p>
                                 <div class="actions">
+
+                                        <a class="snapshot--title" href="/practices/{{ practice.properties.id }}" title="Practice summary">
+                                            <i class="material-icons">
+                                                dashboard
+                                            </i>
+                                        </a>
+                                        <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/photos" title="Practice photos">
+                                            <i class="material-icons">
+                                                insert_photo
+                                            </i>
+                                        </a>
+                                        <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/edit" title="Edit practice" data-ng-if="page.permissions.can_edit">
+                                            <i class="material-icons">
+                                                edit
+                                            </i>
+                                        </a>
+                                        <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/location" title="Edit location" data-ng-if="page.permissions.can_edit">
+                                            <i class="material-icons">
+                                                location_on
+                                            </i>
+                                        </a>
+
                                     <a class="snapshot--title"
                                        data-ng-click="page.addToDeleteQueue(practice.properties.id)"
                                        title="Add to batch delete"
                                        data-ng-if="!practice.marked_for_deletion"
+                                       s
                                     >
                                         <i class="material-icons" style=" padding: 3px; 3px; 0 3px;">
                                             delete
@@ -130,6 +152,7 @@
                                         data-ng-click="page.removeFromDeleteQueue(practice.properties.id)"
                                         title="Remove from batch delete"
                                         data-ng-if="practice.marked_for_deletion"
+                                        style="margin-left:80px;"
                                      >
                                           <i class="material-icons" style="width: 30px;
                                                                         height: 30px;

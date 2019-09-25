@@ -52,7 +52,7 @@
 
                         <p style="max-width:800px; text-align:justify">
                             <strong>Instructions:</strong><br>
-                            Select sites for deletion by
+                            Select one or more sites for deletion by
                             clicking the <sub><i class="material-icons" style="color:#666666; font-size:20px;"> delete</i></sub> at the bottom of the site's thumbnail.
                             After making your selection,
                             click the <sub><i class="material-icons" style="color:#666666; font-size:20px;">delete_sweep</i></sub>
@@ -83,15 +83,14 @@
 
                      <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search your sites">
 
-                     <div class="multiSelect">
-                        <a data-ng-click="page.removeAllFromDeleteQueue()" title="Remove all from batch delete">
+                    <div class="collection-filter-group">
+                        <button data-ng-click="page.removeAllFromDeleteQueue()" title="Remove all from batch delete" style="margin-top:-15px; margin-left:30px;">
                             <nobr>Deselect All</nobr>
-                        </a>
-                        <a data-ng-click="page.addAllToDeleteQueue()" title="Add all to batch delete" style="margin-top:15px;" >
+                        </button>
+                        <button data-ng-click="page.addAllToDeleteQueue()" title="Add all to batch delete" style="margin-top:-15px; margin-left:30px;" >
                             <nobr>Select All</nobr>
-                        </a>
-
-                </div>
+                        </button>
+                     </div>
 
                 </div>
 
@@ -118,6 +117,22 @@
 
                                 <p>{{ (site.properties.description || site.properties.annotation || 'No description') | truncate:80 }}</p>
                                 <div class="actions">
+                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}" title="Site summary">
+                                        <i class="material-icons">
+                                            dashboard
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/edit" title="Edit site" data-ng-if="page.permissions.can_edit">
+                                        <i class="material-icons">
+                                            edit
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/location" title="Edit location" data-ng-if="page.permissions.can_edit">
+                                        <i class="material-icons">
+                                            location_on
+                                        </i>
+                                    </a>
+
                                     <a class="snapshot--title"
                                        data-ng-click="page.addToDeleteQueue(site.properties.id)"
                                        title="Add to batch delete"
