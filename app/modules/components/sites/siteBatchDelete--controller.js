@@ -74,7 +74,7 @@
                         self.permissions.can_edit = successResponse.permissions.write;
                         self.permissions.can_delete = successResponse.permissions.write;
 
-                        $rootScope.page.title = self.site.name;
+                    //    $rootScope.page.title = self.site.name;
 
                         self.project = successResponse.project;
 
@@ -376,7 +376,7 @@
                             }
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
-                            $rootScope.page.title = self.site.name;
+                        //    $rootScope.page.title = self.site.name;
                             self.loadSite();
 
                         }, function(errorResponse) {
