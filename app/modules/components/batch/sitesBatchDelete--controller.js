@@ -17,6 +17,8 @@
 
                 var self = this;
 
+                self.params;
+
                 self.confirmBatchDelete = false;
                 self.toggleConfirmDelete = false;
 
@@ -27,7 +29,9 @@
                     'edit': true
                 };
 
-                $rootScope.page = {};
+                $rootScope.page = {
+                    title: 'Batch Delete'
+                };
 
                 self.status = {
                     loading: true,
@@ -321,6 +325,11 @@
 
                 };
 
+                self.inspectSearchParams = function(params) {
+
+                };
+
+
                 //
                 // Verify Account information for proper UI element display
                 //
@@ -337,45 +346,41 @@
                             can_edit: false
                         };
 
+
                         site.$promise.then(function(successResponse) {
-
                             console.log('self.site', successResponse);
-
                             self.site = successResponse;
-
-                            if (successResponse.permissions.read &&
-                                successResponse.permissions.write) {
-
+                            if (successResponse.permissions.read && successResponse.permissions.write) {
                                 self.makePrivate = false;
-
                             } else {
-
                                 self.makePrivate = true;
-
                             }
-
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
-
                             $rootScope.page.title = self.site.name;
-
                             self.loadSite();
-                        //    self.showElements();
 
                         }, function(errorResponse) {
-
                             self.showElements();
-
                         });
 
                     });
 
                 } else {
-
                     $location.path('/logout');
 
                 }
 
+        /*    $scope.$on('$routeUpdate', function() {
+
+              self.params = $location.search();
+
+              self.inspectSearchParams(params);
+
             });
+            */
+
+
+       });
 
 }());
