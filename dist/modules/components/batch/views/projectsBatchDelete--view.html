@@ -37,10 +37,10 @@
                             Last modified by {{ page.site.last_modified_by.first_name }} {{ page.site.last_modified_by.last_name }} on {{ page.site.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.site.modified_on | localTime | date:'h:mma' }}</span>
                         </p>
 
-                        <p data-ng-if="page.project.id && page.project.program">
+                   <!--     <p data-ng-if="page.project.id && page.project.program">
                             <strong>Program:</strong> {{ page.site.properties.project.properties.program.name }}
                         </p>
-
+                    -->
                          <p>
                             <strong>Project:</strong> <a href="{{ page.site.links.project.html }}">{{ page.project.name || 'Un-named' }}</a>
                         </p>
