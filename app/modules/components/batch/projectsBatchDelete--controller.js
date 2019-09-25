@@ -38,15 +38,11 @@
                     processing: false
                 };
 
-                self.showElements = function() {
+                self.alerts = [];
 
-                    $timeout(function() {
+                self.closeAlerts = function() {
 
-                        self.status.loading = false;
-
-                        self.status.processing = false;
-
-                    }, 1000);
+                    self.alerts = [];
 
                 };
 
@@ -264,6 +260,9 @@
                     self.toggleConfirmDelete = false;
                     console.log("self.project.id",self.project.id);
 
+                    self.status.processing = true;
+
+
                    var data  = {collection: self.selectedFeatures};
 
                     Batch.batchDelete({
@@ -273,10 +272,29 @@
 
                         console.log('Batch.practiceDelete', successResponse);
 
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Sites deleted from project.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
+
                         self.selectedFeatures = [];
                         self.loadSites();
 
                     }, function(errorResponse) {
+
+                         self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong and the changes could not be saved.',
+                            'prompt': 'OK'
+                        }];
+
+                         self.status.processing = false;
 
                         console.log('errorResponse', errorResponse);
 
