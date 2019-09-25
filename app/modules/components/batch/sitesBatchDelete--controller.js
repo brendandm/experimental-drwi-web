@@ -38,17 +38,15 @@
                     processing: false
                 };
 
-                self.showElements = function() {
+                self.alerts = [];
 
-                    $timeout(function() {
+                self.closeAlerts = function() {
 
-                        self.status.loading = false;
-
-                        self.status.processing = false;
-
-                    }, 1000);
+                    self.alerts = [];
 
                 };
+
+
 
                 self.loadSite = function() {
 
@@ -128,6 +126,8 @@
                             self.showElements();
 
                         }, function(errorResponse) {
+
+
 
                             console.log("PRACTICE ERROR RESPONSE");
 
@@ -298,6 +298,8 @@
                 };
 
                 self.batchDelete = function(){
+                     self.status.processing = true;
+
                     self.toggleConfirmDelete = false;
                     console.log("self.site.id",self.site.id);
 
@@ -310,13 +312,30 @@
 
                         console.log('Batch.practiceDelete', successResponse);
 
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Practices deleted from site.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
                         self.selectedFeatures = [];
                         self.loadPractices();
 
                     }, function(errorResponse) {
 
+                         self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Something went wrong and the changes could not be saved.',
+                            'prompt': 'OK'
+                        }];
+
                         console.log('errorResponse', errorResponse);
 
+                        self.status.processing = false;
                     });
                 };
 
