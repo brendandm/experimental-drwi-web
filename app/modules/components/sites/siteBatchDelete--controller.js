@@ -10,7 +10,7 @@
      * Controller of the FieldDoc
      */
     angular.module('FieldDoc')
-        .controller('SitesBatchDeleteController',
+        .controller('SiteBatchDeleteController',
             function(Account, environment, $http, $location, mapbox,
                 Notifications, Site, site, $rootScope, $route, $scope,
                 $timeout, $interval, user, Utility, Batch) {
