@@ -8,7 +8,7 @@
 
         <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
             <div class="progress--container">
-                <p style="font-weight: bold;" class="color-pulse">Loading site data&hellip;</p>
+                <p style="font-weight: bold;" class="color-pulse">Loading practices&hellip;</p>
             </div>
         </div>
 
@@ -42,11 +42,11 @@
                         </p>
 
                          <p>
-                            <strong>Project:</strong> <a href="{{ page.site.links.project.html }}">{{ page.site.properties.project.properties.name || 'Un-named' }}</a>
+                            <strong>Project:</strong> <a href="/projects/{{ page.site.properties.project.id }}">{{ page.site.properties.project.properties.name || 'Un-named' }}</a>
                         </p>
 
                         <p>
-                            <strong>Site:</strong> <a href="{{ page.site.links.project.html }}">{{ page.site.properties.name || 'Un-named' }}</a>
+                            <strong>Site:</strong> <a href="/sites/{{ page.site.id }}">{{ page.site.properties.name || 'Un-named' }}</a>
                         </p>
 
                         <p style="max-width:800px; text-align:justify">
