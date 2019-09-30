@@ -233,15 +233,12 @@ angular.module('FieldDoc')
 
             self.checkOrganizations = function(){
                 if(self.partnerQuery.id == null){
-                    console.log("THIS IS A NEW ORGANIZATION");
 
                         var _organization = new Organization({
                             'name': self.partnerQuery.name
                         });
 
                         _organization.$save(function(successResponse) {
-
-                            console.log("ORGANIZATION SAVE:", successResponse);
 
                             self.partnerQuery.id = successResponse.id;
 
@@ -278,7 +275,7 @@ angular.module('FieldDoc')
             };
 
             self.createPartnership = function() {
-                console.log("KITTY CREATE PARTNERSHIP");
+
                 var params = {
                 //    name: self.partnerQuery.name,
                     amount: self.partnerQuery.amount,
@@ -292,8 +289,6 @@ angular.module('FieldDoc')
                     self.tempPartnerships.push({
                         id: successResponse.id
                     });
-
-                    console.log('self.createPartnership.self.tempPartnerships', self.tempPartnerships);
 
                     self.saveProject();
 
@@ -313,7 +308,7 @@ angular.module('FieldDoc')
             };
 
             self.editPartnership = function(obj) {
-                console.log("KITTY EDIT PARTNERSHIP");
+
                 self.editMode = true;
 
                 self.displayModal = true;
@@ -325,7 +320,7 @@ angular.module('FieldDoc')
             };
 
             self.updatePartnership = function() {
-                 console.log("KITTY UPDATE PARTNERSHIP");
+
                 self.scrubFeature(self.targetFeature);
 
                 Partnership.update({
@@ -407,7 +402,7 @@ angular.module('FieldDoc')
             };
 
             self.saveProject = function() {
-                console.log("KITTY SAVE PARNTNERSHIP");
+
                 self.status.processing = true;
 
                 self.scrubFeature(self.project);
@@ -479,10 +474,8 @@ angular.module('FieldDoc')
             };
 
             self.addOrg = function(featureVal){
-                console.log("KITTY ADD ORG");
+
                 self.partnerQuery.name = featureVal;
-                console.log("KITTY", self.partnerQuery);
-                console.log("KITTY featureVal", featureVal);
 
             };
 
