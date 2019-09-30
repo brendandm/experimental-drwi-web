@@ -9,7 +9,7 @@ angular.module('FieldDoc')
     .controller('ProjectPartnershipController',
         function(Account, $location, $log, Project, project, Partnership,
             $rootScope, $route, user, SearchService, $timeout, $window,
-            Utility, $interval, partnerships) {
+            Utility, $interval, partnerships, Organization) {
 
             var self = this;
 
@@ -20,6 +20,8 @@ angular.module('FieldDoc')
             $rootScope.toolbarState = {
                 'partnerships': true
             };
+
+         //   self.partnerQuery = {};
 
             $rootScope.page = {};
 
@@ -73,6 +75,8 @@ angular.module('FieldDoc')
                 }).$promise.then(function(successResponse) {
 
                     self.tempPartnerships = successResponse.features;
+
+                    console.log("self.tempPartnerships", self.tempPartnerships);
 
                     self.showElements();
 
@@ -227,9 +231,56 @@ angular.module('FieldDoc')
 
             };
 
-            self.createPartnership = function() {
+            self.checkOrganizations = function(){
+                if(self.partnerQuery.id == null){
+                    console.log("THIS IS A NEW ORGANIZATION");
 
+                        var _organization = new Organization({
+                            'name': self.partnerQuery.name
+                        });
+
+                        _organization.$save(function(successResponse) {
+
+                            console.log("ORGANIZATION SAVE:", successResponse);
+
+                            self.partnerQuery.id = successResponse.id;
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Successfully created ' + successResponse.properties.name + '.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(self.closeAlerts, 2000);
+
+                            self.createPartnership();
+
+                        }, function(errorResponse) {
+
+                            self.status.processing = false;
+
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Something went wrong and the changes could not be saved.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                        });
+
+                }else{
+                     self.createPartnership();
+                }
+            };
+
+            self.createPartnership = function() {
+                console.log("KITTY CREATE PARTNERSHIP");
                 var params = {
+                //    name: self.partnerQuery.name,
                     amount: self.partnerQuery.amount,
                     description: self.partnerQuery.description,
                     organization_id: self.partnerQuery.id
@@ -262,7 +313,7 @@ angular.module('FieldDoc')
             };
 
             self.editPartnership = function(obj) {
-
+                console.log("KITTY EDIT PARTNERSHIP");
                 self.editMode = true;
 
                 self.displayModal = true;
@@ -274,7 +325,7 @@ angular.module('FieldDoc')
             };
 
             self.updatePartnership = function() {
-
+                 console.log("KITTY UPDATE PARTNERSHIP");
                 self.scrubFeature(self.targetFeature);
 
                 Partnership.update({
@@ -356,7 +407,7 @@ angular.module('FieldDoc')
             };
 
             self.saveProject = function() {
-
+                console.log("KITTY SAVE PARNTNERSHIP");
                 self.status.processing = true;
 
                 self.scrubFeature(self.project);
@@ -424,6 +475,14 @@ angular.module('FieldDoc')
                     self.partnerQuery = null;
 
                 });
+
+            };
+
+            self.addOrg = function(featureVal){
+                console.log("KITTY ADD ORG");
+                self.partnerQuery.name = featureVal;
+                console.log("KITTY", self.partnerQuery);
+                console.log("KITTY featureVal", featureVal);
 
             };
 
