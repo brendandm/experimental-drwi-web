@@ -768,7 +768,7 @@
 
                         self.map.addControl(fullScreen, 'top-left');
 
-                        var paintFeature = true;
+                     /*   var paintFeature = true;
 
                         if (self.site &&
                             self.site.geometry &&
@@ -777,12 +777,14 @@
                             paintFeature = false;
 
                         }
-
+                    */
+                        
                         MapManager.addFeature(
                             self.map,
                             self.site,
                             'geometry',
-                            paintFeature,
+                            true,
+                      //      paintFeature,
                             true);
 
                         if (self.layers && self.layers.length) {
