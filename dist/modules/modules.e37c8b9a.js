@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1569515231321})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1569958269718})
 
 ;
 /**
@@ -9370,7 +9370,7 @@ angular.module('FieldDoc')
     .controller('ProjectPartnershipController',
         function(Account, $location, $log, Project, project, Partnership,
             $rootScope, $route, user, SearchService, $timeout, $window,
-            Utility, $interval, partnerships) {
+            Utility, $interval, partnerships, Organization) {
 
             var self = this;
 
@@ -9381,6 +9381,8 @@ angular.module('FieldDoc')
             $rootScope.toolbarState = {
                 'partnerships': true
             };
+
+         //   self.partnerQuery = {};
 
             $rootScope.page = {};
 
@@ -9434,6 +9436,8 @@ angular.module('FieldDoc')
                 }).$promise.then(function(successResponse) {
 
                     self.tempPartnerships = successResponse.features;
+
+                    console.log("self.tempPartnerships", self.tempPartnerships);
 
                     self.showElements();
 
@@ -9588,9 +9592,53 @@ angular.module('FieldDoc')
 
             };
 
+            self.checkOrganizations = function(){
+                if(self.partnerQuery.id == null){
+
+                        var _organization = new Organization({
+                            'name': self.partnerQuery.name
+                        });
+
+                        _organization.$save(function(successResponse) {
+
+                            self.partnerQuery.id = successResponse.id;
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Successfully created ' + successResponse.properties.name + '.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(self.closeAlerts, 2000);
+
+                            self.createPartnership();
+
+                        }, function(errorResponse) {
+
+                            self.status.processing = false;
+
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Something went wrong and the changes could not be saved.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                        });
+
+                }else{
+                     self.createPartnership();
+                }
+            };
+
             self.createPartnership = function() {
 
                 var params = {
+                //    name: self.partnerQuery.name,
                     amount: self.partnerQuery.amount,
                     description: self.partnerQuery.description,
                     organization_id: self.partnerQuery.id
@@ -9602,8 +9650,6 @@ angular.module('FieldDoc')
                     self.tempPartnerships.push({
                         id: successResponse.id
                     });
-
-                    console.log('self.createPartnership.self.tempPartnerships', self.tempPartnerships);
 
                     self.saveProject();
 
@@ -9785,6 +9831,12 @@ angular.module('FieldDoc')
                     self.partnerQuery = null;
 
                 });
+
+            };
+
+            self.addOrg = function(featureVal){
+
+                self.partnerQuery.name = featureVal;
 
             };
 
@@ -10942,11 +10994,11 @@ angular.module('FieldDoc')
 
                 self.alerts = [];
 
-                self.closeAlerts = function() {
+                    self.closeAlerts = function() {
 
-                    self.alerts = [];
+                        self.alerts = [];
 
-                };
+                    };
 
                 self.loadProject = function() {
 
@@ -12970,7 +13022,7 @@ angular.module('FieldDoc')
 
                             if(feature.geometry != null){
 
-                                feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
+                                feature.staticURL = Utility.buildStaticMapURL(feature.geometry,'practice');
 
                                 self.practices[index].staticURL = feature.staticURL;
 
@@ -13232,7 +13284,7 @@ angular.module('FieldDoc')
 
                         self.map.addControl(fullScreen, 'top-left');
 
-                        var paintFeature = true;
+                     /*   var paintFeature = true;
 
                         if (self.site &&
                             self.site.geometry &&
@@ -13241,12 +13293,14 @@ angular.module('FieldDoc')
                             paintFeature = false;
 
                         }
+                    */
 
                         MapManager.addFeature(
                             self.map,
                             self.site,
                             'geometry',
-                            paintFeature,
+                            true,
+                      //      paintFeature,
                             true);
 
                         if (self.layers && self.layers.length) {
@@ -13268,7 +13322,9 @@ angular.module('FieldDoc')
                                     feature,
                                     'geometry',
                                     true,
-                                    false);
+                                    false,
+                                    'practice'
+                                    );
 
                             });
 
@@ -18020,7 +18076,9 @@ angular.module('FieldDoc')
                             self.practice,
                             'geometry',
                             true,
-                            true);
+                            true,
+                            'practice'
+                            );
 
                         if (self.layers && self.layers.length) {
 
@@ -34867,12 +34925,30 @@ angular.module('FieldDoc')
                 return arr;
 
             },
-            addFeature: function(map, feature, attribute, addToMap, fitBounds) {
+            addFeature: function(map, feature, attribute, addToMap, fitBounds, featureType = null) {
 
                 if (fitBounds === null ||
                     typeof fitBounds === 'undefined') {
 
                     fitBounds = true;
+
+                }
+                /*Check feature type to set color*/
+
+                var geometryFillColor           = '#06aadf';
+                var geometryCircleStrokeColor   = 'rgba(6, 170, 223, 0.5)';
+                var geometryLineColor           = 'rgba(6, 170, 223, 0.8)';
+
+                if(featureType != null){
+                    if(featureType == 'site'){
+
+                    }else if(featureType == 'practice'){
+                        //df063e
+                        geometryFillColor = '#df063e';
+                        geometryCircleStrokeColor = 'rgba(223, 6, 62, 0.5)';
+                        geometryLineColor = 'rgba(223, 6, 62, 0.8)';
+                    }
+                }else{
 
                 }
 
@@ -34932,8 +35008,8 @@ angular.module('FieldDoc')
                                 },
                                 'paint': {
                                     'circle-radius': 8,
-                                    'circle-color': '#06aadf',
-                                    'circle-stroke-color': 'rgba(6, 170, 223, 0.5)',
+                                    'circle-color': geometryFillColor,
+                                    'circle-stroke-color': geometryCircleStrokeColor,
                                     'circle-stroke-opacity': 1,
                                     'circle-stroke-width': 4
                                 }
@@ -34955,7 +35031,7 @@ angular.module('FieldDoc')
                                     'visibility': 'visible'
                                 },
                                 'paint': {
-                                    'line-color': 'rgba(6, 170, 223, 0.8)',
+                                    'line-color': geometryLineColor,
                                     'line-width': 2
                                 }
                             });
@@ -34973,7 +35049,7 @@ angular.module('FieldDoc')
                                     'visibility': 'visible'
                                 },
                                 'paint': {
-                                    'fill-color': '#06aadf',
+                                    'fill-color': geometryFillColor,
                                     'fill-opacity': 0.4
                                 }
                             });
@@ -34989,7 +35065,7 @@ angular.module('FieldDoc')
                                     'visibility': 'visible'
                                 },
                                 'paint': {
-                                    'line-color': 'rgba(6, 170, 223, 0.8)',
+                                    'line-color': geometryLineColor,
                                     'line-width': 2
                                 }
                             });
@@ -37158,24 +37234,37 @@ angular.module('FieldDoc')
                 return [];
 
             },
-            buildStaticMapURL: function(geometry) {
+            buildStaticMapURL: function(geometry, colorScheme = null) {
+
+                var color = "#06aadf";
+
+                if(colorScheme != null){
+                    console.log('COLOR 0');
+                    if(colorScheme == 'practice'){
+                        color = "#df063e";
+                         console.log('COLOR 1');
+                    }else{
+                         console.log('COLOR 2');
+                    }
+                }else{
+                     console.log('COLOR 3');
+                }
 
                 var styledFeature = {
                     "type": "Feature",
                     "geometry": geometry,
                     "properties": {
                         "marker-size": "small",
-                        "marker-color": "#2196F3",
-                        "stroke": "#2196F3",
+                        "marker-color": color,
+                        "stroke": color,
                         "stroke-opacity": 1.0,
                         "stroke-width": 2,
-                        "fill": "#2196F3",
+                        "fill": color,
                         "fill-opacity": 0.5
                     }
                 };
-
                 // Build static map URL for Mapbox API
-
+                console.log('buildStaticMapURL->styledFeature',styledFeature);
                 return [
                     'https://api.mapbox.com/styles/v1',
                     '/mapbox/streets-v10/static/geojson(',
