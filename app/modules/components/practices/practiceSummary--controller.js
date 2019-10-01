@@ -580,7 +580,9 @@
                             self.practice,
                             'geometry',
                             true,
-                            true);
+                            true,
+                            'practice'
+                            );
 
                         if (self.layers && self.layers.length) {
 
