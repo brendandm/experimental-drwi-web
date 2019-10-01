@@ -506,7 +506,7 @@
 
                             if(feature.geometry != null){
 
-                                feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
+                                feature.staticURL = Utility.buildStaticMapURL(feature.geometry,'practice');
 
                                 self.practices[index].staticURL = feature.staticURL;
 
@@ -778,7 +778,7 @@
 
                         }
                     */
-                        
+
                         MapManager.addFeature(
                             self.map,
                             self.site,
@@ -806,7 +806,9 @@
                                     feature,
                                     'geometry',
                                     true,
-                                    false);
+                                    false,
+                                    'practice'
+                                    );
 
                             });
 
