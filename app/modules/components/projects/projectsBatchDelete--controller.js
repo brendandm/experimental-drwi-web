@@ -40,11 +40,11 @@
 
                 self.alerts = [];
 
-                self.closeAlerts = function() {
+                    self.closeAlerts = function() {
 
-                    self.alerts = [];
+                        self.alerts = [];
 
-                };
+                    };
 
                 self.loadProject = function() {
 
