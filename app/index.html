@@ -64,6 +64,23 @@
 
     </script>
 
+    <!-- Sentry Bot Integration -->
+        <!-- Note that we now also provide a es6 build only -->
+        <!-- <script src="https://browser.sentry-cdn.com/5.6.3/bundle.es6.min.js" integrity="sha384-NEWge0n6G1Kne9yTAYJ/i9ezaKNstK9IbfJS7vlZk53XtWjF4wEJs3TOkC3hGGN1" crossorigin="anonymous"></script> -->
+    <script src="https://browser.sentry-cdn.com/5.6.3/bundle.min.js" integrity="sha384-/Cqa/8kaWn7emdqIBLk3AkFMAHBk0LObErtMhO+hr52CntkaurEnihPmqYj3uJho" crossorigin="anonymous"></script>
+
+        <!-- If you include the integration it will be available under Sentry.Integrations.Angular -->
+    <script src="https://browser.sentry-cdn.com/5.6.3/angular.min.js" crossorigin="anonymous"></script>
+
+    <script>
+      Sentry.init({
+        dsn: 'https://9eae6e05eb3e4c6fa8191d0a55d47c50@sentry.io/1769731',
+        integrations: [
+          new Sentry.Integrations.Angular(),
+        ],
+      });
+    </script>
+
     <!-- <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script> -->
 
     <!-- build:js(.) /scripts/oldieshim.js -->
