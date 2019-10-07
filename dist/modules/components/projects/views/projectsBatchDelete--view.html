@@ -236,54 +236,69 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li data-ng-class="{active: $root.toolbarState.dashboard}">
-                <a href="/sites/{{ page.site.id }}">
+                <a href="/projects/{{ page.project.id }}">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/sites/{{ page.site.id }}/edit">
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="/projects/{{ page.project.id }}/edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
-                <a href="/sites/{{ page.site.id }}/location">
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.grant}">
+                <a href="/projects/{{ page.project.id }}/grant">
                     <i class="material-icons">
-                        location_on
+                        account_balance
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.viewGeographies}">
-                <a href="/sites/{{ page.site.id }}/geographies">
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="/projects/{{ page.project.id }}/users">
                     <i class="material-icons">
-                        public
+                        group
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/sites/{{ page.site.id }}/partnerships">
+                <a href="/projects/{{ page.project.id }}/partnerships">
                     <i class="material-icons">
                         group_work
                     </i>
                 </a>
             </li>
-            <!-- <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/sites/{{ page.site.id }}/targets">
+            <!-- <li data-ng-if="page.permissions.can_edit">
+                <a href="/projects/{{ page.project.id }}/edit">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+            </li> -->
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
+                <a href="/projects/{{ page.project.id }}/targets">
                     <i class="material-icons">
                         multiline_chart
                     </i>
                 </a>
-            </li> -->
+            </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/sites/{{ page.site.id }}/tags">
+                <a href="/projects/{{ page.project.id }}/tags">
                     <i class="material-icons">
                         local_offer
                     </i>
                 </a>
             </li>
+     <!--       <li data-ng-if="page.permissions.can_edit">
+                <a href="#" data-ng-click="page.print()">
+                    <i class="material-icons">
+                        print
+                    </i>
+                </a>
+            </li>
+            -->
             <li data-ng-if="page.permissions.can_edit">
                 <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
                     <p>Do you want to delete this site?</p>
