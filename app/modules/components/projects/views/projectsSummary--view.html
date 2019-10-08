@@ -123,8 +123,12 @@
                                     <tr>
                                         <th class="table-column-wide table-metrics-header">&nbsp;</th>
                                         <th class="table-metrics-header">Estimated value</th>
+                                     <!--
                                         <th class="table-metrics-header" data-ng-if="model.datum.show_progress">Estimated progress</th>
+                                     -->
+                                     <!--
                                         <th data-ng-if="model.datum.show_progress">&nbsp;</th>
+                                        -->
                                     </tr>
                                 </thead>
 
@@ -137,13 +141,18 @@
                                         </td>
                                         <td>
                                             <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
+                                           <!--
                                                 <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ metric.self_target | number:2 }}</span>
+                                            -->
                                         </td>
+                                   <!--
                                         <td data-ng-if="model.datum.show_progress || metric.show_progress">
                                             <strong class="metrics--metric--percentage">
                                                 {{ metric.selfProgress.value * 100 | number:1 }}%
                                             </strong>
                                         </td>
+                                    -->
+                                    <!--
                                         <td data-ng-if="model.datum.show_progress || metric.show_progress">
                                             <progress-arc
                                                 size="32"
@@ -154,6 +163,7 @@
                                                 background="rgba(0,0,0,0.2)">
                                             </progress-arc>
                                         </td>
+                                     -->
                                     </tr>
                                     <tr class="metrics--metric" style="opacity: 0.72;" data-ng-repeat="geography in metric.geographies">
                                         <td class="table-column-wide">
