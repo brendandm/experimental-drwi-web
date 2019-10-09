@@ -64,7 +64,7 @@
             </section>
 
             <!-- Unselected Practices -->
-            <section class="reveal fade-in t3" style="padding: 0;">
+            <section class="reveal fade-in t3" style="padding: 0;" data-ng-if="page.permissions.can_edit">
                 <h2>Practices</h2>
                 <p>
                     Showing <b>{{ practiceList.length }}</b> of <b>{{ page.availableFeatures.length }}</b> total practices in site <b>{{page.site.properties.name}}</b>.
