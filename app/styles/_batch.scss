@@ -1,0 +1,103 @@
+//
+// _batch.scss
+//
+// This stylesheet is written in SASS(1) and contains site specific layout
+// elements.
+//
+// @see (1) http://sass-lang.com/documentation/file.SASS_REFERENCE.html
+//
+
+.batchDeleteSelected{
+    background-color: "red";
+
+}
+
+.multiSelect {
+  display: flex;
+  //  float:right !important;
+    text-align: right;
+  //  clear:left;
+ //   float:right;
+    display:inline-block;
+    position:relative;
+    width:60%;
+    min-width:300px;
+    border: 0px solid red;
+    padding: 30px 30px 20px 0px;
+
+    margin: 0 0% 0 0%;
+
+}
+
+.multiSelect a{
+    width: 30px;
+    height: 30px;
+    background-color:#999999;
+    border-radius:15px;
+    color:white;
+    padding: 0px 10px 0 10px;
+    margin: 0px 15px 15px 15px;
+}
+.multiSelect a:hover{
+    background-color:#666666;
+    color:white !important;
+}
+
+.delete--confirm--delete--popup {
+  position: absolute;
+  top: 0;
+  //left: 0;
+  //bottom: 0;
+  right: 90px;
+  //right: 120%;
+  //width: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2em 1em;
+  min-width: 320px;
+  background: #fff;
+  border-radius: 4px;
+  z-index: 9990;
+  box-shadow: 0 1px 1px 0 rgba(60,64,67,.08),0 1px 3px 1px rgba(60,64,67,.16);
+
+  .actions {
+      flex: 1;
+      display: flex;
+      flex-flow: row nowrap;
+      align-items: center;
+      //justify-content: flex-end;
+      //text-align: right;
+      //margin-top: 1em;
+
+      a,
+      a:link,
+      a:visited {
+        display: inline-block;
+        margin-right: 1em;
+        //color: #333;
+        opacity: 0.7;
+        transition: all 250ms ease 0s;
+      }
+
+      a:hover,
+      a:focus {
+        opacity: 1;
+      }
+
+      a:last-of-type {
+        color: #333;
+        margin-right: 0;
+      }
+
+      a:first-of-type {
+        background: red;
+        padding: 0.5em 1em;
+        border-radius: 3px;
+        color: #fff;
+      }
+
+    }
+}

@@ -64,6 +64,24 @@
 
     </script>
 
+    <!-- Sentry Bot Integration -->
+        <!-- Note that we now also provide a es6 build only -->
+        <!-- <script src="https://browser.sentry-cdn.com/5.6.3/bundle.es6.min.js" integrity="sha384-NEWge0n6G1Kne9yTAYJ/i9ezaKNstK9IbfJS7vlZk53XtWjF4wEJs3TOkC3hGGN1" crossorigin="anonymous"></script> -->
+    <script src="https://browser.sentry-cdn.com/5.6.3/bundle.min.js" integrity="sha384-/Cqa/8kaWn7emdqIBLk3AkFMAHBk0LObErtMhO+hr52CntkaurEnihPmqYj3uJho" crossorigin="anonymous"></script>
+
+        <!-- If you include the integration it will be available under Sentry.Integrations.Angular -->
+    <script src="https://browser.sentry-cdn.com/5.6.3/angular.min.js" crossorigin="anonymous"></script>
+
+    <script>
+      Sentry.init({
+        dsn: 'https://9eae6e05eb3e4c6fa8191d0a55d47c50@sentry.io/1769731',
+        integrations: [
+          new Sentry.Integrations.Angular(),
+        ],
+        environment: 'zt_sentry_angular_local'
+      });
+    </script>
+
     <!-- <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script> -->
 
     <!-- build:js(.) /scripts/oldieshim.js -->
@@ -136,6 +154,7 @@
             <!-- Organization Module -->
             <script src="modules/components/organization/organization--routes.js"></script>
             <script src="modules/components/organization/organizationEdit--controller.js"></script>
+            <script src="modules/components/organization/organizationProfile--controller.js"></script>
 
             <!-- Projects Module -->
             <script src="modules/components/projects/projects--routes.js"></script>
@@ -148,6 +167,7 @@
             <script src="modules/components/projects/projectPartnership--controller.js"></script>
             <script src="modules/components/projects/projectGrant--controller.js"></script>
             <script src="modules/components/projects/projectTag--controller.js"></script>
+            <script src="modules/components/projects/projectsBatchDelete--controller.js"></script>
 
             <!-- Onboarding Module -->
             <script src="modules/components/onboarding/onboarding--routes.js"></script>
@@ -160,6 +180,12 @@
             <!-- Account Module -->
             <script src="modules/components/account/account--routes.js"></script>
             <script src="modules/components/account/accountEdit--controller.js"></script>
+         <!--     <script src="modules/components/account/accountProfileView--controller.js"></script> -->
+
+
+           <!-- Profile Module -->
+            <script src="modules/components/profile/profile--routes.js"></script>
+            <script src="modules/components/profile/profileView--controller.js"></script>
 
            <!-- Sites Module -->
             <script src="modules/components/sites/sites--routes.js"></script>
@@ -170,6 +196,9 @@
             <script src="modules/components/sites/sitePhoto--controller.js"></script>
             <script src="modules/components/sites/siteGeography--controller.js"></script>
             <script src="modules/components/sites/siteTag--controller.js"></script>
+            <script src="modules/components/sites/siteBatchDelete--controller.js"></script>
+
+       <!--     <script src="modules/components/sites/siteBatchDelete--controller.js"></script>-->
 
             <!-- Practices Module -->
             <script src="modules/components/practices/practice--routes.js"></script>
@@ -304,6 +333,7 @@
             <script src="modules/shared/api/partnership--service.js"></script>
             <script src="modules/shared/api/practiceType--service.js"></script>
             <script src="modules/shared/api/program--service.js"></script>
+            <script src="modules/shared/api/profile--service.js"></script>
             <script src="modules/shared/api/project--service.js"></script>
             <script src="modules/shared/api/search--service.js"></script>
             <script src="modules/shared/api/security--service.js"></script>
@@ -326,6 +356,7 @@
 
             <script src="modules/shared/api/preprocessors--service.js"></script>
             <script src="modules/shared/api/user--service.js"></script>
+            <script src="modules/shared/api/batch--service.js"></script>
 
             <!-- Factories -->
 
@@ -342,6 +373,8 @@
             <script src="modules/shared/directives/viewFeatures--directive.js"></script>
 
             <script src="modules/shared/directives/viewFrame--directive.js"></script>
+
+            <script src="modules/shared/directives/upload--directive.js"></script>
 
             <!-- Filters -->
             <script src="modules/shared/filters/toAcres--filter.js"></script>

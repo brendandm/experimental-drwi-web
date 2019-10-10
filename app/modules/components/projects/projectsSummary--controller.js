@@ -12,7 +12,9 @@ angular.module('FieldDoc')
         function(Account, Notifications, $rootScope, Project, $routeParams,
             $scope, $location, mapbox, Site, user, $window, $timeout,
             Practice, project, sites, Utility, $interval, LayerService,
-            MapManager) {
+            MapManager,
+            Shapefile, Task
+            ) {
 
             var self = this;
 
@@ -73,8 +75,8 @@ angular.module('FieldDoc')
                             self.createMap(self.mapOptions);
 
                             if (self.sites && self.sites.length) {
-
-                                self.addMapPreviews(self.sites);
+                                self.createStaticMapURLs(self.sites);
+                         //       self.addMapPreviews(self.sites);
 
                             }
 
@@ -148,6 +150,8 @@ angular.module('FieldDoc')
 //                        self.loadTags();
 
                         self.loadArea();
+
+                        self.loadPartnerships();
 
                     }
 
@@ -317,7 +321,13 @@ angular.module('FieldDoc')
 
                 console.log('self.loadSites --> Starting...');
 
-                sites.$promise.then(function(successResponse) {
+                Project.sites({
+
+                    id: self.project.id,
+
+                    currentTime: Date.UTC()
+
+                }).$promise.then(function(successResponse) {
 
                     console.log('Project sites --> ', successResponse);
 
@@ -453,6 +463,56 @@ angular.module('FieldDoc')
 
             };
 
+            /*
+            createStaticMapUrls:
+                takes self.sites as self.sites as argument
+                iterates of self.sites
+                checks if project extent exists
+                checks if site geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
+                adds return to site[] as staticURL property
+                if no site geometry, adds default URL to site[].staticURL
+            */
+            self.createStaticMapURLs = function(arr){
+                console.log("createStaticMapURLS -> arr", arr)
+
+                arr.forEach(function(feature, index) {
+                     console.log(
+                        'self.createStaticMapUrls --> feature, index',
+                        feature,
+                        index);
+                     console.log();
+                         if (feature.properties.project.extent) {
+
+                            if(feature.geometry != null){
+
+                                feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
+
+                                console.log('feature.staticURL',feature.staticURL);
+
+                                self.sites[index].staticURL = feature.staticURL;
+
+                                console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
+
+                            }else{
+
+                                self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                                            '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                                        ].join('');
+
+                                console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
+                            }
+
+                        }
+
+                });
+
+            }
+
+            /*
+            addMapPreviews:
+                this func may now be defunct - review needed...
+            */
             self.addMapPreviews = function(arr) {
 
                 console.log('self.addMapPreviews --> arr', arr);
@@ -793,6 +853,204 @@ angular.module('FieldDoc')
 
             };
 
+
+            self.loadPartnerships = function() {
+
+                Project.partnerships({
+                    id: self.project.id
+                }).$promise.then(function(successResponse) {
+
+                    self.partnerships = successResponse.features;
+
+                    console.log("self.partnerships",self.partnerships)
+
+                    self.showElements();
+
+                }, function(errorResponse) {
+
+                    $log.error('Unable to load project partnerships.');
+
+                    self.showElements();
+
+                });
+
+            };
+
+
+            /*
+                */
+                self.uploadShapefile = function() {
+
+                    /*Cast the file into an array
+                    could possibly remove this with reworks
+                    to the Upload directive
+                    */
+                    var tempFileImport = [];
+                    tempFileImport.push(self.fileImport);
+                    self.fileImport = tempFileImport;
+
+                    if (!self.fileImport ||
+                        !self.fileImport.length) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Please select a file.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        return false;
+
+                    }
+
+                    self.progressMessage = 'Uploading your file...';
+
+                    var fileData = new FormData();
+
+                    fileData.append('file', self.fileImport[0]);
+
+                    fileData.append('feature_type', 'site');
+
+                    //fileData.append('site_id', self.site.id);
+
+                    fileData.append('collection', true);
+
+                    fileData.append('project_id',self.project.id);
+
+                    console.log('fileData', fileData);
+
+                    try {
+
+                        Shapefile.upload({}, fileData, function(successResponse) {
+
+                            console.log('successResponse', successResponse);
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Upload complete. Processing data...',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                            document.getElementById("shapefile").value = "";
+
+                            if (successResponse.task) {
+
+                                self.pendingTasks = [
+                                    successResponse.task
+                                ];
+
+                            }
+
+                            self.taskPoll = $interval(function() {
+
+                                self.fetchTasks(successResponse.task.id);
+
+                            }, 1000);
+
+                        }, function(errorResponse) {
+
+                            console.log('Upload error', errorResponse);
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'The file could not be processed.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                        });
+
+                    } catch (error) {
+
+                        console.log('Shapefile upload error', error);
+
+                    }
+
+                };
+
+                self.hideTasks = function() {
+
+                    self.pendingTasks = [];
+
+                    if (typeof self.taskPoll !== 'undefined') {
+
+                        $interval.cancel(self.taskPoll);
+
+                    }
+
+                     $timeout(function() {
+                                    // self.reloadPage();
+                                        self.loadSites();
+
+                     }, 1000);
+
+                };
+
+                self.fetchTasks = function(taskId) {
+
+                    if (taskId &&
+                        typeof taskId === 'number') {
+
+                        return Task.get({
+                            id: taskId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            if (response.status &&
+                                response.status === 'complete') {
+
+                                self.hideTasks();
+
+                            }
+
+                        });
+
+                    } else {
+
+                        return Site.tasks({
+                            id: $route.current.params.practiceId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            self.pendingTasks = response.features;
+
+                            if (self.pendingTasks.length < 1) {
+
+
+                                 $timeout(function() {
+                                    // self.reloadPage();
+                                        self.loadSites();
+
+                                 }, 1000);
+
+                                $interval.cancel(self.taskPoll);
+
+                            }
+
+                        });
+
+                    }
+
+                };
+
+                /*
+                */
+
+             self.reloadPage = function (){
+                    location.reload();
+                };
+
+
+
             //
             // Verify Account information for proper UI element display
             //
@@ -802,6 +1060,8 @@ angular.module('FieldDoc')
                 user.$promise.then(function(userResponse) {
 
                     $rootScope.user = Account.userObject = userResponse;
+
+                    self.user = Account.userObject = userResponse;
 
                     self.permissions = {
                         isLoggedIn: Account.hasToken(),

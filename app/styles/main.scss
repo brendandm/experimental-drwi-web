@@ -42,6 +42,9 @@
 @import "_editor";
 @import "_mapboxGeocoder";
 
+@import "_profile";
+@import "_batch";
+
 .missing {
   color: red !important;
 }

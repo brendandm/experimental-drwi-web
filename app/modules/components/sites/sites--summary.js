@@ -11,7 +11,8 @@
         .controller('SiteSummaryController',
             function(Account, $location, $window, $timeout, Practice, $rootScope, $scope,
                 $route, nodes, user, Utility, site, mapbox, Site, Project, practices,
-                $interval, LayerService, MapManager) {
+                $interval, LayerService, MapManager,
+                Shapefile, Task) {
 
                 var self = this;
 
@@ -34,6 +35,15 @@
 
                 };
 
+                /**/
+                 self.alerts = [];
+
+                function closeAlerts() {
+
+                    self.alerts = [];
+
+                }
+
                 self.showElements = function() {
 
                     $timeout(function() {
@@ -54,7 +64,8 @@
 
                             if (self.practices && self.practices.length) {
 
-                                self.addMapPreviews(self.practices);
+                            //    self.addMapPreviews(self.practices);
+                                self.createStaticMapURLs(self.practices);
 
                             }
 
@@ -63,14 +74,6 @@
                     }, 1000);
 
                 };
-
-                self.alerts = [];
-
-                function closeAlerts() {
-
-                    self.alerts = [];
-
-                }
 
                 function closeRoute() {
 
@@ -215,7 +218,85 @@
 
                 self.loadSite = function() {
 
+                    console.log("LOAD SITE");
+
                     site.$promise.then(function(successResponse) {
+
+                        console.log("SITE RESPONSE");
+
+                        console.log('self.site', successResponse);
+
+                        self.site = successResponse;
+
+                        if (successResponse.permissions.read &&
+                            successResponse.permissions.write) {
+
+                            self.makePrivate = false;
+
+                        } else {
+
+                            self.makePrivate = true;
+
+                        }
+
+                        self.permissions.can_edit = successResponse.permissions.write;
+                        self.permissions.can_delete = successResponse.permissions.write;
+
+                        $rootScope.page.title = self.site.name;
+
+                        self.project = successResponse.project;
+
+                        console.log('self.project', self.project);
+
+                        //
+                        // Load practices
+                        //
+
+                        self.loadPractices();
+
+                        self.loadMetrics();
+
+//                        self.loadTags();
+
+                        self.tags = Utility.processTags(self.site.tags);
+
+                        // self.showElements();
+
+                    });
+
+                };
+
+                self.loadPractices = function(){
+                     Site.practices({
+                            id: self.site.id,
+
+                            currentTime: Date.UTC()
+
+                        }).$promise.then(function(successResponse) {
+
+                            console.log("PRACTICE RESPONSE");
+
+                            self.practices = successResponse.features;
+
+                            console.log('self.practices', successResponse);
+
+                            self.showElements();
+
+                        }, function(errorResponse) {
+
+                            self.showElements();
+
+                        });
+
+                };
+
+                self.loadSite = function() {
+
+                    console.log("LOAD SITE");
+
+                    site.$promise.then(function(successResponse) {
+
+                        console.log("SITE RESPONSE");
 
                         console.log('self.site', successResponse);
 
@@ -246,40 +327,7 @@
                         //
 
                         practices.$promise.then(function(successResponse) {
-
-                            // // console.log('self.practices', successResponse);
-
-                            // successResponse.features.forEach(function(feature) {
-
-                            //     if (feature.geometry) {
-
-                            //         feature.geojson = self.buildFeature(feature.geometry);
-
-                            //         feature.bounds = turf.bbox(feature.geometry);
-
-                            //         // var styledFeature = {
-                            //         //     "type": "Feature",
-                            //         //     "geometry": feature.geometry,
-                            //         //     "properties": {
-                            //         //         "marker-size": "small",
-                            //         //         "marker-color": "#2196F3",
-                            //         //         "stroke": "#2196F3",
-                            //         //         "stroke-opacity": 1.0,
-                            //         //         "stroke-width": 2,
-                            //         //         "fill": "#2196F3",
-                            //         //         "fill-opacity": 0.5
-                            //         //     }
-                            //         // };
-
-                            //         // // Build static map URL for Mapbox API
-
-                            //         // var staticURL = 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/static/geojson(' + encodeURIComponent(JSON.stringify(styledFeature)) + ')/auto/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw';
-
-                            //         // feature.staticURL = staticURL;
-
-                            //     }
-
-                            // });
+                            console.log("PRACTICE RESPONSE");
 
                             self.practices = successResponse.features;
 
@@ -441,6 +489,39 @@
                     self.displayModal = false;
 
                 };
+
+            /*  createStaticMapUrls:
+                takes self.sites as self.practices as argument
+                iterates of self.practices
+                checks if project extent exists
+                checks if practice geometry exists, if so, calls Utility.buildStateMapURL, pass geometry
+                adds return to practices[] as staticURL property
+                if no site geometry, adds default URL to practices[].staticURL
+            */
+                self.createStaticMapURLs = function(arr){
+
+                    arr.forEach(function(feature, index) {
+
+                         if (feature.properties.project.extent) {
+
+                            if(feature.geometry != null){
+
+                                feature.staticURL = Utility.buildStaticMapURL(feature.geometry,'practice');
+
+                                self.practices[index].staticURL = feature.staticURL;
+
+                            }else{
+
+                                self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                                            '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                                        ].join('');
+                            }
+
+                        }
+
+                    });
+                }
 
                 self.addMapPreviews = function(arr) {
 
@@ -687,7 +768,7 @@
 
                         self.map.addControl(fullScreen, 'top-left');
 
-                        var paintFeature = true;
+                     /*   var paintFeature = true;
 
                         if (self.site &&
                             self.site.geometry &&
@@ -696,12 +777,14 @@
                             paintFeature = false;
 
                         }
+                    */
 
                         MapManager.addFeature(
                             self.map,
                             self.site,
                             'geometry',
-                            paintFeature,
+                            true,
+                      //      paintFeature,
                             true);
 
                         if (self.layers && self.layers.length) {
@@ -723,7 +806,9 @@
                                     feature,
                                     'geometry',
                                     true,
-                                    false);
+                                    false,
+                                    'practice'
+                                    );
 
                             });
 
@@ -733,6 +818,191 @@
 
                 };
 
+
+            /*
+            START BATCH UPLOAD METHODS
+            */
+                self.uploadShapefile = function() {
+
+
+                    /*Cast the file into an array
+                    could possibly remove this with reworks
+                    to the Upload directive
+                    */
+                    var tempFileImport = [];
+                    tempFileImport.push(self.fileImport);
+                    self.fileImport = tempFileImport;
+
+                    if (!self.fileImport  ||
+                        !self.fileImport.length
+                        ) {
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Please select a file.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(closeAlerts, 2000);
+
+                        return false;
+
+                    }
+
+                    self.progressMessage = 'Uploading your file...';
+
+                    var fileData = new FormData();
+
+
+
+                    fileData.append('file', self.fileImport[0]);
+
+                    fileData.append('feature_type', 'practice');
+
+                    fileData.append('site_id', self.site.id);
+
+                    fileData.append('collection', true);
+
+                    fileData.append('project_id',self.site.project_id);
+
+                    console.log('fileData', fileData);
+
+                    try {
+
+                        Shapefile.upload({}, fileData, function(successResponse) {
+
+                            console.log('successResponse', successResponse);
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Upload complete. Processing data...',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                            document.getElementById("shapefile").value = "";
+
+                            if (successResponse.task) {
+
+                                self.pendingTasks = [
+                                    successResponse.task
+                                ];
+
+                            }
+
+                            self.taskPoll = $interval(function() {
+
+                                self.fetchTasks(successResponse.task.id);
+
+                            }, 1000);
+
+                        }, function(errorResponse) {
+
+                            console.log('Upload error', errorResponse);
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'The file could not be processed.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                        });
+
+                    } catch (error) {
+
+                        console.log('Shapefile upload error', error);
+
+                    }
+
+                };
+
+                self.reloadPage = function (){
+                    location.reload();
+                };
+
+                self.hideTasks = function() {
+
+                    self.pendingTasks = [];
+
+                    if (typeof self.taskPoll !== 'undefined') {
+
+                        $interval.cancel(self.taskPoll);
+
+                    }
+                    $timeout(function() {
+
+                          self.loadPractices();
+                    //      self.reloadPage();
+                    //    self.loadSite();
+
+                    }, 500);
+
+
+                };
+
+                self.fetchTasks = function(taskId) {
+
+                    if (taskId &&
+                        typeof taskId === 'number') {
+
+                        return Task.get({
+                            id: taskId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            if (response.status &&
+                                response.status === 'complete') {
+
+                                self.hideTasks();
+
+                            }
+
+                        });
+
+                    } else {
+
+                        return Practice.tasks({
+                            id: $route.current.params.practiceId
+                        }).$promise.then(function(response) {
+
+                            console.log('Task.get response', response);
+
+                            self.pendingTasks = response.features;
+
+                            if (self.pendingTasks.length < 1) {
+
+                                 console.log("FOUR FOUR");
+
+                                //self.loadSite();
+
+                                 $timeout(function() {
+                                    self.loadPractices();
+                                   //  self.reloadPage();
+                                   //     self.loadSite();
+
+                                 }, 500);
+
+                                $interval.cancel(self.taskPoll);
+
+                            }
+
+                        });
+
+                    }
+
+                };
+
+            /*
+            END BATCH UPLOAD METHODS
+            */
+
                 //
                 // Verify Account information for proper UI element display
                 //
@@ -741,6 +1011,8 @@
                     user.$promise.then(function(userResponse) {
 
                         $rootScope.user = Account.userObject = userResponse;
+
+                        self.user = Account.userObject = userResponse;
 
                         self.permissions = {
                             isLoggedIn: Account.hasToken(),

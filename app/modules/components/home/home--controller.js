@@ -213,7 +213,7 @@
 
                     projects.$promise.then(function(successResponse) {
 
-                        console.log('self.program', successResponse);
+                        console.log('self.project', successResponse);
 
                         successResponse.features.forEach(function(feature) {
 
@@ -246,8 +246,10 @@
 
                         $rootScope.user = Account.userObject = userResponse;
 
-                        if ($rootScope.user.properties.organization) {
+                        self.user = userResponse;
 
+                        if ($rootScope.user.properties.organization) {
+                           
                             self.permissions = {
                                 isLoggedIn: Account.hasToken(),
                                 role: $rootScope.user.properties.roles[0],

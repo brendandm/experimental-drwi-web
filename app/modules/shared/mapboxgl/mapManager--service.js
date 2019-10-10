@@ -63,12 +63,30 @@ angular.module('FieldDoc')
                 return arr;
 
             },
-            addFeature: function(map, feature, attribute, addToMap, fitBounds) {
+            addFeature: function(map, feature, attribute, addToMap, fitBounds, featureType = null) {
 
                 if (fitBounds === null ||
                     typeof fitBounds === 'undefined') {
 
                     fitBounds = true;
+
+                }
+                /*Check feature type to set color*/
+
+                var geometryFillColor           = '#06aadf';
+                var geometryCircleStrokeColor   = 'rgba(6, 170, 223, 0.5)';
+                var geometryLineColor           = 'rgba(6, 170, 223, 0.8)';
+
+                if(featureType != null){
+                    if(featureType == 'site'){
+
+                    }else if(featureType == 'practice'){
+                        //df063e
+                        geometryFillColor = '#df063e';
+                        geometryCircleStrokeColor = 'rgba(223, 6, 62, 0.5)';
+                        geometryLineColor = 'rgba(223, 6, 62, 0.8)';
+                    }
+                }else{
 
                 }
 
@@ -128,8 +146,8 @@ angular.module('FieldDoc')
                                 },
                                 'paint': {
                                     'circle-radius': 8,
-                                    'circle-color': '#06aadf',
-                                    'circle-stroke-color': 'rgba(6, 170, 223, 0.5)',
+                                    'circle-color': geometryFillColor,
+                                    'circle-stroke-color': geometryCircleStrokeColor,
                                     'circle-stroke-opacity': 1,
                                     'circle-stroke-width': 4
                                 }
@@ -151,7 +169,7 @@ angular.module('FieldDoc')
                                     'visibility': 'visible'
                                 },
                                 'paint': {
-                                    'line-color': 'rgba(6, 170, 223, 0.8)',
+                                    'line-color': geometryLineColor,
                                     'line-width': 2
                                 }
                             });
@@ -169,7 +187,7 @@ angular.module('FieldDoc')
                                     'visibility': 'visible'
                                 },
                                 'paint': {
-                                    'fill-color': '#06aadf',
+                                    'fill-color': geometryFillColor,
                                     'fill-opacity': 0.4
                                 }
                             });
@@ -185,7 +203,7 @@ angular.module('FieldDoc')
                                     'visibility': 'visible'
                                 },
                                 'paint': {
-                                    'line-color': 'rgba(6, 170, 223, 0.8)',
+                                    'line-color': geometryLineColor,
                                     'line-width': 2
                                 }
                             });

@@ -9,7 +9,7 @@ angular.module('FieldDoc')
     .controller('ProjectPartnershipController',
         function(Account, $location, $log, Project, project, Partnership,
             $rootScope, $route, user, SearchService, $timeout, $window,
-            Utility, $interval, partnerships) {
+            Utility, $interval, partnerships, Organization) {
 
             var self = this;
 
@@ -20,6 +20,8 @@ angular.module('FieldDoc')
             $rootScope.toolbarState = {
                 'partnerships': true
             };
+
+         //   self.partnerQuery = {};
 
             $rootScope.page = {};
 
@@ -73,6 +75,8 @@ angular.module('FieldDoc')
                 }).$promise.then(function(successResponse) {
 
                     self.tempPartnerships = successResponse.features;
+
+                    console.log("self.tempPartnerships", self.tempPartnerships);
 
                     self.showElements();
 
@@ -192,7 +196,10 @@ angular.module('FieldDoc')
                     'last_modified_by',
                     'organization',
                     'tags',
-                    'tasks'
+                    'tasks',
+                    'centroid',
+                    'extent',
+                    'program'
                 ];
 
                 var reservedProperties = [
@@ -224,9 +231,53 @@ angular.module('FieldDoc')
 
             };
 
+            self.checkOrganizations = function(){
+                if(self.partnerQuery.id == null){
+
+                        var _organization = new Organization({
+                            'name': self.partnerQuery.name
+                        });
+
+                        _organization.$save(function(successResponse) {
+
+                            self.partnerQuery.id = successResponse.id;
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Successfully created ' + successResponse.properties.name + '.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(self.closeAlerts, 2000);
+
+                            self.createPartnership();
+
+                        }, function(errorResponse) {
+
+                            self.status.processing = false;
+
+
+                            self.alerts = [{
+                                'type': 'error',
+                                'flag': 'Error!',
+                                'msg': 'Something went wrong and the changes could not be saved.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(closeAlerts, 2000);
+
+                        });
+
+                }else{
+                     self.createPartnership();
+                }
+            };
+
             self.createPartnership = function() {
 
                 var params = {
+                //    name: self.partnerQuery.name,
                     amount: self.partnerQuery.amount,
                     description: self.partnerQuery.description,
                     organization_id: self.partnerQuery.id
@@ -238,8 +289,6 @@ angular.module('FieldDoc')
                     self.tempPartnerships.push({
                         id: successResponse.id
                     });
-
-                    console.log('self.createPartnership.self.tempPartnerships', self.tempPartnerships);
 
                     self.saveProject();
 
@@ -421,6 +470,12 @@ angular.module('FieldDoc')
                     self.partnerQuery = null;
 
                 });
+
+            };
+
+            self.addOrg = function(featureVal){
+
+                self.partnerQuery.name = featureVal;
 
             };
 
