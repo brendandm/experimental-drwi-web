@@ -1,0 +1,742 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="site--content--flow fluid-content clearfix distinguish">
+
+    <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
+
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
+
+        <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
+            <div class="progress--container">
+                <p style="font-weight: bold;" class="color-pulse">Loading project data&hellip;</p>
+            </div>
+        </div>
+
+        <section class="privacy-message reveal fade-in t0" data-ng-if="!page.status.loading && page.makePrivate">
+
+            <p>
+                <i class="material-icons">
+                    lock
+                </i>
+            </p>
+
+            <p>This project is private.</p>
+
+        </section>
+
+        <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
+
+            <div class="module--grid">
+
+                <div class="group">
+
+                    <article class="pad space-right shadow reveal fade-in t0">
+
+                        <h1>{{ page.project.name }}</h1>
+
+                        <p data-ng-if="page.project.id && page.project.last_modified_by.first_name && page.project.last_modified_by.last_name" class="label modtime">
+                            Last modified by {{ page.project.last_modified_by.first_name }} {{ page.project.last_modified_by.last_name }} on {{ page.project.modified_on | localTime | date:'fullDate' }} at <span class="lowercase">{{ page.project.modified_on | localTime | date:'h:mma' }}</span>
+                        </p>
+
+                        <p data-ng-if="page.project.program && page.project.program.id" class="label">
+                            <strong>Program:</strong> <a href="{{ page.project.links.program.html }}">{{ page.project.program.name }}</a>
+                        </p>
+
+                        <p data-ng-if="page.area && page.area.value" class="label">
+                            <strong>Total area:</strong> {{ page.area.value | number:2 }} {{ page.area.unit }}s
+                        </p>
+
+                        <p data-ng-bind-html="page.project.description"></p>
+
+                        <div data-ng-if="page.tags && page.tags.length">
+
+                            <span style="display: block; margin: 1em 0; color: #757575; text-transform: uppercase; font-size: .8em; font-weight: bold; letter-spacing: .05em;">Tags</span>
+
+                            <div class="tag--group">
+
+                                <div class="tag--pill" data-ng-class="{'colorize': tag.color && tag.color.length === 7}" data-ng-repeat="tag in page.tags">
+                                    <div class="colorize" data-ng-if="tag.color">
+                                        <span class="category" style="background: {{ tag.color }}; color: #f5f5f5; border-bottom: 1px solid {{ tag.color }};">{{ tag.group.name || 'misc' }}</span>
+                                        <span style="background: {{ tag.lightColor }}; color: #fafafa;">{{ tag.name }}</span>
+                                    </div>
+                                    <div data-ng-if="!tag.color || tag.color.length < 7">
+                                        <span class="category">{{ tag.group.name || 'misc' }}</span>
+                                        <span>{{ tag.name }}</span>
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                    <!-- <div class="map--module shadow reveal fade-in t1" style="position:relative;" data-ng-include="'/templates/primaryMap--view.html'"></div> -->
+
+                    <div class="map--module shadow reveal fade-in t1" style="position:relative;">
+                        <div id="primary--map" class="map tall" style="border-radius: 4px; overflow: hidden;">
+                            <div class="mapboxgl-layer-ctrl" data-ng-click="page.showLayerOptions = !page.showLayerOptions" title="Switch layers">
+                                <i class="material-icons">
+                                    layers
+                                </i>
+                                <div class="layer-group" data-ng-show="page.showLayerOptions">
+                                    <form>
+                                        <label data-ng-repeat="style in page.mapStyles" data-ng-class="{'active': page.activeStyle === $index}" title="{{ style.name }}">
+                                            <input type="radio" id="base-style-{{ $index }}" name="active-style" data-ng-model="page.activeStyle" data-ng-value="{{ $index }}" data-ng-change="page.switchMapStyle(style, $index)"><span> {{ style.name }}</span>
+                                        </label>
+                                    </form>
+                                    <form class="layers" data-ng-show="page.layers && page.layers.length">
+                                        <label for="layer-{{ $index }}" data-ng-repeat="layer in page.layers" data-ng-class="{'active': layer.selected}" title="{{ layer.name }}">
+                                            <input type="checkbox" id="layer-{{ $index }}" name="layer-{{ $index }}" data-ng-model="layer.selected" data-ng-value="{{ $index }}" data-ng-change="page.toggleLayer(layer)">
+                                            <span> {{ layer.name }}</span>
+                                            <div class="symbol-group" data-ng-if="layer.symbol && layer.symbol.colors">
+                                                <div class="color" data-ng-repeat="color in layer.symbol.colors" style="background: {{ color }};"></div>
+                                            </div>
+                                        </label>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="group reveal fade-in t2">
+
+                    <section class="pad shadow">
+
+                        <h2>Metrics</h2>
+
+                        <div data-ng-if="page.metrics && page.metrics.has_models">
+
+                            <table class="table table-practices with-metrics" data-ng-repeat="model in page.metrics.models">
+
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <strong>{{ model.datum.name }}</strong>
+                                            <p style="color: #616161; margin: 0; padding-top: 2em; font-size: 0.9em;">
+                                                The following metric values were generated using data and algorithms supplied by the {{ model.datum.name }} model. You can find more information about this model <a href="/models/{{ model.datum.id }}">here</a>.
+                                            </p>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th class="table-column-wide table-metrics-header">&nbsp;</th>
+                                        <th class="table-metrics-header">Estimated value</th>
+                                     <!--
+                                        <th class="table-metrics-header" data-ng-if="model.datum.show_progress">Estimated progress</th>
+                                     -->
+                                     <!--
+                                        <th data-ng-if="model.datum.show_progress">&nbsp;</th>
+                                        -->
+                                    </tr>
+                                </thead>
+
+                                <tbody class="metrics" data-ng-repeat="metric in model.collection track by $index">
+                                    <tr class="metrics--metric" data-ng-click="page.showMetricModal(metric)">
+                                        <td class="table-column-wide">
+                                            <p class="metric--title">
+                                                {{ metric.name }}
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
+                                           <!--
+                                                <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ metric.self_target | number:2 }}</span>
+                                            -->
+                                        </td>
+                                   <!--
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                            <strong class="metrics--metric--percentage">
+                                                {{ metric.selfProgress.value * 100 | number:1 }}%
+                                            </strong>
+                                        </td>
+                                    -->
+                                    <!--
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                            <progress-arc
+                                                size="32"
+                                                stroke="#2196F3"
+                                                stroke-width="4"
+                                                complete="metric.selfProgress.arcValue"
+                                                counter-clockwise="false"
+                                                background="rgba(0,0,0,0.2)">
+                                            </progress-arc>
+                                        </td>
+                                     -->
+                                    </tr>
+                                    <tr class="metrics--metric" style="opacity: 0.72;" data-ng-repeat="geography in metric.geographies">
+                                        <td class="table-column-wide">
+                                            <a class="metric--title" style="display: flex; flex-flow: row nowrap; align-items: center; padding-left: 2em;" data-ng-href="/geographies/{{ geography.id }}">
+                                                <i class="material-icons">
+                                                    public
+                                                </i>
+                                                &nbsp;
+                                                {{ geography.name }}
+                                                <span data-ng-if="geography.category">&nbsp;&middot; {{ geography.category }}</span>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
+                                                <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ geography.target | number:2 }}</span>
+                                        </td>
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                            <strong class="metrics--metric--percentage">
+                                                {{ geography.progress | number:1 }}%
+                                            </strong>
+                                        </td>
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                            <progress-arc
+                                                size="32"
+                                                stroke="#2196F3"
+                                                stroke-width="4"
+                                                complete="geography.arc_value"
+                                                counter-clockwise="false"
+                                                background="rgba(0,0,0,0.2)">
+                                            </progress-arc>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                        <table class="table table-practices with-metrics" style="border-top: 1px solid #e0e0e0;" data-ng-if="page.metrics && page.metrics.generic.length">
+
+                            <thead>
+                                <tr>
+                                    <th class="table-column-wide table-metrics-header">&nbsp;</th>
+                                    <th class="table-metrics-header">Installed To-Date</th>
+                                    <th class="table-metrics-header">% Installed</th>
+                                    <th>&nbsp;</th>
+                                </tr>
+                            </thead>
+
+                            <!-- <tbody class="metrics">
+                                <tr class="metrics--metric" data-ng-repeat="metric in page.metrics.generic track by $index" data-ng-click="page.showMetricModal(metric)">
+                                    <td class="table-column-wide">
+                                        <p class="metric--title">
+                                            {{ metric.name }}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}<br />
+                                            of {{ metric.self_target | number:2 }}</span>
+                                    </td>
+                                    <td>
+                                        <strong class="metrics--metric--percentage">
+                                            {{ metric.selfProgress.value * 100 | number:1 }}%
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <progress-arc
+                                            size="32"
+                                            stroke="#2196F3"
+                                            stroke-width="4"
+                                            complete="metric.selfProgress.arcValue"
+                                            counter-clockwise="false"
+                                            background="rgba(0,0,0,0.2)">
+                                        </progress-arc>
+                                    </td>
+                                </tr>
+                            </tbody> -->
+
+                            <tbody class="metrics" data-ng-repeat="metric in page.metrics.generic track by $index">
+                                <tr class="metrics--metric" data-ng-click="page.showMetricModal(metric)">
+                                    <td class="table-column-wide">
+                                        <p class="metric--title">
+                                            {{ metric.name }}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
+                                            <span class="metrics--metric--rollup--label" data-ng-if="metric.show_progress">of {{ metric.self_target | number:2 }}</span>
+                                    </td>
+                                    <td data-ng-if="metric.show_progress">
+                                        <strong class="metrics--metric--percentage">
+                                            {{ metric.selfProgress.value * 100 | number:1 }}%
+                                        </strong>
+                                    </td>
+                                    <td data-ng-if="metric.show_progress">
+                                        <progress-arc
+                                            size="32"
+                                            stroke="#2196F3"
+                                            stroke-width="4"
+                                            complete="metric.selfProgress.arcValue"
+                                            counter-clockwise="false"
+                                            background="rgba(0,0,0,0.2)">
+                                        </progress-arc>
+                                    </td>
+                                </tr>
+                                <tr class="metrics--metric" style="opacity: 0.72;" data-ng-repeat="geography in metric.geographies">
+                                    <td class="table-column-wide">
+                                        <p class="metric--title" style="display: flex; flex-flow: row nowrap; align-items: center; padding-left: 2em;">
+                                            <i class="material-icons">
+                                                public
+                                            </i>
+                                            &nbsp;
+                                            {{ geography.name }}
+                                            <span data-ng-if="geography.category">&nbsp;&middot; {{ geography.category }}</span>
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
+                                            <span class="metrics--metric--rollup--label" data-ng-if="metric.show_progress">of {{ geography.target | number:2 }}</span>
+                                    </td>
+                                    <td data-ng-if="metric.show_progress">
+                                        <strong class="metrics--metric--percentage">
+                                            {{ geography.progress | number:1 }}%
+                                        </strong>
+                                    </td>
+                                    <td data-ng-if="metric.show_progress">
+                                        <progress-arc
+                                            size="32"
+                                            stroke="#2196F3"
+                                            stroke-width="4"
+                                            complete="geography.arc_value"
+                                            counter-clockwise="false"
+                                            background="rgba(0,0,0,0.2)">
+                                        </progress-arc>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+
+                    </section>
+
+                </div>
+
+                <div class="metric-modal" data-ng-if="page.displayModal" data-ng-click="page.closeMetricModal()">
+
+                    <div class="summary-card">
+
+                        <button class="close" type="button" data-ng-click="page.closeMetricModal()" title="Cancel">
+                            <i class="material-icons">
+                                clear
+                            </i>
+                        </button>
+
+                        <h2 class="metric--title" style="color: #e0e0e0; margin-bottom: 1em; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 1em;">
+                            {{ page.selectedMetric.name }}
+                        </h2>
+
+                        <p style="color: #e0e0e0;">{{ page.selectedMetric.description || 'No description' }}</p>
+
+                        <div style="display: flex; flex-flow: row nowrap; justify-content: center; align-items: center; padding: 1em 0; width: 100%;">
+
+                            <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center; ">
+                                <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Program progress</span>
+                                <br />
+                                <progress-arc
+                                    size="80"
+                                    stroke="#2196F3"
+                                    stroke-width="8"
+                                    complete="page.selectedMetric.contextProgress.arcValue"
+                                    counter-clockwise="false"
+                                    background="rgba(0,0,0,0.2)">
+                                </progress-arc>
+                                <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.target | number:2 }}</span>
+                            </div>
+
+                            <div style="display: flex; flex-flow: column; flex-grow: 1; justify-content: center; align-items: center;">
+                                <span style="display: block; margin-bottom: 2em; color: #e0e0e0; text-transform: uppercase; font-size: .8em; letter-spacing: .05em;">Project progress</span>
+                                <br />
+                                <progress-arc
+                                    size="80"
+                                    stroke="#2196F3"
+                                    stroke-width="8"
+                                    complete="page.selectedMetric.selfProgress.arcValue"
+                                    background="rgba(0,0,0,0.2)">
+                                </progress-arc>
+                                <span style="display: block; margin-top: 2em; color: #e0e0e0;">{{ page.selectedMetric.current_value | number:2 }} / {{ page.selectedMetric.self_target | number:2 }}</span>
+                            </div>
+
+                        </div>
+
+                        <p style="color: #e0e0e0; margin: 0; padding-top: 2em; font-size: 0.9em;" data-ng-if="page.selectedMetric.model">
+                            This is an automated metric. The values above were generated using data and algorithms supplied by the {{ page.selectedMetric.model.name }} model. You can find more information about this model <a href="/models/{{ page.selectedMetric.model.id }}">here</a>.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <section class="reveal fade-in t3" style="padding: 0;">
+
+                 <div style="border:0px solid red;">
+                    <div style="border:0px solid red; float:left; display:inline-block">
+                         <h2>Sites</h2>
+                    </div>
+                    <div style="margin-top:24px; border:0px solid red;float:right; display:inline-block" data-ng-if="page.permissions.can_edit">
+                        <a class="snapshot--title"
+                           href="/projects/{{ page.project.id }}/batchDelete"
+                           >
+                                <i class="material-icons" style="color:#666666;">
+                                      delete_sweep
+                                </i>
+                        </a>
+
+
+                    </div>
+
+                </div>
+
+                <ul class="snapshot--cards list-unstyled">
+
+                    <li class="card" data-ng-repeat="site in page.sites track by $index">
+
+                        <div class="card--content">
+
+                            <div style="position:relative;">
+
+                              <img data-ng-if="site.staticURL" data-ng-src="{{ site.staticURL }}" width="auto" height="auto" />
+
+
+                                <img data-ng-if="!site.staticURL" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,5/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
+
+
+                                <!--<div id="site-geography-preview-{{ $index }}" style="width: 100%; height: 200px;"></div>-->
+
+
+                                <!-- <leaflet id="site-geography-preview-{{ $index }}" style="width: 100%; height: 200px;" defaults="page.previewMap.defaults" layers="page.previewMap.layers" bounds="site.bounds" geojson="site.geojson"></leaflet> -->
+
+                            </div>
+
+                            <div class="name" style="background: #fff;">
+                                <span>{{ site.properties.name || 'Un-named' }}</span>
+                            </div>
+
+                            <div class="body">
+
+                                <div class="confirm--delete" data-ng-if="page.deletionTarget && page.deletionTarget.feature.properties.id === site.properties.id && page.deletionTarget.collection === 'site'">
+                                    <p>Do you want to delete this site?</p>
+                                    <div class="actions" style="flex: 0;">
+                                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('site', $index)">
+                                            Yes
+                                        </a>
+                                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                                            Cancel
+                                        </a>
+                                    </div>
+                                </div>
+                                <p>{{ (site.properties.description || 'No description') | truncate:80 }}</p>
+                                <div class="actions">
+                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}" title="Site summary">
+                                        <i class="material-icons">
+                                            dashboard
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/edit" title="Edit site" data-ng-if="page.permissions.can_edit">
+                                        <i class="material-icons">
+                                            edit
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/location" title="Edit location" data-ng-if="page.permissions.can_edit">
+                                        <i class="material-icons">
+                                            location_on
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="#" title="Delete site" data-ng-click="page.confirmDelete(site, 'site')" data-ng-if="page.permissions.can_edit">
+                                        <i class="material-icons">
+                                            delete
+                                        </i>
+                                    </a>
+                                </div>
+                                <span><time datetime="{{ site.properties.modified_on }}" title="{{ site.properties.modified_on }}">Last updated on {{ site.properties.modified_on | date : 'mediumDate' }}</time></span>
+                            </div>
+
+                        </div>
+
+                    </li>
+
+                    <li class="card" data-ng-if="page.permissions.can_edit">
+                        <div class="card--content">
+                            <div class="body">
+                                <button type="button" class="snapshot--title" data-ng-click="page.createSite()" title="Create site">
+                                    <i class="material-icons">
+                                        add
+                                    </i>
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+
+            </section>
+
+            <section class="reveal fade-in t0" style="padding: 1em 0 0;" data-ng-if="!page.status.loading && page.pendingTasks.length">
+
+                <h2 style="width: 100%; display: flex; flex-flow: row nowrap; align-items: center; text-align: left;">
+                    Active tasks
+                    <a href="#" data-ng-click="page.hideTasks()" style="display: inline-block; font-size: 0.5em; margin-left: 1em;">Dismiss</a>
+                </h2>
+
+                <!-- <a href="#" data-ng-click="page.hideTasks()">Dismiss</a> -->
+
+                <div class="features--container" style="padding: 0;">
+
+                    <table class="features clearfix">
+                        <thead>
+                            <tr class="table-row clearfix">
+                                <th class="table-heading" style="text-align: left;">
+                                    Date
+                                </th>
+                                <th class="table-heading" style="text-align: left;">
+                                    User
+                                </th>
+                                <th class="table-heading" style="text-align: left;">
+                                    Annotation
+                                </th>
+                                <th class="table-heading" style="text-align: left;">
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row clearfix" data-ng-repeat="task in page.pendingTasks | orderBy: '-start'">
+                                <td>
+                                    <time datetime="{{ task.start }}Z" title="{{ task.start }}Z">{{ task.start | date:'fullDate' }} at <span class="lowercase" style="display: inline-flex; padding-bottom: 0;">{{ task.start | date:'mediumTime' }}</span> UTC</time>
+                                </td>
+                                <td>
+                                    <a data-ng-href="profiles/{{ task.user.id }}" style="display: inline; color: #333; font-weight: bold;">{{ task.creator.first_name }} {{ task.creator.last_name }}</a>
+                                </td>
+                                <td class="truncate" style="text-align: left;">
+                                    {{ task.annotation }}
+                                </td>
+                                <td style="color: #616161; vertical-align: middle;">
+                                    <span>{{ task.status }}</span>
+                                    <span data-ng-repeat="error in task.errors">({{ error.message }})</span>
+                                    <!-- <i class="material-icons">
+                                    remove_circle
+                                    </i> -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <section class="reveal fade-in t0" style="padding: 1em 0 0; border:0px solid red; "
+             data-ng-if="page.permissions.can_edit"
+            >
+
+                <form role="form" class="form" id="form--site-collection" name="form--site-collection"
+                      style="position: relative; display:block; border:0px solid purple;
+                             width:100%; min-width:300px; max-width:1200px; " data-ng-submit="page.uploadShapefile()">
+
+                    <!-- Shapefile input -->
+                    <div class="form-field" style="border:0px solid blue; float:left; display:inline block; width:100%;">
+
+                        <p style="font-style: normal; font-size: 1em; margin-top: 1.5em; border:0px solid green;">
+                            <strong>Site Batch Import</strong>
+                        </p>
+
+                        <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+
+                            Batch Uploads allow you to upload polygons for multiple sites simultaneously.
+                            After upload, each record will display as a separate site tile.
+
+                        </p>
+                        <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+
+                            FieldDoc accepts .zip files that archive  ESRI .shp, .shx, .dbg and a .prj file. The project should be WGS1984.
+                            GeoJSON files must use the json or .geojson file extensions and follow the format described in this specification.
+
+                        </p>
+
+                        <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+
+                           Batch importing is optimized for 500 sites or less. Refer to our help documentation for more guidance on batch imports and upload requirements.
+
+                        </p>
+
+                        <input type="file" class="form-control" id="shapefile" name="shapefile" file-upload file-model="page.fileImport" />
+                        <!--
+                         <input type="file" class="form-control" id="shapefile" name="shapefile" file-upload file-model="page.fileImport" file-on-change="page.uploadShapefile()" />
+                        -->
+                        <!--
+                        <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+                            Regardless of type, file uploads cannot exceed 100MB. For shapefile archives,
+                            this is the maximum total size of all <strong>un-compressed</strong> files.
+                            If your import exceeds the 100MB limit, <a href="mailto:support@fielddoc.org">contact the FieldDoc team</a>
+                            and we’ll help you bring the data online.
+                        </p>
+                        -->
+                    </div>
+
+
+                    <div class="save--action--wrapper save--action--bottom">
+                        <button type="submit" data-ng-disabled="page.status.processing">
+                            <i class="material-icons" data-ng-if="page.status.processing">
+                                more_horiz
+                            </i>
+                            <i class="material-icons" data-ng-if="!page.status.processing">
+                                done
+                            </i>
+                        </button>
+                    </div>
+
+                </form>
+
+            </section>
+
+            <section class="reveal fade-in t3" style="padding: 0;">
+                <h2 class="">Partners</h2>
+                <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading">
+                    <div class="add--new--wrapper" style="position:relative">
+                      <span></span>
+
+                         </a>
+                    </div>
+
+                    <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">{{page.project.name}} has <strong>{{ (page.partnerships.length | number) || 0 }}</strong> <ng-pluralize count="page.partnerships.length" when="{'one': 'partnership','other': 'partnerships'}"></ng-pluralize>.</p>
+
+                    <div class="features--container" data-ng-if="!page.status.loading">
+
+                        <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
+
+                            <li class="flow2-card reveal fade-in" style=" padding-left:0; padding-bottom:2em; position:relative; display:block; border: 0px solid green; animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="partner in page.partnerships | orderBy:'-created_on' | filter: page.q">
+
+                                    <div class="flow2-card--content" style="width: 100%;height: 100%; display:table; border: 0px solid red; " >
+
+                                        <a href="/organizationProfile/{{partner.organization.id}}" style="display: table-cell; vertical-align: middle;">
+                                              <div class="partner-logo-wrapper" style="border: 0px solid purple; "   ng-if="partner.organization.picture">
+                                                     <img class='partner-logo' style="width: 100%; height: auto;" src="{{partner.organization.picture}}">
+                                                </div>
+                                                 <div class="partner-logo-wrapper" style="border: 0px solid purple;"   ng-if="!partner.organization.picture">
+                                                     <img class='partner-logo' style="clear:right;" src="/images/partner-Default-1024x.png">
+                                                </div>
+                                        </a>
+
+                                    </div>
+                                     <div class="partner_name" style="max-width:400px;  margin-top: -2em; clear:both;  border-bottom:1px ; display:block;  float: center; ">
+                                            <span>{{ partner.organization.name }}</span>
+                                        </div>
+
+
+
+
+
+                            </li>
+
+
+
+                        </ul>
+
+                    </div>
+                 </div>
+            </section>
+        </div>
+
+
+
+
+        </div>
+
+    </div>
+
+    <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
+        <ul>
+            <li data-ng-class="{active: $root.toolbarState.dashboard}">
+                <a href="/projects/{{ page.project.id }}">
+                    <i class="material-icons">
+                        dashboard
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="/projects/{{ page.project.id }}/edit">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.grant}">
+                <a href="/projects/{{ page.project.id }}/grant">
+                    <i class="material-icons">
+                        account_balance
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="/projects/{{ page.project.id }}/users">
+                    <i class="material-icons">
+                        group
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
+                <a href="/projects/{{ page.project.id }}/partnerships">
+                    <i class="material-icons">
+                        group_work
+                    </i>
+                </a>
+            </li>
+            <!-- <li data-ng-if="page.permissions.can_edit">
+                <a href="/projects/{{ page.project.id }}/edit">
+                    <i class="material-icons">
+                        edit
+                    </i>
+                </a>
+            </li> -->
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
+                <a href="/projects/{{ page.project.id }}/targets">
+                    <i class="material-icons">
+                        multiline_chart
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
+                <a href="/projects/{{ page.project.id }}/tags">
+                    <i class="material-icons">
+                        local_offer
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <a href="#" data-ng-click="page.print()">
+                    <i class="material-icons">
+                        print
+                    </i>
+                </a>
+            </li>
+            <li data-ng-if="page.permissions.can_edit">
+                <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.project.id && page.deletionTarget.collection === 'project'">
+                    <p>Do you want to delete this project?</p>
+                    <div class="actions">
+                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('project')">
+                            Yes
+                        </a>
+                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+                <a href="#" data-ng-click="page.confirmDelete(page.project, 'project')">
+                    <i class="material-icons">
+                        delete
+                    </i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+        <div class="event--container">
+            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                <span class="event--message">{{ alert.msg }}</span>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>
