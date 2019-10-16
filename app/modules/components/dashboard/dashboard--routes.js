@@ -40,50 +40,50 @@ angular.module('FieldDoc')
                 }
 
             })
-            .when('/dashboards/:dashboardId', {
-                templateUrl: '/modules/components/dashboard/views/dashboard--view.html?t=' + environment.version,
-                controller: 'DashboardController',
-                controllerAs: 'page',
-                reloadOnSearch: false,
-                resolve: {
-                    geographies: function($route, $location, Dashboard) {
-
-                        return Dashboard.geographies({
-                            id: $route.current.params.dashboardId
-                        });
-
-                    },
-                    baseProjects: function($route, $location, Dashboard) {
-
-                        return Dashboard.projects({
-                            id: $route.current.params.dashboardId
-                        });
-
-                    },
-                    dashboard: function($route, $location, Dashboard, $rootScope, $document) {
-
-                        $rootScope.targetPath = '/dashboards';
-
-                        return Dashboard.basic({
-                            id: $route.current.params.dashboardId
-                        });
-
-                    },
-                    user: function(Account, $rootScope, $document) {
-
-                        if (Account.userObject && !Account.userObject.id) {
-
-                            return Account.getUser();
-                            
-                        }
-
-                        return Account.userObject;
-
-                    }
-
-                }
-
-            })
+//            .when('/dashboards/:dashboardId', {
+//                templateUrl: '/modules/components/dashboard/views/dashboard--view.html?t=' + environment.version,
+//                controller: 'DashboardController',
+//                controllerAs: 'page',
+//                reloadOnSearch: false,
+//                resolve: {
+//                    geographies: function($route, $location, Dashboard) {
+//
+//                        return Dashboard.geographies({
+//                            id: $route.current.params.dashboardId
+//                        });
+//
+//                    },
+//                    baseProjects: function($route, $location, Dashboard) {
+//
+//                        return Dashboard.projects({
+//                            id: $route.current.params.dashboardId
+//                        });
+//
+//                    },
+//                    dashboard: function($route, $location, Dashboard, $rootScope, $document) {
+//
+//                        $rootScope.targetPath = '/dashboards';
+//
+//                        return Dashboard.basic({
+//                            id: $route.current.params.dashboardId
+//                        });
+//
+//                    },
+//                    user: function(Account, $rootScope, $document) {
+//
+//                        if (Account.userObject && !Account.userObject.id) {
+//
+//                            return Account.getUser();
+//
+//                        }
+//
+//                        return Account.userObject;
+//
+//                    }
+//
+//                }
+//
+//            })
             .when('/dashboards/collection/new', {
                 templateUrl: '/modules/components/dashboard/views/dashboardCreate--view.html?t=' + environment.version,
                 controller: 'DashboardCreateController',
