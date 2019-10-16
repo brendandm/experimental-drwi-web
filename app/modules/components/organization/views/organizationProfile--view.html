@@ -8,6 +8,7 @@
 
         <h1 class="inset">{{page.organizationProfile.name}}</h1>
 
+
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading" style="border:0px solid red;">
 
         <!--    <section class="reveal fade-in t0 ng-scope" style="padding: 1em 0 0;"> -->
@@ -69,6 +70,73 @@
 
     <!--        </section> -->
         </div>
+
+        <h2 class="flow2" ng-if="page.members.length">Members</h2>
+        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && page.members.length">
+            <div class="add--new--wrapper" style="position:relative">
+                <span></span>
+
+                </a>
+            </div>
+   <!--         <section class="reveal fade-in t0 ng-scope" style="padding: 1em 0 0;"> -->
+
+                <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">{{page.organizationProfile.name}} has <strong>{{ (page.members.length | number) || 0 }}</strong> <ng-pluralize count="page.members.length" when="{'one': 'member','other': 'members'}"></ng-pluralize>.</p>
+
+                <div class="features--container" data-ng-if="!page.status.loading" style="padding-bottom: 20px;">
+
+                    <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
+
+                        <li class="flow2-card reveal fade-in" style="max-width:25%; display:block; border: 0px solid green; animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="member in page.members | orderBy:'-last_login_at' | filter: page.q">
+
+                                <div class="flow2-card--content" style="border: 0px solid red;" >
+
+
+                                      <a href="/profile/" data-ng-class="{viewing: $root.viewState.profile}" data-ng-if="member.id == page.user.properties.id">
+
+                                        <div class="user-avatar-wrapper" style=" margin-left:auto; margin-right:auto;"  ng-if="member.picture">
+                                             <img class='user--avatar' style="clear:right;" src="{{member.picture}}">
+                                        </div>
+                                        <div class="user-avatar-wrapper" style="margin-left:auto; margin-right:auto;"  ng-if="!member.picture">
+                                             <img class='user--avatar' style="clear:right;" src="/images/avatar-Default-1024x.png">
+                                        </div>
+
+                                      </a>
+                                    <a href="/profile/{{member.id}}" data-ng-class="{viewing: $root.viewState.profile}" data-ng-if="member.id != page.user.properties.id">
+
+                                        <div class="user-avatar-wrapper" style=" margin-left:auto; margin-right:auto;"  ng-if="member.picture">
+                                             <img class='user--avatar' style="clear:right;" src="{{member.picture}}">
+                                        </div>
+                                        <div class="user-avatar-wrapper" style="margin-left:auto; margin-right:auto;"  ng-if="!member.picture">
+                                             <img class='user--avatar' style="clear:right;" src="/images/avatar-Default-1024x.png">
+                                        </div>
+
+                                      </a>
+
+                                        <div class="name" style="display:block;  float: center; clear:left; background: #fff;">
+                                            <span>  {{ member.first_name }} {{ member.last_name }}</span>
+
+                                        </div>
+
+                                        <div class="body" style="display:block; border-bottom: 0px; float: left; clear:left; background: #fff;">
+                                             <span style=" font-weight: normal;"> {{ member.title }} </span>
+
+
+                                       </div>
+
+                                </div>
+
+
+                        </li>
+
+
+                    </ul>
+
+                </div>
+
+        <!--    </section> -->
+
+        </div>
+
         <h2 class="flow2" style="display:block" ng-if="page.projects.length">Projects</h2>
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && page.projects.length" style="border:0px solid red;">
             <div class="add--new--wrapper" data-ng-if="$root.user.properties.is_admin || page.organizationProfile.id == page.user.properties.organization.id">
@@ -149,71 +217,8 @@
                 </div>
        <!--     </section> -->
         </div>
-        <h2 class="flow2" ng-if="page.members.length">Members</h2>
-        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && page.members.length">
-            <div class="add--new--wrapper" style="position:relative">
-                <span></span>
-
-                </a>
-            </div>
-   <!--         <section class="reveal fade-in t0 ng-scope" style="padding: 1em 0 0;"> -->
-
-                <p data-ng-if="!page.status.loading && !$root.user.properties.is_admin && !$root.user.properties.is_manager">{{page.organizationProfile.name}} has <strong>{{ (page.members.length | number) || 0 }}</strong> <ng-pluralize count="page.members.length" when="{'one': 'member','other': 'members'}"></ng-pluralize>.</p>
-
-                <div class="features--container" data-ng-if="!page.status.loading">
-
-                    <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
-
-                        <li class="flow2-card reveal fade-in" style="max-width:25%; display:block; border: 0px solid green; animation-delay: {{ $index * 150 }}ms;" data-ng-repeat="member in page.members | orderBy:'-last_login_at' | filter: page.q">
-
-                                <div class="flow2-card--content" style="border: 0px solid red;" >
 
 
-                                      <a href="/profile/" data-ng-class="{viewing: $root.viewState.profile}" data-ng-if="member.id == page.user.properties.id">
-
-                                        <div class="user-avatar-wrapper" style=" margin-left:auto; margin-right:auto;"  ng-if="member.picture">
-                                             <img class='user--avatar' style="clear:right;" src="{{member.picture}}">
-                                        </div>
-                                        <div class="user-avatar-wrapper" style="margin-left:auto; margin-right:auto;"  ng-if="!member.picture">
-                                             <img class='user--avatar' style="clear:right;" src="/images/avatar-Default-1024x.png">
-                                        </div>
-
-                                      </a>
-                                    <a href="/profile/{{member.id}}" data-ng-class="{viewing: $root.viewState.profile}" data-ng-if="member.id != page.user.properties.id">
-
-                                        <div class="user-avatar-wrapper" style=" margin-left:auto; margin-right:auto;"  ng-if="member.picture">
-                                             <img class='user--avatar' style="clear:right;" src="{{member.picture}}">
-                                        </div>
-                                        <div class="user-avatar-wrapper" style="margin-left:auto; margin-right:auto;"  ng-if="!member.picture">
-                                             <img class='user--avatar' style="clear:right;" src="/images/avatar-Default-1024x.png">
-                                        </div>
-
-                                      </a>
-
-                                        <div class="name" style="display:block;  float: center; clear:left; background: #fff;">
-                                            <span>  {{ member.first_name }} {{ member.last_name }}</span>
-
-                                        </div>
-
-                                        <div class="body" style="display:block; border-bottom: 0px; float: left; clear:left; background: #fff;">
-                                             <span style=" font-weight: normal;"> {{ member.email }} </span>
-
-
-                                       </div>
-
-                                </div>
-
-
-                        </li>
-
-
-                    </ul>
-
-                </div>
-
-        <!--    </section> -->
-
-        </div>
 
     </div>
 
