@@ -277,7 +277,7 @@ angular.module('FieldDoc')
             self.createPartnership = function() {
 
                 var params = {
-                //    name: self.partnerQuery.name,
+                    name: self.partnerQuery.name,
                     amount: self.partnerQuery.amount,
                     description: self.partnerQuery.description,
                     organization_id: self.partnerQuery.id
@@ -475,7 +475,15 @@ angular.module('FieldDoc')
 
             self.addOrg = function(featureVal){
 
-                self.partnerQuery.name = featureVal;
+                if(self.partnerQuery.id == null){
+                    self.partnerQuery = {};
+                    self.partnerQuery.name = featureVal;
+                }else{
+
+                    self.partnerQuery = featureVal;
+
+                }
+
 
             };
 
