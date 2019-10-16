@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1571245927298})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1571248857514})
 
 ;
 /**
@@ -7713,7 +7713,7 @@ angular.module('FieldDoc')
             self.createPartnership = function() {
 
                 var params = {
-                //    name: self.partnerQuery.name,
+                    name: self.partnerQuery.name,
                     amount: self.partnerQuery.amount,
                     description: self.partnerQuery.description,
                     organization_id: self.partnerQuery.id
@@ -7911,7 +7911,15 @@ angular.module('FieldDoc')
 
             self.addOrg = function(featureVal){
 
-                self.partnerQuery.name = featureVal;
+                if(self.partnerQuery.id == null){
+                    self.partnerQuery = {};
+                    self.partnerQuery.name = featureVal;
+                }else{
+
+                    self.partnerQuery = featureVal;
+
+                }
+
 
             };
 
