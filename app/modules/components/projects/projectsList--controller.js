@@ -261,6 +261,8 @@ angular.module('FieldDoc')
 
                     self.filters.tag = self.tags[0].id;
 
+                    console.log("self.filters.tag", self.filters.tag);
+
                     self.inspectSearchParams();
 
                 }, function(errorResponse) {
