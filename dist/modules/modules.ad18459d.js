@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1571248857514})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1571325836233})
 
 ;
 /**
@@ -32534,7 +32534,6 @@ angular.module('FieldDoc')
 
                     Model.practiceTypes({
                         id: self.model.id
-                     //   program _id: self.program.id
                     }).$promise.then(function(successResponse) {
 
                         console.log('Model.practiceTypes successResponse', successResponse);
@@ -32548,8 +32547,6 @@ angular.module('FieldDoc')
                         });
 
                         self.practiceTypes = practiceTypes;
-
-                        console.log("PRACTICE TYPES", self.practiceTypes);
 
                     }, function(errorResponse) {
 

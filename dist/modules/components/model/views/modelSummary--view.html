@@ -95,9 +95,11 @@
 
                         <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
-                            <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="practice in page.practiceTypes | orderBy:'name' | filter: page.q">
+                            <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
+                                data-ng-repeat="practice in page.practiceTypes | orderBy:'name' | filter: page.q"
+                               >
 
-                                <div class="card--content">
+                                <div class="card--content" >
 
                                     <div class="name" style="flex-flow: column; align-items: flex-start;">
                                         <label for="practice-{{ practice.id }}">
