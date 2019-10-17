@@ -86,6 +86,34 @@
                     </form>
                 </div>
 
+
+                 <div class="collection-filter drop-down category">
+                    <button type="button" data-ng-class="{'open-btn': (page.showModal.tag || (page.filters.tag > 0))}" data-ng-click="page.showModal.tag = !page.showModal.tag">
+                        Tag Categories
+                        <i class="material-icons">
+                            arrow_drop_down
+                        </i>
+                    </button>
+                    <form name="collection-filter-form" class="collection-filter-modal" style="width: auto;" data-ng-if="page.showModal.tag">
+                        <label data-ng-repeat="tag in page.tags | orderBy:'name'" data-ng-class="{'active': page.filters.tag === tag.id}" title="{{ tag.name }}">
+                            <span class="input-mask" data-ng-if="page.filters.tag === tag.id">
+                                <i class="material-icons">
+                                    radio_button_checked
+                                </i>
+                            </span>
+                            <span class="input-mask" data-ng-if="page.filters.tag !== tag.id">
+                                <i class="material-icons">
+                                    radio_button_unchecked
+                                </i>
+                            </span>
+                            <input type="radio" id="tag-option-{{ tag.id }}" name="active-category" data-ng-model="page.filters.tag" data-ng-value="{{ tag.id }}" data-ng-change="page.inspectSearchParams(true)"><span> {{ tag.name }}</span>
+                        </label>
+                    </form>
+                </div>
+
+
+
+
                 <div class="collection-filter drop-down category">
                     <button type="button" data-ng-class="{'open-btn': (page.showModal.tag || (page.filters.tag > 0))}" data-ng-click="page.showModal.tag = !page.showModal.tag">
                         Tags&nbsp;
