@@ -112,9 +112,9 @@
 
                         successResponse.features.forEach(function(feature) {
 
-                            practiceTypes.push(feature.practice);
+                            practiceTypes.push(feature);
 
-                        })
+                        });
 
                         self.practiceTypes = practiceTypes;
 
