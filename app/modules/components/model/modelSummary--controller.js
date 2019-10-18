@@ -112,7 +112,11 @@
 
                         successResponse.features.forEach(function(feature) {
 
-                            practiceTypes.push(feature);
+                            if(feature.model_practice_type.model_id == self.model.id){
+
+                                practiceTypes.push(feature.practice_type);
+
+                            }
 
                         });
 
