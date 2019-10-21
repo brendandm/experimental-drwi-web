@@ -277,7 +277,7 @@ angular.module('FieldDoc')
             self.createPartnership = function() {
 
                 var params = {
-                    name: self.partnerQuery.name,
+                  //  name: self.partnerQuery.name,
                     amount: self.partnerQuery.amount,
                     description: self.partnerQuery.description,
                     organization_id: self.partnerQuery.id
