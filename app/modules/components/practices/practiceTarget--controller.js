@@ -186,12 +186,14 @@ angular.module('FieldDoc')
                     'practices'
                 ].join(',');
                 
-                Practice.get({
+                Practice.getSingle({
                     id: $route.current.params.practiceId,
                     exclude: exclude
                 }).$promise.then(function(successResponse) {
 
                     self.processPractice(successResponse);
+
+                    console.log("practice response",successResponse)
 
                     if (!successResponse.permissions.read &&
                         !successResponse.permissions.write) {
