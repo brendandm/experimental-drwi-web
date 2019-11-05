@@ -10,20 +10,32 @@
 
         <div class="main--ui target-ui reveal fade-in t0">
 
-            <p>The metrics listed here are associated with the <strong>{{ page.practice.site.name }}</strong> site. Assign targets to this practice by entering a numeric value for one or more metrics.</p>
+            <p>The metrics listed here are associated with the <strong>{{ page.practice_category.name }}</strong> practice type and the <strong>{{ page.practice.site.name }}</strong> site. Assign targets to this practice by entering a numeric value for one or more metrics.</p>
+
+            <h2>{{ page.practice_category.name }} &middot; Definition</h2>
+
+            <div>
+
+                <p data-ng-if="page.practice_category.description" style="width:70%">
+                    {{ page.practice_category.description }}
+                </p>
+                <p data-ng-if="!page.practice_category.description" style="width:70%">
+                   This practice type's definition hasn't been defined.
+                </p>
+            </div>
 
             <div data-ng-if="page.models.length">
 
                 <h2>Modeled metrics</h2>
 
-                <div data-ng-repeat="model in page.models">
+                <div data-ng-repeat="model in page.models" style="height:25px;">
 
-                    <p><strong>{{ model.model.name }}</strong></p>
+                    <p style=""><a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">{{ model.model.name }}</a></p>
 
-                    <p data-ng-if="!page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. As you add categorical and spatial data to this practice, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and valid data for this practice type.</p>
+               <!--     <p data-ng-if="!page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. As you add categorical and spatial data to this practice, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and valid data for this practice type.</p>
 
                     <p data-ng-if="page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. When you add the required inputs, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and/or valid data for this practice type. <a href="/practices/{{ page.practice.id }}/model-data">Click here to add or modify model inputs.</a></p>
-
+                -->
                     <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
                         <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 1em;" data-ng-repeat="metric in model.metrics | orderBy:'name'">
@@ -52,12 +64,63 @@
 
             </div>
 
+            <h2>Practice Extent</h2>
+
+            <ul class="target-lst target-lst-inactive" >
+                <li style="height:63px; margin-bottom:8px;">
+
+                    <div>Custom Extent Value</div>
+                    <input type="number"
+                           class="form-control"
+                           style="margin-right: 20px; text-align: right; padding-right: 10px;"
+                           data-ng-model="page.practice.custom_extent"
+                           id="custom_extent"
+                           name="custom_extent" placeholder="0" step="0.0001" min="0" autocomplete="off" />
+                     <span style="text-align: left; width: 80px; margin-right: 20px; text-transform:capitalize;">{{page.practice_category.unit.unit.plural}}</span>
+                     <button type="button" class="add-item" data-ng-click="" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
+                        <i class="material-icons">
+                            delete
+                        </i>
+                    </button>
+
+                    <button type="button" class="add-item" data-ng-click="page.savePractice()" data-ng-disabled="page.status.processing">
+                        <i class="material-icons">
+                            done
+                        </i>
+                    </button>
+                </li>
+
+                 <li style="height:63px; margin-bottom:8px;">
+
+                    <div>Calculated Extent Value</div>
+                    <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.calculated_extent}} </span>
+
+                     <span style="text-align: left; width: 80px; margin-right: 20px; text-transform:capitalize;">Acres</span>
+
+                     <button type="button" class="add-item" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
+                        <i class="material-icons">
+
+                        </i>
+                    </button>
+
+                    <button type="button" class="add-item" data-ng-disabled="page.status.processing">
+                        <i class="material-icons">
+
+                        </i>
+                    </button>
+
+                </li>
+                <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;">
+            </ul>
+
+
             <h2 data-ng-if="page.targets && page.targets.active.length">Active targets</h2>
 
             <ul class="target-lst" data-ng-if="page.targets && page.targets.active.length">
                 <li data-ng-repeat="target in page.targets.active">
-                    <div>{{ target.metric.name || target.name }}</div>
+                    <div> {{ target.metric.name || target.name }}</div>
                     <input type="number" class="form-control" data-ng-model="target.value" id="name-active-{{ $index }}" name="name-active-{{ $index }}" placeholder="0" step="0.0001" min="0" autocomplete="off" data-ng-readonly="target.metric.locked" />
+
                     <button type="button" class="add-item" data-ng-click="page.removeTarget(target, $index)" data-ng-disabled="page.status.processing || target.metric.locked">
                         <i class="material-icons">
                             remove_circle

@@ -191,6 +191,10 @@ angular.module('FieldDoc')
                     exclude: exclude
                 }).$promise.then(function(successResponse) {
 
+                    self.practice_category = successResponse.category;
+
+                    console.log("self.practice_category -->",self.practice_category);
+
                     self.processPractice(successResponse);
 
                     console.log("practice response",successResponse)
@@ -388,6 +392,8 @@ angular.module('FieldDoc')
                 self.tempTargets = self.practice.targets || [];
 
                 self.status.processing = false;
+
+                console.log("process practice->>",self.practice)
 
             };
 
@@ -606,6 +612,16 @@ angular.module('FieldDoc')
                 });
 
             };
+
+            /*
+            START Custom Extent Logic
+            */
+
+
+            /*
+            END Custom Extent Logic
+            */
+
 
             //
             // Verify Account information for proper UI element display
