@@ -617,7 +617,11 @@ angular.module('FieldDoc')
             START Custom Extent Logic
             */
 
+            self.deleteCustomExtent = function(){
+                   self.practice.custom_extent = null;
 
+                   self.savePractice();
+            }
             /*
             END Custom Extent Logic
             */
