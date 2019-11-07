@@ -123,12 +123,12 @@
 
                 </li>
 
-                <li style="height:63px; margin-bottom:8px;" data-ng-if="!page.practice.calculated_extent && page.practice.geometry.type != 'Point'">
-                    A <a href="/practices/{{ page.practice.id }}/location">Practice Location Geometry</a>  must be defined for a Calculated {{page.practice_category.unit.dimension}} Value to be generated.
+                <li style="height:63px; margin-bottom:8px; font-size:0.8em;" data-ng-if="!page.practice.calculated_extent && page.practice.geometry.type != 'Point'">
+                    A&nbsp;<a href="/practices/{{ page.practice.id }}/location">Practice Location Geometry</a>&nbsp;must be defined for a Calculated {{page.practice_category.unit.dimension}} Value to be generated.
                 </li>
 
-                <li style="height:63px; margin-bottom:8px;" data-ng-if="page.practice.geometry.type == 'Point'">
-                    Calculated {{page.practice_category.unit.dimension}} Values are not available for <a href="/practices/{{ page.practice.id }}/location">Point Geometries</a>.
+                <li style="height:63px; margin-bottom:8px; font-size:0.8em;" data-ng-if="page.practice.geometry.type == 'Point'">
+                    Calculated {{page.practice_category.unit.dimension}} Values are not available for&nbsp;<a href="/practices/{{ page.practice.id }}/location">Point Geometries</a>.
                 </li>
 
                 <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;">
