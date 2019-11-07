@@ -22,7 +22,7 @@
                     {{ page.practice_category.description }}
                 </p>
                 <p data-ng-if="!page.practice_category.description" style="width:70%">
-                   This practice type's definition hasn't been defined.
+                   This Practice Type's definition has not been defined.
                 </p>
             </div>
 
@@ -124,11 +124,11 @@
                 </li>
 
                 <li style="height:63px; margin-bottom:8px;" data-ng-if="!page.practice.calculated_extent && page.practice.geometry.type != 'Point'">
-                    A Practice Location Geometry must be defined for a Calculated {{page.practice_category.unit.dimension}} Value to be generated.
+                    A <a href="/practices/{{ page.practice.id }}/location">Practice Location Geometry</a>  must be defined for a Calculated {{page.practice_category.unit.dimension}} Value to be generated.
                 </li>
 
                 <li style="height:63px; margin-bottom:8px;" data-ng-if="page.practice.geometry.type == 'Point'">
-                    Calculated {{page.practice_category.unit.dimension}} Values are not available for Point Geometries.
+                    Calculated {{page.practice_category.unit.dimension}} Values are not available for <a href="/practices/{{ page.practice.id }}/location">Point Geometries</a>.
                 </li>
 
                 <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;">
