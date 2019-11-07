@@ -52,6 +52,14 @@
                             <strong>Practice Type:</strong> {{ page.practice.category.name }}
                         </p>
 
+                        <p data-ng-if="page.practice.calculated_extent && !page.practice.custom_extet">
+                            <strong>Calculated {{page.practice_category.unit.dimension}} Value:</strong> {{ page.practice.calculated_extent }}
+                        </p>
+                         <p data-ng-if="page.practice.custom_extent">
+                            <strong> {{page.practice_category.unit.dimension}} Value:</strong> {{ page.practice.custom_extent }}
+                        </p>
+
+
                         <p data-ng-if="page.practice.area && page.practice.area > 0">
                             <strong>Area:</strong> {{ page.practice.area | convertArea:'acre' | number:2 }} acres</a>
                         </p>
