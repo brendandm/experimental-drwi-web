@@ -28,7 +28,7 @@
 
                 <h2>Modeled metrics</h2>
 
-                <div data-ng-repeat="model in page.models" style="">
+                <div data-ng-repeat="model in page.models" style="height:25px;">
 
                     <p style=""><a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">{{ model.model.name }}</a></p>
 
@@ -36,7 +36,7 @@
 
                     <p data-ng-if="page.practice.category.require_inputs">This conservation practice is <a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">linked to an automated model</a> that calculates estimated values for the parameters below. When you add the required inputs, FieldDoc will run the model behind the scenes and display metric outputs in the practice summary page. If these metrics don’t appear in the practice summary, it means that FieldDoc was unable to supply the model with sufficient and/or valid data for this practice type. <a href="/practices/{{ page.practice.id }}/model-data">Click here to add or modify model inputs.</a></p>
                 -->
-                    <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
+           <!--         <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
 
                         <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 1em;" data-ng-repeat="metric in model.metrics | orderBy:'name'">
 
@@ -59,30 +59,33 @@
                         </li>
 
                     </ul>
+                 -->
 
                 </div>
 
             </div>
 
             <h2>Practice Extent</h2>
-
+            <span style="text-align: left; margin-right: 20px; ">
+                         {{page.practice_category.unit.instructions}}:
+                     </span>
             <ul class="target-lst target-lst-inactive" >
                 <li style="height:63px; margin-bottom:8px;">
 
                     <div style="text-transform:capitalize;">Custom {{page.practice_category.unit.dimension}} Value</div>
-                    <span style="text-align: left; margin-right: 20px; ">
+            <!--        <span style="text-align: left; margin-right: 20px; ">
                          {{page.practice_category.unit.instructions}}:
                      </span>
-
+              -->
                     <input type="number"
                            class="form-control"
                            style="margin-right: 20px; text-align: right; padding-right: 10px;"
                            data-ng-model="page.practice.custom_extent"
                            id="custom_extent"
                            name="custom_extent" placeholder="0" step="0.0001" min="0" autocomplete="off" />
-                   <!--  <span style="text-align: left; width: 80px; margin-right: 20px; text-transform:capitalize;">
+                     <span style="text-align: left; width: 80px; margin-right: 20px; text-transform:capitalize;">
                          {{page.practice_category.unit.unit.plural}}
-                     </span>-->
+                     </span>
                      <button type="button" class="add-item" data-ng-click="page.deleteCustomExtent()" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
                         <i class="material-icons">
                             delete
@@ -101,9 +104,9 @@
                      <div style="text-transform:capitalize;">Calculated {{page.practice_category.unit.dimension}} Value</div>
                     <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.calculated_extent}} </span>
 
-                     <span style="text-align: left; width: 85px; margin-right: 0px; text-transform:capitalize;">Acres</span>
+                     <span style="text-align: left; width: 85px; margin-right: 0px; text-transform:capitalize;">{{page.practice_category.unit.unit.plural}}</span>
 
-                <!--     <button type="button" class="add-item" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
+                     <button type="button" class="add-item" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
                         <i class="material-icons">
 
                         </i>
@@ -114,7 +117,7 @@
 
                         </i>
                     </button>
-                   -->
+
 
                 </li>
                 <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;">
