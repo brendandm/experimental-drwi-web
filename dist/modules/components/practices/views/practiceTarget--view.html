@@ -69,14 +69,20 @@
             <ul class="target-lst target-lst-inactive" >
                 <li style="height:63px; margin-bottom:8px;">
 
-                    <div>Custom Extent Value</div>
+                    <div style="text-transform:capitalize;">Custom {{page.practice_category.unit.dimension}} Value</div>
+                    <span style="text-align: left; margin-right: 20px; ">
+                         {{page.practice_category.unit.instructions}}:
+                     </span>
+
                     <input type="number"
                            class="form-control"
                            style="margin-right: 20px; text-align: right; padding-right: 10px;"
                            data-ng-model="page.practice.custom_extent"
                            id="custom_extent"
                            name="custom_extent" placeholder="0" step="0.0001" min="0" autocomplete="off" />
-                     <span style="text-align: left; width: 80px; margin-right: 20px; text-transform:capitalize;">{{page.practice_category.unit.unit.plural}}</span>
+                   <!--  <span style="text-align: left; width: 80px; margin-right: 20px; text-transform:capitalize;">
+                         {{page.practice_category.unit.unit.plural}}
+                     </span>-->
                      <button type="button" class="add-item" data-ng-click="page.deleteCustomExtent()" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
                         <i class="material-icons">
                             delete
@@ -92,12 +98,12 @@
 
                  <li style="height:63px; margin-bottom:8px;">
 
-                    <div>Calculated Extent Value</div>
+                     <div style="text-transform:capitalize;">Calculated {{page.practice_category.unit.dimension}} Value</div>
                     <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.calculated_extent}} </span>
 
-                     <span style="text-align: left; width: 80px; margin-right: 20px; text-transform:capitalize;">Acres</span>
+                     <span style="text-align: left; width: 85px; margin-right: 0px; text-transform:capitalize;">Acres</span>
 
-                     <button type="button" class="add-item" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
+                <!--     <button type="button" class="add-item" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
                         <i class="material-icons">
 
                         </i>
@@ -108,6 +114,7 @@
 
                         </i>
                     </button>
+                   -->
 
                 </li>
                 <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;">
