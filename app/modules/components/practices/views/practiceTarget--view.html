@@ -4,7 +4,9 @@
 
     <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
 
-    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
+    <div data-ng-if="page.category"
+            class="content--container"
+         style="border-right: 1px solid #e0e0e0;">
 
         <h1 class="inset">{{ page.practice.name || 'Un-named' }} &middot; Targets</h1>
 
@@ -202,6 +204,13 @@
         </div>
 
     </div>
+
+    <div data-ng-if="!page.category"
+            class="content--container"
+         style="border-right: 1px solid #e0e0e0;">
+        Please select a Practice Type before assigning metrics.
+    </div>
+
 
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
