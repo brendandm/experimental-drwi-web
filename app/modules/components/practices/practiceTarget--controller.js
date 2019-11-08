@@ -387,6 +387,8 @@ angular.module('FieldDoc')
 
             self.processPractice = function(data) {
 
+                console.log('process-data -->', data);
+
                 self.practice = data.properties || data;
 
                 self.tempTargets = self.practice.targets || [];
