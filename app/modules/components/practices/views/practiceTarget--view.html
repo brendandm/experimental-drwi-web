@@ -101,10 +101,10 @@
                     </button>
                 </li>
 
-                 <li style="height:63px; margin-bottom:8px;" data-ng-if="page.practice.calculated_extent">
+                 <li style="height:63px; margin-bottom:8px;" data-ng-if="page.practice.extent.calculated.converted">
 
                      <div style="text-transform:capitalize;">Calculated {{page.practice_category.unit.dimension}} Value</div>
-                    <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.calculated_extent | number:2}} </span>
+                    <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.extent.calculated.converted | number:2}} </span>
 
                      <span style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
                          <nobr> {{page.practice_category.unit.unit.plural}} </nobr>
@@ -123,11 +123,11 @@
 
                 </li>
 
-                <li style="height:63px; margin-bottom:8px; font-size:0.8em;" data-ng-if="!page.practice.calculated_extent && page.practice.geometry.type != 'Point'">
+                <li style="height:63px; margin-bottom:8px; font-size:0.8em;" data-ng-if="!page.practice.extent.calculated.converted && page.practice.geometry.type != 'Point'">
                     A&nbsp;<a href="/practices/{{ page.practice.id }}/location">Practice Location Geometry</a>&nbsp;must be defined for a Calculated {{page.practice_category.unit.dimension}} Value to be generated.
                 </li>
 
-                <li style="height:63px; margin-bottom:8px; font-size:0.8em;" data-ng-if="page.practice.geometry.type == 'Point' && !page.practice.calculated_extent">
+                <li style="height:63px; margin-bottom:8px; font-size:0.8em;" data-ng-if="page.practice.geometry.type == 'Point' && !page.practice.extent.calculated.converted">
                     Calculated {{page.practice_category.unit.dimension}} Values are not available for&nbsp;<a href="/practices/{{ page.practice.id }}/location">Point Geometries</a>.
                 </li>
 
