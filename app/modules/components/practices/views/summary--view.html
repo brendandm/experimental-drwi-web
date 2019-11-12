@@ -62,10 +62,10 @@
                         </p>
 
 
-                        <p data-ng-if="page.practice.area && page.practice.area > 0">
+                    <!--    <p data-ng-if="page.practice.area && page.practice.area > 0">
                             <strong>Area:</strong> {{ page.practice.area | convertArea:'acre' | number:2 }} acres</a>
                         </p>
-
+                    -->
                         <p data-ng-if="page.practice.description" data-ng-bind-html="page.practice.description"></p>
 
                         <p data-ng-if="!page.practice.description">{{ page.practice.category.description }}</p>
