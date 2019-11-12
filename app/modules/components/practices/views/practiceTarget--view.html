@@ -85,7 +85,7 @@
                            data-ng-model="page.practice.custom_extent"
                            id="custom_extent"
                            name="custom_extent" placeholder="0" step="0.0001" min="0" autocomplete="off" />
-                     <span style="text-align: left; width: 80px; margin-right: 20px; text-transform:capitalize;">
+                     <span style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
                          <nobr> {{page.practice_category.unit.unit.plural}} </nobr>
                      </span>
                      <button type="button" class="add-item" data-ng-click="page.deleteCustomExtent()" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
@@ -106,7 +106,7 @@
                      <div style="text-transform:capitalize;">Calculated {{page.practice_category.unit.dimension}} Value</div>
                     <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.calculated_extent | number:2}} </span>
 
-                     <span style="text-align: left; width: 80px; margin-right: 20px; text-transform:capitalize;">
+                     <span style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
                          <nobr> {{page.practice_category.unit.unit.plural}} </nobr>
                      </span>
                      <button type="button" class="add-item" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
