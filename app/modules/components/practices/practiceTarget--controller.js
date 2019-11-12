@@ -171,7 +171,7 @@ angular.module('FieldDoc')
                     'centroid',
                     'creator',
                     'dashboards',
-                    'extent',
+                  //  'extent',
                     // 'geometry',
                     'members',
                     'metric_types',
@@ -404,6 +404,7 @@ angular.module('FieldDoc')
                 var excludedKeys = [
                     'category',
                     'creator',
+            //        'extent',
                     'geometry',
                     'last_modified_by',
                     'members',
