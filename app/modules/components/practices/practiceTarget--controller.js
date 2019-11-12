@@ -404,7 +404,6 @@ angular.module('FieldDoc')
                 var excludedKeys = [
                     'category',
                     'creator',
-                    'extent',
                     'geometry',
                     'last_modified_by',
                     'members',
