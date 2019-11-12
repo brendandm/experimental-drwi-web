@@ -107,7 +107,7 @@ angular.module('FieldDoc')
 
                     self.practiceType = successResponse.properties.category  || successResponse.category;
 
-                    console.log('self.practiceType', successResponse);
+                    console.log('self.practiceType',  self.practiceType);
 
                     if (!successResponse.permissions.read &&
                         !successResponse.permissions.write) {

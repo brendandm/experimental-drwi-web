@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1573232370693})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1573574595902})
 
 ;
 /**
@@ -16311,7 +16311,9 @@ angular.module('FieldDoc')
 
                     self.practice = successResponse;
 
-                    self.practiceType = successResponse.properties.category.properties || successResponse.category;
+                    self.practiceType = successResponse.properties.category  || successResponse.category;
+
+                    console.log('self.practiceType',  self.practiceType);
 
                     if (!successResponse.permissions.read &&
                         !successResponse.permissions.write) {
