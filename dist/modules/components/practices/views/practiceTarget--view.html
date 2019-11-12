@@ -101,10 +101,10 @@
                     </button>
                 </li>
 
-                 <li style="height:63px; margin-bottom:8px;" data-ng-if="page.practice.area">
+                 <li style="height:63px; margin-bottom:8px;" data-ng-if="page.practice.calculated_extent">
 
                      <div style="text-transform:capitalize;">Calculated {{page.practice_category.unit.dimension}} Value</div>
-                    <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.area | number:2}} </span>
+                    <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.calculated_extent | number:2}} </span>
 
                      <span style="text-align: left; width: 80px; margin-right: 20px; text-transform:capitalize;">
                          <nobr> {{page.practice_category.unit.unit.plural}} </nobr>
@@ -123,7 +123,7 @@
 
                 </li>
 
-                <li style="height:63px; margin-bottom:8px; font-size:0.8em;" data-ng-if="!page.practice.area && page.practice.geometry.type != 'Point'">
+                <li style="height:63px; margin-bottom:8px; font-size:0.8em;" data-ng-if="!page.practice.calculated_extent && page.practice.geometry.type != 'Point'">
                     A&nbsp;<a href="/practices/{{ page.practice.id }}/location">Practice Location Geometry</a>&nbsp;must be defined for a Calculated {{page.practice_category.unit.dimension}} Value to be generated.
                 </li>
 
