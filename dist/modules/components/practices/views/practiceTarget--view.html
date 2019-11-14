@@ -128,7 +128,15 @@
                 </li>
 
                 <li style="height:63px; margin-bottom:8px; font-size:0.8em;" data-ng-if="page.practice.geometry.type == 'Point' && !page.practice.extent.calculated.converted">
-                    Calculated&nbsp;<span style="text-transform:capitalize;">{{page.practice_category.unit.dimension}}</span>&nbsp;Values are not available for&nbsp;<a href="/practices/{{ page.practice.id }}/location">Point Geometries</a>.
+                    Calculated&nbsp;
+                    <span data-ng-if="page.practice_category.unit.unit.plural == 'acres' || 'linear feet'" style="text-transform:capitalize;">
+                        {{page.practice_category.unit.dimension}}
+                    </span>
+                     <span data-ng-if="page.practice_category.unit.unit.plural != 'acres' || 'linear feet'" style="text-transform:capitalize;">
+                        area
+                    </span>
+                    &nbsp;Values are not available for&nbsp;
+                    <a href="/practices/{{ page.practice.id }}/location">Point Geometries</a>.
                 </li>
 
                 <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;">
@@ -141,7 +149,7 @@
                 <li data-ng-repeat="target in page.targets.active">
                     <div>
                         <div> {{ target.metric.name || target.name }}</div>
-                        <div data-ng-if="target.metric.model" style="float:left; color:#333333; font-size:10px;">
+                        <div data-ng-if="target.metric.model" style="float:left; color:#666666; font-size:10px;">
                         {{target.metric.model.name}}
                     </div>
                     </div>
