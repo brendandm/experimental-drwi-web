@@ -106,12 +106,16 @@
                      <div style="text-transform:capitalize;">Calculated {{page.practice_category.unit.dimension}} Value</div>
                     <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.extent.calculated.converted | number:2}} </span>
 
-                     <span style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
-                         <nobr data-ng-if="page.practice_category.unit.unit.plural == 'acres' || 'linear feet'">
+                     <span data-ng-if="page.practice_category.unit.unit.plural == 'acres' || 'linear feet'"
+                           style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
+                         <nobr >
                              {{page.practice_category.unit.unit.plural}}
                          </nobr>
-                          <nobr data-ng-if="page.practice_category.unit.unit.plural != 'acres' || 'linear feet'">
-                             Acres
+                     </span>
+                     <span data-ng-if="page.practice_category.unit.unit.plural != 'acres' || 'linear feet'"
+                           style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
+                         <nobr >
+                             acres
                          </nobr>
                      </span>
                      <button type="button" class="add-item" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
