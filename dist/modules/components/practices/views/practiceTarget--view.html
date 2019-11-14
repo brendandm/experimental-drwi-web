@@ -107,7 +107,12 @@
                     <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.extent.calculated.converted | number:2}} </span>
 
                      <span style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
-                         <nobr> {{page.practice_category.unit.unit.plural}} </nobr>
+                         <nobr data-ng-if="page.practice_category.unit.unit.plural == 'acres' || 'linear feet'">
+                             {{page.practice_category.unit.unit.plural}}
+                         </nobr>
+                          <nobr data-ng-if="page.practice_category.unit.unit.plural != 'acres' || 'linear feet'">
+                             Acres
+                         </nobr>
                      </span>
                      <button type="button" class="add-item" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
                         <i class="material-icons">
@@ -124,7 +129,16 @@
                 </li>
 
                 <li style="height:63px; margin-bottom:8px; font-size:0.8em;" data-ng-if="!page.practice.extent.calculated.converted && page.practice.geometry.type != 'Point'">
-                    A&nbsp;<a href="/practices/{{ page.practice.id }}/location">Practice Location Geometry</a>&nbsp;must be defined for a Calculated {{page.practice_category.unit.dimension}} Value to be generated.
+                    A&nbsp;
+                    <a href="/practices/{{ page.practice.id }}/location">Practice Location Geometry</a>
+                    &nbsp;must be defined for a Calculated&nbsp;
+                    <span data-ng-if="page.practice_category.unit.unit.plural == 'acres' || 'linear feet'" style="text-transform:capitalize;">
+                        {{page.practice_category.unit.dimension}}
+                    </span>
+                     <span data-ng-if="page.practice_category.unit.unit.plural != 'acres' || 'linear feet'" style="text-transform:capitalize;">
+                        area
+                    </span>
+                    &nbsp;Value to be generated.
                 </li>
 
                 <li style="height:63px; margin-bottom:8px; font-size:0.8em;" data-ng-if="page.practice.geometry.type == 'Point' && !page.practice.extent.calculated.converted">
