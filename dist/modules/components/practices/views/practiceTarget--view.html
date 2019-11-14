@@ -139,7 +139,12 @@
 
             <ul class="target-lst" data-ng-if="page.targets && page.targets.active.length">
                 <li data-ng-repeat="target in page.targets.active">
-                    <div> {{ target.metric.name || target.name }}</div>
+                    <div>
+                        <div> {{ target.metric.name || target.name }}</div>
+                        <div data-ng-if="target.metric.model" style="float:left; font-size:10px;">
+                        {{target.metric.model.name}}
+                    </div>
+                    </div>
                     <input type="number" class="form-control" data-ng-model="target.value" id="name-active-{{ $index }}" name="name-active-{{ $index }}" placeholder="0" step="0.0001" min="0" autocomplete="off" data-ng-readonly="target.metric.locked" />
 
                     <button type="button" class="add-item" data-ng-click="page.removeTarget(target, $index)" data-ng-disabled="page.status.processing || target.metric.locked">
@@ -147,9 +152,7 @@
                             remove_circle
                         </i>
                     </button>
-                    <div data-ng-if="target.metric.model" style="float:left; font-size:10px;">
-                        {{target.metric.model.name}}
-                    </div>
+
                 </li>
                 <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;">
                     <button type="button" class="add-item" data-ng-click="page.removeAll()" data-ng-disabled="page.status.processing">
