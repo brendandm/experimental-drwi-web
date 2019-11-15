@@ -489,6 +489,8 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
+                    console.log("practice.updateMatrix", successResponse);
+
                 }).catch(function(error) {
 
                     console.log('savePractice.error', error);
