@@ -30,7 +30,7 @@
 
                 <h2>Modeled metrics</h2>
 
-                <div data-ng-repeat="model in page.models" style="height:25px;">
+                <div data-ng-repeat="model in page.models" style="min-height:25px; display:block; clear:both;">
 
                     <p style="display:block; clear:both;"><a href="/models/{{ model.model.id }}" title="{{ model.model.name }}">{{ model.model.name }}</a></p>
 
@@ -74,9 +74,9 @@
          -->
             <ul class="target-lst target-lst-inactive" >
 
-                <li style="display:block; height:20px; color:#000000; width: 100%; ">
+                <li style="display:block; min-height:20px; color:#000000; width: 100%; ">
                     
-                        <p style="display:block;">
+                        <p style="display:block; clear:both;">
                     This is a system-generated number based on the length or area of this practice's geometry. You can provide a separate value in the "custom" field.
                         </p>
 
