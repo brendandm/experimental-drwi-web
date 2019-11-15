@@ -74,12 +74,12 @@
          -->
             <ul class="target-lst target-lst-inactive" >
 
-                <li style="height:20px; color:#000000; width: 70%">
+                <li style="height:20px; color:#000000; width: 70%; font-size: 10px;">
                     <div>
                     This is a system-generated number based on the length or area of this practice's geometry. You can provide a separate value in the "custom" field.
                     </div>
                 </li>
-                 <li style="height:63px; margin-bottom:8px;" data-ng-if="page.practice.extent.calculated.converted">
+                 <li style="height:63px; margin-bottom:20px;" data-ng-if="page.practice.extent.calculated.converted">
 
                      <div data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'" style="text-transform:capitalize;">Calculated {{page.practice_category.unit.dimension}} Value</div>
                      <div data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" style="text-transform:capitalize;">Calculated Area Value</div>
@@ -112,7 +112,7 @@
 
                 </li>
 
-                <li style="height:63px; margin-bottom:8px; font-size:0.8em;" data-ng-if="!page.practice.extent.calculated.converted && page.practice.geometry.type != 'Point'">
+                <li style="height:63px; margin-bottom:20px; font-size:0.8em;" data-ng-if="!page.practice.extent.calculated.converted && page.practice.geometry.type != 'Point'">
                     A&nbsp;
                     <a href="/practices/{{ page.practice.id }}/location">Practice Location Geometry</a>
                     &nbsp;must be defined for a Calculated&nbsp;
@@ -125,7 +125,7 @@
                     &nbsp;Value to be generated.
                 </li>
 
-                <li style="height:63px; margin-bottom:8px; font-size:0.8em;" data-ng-if="page.practice.geometry.type == 'Point' && !page.practice.extent.calculated.converted">
+                <li style="height:63px; margin-bottom:20px; font-size:0.8em;" data-ng-if="page.practice.geometry.type == 'Point' && !page.practice.extent.calculated.converted">
                     Calculated&nbsp;
                     <span data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'" style="text-transform:capitalize;">
                         {{page.practice_category.unit.dimension}}
@@ -137,7 +137,7 @@
                     <a href="/practices/{{ page.practice.id }}/location">Point Geometries</a>.
                 </li>
 
-                <li style="height:20px; color:#000000; width: 70%">
+                <li style="height:20px; color:#000000; width: 70%; font-size: 10px;">
                     <div >
                          {{page.practice_category.unit.instructions}}
                    </div>
