@@ -105,7 +105,8 @@
 
                  <li style="height:63px; margin-bottom:8px;" data-ng-if="page.practice.extent.calculated.converted">
 
-                     <div style="text-transform:capitalize;">Calculated {{page.practice_category.unit.dimension}} Value</div>
+                     <div data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'" style="text-transform:capitalize;">Calculated {{page.practice_category.unit.dimension}} Value</div>
+                     <div data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" style="text-transform:capitalize;">Calculated {{page.practice_category.unit.dimension}} Value</div>
                     <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.extent.calculated.converted | number:2}} </span>
 
                      <span style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
@@ -135,10 +136,10 @@
                     A&nbsp;
                     <a href="/practices/{{ page.practice.id }}/location">Practice Location Geometry</a>
                     &nbsp;must be defined for a Calculated&nbsp;
-                    <span data-ng-if="page.practice_category.unit.unit.plural != null && page.practice_category.unit.unit.plural == 'acres' || 'linear feet'" style="text-transform:capitalize;">
+                    <span data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'" style="text-transform:capitalize;">
                         {{page.practice_category.unit.dimension}}
                     </span>
-                     <span data-ng-if="page.practice_category.unit.unit.plural == null" style="text-transform:capitalize;">
+                     <span data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" style="text-transform:capitalize;">
                         area
                     </span>
                     &nbsp;Value to be generated.
@@ -146,10 +147,10 @@
 
                 <li style="height:63px; margin-bottom:8px; font-size:0.8em;" data-ng-if="page.practice.geometry.type == 'Point' && !page.practice.extent.calculated.converted">
                     Calculated&nbsp;
-                    <span data-ng-if="page.practice_category.unit.unit.plural != null && page.practice_category.unit.unit.plural == 'acres' || 'linear feet'" style="text-transform:capitalize;">
+                    <span data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'" style="text-transform:capitalize;">
                         {{page.practice_category.unit.dimension}}
                     </span>
-                     <span data-ng-if="page.practice_category.unit.unit.plural == null" style="text-transform:capitalize;">
+                     <span data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" style="text-transform:capitalize;">
                         area
                     </span>
                     &nbsp;Values are not available for&nbsp;
