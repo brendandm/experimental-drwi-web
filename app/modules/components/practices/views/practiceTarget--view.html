@@ -109,10 +109,10 @@
                     <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.extent.calculated.converted | number:2}} </span>
 
                      <span style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
-                         <nobr data-ng-if="page.practice_category.unit.unit.plural == 'acres' || 'linear feet'">
+                         <nobr data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'">
                              {{page.practice_category.unit.unit.plural}}
                          </nobr>
-                         <nobr data-ng-if="page.practice_category.unit.unit.plural != null && page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" >
+                         <nobr data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" >
                              acres
                          </nobr>
                      </span>
