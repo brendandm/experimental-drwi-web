@@ -112,7 +112,7 @@
                          <nobr data-ng-if="page.practice_category.unit.unit.plural == 'acres' || 'linear feet'">
                              {{page.practice_category.unit.unit.plural}}
                          </nobr>
-                         <nobr data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" >
+                         <nobr data-ng-if="page.practice_category.unit.unit.plural != null && page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" >
                              acres
                          </nobr>
                      </span>
