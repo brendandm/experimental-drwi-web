@@ -406,7 +406,7 @@ angular.module('FieldDoc')
             self.scrubFeature = function(feature) {
 
                 var excludedKeys = [
-                    'category',
+            //        'category',
                     'creator',
             //        'extent',
                     'geometry',
@@ -453,11 +453,11 @@ angular.module('FieldDoc')
 
                 self.status.processing = true;
 
-                self.scrubFeature(self.practice);
+               // self.scrubFeature(self.practice);
 
-                console.log('self.savePractice.practice', self.practice);
+            //    console.log('self.savePractice.practice', self.practice);
 
-                console.log('self.savePractice.Practice', Practice);
+            //    console.log('self.savePractice.Practice', Practice);
 
                 var data = {
                     targets: self.targets.active.slice(0)

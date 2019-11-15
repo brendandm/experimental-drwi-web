@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1573848864818})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1573849032701})
 
 ;
 /**
@@ -19623,7 +19623,7 @@ angular.module('FieldDoc')
             self.scrubFeature = function(feature) {
 
                 var excludedKeys = [
-                    'category',
+            //        'category',
                     'creator',
             //        'extent',
                     'geometry',
@@ -19670,11 +19670,11 @@ angular.module('FieldDoc')
 
                 self.status.processing = true;
 
-                self.scrubFeature(self.practice);
+               // self.scrubFeature(self.practice);
 
-                console.log('self.savePractice.practice', self.practice);
+            //    console.log('self.savePractice.practice', self.practice);
 
-                console.log('self.savePractice.Practice', Practice);
+            //    console.log('self.savePractice.Practice', Practice);
 
                 var data = {
                     targets: self.targets.active.slice(0)
