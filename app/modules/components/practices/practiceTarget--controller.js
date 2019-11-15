@@ -58,9 +58,7 @@ angular.module('FieldDoc')
             };
 
             self.loadMatrix = function() {
-                console.log("SMURF");
-                console.log($route.current.params.practiceId);
-                console.log(self.practice.project.program_id);
+               
                 //
                 // Assign practice to a scoped variable
                 //
