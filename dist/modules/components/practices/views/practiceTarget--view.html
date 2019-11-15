@@ -74,8 +74,10 @@
          -->
             <ul class="target-lst target-lst-inactive" >
 
-                <li style="height:63px; ">
+                <li style="height:20px; ">
+                    <div>
                     This is a system-generated number based on the length or area of this practice's geometry. You can provide a separate value in the "custom" field.
+                    </div>
                 </li>
                  <li style="height:63px; margin-bottom:8px;" data-ng-if="page.practice.extent.calculated.converted">
 
@@ -135,7 +137,11 @@
                     <a href="/practices/{{ page.practice.id }}/location">Point Geometries</a>.
                 </li>
 
-
+                <li tyle="height:20px;">
+                    <div >
+                         {{page.practice_category.unit.instructions}}
+                   </div>
+             </li>
 
                 <li style="height:63px; margin-bottom:8px;">
 
