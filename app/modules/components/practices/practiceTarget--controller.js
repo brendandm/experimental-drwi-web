@@ -516,7 +516,9 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.practice);
 
-                self.practice.targets = self.processTargets(self.tempTargets);
+                console.log('self.tempTargets', self.tempTargets);
+
+            //    self.practice.targets = self.processTargets(self.tempTargets);
 
                 console.log('self.savePractice.practice', self.practice);
 

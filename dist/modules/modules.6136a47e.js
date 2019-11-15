@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1573850640234})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1573854368734})
 
 ;
 /**
@@ -19733,7 +19733,9 @@ angular.module('FieldDoc')
 
                 self.scrubFeature(self.practice);
 
-                self.practice.targets = self.processTargets(self.tempTargets);
+                console.log('self.tempTargets', self.tempTargets);
+
+            //    self.practice.targets = self.processTargets(self.tempTargets);
 
                 console.log('self.savePractice.practice', self.practice);
 
