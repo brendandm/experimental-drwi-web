@@ -539,7 +539,8 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                    self.loadPractice();
+                    self.loadMatrix();
+                  //  self.loadPractice();
 
                 }).catch(function(error) {
 
