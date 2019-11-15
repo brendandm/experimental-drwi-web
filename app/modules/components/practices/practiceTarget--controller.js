@@ -535,6 +535,8 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
+                    self.loadMatrix();
+
                 }).catch(function(error) {
 
                     console.log('savePractice.error', error);
@@ -623,6 +625,7 @@ angular.module('FieldDoc')
                    self.practice.custom_extent = null;
 
                    self.savePractice();
+                   self.loadMatrix();
             }
             /*
             END Custom Extent Logic
