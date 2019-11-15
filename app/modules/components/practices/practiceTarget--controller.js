@@ -518,7 +518,7 @@ angular.module('FieldDoc')
 
                 console.log('self.tempTargets', self.tempTargets);
 
-                self.practice.targets = self.processTargets(self.tempTargets);
+            //    self.practice.targets = self.processTargets(self.tempTargets);
 
                 console.log('self.savePractice.practice', self.practice);
 
