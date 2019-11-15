@@ -80,6 +80,8 @@ angular.module('FieldDoc')
 
                     self.loadModels(activeDomain);
 
+                    console.log("LoadMatrix", successResponse);
+
                 }).catch(function(errorResponse) {
 
                     $log.error('Unable to load practice target matrix.');
