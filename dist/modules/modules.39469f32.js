@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1573853872025})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1573854070384})
 
 ;
 /**
@@ -19399,7 +19399,7 @@ angular.module('FieldDoc')
                     'practice_types',
                     'properties',
                     'tags',
-               //     'targets',
+                    'targets',
                     'tasks',
                     'type',
                     'practices'
@@ -19732,6 +19732,8 @@ angular.module('FieldDoc')
                 self.status.processing = true;
 
                 self.scrubFeature(self.practice);
+
+                console.log('self.tempTargets', self.tempTargets);
 
                 self.practice.targets = self.processTargets(self.tempTargets);
 

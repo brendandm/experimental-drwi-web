@@ -182,7 +182,7 @@ angular.module('FieldDoc')
                     'practice_types',
                     'properties',
                     'tags',
-               //     'targets',
+                    'targets',
                     'tasks',
                     'type',
                     'practices'
@@ -515,6 +515,8 @@ angular.module('FieldDoc')
                 self.status.processing = true;
 
                 self.scrubFeature(self.practice);
+
+                console.log('self.tempTargets', self.tempTargets);
 
                 self.practice.targets = self.processTargets(self.tempTargets);
 
