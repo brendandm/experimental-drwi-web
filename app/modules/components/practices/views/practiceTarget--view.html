@@ -68,46 +68,21 @@
             </div>
 
             <h2>Practice Extent</h2>
-            <div style="text-align: left;margin-bottom:20px;">
+        <!--    <div style="text-align: left;margin-bottom:20px;">
                          {{page.practice_category.unit.instructions}}
             </div>
+         -->
             <ul class="target-lst target-lst-inactive" >
-                <li style="height:63px; margin-bottom:8px;">
 
-                    <div style="text-transform:capitalize;">Custom {{page.practice_category.unit.dimension}} Value</div>
-            <!--        <span style="text-align: left; margin-right: 20px; ">
-                         {{page.practice_category.unit.instructions}}:
-                     </span>
-              -->
-                    <input type="number"
-                           class="form-control"
-                           style="margin-right: 20px; text-align: right; padding-right: 10px;"
-                           data-ng-model="page.practice.custom_extent"
-                           id="custom_extent"
-                           name="custom_extent" placeholder="0" step="0.0001" min="0" autocomplete="off" />
-
-                     <span style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
-                         <nobr > {{page.practice_category.unit.unit.plural}} </nobr>
-                     </span>
-
-                     <button type="button" class="add-item" data-ng-click="page.deleteCustomExtent()" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
-                        <i class="material-icons">
-                            delete
-                        </i>
-                    </button>
-
-                    <button type="button" class="add-item" data-ng-click="page.savePractice()" data-ng-disabled="page.status.processing">
-                        <i class="material-icons">
-                            done
-                        </i>
-                    </button>
-                </li>
 
                  <li style="height:63px; margin-bottom:8px;" data-ng-if="page.practice.extent.calculated.converted">
 
                      <div data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'" style="text-transform:capitalize;">Calculated {{page.practice_category.unit.dimension}} Value</div>
                      <div data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" style="text-transform:capitalize;">Calculated Area Value</div>
-                    <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.extent.calculated.converted | number:2}} </span>
+                     <div style="float:left; color:#666666; font-size:10px;">
+                           This is a system-generated number based on the length or area of this practice's geometry. You can provide a separate value in the "custom" field.
+                        </div>
+                     <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.extent.calculated.converted | number:2}} </span>
 
                      <span style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
                          <nobr data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'">
@@ -158,6 +133,36 @@
                 </li>
 
                 <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;">
+
+                <li style="height:63px; margin-bottom:8px;">
+
+                    <div style="text-transform:capitalize;">Custom {{page.practice_category.unit.dimension}} Value</div>
+                        <div style="float:left; color:#666666; font-size:10px;">
+                            {{page.practice_category.unit.instructions}}
+                        </div>
+                    <input type="number"
+                           class="form-control"
+                           style="margin-right: 20px; text-align: right; padding-right: 10px;"
+                           data-ng-model="page.practice.custom_extent"
+                           id="custom_extent"
+                           name="custom_extent" placeholder="0" step="0.0001" min="0" autocomplete="off" />
+
+                     <span style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
+                         <nobr > {{page.practice_category.unit.unit.plural}} </nobr>
+                     </span>
+
+                     <button type="button" class="add-item" data-ng-click="page.deleteCustomExtent()" data-ng-disabled="page.status.processing" style="margin-right: 20px;">
+                        <i class="material-icons">
+                            delete
+                        </i>
+                    </button>
+
+                    <button type="button" class="add-item" data-ng-click="page.savePractice()" data-ng-disabled="page.status.processing">
+                        <i class="material-icons">
+                            done
+                        </i>
+                    </button>
+                </li>
             </ul>
 
 
@@ -168,8 +173,8 @@
                     <div>
                         <div> {{ target.metric.name || target.name }}</div>
                         <div data-ng-if="target.metric.model" style="float:left; color:#666666; font-size:10px;">
-                        {{target.metric.model.name}}
-                    </div>
+                           {{target.metric.model.name}}
+                        </div>
                     </div>
                     <input type="number" class="form-control" data-ng-model="target.value" id="name-active-{{ $index }}" name="name-active-{{ $index }}" placeholder="0" step="0.0001" min="0" autocomplete="off" data-ng-readonly="target.metric.locked" />
 
