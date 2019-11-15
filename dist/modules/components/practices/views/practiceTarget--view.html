@@ -74,7 +74,7 @@
          -->
             <ul class="target-lst target-lst-inactive" >
 
-                <li style="height:20px; ">
+                <li style="height:20px; color:#000000; width: 70%">
                     <div>
                     This is a system-generated number based on the length or area of this practice's geometry. You can provide a separate value in the "custom" field.
                     </div>
@@ -137,7 +137,7 @@
                     <a href="/practices/{{ page.practice.id }}/location">Point Geometries</a>.
                 </li>
 
-                <li tyle="height:20px;">
+                <li style="height:20px; color:#000000; width: 70%">
                     <div >
                          {{page.practice_category.unit.instructions}}
                    </div>
@@ -146,9 +146,7 @@
                 <li style="height:63px; margin-bottom:8px;">
 
                     <div style="text-transform:capitalize;">Custom {{page.practice_category.unit.dimension}} Value</div>
-                        <div style="float:left; color:#666666; font-size:10px;">
-                            {{page.practice_category.unit.instructions}}
-                        </div>
+
                     <input type="number"
                            class="form-control"
                            style="margin-right: 20px; text-align: right; padding-right: 10px;"
