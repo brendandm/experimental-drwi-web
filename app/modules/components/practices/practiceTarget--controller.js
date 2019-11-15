@@ -182,7 +182,7 @@ angular.module('FieldDoc')
                     'practice_types',
                     'properties',
                     'tags',
-                    'targets',
+               //     'targets',
                     'tasks',
                     'type',
                     'practices'
