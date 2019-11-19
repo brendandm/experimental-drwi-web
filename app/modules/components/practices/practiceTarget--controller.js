@@ -641,7 +641,6 @@ angular.module('FieldDoc')
             END Custom Extent Logic
             */
 
-
             //
             // Verify Account information for proper UI element display
             //
