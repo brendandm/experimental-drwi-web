@@ -68,7 +68,7 @@ module.exports = function(grunt) {
                 constants: {
                     environment: {
                         name: 'development',
-                        apiUrl: 'https://dev.api.fielddoc.org',
+                        apiUrl: 'https://api.fielddoc.org',
                         castUrl: 'https://dev.cast.fielddoc.chesapeakecommons.org',
                         dnrUrl: 'https://dev.dnr.fielddoc.chesapeakecommons.org',
                         siteUrl: 'https://dev.fielddoc.org',
@@ -77,6 +77,24 @@ module.exports = function(grunt) {
                     }
                 }
             },
+
+            livedev: {
+                options: {
+                    dest: '<%= yeoman.app %>/config/environment.js'
+                },
+                constants: {
+                    environment: {
+                        name: 'livedev',
+                        apiUrl: 'https://dev.api.fielddoc.org',
+                        castUrl: 'https://dev.cast.fielddoc.chesapeakecommons.org',
+                        dnrUrl: 'https://dev.dnr.fielddoc.chesapeakecommons.org',
+                        siteUrl: 'http://127.0.0.1:9000',
+                        clientId: 'sL3yMmmnSNszktuQGVBCasZ6mCy7DahS',
+                        version: version
+                    }
+                }
+            },
+
             staging: {
                 options: {
                     dest: '<%= yeoman.app %>/config/environment.js'
