@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1574194645694})
+.constant('environment', {name:'development',apiUrl:'https://api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1574198059334})
 
 ;
 /**
@@ -19275,7 +19275,7 @@ angular.module('FieldDoc')
             };
 
             self.loadMatrix = function() {
-               
+               console.log("self.practice.project.program_id",self.practice.project.program_id);
                 //
                 // Assign practice to a scoped variable
                 //
@@ -19758,9 +19758,10 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                    setTimeout(function(){
+                  //  setTimeout(function(){
                          self.loadMatrix();
-                     }, 2000);
+                    // }, 2000);
+
 
                   //  self.loadPractice();
 
