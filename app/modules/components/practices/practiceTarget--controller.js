@@ -671,7 +671,7 @@ angular.module('FieldDoc')
 
                      self.matrixLoadInterval = $interval(function() {
                          self.loadPractice();
-                    }, 1500);
+                    }, 2000);
                 }else{
                     console.log("Reloading Matrix");
 
@@ -681,9 +681,9 @@ angular.module('FieldDoc')
 
                         self.matrixLoadIntervalRunning = false;
 
-                        setTimeout(function(){
+                      //  setTimeout(function(){
                             $interval.cancel(self.matrixLoadInterval);
-                        }, 2000);
+                     //   }, 2000);
 
 
               //      }
