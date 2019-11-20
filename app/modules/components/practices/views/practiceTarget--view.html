@@ -191,7 +191,25 @@
 
             <h2 data-ng-if="page.targets && page.targets.active.length">Active targets</h2>
 
-            <ul class="target-lst" data-ng-if="page.targets && page.targets.active.length">
+            <ul class="target-lst" data-ng-if="page.practice.calculating == true">
+                <li>
+                    <div style="padding-right: 0; text-align:center;">Recalculating metrics...</div>
+                </li>
+                <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;">
+                    <button type="button" class="add-item" data-ng-click="page.removeAll()" data-ng-disabled="page.status.processing">
+                        <i class="material-icons">
+                            delete_sweep
+                        </i>
+                    </button>
+                    <button type="button" class="add-item" style="margin-left: 1em;" data-ng-click="page.saveTargets()" data-ng-disabled="page.status.processing">
+                        <i class="material-icons">
+                            done
+                        </i>
+                    </button>
+                </li>
+            </ul>
+
+            <ul class="target-lst" data-ng-if="page.targets && page.targets.active.length && page.practice.calculating == false">
                 <li data-ng-repeat="target in page.targets.active">
                     <div>
                         <div> {{ target.metric.name || target.name }}</div>
@@ -222,22 +240,9 @@
                 </li>
             </ul>
 
-<!--            <ul class="target-lst">-->
-<!--                <li style="justify-content: flex-end; margin-top: 2em; border-top: 1px solid #e0e0e0; padding-top: 1em;">-->
-<!--                    <button type="button" class="add-item" data-ng-click="page.removeAll()" data-ng-disabled="page.status.processing">-->
-<!--                        <i class="material-icons">-->
-<!--                            delete_sweep-->
-<!--                        </i>-->
-<!--                    </button>-->
-<!--                    <button type="button" class="add-item" style="margin-left: 1em;" data-ng-click="page.saveTargets()" data-ng-disabled="page.status.processing">-->
-<!--                        <i class="material-icons">-->
-<!--                            done-->
-<!--                        </i>-->
-<!--                    </button>-->
-<!--                </li>-->
-<!--            </ul>-->
 
-            <ul class="target-lst" data-ng-if="!page.targets || !page.targets.active.length">
+
+            <ul class="target-lst" data-ng-if="(!page.targets || !page.targets.active.length) && practice.calculating == false">
                 <li>
                     <div style="padding-right: 0; text-align:center;">This practice is not tracking any metrics yet.</div>
                 </li>
