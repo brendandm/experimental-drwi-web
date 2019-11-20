@@ -403,6 +403,7 @@ angular.module('FieldDoc')
             self.processPractice = function(data) {
 
                 console.log('process-data -->', data);
+                console.log('process-data -->', data.properties);
 
                 self.practice = data.properties || data;
 
@@ -533,7 +534,7 @@ angular.module('FieldDoc')
 
                 self.status.processing = true;
 
-                self.scrubFeature(self.practice);
+           //     self.scrubFeature(self.practice);
 
                 console.log('self.tempTargets', self.tempTargets);
 
