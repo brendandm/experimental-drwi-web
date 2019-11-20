@@ -427,7 +427,7 @@ angular.module('FieldDoc')
                     'members',
                     'organization',
                     'project',
-                    'site',
+             //       'site',
                     'tags',
                     'tasks'
                 ];
