@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1574279612505})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1574279833351})
 
 ;
 /**
@@ -19883,7 +19883,7 @@ angular.module('FieldDoc')
 //                var matrixLoadInterval;
 //                var matrixLoadIntervalRunning;
 
-                if(self.calculating == true && self.matrixLoadIntervalRunning == false){
+                if(self.practice.calculating == true && self.matrixLoadIntervalRunning == false){
 
                     console.log("Checking Practice");
 
