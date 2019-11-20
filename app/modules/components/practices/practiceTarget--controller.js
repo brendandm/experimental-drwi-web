@@ -420,7 +420,7 @@ angular.module('FieldDoc')
             self.scrubFeature = function(feature) {
 
                 var excludedKeys = [
-            //        'category',
+                    'category',
                     'creator',
             //        'extent',
                     'geometry',
