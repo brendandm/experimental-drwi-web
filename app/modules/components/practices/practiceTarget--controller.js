@@ -58,7 +58,7 @@ angular.module('FieldDoc')
             };
 
             self.loadMatrix = function() {
-               
+               console.log("self.practice.project.program_id",self.practice.project.program_id);
                 //
                 // Assign practice to a scoped variable
                 //
@@ -544,6 +544,7 @@ angular.module('FieldDoc')
                     setTimeout(function(){
                          self.loadMatrix();
                      }, 2000);
+
 
                   //  self.loadPractice();
 
