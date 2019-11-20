@@ -663,7 +663,7 @@ angular.module('FieldDoc')
 //                var matrixLoadInterval;
 //                var matrixLoadIntervalRunning;
 
-                if(self.practice.calculating == true && self.matrixLoadIntervalRunning == false;){
+                if(self.practice.calculating == true && self.matrixLoadIntervalRunning == false){
 
                     console.log("Checking Practice");
 
