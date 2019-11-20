@@ -683,6 +683,9 @@ angular.module('FieldDoc')
 
                       //  setTimeout(function(){
                             $interval.cancel(self.matrixLoadInterval);
+
+
+                            self.matrixLoadInterval = false;
                      //   }, 2000);
 
 
@@ -734,5 +737,6 @@ angular.module('FieldDoc')
 
             }
 
+            $scope.$on('$destroy', function () { $interval.cancel(matrixLoadInterval); });
 
         });
