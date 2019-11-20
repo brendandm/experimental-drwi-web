@@ -534,7 +534,7 @@ angular.module('FieldDoc')
 
                 self.status.processing = true;
 
-           //     self.scrubFeature(self.practice);
+                self.scrubFeature(self.practice);
 
                 console.log('self.tempTargets', self.tempTargets);
 
