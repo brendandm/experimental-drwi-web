@@ -9,7 +9,7 @@ angular.module('FieldDoc')
     .controller('PracticeTargetController',
         function($scope, Account, $location, $log, Practice, practice,
             $rootScope, $route, user, FilterStore, $timeout, SearchService,
-            MetricType, Model, $filter) {
+            MetricType, Model, $filter, $interval) {
 
             var self = this;
 
@@ -81,6 +81,10 @@ angular.module('FieldDoc')
                     self.loadModels(activeDomain);
 
                     console.log("LoadMatrix", successResponse);
+
+                    console.log("self.practice.calculating",self.practice.calculating);
+
+
 
                 }).catch(function(errorResponse) {
 
@@ -211,7 +215,16 @@ angular.module('FieldDoc')
                     self.permissions.can_edit = successResponse.permissions.write;
                     self.permissions.can_delete = successResponse.permissions.write;
 
-                    self.loadMatrix();
+                 //   if(self.practice.calculating === false){
+                 //       $interval.cancel(self.matrixLoadInterval);
+                 //       self.loadMatrix();
+                 //   }else{
+                        self.backgroundLoadMatrix();
+                //    }
+
+
+
+                    //self.loadMatrix();
 
                 }).catch(function(errorResponse) {
 
@@ -461,6 +474,8 @@ angular.module('FieldDoc')
                     targets: self.targets.active.slice(0)
                 };
 
+                console.log('id: +self.practice.id', self.practice.id);
+
                 self.targets.inactive.forEach(function (item) {
 
                     if (item.action &&
@@ -472,8 +487,10 @@ angular.module('FieldDoc')
 
                 });
 
+                console.log("data.targets",data.targets);
+
                 Practice.updateMatrix({
-                    id: +self.practice.id
+                    id: +self.practice.id,
                 }, data).$promise.then(function(successResponse) {
 
                     self.alerts = [{
@@ -541,9 +558,10 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                    setTimeout(function(){
-                         self.loadMatrix();
-                     }, 2000);
+                 //   setTimeout(function(){
+                 //     console.log("Timeout complete");
+                      self.backgroundLoadMatrix();
+                 //    }, 2000);
 
 
                   //  self.loadPractice();
@@ -637,7 +655,41 @@ angular.module('FieldDoc')
 
                    self.savePractice();
 
-            }
+            };
+
+            self.backgroundLoadMatrix = function(){
+                console.log("YESSSS", self.practice.calculating);
+
+//                var matrixLoadInterval;
+//                var matrixLoadIntervalRunning;
+
+                if(self.practice.calculating == true){
+
+                    console.log("Checking Practice");
+
+                     self.matrixLoadIntervalRunning = true;
+
+                     self.matrixLoadInterval = $interval(function() {
+                         self.loadPractice();
+                    }, 3000);
+                }else{
+                    console.log("Reloading Matrix");
+
+                    if(self.matrixLoadIntervalRunning == true){
+
+                        console.log("Terminating Matrix Load Interval");
+
+                        self.matrixLoadIntervalRunning = false;
+
+                        $interval.cancel(self.matrixLoadInterval);
+                    }
+
+                    self.loadMatrix();
+                }
+
+
+            };
+
             /*
             END Custom Extent Logic
             */
@@ -677,5 +729,6 @@ angular.module('FieldDoc')
                 $location.path('/logout');
 
             }
+
 
         });
