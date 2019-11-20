@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1574279109264})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1574279612505})
 
 ;
 /**
@@ -19623,6 +19623,8 @@ angular.module('FieldDoc')
 
                 self.practice = data.properties || data;
 
+                 self.calculating ==  self.practice.calculating;
+
                 self.tempTargets = self.practice.targets || [];
 
                 self.status.processing = false;
@@ -19868,6 +19870,7 @@ angular.module('FieldDoc')
             */
 
             self.deleteCustomExtent = function(){
+                   self.calculating == true;
                    self.practice.custom_extent = null;
 
                    self.savePractice();
@@ -19880,7 +19883,7 @@ angular.module('FieldDoc')
 //                var matrixLoadInterval;
 //                var matrixLoadIntervalRunning;
 
-                if(self.practice.calculating == true && self.matrixLoadIntervalRunning == false){
+                if(self.calculating == true && self.matrixLoadIntervalRunning == false){
 
                     console.log("Checking Practice");
 

@@ -406,6 +406,8 @@ angular.module('FieldDoc')
 
                 self.practice = data.properties || data;
 
+                 self.calculating ==  self.practice.calculating;
+
                 self.tempTargets = self.practice.targets || [];
 
                 self.status.processing = false;
@@ -651,6 +653,7 @@ angular.module('FieldDoc')
             */
 
             self.deleteCustomExtent = function(){
+                   self.calculating == true;
                    self.practice.custom_extent = null;
 
                    self.savePractice();
@@ -663,7 +666,7 @@ angular.module('FieldDoc')
 //                var matrixLoadInterval;
 //                var matrixLoadIntervalRunning;
 
-                if(self.practice.calculating == true && self.matrixLoadIntervalRunning == false){
+                if(self.calculating == true && self.matrixLoadIntervalRunning == false){
 
                     console.log("Checking Practice");
 
