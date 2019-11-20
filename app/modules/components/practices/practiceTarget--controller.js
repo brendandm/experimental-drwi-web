@@ -675,14 +675,14 @@ angular.module('FieldDoc')
                 }else{
                     console.log("Reloading Matrix");
 
-               //     if(self.matrixLoadIntervalRunning == true){
+                    if(self.matrixLoadIntervalRunning == true){
 
                         console.log("Terminating Matrix Load Interval");
 
                         self.matrixLoadIntervalRunning = false;
 
                         $interval.cancel(self.matrixLoadInterval);
-             //       }
+                    }
 
                     self.loadMatrix();
                 }
