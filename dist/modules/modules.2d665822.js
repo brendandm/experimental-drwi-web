@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1574274667486})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1574275969662})
 
 ;
 /**
@@ -19892,14 +19892,14 @@ angular.module('FieldDoc')
                 }else{
                     console.log("Reloading Matrix");
 
-                    if(self.matrixLoadIntervalRunning == true){
+               //     if(self.matrixLoadIntervalRunning == true){
 
                         console.log("Terminating Matrix Load Interval");
 
                         self.matrixLoadIntervalRunning = false;
 
                         $interval.cancel(self.matrixLoadInterval);
-                    }
+             //       }
 
                     self.loadMatrix();
                 }
