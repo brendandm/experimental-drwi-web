@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1574358205686})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1574367095473})
 
 ;
 /**
@@ -8140,6 +8140,8 @@ angular.module('FieldDoc')
                     //
                     project.$promise.then(function(successResponse) {
 
+                        console.log("project success response",successResponse);
+
                         if (!successResponse.permissions.read &&
                             !successResponse.permissions.write) {
 
@@ -8286,6 +8288,8 @@ angular.module('FieldDoc')
                 }
 
                 self.tempPartners = self.project.partners;
+
+                console.log("self.tempPartners",self.tempPartners)
 
                 self.status.processing = false;
 
