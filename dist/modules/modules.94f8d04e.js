@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1574287018023})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1574358205686})
 
 ;
 /**
@@ -19436,7 +19436,7 @@ angular.module('FieldDoc')
                  //       $interval.cancel(self.matrixLoadInterval);
                  //       self.loadMatrix();
                  //   }else{
-                        self.backgroundLoadMatrix();
+                        self.bgLoadMatrix();
                 //    }
 
 
@@ -19780,7 +19780,7 @@ angular.module('FieldDoc')
 
                  //   setTimeout(function(){
                  //     console.log("Timeout complete");
-                      self.backgroundLoadMatrix();
+                      self.bgLoadMatrix();
                  //    }, 2000);
 
 
@@ -19878,6 +19878,22 @@ angular.module('FieldDoc')
 
             };
 
+            self.bgLoadMatrix = function(){
+                console.log("BG LOAD MATRIX", self.practice.calculating);
+
+                if(self.practice.calculating == true){
+                     console.log("Checking Practice");
+                     var timer = setTimeout(function(){
+                          self.loadPractice();
+
+                    }, 2000);
+                }else{
+                    clearTimeout(timer);
+                    self.loadMatrix();
+                }
+
+            };
+/*
             self.backgroundLoadMatrix = function(){
                 console.log("YESSSS", self.practice.calculating);
 
@@ -19888,6 +19904,7 @@ angular.module('FieldDoc')
                 if(self.practice.calculating == true && self.matrixLoadIntervalRunning == false){
 
                     console.log("Checking Practice");
+                    console.log("self.matrixLoadIntervalRunning",self.matrixLoadIntervalRunning);
 
                      self.matrixLoadIntervalRunning = true;
 
@@ -19896,7 +19913,7 @@ angular.module('FieldDoc')
                     }, 2000);
                 }else{
                     console.log("Reloading Matrix");
-
+                    console.log("self.matrixLoadIntervalRunning",self.matrixLoadIntervalRunning);
                 //    if(self.matrixLoadIntervalRunning == true){
 
                         console.log("Terminating Matrix Load Interval");
@@ -19918,7 +19935,7 @@ angular.module('FieldDoc')
 
 
             };
-
+*/
             /*
             END Custom Extent Logic
             */
