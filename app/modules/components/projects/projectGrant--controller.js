@@ -229,9 +229,9 @@ angular.module('FieldDoc')
 
                 self.project = data;
 
-                if (self.project.program) {
+                if (self.project.programs) {
 
-                    self.program = self.project.program;
+                    self.programs = self.project.programs;
 
                 }
 
