@@ -248,6 +248,7 @@ angular.module('FieldDoc')
 
                 self.project.program_id = item.id;
             //    self.project.programs.push(item.id);
+                self.project.programs.push(item);
 
             };
 
