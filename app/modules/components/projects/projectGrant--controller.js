@@ -246,8 +246,13 @@ angular.module('FieldDoc')
             /*self.setProgram: This need to handle an array*/
             self.setProgram = function(item, model, label) {
 
-                self.project.program_id = item.id;
-            //    self.project.programs.push(item);
+                console.log("NEW PROGRAM");
+                console.log("ITEM",item);
+                console.log("MODEL",model);
+                console.log("LABEL",label);
+
+            //    self.project.program_id = item.id;
+                self.project.programs.push(item);
 
             };
 
