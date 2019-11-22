@@ -243,9 +243,11 @@ angular.module('FieldDoc')
 
             };
 
+            /*self.setProgram: This need to handle an array*/
             self.setProgram = function(item, model, label) {
 
                 self.project.program_id = item.id;
+            //    self.project.programs.push(item.id);
 
             };
 
@@ -300,6 +302,8 @@ angular.module('FieldDoc')
             };
 
             self.saveProject = function() {
+
+                console.log("SAVING PROJECT");
 
                 self.status.processing = true;
 
