@@ -306,6 +306,8 @@ angular.module('FieldDoc')
 
                 console.log("SAVING PROJECT");
 
+                console.log("self.project ->>",self.project);
+
                 self.status.processing = true;
 
                 self.scrubFeature(self.project);
