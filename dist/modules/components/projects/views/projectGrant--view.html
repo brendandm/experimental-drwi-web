@@ -65,7 +65,15 @@
 
                         <div class="classification--search" style="position: relative;">
                             <p style="font-style: normal; color: #616161; font-size: 1em; margin-bottom: 2em;">Which grant program is funding this project?</p>
-                            <input type="search" class="search" value="" placeholder="Search programs" data-ng-model="page.programQuery" uib-typeahead="suggestion as suggestion.name for suggestion in page.searchPrograms($viewValue)" typeahead-on-select="page.setProgram($item, $model, $label)" typeahead-wait-ms="100" typeahead-template-url="templates/search--tpl.html">
+                            <input type="search"
+                                   class="search"
+                                   value=""
+                                   placeholder="Search programs"
+                                   data-ng-model="page.programQuery"
+                                   uib-typeahead="suggestion as suggestion.name for suggestion in page.searchPrograms($viewValue)"
+                                   typeahead-on-select="page.setProgram($item, $model, $label)"
+                                   typeahead-wait-ms="100"
+                                   typeahead-template-url="templates/search--tpl.html">
                         </div>
 
                         <div class="classification--list" style="margin-top: 2em;" data-ng-if="page.programs">
