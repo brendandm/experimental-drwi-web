@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1574448629119})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1574449427755})
 
 ;
 /**
@@ -8287,6 +8287,12 @@ angular.module('FieldDoc')
 
                 }
 
+                self.project.program_id = [];
+                self.project.programs.forEach(function(program){
+                    self.project.program_id.push(program.id);
+
+                });
+
                 self.tempPartners = self.project.partners;
 
                 console.log("self.tempPartners",self.tempPartners)
@@ -8303,7 +8309,8 @@ angular.module('FieldDoc')
                 console.log("MODEL",model);
                 console.log("LABEL",label);
 
-            //    self.project.program_id = item.id;
+                self.project.program_ids.push(item.id);
+               // self.project.program_id = item.id;
                 self.project.programs.push(item);
 
             };
