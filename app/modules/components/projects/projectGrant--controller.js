@@ -257,7 +257,7 @@ angular.module('FieldDoc')
                 console.log("MODEL",model);
                 console.log("LABEL",label);
 
-                self.project.program_ids.push(item.id);
+                self.project.program_id.push(item.id);
                // self.project.program_id = item.id;
                 self.project.programs.push(item);
 
