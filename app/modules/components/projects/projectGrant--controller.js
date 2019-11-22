@@ -247,8 +247,7 @@ angular.module('FieldDoc')
             self.setProgram = function(item, model, label) {
 
                 self.project.program_id = item.id;
-            //    self.project.programs.push(item.id);
-                self.project.programs.push(item);
+            //    self.project.programs.push(item);
 
             };
 
