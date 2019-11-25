@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1574711802727})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1574713206153})
 
 ;
 /**
@@ -8318,11 +8318,29 @@ angular.module('FieldDoc')
 
             };
 
-            self.unsetProgram = function() {
+            self.unsetProgram = function(index) {
 
-                self.project.program_id = null;
+                self.project.programs.splice(index,1);
+                self.project.program_id.splice(index,1);
 
-                self.program = null;
+//                i = 0;
+//                self.project.programs.forEach(function(program){
+//                    if(program.id = id){
+//                        self.project.programs.splice(i,1);
+//                        self.project.program_id.splice(i,1);
+//
+//      //                  delete self.project.programs[i];
+//      //                  delete self.project.program_id[i];
+//
+//                    }
+//                    i = i+1;
+//                });
+
+                self.programs = self.project.programs;
+
+             //   self.project.program_id = null;
+
+             // q   self.program = null;
 
             };
 
