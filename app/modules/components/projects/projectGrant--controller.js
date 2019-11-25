@@ -320,16 +320,19 @@ angular.module('FieldDoc')
 
                 console.log("SAVING PROJECT");
 
+
                 self.status.processing = true;
 
                 self.scrubFeature(self.project);
 
                 self.project.partners = self.processRelations(self.tempPartners);
 
+                console.log("self.project ->>",self.project);
+
                 var i = 0;
                 self.project.programs.forEach(function(program){
 
-                    if(self.project.programs[i][centroid] != null){
+                    if(program.centroid != null){
 
                          delete self.project.programs[i][centroid];
 
