@@ -38,10 +38,17 @@
                             Last modified by {{ page.project.last_modified_by.first_name }} {{ page.project.last_modified_by.last_name }} on {{ page.project.modified_on | localTime | date:'fullDate' }} at <span class="lowercase">{{ page.project.modified_on | localTime | date:'h:mma' }}</span>
                         </p>
 
+                        <p data-ng-if="page.project.programs.length > 0"
+                           data-ng-repeat="program in page.project.programs"
+                           class="label">
+                            <strong>Program:</strong> <a href="{{ page.project.links.program[$index].html }}">{{ program.name }}</a>
+                        </p>
+
+                        <!--
                         <p data-ng-if="page.project.program && page.project.program.id" class="label">
                             <strong>Program:</strong> <a href="{{ page.project.links.program.html }}">{{ page.project.program.name }}</a>
                         </p>
-
+                        -->
                      <!--   <p data-ng-if="page.area && page.area.value" class="label">
                             <strong>Total area:</strong> {{ page.area.value | number:2 }} {{ page.area.unit }}s
                         </p>
