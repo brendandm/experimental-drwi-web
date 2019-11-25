@@ -329,12 +329,12 @@ angular.module('FieldDoc')
                 self.project.partners = self.processRelations(self.tempPartners);
 
                 var i = 0;
-                self.project.programs.forEach(function(program)){
+                self.project.programs.forEach(function(program){
 
                     delete self.project.programs.centroid;
 
                     i = i+1;
-                };
+                });
 
                 self.project.workflow_state = "Draft";
 
