@@ -320,7 +320,7 @@ angular.module('FieldDoc')
 
                 console.log("SAVING PROJECT");
 
-                console.log("self.project ->>",self.project);
+
 
                 self.status.processing = true;
 
@@ -338,7 +338,7 @@ angular.module('FieldDoc')
 
                 self.project.workflow_state = "Draft";
 
-
+                 console.log("self.project ->>",self.project);
 
                 var exclude = [
                     'centroid',
