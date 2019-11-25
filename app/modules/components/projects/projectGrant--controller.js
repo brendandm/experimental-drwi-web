@@ -261,6 +261,7 @@ angular.module('FieldDoc')
                // self.project.program_id = item.id;
 
                 delete item.category;
+                delete item.subcategory;
                 self.project.programs.push(item);
 
             };
