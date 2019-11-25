@@ -266,11 +266,29 @@ angular.module('FieldDoc')
 
             };
 
-            self.unsetProgram = function() {
+            self.unsetProgram = function(index) {
 
-                self.project.program_id = null;
+                self.project.programs.splice(index,1);
+                self.project.program_id.splice(index,1);
 
-                self.program = null;
+//                i = 0;
+//                self.project.programs.forEach(function(program){
+//                    if(program.id = id){
+//                        self.project.programs.splice(i,1);
+//                        self.project.program_id.splice(i,1);
+//
+//      //                  delete self.project.programs[i];
+//      //                  delete self.project.program_id[i];
+//
+//                    }
+//                    i = i+1;
+//                });
+
+                self.programs = self.project.programs;
+
+             //   self.project.program_id = null;
+
+             // q   self.program = null;
 
             };
 
