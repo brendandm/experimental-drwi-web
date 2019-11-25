@@ -331,7 +331,7 @@ angular.module('FieldDoc')
                 var i = 0;
                 self.project.programs.forEach(function(program){
 
-                    delete self.project.programs.centroid;
+                    delete self.project.programs[i].centroid;
 
                     i = i+1;
                 });
