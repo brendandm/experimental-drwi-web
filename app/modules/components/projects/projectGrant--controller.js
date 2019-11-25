@@ -320,8 +320,6 @@ angular.module('FieldDoc')
 
                 console.log("SAVING PROJECT");
 
-
-
                 self.status.processing = true;
 
                 self.scrubFeature(self.project);
@@ -331,7 +329,7 @@ angular.module('FieldDoc')
                 var i = 0;
                 self.project.programs.forEach(function(program){
 
-                    delete self.project.programs[i].centroid;
+                    delete self.project.programs[i][centroid];
 
                     i = i+1;
                 });

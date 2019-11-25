@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1574710639816})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1574710839245})
 
 ;
 /**
@@ -8372,8 +8372,6 @@ angular.module('FieldDoc')
 
                 console.log("SAVING PROJECT");
 
-
-
                 self.status.processing = true;
 
                 self.scrubFeature(self.project);
@@ -8383,7 +8381,7 @@ angular.module('FieldDoc')
                 var i = 0;
                 self.project.programs.forEach(function(program){
 
-                    delete self.project.programs[i].centroid;
+                    delete self.project.programs[i][centroid];
 
                     i = i+1;
                 });
