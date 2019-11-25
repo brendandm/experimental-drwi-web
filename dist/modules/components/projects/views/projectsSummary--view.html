@@ -41,7 +41,7 @@
                         <p data-ng-if="page.project.programs.length > 0"
                            data-ng-repeat="program in page.project.programs"
                            class="label">
-                            <strong>Program:</strong> <a href="{{ page.project.links.program[$index].html }}">{{ program.name }}</a>
+                            <strong>Program:</strong> <a href="{{ page.project.links.program[$index][html] }}">{{ program.name }}</a>
                         </p>
 
                         <!--
