@@ -453,7 +453,7 @@ angular.module('FieldDoc')
                 })
              .when('/projects/:projectId/reports', {
                     templateUrl: '/modules/components/projects/views/projectsReports--view.html?t=' + environment.version,
-                    controller: 'ProjectsBatchDeleteController',
+                    controller: 'ProjectsReportsController',
                     controllerAs: 'page',
                     resolve: {
                         user: function(Account, $rootScope, $document) {
