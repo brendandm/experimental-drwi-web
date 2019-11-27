@@ -427,10 +427,10 @@ angular.module('FieldDoc')
                 }
             })
             .when('/projects/:projectId/batchDelete', {
-                    templateUrl: '/modules/components/projects/views/projectsBatchDelete--view.html?t=' + environment.version,
-                    controller: 'ProjectsBatchDeleteController',
-                    controllerAs: 'page',
-                    resolve: {
+                 templateUrl: '/modules/components/projects/views/projectsBatchDelete--view.html?t=' + environment.version,
+                 controller: 'ProjectsBatchDeleteController',
+                 controllerAs: 'page',
+                 resolve: {
                         user: function(Account, $rootScope, $document) {
 
                             $rootScope.targetPath = document.location.pathname;
@@ -449,8 +449,8 @@ angular.module('FieldDoc')
                             });
                         },
 
-                    }
-                })
+                  }
+             })
              .when('/projects/:projectId/reports', {
                     templateUrl: '/modules/components/projects/views/projectsReports--view.html?t=' + environment.version,
                     controller: 'ProjectsReportsController',
