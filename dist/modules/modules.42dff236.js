@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575480806143})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575481104658})
 
 ;
 /**
@@ -9627,7 +9627,7 @@ angular.module('FieldDoc')
 
                 self.loadReports = function(){
                     console.log("Loading Reports");
-                    Report.projectBundle({}).$promise.then(function(successResponse) {
+                    Report.projectReport({}).$promise.then(function(successResponse) {
                         console.log("successResponse");
                         console.log(successResponse);
                     }, function(errorResponse){
