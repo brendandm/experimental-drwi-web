@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575501352000})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575502722741})
 
 ;
 /**
@@ -9720,18 +9720,12 @@ angular.module('FieldDoc')
 
                 self.params;
 
-                self.confirmBatchDelete = false;
-                self.toggleConfirmDelete = false;
-
-                self.unselectedFeatures = [];
-                self.selectedFeatures = [];
-
                 $rootScope.toolbarState = {
                     'edit': true
                 };
 
                 $rootScope.page = {
-                    title: 'Batch Delete'
+                    title: 'Edit Report'
                 };
 
                 self.status = {
@@ -9786,49 +9780,6 @@ angular.module('FieldDoc')
                     });
 
                 };
-
-                self.loadSites = function() {
-
-                    console.log('self.loadSites --> Starting...');
-
-                    Project.sites({
-
-                        id: self.project.id,
-
-                        currentTime: Date.UTC()
-
-                    }).$promise.then(function(successResponse) {
-
-                        console.log('Project sites --> ', successResponse);
-
-                        self.sites = successResponse.features;
-
-                         self.availableFeatures = self.sites;
-
-                        console.log('self.availableFeatures',self.availableFeatures);
-
-                        self.availableFeatures.forEach(function(feature, index) {
-                                console.log("index", index);
-                                var markedKey = "marked_for_deletion";
-                                var markedVal = false;
-                                self.availableFeatures[index][markedKey] = markedVal;
-                            });
-
-                        self.showElements(true);
-
-                       ;
-
-                    }, function(errorResponse) {
-
-                        console.log('loadSites.errorResponse', errorResponse);
-
-                        self.showElements(false);
-
-                    });
-
-                };
-
-
 
 
                 self.showElements = function() {
@@ -9885,127 +9836,6 @@ angular.module('FieldDoc')
 
                     });
                 }
-
-
-                self.addToDeleteQueue = function(featureId){
-                    console.log("ADDING PRACTICE "+featureId+" TO DELETE QUEUE");
-                      var i = 0
-                      self.availableFeatures.forEach(function(feature){
-                        if(feature.properties.id == featureId){
-                            console.log(featureId+" found in self.availableFeatures");
-                            self.availableFeatures[i].marked_for_deletion = true;
-                            var tempFeature = feature;
-                            self.selectedFeatures.push(tempFeature);
-
-                          //  self.unselectedFeatures.splice(i,1);
-                        }
-                        i = i+1;
-                    });
-
-                    console.log("self.selectedFeatures -->",self.selectedFeatures);
-                    console.log("self.availableFeatures -->",self.availableFeatures);
-
-                };
-
-                self.removeFromDeleteQueue = function(featureId){
-                     console.log("REMOVING PRACTICE "+featureId+" FROM DELETE QUEUE");
-                     /*below resetting of self.selected features is a hackaround for the
-                     commented out splice below, as it appeared to be
-                      also splicing available features after select all. Cause unknow*/
-                     self.selectedFeatures = [];
-                     var i = 0
-                     self.availableFeatures.forEach(function(feature){
-                        if(feature.properties.id == featureId){
-                            console.log(featureId+" found in self.availableFeatures");
-                            self.availableFeatures[i].marked_for_deletion = false;
-                           // self.selectedFeatures.splice(i,1);
-                          //  self.unselectedFeatures.splice(i,1);
-                        }
-                        if(self.availableFeatures[i].marked_for_deletion == true){
-                            self.selectedFeatures.push(self.availableFeatures[i]);
-                        }
-                        i = i+1;
-                    });
-
-                     console.log("self.selectedFeatures -->",self.selectedFeatures);
-                     console.log("self.availableFeatures -->",self.availableFeatures);
-
-                };
-
-                self.addAllToDeleteQueue = function(){
-                    var i = 0
-                    self.availableFeatures.forEach(function(feature){
-                        self.availableFeatures[i].marked_for_deletion = true;
-                        i = i+1;
-                    });
-                    self.selectedFeatures = self.availableFeatures;
-
-                };
-
-                self.removeAllFromDeleteQueue = function(){
-                   var i = 0
-                    self.availableFeatures.forEach(function(feature){
-                        self.availableFeatures[i].marked_for_deletion = false;
-                        i = i+1;
-                    });
-                    self.selectedFeatures = [];
-                };
-
-
-                self.toggleConfirmDeleteDialog = function(){
-                    console.log();
-                    self.toggleConfirmDelete = true;
-                };
-
-                self.batchDelete = function(){
-                    self.toggleConfirmDelete = false;
-                    console.log("self.project.id",self.project.id);
-
-                    self.status.processing = true;
-
-
-                   var data  = {collection: self.selectedFeatures};
-
-                    Batch.batchDelete({
-                        featureType: 'project',
-                        id: self.project.id
-                    },data).$promise.then(function(successResponse) {
-
-                        console.log('Batch.practiceDelete', successResponse);
-
-                        self.alerts = [{
-                            'type': 'success',
-                            'flag': 'Success!',
-                            'msg': 'Sites deleted from project.',
-                            'prompt': 'OK'
-                        }];
-
-                        $timeout(self.closeAlerts, 2000);
-
-
-                        self.selectedFeatures = [];
-                        self.loadSites();
-
-                    }, function(errorResponse) {
-
-                         self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong and the changes could not be saved.',
-                            'prompt': 'OK'
-                        }];
-
-                         self.status.processing = false;
-
-                        console.log('errorResponse', errorResponse);
-
-                    });
-                };
-
-                self.cancelDelete = function(){
-                     self.toggleConfirmDelete = false;
-
-                };
 
                 self.inspectSearchParams = function(params) {
 
