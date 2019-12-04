@@ -91,7 +91,7 @@
 
                       //      $rootScope.page.title = 'Project Batch Delete';
 
-                   //         self.loadReports();
+                            self.loadReports();
 
                         }
 
@@ -111,13 +111,14 @@
 
                 self.loadReports = function(){
                     console.log("Loading Reports");
-                    report.projectBundle({}).$promise.then(function(successResponse) {
+                    Report.projectReport({}).$promise.then(function(successResponse) {
                         console.log("successResponse");
                         console.log(successResponse);
                     }, function(errorResponse){
                         console.log("errorResponse");
                         console.log(errorResponse);
                     });
+
                 };
 
 
