@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575477400937})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575478094574})
 
 ;
 /**
@@ -9529,7 +9529,7 @@ angular.module('FieldDoc')
         .controller('ProjectsReportsController',
             function(Account, environment, $http, $location, mapbox,
                 Notifications, Project, project, $rootScope, $route, $scope,
-                $timeout, $interval, user, Utility, Batch) {
+                $timeout, $interval, user, Utility, report) {
 
                 var self = this;
 
@@ -9561,6 +9561,82 @@ angular.module('FieldDoc')
                         self.alerts = [];
 
                     };
+
+                 self.showElements = function() {
+
+                    $timeout(function() {
+
+                        self.status.loading = false;
+
+                        self.status.processing = false;
+
+                        $timeout(function() {
+
+                        //    if (self.sites && self.sites.length) {
+
+                        //        self.createStaticMapURLs(self.sites);
+
+                        //    }
+
+                        }, 500);
+
+                    }, 1000);
+
+                };
+
+
+                self.loadProject = function() {
+
+                    project.$promise.then(function(successResponse) {
+
+                        console.log('self.project', successResponse);
+
+                         self.project = successResponse;
+
+                        if (!successResponse.permissions.read &&
+                            !successResponse.permissions.write) {
+
+                            self.makePrivate = true;
+
+                            self.showElements(false);
+
+                        } else {
+
+                            self.permissions.can_edit = successResponse.permissions.write;
+                            self.permissions.can_delete = successResponse.permissions.write;
+
+                      //      $rootScope.page.title = 'Project Batch Delete';
+
+                            self.loadReports();
+
+                        }
+
+                        self.tags = Utility.processTags(self.project.tags);
+
+                        // self.showElements();
+
+                    }).catch(function(errorResponse) {
+
+                        console.log('loadProject.errorResponse', errorResponse);
+
+                        self.showElements(false);
+
+                    });
+
+                };
+
+                self.loadReports = function(){
+                    console.log("Loading Reports");
+                    report.projectBundle({}).$promise.then(function(successResponse) {
+                        console.log("successResponse");
+                        console.log(successResponse);
+                    }, function(errorResponse){
+                        console.log("errorResponse");
+                        console.log(errorResponse);
+                    });
+                };
+
+
 
               
                 self.inspectSearchParams = function(params) {
@@ -35354,6 +35430,11 @@ angular
                     method: 'POST',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/report/:id/matrix')
+                },
+                projectBundle:{
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/report-bundle/:id')
                 }
             });
         });
