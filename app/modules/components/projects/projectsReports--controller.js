@@ -13,7 +13,7 @@
         .controller('ProjectsReportsController',
             function(Account, environment, $http, $location, mapbox,
                 Notifications, Project, project, $rootScope, $route, $scope,
-                $timeout, $interval, user, Utility, report) {
+                $timeout, $interval, user, Utility, Report) {
 
                 var self = this;
 
