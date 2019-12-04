@@ -42,6 +42,11 @@
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/report-bundle/:id')
+                },
+                projectReport:{
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/project/:id/reports')
                 }
             });
         });
