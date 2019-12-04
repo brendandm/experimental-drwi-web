@@ -81,15 +81,15 @@ angular.module('FieldDoc')
                 var color = "#06aadf";
 
                 if(colorScheme != null){
-                    console.log('COLOR 0');
+                  //  console.log('COLOR 0');
                     if(colorScheme == 'practice'){
                         color = "#df063e";
-                         console.log('COLOR 1');
+                     //    console.log('COLOR 1');
                     }else{
-                         console.log('COLOR 2');
+                    //     console.log('COLOR 2');
                     }
                 }else{
-                     console.log('COLOR 3');
+                  //   console.log('COLOR 3');
                 }
 
                 var styledFeature = {
