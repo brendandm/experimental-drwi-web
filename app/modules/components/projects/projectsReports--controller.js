@@ -91,7 +91,7 @@
 
                       //      $rootScope.page.title = 'Project Batch Delete';
 
-                            self.loadReports();
+                   //         self.loadReports();
 
                         }
 
