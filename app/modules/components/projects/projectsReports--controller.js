@@ -109,7 +109,6 @@
 
                 };
 
-
                 self.loadReports = function(){
                     console.log("Loading Reports");
                     Report.projectReport({}).$promise.then(function(successResponse) {
