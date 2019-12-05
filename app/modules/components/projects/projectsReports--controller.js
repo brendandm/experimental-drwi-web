@@ -132,7 +132,7 @@
 
                             if(program.id == report.id){
 
-                                self.matrix[i].reports[i2] = report;
+                                self.matrix.push(report);
 
                             }
 
@@ -142,6 +142,8 @@
 
                         i = i+1;
                     });
+
+                    console.log(self.matrix);
                 };
 
 
