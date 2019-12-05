@@ -130,9 +130,9 @@
 
                         self.reports.forEach(function(report,r_i){
 
-                            if(program.id == report.id){
+                            if(program.id == report.program_id){
 
-                                self.matrix.push(report);
+                                self.matrix[i].reports.push(report);
 
                             }
 
