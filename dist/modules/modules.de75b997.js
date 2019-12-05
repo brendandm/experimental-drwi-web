@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575575839379})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575577633253})
 
 ;
 /**
@@ -9585,6 +9585,7 @@ angular.module('FieldDoc')
                 };
 
 
+
                 self.loadProject = function() {
 
                     project.$promise.then(function(successResponse) {
@@ -9607,7 +9608,9 @@ angular.module('FieldDoc')
 
                       //      $rootScope.page.title = 'Project Batch Delete';
 
-                            self.loadReports();
+                        self.mapReportsToPrograms();
+
+                           // self.loadReports();
 
                         }
 
@@ -9625,14 +9628,61 @@ angular.module('FieldDoc')
 
                 };
 
+                self.mapReportsToPrograms = function(){
+
+                    self.reports = self.project.reports;
+
+                    self.programs = self.projects.programs;
+
+                    self.matrix = [];
+
+                    var i = 0;
+
+                    self.programs.forEach(function(program,p_i){
+
+                        self.matrix[i] = program;
+
+                        var i2 = 0;
+
+                        self.reports.forEach(function(report,r_i)){
+
+                            if(program.id == reports.id){
+
+                            self.matrix[i].reports[i2] = report;
+
+                            }
+
+                            i2 = i2+1;
+
+                        }
+
+                        i = i+1;
+
+                    });
+
+
+                    });
+                };
+
+
                 self.loadReports = function(){
                     console.log("Loading Reports");
+
                     Report.projectReport({id:self.project.id}).$promise.then(function(successResponse) {
-                        console.log("successResponse");
-                        console.log(successResponse);
+
+                        console.log("self.loadReports",successResponse);
+
+                        self.showElements();
+
+                        self.reports = successResponse.features;
+
+                        console.log("self.reports",self.reports)
+
                     }, function(errorResponse){
-                        console.log("errorResponse");
+
                         console.log(errorResponse);
+
+                        self.showElements(false);
                     });
 
                 };
