@@ -116,7 +116,7 @@
 
                     self.reports = self.project.reports;
 
-                    self.programs = self.projects.programs;
+                    self.programs = self.project.programs;
 
                     self.matrix = [];
 
