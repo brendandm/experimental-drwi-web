@@ -111,7 +111,7 @@
 
                 self.loadReports = function(){
                     console.log("Loading Reports");
-                    Report.projectReport({}).$promise.then(function(successResponse) {
+                    Report.projectReport({id:self.project.id}).$promise.then(function(successResponse) {
                         console.log("successResponse");
                         console.log(successResponse);
                     }, function(errorResponse){
