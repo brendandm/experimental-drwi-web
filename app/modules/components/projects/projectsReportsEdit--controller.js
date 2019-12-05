@@ -19,6 +19,8 @@
 
                 self.params;
 
+                self.reportId = +$routeParams.reportId;
+
                 $rootScope.toolbarState = {
                     'edit': true
                 };
@@ -104,9 +106,13 @@
 
                 self.loadReport = function(){
 
+                };
+
+                self.loadBundle = function(){
+
                     console.log("Loading Report");
 
-                    Report.reportBundle().$promise.then(function(successResponse) {
+                    Report.reportBundle({id:self.reportId}).$promise.then(function(successResponse) {
 
                         console.log("successResponse");
 
