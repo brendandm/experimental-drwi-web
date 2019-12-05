@@ -13,7 +13,7 @@
         .controller('ProjectsReportsEditController',
             function(Account, environment, $http, $location, mapbox,
                 Notifications, Project, project, $rootScope, $route, $scope,
-                $timeout, $interval, user, Utility, Batch) {
+                $timeout, $interval, user, Utility, Batch, Report) {
 
                 var self = this;
 
@@ -34,11 +34,33 @@
 
                 self.alerts = [];
 
-                    self.closeAlerts = function() {
+                self.closeAlerts = function() {
 
                         self.alerts = [];
 
                     };
+
+                self.showElements = function() {
+
+                    $timeout(function() {
+
+                        self.status.loading = false;
+
+                        self.status.processing = false;
+
+                        $timeout(function() {
+
+                            if (self.sites && self.sites.length) {
+
+                                self.createStaticMapURLs(self.sites);
+
+                            }
+
+                        }, 500);
+
+                    }, 1000);
+
+                };
 
                 self.loadProject = function() {
 
@@ -62,7 +84,7 @@
 
                             $rootScope.page.title = 'Project Batch Delete';
 
-                            self.loadSites();
+                         //   self.loadSites();
 
                         }
 
@@ -80,26 +102,23 @@
 
                 };
 
+                self.loadReport = function(){
 
-                self.showElements = function() {
+                    console.log("Loading Report");
 
-                    $timeout(function() {
+                    Report.reportBundle({}).$promise.then(function(successResponse) {
 
-                        self.status.loading = false;
+                        console.log("successResponse");
 
-                        self.status.processing = false;
+                        console.log(successResponse);
 
-                        $timeout(function() {
+                    }, function(errorResponse){
 
-                            if (self.sites && self.sites.length) {
+                        console.log("errorResponse");
 
-                                self.createStaticMapURLs(self.sites);
+                        console.log(errorResponse);
 
-                            }
-
-                        }, 500);
-
-                    }, 1000);
+                    });
 
                 };
 
