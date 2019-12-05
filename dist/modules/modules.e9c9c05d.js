@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575502722741})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575573953919})
 
 ;
 /**
@@ -9714,7 +9714,7 @@ angular.module('FieldDoc')
         .controller('ProjectsReportsEditController',
             function(Account, environment, $http, $location, mapbox,
                 Notifications, Project, project, $rootScope, $route, $scope,
-                $timeout, $interval, user, Utility, Batch) {
+                $timeout, $interval, user, Utility, Batch, Report) {
 
                 var self = this;
 
@@ -9735,11 +9735,33 @@ angular.module('FieldDoc')
 
                 self.alerts = [];
 
-                    self.closeAlerts = function() {
+                self.closeAlerts = function() {
 
                         self.alerts = [];
 
                     };
+
+                self.showElements = function() {
+
+                    $timeout(function() {
+
+                        self.status.loading = false;
+
+                        self.status.processing = false;
+
+                        $timeout(function() {
+
+                            if (self.sites && self.sites.length) {
+
+                                self.createStaticMapURLs(self.sites);
+
+                            }
+
+                        }, 500);
+
+                    }, 1000);
+
+                };
 
                 self.loadProject = function() {
 
@@ -9763,7 +9785,7 @@ angular.module('FieldDoc')
 
                             $rootScope.page.title = 'Project Batch Delete';
 
-                            self.loadSites();
+                         //   self.loadSites();
 
                         }
 
@@ -9781,26 +9803,23 @@ angular.module('FieldDoc')
 
                 };
 
+                self.loadReport = function(){
 
-                self.showElements = function() {
+                    console.log("Loading Report");
 
-                    $timeout(function() {
+                    Report.reportBundle({}).$promise.then(function(successResponse) {
 
-                        self.status.loading = false;
+                        console.log("successResponse");
 
-                        self.status.processing = false;
+                        console.log(successResponse);
 
-                        $timeout(function() {
+                    }, function(errorResponse){
 
-                            if (self.sites && self.sites.length) {
+                        console.log("errorResponse");
 
-                                self.createStaticMapURLs(self.sites);
+                        console.log(errorResponse);
 
-                            }
-
-                        }, 500);
-
-                    }, 1000);
+                    });
 
                 };
 
@@ -35262,7 +35281,7 @@ angular
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/report/:id/matrix')
                 },
-                projectBundle:{
+                reportBundle:{
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/report-bundle/:id')
@@ -35952,15 +35971,15 @@ angular.module('FieldDoc')
                 var color = "#06aadf";
 
                 if(colorScheme != null){
-                    console.log('COLOR 0');
+                  //  console.log('COLOR 0');
                     if(colorScheme == 'practice'){
                         color = "#df063e";
-                         console.log('COLOR 1');
+                     //    console.log('COLOR 1');
                     }else{
-                         console.log('COLOR 2');
+                    //     console.log('COLOR 2');
                     }
                 }else{
-                     console.log('COLOR 3');
+                  //   console.log('COLOR 3');
                 }
 
                 var styledFeature = {
