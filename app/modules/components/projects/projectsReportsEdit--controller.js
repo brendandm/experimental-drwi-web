@@ -19,7 +19,10 @@
 
                 self.params;
 
-                self.reportId = +$routeParams.reportId;
+                self.reportId = $route.current.params.reportId;
+
+               
+
 
                 $rootScope.toolbarState = {
                     'edit': true
