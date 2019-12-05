@@ -128,7 +128,7 @@
 
                         var i2 = 0;
 
-                        self.reports.forEach(function(report,r_i)){
+                        self.reports.forEach(function(report,r_i){
 
                             if(program.id == reports.id){
 
