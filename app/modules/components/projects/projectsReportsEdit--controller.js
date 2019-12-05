@@ -106,7 +106,7 @@
 
                     console.log("Loading Report");
 
-                    Report.reportBundle({}).$promise.then(function(successResponse) {
+                    Report.reportBundle().$promise.then(function(successResponse) {
 
                         console.log("successResponse");
 
