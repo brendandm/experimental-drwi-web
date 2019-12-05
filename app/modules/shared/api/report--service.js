@@ -38,7 +38,7 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/report/:id/matrix')
                 },
-                projectBundle:{
+                reportBundle:{
                     method: 'GET',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/report-bundle/:id')
