@@ -69,6 +69,7 @@
                 };
 
 
+
                 self.loadProject = function() {
 
                     project.$promise.then(function(successResponse) {
@@ -91,7 +92,9 @@
 
                       //      $rootScope.page.title = 'Project Batch Delete';
 
-                            self.loadReports();
+                        self.mapReportsToPrograms();
+
+                           // self.loadReports();
 
                         }
 
@@ -109,14 +112,61 @@
 
                 };
 
+                self.mapReportsToPrograms = function(){
+
+                    self.reports = self.project.reports;
+
+                    self.programs = self.projects.programs;
+
+                    self.matrix = [];
+
+                    var i = 0;
+
+                    self.programs.forEach(function(program,p_i){
+
+                        self.matrix[i] = program;
+
+                        var i2 = 0;
+
+                        self.reports.forEach(function(report,r_i)){
+
+                            if(program.id == reports.id){
+
+                            self.matrix[i].reports[i2] = report;
+
+                            }
+
+                            i2 = i2+1;
+
+                        }
+
+                        i = i+1;
+
+                    });
+
+
+                    });
+                };
+
+
                 self.loadReports = function(){
                     console.log("Loading Reports");
+
                     Report.projectReport({id:self.project.id}).$promise.then(function(successResponse) {
-                        console.log("successResponse");
-                        console.log(successResponse);
+
+                        console.log("self.loadReports",successResponse);
+
+                        self.showElements();
+
+                        self.reports = successResponse.features;
+
+                        console.log("self.reports",self.reports)
+
                     }, function(errorResponse){
-                        console.log("errorResponse");
+
                         console.log(errorResponse);
+
+                        self.showElements(false);
                     });
 
                 };
