@@ -21,7 +21,7 @@
 
                 self.reportId = $route.current.params.reportId;
 
-               
+
 
 
                 $rootScope.toolbarState = {
@@ -95,7 +95,9 @@
 
                         self.tags = Utility.processTags(self.project.tags);
 
-                        // self.showElements();
+                         self.showElements();
+
+                         self.loadBundle ();
 
                     }).catch(function(errorResponse) {
 
