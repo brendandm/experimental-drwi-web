@@ -126,6 +126,8 @@
 
                         self.matrix[i] = program;
 
+                        self.matrix[i].reports = [];
+
                         var i2 = 0;
 
                         self.reports.forEach(function(report,r_i){
