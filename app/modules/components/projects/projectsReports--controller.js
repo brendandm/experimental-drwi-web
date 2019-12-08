@@ -146,6 +146,8 @@
                     });
 
                     console.log(self.matrix);
+
+                     self.showElements();
                 };
 
 
