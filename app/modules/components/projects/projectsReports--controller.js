@@ -184,8 +184,8 @@
                             "notes": "Cats are super",
                             "date": "2019-12-09",
                             "organization_id": self.project.organization_id,
-                            "project_id": self.project.id,
-                            "program_id": program_id
+                            "project_id": 2671
+                            "program_id": 4
                         }
                     )
                     .$promise.then(function(successResponse) {
