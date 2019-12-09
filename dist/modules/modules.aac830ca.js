@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575901679520})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575902206531})
 
 ;
 /**
@@ -9694,7 +9694,7 @@ angular.module('FieldDoc')
 
                     console.log("Add Report to program id# "+program_id);
 
-                    Report.reportBundle()
+                    Report.CreateReportBundle()
                     .$promise.then(function(successResponse) {
 
                         console.log(successResponse);
@@ -35366,10 +35366,10 @@ angular
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/report-bundle/:id')
                 },
-                 CreateReportBundle:{
+                createReportBundle:{
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/report-bundle/:id')
+                    url: environment.apiUrl.concat('/v1/report-bundle')
                 },
                 projectReport:{
                     method: 'GET',
