@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575909689504})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575910348411})
 
 ;
 /**
@@ -9699,9 +9699,9 @@ angular.module('FieldDoc')
                             "title": "I eat food",
                             "notes": "Cats are super",
                             "date": "2019-12-09",
-                            "organization_id": 190,
-                            "project_id": 2671,
-                            "program_id": 5
+                            "organization_id": self.project.organization_id,
+                            "project_id": self.project.id,
+                            "program_id": program_id
                         }
                     )
                     .$promise.then(function(successResponse) {
