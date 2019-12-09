@@ -178,9 +178,16 @@
 
                     console.log("Add Report to program id# "+program_id);
 
-                    Report.reportBundle({
-                         program_id: program_id
-                        })
+                    Report.reportBundle(
+                        {
+                            "title": "I eat food",
+                            "notes": "Cats are super",
+                            "date": "2019-12-09",
+                            "organization_id": 190,
+                            "project_id": 2671,
+                            "program_id": 5
+                        }
+                    )
                     .$promise.then(function(successResponse) {
 
                         console.log(successResponse);
