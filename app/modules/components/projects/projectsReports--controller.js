@@ -174,6 +174,11 @@
                 };
 
 
+                self.addReport = function(program_id){
+
+                    console.log("Add Report to program id# "+program_id);
+    
+                };
 
               
                 self.inspectSearchParams = function(params) {
