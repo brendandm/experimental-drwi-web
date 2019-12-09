@@ -177,7 +177,21 @@
                 self.addReport = function(program_id){
 
                     console.log("Add Report to program id# "+program_id);
-    
+
+                    Report.reportBundle({
+                         program_id: program_id
+                        })
+                    .$promise.then(function(successResponse) {
+
+                        console.log(successResponse);
+
+                    }, function(errorResponse){
+
+                        console.log(errorResponse);
+
+                    });
+
+
                 };
 
               
