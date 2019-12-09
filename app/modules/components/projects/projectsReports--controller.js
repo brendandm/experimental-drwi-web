@@ -183,9 +183,9 @@
                             "title": "I eat food",
                             "notes": "Cats are super",
                             "date": "2019-12-09",
-                            "organization_id": 190,
-                            "project_id": 2671,
-                            "program_id": 5
+                            "organization_id": self.project.organization_id,
+                            "project_id": self.project.id,
+                            "program_id": program_id
                         }
                     )
                     .$promise.then(function(successResponse) {
