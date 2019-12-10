@@ -174,17 +174,21 @@
                 };
 
 
-                self.addReport = function(program_id){
+                self.testMe = function(program_id){
+                    console.log("TEST ME", program_id);
+                };
+
+                self.createReportBundle = function(program_id){
 
                     console.log("Add Report to program id# "+program_id);
 
-                    Report.reportBundle(
+                    Report.createReportBundle(
                         {
                             "title": "I eat food",
                             "notes": "Cats are super",
                             "date": "2019-12-09",
-                            "organization_id": self.project.organization_id,
-                            "project_id": 2671
+                            "organization_id": 190,
+                            "project_id": 2671,
                             "program_id": 4
                         }
                     )
