@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575989066884})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575989420908})
 
 ;
 /**
@@ -9712,6 +9712,10 @@ angular.module('FieldDoc')
 
                         console.log(successResponse);
 
+                        self.newReport = successResponse;
+
+                        $location.path('/'+self.newReport.id);
+
                     }, function(errorResponse){
 
                         console.log(errorResponse);
@@ -9743,6 +9747,8 @@ angular.module('FieldDoc')
                             can_edit: false,
                             can_delete: false
                         };
+
+                        console.log("$rootScope.user",$rootScope.user);
 
                         project.$promise.then(function(successResponse) {
                             console.log('self.project', successResponse);
