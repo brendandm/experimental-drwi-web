@@ -198,7 +198,7 @@
 
                         self.newReport = successResponse;
 
-                        $location.path('/'+self.newReport.id);
+                        $location.path('/projects/'+self.project.id"/reports/"+self.newReport.id);
 
                     }, function(errorResponse){
 
