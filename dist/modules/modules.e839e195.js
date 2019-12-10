@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575989702308})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1575989841313})
 
 ;
 /**
@@ -9699,7 +9699,6 @@ angular.module('FieldDoc')
                     console.log("Add Report to program id# "+program_id);
 
                     Report.createReportBundle(
-
                         {
                           //  "title": "I eat food",
                            // "notes": "Cats are super",
@@ -9708,7 +9707,6 @@ angular.module('FieldDoc')
                             "project_id": self.project.id,
                             "program_id": program_id
                         }
-
                     )
                     .$promise.then(function(successResponse) {
 
@@ -9716,7 +9714,7 @@ angular.module('FieldDoc')
 
                         self.newReport = successResponse;
 
-                        $location.path('/projects/'+self.project.id"/reports/"+self.newReport.id);
+                        $location.path('/projects/'+self.project.id+"/reports/"+self.newReport.id);
 
                     }, function(errorResponse){
 
