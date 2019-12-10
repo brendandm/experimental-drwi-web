@@ -183,6 +183,7 @@
                     console.log("Add Report to program id# "+program_id);
 
                     Report.createReportBundle(
+
                         {
                           //  "title": "I eat food",
                            // "notes": "Cats are super",
@@ -191,6 +192,7 @@
                             "project_id": self.project.id,
                             "program_id": program_id
                         }
+
                     )
                     .$promise.then(function(successResponse) {
 
