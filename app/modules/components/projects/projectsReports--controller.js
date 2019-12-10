@@ -196,6 +196,10 @@
 
                         console.log(successResponse);
 
+                        self.newReport = successResponse;
+
+                        $location.path('/'+self.newReport.id);
+
                     }, function(errorResponse){
 
                         console.log(errorResponse);
@@ -227,6 +231,8 @@
                             can_edit: false,
                             can_delete: false
                         };
+
+                        console.log("$rootScope.user",$rootScope.user);
 
                         project.$promise.then(function(successResponse) {
                             console.log('self.project', successResponse);
