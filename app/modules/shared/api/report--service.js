@@ -47,7 +47,7 @@
                 createReportBundle:{
                     method: 'POST',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/report-bundle/:id')
+                    url: environment.apiUrl.concat('/v1/data/report-bundle')
                 },
 
                 projectReport:{
