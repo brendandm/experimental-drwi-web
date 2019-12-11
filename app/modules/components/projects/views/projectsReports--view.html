@@ -53,7 +53,8 @@
                             <div class="card--content">
 
                                 <div class="name">
-                                    <span>{{ report.title }}</span>
+                                    <span data-ng-if="report.title">{{ report.title }}</span>
+                                    <span data-ng-if="!report.title">{{ report.date }}</span>
                                 </div>
 
                                 <div class="body">
