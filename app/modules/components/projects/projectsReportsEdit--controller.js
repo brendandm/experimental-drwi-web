@@ -75,6 +75,10 @@
 
                          self.project = successResponse;
 
+                         self.practices = self.project.practices;
+
+                        console.log("self.practices", self.practices);
+
                         if (!successResponse.permissions.read &&
                             !successResponse.permissions.write) {
 
@@ -130,6 +134,15 @@
                         console.log(errorResponse);
 
                     });
+
+                };
+
+                self.loadPractices = function(){
+
+                    console.log("Load Practices");
+
+
+
 
                 };
 
