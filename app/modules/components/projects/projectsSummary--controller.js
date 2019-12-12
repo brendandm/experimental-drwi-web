@@ -487,6 +487,8 @@ angular.module('FieldDoc')
 
                                 feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
 
+                                
+
                                 console.log('feature.staticURL',feature.staticURL);
 
                                 self.sites[index].staticURL = feature.staticURL;
