@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1574358205686})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1576163556865})
 
 ;
 /**
@@ -5292,6 +5292,13 @@ angular.module('FieldDoc')
                             if(feature.geometry != null){
 
                                 feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
+
+                                if(feature.staticURL.length >= 4096){
+                                       feature.staticURL = ['https://api.mapbox.com/styles/v1',
+                                                            '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                                        ].join('');
+                                }
 
                                 console.log('feature.staticURL',feature.staticURL);
 
