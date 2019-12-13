@@ -77,7 +77,7 @@
 
                       //   self.practices = self.project.practices;
 
-                        console.log("self.practices", self.practices);
+
 
                         if (!successResponse.permissions.read &&
                             !successResponse.permissions.write) {
@@ -130,6 +130,8 @@
                         self.bundle = successResponse;
 
                         self.practices = self.bundle.practices;
+
+                        console.log("self.practices", self.practices);
 
                     }, function(errorResponse){
 
