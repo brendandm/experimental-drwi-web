@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1576254459532})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1576254615371})
 
 ;
 /**
@@ -9866,7 +9866,7 @@ angular.module('FieldDoc')
 
                       //   self.practices = self.project.practices;
 
-                        console.log("self.practices", self.practices);
+
 
                         if (!successResponse.permissions.read &&
                             !successResponse.permissions.write) {
@@ -9919,6 +9919,8 @@ angular.module('FieldDoc')
                         self.bundle = successResponse;
 
                         self.practices = self.bundle.practices;
+
+                        console.log("self.practices", self.practices);
 
                     }, function(errorResponse){
 
