@@ -93,7 +93,7 @@
 
                             $rootScope.page.title = 'Project Batch Delete';
 
-                            self.loadReport();
+                            self.loadBundle();
 
                         }
 
@@ -123,7 +123,7 @@
 
                     Report.reportBundle({id:self.reportId}).$promise.then(function(successResponse) {
 
-                        console.log("successResponse");
+                        console.log("reportBundle successResponse");
 
                         console.log(successResponse);
 
