@@ -75,7 +75,7 @@
 
                          self.project = successResponse;
 
-                         self.practices = self.project.practices;
+                      //   self.practices = self.project.practices;
 
                         console.log("self.practices", self.practices);
 
@@ -126,6 +126,10 @@
                         console.log("reportBundle successResponse");
 
                         console.log(successResponse);
+
+                        self.bundle = successResponse;
+
+                        self.practices = self.bundle.practices;
 
                     }, function(errorResponse){
 
