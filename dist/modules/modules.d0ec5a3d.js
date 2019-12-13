@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1576252649738})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1576254459532})
 
 ;
 /**
@@ -9864,7 +9864,7 @@ angular.module('FieldDoc')
 
                          self.project = successResponse;
 
-                         self.practices = self.project.practices;
+                      //   self.practices = self.project.practices;
 
                         console.log("self.practices", self.practices);
 
@@ -9882,7 +9882,7 @@ angular.module('FieldDoc')
 
                             $rootScope.page.title = 'Project Batch Delete';
 
-                            self.loadReport();
+                            self.loadBundle();
 
                         }
 
@@ -9912,9 +9912,13 @@ angular.module('FieldDoc')
 
                     Report.reportBundle({id:self.reportId}).$promise.then(function(successResponse) {
 
-                        console.log("successResponse");
+                        console.log("reportBundle successResponse");
 
                         console.log(successResponse);
+
+                        self.bundle = successResponse;
+
+                        self.practices = self.bundle.practices;
 
                     }, function(errorResponse){
 
