@@ -55,9 +55,9 @@
 
                         $timeout(function() {
 
-                            if (self.sites && self.sites.length) {
+                            if (self.practices && self.practices.length) {
 
-                                self.createStaticMapURLs(self.sites);
+                                self.createStaticMapURLs(self.practices);
 
                             }
 
