@@ -170,7 +170,7 @@
 
                                 feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
 
-                                self.sites[index].staticURL = feature.staticURL;
+                                self.practices[index].staticURL = feature.staticURL;
 
                             }else{
 
