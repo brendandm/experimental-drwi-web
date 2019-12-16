@@ -55,7 +55,11 @@
 
                         $timeout(function() {
 
+                            console.log("YES A");
+
                             if (self.practices && self.practices.length) {
+
+                                console.log("YES B");
 
                                 self.createStaticMapURLs(self.practices);
 
@@ -162,17 +166,27 @@
             */
                 self.createStaticMapURLs = function(arr){
 
+                    console.log("ONE");
+
                     arr.forEach(function(feature, index) {
+
+                           console.log("TWO");
 
                          if (feature.project.extent) {
 
+                              console.log("THREE");
+
                             if(feature.geometry != null){
+
+                                console.log("FOUR");
 
                                 feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
 
                                 self.practices[index].staticURL = feature.staticURL;
 
                             }else{
+
+                                 console.log("FIVE");
 
                                 self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
                                                             '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
