@@ -21,7 +21,14 @@
 
                 self.reportId = $route.current.params.reportId;
 
+                self.date = {
 
+                    year: 0000,
+                    month: 00,
+                    day: 00,
+                    time: 00
+
+                };
 
 
                 $rootScope.toolbarState = {
