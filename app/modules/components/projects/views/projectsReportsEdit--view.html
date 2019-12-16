@@ -45,21 +45,23 @@
                             <input id="report_title" name="report_date_month" type="text" value="page.bundle.title" data-ng-model="page.bundle.title" >
                         </div>
 
+                        <div style="display:block border: 1px solid green;">
 
+                            <div class="form-element" style="border:1px solid red; width: 30%; margin-right:3.333%; float: right;">
+                                <span class="meta-label"><b>Year</b></span>
+                                <input number type="number" min="1900" step="1" id="report_date_year" name="report_date_year" data-ng-model="page.date.year" />
+                            </div>
 
-                        <div class="form-element" style="border:1px solid red; width: 30%; margin-right:3.333%; float: right;">
-                            <span class="meta-label"><b>Month</b></span>
-                            <input id="report_date_month" name="report_date_month" type="text" value="page.date.month" data-ng-model="page.date.month" uib-typeahead="month.name for month in page.months | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html" required="required">
-                        </div>
+                            <div class="form-element" style="border:1px solid red; width: 30%; margin-right:3.333%; float: right;">
+                                <span class="meta-label"><b>Month</b></span>
+                                <input id="report_date_month" name="report_date_month" type="text" value="page.date.month" data-ng-model="page.date.month" uib-typeahead="month.name for month in page.months | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html" required="required">
+                            </div>
 
-                        <div class="form-element" style="border:1px solid red; width: 30%; margin-right:3.333%; float: right;">
-                            <span class="meta-label"><b>Date</b></span>
-                            <input type="number" min="1" max="31" step="1" id="report_date_date" name="report_date_date" data-ng-model="page.date.date" />
-                        </div>
+                            <div class="form-element" style="border:1px solid red; width: 30%; margin-right:3.333%; float: right;">
+                                <span class="meta-label"><b>Day</b></span>
+                                <input type="number" min="1" max="31" step="1" id="report_date_date" name="report_date_date" data-ng-model="page.date.date" />
+                            </div>
 
-                        <div class="form-element" style="border:1px solid red; width: 30%; float: right;">
-                            <span class="meta-label"><b>Year</b></span>
-                            <input number type="number" min="1900" step="1" id="report_date_year" name="report_date_year" data-ng-model="page.date.year" />
                         </div>
 
                         <div class="form-element" style="clear:left;">
