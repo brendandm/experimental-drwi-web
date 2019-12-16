@@ -23,10 +23,10 @@
 
                 self.date = {
 
-                    year: 0000,
-                    month: 00,
-                    day: 00,
-                    time: 00,
+                    year: 0,
+                    month: 0,
+                    day: 0,
+                    time: 0,
 
                 };
 
