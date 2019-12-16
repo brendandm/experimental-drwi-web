@@ -140,7 +140,7 @@
 
                         }
 
-                    
+
                 }, true);
 
 
@@ -340,9 +340,9 @@
 
 
 
-                            if (self.report.report_date) {
+                            if (self.bundle.date) {
 
-                                self.today = parseISOLike(self.report.report_date);
+                                self.today = parseISOLike(self.bundle.date);
 
                             }
 
