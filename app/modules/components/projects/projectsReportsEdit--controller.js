@@ -21,15 +21,6 @@
 
                 self.reportId = $route.current.params.reportId;
 
-                self.date = {
-
-                    year: 0,
-                    month: 0,
-                    day: 0,
-                    time: 0,
-
-                };
-
 
                 $rootScope.toolbarState = {
                     'edit': true
@@ -51,6 +42,93 @@
                         self.alerts = [];
 
                     };
+
+
+                              //
+                // Setup all of our basic date information so that we can use it
+                // throughout the page
+                //
+                self.today = new Date();
+
+                self.days = [
+                    'Sunday',
+                    'Monday',
+                    'Tuesday',
+                    'Wednesday',
+                    'Thursday',
+                    'Friday',
+                    'Saturday'
+                ];
+
+                self.months = [{
+                        'shortName': 'Jan',
+                        'name': 'January',
+                        'numeric': '01'
+                    },
+                    {
+                        'shortName': 'Feb',
+                        'name': 'February',
+                        'numeric': '02'
+                    },
+                    {
+                        'shortName': 'Mar',
+                        'name': 'March',
+                        'numeric': '03'
+                    },
+                    {
+                        'shortName': 'Apr',
+                        'name': 'April',
+                        'numeric': '04'
+                    },
+                    {
+                        'shortName': 'May',
+                        'name': 'May',
+                        'numeric': '05'
+                    },
+                    {
+                        'shortName': 'Jun',
+                        'name': 'June',
+                        'numeric': '06'
+                    },
+                    {
+                        'shortName': 'Jul',
+                        'name': 'July',
+                        'numeric': '07'
+                    },
+                    {
+                        'shortName': 'Aug',
+                        'name': 'August',
+                        'numeric': '08'
+                    },
+                    {
+                        'shortName': 'Sep',
+                        'name': 'September',
+                        'numeric': '09'
+                    },
+                    {
+                        'shortName': 'Oct',
+                        'name': 'October',
+                        'numeric': '10'
+                    },
+                    {
+                        'shortName': 'Nov',
+                        'name': 'November',
+                        'numeric': '11'
+                    },
+                    {
+                        'shortName': 'Dec',
+                        'name': 'December',
+                        'numeric': '12'
+                    }
+                ];
+
+                function parseISOLike(s) {
+                    var b = s.split(/\D/);
+                    return new Date(b[0], b[1] - 1, b[2]);
+                }
+
+
+
 
                 self.showElements = function() {
 
