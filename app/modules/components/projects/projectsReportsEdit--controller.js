@@ -26,7 +26,7 @@
                     year: 0000,
                     month: 00,
                     day: 00,
-                    time: 00
+                    time: 00,
 
                 };
 
