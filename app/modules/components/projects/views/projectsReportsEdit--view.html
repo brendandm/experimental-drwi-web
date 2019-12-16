@@ -31,6 +31,49 @@
 
             <section class="reveal fade-in t3" style="padding: 0;">
 
+                <div class="feature-detail-content">
+
+                    <form data-ng-submit="page.saveReport()" class="form" role="form" autocomplete="off">
+
+                        <!--
+                         <h2>
+                            Report date and measurement period
+                        </h2>
+                        -->
+                        <div class="form-element">
+                            <span class="meta-label"><b>Title</b></span>
+                            <input id="report_title" name="report_date_month" type="text" value="page.date.month" data-ng-model="page.bundle.title" >
+                        </div>
+
+
+
+                        <div class="form-element">
+                            <span class="meta-label"><b>Month</b></span>
+                            <input id="report_date_month" name="report_date_month" type="text" value="page.date.month" data-ng-model="page.date.month" uib-typeahead="month.name for month in page.months | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html" required="required">
+                        </div>
+
+                        <div class="form-element">
+                            <span class="meta-label"><b>Date</b></span>
+                            <input type="number" min="1" max="31" step="1" id="report_date_date" name="report_date_date" data-ng-model="page.date.date" />
+                        </div>
+
+                        <div class="form-element">
+                            <span class="meta-label"><b>Year</b></span>
+                            <input number type="number" min="1900" step="1" id="report_date_year" name="report_date_year" data-ng-model="page.date.year" />
+                        </div>
+
+                        <div class="form-element">
+                            <span class="meta-label"><b>Notes</b></span>
+                            <textarea class="form-control" msd-elastic data-ng-model="page.bundle.notes" maxlength="1000" rows="10">{{ page.report.notes }}</textarea>
+                            <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
+                                Notes may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.report.notes.length || 0) | number }} used)</strong>
+                            </p>
+                        </div>
+
+                    </form>
+
+                </div>
+
 
 
             </section>
