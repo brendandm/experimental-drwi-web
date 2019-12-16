@@ -127,7 +127,21 @@
                     return new Date(b[0], b[1] - 1, b[2]);
                 }
 
+                $scope.$watch(angular.bind(this, function() {
 
+                    return this.date;
+
+                }), function(response) {
+                        if (response) {
+
+                            var _new = response.year + '-' + response.month.numeric + '-' + response.date,
+                                _date = new Date(_new);
+                            self.date.day = self.days[_date.getDay()];
+
+                        }
+
+                    
+                }, true);
 
 
                 self.showElements = function() {
@@ -323,6 +337,26 @@
                             }
                             self.permissions.can_edit = successResponse.permissions.write;
                             self.permissions.can_delete = successResponse.permissions.write;
+
+
+
+                            if (self.report.report_date) {
+
+                                self.today = parseISOLike(self.report.report_date);
+
+                            }
+
+                            //
+                            // Check to see if there is a valid date
+                            //
+                            self.date = {
+                                month: self.months[self.today.getMonth()],
+                                date: self.today.getDate(),
+                                day: self.days[self.today.getDay()],
+                                year: self.today.getFullYear()
+                            };
+
+
                             $rootScope.page.title = self.project.name;
                             self.loadProject();
 
