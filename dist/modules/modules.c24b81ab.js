@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1576519874596})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1576520287752})
 
 ;
 /**
@@ -9929,7 +9929,7 @@ angular.module('FieldDoc')
 
                         }
 
-                    
+
                 }, true);
 
 
@@ -10129,9 +10129,9 @@ angular.module('FieldDoc')
 
 
 
-                            if (self.report.report_date) {
+                            if (self.bundle.date) {
 
-                                self.today = parseISOLike(self.report.report_date);
+                                self.today = parseISOLike(self.bundle.date);
 
                             }
 
