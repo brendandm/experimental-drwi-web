@@ -57,7 +57,7 @@
 
                             console.log("YES A");
 
-                            console.log("self.practices",self.practices);
+                            console.log("self.practices", self.practices);
                             console.log("self.practices.length",self.practices.length);
 
                             if (self.practices && self.practices.length) {
@@ -106,7 +106,7 @@
 
                         self.tags = Utility.processTags(self.project.tags);
 
-                         self.showElements();
+                        // self.showElements();
 
                          self.loadBundle ();
 
@@ -140,11 +140,15 @@
 
                         console.log("self.practices", self.practices);
 
+                        self.showElements();
+
                     }, function(errorResponse){
 
                         console.log("errorResponse");
 
                         console.log(errorResponse);
+
+                        self.showElements(false);
 
                     });
 
