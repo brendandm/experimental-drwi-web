@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1576475633569})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1576476289102})
 
 ;
 /**
@@ -9846,7 +9846,7 @@ angular.module('FieldDoc')
 
                             console.log("YES A");
 
-                            console.log("self.practices",self.practices);
+                            console.log("self.practices", self.practices);
                             console.log("self.practices.length",self.practices.length);
 
                             if (self.practices && self.practices.length) {
@@ -9895,7 +9895,7 @@ angular.module('FieldDoc')
 
                         self.tags = Utility.processTags(self.project.tags);
 
-                         self.showElements();
+                        // self.showElements();
 
                          self.loadBundle ();
 
@@ -9929,11 +9929,15 @@ angular.module('FieldDoc')
 
                         console.log("self.practices", self.practices);
 
+                        self.showElements();
+
                     }, function(errorResponse){
 
                         console.log("errorResponse");
 
                         console.log(errorResponse);
+
+                        self.showElements(false);
 
                     });
 
