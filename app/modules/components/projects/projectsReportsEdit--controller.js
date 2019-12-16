@@ -167,6 +167,24 @@
 
                             }
 
+                            if (self.bundle.date) {
+
+                                self.today = parseISOLike(self.bundle.date);
+
+                            }
+
+                            //
+                            // Check to see if there is a valid date
+                            //
+                            self.date = {
+                                month: self.months[self.today.getMonth()],
+                                date: self.today.getDate(),
+                                day: self.days[self.today.getDay()],
+                                year: self.today.getFullYear()
+                            };
+
+
+
                         }, 500);
 
                     }, 1000);
@@ -340,21 +358,7 @@
 
 
 
-                            if (self.bundle.date) {
 
-                                self.today = parseISOLike(self.bundle.date);
-
-                            }
-
-                            //
-                            // Check to see if there is a valid date
-                            //
-                            self.date = {
-                                month: self.months[self.today.getMonth()],
-                                date: self.today.getDate(),
-                                day: self.days[self.today.getDay()],
-                                year: self.today.getFullYear()
-                            };
 
 
                             $rootScope.page.title = self.project.name;
