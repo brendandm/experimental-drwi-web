@@ -195,7 +195,7 @@
 
                                  console.log("FIVE");
 
-                                self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
                                                             '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
                                                             'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
                                                         ].join('');
