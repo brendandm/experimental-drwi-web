@@ -57,6 +57,9 @@
 
                             console.log("YES A");
 
+                            console.log("self.practices",self.practices);
+                            console.log("self.practices.length",self.practices.length);
+
                             if (self.practices && self.practices.length) {
 
                                 console.log("YES B");
