@@ -31,7 +31,7 @@
 
             <section class="reveal fade-in t3" style="padding: 0;">
 
-                <div class="feature-detail-content" style="border:1px solid red; width:100%;">
+                <div class="feature-detail-content" style="border:1px solid red;">
 
                      <h2>Report to {{page.bundle.program.name}}</h2>
 
@@ -78,6 +78,11 @@
 
                     </form>
 
+                    <h2>Practices</h2>
+                    <p>
+                        Showing <b>{{ siteList.length }}</b> of <b>{{ page.availableFeatures.length }}</b> total practices in project <b>{{page.project.name}}</b>.
+                    </p>
+
                 </div>
 
 
@@ -87,10 +92,7 @@
             <!-- Unselected Sites -->
             <section class="reveal fade-in t3" style="padding: 0;" data-ng-if="page.permissions.can_edit">
 
-                <h2>Practices</h2>
-                <p>
-                    Showing <b>{{ siteList.length }}</b> of <b>{{ page.availableFeatures.length }}</b> total practices in project <b>{{page.project.name}}</b>.
-                </p>
+
 
 
 
