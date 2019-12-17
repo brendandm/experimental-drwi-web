@@ -106,7 +106,7 @@ angular.module('FieldDoc')
                     }
                 };
                 // Build static map URL for Mapbox API
-                console.log('buildStaticMapURL->styledFeature',styledFeature);
+             //   console.log('buildStaticMapURL->styledFeature',styledFeature);
                 return [
                     'https://api.mapbox.com/styles/v1',
                     '/mapbox/streets-v10/static/geojson(',
