@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1576606764618})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1576608081125})
 
 ;
 /**
@@ -10079,19 +10079,19 @@ angular.module('FieldDoc')
             */
                 self.createStaticMapURLs = function(arr){
 
-                    console.log("ONE");
+                //    console.log("ONE");
 
                     arr.forEach(function(feature, index) {
 
-                           console.log("TWO");
+                        //   console.log("TWO");
 
                          if (feature.project.extent) {
 
-                              console.log("THREE");
+                       //       console.log("THREE");
 
                             if(feature.geometry != null){
 
-                                console.log("FOUR");
+                      //          console.log("FOUR");
 
                                 feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
 
@@ -10099,7 +10099,7 @@ angular.module('FieldDoc')
 
                             }else{
 
-                                 console.log("FIVE");
+                      //           console.log("FIVE");
 
                                 self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
                                                             '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
@@ -36265,7 +36265,7 @@ angular.module('FieldDoc')
                     }
                 };
                 // Build static map URL for Mapbox API
-                console.log('buildStaticMapURL->styledFeature',styledFeature);
+             //   console.log('buildStaticMapURL->styledFeature',styledFeature);
                 return [
                     'https://api.mapbox.com/styles/v1',
                     '/mapbox/streets-v10/static/geojson(',
