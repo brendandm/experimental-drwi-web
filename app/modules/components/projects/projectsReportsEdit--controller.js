@@ -290,19 +290,19 @@
             */
                 self.createStaticMapURLs = function(arr){
 
-                    console.log("ONE");
+                //    console.log("ONE");
 
                     arr.forEach(function(feature, index) {
 
-                           console.log("TWO");
+                        //   console.log("TWO");
 
                          if (feature.project.extent) {
 
-                              console.log("THREE");
+                       //       console.log("THREE");
 
                             if(feature.geometry != null){
 
-                                console.log("FOUR");
+                      //          console.log("FOUR");
 
                                 feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
 
@@ -310,7 +310,7 @@
 
                             }else{
 
-                                 console.log("FIVE");
+                      //           console.log("FIVE");
 
                                 self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
                                                             '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
