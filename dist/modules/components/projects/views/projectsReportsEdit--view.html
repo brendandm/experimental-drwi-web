@@ -33,7 +33,7 @@
 
                 <div class="feature-detail-content" style="border:1px solid red; margin:0 auto; max-width:766px; width:100%;">
 
-                     <h2>Report to {{page.bundle.program.name}}</h2>
+                     <h2>Reporting to {{page.bundle.program.name}}</h2>
 
                     <form data-ng-submit="page.saveReport()" class="form" role="form" autocomplete="off"
                           style="border:1px solid purple; width:100%; margin: 0 auto;"
@@ -137,6 +137,13 @@
                                 </div>
 
                                 <div class="body">
+
+                                    <div class="collection-filter-group">
+                                        <button data-ng-click="page.removeAllFromDeleteQueue()" title="Remove all from batch delete" style="margin-top:-15px; margin-left:30px;">
+                                            <nobr>Add Data</nobr>
+                                        </button>
+
+                                        </div>
                                 <!--
                                     <div class="confirm--delete" data-ng-if="page.deletionTarget && page.deletionTarget.feature.properties.id === site.properties.id && page.deletionTarget.collection === 'site'">
                                         <p>Do you want to delete this site?</p>
