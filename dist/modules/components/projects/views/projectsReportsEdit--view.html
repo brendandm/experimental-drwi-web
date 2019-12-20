@@ -152,10 +152,10 @@
                                         </div>
                                     </div>
                                   -->
-                                    <p>{{ (site.properties.description || 'No description') | truncate:80 }}</p>
+                                    <p>{{ (practice.description || 'No description') | truncate:80 }}</p>
 
                                      <div class="collection-filter-group">
-                                        <button data-ng-click="page.removeAllFromDeleteQueue()" title="Remove all from batch delete"
+                                        <button data-ng-click="page.showPracticeModal(practice.id)" title="add data to practice {{practice.name}}"
                                                 style="
                                                     margin: 0 auto;
                                                     background-color:#29cc82;
