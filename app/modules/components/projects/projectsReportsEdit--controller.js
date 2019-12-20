@@ -271,6 +271,14 @@
 
                 };
 
+
+                self.showPracticeModal = function(p_id){
+
+                    console.log("SHOW PRACTICE "+p_id);
+
+                };
+
+
                 self.loadPractices = function(){
 
                     console.log("Load Practices");
