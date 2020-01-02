@@ -276,7 +276,20 @@
 
                     console.log("SHOW PRACTICE "+p_id);
 
+                    self.displayModal = true;
+
                 };
+
+                 self.closePracticeModal = function(){
+
+                    console.log("CLOSE PRACTICE ");
+
+                    self.displayModal = false;
+
+                };
+
+
+
 
 
                 self.loadPractices = function(){
