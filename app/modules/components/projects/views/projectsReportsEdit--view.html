@@ -206,7 +206,15 @@
 
             <div class="metric-modal" data-ng-if="page.displayModal" data-ng-click="page.closePracticeModal()">
 
-                    <form data-ng-submit="page.saveReport()" class="form" role="form" autocomplete="off">
+                    <div class="summary-card">
+
+                        <button class="close" type="button" data-ng-click="page.closeMetricModal()" title="Cancel">
+                            <i class="material-icons">
+                                clear
+                            </i>
+                        </button>
+
+                         <form data-ng-submit="page.saveReport()" class="form" role="form" autocomplete="off">
 
                         <h2>
                             Report date and measurement period
@@ -320,6 +328,8 @@
 
                     </form>
 
+
+                    </div>
 
                 </div>
 
