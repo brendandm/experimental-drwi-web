@@ -204,7 +204,11 @@
             MODAL
             -->
 
-            <div class="metric-modal" data-ng-if="page.displayModal" data-ng-click="page.closePracticeModal()">
+            <div class="metric-modal"
+                 data-ng-if="page.displayModal"
+                 data-ng-click="page.closePracticeModal()"
+                 style="overflow-y:auto;"
+            >
 
                     <div class="summary-card">
 
