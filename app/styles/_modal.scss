@@ -21,6 +21,8 @@ body.modal-open {
   width: 100%;
   z-index: 9999;
 
+  overflow-y:scroll;
+
   .close {
     cursor: pointer;
     font-size: 2em;
