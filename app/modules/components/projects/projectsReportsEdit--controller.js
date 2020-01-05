@@ -276,7 +276,7 @@
 
                     console.log("SHOW PRACTICE "+p_id);
 
-                    var self.selectedPractice;
+                    self.selectedPractice = {};
 
                     self.practices.forEach(practice, function(){
 
