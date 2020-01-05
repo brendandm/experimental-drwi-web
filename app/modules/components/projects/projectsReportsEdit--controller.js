@@ -278,7 +278,7 @@
 
                     self.selectedPractice = {};
 
-                    self.practices.forEach(practice, function(){
+                    self.practices.forEach(function(practice){
 
                         if(practice.id == p_id){
 
