@@ -276,6 +276,18 @@
 
                     console.log("SHOW PRACTICE "+p_id);
 
+                    var self.selectedPractice;
+
+                    self.practices.forEach(practice, function(){
+
+                        if(practice.id == p_id){
+
+                            self.selectedPractice = practice;
+
+                        }
+
+                    });
+
                     self.displayModal = true;
 
                 };
