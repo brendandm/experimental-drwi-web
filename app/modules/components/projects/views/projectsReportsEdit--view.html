@@ -215,6 +215,21 @@
             >
                  <!--   display:block; -->
             <!--   data-ng-click="page.closePracticeModal()" -->
+
+                <div style="boarder: 1px solid orange;>
+
+                    <button class="close" type="button" data-ng-click="page.closeMetricModal()" title="Cancel"
+                                style=" position:   absolute;
+                                        top:        0px;
+                                        right:      0px;
+
+                                ";
+                        >
+                            <i class="material-icons">
+                                clear
+                            </i>
+                    </button>
+
                     <div id="modalScroll" class="summary-card"
                          style="">
 
@@ -226,17 +241,7 @@
                         </h2>
 
             <!--  position:fixed; -->
-                        <button class="close" type="button" data-ng-click="page.closeMetricModal()" title="Cancel"
-                                style=" position:   absolute;
-                                        top:        0px;
-                                        right:      0px;
 
-                                ";
-                        >
-                            <i class="material-icons">
-                                clear
-                            </i>
-                        </button>
 
                          <form data-ng-submit="page.saveReport()" class="form" role="form" autocomplete="off">
 
@@ -356,6 +361,8 @@
                     </div>
 
                 </div>
+
+            </div>
 
             <!--
             END MODAL
