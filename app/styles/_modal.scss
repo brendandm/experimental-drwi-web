@@ -34,7 +34,16 @@ body.modal-open {
   }
 }
 
+.modal-wrapper {
+    position:   absolute;
+    display:    block;
+    top:        10%;
+    right:      10%;
+    left:       10%;
+    margin:     0 auto;
+    border:     1px solid blue;
 
+}
 
 #modalScroll {
     max-height:80%;
