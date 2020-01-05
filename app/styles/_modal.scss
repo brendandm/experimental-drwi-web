@@ -34,19 +34,28 @@ body.modal-open {
   }
 }
 
-.modalScroll {
-   overflow: scroll;
+#modalScroll {
+    max-height:80%;
+                                display:    block;
+                                position:   fixed;
+                                left:       10%;
+                                right:      10%;
+                                top:        10%;
+                                margin:     0 auto;
+                                overflow-y: auto;
+                                overflow-y: scroll;
+                                border:     1px solid red;
 }
-.modalScroll::-webkit-scrollbar {
+#modalScroll::-webkit-scrollbar {
     width: 12px;
 }
 
-.modalScroll::-webkit-scrollbar-track {
+#modalScroll::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     border-radius: 10px;
 }
 
-.modalScroll::-webkit-scrollbar-thumb {
+#modalScroll::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }
