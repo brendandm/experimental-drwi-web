@@ -207,22 +207,26 @@
             <div class="metric-modal"
                  data-ng-if="page.displayModal"
                  style="
-                        display:block;
+
                         overflow-y:auto;
                         overflow-y:scroll;
                         border: 1px solid green;"
 
             >
+                 <!--   display:block; -->
             <!--   data-ng-click="page.closePracticeModal()" -->
                     <div class="summary-card"
                          style="max-height:80%;
-                                display: block;
-                                position:fixed;
-                                margin: 0 auto;
-                                overflow-y:auto;
-                                overflow-y:scroll;
-                                border: 1px solid red;">
-
+                                display:    block;
+                                position:   fixed;
+                                left:       10%;
+                                right:      10%;
+                                top:        10%;
+                                margin:     0 auto;
+                                overflow-y: auto;
+                                overflow-y: scroll;
+                                border:     1px solid red;">
+            <!--  position:fixed; -->
                         <button class="close" type="button" data-ng-click="page.closeMetricModal()" title="Cancel">
                             <i class="material-icons">
                                 clear
