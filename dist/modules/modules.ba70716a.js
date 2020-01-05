@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578262615671})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578264023172})
 
 ;
 /**
@@ -10064,6 +10064,18 @@ angular.module('FieldDoc')
                 self.showPracticeModal = function(p_id){
 
                     console.log("SHOW PRACTICE "+p_id);
+
+                    var self.selectedPractice;
+
+                    self.practices.forEach(practice, function(){
+
+                        if(practice.id == p_id){
+
+                            self.selectedPractice = practice;
+
+                        }
+
+                    });
 
                     self.displayModal = true;
 
