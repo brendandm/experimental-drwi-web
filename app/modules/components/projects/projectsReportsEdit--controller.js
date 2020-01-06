@@ -312,6 +312,10 @@
 
                             self.selectedPractice = practice;
 
+                            console.log("self.selectedPractice.report", self.selectedPractice.report);
+
+                            console.log(" self.selectedPractice", self.selectedPractice);
+
                             if(self.selectedPractice.report == true){
                                 console.log("SHOW EXISTING REPORT:",self.selectedPractice.report);
                                  self.loadMatrix(self.selectedPractice.report.id);
