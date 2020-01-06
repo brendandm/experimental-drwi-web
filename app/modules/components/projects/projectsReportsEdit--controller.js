@@ -319,12 +319,10 @@
 
                 };
 
-                 self.loadMetrics = function() {
-
-
+                 self.loadMetrics = function(report_id) {
 
                     Report.metrics({
-                        id: p_id
+                        id: report_id
                     }).$promise.then(function(successResponse) {
 
                         console.log('Report metrics', successResponse);
