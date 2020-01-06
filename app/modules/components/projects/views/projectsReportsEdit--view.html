@@ -261,7 +261,7 @@
 
                                 <div class="form-element">
                                     <span class="meta-label"><b>Practice area</b></span>
-                                    <input class="form-control" data-ng-model="page.report.practice_extent" id="practice_extent" name="practice_extent" step="0.0001" type="number" placeholder="0" />
+                                    <input class="form-control" data-ng-model="page.selectedPractice.practice_extent" id="practice_extent" name="practice_extent" step="0.0001" type="number" placeholder="0" />
                                 </div>
 
                                 <div class="form-element">
@@ -280,7 +280,7 @@
 
                         <div style="margin: 0 0 4em;">
 
-                            <p style="font-style: normal; font-size: 1em; color: #616161;">The metrics listed here are associated with the <strong>{{ page.practice.name }}</strong> practice. Track implementation by entering a numeric value for one or more metrics. If you try to add a progress value that exceeds a metric’s baseline practice value, FieldDoc will cap the site target’s value for you.</p>
+                            <p style="font-style: normal; font-size: 1em; color: #616161;">The metrics listed here are associated with the <strong>{{ page.selectedPractice.name }}</strong> practice. Track implementation by entering a numeric value for one or more metrics. If you try to add a progress value that exceeds a metric’s baseline practice value, FieldDoc will cap the site target’s value for you.</p>
 
                             <br />
 
@@ -351,13 +351,14 @@
 
                     </div>
 
-                     <button class="summary-card close" type="button" data-ng-click="page.closeMetricModal()" title="Cancel"
+                     <button class="summary-card close" type="button" data-ng-click="page.closePracticeModal()" title="Cancel"
                                 style="
                                         position:   relative;
                                         display:    block;
                                         float:      right;
-                                        width:      25px;
-                                        height:     25px;
+                                        width:      10px;
+                                        height:     10px;
+                                        border:     0px solid white;
                                       "
                         >
                             <i class="material-icons">
