@@ -312,7 +312,7 @@
 
                             self.selectedPractice = practice;
 
-                            if(self.selectedPractice.report.id > 0){
+                            if(self.selectedPractice.report.id != null && self.selectedPractice.report.id > 0 ){
 
                                 console.log("SHOW EXISTING REPORT:",self.selectedPractice.report);
 
