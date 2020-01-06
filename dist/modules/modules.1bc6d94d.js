@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578323404167})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578323908761})
 
 ;
 /**
@@ -10045,7 +10045,9 @@ angular.module('FieldDoc')
 
                             console.log("Report Created",successResponse.id);
 
-                            self.loadMetrics(successResponse.id);
+                        self.loadMatrix(successResponse.id);
+
+                          //  self.loadMetrics(successResponse.id);
 
                     }, function(errorResponse) {
 
@@ -10100,6 +10102,8 @@ angular.module('FieldDoc')
 
                             self.addReading("Installation");
 
+
+
                             console.log("SELECTED PRACTICE", practice)
 
                         }
@@ -10107,6 +10111,37 @@ angular.module('FieldDoc')
                     });
 
                     self.displayModal = true;
+
+                };
+
+                self.loadMatrix = function(report_id) {
+
+                    //
+                    // Assign practice to a scoped variable
+                    //
+                    Report.targetMatrix({
+                        id: report_id,
+                        simple_bool: 'true'
+                    }).$promise.then(function(successResponse) {
+
+                        self.targets = successResponse;
+
+                        self.showElements();
+
+                    }).catch(function(errorResponse) {
+
+                        console.error('Unable to load report target matrix.');
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to load report metric targets.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
+                    });
 
                 };
 
