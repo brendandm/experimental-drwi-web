@@ -254,6 +254,8 @@
 
                      //   $location.path('/reports/' + successResponse.id + '/edit');
 
+                            console.log("Report Created",successResponse.id);
+
                             self.loadMetrics(successResponse.id);
 
                     }, function(errorResponse) {
