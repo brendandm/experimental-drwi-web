@@ -284,6 +284,8 @@
 
                             self.selectedPractice = practice;
 
+                            console.log("SELECTED PRACTICE", practice)
+
                         }
 
                     });
