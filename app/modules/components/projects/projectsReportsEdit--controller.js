@@ -244,10 +244,11 @@
                  self.addReading = function(measurementPeriod) {
 
                     var newReading = new Report({
-                        'measurement_period': 'Installation',
-                        'report_date': new Date(),
-                        'practice_id': self.selectedPractice.id,
-                        'organization_id': self.selectedPractice.organization_id
+                        'measurement_period'    : 'Installation',
+                        'report_date'           : new Date(),
+                        'practice_id'           : self.selectedPractice.id,
+                        'organization_id'       : self.selectedPractice.organization_id,
+                        'bundle_id'             : self.bundle.id
                     });
 
                     newReading.$save().then(function(successResponse) {
