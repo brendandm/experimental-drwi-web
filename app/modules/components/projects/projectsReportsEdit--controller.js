@@ -316,7 +316,7 @@
 
                             console.log(" self.selectedPractice", self.selectedPractice);
 
-                            if(self.selectedPractice.report.id === true){
+                            if(self.selectedPractice.report.id > 0){
                                 console.log("SHOW EXISTING REPORT:",self.selectedPractice.report);
                                  self.loadMatrix(self.selectedPractice.report.id);
                             }else{
