@@ -307,7 +307,7 @@
 
                             self.selectedPractice = practice;
 
-                            addReading("Installation");
+                            self.addReading("Installation");
 
                             console.log("SELECTED PRACTICE", practice)
 
