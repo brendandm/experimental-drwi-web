@@ -163,7 +163,8 @@
                                                     width: 156px;
                                                     text-align: center;
                                                   ">
-                                            <span style="text-align: center; border:1px solid pink; margin: 0 auto;"><nobr>Add Data</nobr></span>
+                                            <span ng-if="practice.report" style="text-align: center; border:1px solid pink; margin: 0 auto;"><nobr>Edit Data</nobr></span>
+                                            <span ng-if="!practice.report" style="text-align: center; border:1px solid pink; margin: 0 auto;"><nobr>Create Data</nobr></span>
                                         </button>
                                     </div>
 
