@@ -312,18 +312,18 @@
 
                             self.selectedPractice = practice;
 
-                            console.log("self.selectedPractice.report", self.selectedPractice.report);
-
-                            console.log(" self.selectedPractice", self.selectedPractice);
-
-                            console.log("self.selectedPractice.report.id",self.selectedPractice.report.id);
-
                             if(self.selectedPractice.report.id > 0){
+
                                 console.log("SHOW EXISTING REPORT:",self.selectedPractice.report);
-                                 self.loadMatrix(self.selectedPractice.report.id);
+
+                                self.loadMatrix(self.selectedPractice.report.id);
+
                             }else{
+
                                  console.log("CREATE REPORT");
+
                                 self.addReading("Installation");
+
                             }
 
 
