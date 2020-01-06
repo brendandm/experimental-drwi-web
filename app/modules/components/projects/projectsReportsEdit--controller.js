@@ -284,6 +284,8 @@
 
                             self.selectedPractice = practice;
 
+                            self.loadMetrics(p_id);
+
                             console.log("SELECTED PRACTICE", practice)
 
                         }
@@ -293,6 +295,35 @@
                     self.displayModal = true;
 
                 };
+
+                 self.loadMetrics = function(p_id) {
+
+                    Report.metrics({
+                        id: p_id
+                    }).$promise.then(function(successResponse) {
+
+                        console.log('Report metrics', successResponse);
+
+                        var _reportMetrics = [];
+
+                        successResponse.features.forEach(function(metric) {
+
+                            var datum = self.processMetric(metric);
+
+                            _reportMetrics.push(datum);
+
+                        });
+
+                        self.reportMetrics = _reportMetrics;
+
+                    }, function(errorResponse) {
+
+                        console.log('errorResponse', errorResponse);
+
+                    });
+
+                };
+
 
                  self.closePracticeModal = function(){
 
