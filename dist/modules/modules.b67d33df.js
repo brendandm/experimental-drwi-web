@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578320986221})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578322878845})
 
 ;
 /**
@@ -10030,6 +10030,29 @@ angular.module('FieldDoc')
 
                 };
 
+                 self.addReading = function(measurementPeriod) {
+
+                    var newReading = new Report({
+                        'measurement_period': 'Installation',
+                        'report_date': new Date(),
+                        'practice_id': self.selectedPractice.id,
+                        'organization_id': self.selectedPractice.organization_id
+                    });
+
+                    newReading.$save().then(function(successResponse) {
+
+                     //   $location.path('/reports/' + successResponse.id + '/edit');
+
+                            self.loadMetrics(successResponse.id);
+
+                    }, function(errorResponse) {
+
+                        console.error('ERROR: ', errorResponse);
+
+                    });
+
+                };
+
                 self.loadBundle = function(){
 
                     console.log("Loading Report");
@@ -10073,7 +10096,7 @@ angular.module('FieldDoc')
 
                             self.selectedPractice = practice;
 
-                            self.loadMetrics(p_id);
+                            addReading("Installation");
 
                             console.log("SELECTED PRACTICE", practice)
 
@@ -10085,7 +10108,9 @@ angular.module('FieldDoc')
 
                 };
 
-                 self.loadMetrics = function(p_id) {
+                 self.loadMetrics = function() {
+
+
 
                     Report.metrics({
                         id: p_id
