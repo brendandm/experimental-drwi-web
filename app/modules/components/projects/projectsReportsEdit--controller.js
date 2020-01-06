@@ -337,6 +337,8 @@
 
                         self.targets = successResponse;
 
+                        console.log("self.targets",self.targets);
+
                         self.showElements();
 
                     }).catch(function(errorResponse) {
