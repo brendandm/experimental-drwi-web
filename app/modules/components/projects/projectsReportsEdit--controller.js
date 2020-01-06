@@ -256,7 +256,9 @@
 
                             console.log("Report Created",successResponse.id);
 
-                            self.loadMetrics(successResponse.id);
+                        self.loadMatrix(successResponse.id);
+
+                          //  self.loadMetrics(successResponse.id);
 
                     }, function(errorResponse) {
 
@@ -311,6 +313,8 @@
 
                             self.addReading("Installation");
 
+
+
                             console.log("SELECTED PRACTICE", practice)
 
                         }
@@ -318,6 +322,37 @@
                     });
 
                     self.displayModal = true;
+
+                };
+
+                self.loadMatrix = function(report_id) {
+
+                    //
+                    // Assign practice to a scoped variable
+                    //
+                    Report.targetMatrix({
+                        id: report_id,
+                        simple_bool: 'true'
+                    }).$promise.then(function(successResponse) {
+
+                        self.targets = successResponse;
+
+                        self.showElements();
+
+                    }).catch(function(errorResponse) {
+
+                        console.error('Unable to load report target matrix.');
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Unable to load report metric targets.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
+                    });
 
                 };
 
