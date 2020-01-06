@@ -241,6 +241,29 @@
 
                 };
 
+                 self.addReading = function(measurementPeriod) {
+
+                    var newReading = new Report({
+                        'measurement_period': 'Installation',
+                        'report_date': new Date(),
+                        'practice_id': self.selectedPractice.id,
+                        'organization_id': self.selectedPractice.organization_id
+                    });
+
+                    newReading.$save().then(function(successResponse) {
+
+                     //   $location.path('/reports/' + successResponse.id + '/edit');
+
+                            self.loadMetrics(successResponse.id);
+
+                    }, function(errorResponse) {
+
+                        console.error('ERROR: ', errorResponse);
+
+                    });
+
+                };
+
                 self.loadBundle = function(){
 
                     console.log("Loading Report");
@@ -284,7 +307,7 @@
 
                             self.selectedPractice = practice;
 
-                            self.loadMetrics(p_id);
+                            addReading("Installation");
 
                             console.log("SELECTED PRACTICE", practice)
 
@@ -296,7 +319,9 @@
 
                 };
 
-                 self.loadMetrics = function(p_id) {
+                 self.loadMetrics = function() {
+
+
 
                     Report.metrics({
                         id: p_id
