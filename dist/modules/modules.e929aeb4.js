@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578322996967})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578323190062})
 
 ;
 /**
@@ -10108,12 +10108,10 @@ angular.module('FieldDoc')
 
                 };
 
-                 self.loadMetrics = function() {
-
-
+                 self.loadMetrics = function(report_id) {
 
                     Report.metrics({
-                        id: p_id
+                        id: report_id
                     }).$promise.then(function(successResponse) {
 
                         console.log('Report metrics', successResponse);
