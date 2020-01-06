@@ -312,7 +312,14 @@
 
                             self.selectedPractice = practice;
 
-                            self.addReading("Installation");
+                            if(self.selectedPractice.report){
+                                console.log("SHOW EXISTING REPORT:",self.selectedPractice.report);
+                                 self.loadMatrix(self.selectedPractice.report.id);
+                            }else{
+                                self.addReading("Installation");
+                            }
+
+
 
 
 
