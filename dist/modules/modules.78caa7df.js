@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578327999242})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578328744538})
 
 ;
 /**
@@ -10101,7 +10101,14 @@ angular.module('FieldDoc')
 
                             self.selectedPractice = practice;
 
-                            self.addReading("Installation");
+                            if(self.selectedPractice.report){
+                                console.log("SHOW EXISTING REPORT:",self.selectedPractice.report);
+                                 self.loadMatrix(self.selectedPractice.report.id);
+                            }else{
+                                self.addReading("Installation");
+                            }
+
+
 
 
 
