@@ -155,30 +155,59 @@
                                     <p>{{ (practice.description || 'No description') | truncate:80 }}</p>
 
                                      <div class="collection-filter-group">
-                                        <button data-ng-click="page.showPracticeModal(practice.id)" title="add data to practice {{practice.name}}"
+                                        <button  ng-if="practice.report"
+                                                 data-ng-click="page.showPracticeModal(practice.id)"
+                                                 title="add data to practice {{practice.name}}"
                                                 style="
                                                     margin: 0 auto;
                                                     background-color:#29cc82;
                                                     color: #ffffff;
                                                     width: 156px;
                                                     text-align: center;
-                                                  ">
-                                            <span ng-if="practice.report"
+                                                  "
+                                        >
+
+                                            <span
                                                   style="
                                                     text-align: center;
-                                                    border:1px solid pink;
+                                                    border:0px solid pink;
                                                     margin: 0 auto;
 "
-                                            ><nobr>Edit Metric Data</nobr></span>
-                                            <span ng-if="!practice.report"
+                                            >
+                                                <nobr>Edit Metric Data</nobr>
+
+                                            </span>
+
+
+                                        </button>
+                                         <button ng-if="!practice.report"
+                                                  data-ng-click="page.showPracticeModal(practice.id)"
+                                                  title="add data to practice {{practice.name}}"
+                                                style="
+                                                    margin: 0 auto;
+
+                                                    background-color: #3299cb;
+
+                                                    color: #ffffff;
+                                                    width: 156px;
+                                                    text-align: center;
+                                                  "
+                                         >
+
+
+                                             <span
                                                   style="
                                                     text-align: center;
-                                                    border:1px solid pink;
+                                                    border:0px solid pink;
                                                     margin: 0 auto;
-                                                    background-color: #3299cb;
+
                                                     "
                                             ><nobr>Add Metric Data</nobr></span>
                                         </button>
+
+
+
+
                                     </div>
 
                                     <div class="actions">
