@@ -55,9 +55,7 @@
                           autocomplete="off"
                           style="
                             border:     1px solid purple;
-                            display:    block;
-                            float:left;
-                            width:      100%;
+                            
                             margin:     0 auto;"
                         >
 
@@ -73,24 +71,45 @@
 
                             <div style="display:block; border: 0px solid green;">
 
-                                <div class="form-element" style="border:0px solid red; width: 31.1111%; float: right; display:inline-block;">
+                                <div class="form-element" style="
+                                    border:0px solid red;
+                                    width: 31.1111%;
+                                    float: right;
+                                    display:inline-block;"
+                                >
                                     <span class="meta-label"><b>Year</b></span>
                                     <input number type="number" min="1900" step="1" id="report_date_year" name="report_date_year" data-ng-model="page.date.year" />
                                 </div>
 
-                                <div class="form-element" style="border:0px solid red; width: 31.1111%; margin-left:3.3333%; margin-right:3.3333%; float: right; display:inline-block;">
+                                <div class="form-element" style="
+                                    border:0px solid red;
+                                    width: 31.1111%;
+                                    margin-left:3.3333%;
+                                    margin-right:3.3333%;
+                                    float: right;
+                                    display:inline-block;"
+                                >
                                     <span class="meta-label"><b>Month</b></span>
                                     <input id="report_date_month" name="report_date_month" type="text" value="page.date.month" data-ng-model="page.date.month" uib-typeahead="month.name for month in page.months | filter:$viewValue | limitTo:5" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html" required="required">
                                 </div>
 
-                                <div class="form-element" style="border:0px solid red; width: 31.1111%; float: right; display:inline-block;">
+                                <div class="form-element" style="
+                                        border:0px solid red;
+                                        width: 31.1111%;
+                                        float: right;
+                                        display:inline-block;"
+                                >
                                     <span class="meta-label"><b>Day</b></span>
                                     <input type="number" min="1" max="31" step="1" id="report_date_date" name="report_date_date" data-ng-model="page.date.date" />
                                 </div>
 
                             </div>
 
-                            <div class="form-element" style="clear:left; float:right; display: inline-block; border: 0px solid purple;">
+                            <div class="form-element" style="
+                               clear:left;
+                               float:right;
+                               display: inline-block;
+                               border: 0px solid purple;">
                                 <span class="meta-label" style="display: block;"><b>Notes</b></span>
                                 <textarea class="form-control" msd-elastic data-ng-model="page.bundle.notes" maxlength="1000" rows="10">{{ page.report.notes }}</textarea>
                                 <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
