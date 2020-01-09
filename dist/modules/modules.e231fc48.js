@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578505768030})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578595128368})
 
 ;
 /**
@@ -10189,6 +10189,71 @@ angular.module('FieldDoc')
                     });
 
                 };
+
+
+                self.processReport = function(data) {
+
+                    self.report = data;
+
+                    self.loadMetrics();
+
+                };
+
+                self.saveReport = function(metricArray) {
+
+                    self.status.processing = true;
+
+                    self.scrubFeature(self.report);
+
+                    if (self.date.month.numeric !== null &&
+                        typeof self.date.month.numeric === 'string') {
+
+                        self.report.report_date = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
+
+                    } else {
+
+                        self.report.report_date = self.date.year + '-' + self.date.month + '-' + self.date.date;
+
+                    }
+
+                    Report.update({
+                        id: self.report.id
+                    }, self.report).then(function(successResponse) {
+
+                        self.processReport(successResponse);
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Report changes saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
+                        self.loadMetrics();
+
+                        self.showElements();
+
+                    }).catch(function(errorResponse) {
+
+                        console.error('ERROR: ', errorResponse);
+
+                        self.alerts = [{
+                            'type': 'error',
+                            'flag': 'Error!',
+                            'msg': 'Report changes could not be saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
+                        self.showElements();
+
+                    });
+
+
+
 
 
                  self.closePracticeModal = function(){
