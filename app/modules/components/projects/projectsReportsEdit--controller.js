@@ -466,7 +466,53 @@
 
 
 
+                self.scrubFeature = function(feature) {
 
+                    var excludedKeys = [
+                        'creator',
+                        'geometry',
+                        'last_modified_by',
+                        'organization',
+                        'practice',
+                        'program',
+                        'project',
+                        'properties',
+                        'site',
+                        'status',
+                        'tags',
+                        'targets',
+                        'tasks',
+                        'users'
+                    ];
+
+                    var reservedProperties = [
+                        'links',
+                        'permissions',
+                        '$promise',
+                        '$resolved'
+                    ];
+
+                    excludedKeys.forEach(function(key) {
+
+                        if (feature.properties) {
+
+                            delete feature.properties[key];
+
+                        } else {
+
+                            delete feature[key];
+
+                        }
+
+                    });
+
+                    reservedProperties.forEach(function(key) {
+
+                        delete feature[key];
+
+                    });
+
+                };
 
                  self.closePracticeModal = function(){
 

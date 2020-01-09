@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578595329413})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578595568404})
 
 ;
 /**
@@ -10255,7 +10255,53 @@ angular.module('FieldDoc')
 
 
 
+                self.scrubFeature = function(feature) {
 
+                    var excludedKeys = [
+                        'creator',
+                        'geometry',
+                        'last_modified_by',
+                        'organization',
+                        'practice',
+                        'program',
+                        'project',
+                        'properties',
+                        'site',
+                        'status',
+                        'tags',
+                        'targets',
+                        'tasks',
+                        'users'
+                    ];
+
+                    var reservedProperties = [
+                        'links',
+                        'permissions',
+                        '$promise',
+                        '$resolved'
+                    ];
+
+                    excludedKeys.forEach(function(key) {
+
+                        if (feature.properties) {
+
+                            delete feature.properties[key];
+
+                        } else {
+
+                            delete feature[key];
+
+                        }
+
+                    });
+
+                    reservedProperties.forEach(function(key) {
+
+                        delete feature[key];
+
+                    });
+
+                };
 
                  self.closePracticeModal = function(){
 
