@@ -418,6 +418,10 @@
 
                 self.saveReport = function(metricArray) {
 
+                    console.log("REPORT", report);
+
+                    console.log("REPORT_ID", report.id);
+
                     self.status.processing = true;
 
                     self.scrubFeature(self.report);
