@@ -354,7 +354,9 @@
 
                         console.log("self.targets",self.targets);
 
-                         self.processReport(successResponse);
+                         self.report = successResponse;
+
+                     //   self.loadMetrics();
 
                         self.showElements();
 
