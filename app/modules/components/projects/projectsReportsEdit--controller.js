@@ -354,7 +354,11 @@
 
                         console.log("self.targets",self.targets);
 
+                         self.processReport(successResponse);
+
                         self.showElements();
+
+
 
                     }).catch(function(errorResponse) {
 
