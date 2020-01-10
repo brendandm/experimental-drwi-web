@@ -342,10 +342,11 @@
 
                 self.loadMatrix = function(report_id) {
 
+                    console.log("Report_id", report_id);
                     //
                     // Assign practice to a scoped variable
                     //
-                    Report.summary({
+                    Report.targetMatrix({
                         id: report_id,
                         simple_bool: 'true'
                     }).$promise.then(function(successResponse) {
@@ -358,6 +359,7 @@
 
                          self.report = successResponse;
 
+                         self.report.id = report_id;
                      //   self.loadMetrics();
 
                         self.showElements();
