@@ -385,6 +385,8 @@
 
                  self.loadMetrics = function(report_id) {
 
+                    console.log("Loading Metrics !!!!");
+
                     Report.metrics({
                         id: report_id
                     }).$promise.then(function(successResponse) {
@@ -416,7 +418,9 @@
 
                     self.report = data;
 
-                    self.loadMetrics();
+                    console.log("PROCESS REPORT", data);
+
+            //        self.loadMetrics(self.report.id);
 
                 };
 
@@ -456,7 +460,7 @@
 
                         $timeout(self.closeAlerts, 2000);
 
-                        self.loadMetrics();
+                 //       self.loadMetrics(self.report.id);
 
                         self.showElements();
 
