@@ -426,6 +426,63 @@
 
                 };
 
+                  self.saveTargets = function() {
+
+                    self.status.processing = true;
+
+                    // self.scrubFeature(self.report);
+
+                    var data = {
+                        targets: self.targets.active.slice(0)
+                    };
+
+                    self.targets.inactive.forEach(function(item) {
+
+                        if (item.action &&
+                            item.action === 'remove') {
+
+                            data.targets.push(item);
+
+                        }
+
+                    });
+
+                    Report.updateMatrix({
+                        id: +self.report.id
+                    }, data).$promise.then(function(successResponse) {
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Target changes saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
+                        self.status.processing = false;
+
+                    }).catch(function(error) {
+
+                        console.log('saveReport.error', error);
+
+                        // Do something with the error
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Something went wrong and the target changes were not saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
+                        self.status.processing = false;
+
+                    });
+
+                };
+
                 self.saveReport = function(metricArray) {
 
                     console.log("REPORT", self.report);
