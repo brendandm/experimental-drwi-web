@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578698131990})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578698501010})
 
 ;
 /**
@@ -10212,6 +10212,63 @@ angular.module('FieldDoc')
 
                     self.loadMatrix(self.report.id);
             //        self.loadMetrics(self.report.id);
+
+                };
+
+                  self.saveTargets = function() {
+
+                    self.status.processing = true;
+
+                    // self.scrubFeature(self.report);
+
+                    var data = {
+                        targets: self.targets.active.slice(0)
+                    };
+
+                    self.targets.inactive.forEach(function(item) {
+
+                        if (item.action &&
+                            item.action === 'remove') {
+
+                            data.targets.push(item);
+
+                        }
+
+                    });
+
+                    Report.updateMatrix({
+                        id: +self.report.id
+                    }, data).$promise.then(function(successResponse) {
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Target changes saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
+                        self.status.processing = false;
+
+                    }).catch(function(error) {
+
+                        console.log('saveReport.error', error);
+
+                        // Do something with the error
+
+                        self.alerts = [{
+                            'type': 'success',
+                            'flag': 'Success!',
+                            'msg': 'Something went wrong and the target changes were not saved.',
+                            'prompt': 'OK'
+                        }];
+
+                        $timeout(self.closeAlerts, 2000);
+
+                        self.status.processing = false;
+
+                    });
 
                 };
 
