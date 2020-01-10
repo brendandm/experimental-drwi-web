@@ -418,9 +418,9 @@
 
                 self.saveReport = function(metricArray) {
 
-                    console.log("REPORT", report);
+                    console.log("REPORT", self.report);
 
-                    console.log("REPORT_ID", report.id);
+                    console.log("REPORT_ID", self.report.id);
 
                     self.status.processing = true;
 
