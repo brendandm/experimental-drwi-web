@@ -354,6 +354,8 @@
 
                         console.log("self.targets",self.targets);
 
+                         console.log("targetMatrix", successResponse);
+
                          self.report = successResponse;
 
                      //   self.loadMetrics();
