@@ -345,7 +345,7 @@
                     //
                     // Assign practice to a scoped variable
                     //
-                    Report.targetMatrix({
+                    Report.summary({
                         id: report_id,
                         simple_bool: 'true'
                     }).$promise.then(function(successResponse) {
