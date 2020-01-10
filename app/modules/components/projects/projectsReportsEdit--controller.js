@@ -420,6 +420,8 @@
 
                     console.log("PROCESS REPORT", data);
 
+
+                    self.loadMatrix(self.report.id);
             //        self.loadMetrics(self.report.id);
 
                 };
@@ -460,6 +462,7 @@
 
                         $timeout(self.closeAlerts, 2000);
 
+                        self.loadMatrix(self.report.id);
                  //       self.loadMetrics(self.report.id);
 
                         self.showElements();
