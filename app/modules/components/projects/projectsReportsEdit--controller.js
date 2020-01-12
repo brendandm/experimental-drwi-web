@@ -468,6 +468,7 @@
                     });
 
                     console.log("TIGER",self.report);
+                    console.log("data",data);
 
                     Report.updateMatrix({
                         id: self.report.id
