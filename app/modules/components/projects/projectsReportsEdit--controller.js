@@ -479,6 +479,18 @@
                 };
 
 
+                self.removeAll = function() {
+
+                    self.targets.active.forEach(function(item) {
+
+                        self.targets.inactive.unshift(item);
+
+                    });
+
+                    self.targets.active = [];
+
+                };
+
 
                 self.saveTargets = function() {
 
