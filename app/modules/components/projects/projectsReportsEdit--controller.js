@@ -485,6 +485,9 @@
 
                         self.status.processing = false;
 
+                        console.log("data Success",successResponse)
+                     //   console.log(successResponse);
+
                     }).catch(function(error) {
 
                         console.log('saveReport.error', error);
