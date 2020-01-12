@@ -358,7 +358,7 @@
                          console.log("targetMatrix", successResponse);
 
                         if(self.targets.inactive.length > 0){
-                            self.targets.inactive.forEach(target,function(){
+                            self.targets.inactive.forEach(function(target){
                                 self.targets.active.push(target);
                             });
                             self.targets.inactive = [];
