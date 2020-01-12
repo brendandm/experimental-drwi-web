@@ -467,8 +467,10 @@
 
                     });
 
+                    console.log("TIGER",self.report);
+
                     Report.updateMatrix({
-                        id: +self.report.id
+                        id: self.report.id
                     }, data).$promise.then(function(successResponse) {
 
                         self.alerts = [{
