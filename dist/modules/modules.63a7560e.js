@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578794690464})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578794792808})
 
 ;
 /**
@@ -10147,9 +10147,9 @@ angular.module('FieldDoc')
                          console.log("targetMatrix", successResponse);
 
                         if(self.targets.inactive.length > 0){
-                            self.targets.inactive.forEach(target){
+                            self.targets.inactive.forEach(target,function(){
                                 self.targets.active.push(target);
-                            }
+                            });
                             self.targets.inactive = [];
                         }
 
