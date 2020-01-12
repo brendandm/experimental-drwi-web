@@ -364,7 +364,9 @@
                             self.targets.inactive = [];
                         }
 
-                        self.targets.active = self.targets.inactive;
+
+
+                      //  self.targets.active = self.targets.inactive;
 
                          self.report = successResponse;
 
