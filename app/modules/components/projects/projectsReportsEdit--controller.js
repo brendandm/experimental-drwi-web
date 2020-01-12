@@ -357,13 +357,13 @@
 
                          console.log("targetMatrix", successResponse);
 
-                        if(self.targets.inactive.length > 0){
+               /*         if(self.targets.inactive.length > 0){
                             self.targets.inactive.forEach(function(target){
                                 self.targets.active.push(target);
                             });
                             self.targets.inactive = [];
                         }
-
+                */
                         console.log("self.targets",self.targets);
 
                          console.log("targetMatrix", successResponse);
