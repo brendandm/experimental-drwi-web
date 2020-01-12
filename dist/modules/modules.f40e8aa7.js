@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578865813354})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578866261465})
 
 ;
 /**
@@ -10232,7 +10232,44 @@ angular.module('FieldDoc')
 
                 };
 
-                  self.saveTargets = function() {
+
+
+
+                self.addTarget = function(item, idx) {
+
+                    if (!item.value ||
+                        typeof item.value !== 'number') {
+
+                        item.value = 0;
+
+                    };
+
+                    if (typeof idx === 'number') {
+
+                        item.action = 'add';
+
+                        if (!item.metric ||
+                            typeof item.metric === 'undefined') {
+
+                            item.metric_id = item.id;
+
+                            delete item.id;
+
+                        }
+
+                        self.targets.inactive.splice(idx, 1);
+
+                        self.targets.active.push(item);
+
+                    }
+
+                    console.log('Updated targets (addition)');
+
+                };
+
+
+
+                self.saveTargets = function() {
 
                     self.status.processing = true;
 

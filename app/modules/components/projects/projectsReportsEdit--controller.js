@@ -443,7 +443,44 @@
 
                 };
 
-                  self.saveTargets = function() {
+
+
+
+                self.addTarget = function(item, idx) {
+
+                    if (!item.value ||
+                        typeof item.value !== 'number') {
+
+                        item.value = 0;
+
+                    };
+
+                    if (typeof idx === 'number') {
+
+                        item.action = 'add';
+
+                        if (!item.metric ||
+                            typeof item.metric === 'undefined') {
+
+                            item.metric_id = item.id;
+
+                            delete item.id;
+
+                        }
+
+                        self.targets.inactive.splice(idx, 1);
+
+                        self.targets.active.push(item);
+
+                    }
+
+                    console.log('Updated targets (addition)');
+
+                };
+
+
+
+                self.saveTargets = function() {
 
                     self.status.processing = true;
 
