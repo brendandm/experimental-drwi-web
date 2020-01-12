@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578863034960})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578863370044})
 
 ;
 /**
@@ -10153,7 +10153,9 @@ angular.module('FieldDoc')
                             self.targets.inactive = [];
                         }
 
+                        console.log("self.targets",self.targets);
 
+                         console.log("targetMatrix", successResponse);
 
                       //  self.targets.active = self.targets.inactive;
 
@@ -10161,6 +10163,10 @@ angular.module('FieldDoc')
 
                          self.report.id = report_id;
                      //   self.loadMetrics();
+
+                        console.log("SMURF");
+
+                        console.log("self.report",self.report);
 
                         self.showElements();
 

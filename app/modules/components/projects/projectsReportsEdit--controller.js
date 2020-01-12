@@ -364,7 +364,9 @@
                             self.targets.inactive = [];
                         }
 
+                        console.log("self.targets",self.targets);
 
+                         console.log("targetMatrix", successResponse);
 
                       //  self.targets.active = self.targets.inactive;
 
@@ -372,6 +374,10 @@
 
                          self.report.id = report_id;
                      //   self.loadMetrics();
+
+                        console.log("SMURF");
+
+                        console.log("self.report",self.report);
 
                         self.showElements();
 
