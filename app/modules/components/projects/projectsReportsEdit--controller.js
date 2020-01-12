@@ -357,6 +357,15 @@
 
                          console.log("targetMatrix", successResponse);
 
+                        if(self.targets.inactive.length > 0){
+                            self.targets.inactive.forEach(target){
+                                self.targets.active.push(target);
+                            }
+                            self.targets.inactive = [];
+                        }
+
+                        self.targets.active = self.targets.inactive;
+
                          self.report = successResponse;
 
                          self.report.id = report_id;
