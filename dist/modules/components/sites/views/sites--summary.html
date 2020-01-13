@@ -190,8 +190,8 @@
                                 </tr>
                             </thead>
 
-                            <tbody class="metrics">
-                                <tr class="metrics--metric" data-ng-repeat="metric in page.metrics.generic track by $index" data-ng-click="page.showMetricModal(metric)">
+                            <tbody class="metrics" data-ng-repeat="metric in page.metrics.generic track by $index" >
+                                <tr class="metrics--metric" data-ng-click="page.showMetricModal(metric)">
                                     <td class="table-column-wide">
                                         <p class="metric--title">
                                             {{ metric.name }}
@@ -217,7 +217,7 @@
                                         </progress-arc>
                                     </td>
                                 </tr>
-                                <tr class="metrics--metric" style="opacity: 0.72;" data-ng-repeat="geography in metric.geographies">
+                                 <tr class="metrics--metric" style="opacity: 0.72;" data-ng-repeat="geography in metric.geographies">
                                         <td class="table-column-wide">
                                             <a class="metric--title" style="display: flex; flex-flow: row nowrap; align-items: center; padding-left: 2em;" data-ng-href="/geographies/{{ geography.id }}">
                                                 <i class="material-icons">
@@ -247,7 +247,10 @@
                                                 background="rgba(0,0,0,0.2)">
                                             </progress-arc>
                                         </td>
-                                    </tr>
+                                </tr>
+
+
+
                             </tbody>
 
                         </table>
