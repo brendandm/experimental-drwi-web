@@ -184,13 +184,11 @@
 
                     console.log("DATE NOW",Date.now());
 
-                    // Here a date has been assigned
-                    // while creating Date object
-                    var dateobj = Date();
+                   var d = new Date();
+                   var n = d.toISOString();
 
-                    // Contents of above date object is converted
-                    // into a string using toISOString() function.
-                    var date = dateobj.toISOString();
+                    console.log(d);
+                    console.log(n);
 
 
                     Report.createReportBundle(
@@ -198,7 +196,7 @@
                           //  "title": "I eat food",
                            // "notes": "Cats are super",
                            // "date": "2019-12-09",
-                            "date": date,
+                            "date": n,
                             "organization_id": self.project.organization_id,
                             "project_id": self.project.id,
                             "program_id": program_id

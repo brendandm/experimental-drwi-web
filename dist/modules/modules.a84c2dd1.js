@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578882565088})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578882816801})
 
 ;
 /**
@@ -9700,13 +9700,11 @@ angular.module('FieldDoc')
 
                     console.log("DATE NOW",Date.now());
 
-                    // Here a date has been assigned
-                    // while creating Date object
-                    var dateobj = Date();
+                   var d = new Date();
+                   var n = d.toISOString();
 
-                    // Contents of above date object is converted
-                    // into a string using toISOString() function.
-                    var date = dateobj.toISOString();
+                    console.log(d);
+                    console.log(n);
 
 
                     Report.createReportBundle(
@@ -9714,7 +9712,7 @@ angular.module('FieldDoc')
                           //  "title": "I eat food",
                            // "notes": "Cats are super",
                            // "date": "2019-12-09",
-                            "date": date,
+                            "date": n,
                             "organization_id": self.project.organization_id,
                             "project_id": self.project.id,
                             "program_id": program_id
