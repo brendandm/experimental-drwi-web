@@ -187,6 +187,7 @@
                           //  "title": "I eat food",
                            // "notes": "Cats are super",
                            // "date": "2019-12-09",
+                           "date": Date.now();
                             "organization_id": self.project.organization_id,
                             "project_id": self.project.id,
                             "program_id": program_id
