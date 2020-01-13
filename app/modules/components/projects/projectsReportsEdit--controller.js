@@ -299,6 +299,10 @@
 
                 };
 
+                function parseISOLike(s) {
+                    var b = s.split(/\D/);
+                    return new Date(b[0], b[1] - 1, b[2]);
+                }
 
                 self.showPracticeModal = function(p_id){
 
@@ -311,6 +315,8 @@
                         if(practice.id == p_id){
 
                             self.selectedPractice = practice;
+
+                            self.selectedReport.date = parseISOLike(self.selectedPractice.report.created_on);
 
                             if(self.selectedPractice.report != undefined ){
 

@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578898322168})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578899094609})
 
 ;
 /**
@@ -10098,6 +10098,10 @@ angular.module('FieldDoc')
 
                 };
 
+                function parseISOLike(s) {
+                    var b = s.split(/\D/);
+                    return new Date(b[0], b[1] - 1, b[2]);
+                }
 
                 self.showPracticeModal = function(p_id){
 
@@ -10110,6 +10114,8 @@ angular.module('FieldDoc')
                         if(practice.id == p_id){
 
                             self.selectedPractice = practice;
+
+                            self.selectedReport.date = parseISOLike(self.selectedPractice.report.created_on);
 
                             if(self.selectedPractice.report != undefined ){
 
