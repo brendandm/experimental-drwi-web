@@ -217,6 +217,37 @@
                                         </progress-arc>
                                     </td>
                                 </tr>
+                                <tr class="metrics--metric" style="opacity: 0.72;" data-ng-repeat="geography in metric.geographies">
+                                        <td class="table-column-wide">
+                                            <a class="metric--title" style="display: flex; flex-flow: row nowrap; align-items: center; padding-left: 2em;" data-ng-href="/geographies/{{ geography.id }}">
+                                                <i class="material-icons">
+                                                    public
+                                                </i>
+                                                &nbsp;
+                                                {{ geography.name }}
+                                                <span data-ng-if="geography.category">&nbsp;&middot; {{ geography.category }}</span>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <strong class="metrics--metric--rollup--small">{{ metric.current_value | number:2 }}</strong> <span class="metrics--metric--rollup--label">{{ metric.unit.plural }}</span><br />
+                                                <span class="metrics--metric--rollup--label" data-ng-if="model.datum.show_progress || metric.show_progress">of {{ geography.target | number:2 }}</span>
+                                        </td>
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                            <strong class="metrics--metric--percentage">
+                                                {{ geography.progress | number:1 }}%
+                                            </strong>
+                                        </td>
+                                        <td data-ng-if="model.datum.show_progress || metric.show_progress">
+                                            <progress-arc
+                                                size="32"
+                                                stroke="#2196F3"
+                                                stroke-width="4"
+                                                complete="geography.arc_value"
+                                                counter-clockwise="false"
+                                                background="rgba(0,0,0,0.2)">
+                                            </progress-arc>
+                                        </td>
+                                    </tr>
                             </tbody>
 
                         </table>
