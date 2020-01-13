@@ -583,6 +583,8 @@
                         id: self.report.id
                     }, self.report).then(function(successResponse) {
 
+                        console.log("REPORT UPDATE", successResponse);
+
                         self.processReport(successResponse);
 
                         self.alerts = [{
