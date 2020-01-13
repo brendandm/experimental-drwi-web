@@ -186,7 +186,7 @@
 
                     // Here a date has been assigned
                     // while creating Date object
-                    var dateobj = new Date.now();
+                    var dateobj = Date.now();
 
                     // Contents of above date object is converted
                     // into a string using toISOString() function.
