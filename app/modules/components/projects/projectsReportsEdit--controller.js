@@ -558,7 +558,7 @@
 
                 };
 
-                self.saveReport = function(metricArray) {
+                self.saveReport = function() {
 
                     console.log("REPORT", self.report);
 
@@ -566,7 +566,7 @@
 
                     self.status.processing = true;
 
-                    self.scrubFeature(self.report);
+                 //   self.scrubFeature(self.report);
 
                     if (self.date.month.numeric !== null &&
                         typeof self.date.month.numeric === 'string') {
