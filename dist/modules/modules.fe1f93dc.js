@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578878679055})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1578879069195})
 
 ;
 /**
@@ -9698,12 +9698,14 @@ angular.module('FieldDoc')
 
                     console.log("Add Report to program id# "+program_id);
 
+                    console.log("DATE NOW",Date.now());
+
                     Report.createReportBundle(
                         {
                           //  "title": "I eat food",
                            // "notes": "Cats are super",
                            // "date": "2019-12-09",
-                           "date": Date.now(),
+                            "date": Date.now(),
                             "organization_id": self.project.organization_id,
                             "project_id": self.project.id,
                             "program_id": program_id
