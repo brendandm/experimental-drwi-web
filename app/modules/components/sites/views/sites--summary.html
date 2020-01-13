@@ -140,8 +140,8 @@
                                     </tr>
                                 </thead>
 
-                                <tbody class="metrics">
-                                    <tr class="metrics--metric" data-ng-repeat="metric in model.collection track by $index" data-ng-click="page.showMetricModal(metric)">
+                                <tbody class="metrics" data-ng-repeat="metric in model.collection track by $index">
+                                    <tr class="metrics--metric" data-ng-click="page.showMetricModal(metric)">
                                         <td class="table-column-wide">
                                             <p class="metric--title">
                                                 {{ metric.name }}
