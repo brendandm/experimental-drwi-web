@@ -594,7 +594,7 @@
 
                         $timeout(self.closeAlerts, 2000);
 
-                        self.saveTargets();
+                 //       self.saveTargets();
 
                  //       self.loadMatrix(self.report.id);
                  //       self.loadMetrics(self.report.id);
