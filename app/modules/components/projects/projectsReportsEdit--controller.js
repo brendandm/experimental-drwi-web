@@ -592,9 +592,13 @@
 
                         self.report.report_date = self.reportDate.year + '-' + self.reportDate.month.numeric + '-' + self.reportDate.date;
 
+                        self.selectedPractice.date =  self.report.report_date;
+
                     } else {
 
                         self.report.report_date = self.reportDate.year + '-' + self.reportDate.month + '-' + self.reportDate.date;
+
+                        self.selectedPractice.date =  self.report.report_date;
 
                     }
 
