@@ -318,7 +318,7 @@
 
                             self.selectedPractice.date = parseISOLike(self.selectedPractice.report.report_date);
 
-                            console.log("SELECTED PRACTICE YO YO YO", self.selectedReport);
+                            console.log("SELECTED PRACTICE YO YO YO", self.selectedPractice);
 
 
                             if(self.selectedPractice.report != undefined ){
