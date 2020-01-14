@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579036177098})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579036664581})
 
 ;
 /**
@@ -10119,6 +10119,14 @@ angular.module('FieldDoc')
 
                             console.log("SELECTED PRACTICE YO YO YO", self.selectedPractice);
 
+                            self.reportDate = {
+                                month: self.months[self.selectedPractice.date.getMonth()],
+                                date: self.selectedPractice.date.getDate(),
+                                day: self.days[self.selectedPractice.date.getDay()],
+                                year: self.selectedPractice.date.getFullYear()
+                            };
+
+                            console.log("self.reportDate",self.reportDate);
 
                             if(self.selectedPractice.report != undefined ){
 

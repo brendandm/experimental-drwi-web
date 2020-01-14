@@ -320,6 +320,14 @@
 
                             console.log("SELECTED PRACTICE YO YO YO", self.selectedPractice);
 
+                            self.reportDate = {
+                                month: self.months[self.selectedPractice.date.getMonth()],
+                                date: self.selectedPractice.date.getDate(),
+                                day: self.days[self.selectedPractice.date.getDay()],
+                                year: self.selectedPractice.date.getFullYear()
+                            };
+
+                            console.log("self.reportDate",self.reportDate);
 
                             if(self.selectedPractice.report != undefined ){
 
