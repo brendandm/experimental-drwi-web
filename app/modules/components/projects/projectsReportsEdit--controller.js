@@ -331,14 +331,14 @@
 
                             console.log("SELECTED PRACTICE YO YO YO", self.selectedPractice);
 
-                        /*    self.reportDate = {
+                            self.reportDate = {
                                 month: self.months[self.selectedPractice.date.getMonth()],
                                 date: self.selectedPractice.date.getDate(),
                                 day: self.days[self.selectedPractice.date.getDay()],
                                 year: self.selectedPractice.date.getFullYear()
                             };
-                    */
-                            self.reportDate = self.formatDate(self.selectedPractice.date);
+
+                    //        self.reportDate = self.formatDate(self.selectedPractice.date);
 
                             console.log("self.reportDate",self.reportDate);
 
@@ -615,6 +615,13 @@
 
                     }
 
+                    self.reportDate = {
+                                month: self.months[self.selectedPractice.date.getMonth()],
+                                date: self.selectedPractice.date.getDate(),
+                                day: self.days[self.selectedPractice.date.getDay()],
+                                year: self.selectedPractice.date.getFullYear()
+                            };
+
                     Report.update({
                         id: self.report.id
                     }, self.report).then(function(successResponse) {
@@ -625,7 +632,9 @@
 
                         self.processReport(successResponse);
 
-                        self.reportDate = self.formatDate(self.selectedPractice.date);
+                 //       self.reportDate = self.formatDate(self.selectedPractice.date);
+
+
 
                         self.alerts = [{
                             'type': 'success',
