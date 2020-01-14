@@ -590,11 +590,11 @@
                     if (self.date.month.numeric !== null &&
                         typeof self.date.month.numeric === 'string') {
 
-                        self.report.report_date = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
+                        self.report.report_date = self.reportDate.year + '-' + self.reportDate.month.numeric + '-' + self.reportDate.date;
 
                     } else {
 
-                        self.report.report_date = self.date.year + '-' + self.date.month + '-' + self.date.date;
+                        self.report.report_date = self.reportDate.year + '-' + self.reportDate.month + '-' + self.reportDate.date;
 
                     }
 

@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579037085588})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579037380286})
 
 ;
 /**
@@ -10389,11 +10389,11 @@ angular.module('FieldDoc')
                     if (self.date.month.numeric !== null &&
                         typeof self.date.month.numeric === 'string') {
 
-                        self.report.report_date = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
+                        self.report.report_date = self.reportDate.year + '-' + self.reportDate.month.numeric + '-' + self.reportDate.date;
 
                     } else {
 
-                        self.report.report_date = self.date.year + '-' + self.date.month + '-' + self.date.date;
+                        self.report.report_date = self.reportDate.year + '-' + self.reportDate.month + '-' + self.reportDate.date;
 
                     }
 
