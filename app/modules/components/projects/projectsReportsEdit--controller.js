@@ -304,6 +304,17 @@
                     return new Date(b[0], b[1] - 1, b[2]);
                 }
 
+                self.formatDate = function(rawDate){
+                    var formattedDate = {
+                                month: self.months[rawDate.getMonth()],
+                                date: rawDate.getDate(),
+                                day: rawDate.getDay()],
+                                year: rawDate.getFullYear()
+                    }
+
+                    return formattedDate;
+                }
+
                 self.showPracticeModal = function(p_id){
 
                     console.log("SHOW PRACTICE "+p_id);
@@ -320,12 +331,14 @@
 
                             console.log("SELECTED PRACTICE YO YO YO", self.selectedPractice);
 
-                            self.reportDate = {
+                        /*    self.reportDate = {
                                 month: self.months[self.selectedPractice.date.getMonth()],
                                 date: self.selectedPractice.date.getDate(),
                                 day: self.days[self.selectedPractice.date.getDay()],
                                 year: self.selectedPractice.date.getFullYear()
                             };
+                    */
+                            self.reportDate = self.formatDate(self.selectedPractice.date);
 
                             console.log("self.reportDate",self.reportDate);
 
@@ -611,6 +624,8 @@
                         console.log("REPORT UPDATE", successResponse);
 
                         self.processReport(successResponse);
+
+                        self.reportDate = self.formatDate(self.selectedPractice.date);
 
                         self.alerts = [{
                             'type': 'success',

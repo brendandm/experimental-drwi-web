@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579037911919})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579044845061})
 
 ;
 /**
@@ -10103,6 +10103,17 @@ angular.module('FieldDoc')
                     return new Date(b[0], b[1] - 1, b[2]);
                 }
 
+                self.formatDate = function(rawDate){
+                    var formattedDate = {
+                                month: self.months[rawDate.getMonth()],
+                                date: rawDate.getDate(),
+                                day: rawDate.getDay()],
+                                year: rawDate.getFullYear()
+                    }
+
+                    return formattedDate;
+                }
+
                 self.showPracticeModal = function(p_id){
 
                     console.log("SHOW PRACTICE "+p_id);
@@ -10119,12 +10130,14 @@ angular.module('FieldDoc')
 
                             console.log("SELECTED PRACTICE YO YO YO", self.selectedPractice);
 
-                            self.reportDate = {
+                        /*    self.reportDate = {
                                 month: self.months[self.selectedPractice.date.getMonth()],
                                 date: self.selectedPractice.date.getDate(),
                                 day: self.days[self.selectedPractice.date.getDay()],
                                 year: self.selectedPractice.date.getFullYear()
                             };
+                    */
+                            self.reportDate = self.formatDate(self.selectedPractice.date);
 
                             console.log("self.reportDate",self.reportDate);
 
@@ -10410,6 +10423,8 @@ angular.module('FieldDoc')
                         console.log("REPORT UPDATE", successResponse);
 
                         self.processReport(successResponse);
+
+                        self.reportDate = self.formatDate(self.selectedPractice.date);
 
                         self.alerts = [{
                             'type': 'success',
