@@ -318,6 +318,9 @@
 
                             self.selectedReport.date = parseISOLike(self.selectedPractice.report.created_on);
 
+                            console.log("SELECTED PRACTICE YO YO YO", self.selectedReport);
+
+
                             if(self.selectedPractice.report != undefined ){
 
                                 console.log("SHOW EXISTING REPORT:",self.selectedPractice.report);
