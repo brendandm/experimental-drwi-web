@@ -622,6 +622,8 @@
                                 year: self.selectedPractice.date.getFullYear()
                             };
 
+                    console.log("UPDATE REPORT DATE",self.reportDate);
+
                     Report.update({
                         id: self.report.id
                     }, self.report).then(function(successResponse) {
