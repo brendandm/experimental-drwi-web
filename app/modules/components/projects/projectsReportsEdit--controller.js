@@ -316,7 +316,7 @@
 
                             self.selectedPractice = practice;
 
-                            self.selectedPractice.date = parseISOLike(self.selectedPractice.report.created_on);
+                            self.selectedPractice.date = parseISOLike(self.selectedPractice.report.report_date);
 
                             console.log("SELECTED PRACTICE YO YO YO", self.selectedReport);
 
