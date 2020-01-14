@@ -308,7 +308,7 @@
                     var formattedDate = {
                                 month: self.months[rawDate.getMonth()],
                                 date: rawDate.getDate(),
-                                day: rawDate.getDay()],
+                                day: self.days[rawDate.getDay()],
                                 year: rawDate.getFullYear()
                     }
 
