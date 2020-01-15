@@ -635,7 +635,7 @@
                     console.log(self.report.id);
                     console.log(self.report);
 
-                    report.update({
+                    Report.update({
                         id: self.report.id
                     }, self.report).then(function(successResponse) {
 
