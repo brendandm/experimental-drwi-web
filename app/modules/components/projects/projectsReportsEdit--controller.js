@@ -691,6 +691,50 @@
 
                     console.log("SAVE THAT BUNDLE !!!");
 
+
+                    Report.updateBundle({
+                        id: self.bundle.id
+                        }, data).$promise.then(function(successResponse) {
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Changes saved.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(self.closeAlerts, 2000);
+
+                            self.status.processing = false;
+
+                            console.log("data Success",successResponse)
+                         //   console.log(successResponse);
+
+                        }).catch(function(error) {
+
+                            console.log('saveReport.error', error);
+
+                            // Do something with the error
+
+                            self.alerts = [{
+                                'type': 'success',
+                                'flag': 'Success!',
+                                'msg': 'Something went wrong and the changes were not saved.',
+                                'prompt': 'OK'
+                            }];
+
+                            $timeout(self.closeAlerts, 2000);
+
+                            self.status.processing = false;
+
+                        });
+
+                    };
+
+
+
+
+
                 }
 
 
