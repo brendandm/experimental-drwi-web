@@ -327,9 +327,13 @@
 
                             self.selectedPractice = practice;
 
-                            self.selectedPractice.date = parseISOLike(self.selectedPractice.report.report_date);
+                            if(selectedPractice.date == undefined){
+                                self.selectedPractice.date = parseISOLike(self.selectedPractice.report.report_date);
+                            }
 
                             console.log("SELECTED PRACTICE YO YO YO", self.selectedPractice);
+
+
 
                             self.reportDate = {
                                 month: self.months[self.selectedPractice.date.getMonth()],
