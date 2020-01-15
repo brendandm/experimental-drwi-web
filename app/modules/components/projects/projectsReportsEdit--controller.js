@@ -676,7 +676,11 @@
                     });
                 }
 
+                self.saveBundle = function(){
 
+                    console.log("SAVE THAT BUNDLE !!!");
+
+                }
 
                 self.scrubFeature = function(feature) {
 
