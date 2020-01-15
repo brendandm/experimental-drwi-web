@@ -631,6 +631,10 @@
 
                     console.log("UPDATE REPORT DATE",self.reportDate);
 
+                    console.log("YELLOW");
+                    console.log(self.report.id);
+                    console.log(self.report);
+
                     Report.update({
                         id: self.report.id
                     }, self.report).then(function(successResponse) {
