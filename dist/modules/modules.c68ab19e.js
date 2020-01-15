@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579062458214})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579062830696})
 
 ;
 /**
@@ -10127,6 +10127,8 @@ angular.module('FieldDoc')
                             self.selectedPractice = practice;
 
                             self.report = self.selectedPractice.report;
+
+                            console.log("I AM A REPORT", self.report);
 
                             if(self.selectedPractice.date == undefined){
                                 self.selectedPractice.date = parseISOLike(self.selectedPractice.report.report_date);

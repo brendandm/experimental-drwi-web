@@ -329,6 +329,8 @@
 
                             self.report = self.selectedPractice.report;
 
+                            console.log("I AM A REPORT", self.report);
+
                             if(self.selectedPractice.date == undefined){
                                 self.selectedPractice.date = parseISOLike(self.selectedPractice.report.report_date);
                             }
