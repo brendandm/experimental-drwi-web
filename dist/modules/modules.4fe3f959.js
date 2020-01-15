@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579064762352})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579064947245})
 
 ;
 /**
@@ -10208,7 +10208,7 @@ angular.module('FieldDoc')
                          console.log("targetMatrix", successResponse);
 
 
-                         self.report = successResponse;
+                 //        self.report = successResponse;
 
                          self.report.id = report_id;
 
@@ -10434,7 +10434,7 @@ angular.module('FieldDoc')
                     console.log(self.report.id);
                     console.log(self.report);
 
-                    Report.update({
+                    report.update({
                         id: self.report.id
                     }, self.report).then(function(successResponse) {
 
