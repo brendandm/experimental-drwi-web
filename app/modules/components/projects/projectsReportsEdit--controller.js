@@ -333,7 +333,12 @@
                             console.log("I AM A REPORT", self.report);
 
                             if(self.selectedPractice.date == undefined){
-                                self.selectedPractice.date = parseISOLike(self.selectedPractice.report.report_date);
+                                if(self.selectedPractice.report != undefined){
+                                    self.selectedPractice.date = parseISOLike(self.selectedPractice.report.report_date);
+                                }else{
+                                    self.selectedPractice.date = new Date();
+                                }
+
                             }
 
                             console.log("SELECTED PRACTICE YO YO YO", self.selectedPractice);
