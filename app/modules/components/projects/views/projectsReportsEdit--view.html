@@ -441,13 +441,13 @@
                             <span class="meta-label"><b>Notes</b></span>
                             <textarea class="form-control"
                                       msd-elastic
-                                      data-ng-model="page.report.notes"
+                                      data-ng-model="page.selectedPractice.report.notes"
                                       maxlength="1000" rows="10"
                                       style="
                                         background-color:#ffffff;
                                         "
                             >
-                                {{ page.report.notes }}</textarea>
+                                {{ page.selectedPractice.report.notes }}</textarea>
                             <p style="color: #616161; font-size: 0.9em; font-style: normal; margin-top: 0.5em;">
                                 Notes may contain up to 1,000 characters, including spaces and punctuation. <strong>({{ (page.report.notes.length || 0) | number }} used)</strong>
                             </p>
