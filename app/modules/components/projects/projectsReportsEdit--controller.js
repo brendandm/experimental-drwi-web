@@ -257,6 +257,8 @@
 
                             console.log("Report Created",successResponse.id);
 
+                    self.report = successResponse;
+
                         self.loadMatrix(successResponse.id);
 
                           //  self.loadMetrics(successResponse.id);
