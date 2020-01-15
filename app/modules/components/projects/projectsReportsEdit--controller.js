@@ -409,7 +409,7 @@
                          console.log("targetMatrix", successResponse);
 
 
-                         self.report = successResponse;
+                 //        self.report = successResponse;
 
                          self.report.id = report_id;
 
@@ -477,7 +477,7 @@
                     console.log("PROCESS REPORT", data);
 
 
-                    self.loadMatrix(self.report.id);
+             //       self.loadMatrix(self.report.id);
             //        self.loadMetrics(self.report.id);
 
                 };
