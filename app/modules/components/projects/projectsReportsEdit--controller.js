@@ -327,7 +327,7 @@
 
                             self.selectedPractice = practice;
 
-                            if(selectedPractice.date == undefined){
+                            if(self.selectedPractice.date == undefined){
                                 self.selectedPractice.date = parseISOLike(self.selectedPractice.report.report_date);
                             }
 
