@@ -315,6 +315,7 @@
                     return formattedDate;
                 }
 
+
                 self.showPracticeModal = function(p_id){
 
                     console.log("SHOW PRACTICE "+p_id);
@@ -378,6 +379,7 @@
 
                 };
 
+
                 self.loadMatrix = function(report_id) {
 
                     console.log("Report_id", report_id);
@@ -409,7 +411,7 @@
                          console.log("targetMatrix", successResponse);
 
                 // HERE - HERE
-                //         self.report = successResponse;
+                         self.report = successResponse;
 
                          self.report.id = report_id;
 
@@ -436,7 +438,7 @@
 
                 };
 
-                 self.loadMetrics = function(report_id) {
+                self.loadMetrics = function(report_id) {
 
                     console.log("Loading Metrics !!!!");
 
@@ -480,8 +482,6 @@
                 };
 
 
-
-
                 self.addTarget = function(item, idx) {
 
                     if (!item.value ||
@@ -513,7 +513,6 @@
                     console.log('Updated targets (addition)');
 
                 };
-
 
                 self.removeAll = function() {
 
@@ -594,6 +593,8 @@
 
                 };
 
+
+
                 self.saveReport = function() {
 
                     console.log("REPORT", self.report);
@@ -628,7 +629,6 @@
 
                     console.log("UPDATE REPORT DATE",self.reportDate);
 
-                    console.log("YELLOW");
                     console.log(self.report.id);
                     console.log(self.report);
 
@@ -686,6 +686,8 @@
 
                 }
 
+
+
                 self.scrubFeature = function(feature) {
 
                     var excludedKeys = [
@@ -734,15 +736,15 @@
 
                 };
 
-                 self.closePracticeModal = function(){
+
+
+                self.closePracticeModal = function(){
 
                     console.log("CLOSE PRACTICE ");
 
                     self.displayModal = false;
 
                 };
-
-
 
 
 

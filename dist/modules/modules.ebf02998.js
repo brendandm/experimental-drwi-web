@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579098547663})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579099185744})
 
 ;
 /**
@@ -10114,6 +10114,7 @@ angular.module('FieldDoc')
                     return formattedDate;
                 }
 
+
                 self.showPracticeModal = function(p_id){
 
                     console.log("SHOW PRACTICE "+p_id);
@@ -10177,6 +10178,7 @@ angular.module('FieldDoc')
 
                 };
 
+
                 self.loadMatrix = function(report_id) {
 
                     console.log("Report_id", report_id);
@@ -10208,7 +10210,7 @@ angular.module('FieldDoc')
                          console.log("targetMatrix", successResponse);
 
                 // HERE - HERE
-                //         self.report = successResponse;
+                         self.report = successResponse;
 
                          self.report.id = report_id;
 
@@ -10235,7 +10237,7 @@ angular.module('FieldDoc')
 
                 };
 
-                 self.loadMetrics = function(report_id) {
+                self.loadMetrics = function(report_id) {
 
                     console.log("Loading Metrics !!!!");
 
@@ -10279,8 +10281,6 @@ angular.module('FieldDoc')
                 };
 
 
-
-
                 self.addTarget = function(item, idx) {
 
                     if (!item.value ||
@@ -10312,7 +10312,6 @@ angular.module('FieldDoc')
                     console.log('Updated targets (addition)');
 
                 };
-
 
                 self.removeAll = function() {
 
@@ -10393,6 +10392,8 @@ angular.module('FieldDoc')
 
                 };
 
+
+
                 self.saveReport = function() {
 
                     console.log("REPORT", self.report);
@@ -10427,7 +10428,6 @@ angular.module('FieldDoc')
 
                     console.log("UPDATE REPORT DATE",self.reportDate);
 
-                    console.log("YELLOW");
                     console.log(self.report.id);
                     console.log(self.report);
 
@@ -10485,6 +10485,8 @@ angular.module('FieldDoc')
 
                 }
 
+
+
                 self.scrubFeature = function(feature) {
 
                     var excludedKeys = [
@@ -10533,15 +10535,15 @@ angular.module('FieldDoc')
 
                 };
 
-                 self.closePracticeModal = function(){
+
+
+                self.closePracticeModal = function(){
 
                     console.log("CLOSE PRACTICE ");
 
                     self.displayModal = false;
 
                 };
-
-
 
 
 
