@@ -411,7 +411,7 @@
                          console.log("targetMatrix", successResponse);
 
                 // HERE - HERE
-                         self.report = successResponse;
+                 //        self.report = successResponse;
 
                          self.report.id = report_id;
 
