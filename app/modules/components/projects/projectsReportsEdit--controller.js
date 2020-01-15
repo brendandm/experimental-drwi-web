@@ -406,7 +406,7 @@
 
                       //  self.targets.active = self.targets.inactive;
 
-                         self.report = successResponse;
+                 //        self.report = successResponse;
 
                          self.report.id = report_id;
                      //   self.loadMetrics();
