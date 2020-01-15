@@ -327,6 +327,8 @@
 
                             self.selectedPractice = practice;
 
+                            self.report = self.selectedPractice.report;
+
                             if(self.selectedPractice.date == undefined){
                                 self.selectedPractice.date = parseISOLike(self.selectedPractice.report.report_date);
                             }
@@ -404,12 +406,11 @@
 
                          console.log("targetMatrix", successResponse);
 
-                      //  self.targets.active = self.targets.inactive;
 
                  //        self.report = successResponse;
 
                          self.report.id = report_id;
-                     //   self.loadMetrics();
+
 
                         console.log("SMURF");
 
