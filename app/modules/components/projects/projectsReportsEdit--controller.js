@@ -409,7 +409,7 @@
                          console.log("targetMatrix", successResponse);
 
 
-                 //        self.report = successResponse;
+                         self.report = successResponse;
 
                          self.report.id = report_id;
 
