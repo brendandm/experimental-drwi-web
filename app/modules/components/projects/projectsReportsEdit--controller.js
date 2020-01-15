@@ -408,13 +408,10 @@
 
                          console.log("targetMatrix", successResponse);
 
-
-                         self.report = successResponse;
+                // HERE - HERE
+                //         self.report = successResponse;
 
                          self.report.id = report_id;
-
-
-                        console.log("SMURF");
 
                         console.log("self.report",self.report);
 
