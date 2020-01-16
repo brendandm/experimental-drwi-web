@@ -178,13 +178,15 @@
                             //
                             // Check to see if there is a valid date
                             //
+
+                          /*
                             self.bundle.date = {
                                 month: self.months[self.today.getMonth()],
                                 date: self.today.getDate(),
                                 day: self.days[self.today.getDay()],
                                 year: self.today.getFullYear()
                             };
-
+                            */
 
 
                         }, 500);
