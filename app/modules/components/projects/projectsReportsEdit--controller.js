@@ -136,7 +136,7 @@
 
                             var _new = response.year + '-' + response.month.numeric + '-' + response.date,
                                 _date = new Date(_new);
-                            self.date.day = self.days[_date.getDay()];
+                            self.bundle.date.day = self.days[_date.getDay()];
 
                         }
 
@@ -169,20 +169,24 @@
 
                             if (self.bundle.date) {
 
-                                self.today = parseISOLike(self.bundle.date);
+                             //   self.today = parseISOLike(self.bundle.date);
+
+                             //   self.today = self.b
 
                             }
 
                             //
                             // Check to see if there is a valid date
                             //
-                            self.date = {
+
+                          /*
+                            self.bundle.date = {
                                 month: self.months[self.today.getMonth()],
                                 date: self.today.getDate(),
                                 day: self.days[self.today.getDay()],
                                 year: self.today.getFullYear()
                             };
-
+                            */
 
 
                         }, 500);
@@ -612,8 +616,8 @@
 
                  //   self.scrubFeature(self.report);
 
-                    if (self.date.month.numeric !== null &&
-                        typeof self.date.month.numeric === 'string') {
+                    if (self.report.report_date.month.numeric !== null &&
+                        typeof self.report.report_date.month.numeric === 'string') {
 
                         self.report.report_date = self.reportDate.year + '-' + self.reportDate.month.numeric + '-' + self.reportDate.date;
 
@@ -691,10 +695,11 @@
 
                     console.log("SAVE THAT BUNDLE !!!");
 
+                    console.log(self.bundle);
 
                     Report.updateBundle({
                         id: self.bundle.id
-                        }, data).$promise.then(function(successResponse) {
+                        }, self.bundle).$promise.then(function(successResponse) {
 
                             self.alerts = [{
                                 'type': 'success',

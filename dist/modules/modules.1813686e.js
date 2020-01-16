@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579108314132})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579188260030})
 
 ;
 /**
@@ -9935,7 +9935,7 @@ angular.module('FieldDoc')
 
                             var _new = response.year + '-' + response.month.numeric + '-' + response.date,
                                 _date = new Date(_new);
-                            self.date.day = self.days[_date.getDay()];
+                            self.bundle.date.day = self.days[_date.getDay()];
 
                         }
 
@@ -9968,20 +9968,24 @@ angular.module('FieldDoc')
 
                             if (self.bundle.date) {
 
-                                self.today = parseISOLike(self.bundle.date);
+                             //   self.today = parseISOLike(self.bundle.date);
+
+                             //   self.today = self.b
 
                             }
 
                             //
                             // Check to see if there is a valid date
                             //
-                            self.date = {
+
+                          /*
+                            self.bundle.date = {
                                 month: self.months[self.today.getMonth()],
                                 date: self.today.getDate(),
                                 day: self.days[self.today.getDay()],
                                 year: self.today.getFullYear()
                             };
-
+                            */
 
 
                         }, 500);
@@ -10411,8 +10415,8 @@ angular.module('FieldDoc')
 
                  //   self.scrubFeature(self.report);
 
-                    if (self.date.month.numeric !== null &&
-                        typeof self.date.month.numeric === 'string') {
+                    if (self.report.report_date.month.numeric !== null &&
+                        typeof self.report.report_date.month.numeric === 'string') {
 
                         self.report.report_date = self.reportDate.year + '-' + self.reportDate.month.numeric + '-' + self.reportDate.date;
 
@@ -10490,10 +10494,11 @@ angular.module('FieldDoc')
 
                     console.log("SAVE THAT BUNDLE !!!");
 
+                    console.log(self.bundle);
 
                     Report.updateBundle({
                         id: self.bundle.id
-                        }, data).$promise.then(function(successResponse) {
+                        }, self.bundle).$promise.then(function(successResponse) {
 
                             self.alerts = [{
                                 'type': 'success',
