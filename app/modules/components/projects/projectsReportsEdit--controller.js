@@ -169,7 +169,9 @@
 
                             if (self.bundle.date) {
 
-                                self.today = parseISOLike(self.bundle.date);
+                             //   self.today = parseISOLike(self.bundle.date);
+
+                             //   self.today = self.b
 
                             }
 
