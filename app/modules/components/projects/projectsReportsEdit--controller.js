@@ -698,7 +698,8 @@
                     console.log("SAVE THAT BUNDLE !!!");
                     console.log("BundleTitle",self.bundle.title);
                     console.log("BundleNotes",self.bundle.notes);
-                     console.log("self.date",self.date);
+                    console.log("self.bundle.date",self.bundle.date);
+                    console.log("self.date",self.date);
                     console.log(self.bundle);
 
                     Report.reportBundle({
