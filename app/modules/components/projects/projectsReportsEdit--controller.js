@@ -279,7 +279,9 @@
 
                     console.log("Loading Report");
 
-                    Report.reportBundle({id:self.reportId}).$promise.then(function(successResponse) {
+                    Report.reportBundle({
+                        id:self.reportId
+                    }).$promise.then(function(successResponse) {
 
                         console.log("reportBundle successResponse");
 
@@ -699,7 +701,7 @@
 
                     Report.reportBundle({
                         id: self.bundle.id
-                        }, self.bundle).$promise.then(function(successResponse) {
+                    }, self.bundle).then(function(successResponse) {
 
                             self.alerts = [{
                                 'type': 'success',
