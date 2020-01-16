@@ -696,7 +696,8 @@
                 self.saveBundle = function(){
 
                     console.log("SAVE THAT BUNDLE !!!");
-
+                    console.log("BundleTitle",self.bundle.title);
+                    console.log("BundleNotes",self.bundle.notes);
                     console.log(self.bundle);
 
                     Report.reportBundle({
