@@ -136,7 +136,7 @@
 
                             var _new = response.year + '-' + response.month.numeric + '-' + response.date,
                                 _date = new Date(_new);
-                            self.bundle.date.day = self.days[_date.getDay()];
+                            self.date.day = self.days[_date.getDay()];
 
                         }
 
@@ -180,7 +180,7 @@
                             //
 
 
-                            self.bundle.date = {
+                            self.date = {
                                 month: self.months[self.today.getMonth()],
                                 date: self.today.getDate(),
                                 day: self.days[self.today.getDay()],

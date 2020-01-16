@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579193371546})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579193563898})
 
 ;
 /**
@@ -9935,7 +9935,7 @@ angular.module('FieldDoc')
 
                             var _new = response.year + '-' + response.month.numeric + '-' + response.date,
                                 _date = new Date(_new);
-                            self.bundle.date.day = self.days[_date.getDay()];
+                            self.date.day = self.days[_date.getDay()];
 
                         }
 
@@ -9979,7 +9979,7 @@ angular.module('FieldDoc')
                             //
 
 
-                            self.bundle.date = {
+                            self.date = {
                                 month: self.months[self.today.getMonth()],
                                 date: self.today.getDate(),
                                 day: self.days[self.today.getDay()],
