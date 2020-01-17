@@ -52,12 +52,12 @@
                             <strong>Practice Type:</strong> {{ page.practice.category.name }}
                         </p>
 
-                        <p data-ng-if="page.practice.extent.calculated.converted && !page.practice.custom_extent">
+                        <p data-ng-if="page.practice.extent.calculated.converted && !page.practice.custom_extent" style="text-transform:capitalize;">
                             <strong>Practice {{page.practice.category.unit.dimension}} extent:</strong>
                             {{ page.practice.extent.calculated.converted | number:2 }} {{page.practice.category.unit.unit.plural}}
                            <!-- {{ calculated_extent.practice.calculated_extent }} -->
                         </p>
-                         <p data-ng-if="page.practice.custom_extent">
+                         <p data-ng-if="page.practice.custom_extent" style="text-transform:capitalize;">
                             <strong>Practice {{page.practice.category.unit.dimension}} extent:</strong> {{ page.practice.custom_extent | number:2 }} {{page.practice.category.unit.unit.plural}}
                         </p>
 
