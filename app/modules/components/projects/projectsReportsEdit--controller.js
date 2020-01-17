@@ -720,9 +720,9 @@
                     console.log("self.date",self.date);
                     console.log(self.bundle);
 
-                    Report.reportBundle({
+                    Report.reportBundleUpdate({
                         id: self.bundle.id
-                    }, self.bundle).then(function(successResponse) {
+                    }, self.bundle).$promise.then(function(successResponse) {
 
                             self.alerts = [{
                                 'type': 'success',
