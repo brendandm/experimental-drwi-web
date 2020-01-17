@@ -618,8 +618,8 @@
 
                  //   self.scrubFeature(self.report);
 
-                    if (self.report.report_date.month.numeric !== null &&
-                        typeof self.report.report_date.month.numeric === 'string') {
+                    if (self.reportDate.month.numeric !== null &&
+                        typeof self.reportDate.month.numeric === 'string') {
 
                         self.report.report_date = self.reportDate.year + '-' + self.reportDate.month.numeric + '-' + self.reportDate.date;
 
