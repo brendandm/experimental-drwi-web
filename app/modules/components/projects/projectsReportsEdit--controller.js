@@ -665,7 +665,7 @@
 
                     Report.update({
                         id: self.report.id
-                    }, self.report).$promise.then(function(successResponse) {
+                    }, self.report).then(function(successResponse) {
 
                         console.log("YO YO YO");
 
