@@ -149,6 +149,22 @@
                     <a href="/practices/{{ page.practice.id }}/location">Point Geometries</a>.
                 </li>
 
+                <!--
+                -->
+                <li style="height:63px; margin-bottom:20px; font-size:0.8em;"
+                    data-ng-if="page.practice.geometry.type == 'Line' && page.practice_category.unit.dimension != 'length'"
+                >
+                    Calculated extents for this practice are only available with Line Geometries.
+                </li>
+
+                <li style="height:63px; margin-bottom:20px; font-size:0.8em;"
+                    data-ng-if="page.practice.geometry.type == 'Polygon' && page.practice_category.unit.dimension != 'area'"
+                >
+                    Calculated extents for this practice are only available with Polygonal Geometries.
+                </li>
+                <!--
+                -->
+
                 <li style="display:block; clear:both; color:#000000; width: 100%; ">
 
                         <p style="display:block; clear:both;" >
