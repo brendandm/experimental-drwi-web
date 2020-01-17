@@ -539,6 +539,24 @@
 
                 };
 
+                 self.removeTarget = function(item, idx) {
+
+                    if (typeof idx === 'number') {
+
+                        self.targets.active.splice(idx, 1);
+
+                        item.action = 'remove';
+
+                        item.value = null;
+
+                        self.targets.inactive.unshift(item);
+
+                    }
+
+                    console.log('Updated targets (removal)');
+
+                };
+
 
                 self.saveTargets = function() {
 

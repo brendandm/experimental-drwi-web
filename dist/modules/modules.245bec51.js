@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579271078758})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579277294747})
 
 ;
 /**
@@ -10335,6 +10335,24 @@ angular.module('FieldDoc')
                     });
 
                     self.targets.active = [];
+
+                };
+
+                 self.removeTarget = function(item, idx) {
+
+                    if (typeof idx === 'number') {
+
+                        self.targets.active.splice(idx, 1);
+
+                        item.action = 'remove';
+
+                        item.value = null;
+
+                        self.targets.inactive.unshift(item);
+
+                    }
+
+                    console.log('Updated targets (removal)');
 
                 };
 
