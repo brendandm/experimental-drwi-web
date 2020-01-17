@@ -722,7 +722,7 @@
 
                     Report.reportBundleUpdate({
                         id: self.bundle.id
-                    }, self.bundle).$promise.then(function(successResponse) {
+                    }, self.bundle).then(function(successResponse) {
 
                             self.alerts = [{
                                 'type': 'success',
