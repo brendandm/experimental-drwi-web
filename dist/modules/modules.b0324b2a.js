@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579298911173})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579299627119})
 
 ;
 /**
@@ -10438,11 +10438,15 @@ angular.module('FieldDoc')
                     if (self.reportDate.month.numeric !== null &&
                         typeof self.reportDate.month.numeric === 'string') {
 
+                        console.log("AAAAA");
+
                         self.report.report_date = self.reportDate.year + '-' + self.reportDate.month.numeric + '-' + self.reportDate.date;
 
                         self.selectedPractice.date =   parseISOLike(self.report.report_date);
 
                     } else {
+
+                        console.log("BBBBB");
 
                         self.report.report_date = self.reportDate.year + '-' + self.reportDate.month + '-' + self.reportDate.date;
 

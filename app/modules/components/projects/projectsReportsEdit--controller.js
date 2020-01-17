@@ -639,11 +639,15 @@
                     if (self.reportDate.month.numeric !== null &&
                         typeof self.reportDate.month.numeric === 'string') {
 
+                        console.log("AAAAA");
+
                         self.report.report_date = self.reportDate.year + '-' + self.reportDate.month.numeric + '-' + self.reportDate.date;
 
                         self.selectedPractice.date =   parseISOLike(self.report.report_date);
 
                     } else {
+
+                        console.log("BBBBB");
 
                         self.report.report_date = self.reportDate.year + '-' + self.reportDate.month + '-' + self.reportDate.date;
 
