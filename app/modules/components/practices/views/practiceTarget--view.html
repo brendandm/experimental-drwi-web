@@ -91,7 +91,7 @@
                         </p>
                 -->
                 </li>
-                 <li style="height:63px; margin-bottom:20px;" data-ng-if="page.practice.extent.calculated.converted">
+                 <li style="height:63px; margin-bottom:20px;" data-ng-if="page.practice.extent.calculated.converted && page.geometryMismatch == false">
 
                      <div data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'" style="text-transform:capitalize;">Calculated {{page.practice_category.unit.dimension}} Value</div>
                      <div data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" style="text-transform:capitalize;">Calculated Area Value</div>
