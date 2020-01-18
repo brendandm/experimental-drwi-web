@@ -724,6 +724,28 @@
                     console.log("self.date",self.date);
                     console.log(self.bundle);
 
+                    self.bundle.date = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
+
+                /*    if (self.self.date.month.numeric !== null &&
+                        typeof self.self.date.month.numeric === 'string') {
+
+                        console.log("AAAAA");
+
+                        self.bundle.date = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
+
+                     //   self.selectedPractice.date =   parseISOLike(self.report.report_date);
+
+                    } else {
+
+                        console.log("BBBBB");
+
+                        self.report.report_date = self.reportDate.year + '-' + self.reportDate.month + '-' + self.reportDate.date;
+
+                        self.selectedPractice.date =  parseISOLike(self.report.report_date);
+
+                    }
+                    */
+
                     Report.reportBundleUpdate({
                         id: self.bundle.id
                     }, self.bundle).then(function(successResponse) {
