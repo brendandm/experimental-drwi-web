@@ -675,7 +675,7 @@
 
                         console.log("REPORT UPDATE", successResponse);
 
-                        self.processReport(successResponse);
+                   //     self.processReport(successResponse);
 
                  //       self.reportDate = self.formatDate(self.selectedPractice.date);
 
