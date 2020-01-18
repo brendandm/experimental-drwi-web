@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579380616902})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579381027036})
 
 ;
 /**
@@ -10525,10 +10525,14 @@ angular.module('FieldDoc')
 
                     self.bundle.date = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
 
-                /*    if (self.self.date.month.numeric !== null &&
+                     console.log("self.bundle.date 11",self.bundle.date);
+
+                    if (self.self.date.month.numeric !== null &&
                         typeof self.self.date.month.numeric === 'string') {
 
                         console.log("AAAAA");
+
+                       self.bundle.date = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
 
                         self.bundle.date = self.date.year + '-' + self.date.month.numeric + '-' + self.date.date;
 
@@ -10538,12 +10542,12 @@ angular.module('FieldDoc')
 
                         console.log("BBBBB");
 
-                        self.report.report_date = self.reportDate.year + '-' + self.reportDate.month + '-' + self.reportDate.date;
+                        self.bundle.date = self.date.year + '-' + self.date.month + '-' + self.date.date;
 
-                        self.selectedPractice.date =  parseISOLike(self.report.report_date);
+                 //       self.selectedPractice.date =  parseISOLike(self.report.report_date);
 
                     }
-                    */
+
 
                     Report.reportBundleUpdate({
                         id: self.bundle.id
