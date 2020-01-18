@@ -728,8 +728,8 @@
 
                      console.log("self.bundle.date 11",self.bundle.date);
 
-                    if (self.self.date.month.numeric !== null &&
-                        typeof self.self.date.month.numeric === 'string') {
+                    if (self.date.month.numeric !== null &&
+                        typeof self.date.month.numeric === 'string') {
 
                         console.log("AAAAA");
 
