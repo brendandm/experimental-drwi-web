@@ -679,7 +679,7 @@
 
                  //       self.reportDate = self.formatDate(self.selectedPractice.date);
 
-
+                /*Note to check devbot*/
 
                         self.alerts = [{
                             'type': 'success',
