@@ -191,7 +191,7 @@
 
             <h2 data-ng-if="page.targets && page.targets.active.length">Active targets</h2>
 
-            <ul class="target-lst" data-ng-if="page.practice.calculating == true">
+            <ul class="target-lst" data-ng-if="page.calculating == true">
                 <li>
                     <div style="padding-right: 0; text-align:center;">Recalculating metrics...</div>
                 </li>
@@ -209,7 +209,7 @@
                 </li>
             </ul>
 
-            <ul class="target-lst" data-ng-if="page.targets && page.targets.active.length && page.practice.calculating == false">
+            <ul class="target-lst" data-ng-if="page.targets && page.targets.active.length && page.calculating == false">
                 <li data-ng-repeat="target in page.targets.active">
                     <div>
                         <div> {{ target.metric.name || target.name }}</div>
@@ -242,7 +242,7 @@
 
 
 
-            <ul class="target-lst" data-ng-if="(!page.targets || !page.targets.active.length) && page.practice.calculating == false">
+            <ul class="target-lst" data-ng-if="(!page.targets || !page.targets.active.length) && page.calculating == false">
                 <li>
                     <div style="padding-right: 0; text-align:center;">This practice is not tracking any metrics yet.</div>
                 </li>
