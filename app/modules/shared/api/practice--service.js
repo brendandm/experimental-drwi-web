@@ -106,7 +106,7 @@
                 checkStatus: {
                     method: 'GET',
                     isArray: false,
-                    url: environment.apiUrl.concat('/v1/practice/<int:feature_id>/status')
+                    url: environment.apiUrl.concat('/v1/practice/:id/status')
                 }
 
             });
