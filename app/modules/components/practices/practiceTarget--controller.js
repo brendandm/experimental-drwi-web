@@ -691,7 +691,7 @@ angular.module('FieldDoc')
 
                      console.log(successResponse);
 
-                     self.calculating = successResponse.data.calculating;
+                     self.calculating = successResponse.calculating;
 
                     //self.loadMatrix();
 
