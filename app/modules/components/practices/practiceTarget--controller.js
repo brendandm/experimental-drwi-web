@@ -693,6 +693,8 @@ angular.module('FieldDoc')
 
                      self.calculating = successResponse.calculating;
 
+                    self.bgLoadMatrix();
+
                     //self.loadMatrix();
 
                 }).catch(function(errorResponse) {
