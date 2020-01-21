@@ -102,7 +102,13 @@
                     method: 'POST',
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/practice/:id/matrix')
+                },
+                checkStatus: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/practice/<int:feature_id>/status')
                 }
+
             });
         });
 
