@@ -666,7 +666,7 @@ angular.module('FieldDoc')
             };
 
             self.bgLoadMatrix = function(){
-                console.log("BG LOAD MATRIX", self.practice.calculating);
+                console.log("BG LOAD MATRIX", self.calculating);
 
                 //self.practice.calculating
                 if(self.calculating == true){
