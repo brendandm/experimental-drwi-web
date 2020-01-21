@@ -664,10 +664,11 @@ angular.module('FieldDoc')
             self.bgLoadMatrix = function(){
                 console.log("BG LOAD MATRIX", self.practice.calculating);
 
-                if(self.practice.calculating == true){
+                //self.practice.calculating
+                if(self.calculating == true){
                      console.log("Checking Practice");
                      var timer = setTimeout(function(){
-                          self.loadPractice();
+                          self.checkStatus();
 
                     }, 2000);
                 }else{
@@ -676,6 +677,29 @@ angular.module('FieldDoc')
                 }
 
             };
+
+            self.checkStatus = function(){
+                console.log("Checking Calc Status");
+
+                 Practice.checkStatus({
+                    id: $route.current.params.practiceId,
+                }).$promise.then(function(successResponse) {
+
+                     console.log(successResponse).
+
+                     self.calculating = successResponse.calculating;
+
+                    //self.loadMatrix();
+
+                }).catch(function(errorResponse) {
+
+                    console.log(errorResponse)
+
+                });
+
+
+            }
+
 /*
             self.backgroundLoadMatrix = function(){
                 console.log("YESSSS", self.practice.calculating);
