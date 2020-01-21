@@ -91,7 +91,7 @@
                         </p>
                 -->
                 </li>
-                 <li style="height:63px; margin-bottom:20px;" data-ng-if="page.practice.extent.calculated.converted">
+                 <li style="height:63px; margin-bottom:20px;" data-ng-if="page.practice.extent.calculated.converted && page.geometryMismatch == false">
 
                      <div data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'" style="text-transform:capitalize;">Calculated {{page.practice_category.unit.dimension}} Value</div>
                      <div data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" style="text-transform:capitalize;">Calculated Area Value</div>
@@ -124,7 +124,24 @@
 
                 </li>
 
-                <li style="height:63px; margin-bottom:20px; font-size:0.8em;" data-ng-if="!page.practice.extent.calculated.converted && page.practice.geometry.type != 'Point'">
+                  <!--
+                -->
+                <li style="display:block; min-height:20px; margin-bottom:20px; color:#000000; width: 100%;"
+                    data-ng-if="page.practice.geometry.type == 'LineString' && page.practice_category.unit.dimension != 'length'"
+                >
+                    Calculated Extent Values for this practice are only available with <a href="/practices/{{ page.practice.id }}/location">Polygonal Geometries</a>.
+                </li>
+
+                <li style="display:block; min-height:20px; margin-bottom:20px; color:#000000; width: 100%;"
+                    data-ng-if="page.practice.geometry.type == 'Polygon' && page.practice_category.unit.dimension != 'area'"
+                >
+                    Calculated Extent Values for this practice are only available with <a href="/practices/{{ page.practice.id }}/location">Line Geometries</a>.
+                </li>
+                <!--
+                -->
+
+                <li style="height:63px; margin-bottom:20px; font-size:0.8em;"
+                    data-ng-if="(!page.practice.extent.calculated.converted && page.practice.geometry.type != 'Point')">
                     A&nbsp;
                     <a href="/practices/{{ page.practice.id }}/location">Practice Location Geometry</a>
                     &nbsp;must be defined for a Calculated&nbsp;
@@ -137,7 +154,8 @@
                     &nbsp;Value to be generated.
                 </li>
 
-                <li style="height:63px; margin-bottom:20px; font-size:0.8em;" data-ng-if="page.practice.geometry.type == 'Point' && !page.practice.extent.calculated.converted">
+                <li style="height:63px; margin-bottom:20px; font-size:0.8em;"
+                    data-ng-if="page.practice.geometry.type == 'Point' && !page.practice.extent.calculated.converted">
                     Calculated&nbsp;
                     <span data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'" style="text-transform:capitalize;">
                         {{page.practice_category.unit.dimension}}
@@ -148,6 +166,8 @@
                     &nbsp;Values are not available for&nbsp;
                     <a href="/practices/{{ page.practice.id }}/location">Point Geometries</a>.
                 </li>
+
+
 
                 <li style="display:block; clear:both; color:#000000; width: 100%; ">
 

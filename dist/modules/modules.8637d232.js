@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1579640353428})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1579641203603})
 
 ;
 /**
@@ -19460,6 +19460,8 @@ angular.module('FieldDoc')
                     self.permissions.can_edit = successResponse.permissions.write;
                     self.permissions.can_delete = successResponse.permissions.write;
 
+
+
                  //   if(self.practice.calculating === false){
                  //       $interval.cancel(self.matrixLoadInterval);
                  //       self.loadMatrix();
@@ -19656,7 +19658,16 @@ angular.module('FieldDoc')
 
                 self.practice = data.properties || data;
 
-                 self.calculating ==  self.practice.calculating;
+                self.calculating ==  self.practice.calculating;
+
+                self.geometryMismatch = false;
+
+                if(self.practice.geometry.type == 'LineString' && self.practice_category.unit.dimension != 'length'){
+                    self.geometryMismatch = true;
+                }
+                if(self.practice.geometry.type == 'Polygon' && self.practice_category.unit.dimension != 'area'){
+                    self.geometryMismatch = true;
+                }
 
                 self.tempTargets = self.practice.targets || [];
 
