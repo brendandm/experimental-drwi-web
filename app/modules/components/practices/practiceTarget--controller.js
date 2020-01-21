@@ -219,6 +219,10 @@ angular.module('FieldDoc')
                  //       $interval.cancel(self.matrixLoadInterval);
                  //       self.loadMatrix();
                  //   }else{
+
+
+                        self.calculating = true;
+
                         self.bgLoadMatrix();
                 //    }
 
