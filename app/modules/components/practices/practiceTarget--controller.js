@@ -689,7 +689,7 @@ angular.module('FieldDoc')
                     id: $route.current.params.practiceId,
                 }).$promise.then(function(successResponse) {
 
-                     console.log(successResponse).
+                     console.log(successResponse);
 
                      self.calculating = successResponse.calculating;
 
