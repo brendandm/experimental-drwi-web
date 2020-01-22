@@ -224,6 +224,13 @@
 
                 };
 
+                self.deleteBundle = function(report_id)
+
+                /*
+                Please write me, I don't want to exist
+                */
+
+                {};
 
                 //
                 // Verify Account information for proper UI element display
