@@ -208,14 +208,14 @@
 
                         //    var f_date = self.formatDate(r.date);
 
-                            if(r.date == undefined){
+                        //    if(r.date == undefined){
                             //    if(self.selectedPractice.report != undefined){
                              var r_iso_date = parseISOLike(r.date);
                             //    }else{
                             //        self.selectedPractice.date = new Date();
                             //    }
 
-                            }
+                     //       }
 
                            var f_date = {
                                 month: self.months[r_iso_date.getMonth()],
