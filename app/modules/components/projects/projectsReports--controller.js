@@ -206,7 +206,15 @@
                     self.reports.forEach(function(r){
                             console.log("BUNDLE", r);
 
-                            var f_date = self.formatDate(r.date);
+                        //    var f_date = self.formatDate(r.date);
+
+                           var f_date = {
+                                month: self.months[r.date.getMonth()],
+                                date: self.r.date.getDate(),
+                                day: self.days[r.date.getDay()],
+                                year: r.date.getFullYear()
+                            };
+
 
                             console.log("f_date", f_date);
 
