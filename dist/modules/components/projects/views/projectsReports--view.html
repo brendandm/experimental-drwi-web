@@ -29,6 +29,97 @@
 
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
 
+
+            <!-- Project Summary -->
+
+
+             <div class="group">
+
+                    <article class="pad space-right shadow reveal fade-in t0">
+
+                        <h1>{{ page.project.name }}</h1>
+
+                        <p data-ng-if="page.project.id && page.project.last_modified_by.first_name && page.project.last_modified_by.last_name" class="label modtime">
+                            Last modified by {{ page.project.last_modified_by.first_name }} {{ page.project.last_modified_by.last_name }} on {{ page.project.modified_on | localTime | date:'fullDate' }} at <span class="lowercase">{{ page.project.modified_on | localTime | date:'h:mma' }}</span>
+                        </p>
+
+                        <p data-ng-if="page.project.programs.length > 0"
+                           data-ng-repeat="program in page.project.programs"
+                           class="label">
+                            <strong>Program:</strong> <a href="{{ page.project.links.program[$index][html] }}">{{ program.name }}</a>
+                        </p>
+
+                        <!--
+                        <p data-ng-if="page.project.program && page.project.program.id" class="label">
+                            <strong>Program:</strong> <a href="{{ page.project.links.program.html }}">{{ page.project.program.name }}</a>
+                        </p>
+                        -->
+                     <!--   <p data-ng-if="page.area && page.area.value" class="label">
+                            <strong>Total area:</strong> {{ page.area.value | number:2 }} {{ page.area.unit }}s
+                        </p>
+                    -->
+                        <p data-ng-bind-html="page.project.description"></p>
+
+                        <div data-ng-if="page.tags && page.tags.length">
+
+                            <span style="display: block; margin: 1em 0; color: #757575; text-transform: uppercase; font-size: .8em; font-weight: bold; letter-spacing: .05em;">Tags</span>
+
+                            <div class="tag--group">
+
+                                <div class="tag--pill" data-ng-class="{'colorize': tag.color && tag.color.length === 7}" data-ng-repeat="tag in page.tags">
+                                    <div class="colorize" data-ng-if="tag.color">
+                                        <span class="category" style="background: {{ tag.color }}; color: #f5f5f5; border-bottom: 1px solid {{ tag.color }};">{{ tag.group.name || 'misc' }}</span>
+                                        <span style="background: {{ tag.lightColor }}; color: #fafafa;">{{ tag.name }}</span>
+                                    </div>
+                                    <div data-ng-if="!tag.color || tag.color.length < 7">
+                                        <span class="category">{{ tag.group.name || 'misc' }}</span>
+                                        <span>{{ tag.name }}</span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                    <!-- <div class="map--module shadow reveal fade-in t1" style="position:relative;" data-ng-include="'/templates/primaryMap--view.html'"></div> -->
+
+                    <div class="map--module shadow reveal fade-in t1" style="position:relative;">
+                        <div id="primary--map" class="map tall" style="border-radius: 4px; overflow: hidden;">
+                            <div class="mapboxgl-layer-ctrl" data-ng-click="page.showLayerOptions = !page.showLayerOptions" title="Switch layers">
+                                <i class="material-icons">
+                                    layers
+                                </i>
+                                <div class="layer-group" data-ng-show="page.showLayerOptions">
+                                    <form>
+                                        <label data-ng-repeat="style in page.mapStyles" data-ng-class="{'active': page.activeStyle === $index}" title="{{ style.name }}">
+                                            <input type="radio" id="base-style-{{ $index }}" name="active-style" data-ng-model="page.activeStyle" data-ng-value="{{ $index }}" data-ng-change="page.switchMapStyle(style, $index)"><span> {{ style.name }}</span>
+                                        </label>
+                                    </form>
+                                    <form class="layers" data-ng-show="page.layers && page.layers.length">
+                                        <label for="layer-{{ $index }}" data-ng-repeat="layer in page.layers" data-ng-class="{'active': layer.selected}" title="{{ layer.name }}">
+                                            <input type="checkbox" id="layer-{{ $index }}" name="layer-{{ $index }}" data-ng-model="layer.selected" data-ng-value="{{ $index }}" data-ng-change="page.toggleLayer(layer)">
+                                            <span> {{ layer.name }}</span>
+                                            <div class="symbol-group" data-ng-if="layer.symbol && layer.symbol.colors">
+                                                <div class="color" data-ng-repeat="color in layer.symbol.colors" style="background: {{ color }};"></div>
+                                            </div>
+                                        </label>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+            <!-- End Project Summary -->
+
+
+
+
+
        <!--     <section class="reveal fade-in t3" style="padding: 0;">
 
                 <div data-ng-repeat="program in page.programs">
