@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579711925470})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579712193743})
 
 ;
 /**
@@ -9724,11 +9724,20 @@ angular.module('FieldDoc')
 
                         //    var f_date = self.formatDate(r.date);
 
+                            if(r.date == undefined){
+                            //    if(self.selectedPractice.report != undefined){
+                             var r_iso_date parseISOLike(r.date);
+                            //    }else{
+                            //        self.selectedPractice.date = new Date();
+                            //    }
+
+                            }
+
                            var f_date = {
-                                month: self.months[r.date.getMonth()],
-                                date: self.r.date.getDate(),
-                                day: self.days[r.date.getDay()],
-                                year: r.date.getFullYear()
+                                month: self.months[r_iso_date.getMonth()],
+                                date: r_iso_date.getDate(),
+                                day: self.days[r_iso_date.getDay()],
+                                year: r_iso_date.getFullYear()
                             };
 
 
