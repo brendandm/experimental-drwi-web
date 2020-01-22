@@ -70,7 +70,7 @@
                                             </a>
                                         </div>
                                     </div>
-                                    <p>{{ (report.notes || 'No notes recorded for this date') | truncate:80 }}</p>
+                                    <p>{{ (report.notes || 'No notes recorded for this report group') | truncate:80 }}</p>
                                     <div class="actions">
                                         <a class="snapshot--title" href="/projects/{{page.project.id}}/reports/{{ report.id }}" title="Edit report" data-ng-if="page.permissions.can_edit">
                                             <i class="material-icons">
