@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579562894267})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579711461849})
 
 ;
 /**
@@ -9562,6 +9562,93 @@ angular.module('FieldDoc')
 
                     };
 
+
+                self.days = [
+                    'Sunday',
+                    'Monday',
+                    'Tuesday',
+                    'Wednesday',
+                    'Thursday',
+                    'Friday',
+                    'Saturday'
+                ];
+
+                self.months = [{
+                        'shortName': 'Jan',
+                        'name': 'January',
+                        'numeric': '01'
+                    },
+                    {
+                        'shortName': 'Feb',
+                        'name': 'February',
+                        'numeric': '02'
+                    },
+                    {
+                        'shortName': 'Mar',
+                        'name': 'March',
+                        'numeric': '03'
+                    },
+                    {
+                        'shortName': 'Apr',
+                        'name': 'April',
+                        'numeric': '04'
+                    },
+                    {
+                        'shortName': 'May',
+                        'name': 'May',
+                        'numeric': '05'
+                    },
+                    {
+                        'shortName': 'Jun',
+                        'name': 'June',
+                        'numeric': '06'
+                    },
+                    {
+                        'shortName': 'Jul',
+                        'name': 'July',
+                        'numeric': '07'
+                    },
+                    {
+                        'shortName': 'Aug',
+                        'name': 'August',
+                        'numeric': '08'
+                    },
+                    {
+                        'shortName': 'Sep',
+                        'name': 'September',
+                        'numeric': '09'
+                    },
+                    {
+                        'shortName': 'Oct',
+                        'name': 'October',
+                        'numeric': '10'
+                    },
+                    {
+                        'shortName': 'Nov',
+                        'name': 'November',
+                        'numeric': '11'
+                    },
+                    {
+                        'shortName': 'Dec',
+                        'name': 'December',
+                        'numeric': '12'
+                    }
+                ];
+
+
+                 self.formatDate = function(rawDate){
+                    var formattedDate = {
+                                month: self.months[rawDate.getMonth()],
+                                date: rawDate.getDate(),
+                                day: self.days[rawDate.getDay()],
+                                year: rawDate.getFullYear()
+                    }
+
+                    return formattedDate;
+                }
+
+
+
                  self.showElements = function() {
 
                     $timeout(function() {
@@ -9632,6 +9719,18 @@ angular.module('FieldDoc')
 
                     self.reports = self.project.reports;
 
+                    self.reports.forEach(function(r){
+                            console.log("BUNDLE", r);
+
+                            var f_date = formattedDate(r.date);
+
+                            console.log("f_date", f_date);
+
+                            self.reports[i].formatted_date = f_date;
+
+                        });
+
+
                     self.programs = self.project.programs;
 
                     self.matrix = [];
@@ -9677,6 +9776,19 @@ angular.module('FieldDoc')
                         self.showElements();
 
                         self.reports = successResponse.features;
+
+                        var i = 0;
+
+                        self.reports.forEach(function(r){
+                            console.log("BUNDLE", r);
+
+                            var f_date = formattedDate(r.date);
+
+                            console.log("f_date", f_date);
+
+                            self.reports[i].formatted_date = f_date;
+
+                        });
 
                         console.log("self.reports",self.reports)
 
@@ -9740,6 +9852,13 @@ angular.module('FieldDoc')
 
                 };
 
+                self.deleteBundle = function(report_id)
+
+                /*
+                Please write me, I don't want to exist
+                */
+
+                {};
 
                 //
                 // Verify Account information for proper UI element display
@@ -10163,6 +10282,19 @@ angular.module('FieldDoc')
 
                             console.log("self.reportDate",self.reportDate);
 
+                            if(self.selectedPractice.report != undefined ){
+
+                                console.log("SHOW EXISTING REPORT:",self.selectedPractice.report);
+
+                                self.loadMatrix(self.selectedPractice.report.id);
+
+                            }else{
+
+                                 console.log("CREATE REPORT");
+
+                                self.addReading("Installation");
+
+                            }
                             if(self.selectedPractice.report != undefined ){
 
                                 console.log("SHOW EXISTING REPORT:",self.selectedPractice.report);

@@ -203,6 +203,18 @@
 
                     self.reports = self.project.reports;
 
+                    self.reports.forEach(function(r){
+                            console.log("BUNDLE", r);
+
+                            var f_date = formattedDate(r.date);
+
+                            console.log("f_date", f_date);
+
+                            self.reports[i].formatted_date = f_date;
+
+                        });
+
+
                     self.programs = self.project.programs;
 
                     self.matrix = [];

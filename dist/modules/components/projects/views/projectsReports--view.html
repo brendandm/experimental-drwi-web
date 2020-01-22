@@ -62,7 +62,7 @@
                                     <div class="confirm--delete" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === report.id && page.deletionTarget.collection === 'report'">
                                         <p>Do you want to delete this report?</p>
                                         <div class="actions" style="flex: 0;">
-                                            <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('report', $index)">
+                                            <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteBundle('report', $index)">
                                                 Yes
                                             </a>
                                             <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
@@ -84,7 +84,7 @@
                                         </a>
                                     </div>
                                     <span><time datetime="{{ report.report_date }}" title="{{ report.report_date }}">
-                                            Created on {{ report.report_date | date }}</time></span>
+                                            Created on {{ report.created_on  }}</time></span>
                                 </div>
 
                             </div>

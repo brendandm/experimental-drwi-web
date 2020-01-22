@@ -377,6 +377,19 @@
                                 self.addReading("Installation");
 
                             }
+                            if(self.selectedPractice.report != undefined ){
+
+                                console.log("SHOW EXISTING REPORT:",self.selectedPractice.report);
+
+                                self.loadMatrix(self.selectedPractice.report.id);
+
+                            }else{
+
+                                 console.log("CREATE REPORT");
+
+                                self.addReading("Installation");
+
+                            }
 
 
 
