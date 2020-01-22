@@ -206,7 +206,7 @@
                     self.reports.forEach(function(r){
                             console.log("BUNDLE", r);
 
-                            var f_date = formattedDate(r.date);
+                            var f_date = self.formattedDate(r.date);
 
                             console.log("f_date", f_date);
 
@@ -266,7 +266,7 @@
                         self.reports.forEach(function(r){
                             console.log("BUNDLE", r);
 
-                            var f_date = formattedDate(r.date);
+                            var f_date = self.formattedDate(r.date);
 
                             console.log("f_date", f_date);
 
