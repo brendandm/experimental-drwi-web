@@ -46,6 +46,93 @@
 
                     };
 
+
+                self.days = [
+                    'Sunday',
+                    'Monday',
+                    'Tuesday',
+                    'Wednesday',
+                    'Thursday',
+                    'Friday',
+                    'Saturday'
+                ];
+
+                self.months = [{
+                        'shortName': 'Jan',
+                        'name': 'January',
+                        'numeric': '01'
+                    },
+                    {
+                        'shortName': 'Feb',
+                        'name': 'February',
+                        'numeric': '02'
+                    },
+                    {
+                        'shortName': 'Mar',
+                        'name': 'March',
+                        'numeric': '03'
+                    },
+                    {
+                        'shortName': 'Apr',
+                        'name': 'April',
+                        'numeric': '04'
+                    },
+                    {
+                        'shortName': 'May',
+                        'name': 'May',
+                        'numeric': '05'
+                    },
+                    {
+                        'shortName': 'Jun',
+                        'name': 'June',
+                        'numeric': '06'
+                    },
+                    {
+                        'shortName': 'Jul',
+                        'name': 'July',
+                        'numeric': '07'
+                    },
+                    {
+                        'shortName': 'Aug',
+                        'name': 'August',
+                        'numeric': '08'
+                    },
+                    {
+                        'shortName': 'Sep',
+                        'name': 'September',
+                        'numeric': '09'
+                    },
+                    {
+                        'shortName': 'Oct',
+                        'name': 'October',
+                        'numeric': '10'
+                    },
+                    {
+                        'shortName': 'Nov',
+                        'name': 'November',
+                        'numeric': '11'
+                    },
+                    {
+                        'shortName': 'Dec',
+                        'name': 'December',
+                        'numeric': '12'
+                    }
+                ];
+
+
+                 self.formatDate = function(rawDate){
+                    var formattedDate = {
+                                month: self.months[rawDate.getMonth()],
+                                date: rawDate.getDate(),
+                                day: self.days[rawDate.getDay()],
+                                year: rawDate.getFullYear()
+                    }
+
+                    return formattedDate;
+                }
+
+
+
                  self.showElements = function() {
 
                     $timeout(function() {
@@ -161,6 +248,19 @@
                         self.showElements();
 
                         self.reports = successResponse.features;
+
+                        var i = 0;
+
+                        self.reports.forEach(function(r){
+                            console.log("BUNDLE", r);
+
+                            var f_date = formattedDate(r.date);
+
+                            console.log("f_date", f_date);
+
+                            self.reports[i].formatted_date = f_date;
+
+                        });
 
                         console.log("self.reports",self.reports)
 
