@@ -44,7 +44,7 @@
 
                 <div data-ng-repeat="program in page.matrix | orderBy:'name':false">
 
-                    <span style="margin-bottom:20px; "><h2 style="display:inline; margin-left:20px;">{{program.name}}</h2>
+                    <span style="margin-bottom:20px;"><h2 style="display:inline; margin-right:20px;">{{program.name}}</h2>
                         <a style="display:inline;" href="/programs/{{ program.id }}/">
                             <sub>
                                 <i class="material-icons">
@@ -56,7 +56,7 @@
 
                     <ul class="snapshot--cards list-unstyled">
 
-                        <li class="card" data-ng-repeat="report in program.reports | orderBy:'report_date':false">
+                        <li class="card" style="margin-top:20px;" data-ng-repeat="report in program.reports | orderBy:'report_date':false">
 
                             <div class="card--content">
 
