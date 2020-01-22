@@ -210,7 +210,7 @@
 
                             if(r.date == undefined){
                             //    if(self.selectedPractice.report != undefined){
-                             var r_iso_date parseISOLike(r.date);
+                             var r_iso_date = parseISOLike(r.date);
                             //    }else{
                             //        self.selectedPractice.date = new Date();
                             //    }
