@@ -44,12 +44,13 @@
 
                 <div data-ng-repeat="program in page.matrix | orderBy:'name':false">
 
-                    <h2>{{program.name}}</h2>
-                    <a href="/programs/{{ program.id }}/"></a>
-                        <i class="material-icons">
-                                        dashboard
-                        </i>
-                    </a>
+                    <span>{{program.name}}
+                        <a href="/programs/{{ program.id }}/"><
+                            <i class="material-icons">
+                                            dashboard
+                            </i>
+                        </a>
+                    </span>
 
                     <ul class="snapshot--cards list-unstyled">
 
