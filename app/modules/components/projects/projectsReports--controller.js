@@ -207,6 +207,8 @@
 
                     self.reports = self.project.reports;
 
+                    var i = 0
+
                     self.reports.forEach(function(r){
                             console.log("BUNDLE", r);
 
@@ -233,7 +235,8 @@
 
                             self.reports[i].formatted_date = f_date;
 
-                        });
+                            i = i+1;
+                    });
 
 
                     self.programs = self.project.programs;
