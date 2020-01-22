@@ -54,7 +54,7 @@
 
                                 <div class="name">
                                     <span data-ng-if="report.title">{{ report.title }}</span>
-                                    <span data-ng-if="!report.title">{{ report.date | date : 'mediumDate' }}</span>
+                                    <span data-ng-if="!report.title">{{ report.date | date }}</span>
                                 </div>
 
                                 <div class="body">
@@ -84,7 +84,7 @@
                                         </a>
                                     </div>
                                     <span><time datetime="{{ report.report_date }}" title="{{ report.report_date }}">
-                                            Created on {{ report.created_on | date : 'mediumDate' }}</time></span>
+                                            Last updated {{ report.modified_on | date : 'mediumDate' }}</time></span>
                                 </div>
 
                             </div>
