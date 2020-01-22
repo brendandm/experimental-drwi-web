@@ -54,7 +54,7 @@
 
                                 <div class="name">
                                     <span data-ng-if="report.title">{{ report.title }}</span>
-                                    <span data-ng-if="!report.title">{{ report.date | date }}</span>
+                                    <span data-ng-if="!report.title">{{ report.date | date : 'longDate' }}</span>
                                 </div>
 
                                 <div class="body">
