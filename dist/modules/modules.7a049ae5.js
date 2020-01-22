@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579711564967})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579711719724})
 
 ;
 /**
@@ -9722,7 +9722,7 @@ angular.module('FieldDoc')
                     self.reports.forEach(function(r){
                             console.log("BUNDLE", r);
 
-                            var f_date = self.formattedDate(r.date);
+                            var f_date = self.formatDate(r.date);
 
                             console.log("f_date", f_date);
 
@@ -9782,7 +9782,7 @@ angular.module('FieldDoc')
                         self.reports.forEach(function(r){
                             console.log("BUNDLE", r);
 
-                            var f_date = self.formattedDate(r.date);
+                            var f_date = self.formatDate(r.date);
 
                             console.log("f_date", f_date);
 
