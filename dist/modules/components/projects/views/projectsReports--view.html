@@ -32,10 +32,23 @@
             <div class="group">
                 <section class="reveal fade-in t3" style="padding: 0;">
                     <article class="pad space-right shadow reveal fade-in t0">
-                        <h1>{{ page.project.name }}</h1>
+
+                         <p>
+                            <strong>Project:</strong> <a href="/projects/{{ page.project.id }}">{{ page.project.name || 'Un-named' }}</a>
+                        </p>
+                      <!--  <h1>{{ page.project.name }}</h1> -->
                         <p data-ng-if="page.project.id && page.project.last_modified_by.first_name && page.project.last_modified_by.last_name" class="label modtime">
                                     Last modified by {{ page.project.last_modified_by.first_name }} {{ page.project.last_modified_by.last_name }} on {{ page.project.modified_on | localTime | date:'fullDate' }} at <span class="lowercase">{{ page.project.modified_on | localTime | date:'h:mma' }}</span>
-                                </p>
+                        </p>
+
+                         <p style="max-width:800px; text-align:justify">
+                            <strong>Instructions:</strong><br>
+                            To create a new report group for a Project: {{ page.project.name || 'Un-named' }}
+                             press the <strong>+</strong> symbol below under the title of associated Grant Program.
+                             To edit an existing report group,
+                             press the <sub> <i class="material-icons"> edit </i></sub>.
+                        </p>
+
                     </article>
                 </section>
             </div>
