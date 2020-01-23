@@ -29,13 +29,19 @@
 
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
 
+            <section class="reveal fade-in t3" style="padding: 0;">
+                <h1>{{ page.project.name }}</h1>
+                <p data-ng-if="page.project.id && page.project.last_modified_by.first_name && page.project.last_modified_by.last_name" class="label modtime">
+                                Last modified by {{ page.project.last_modified_by.first_name }} {{ page.project.last_modified_by.last_name }} on {{ page.project.modified_on | localTime | date:'fullDate' }} at <span class="lowercase">{{ page.project.modified_on | localTime | date:'h:mma' }}</span>
+                            </p>
+            </section>
 
             <!-- Project Summary -->
 
 
-             <div class="group">
+       <!--      <div class="group">
 
-                    <article class="pad space-right shadow reveal fade-in t0">
+                <article class="pad space-right shadow reveal fade-in t0">
 
                         <h1>{{ page.project.name }}</h1>
 
@@ -49,15 +55,6 @@
                             <strong>Program:</strong> <a href="{{ page.project.links.program[$index][html] }}">{{ program.name }}</a>
                         </p>
 
-                        <!--
-                        <p data-ng-if="page.project.program && page.project.program.id" class="label">
-                            <strong>Program:</strong> <a href="{{ page.project.links.program.html }}">{{ page.project.program.name }}</a>
-                        </p>
-                        -->
-                     <!--   <p data-ng-if="page.area && page.area.value" class="label">
-                            <strong>Total area:</strong> {{ page.area.value | number:2 }} {{ page.area.unit }}s
-                        </p>
-                    -->
                         <p data-ng-bind-html="page.project.description"></p>
 
                         <div data-ng-if="page.tags && page.tags.length">
@@ -82,9 +79,9 @@
                         </div>
 
                     </article>
-
+        -->
                     <!-- <div class="map--module shadow reveal fade-in t1" style="position:relative;" data-ng-include="'/templates/primaryMap--view.html'"></div> -->
-
+<!--
                     <div class="map--module shadow reveal fade-in t1" style="position:relative;">
                         <div id="primary--map" class="map tall" style="border-radius: 4px; overflow: hidden;">
                             <div class="mapboxgl-layer-ctrl" data-ng-click="page.showLayerOptions = !page.showLayerOptions" title="Switch layers">
@@ -113,7 +110,7 @@
 
                 </div>
 
-
+            -->
             <!-- End Project Summary -->
 
 
