@@ -180,7 +180,7 @@
 
                 <ul class="snapshot--cards list-unstyled">
 
-                        <li class="card" data-ng-repeat="practice in page.practices | orderBy:'name':false">
+                        <li class="card" data-ng-repeat="practice in page.practices | orderBy:'-modified_on' | filter: page.queryToken">
 
                             <div class="card--content">
 
