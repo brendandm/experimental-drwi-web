@@ -261,9 +261,22 @@
 
                             console.log("Report Created",successResponse.id);
 
-                    self.report = successResponse;
+                             i = 0;
 
-                        self.loadMatrix(successResponse.id);
+                            self.bundle.practices.forEach(function(p){
+
+                                if(p.id == self.selectedPractice.id){
+
+                                    self.bundle.practices[i].reportAdded = true;
+                                }
+
+                                i = i+1;
+
+                            });
+
+                            self.report = successResponse;
+
+                            self.loadMatrix(successResponse.id);
 
                           //  self.loadMetrics(successResponse.id);
 
@@ -581,6 +594,7 @@
                     console.log("self.targets.active",self.targets.active);
 
                     console.log("SELECTED PRACTICE ON TARGET SAVE", self.selectedPractice);
+
 
 
                     var data = {
