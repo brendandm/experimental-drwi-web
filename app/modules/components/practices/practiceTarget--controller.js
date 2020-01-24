@@ -579,7 +579,7 @@ angular.module('FieldDoc')
                     $timeout(self.closeAlerts, 2000);
 
                     self.status.processing = false;
-
+                    self.calculating = true;
                  //   setTimeout(function(){
                  //     console.log("Timeout complete");
                       self.bgLoadMatrix();
