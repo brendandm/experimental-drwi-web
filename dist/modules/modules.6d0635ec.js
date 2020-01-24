@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1579880875524})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579890437522})
 
 ;
 /**
@@ -19663,12 +19663,14 @@ angular.module('FieldDoc')
                 self.geometryMismatch = false;
 
                 if(self.practice_category.unit != undefined){
-                    if(self.practice.geometry.type == 'LineString' && self.practice_category.unit.dimension != 'length'){
-                        self.geometryMismatch = true;
-                    }
-                    if(self.practice.geometry.type == 'Polygon' && self.practice_category.unit.dimension != 'area'){
-                        self.geometryMismatch = true;
-                    }
+                    if(self.practice.geometry != undefined){
+                        if(self.practice.geometry.type == 'LineString' && self.practice_category.unit.dimension != 'length'){
+                            self.geometryMismatch = true;
+                        }
+                        if(self.practice.geometry.type == 'Polygon' && self.practice_category.unit.dimension != 'area'){
+                            self.geometryMismatch = true;
+                        }
+                     }
                 }
 
                 self.tempTargets = self.practice.targets || [];
