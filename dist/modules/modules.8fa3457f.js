@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1579880875524})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579882232619})
 
 ;
 /**
@@ -20743,7 +20743,7 @@ angular.module('FieldDoc')
  */
 angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
-
+        /*
         $routeProvider
             .when('/practice-types', {
                 templateUrl: '/modules/components/practice-types/views/practiceTypeList--view.html?t=' + environment.version,
@@ -20825,7 +20825,7 @@ angular.module('FieldDoc')
                     }
                 }
             });
-
+    */
     });
 'use strict';
 
@@ -21594,7 +21594,7 @@ angular.module('FieldDoc')
  */
 angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
-
+        /*
         $routeProvider
             .when('/metric-types', {
                 templateUrl: '/modules/components/metrics/views/metricTypeList--view.html?t=' + environment.version,
@@ -21683,7 +21683,7 @@ angular.module('FieldDoc')
                     }
                 }
             });
-
+        */
     });
 'use strict';
 
