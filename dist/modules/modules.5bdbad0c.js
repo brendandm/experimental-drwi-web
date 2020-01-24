@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579882232619})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579882962392})
 
 ;
 /**
@@ -22982,6 +22982,7 @@ angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
 
         $routeProvider
+            /*
             .when('/geographies', {
                 templateUrl: '/modules/components/geographies/views/geographyList--view.html?t=' + environment.version,
                 controller: 'GeographyListController',
@@ -23008,6 +23009,8 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            */
+            /*
             .when('/geographies/collection/new', {
                 templateUrl: '/modules/components/geographies/views/geographyCreate--view.html?t=' + environment.version,
                 controller: 'GeographyCreateController',
@@ -23034,6 +23037,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            */
             .when('/geographies/:geographyId', {
                 templateUrl: '/modules/components/geographies/views/geographySummary--view.html?t=' + environment.version,
                 controller: 'GeographySummaryController',
@@ -23077,6 +23081,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            /*
             .when('/geographies/:geographyId/edit', {
                 templateUrl: '/modules/components/geographies/views/geographyEdit--view.html?t=' + environment.version,
                 controller: 'GeographyEditController',
@@ -23102,6 +23107,8 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            */
+            /*
             .when('/geographies/:geographyId/location', {
                 templateUrl: '/modules/components/geographies/views/geographyLocation--view.html?t=' + environment.version,
                 controller: 'GeographyLocationController',
@@ -23127,6 +23134,8 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            */
+            /*
             .when('/geographies/:geographyId/location', {
                 templateUrl: '/modules/components/geographies/views/geographyLocation--view.html?t=' + environment.version,
                 controller: 'GeographyLocationController',
@@ -23152,6 +23161,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            */
             .when('/geographies/:geographyId/tags', {
                 templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
                 controller: 'FeatureTagController',
@@ -23199,6 +23209,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
+
             .when('/geographies/:geographyId/targets', {
                 templateUrl: '/modules/components/geographies/views/geographyTarget--view.html?t=' + environment.version,
                 controller: 'GeographyTargetController',
