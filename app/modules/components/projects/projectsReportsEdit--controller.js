@@ -887,6 +887,8 @@
 
                     self.displayModal = false;
 
+                     self.loadBundle();
+
                 };
 
 
