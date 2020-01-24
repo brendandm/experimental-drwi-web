@@ -247,7 +247,7 @@
 
 
                                         </button>
-                                         <button ng-if="!practice.report && !(page.newReports | contains:practice.id)"
+                                         <button ng-if="!practice.report && !(page.newReports.indexOf(practice.id > -1))"
                                                   data-ng-click="page.showPracticeModal(practice.id)"
                                                   title="add data to practice {{practice.name}}"
                                                 style="
