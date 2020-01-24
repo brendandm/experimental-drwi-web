@@ -222,7 +222,7 @@
                                     <p style="min-height:78px;">{{ (practice.description || 'No description') | truncate:80 }}</p>
 
                                      <div class="collection-filter-group">
-                                        <button  ng-if="practice.report || (practice.reportAdded == true)"
+                                        <button  ng-if="practice.report || (page.newReports | contains:practice.id)"
                                                  data-ng-click="page.showPracticeModal(practice.id)"
                                                  title="add data to practice {{practice.name}}"
                                                 style="
@@ -247,7 +247,7 @@
 
 
                                         </button>
-                                         <button ng-if="!practice.report"
+                                         <button ng-if="!practice.report && !(page.newReports | contains:practice.id)"
                                                   data-ng-click="page.showPracticeModal(practice.id)"
                                                   title="add data to practice {{practice.name}}"
                                                 style="

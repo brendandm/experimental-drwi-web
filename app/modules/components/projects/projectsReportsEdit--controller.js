@@ -44,6 +44,7 @@
                     };
 
 
+                self.newReports =[];
                               //
                 // Setup all of our basic date information so that we can use it
                 // throughout the page
@@ -261,18 +262,23 @@
 
                             console.log("Report Created",successResponse.id);
 
+                            self.newReports.push(self.selectedPractice.id);
+
+                            /*
                             var i = 0;
 
                             self.bundle.practices.forEach(function(p){
 
                                 if(p.id == self.selectedPractice.id){
 
-                                    self.bundle.practices[i].reportAdded = true;
+
+                                  //  self.bundle.practices[i].reportAdded = true;
                                 }
 
                                 i = i+1;
 
                             });
+                            */
 
                             self.report = successResponse;
 
