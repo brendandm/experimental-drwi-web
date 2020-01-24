@@ -580,6 +580,9 @@
                     console.log("self.targets",self.targets);
                     console.log("self.targets.active",self.targets.active);
 
+                    console.log("SELECTED PRACTICE ON TARGET SAVE", self.selectedPractice);
+
+
                     var data = {
                         targets: self.targets.active.slice(0)
                     };
