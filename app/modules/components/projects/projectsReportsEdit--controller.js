@@ -261,7 +261,7 @@
 
                             console.log("Report Created",successResponse.id);
 
-                             i = 0;
+                            var i = 0;
 
                             self.bundle.practices.forEach(function(p){
 
