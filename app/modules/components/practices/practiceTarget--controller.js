@@ -417,7 +417,7 @@ angular.module('FieldDoc')
 
                 self.geometryMismatch = false;
 
-                if(self.practice_category.unit.dimension != undefined){
+                if(self.practice_category.unit != undefined){
                     if(self.practice.geometry.type == 'LineString' && self.practice_category.unit.dimension != 'length'){
                         self.geometryMismatch = true;
                     }
