@@ -418,12 +418,14 @@ angular.module('FieldDoc')
                 self.geometryMismatch = false;
 
                 if(self.practice_category.unit != undefined){
-                    if(self.practice.geometry.type == 'LineString' && self.practice_category.unit.dimension != 'length'){
-                        self.geometryMismatch = true;
-                    }
-                    if(self.practice.geometry.type == 'Polygon' && self.practice_category.unit.dimension != 'area'){
-                        self.geometryMismatch = true;
-                    }
+                    if(self.practice.geometry != undefined){
+                        if(self.practice.geometry.type == 'LineString' && self.practice_category.unit.dimension != 'length'){
+                            self.geometryMismatch = true;
+                        }
+                        if(self.practice.geometry.type == 'Polygon' && self.practice_category.unit.dimension != 'area'){
+                            self.geometryMismatch = true;
+                        }
+                     }
                 }
 
                 self.tempTargets = self.practice.targets || [];
