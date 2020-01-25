@@ -334,12 +334,25 @@
                     <div id="modalScroll" class="summary-card"
                          style="max-width:80%;">
 
-                         <h2>
+                         <h2 style="
+                                margin-top: 0px;
+                                margin-bottom:0px;
+                                "
+                         >
                             Reporting to {{page.bundle.program.name}}
                         </h2>
-                         <h2>
-                            Reporting to {{page.selectedPractice.name}}
-                        </h2>
+                         <p style="
+                                margin-top: 10px;
+                                margin-bottom:0px;
+                                ">
+                             Reporting to Project: <a href="/projects/page.project.id">{{page.project.name}}</a>
+                        </p>
+                         <p style="
+                                margin-top: 10px;
+                                margin-bottom:0px;
+                                ">
+                             Reporting to Practice: <a href="/projects/page.selectedPractice.id">{{page.selectedPractice.name}}</a>
+                        </p>
 
             <!--  position:fixed; -->
 
@@ -502,8 +515,8 @@
                                         display:    block;
                                         float:      right;
                                         width:      5px;
-                                        height:     5px;
-                                        border:     0px solid white;
+                                        max-height: 5px;
+                                        border:     1px solid white;
                                         box-shadow: none;
                                       "
                         >
