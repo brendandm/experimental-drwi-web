@@ -207,7 +207,7 @@
 
                     self.reports = self.project.reports;
 
-                    console.log("CAN EDIT",page.permissions.can_edit);
+                    console.log("CAN EDIT",self.permissions.can_edit);
 
                     var i = 0
 
