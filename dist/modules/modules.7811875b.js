@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579846705781})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1579928029954})
 
 ;
 /**
@@ -9725,64 +9725,61 @@ angular.module('FieldDoc')
 
                     var i = 0
 
-                    self.reports.forEach(function(r){
-                            console.log("BUNDLE", r);
+                    if(self.reports != undefined){
+                        self.reports.forEach(function(r){
+                                console.log("BUNDLE", r);
 
-                        //    var f_date = self.formatDate(r.date);
-
-                        //    if(r.date == undefined){
-                            //    if(self.selectedPractice.report != undefined){
-                             var r_iso_date = parseISOLike(r.date);
-                            //    }else{
-                            //        self.selectedPractice.date = new Date();
-                            //    }
-
-                     //       }
-
-                           var f_date = {
-                                month: self.months[r_iso_date.getMonth()],
-                                date: r_iso_date.getDate(),
-                                day: self.days[r_iso_date.getDay()],
-                                year: r_iso_date.getFullYear()
-                            };
+                                 var r_iso_date = parseISOLike(r.date);
 
 
-                            console.log("f_date", f_date);
+                               var f_date = {
+                                    month: self.months[r_iso_date.getMonth()],
+                                    date: r_iso_date.getDate(),
+                                    day: self.days[r_iso_date.getDay()],
+                                    year: r_iso_date.getFullYear()
+                                };
 
-                            self.reports[i].formatted_date = f_date;
 
-                            i = i+1;
-                    });
+                                console.log("f_date", f_date);
 
+                                self.reports[i].formatted_date = f_date;
 
-                    self.programs = self.project.programs;
-
-                    self.matrix = [];
-
-                    var i = 0;
-
-                    self.programs.forEach(function(program,p_i){
-
-                        self.matrix[i] = program;
-
-                        self.matrix[i].reports = [];
-
-                        var i2 = 0;
-
-                        self.reports.forEach(function(report,r_i){
-
-                            if(program.id == report.program_id){
-
-                                self.matrix[i].reports.push(report);
-
-                            }
-
-                            i2 = i2+1;
-
+                                i = i+1;
                         });
 
-                        i = i+1;
-                    });
+
+
+                        self.programs = self.project.programs;
+
+                        self.matrix = [];
+
+                        var i = 0;
+
+                        self.programs.forEach(function(program,p_i){
+
+                            self.matrix[i] = program;
+
+                            self.matrix[i].reports = [];
+
+                            var i2 = 0;
+
+                            self.reports.forEach(function(report,r_i){
+
+                                if(program.id == report.program_id){
+
+                                    self.matrix[i].reports.push(report);
+
+                                }
+
+                                i2 = i2+1;
+
+                            });
+
+                            i = i+1;
+                        });
+
+                    
+                    }
 
                     console.log(self.matrix);
 
