@@ -207,6 +207,8 @@
 
                     self.reports = self.project.reports;
 
+                    console.log("CAN EDIT",page.permissions.can_edit);
+
                     var i = 0
 
                     if(self.reports != undefined){
@@ -262,7 +264,7 @@
                             i = i+1;
                         });
 
-                    
+
                     }
 
                     console.log(self.matrix);
