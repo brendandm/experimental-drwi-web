@@ -10,7 +10,7 @@
  */
 angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
-
+        /*
         $routeProvider
             .when('/practice-types', {
                 templateUrl: '/modules/components/practice-types/views/practiceTypeList--view.html?t=' + environment.version,
@@ -92,5 +92,5 @@ angular.module('FieldDoc')
                     }
                 }
             });
-
+    */
     });

@@ -12,6 +12,7 @@ angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
 
         $routeProvider
+            /*
             .when('/geographies', {
                 templateUrl: '/modules/components/geographies/views/geographyList--view.html?t=' + environment.version,
                 controller: 'GeographyListController',
@@ -38,6 +39,8 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            */
+            /*
             .when('/geographies/collection/new', {
                 templateUrl: '/modules/components/geographies/views/geographyCreate--view.html?t=' + environment.version,
                 controller: 'GeographyCreateController',
@@ -64,6 +67,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            */
             .when('/geographies/:geographyId', {
                 templateUrl: '/modules/components/geographies/views/geographySummary--view.html?t=' + environment.version,
                 controller: 'GeographySummaryController',
@@ -107,6 +111,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            /*
             .when('/geographies/:geographyId/edit', {
                 templateUrl: '/modules/components/geographies/views/geographyEdit--view.html?t=' + environment.version,
                 controller: 'GeographyEditController',
@@ -132,6 +137,8 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            */
+            /*
             .when('/geographies/:geographyId/location', {
                 templateUrl: '/modules/components/geographies/views/geographyLocation--view.html?t=' + environment.version,
                 controller: 'GeographyLocationController',
@@ -157,6 +164,8 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            */
+            /*
             .when('/geographies/:geographyId/location', {
                 templateUrl: '/modules/components/geographies/views/geographyLocation--view.html?t=' + environment.version,
                 controller: 'GeographyLocationController',
@@ -182,6 +191,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
+            */
             .when('/geographies/:geographyId/tags', {
                 templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
                 controller: 'FeatureTagController',
@@ -229,6 +239,7 @@ angular.module('FieldDoc')
                     }
                 }
             })
+
             .when('/geographies/:geographyId/targets', {
                 templateUrl: '/modules/components/geographies/views/geographyTarget--view.html?t=' + environment.version,
                 controller: 'GeographyTargetController',

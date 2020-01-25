@@ -10,7 +10,7 @@
  */
 angular.module('FieldDoc')
     .config(function($routeProvider, environment) {
-
+        /*
         $routeProvider
             .when('/metric-types', {
                 templateUrl: '/modules/components/metrics/views/metricTypeList--view.html?t=' + environment.version,
@@ -99,5 +99,5 @@ angular.module('FieldDoc')
                     }
                 }
             });
-
+        */
     });
