@@ -1086,4 +1086,3 @@ angular.module('FieldDoc')
             }
 
         });
-        
