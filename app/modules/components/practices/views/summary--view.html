@@ -27,13 +27,16 @@
         <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
 
             <div class="module--grid">
-                 <div class="breadcrumb_container">
+
+            <!--     <div class="breadcrumb_container"> -->
+                <article class="pad space-right shadow reveal fade-in t0">
                      <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
                         >>
                      <a href="/site/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
                         >>
                      <a href="">{{ page.practice.name }}</a>
-                </div>
+                </article>
+            <!--    </div> -->
 
                 <div class="group">
 
