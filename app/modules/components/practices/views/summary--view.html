@@ -30,12 +30,16 @@
 
             <!--     <div class="breadcrumb_container"> -->
                 <div class="group">
-                    <article class="pad space-right shadow reveal fade-in t0">
-                         <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
-                            >>
-                         <a href="/site/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
-                            >>
-                         <a href="">{{ page.practice.name }}</a>
+                    <article class="space-right shadow reveal fade-in t0"
+                        style="max-height: 30px;">
+                        <nobr>
+
+                            <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
+                                >>
+                            <a href="/site/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
+                                >>
+                            <a href="">{{ page.practice.name }}</a>
+                        </nobr>
                     </article>
                 </div>
             <!--    </div> -->
