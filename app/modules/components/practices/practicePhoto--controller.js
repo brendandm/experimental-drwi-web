@@ -74,8 +74,8 @@ angular.module('FieldDoc')
             }
 
             delete self.practice.organization;
-            delete self.practice.project;
-            delete self.practice.site;
+      //      delete self.practice.project;
+      //      delete self.practice.site;
 
             self.practiceType = data.category;
 
