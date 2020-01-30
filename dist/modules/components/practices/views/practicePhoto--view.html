@@ -1,3 +1,4 @@
+togusa1234
 <div data-ng-include="'/templates/header--view.html'"></div>
 
 <main class="site--content--flow fluid-content clearfix distinguish">
@@ -23,6 +24,22 @@
             <p>This practice is private.</p>
 
         </section>
+
+         <div class="main--ui breadcrumb-ui">
+           <div class="group">
+                    <article class="breadcrumb" >
+                        <nobr>
+                            Project: <a href="/projects/{{page.practice.properties.project.properties.id}}">{{page.practice.properties.project.properties.name}}</a>
+                                /
+                               <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
+                            Site: <a href="/sites/{{page.site.properties.id}}">{{page.site.properties.name}}</a>
+                                /
+                            Practice: <a href="/practices/{{page.practice.properties.id}}">{{ page.practice.properties.name }}</a>
+                                / Practice photos
+                        </nobr>
+                    </article>
+                </div>
+        </div>
 
         <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">Practice photos</h1>
 
