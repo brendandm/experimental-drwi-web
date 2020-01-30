@@ -9,9 +9,9 @@
 
 .breadcrumb {
      max-height      : 30px;
-     min-height      : 0px;
+     min-height      : 0px !important ;
      margin-right    : 0px;
-     margin-bottom   : 16px;
+     margin-bottom   : 16px !important ;
      padding         : 5px 32px 5px 0px;
      color           : #1f2120;
      background-color: transparent;
