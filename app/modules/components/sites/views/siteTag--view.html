@@ -24,6 +24,21 @@
 
         </section>
 
+        <div class="main--ui breadcrumb-ui">
+           <div class="group">
+                    <article class="breadcrumb" >
+                        <nobr>
+                            Project: <a href="/projects/{{page.site.project.id}}">{{page.site.project.name}}</a>
+                                /
+                            Site: <a href="/sites/{{page.site.id}}">{{page.site.name}}</a>
+                                /
+                            Edit tags
+
+                        </nobr>
+                    </article>
+                </div>
+        </div>
+
         <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">Edit tags</h1>
 
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
