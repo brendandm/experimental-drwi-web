@@ -24,6 +24,22 @@
 
         </section>
 
+        <div class="main--ui breadcrumb-ui">
+           <div class="group">
+                    <article class="breadcrumb" >
+                        <nobr>
+                            Project: <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
+                                /
+                               <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
+                            Site: <a href="/sites/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
+                                /
+                            Practice: <a href="/practices/{{page.practice.id}}">{{ page.practice.name }}</a>
+                                / Targets
+                        </nobr>
+                    </article>
+                </div>
+        </div>
+
         <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">Edit tags</h1>
 
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
