@@ -9,6 +9,7 @@
 
 .breadcrumb {
      height      : auto;
+     width:     100%;   
      min-height      : 0px !important ;
      margin-right    : 0px;
      margin-bottom   : 16px !important ;
@@ -16,8 +17,8 @@
      color           : #333333;
      background-color: transparent;
      display: flex;
-  flex-direction: column;
-     float           : right;
+     flex-direction: column;
+     float           : left;
      clear           :both;
 
 }
