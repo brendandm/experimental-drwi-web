@@ -17,6 +17,8 @@
      background-color: transparent;
      display         : inline-block;
      float           : right;
+     resize          : both;
+     overflow     : auto;
 }
 .breadcrumb icon    {
     color:#666666;
