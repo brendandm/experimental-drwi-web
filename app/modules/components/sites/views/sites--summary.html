@@ -28,6 +28,20 @@
 
             <div class="module--grid" data-ng-if="!page.status.loading">
 
+               <!--     <div class="breadcrumb_container"> -->
+                <div class="group">
+                    <article class="breadcrumb" >
+                        <nobr>
+                            Project: <a href="/projects/{{page.site.project.id}}">{{page.practice.project.name}}</a>
+                                /
+                               <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
+                            Site: <a href="/sites/{{page.site.id}}">{{page.practice.site.name}}</a>
+
+                        </nobr>
+                    </article>
+                </div>
+            <!--    </div> -->
+
                 <div class="group">
 
                     <article class="pad space-right shadow reveal fade-in t0">
