@@ -28,15 +28,21 @@
         <div class="main--ui breadcrumb-ui">
            <div class="group">
                     <article class="breadcrumb" >
-                        <nobr>
-                            Project: <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
-                                /
-                               <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
-                            Site: <a href="/sites/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
-                                /
-                            Practice: <a href="/practices/{{page.practice.id}}">{{ page.practice.name }}</a>
-                                / Edit practice
-                        </nobr>
+                        <p>
+                            <nobr>
+                                Project: <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
+                                    /
+                            </nobr>
+                            <nobr>
+                                   <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
+                                Site: <a href="/sites/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
+                                    /
+                            </nobr>
+                            <nobr>
+                                Practice: <a href="/practices/{{page.practice.id}}">{{ page.practice.name }}</a>
+                                    / Edit practice
+                            </nobr>
+                        </p>
                     </article>
                 </div>
         </div>
