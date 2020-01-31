@@ -33,14 +33,16 @@
              -->
                     <article class="breadcrumb" style="border:1px solid red;" >
                         <p>
-                            Project: <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
+                           <nobr> Project: <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
                                 /
+                               </nobr>
+                            <nobr>
                                <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
                             Site: <a href="/sites/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
                                 /
-
+                            </nobr><nobr>
                                 Practice: <a href="/practices/{{page.practice.id}}">{{ page.practice.name }}</a>
-
+                            </nobr>
                         </p>
                     </article>
               <!--  </div>
