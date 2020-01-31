@@ -8,7 +8,7 @@
 //
 
 .breadcrumb {
-     height      : 30px;
+     height      : auto;
      min-height      : 0px !important ;
      margin-right    : 0px;
      margin-bottom   : 16px !important ;
@@ -19,7 +19,7 @@
   flex-direction: column;
      float           : right;
      clear           :both;
-     overflow     : auto;
+
 }
 .breadcrumb icon    {
     color:#666666;
