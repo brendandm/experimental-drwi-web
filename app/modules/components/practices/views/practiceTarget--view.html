@@ -11,21 +11,26 @@
         <div class="main--ui breadcrumb-ui">
            <div class="group">
                     <article class="breadcrumb" >
-                        <nobr>
-                            Project: <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
-                                /
-                               <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
-                            Site: <a href="/sites/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
-                                /
-                            Practice: <a href="/practices/{{page.practice.id}}">{{ page.practice.name }}</a>
-                                / Targets
-                        </nobr>
+                        <p>
+                            <nobr>
+                                Project: <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
+                                    /
+                                </nobr>
+                            <nobr>
+                                   <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
+                                Site: <a href="/sites/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
+                                    /
+                            </nobr><nobr>
+                                Practice: <a href="/practices/{{page.practice.id}}">{{ page.practice.name }}</a>
+                                    / Targets
+                            </nobr>
+                        </p>
                     </article>
                 </div>
         </div>
-
-        <h1 class="inset">{{ page.practice.name || 'Un-named' }} &middot; Targets</h1>
-
+        <div class="breadcrumb-header-wrapper">
+            <h1 class="inset">{{ page.practice.name || 'Un-named' }} &middot; Targets</h1>
+        </div>
         <div class="main--ui target-ui reveal fade-in t0">
 
             <p>The metrics listed here are associated with the <strong>{{ page.practice_category.name }}</strong> practice type and the <strong>{{ page.practice.site.name }}</strong> site. Assign targets to this practice by entering a numeric value for one or more metrics.</p>
