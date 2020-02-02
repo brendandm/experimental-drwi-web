@@ -21,7 +21,7 @@
      flex-direction: column;
      float           : left;
      clear           :both;
-     overflow: hidden;  
+     overflow: hidden;
 
 }
 .breadcrumb icon    {
@@ -36,6 +36,9 @@
 
     float: left;
     display: inline-block;
+}
+.breadcrumb-header-wrapper{
+    width: 100%;
 }
 .breadcrumb-header {
     display:block;

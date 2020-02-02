@@ -27,8 +27,8 @@
         </section>
        <div class="breadcrumb-ui main--ui" >
            <!-- style="padding-bottom: 0px;border:1px solid purple; float:left; display:inline-block;" -->
-           <div class="group" style="border:1px solid red;">
-                    <article class="breadcrumb" style="border:1px solid green;" >
+           <div class="group" style="border:0px solid red;">
+                    <article class="breadcrumb" style="border:0px solid green;" >
                         <p>
                             <nobr>
                                 Project: <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
@@ -47,7 +47,7 @@
                     </article>
                 </div>
       </div>
-        <div style="width: 100%">
+        <div class="breadcrumb-header-wrapper">
             <h1 class="inset breadcrumb-header reveal fade-in t0"
                 data-ng-if="!page.status.loading && !page.makePrivate"
                >Edit practice</h1>
