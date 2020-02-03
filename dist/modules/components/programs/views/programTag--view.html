@@ -27,18 +27,23 @@
         <div class="main--ui breadcrumb-ui">
            <div class="group">
                     <article class="breadcrumb" >
-                        <nobr>
-                            Program: <a href="/programs/{{page.program.id}}">{{page.program.name}}</a>
-                                /
-                            Edit tags
+                        <p>
+                            <nobr>
+                                Program: <a href="/programs/{{page.program.id}}">{{page.program.name}}</a>
+                                    /
+                            </nobr>
+                            <nobr>
+                                Edit tags
 
-                        </nobr>
+                            </nobr>
+                        </p>
                     </article>
                 </div>
         </div>
 
-        <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">Edit tags</h1>
-
+        <div class="breadcrumb-header-wrapper">
+            <h1 class="inset breadcrumb-header" data-ng-if="!page.status.loading && !page.makePrivate">Edit tags</h1>
+        </div>
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
 
             <article class="feature-detail" style="width: 100%; max-width: 48rem; margin: 1em auto;">
