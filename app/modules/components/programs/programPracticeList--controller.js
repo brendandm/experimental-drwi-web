@@ -62,7 +62,7 @@
 
                 self.loadProgram = function() {
 
-                    program.$promise.then(function(successResponse) {
+                    Program.$promise.then(function(successResponse) {
 
                         console.log('self.program', successResponse);
 
