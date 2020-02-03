@@ -22,7 +22,7 @@
             'Model',
             'Project',
             'model',
-            'Program'
+            'Program',
             function(Account, $location, $timeout, $log, $rootScope,
                 $route, Utility, user, $window, mapbox, Model,
                 Project, model) {
