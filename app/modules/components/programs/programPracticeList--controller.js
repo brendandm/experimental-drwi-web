@@ -147,7 +147,7 @@
                             can_edit: true
                         };
 
-                        self.loadModel();
+                        self.loadProgram();
 
                     });
                 }
