@@ -1,0 +1,159 @@
+<div data-ng-include="'/templates/header--view.html'"></div>
+
+<main class="site--content--flow fluid-content clearfix distinguish">
+
+    <div id="sidebar" data-ng-include="'/templates/side-bar.html'"></div>
+
+    <div class="content--container" style="border-right: 1px solid #e0e0e0;">
+
+        <div class="main--ui">
+
+            <div class="module--grid">
+
+                <div class="group">
+
+                    <!-- Descriptors -->
+
+                    <article class="pad space-right shadow">
+
+                        <h1>{{ page.model.name || 'Un-named' }}</h1>
+
+                        <p data-ng-if="page.model.description" data-ng-bind-html="page.model.description"></p>
+
+                        <!-- <p data-ng-if="page.model.website_url" style="display: flex; flex-flow: row nowrap; align-items: center;">
+                            <i class="material-icons">
+                            open_in_new
+                            </i>
+                            <a href="{{ page.model.website_url }}" target="_blank">&nbsp;View website</a>
+                        </p>
+
+                        <p data-ng-if="page.model.documentation_url" style="display: flex; flex-flow: row nowrap; align-items: center;">
+                            <i class="material-icons">
+                            open_in_new
+                            </i>
+                            <a href="{{ page.model.documentation_url }}" target="_blank">&nbsp;View documentation</a>
+                        </p> -->
+
+                        <div data-ng-if="page.tags && page.tags.length">
+
+                            <span style="display: block; margin: 1em 0; color: #757575; text-transform: uppercase; font-size: .8em; font-weight: bold; letter-spacing: .05em;">Tags</span>
+
+                            <div class="tag--group">
+
+                                <div class="tag--pill" data-ng-class="{'colorize': tag.color && tag.color.length === 7}" data-ng-repeat="tag in page.tags">
+                                    <div class="colorize" data-ng-if="tag.color">
+                                        <span class="category" style="background: {{ tag.color }}; color: #f5f5f5; border-bottom: 1px solid {{ tag.color }};">{{ tag.group.name || 'misc' }}</span>
+                                        <span style="background: {{ tag.lightColor }}; color: #fafafa;">{{ tag.name }}</span>
+                                    </div>
+                                    <div data-ng-if="!tag.color || tag.color.length < 7">
+                                        <span class="category">{{ tag.group.name || 'misc' }}</span>
+                                        <span>{{ tag.name }}</span>
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                    <article class="pad shadow reveal fade-in t1">
+
+                        <!-- <h1>{{ page.model.name || 'Un-named' }}</h1> -->
+
+                        <p data-ng-if="page.model.website_url" style="display: flex; flex-flow: row nowrap; align-items: center;">
+                            <i class="material-icons">
+                            open_in_new
+                            </i>
+                            <a href="{{ page.model.website_url }}" target="_blank">&nbsp;View website</a>
+                        </p>
+
+                        <p data-ng-if="page.model.documentation_url" style="display: flex; flex-flow: row nowrap; align-items: center;">
+                            <i class="material-icons">
+                            open_in_new
+                            </i>
+                            <a href="{{ page.model.documentation_url }}" target="_blank">&nbsp;View documentation</a>
+                        </p>
+
+                    </article>
+
+                    <!-- Map -->
+
+                    <!-- <div style="position:relative;">
+
+                        <leaflet id="program--map" class="map tall" center="page.map.center" geojson="page.map.geojson" defaults="page.map.defaults" layers="page.map.layers" markers="page.map.markers"></leaflet>
+
+                    </div> -->
+
+                </div>
+
+                <div class="group reveal fade-in t2">
+
+                    <section class="pad shadow">
+
+                        <h2>Practices</h2>
+
+                        <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+
+                            <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
+                                data-ng-repeat="practice in page.practiceTypes | orderBy:'name' | filter: page.q"
+                               >
+
+                                <div class="card--content" >
+
+                                    <div class="name" style="flex-flow: column; align-items: flex-start;">
+                                        <label for="practice-{{ practice.id }}">
+                                            {{ practice.name }}
+                                        </label>
+                                        <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
+                                    </div>
+
+                                    <!-- <label class="name" for="practice-{{ practice.id }}" style="flex-flow: column; align-items: flex-start;">
+                                        {{ practice.name }}
+                                        <span style="font-size: 0.7em; font-weight: normal; color: #757575; text-transform: uppercase;" data-ng-if="practice.group">{{ practice.group }}</span>
+                                    </label> -->
+
+                                    <div class="body">
+                                        <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (practice.description || 'No description') }}</p>
+                                    </div>
+
+                                </div>
+
+                            </li>
+
+
+                        </ul>
+
+                    </section>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
+        <ul>
+            <li data-ng-class="{active: $root.toolbarState.dashboard}">
+                <a href="/models/{{ page.model.id }}">
+                    <i class="material-icons">
+                        dashboard
+                    </i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="transient--notification" data-ng-class="{show: page.alerts.length}">
+        <div class="event--container">
+            <div data-ng-repeat="alert in page.alerts" data-ng-class="{error: alert.type == 'error', success: alert.type == 'success'}">
+                <span class="event--message">{{ alert.msg }}</span>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<div data-ng-include="'/templates/footer--view.html'"></div>

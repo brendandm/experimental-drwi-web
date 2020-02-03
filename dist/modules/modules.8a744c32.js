@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1580740990218})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1580742217020})
 
 ;
 /**
@@ -27912,7 +27912,32 @@ angular.module('FieldDoc')
                         });
                     }
                 }
-            });
+            })
+             .when('/programs/:programId/practices', {
+                templateUrl: '/modules/components/programs/views/programPracticeList--view.html?t=' + environment.version,
+                controller: 'ProgramListController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    programs: function(Program, $route) {
+
+                        return Program.collection({});
+
+                    }
+                }
+            })
+
+            ;
             // .when('/programs/:programId/tags', {
             //     templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
             //     controller: 'FeatureTagController',

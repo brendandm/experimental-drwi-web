@@ -119,7 +119,32 @@ angular.module('FieldDoc')
                         });
                     }
                 }
-            });
+            })
+             .when('/programs/:programId/practices', {
+                templateUrl: '/modules/components/programs/views/programPracticeList--view.html?t=' + environment.version,
+                controller: 'ProgramListController',
+                controllerAs: 'page',
+                resolve: {
+                    user: function(Account, $rootScope, $document) {
+
+                        $rootScope.targetPath = document.location.pathname;
+
+                        if (Account.userObject && !Account.userObject.id) {
+                            return Account.getUser();
+                        }
+
+                        return Account.userObject;
+
+                    },
+                    programs: function(Program, $route) {
+
+                        return Program.collection({});
+
+                    }
+                }
+            })
+
+            ;
             // .when('/programs/:programId/tags', {
             //     templateUrl: '/modules/shared/tags/views/featureTag--view.html?t=' + environment.version,
             //     controller: 'FeatureTagController',
