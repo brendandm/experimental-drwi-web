@@ -29,16 +29,18 @@
                     <article class="breadcrumb" >
                         <nobr>
                             Project: <a href="/projects/{{page.project.id}}">{{page.project.name}}</a>
-                                /
+                            /
+                        </nobr>
+                        <nobr>
                             Edit project
 
                         </nobr>
                     </article>
                 </div>
         </div>
-
-        <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">Edit project</h1>
-
+        <div class="breadcrumb-header-wrapper">
+            <h1 class="inset breadcrumb-header" data-ng-if="!page.status.loading && !page.makePrivate">Edit project</h1>
+        </div>
         <div class="main--ui" data-ng-if="!page.status.loading && !page.makePrivate">
 
 
