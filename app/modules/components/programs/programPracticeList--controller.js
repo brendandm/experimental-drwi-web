@@ -27,6 +27,8 @@
                 $route, Utility, user, $window, mapbox, Model,
                 Project, model, Program) {
 
+                 console.log("YES");
+
                 var self = this;
 
                 self.modelId = $route.current.params.modelId;
