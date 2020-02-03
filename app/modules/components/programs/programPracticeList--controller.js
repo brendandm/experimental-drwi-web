@@ -138,6 +138,8 @@
 
                     user.$promise.then(function(userResponse) {
 
+                        console.log("DRIVE");
+
                         $rootScope.user = Account.userObject = userResponse;
 
                         self.permissions = {
