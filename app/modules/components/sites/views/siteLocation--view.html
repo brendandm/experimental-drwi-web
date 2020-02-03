@@ -27,20 +27,25 @@
         <div class="main--ui breadcrumb-ui">
            <div class="group">
                     <article class="breadcrumb" >
-                        <nobr>
-                            Project: <a href="/projects/{{page.site.properties.project.properties.id}}">{{page.site.properties.project.properties.name}}</a>
-                                /
-                            Site: <a href="/sites/{{page.site.properties.id}}">{{page.site.properties.name}}</a>
-                                /
-                            Edit location
+                        <p>
+                            <nobr>
+                                Project: <a href="/projects/{{page.site.properties.project.properties.id}}">{{page.site.properties.project.properties.name}}</a>
+                                    /
+                            </nobr><nobr>
+                                Site: <a href="/sites/{{page.site.properties.id}}">{{page.site.properties.name}}</a>
+                                    /
+                            </nobr>
+                            <nobr>
+                                Edit location
 
-                        </nobr>
+                            </nobr>
+                        </p>
                     </article>
                 </div>
         </div>
-
-        <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">Edit location</h1>
-
+        <div class="breadcrumb-header-wrapper">
+             <h1 class="inset breadcrumb-header" data-ng-if="!page.status.loading && !page.makePrivate">Edit location</h1>
+        </div>
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
 
             <form role="form" class="form" id="form--SiteLocation" name="form--SiteLocation" style="position: relative;" data-ng-submit="page.saveSite()" autocomplete="off">
