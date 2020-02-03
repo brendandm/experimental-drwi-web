@@ -9,18 +9,22 @@
          <div class="main--ui breadcrumb-ui">
            <div class="group">
                     <article class="breadcrumb" >
-                        <nobr>
-                            Project: <a href="/projects/{{page.project.id}}">{{page.project.name}}</a>
-                                /
-                            Targets
+                        <p>
+                            <nobr>
+                                Project: <a href="/projects/{{page.project.id}}">{{page.project.name}}</a>
+                                    /
+                            </nobr>
+                            <nobr>
+                                Targets
 
-                        </nobr>
+                            </nobr>
+                        </p>
                     </article>
                 </div>
         </div>
-
-        <h1 class="inset">{{ page.project.name }} &middot; Targets</h1>
-
+        <div class="breadcrumb-header-wrapper">
+            <h1 class="inset breadcrumb-header">{{ page.project.name }} &middot; Targets</h1>
+        </div>
         <div class="main--ui target-ui reveal fade-in t0">
 
             <p>The metrics listed here include those that you created and any associated with the <strong>{{ page.project.program.name }}</strong> conservation program. Assign targets to this project by entering a numeric value for one or more metrics. From there, you’ll be able to track site- and practice-level implementation progress.</p>
