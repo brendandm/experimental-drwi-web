@@ -25,7 +25,7 @@
             'Program',
             function(Account, $location, $timeout, $log, $rootScope,
                 $route, Utility, user, $window, mapbox, Model,
-                Project, model) {
+                Project, model, Program) {
 
                 var self = this;
 
@@ -59,11 +59,11 @@
 
                 }
 
-                self.loadModel = function() {
+                self.loadProgram = function() {
 
-                    model.$promise.then(function(successResponse) {
+                    program.$promise.then(function(successResponse) {
 
-                        console.log('self.model', successResponse);
+                        console.log('self.program', successResponse);
 
                         self.model = successResponse;
 
