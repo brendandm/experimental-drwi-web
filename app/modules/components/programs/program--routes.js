@@ -122,7 +122,7 @@ angular.module('FieldDoc')
             })
              .when('/programs/:programId/practices', {
                 templateUrl: '/modules/components/programs/views/programPracticeList--view.html?t=' + environment.version,
-                controller: 'ProgramListController',
+                controller: 'ProgramPracticeListController',
                 controllerAs: 'page',
                 resolve: {
                     user: function(Account, $rootScope, $document) {
