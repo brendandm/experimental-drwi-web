@@ -22,6 +22,7 @@
             'Model',
             'Project',
             'Program',
+            'program'
             function(Account, $location, $timeout, $log, $rootScope,
                 $route, Utility, user, $window, mapbox, Model,
                 Project, Program) {
@@ -62,19 +63,23 @@
 
                 self.loadProgram = function() {
 
-                    Program.$promise.then(function(successResponse) {
+                    program.$promise.then(function(successResponse) {
 
                         console.log('self.program', successResponse);
 
-                        self.model = successResponse;
+                        self.program = successResponse;
 
-                        $rootScope.model = successResponse;
+                        $rootScope.program = successResponse;
 
-                        $rootScope.page.title = self.model.name ? self.model.name : 'Un-named Model';
+                        $rootScope.page.title = self.program.name ? self.program.name : 'Un-named Program';
 
                         self.status.loading = false;
 
-                        self.loadPractices();
+//                        self.loadMetrics();
+
+  //                      self.loadProjects();
+//
+  //                      self.loadTags();
 
                     }, function(errorResponse) {
 

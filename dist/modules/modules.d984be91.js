@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1580748151404})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1580748612463})
 
 ;
 /**
@@ -29492,6 +29492,7 @@ angular.module('FieldDoc')
             'Model',
             'Project',
             'Program',
+            'program'
             function(Account, $location, $timeout, $log, $rootScope,
                 $route, Utility, user, $window, mapbox, Model,
                 Project, Program) {
@@ -29532,19 +29533,23 @@ angular.module('FieldDoc')
 
                 self.loadProgram = function() {
 
-                    Program.$promise.then(function(successResponse) {
+                    program.$promise.then(function(successResponse) {
 
                         console.log('self.program', successResponse);
 
-                        self.model = successResponse;
+                        self.program = successResponse;
 
-                        $rootScope.model = successResponse;
+                        $rootScope.program = successResponse;
 
-                        $rootScope.page.title = self.model.name ? self.model.name : 'Un-named Model';
+                        $rootScope.page.title = self.program.name ? self.program.name : 'Un-named Program';
 
                         self.status.loading = false;
 
-                        self.loadPractices();
+//                        self.loadMetrics();
+
+  //                      self.loadProjects();
+//
+  //                      self.loadTags();
 
                     }, function(errorResponse) {
 
