@@ -614,6 +614,8 @@
                             can_edit: true
                         };
 
+                        console.log("USER CHECK");
+
                         self.loadProgram();
 
                     });
