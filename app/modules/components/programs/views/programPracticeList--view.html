@@ -30,15 +30,16 @@
                       </div>
 
                     <!-- Descriptors -->
+                     <div class="group">
+                        <article class="pad space-right shadow">
 
-                    <article class="pad space-right shadow">
+                            <h1>{{ page.program.name || 'Un-named' }}</h1>
 
-                        <h1>{{ page.program.name || 'Un-named' }}</h1>
-
-                        <p data-ng-if="page.program.description" data-ng-bind-html="page.program.description"></p>
+                            <p data-ng-if="page.program.description" data-ng-bind-html="page.program.description"></p>
 
 
-                    </article>
+                        </article>
+                     </div>
 
 
                 </div>
