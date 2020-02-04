@@ -72,7 +72,9 @@ angular.module('FieldDoc')
 
             self.loadProgram = function() {
 
-                programs.$promise.then(function(successResponse) {
+                programs({
+                    id: self.programId
+                }).$promise.then(function(successResponse) {
 
                     console.log('self.program', successResponse);
 
