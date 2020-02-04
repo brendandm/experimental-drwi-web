@@ -6,24 +6,9 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProgramPracticeListController', [
-            'Account',
-            '$location',
-            '$timeout',
-            '$log',
-            '$rootScope',
-            '$route',
-            'Utility',
-            'user',
-            '$window',
-            'mapbox',
-            'Program',
-            'Project',
-            'program',
-            'LayerService',
-            function(Account, $location, $timeout, $log, $rootScope,
-                $route, Utility, user, $window, mapbox, Program,
-                Project, program, LayerService) {
+    .controller('ProgramPracticeListController',
+        function(Account, Image, $location, $log, Program, program, $q,
+            $rootScope, $route, $scope, $timeout, $interval, user, Utility) {
 
             var self = this;
 
@@ -268,7 +253,7 @@ angular.module('FieldDoc')
             // Verify Account information for proper UI element display
             //
             if (Account.userObject && user) {
-                console.log("CHECK USER");
+
                 user.$promise.then(function(userResponse) {
 
                     $rootScope.user = Account.userObject = userResponse;

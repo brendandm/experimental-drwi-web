@@ -87,7 +87,7 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                     program: function(Program, $route) {
+                    program: function(Program, $route) {
                         return Program.get({
                             id: $route.current.params.programId
                         });

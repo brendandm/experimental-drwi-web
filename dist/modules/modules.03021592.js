@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1580842310503})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1580842441601})
 
 ;
 /**
@@ -27880,7 +27880,7 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                     program: function(Program, $route) {
+                    program: function(Program, $route) {
                         return Program.get({
                             id: $route.current.params.programId
                         });
@@ -29479,24 +29479,9 @@ angular.module('FieldDoc')
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProgramPracticeListController', [
-            'Account',
-            '$location',
-            '$timeout',
-            '$log',
-            '$rootScope',
-            '$route',
-            'Utility',
-            'user',
-            '$window',
-            'mapbox',
-            'Program',
-            'Project',
-            'program',
-            'LayerService',
-            function(Account, $location, $timeout, $log, $rootScope,
-                $route, Utility, user, $window, mapbox, Program,
-                Project, program, LayerService) {
+    .controller('ProgramPracticeListController',
+        function(Account, Image, $location, $log, Program, program, $q,
+            $rootScope, $route, $scope, $timeout, $interval, user, Utility) {
 
             var self = this;
 
@@ -29741,7 +29726,7 @@ angular.module('FieldDoc')
             // Verify Account information for proper UI element display
             //
             if (Account.userObject && user) {
-                console.log("CHECK USER");
+
                 user.$promise.then(function(userResponse) {
 
                     $rootScope.user = Account.userObject = userResponse;
