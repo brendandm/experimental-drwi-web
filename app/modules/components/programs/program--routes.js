@@ -87,10 +87,10 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    programs: function(Program, $route) {
-
-                        return Program.collection({});
-
+                     program: function(Program, $route) {
+                        return Program.get({
+                            id: $route.current.params.programId
+                        });
                     }
                 }
             })

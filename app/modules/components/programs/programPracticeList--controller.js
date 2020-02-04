@@ -84,7 +84,7 @@ angular.module('FieldDoc')
 
             };
 
- self.loadProgram = function() {
+            self.loadProgram = function() {
 
                 program.$promise.then(function(successResponse) {
 

@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1580841961531})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1580842310503})
 
 ;
 /**
@@ -27880,10 +27880,10 @@ angular.module('FieldDoc')
                         return Account.userObject;
 
                     },
-                    programs: function(Program, $route) {
-
-                        return Program.collection({});
-
+                     program: function(Program, $route) {
+                        return Program.get({
+                            id: $route.current.params.programId
+                        });
                     }
                 }
             })
@@ -29557,7 +29557,7 @@ angular.module('FieldDoc')
 
             };
 
- self.loadProgram = function() {
+            self.loadProgram = function() {
 
                 program.$promise.then(function(successResponse) {
 
