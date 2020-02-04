@@ -6,7 +6,7 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProgramEditController',
+    .controller('ProgramPracticeListController',
         function(Account, Image, $location, $log, Program, program, $q,
             $rootScope, $route, $scope, $timeout, $interval, user, Utility) {
 
