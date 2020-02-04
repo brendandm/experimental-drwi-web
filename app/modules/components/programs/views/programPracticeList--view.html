@@ -16,9 +16,9 @@
 
                     <article class="pad space-right shadow">
 
-                        <h1>{{ page.model.name || 'Un-named' }}</h1>
+                        <h1>{{ page.program.name || 'Un-named' }}</h1>
 
-                        <p data-ng-if="page.model.description" data-ng-bind-html="page.model.description"></p>
+                        <p data-ng-if="page.program.description" data-ng-bind-html="page.program.description"></p>
 
                         <!-- <p data-ng-if="page.model.website_url" style="display: flex; flex-flow: row nowrap; align-items: center;">
                             <i class="material-icons">
@@ -34,7 +34,7 @@
                             <a href="{{ page.model.documentation_url }}" target="_blank">&nbsp;View documentation</a>
                         </p> -->
 
-                        <div data-ng-if="page.tags && page.tags.length">
+                    <!--    <div data-ng-if="page.tags && page.tags.length">
 
                             <span style="display: block; margin: 1em 0; color: #757575; text-transform: uppercase; font-size: .8em; font-weight: bold; letter-spacing: .05em;">Tags</span>
 
@@ -54,14 +54,15 @@
                             </div>
 
                         </div>
+                        -->
 
                     </article>
 
-                    <article class="pad shadow reveal fade-in t1">
+ <!--                   <article class="pad shadow reveal fade-in t1">
 
-                        <!-- <h1>{{ page.model.name || 'Un-named' }}</h1> -->
 
-                        <p data-ng-if="page.model.website_url" style="display: flex; flex-flow: row nowrap; align-items: center;">
+
+                        <p data-ng-if="page.program.website_url" style="display: flex; flex-flow: row nowrap; align-items: center;">
                             <i class="material-icons">
                             open_in_new
                             </i>
@@ -75,7 +76,7 @@
                             <a href="{{ page.model.documentation_url }}" target="_blank">&nbsp;View documentation</a>
                         </p>
 
-                    </article>
+                    </article> -->
 
                     <!-- Map -->
 
@@ -96,7 +97,7 @@
                         <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
                             <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
-                                data-ng-repeat="practice in page.practiceTypes | orderBy:'name' | filter: page.q"
+                                data-ng-repeat="practice in page.program.practices | orderBy:'name' | filter: page.q"
                                >
 
                                 <div class="card--content" >

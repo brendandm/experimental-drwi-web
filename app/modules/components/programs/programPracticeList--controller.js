@@ -37,25 +37,6 @@ angular.module('FieldDoc')
 
             }
 
-            function closeRoute() {
-
-                $location.path(self.program.links.site.html);
-
-            }
-
-            self.confirmDelete = function(obj) {
-
-                console.log('self.confirmDelete', obj);
-
-                self.deletionTarget = self.deletionTarget ? null : obj;
-
-            };
-
-            self.cancelDelete = function() {
-
-                self.deletionTarget = null;
-
-            };
 
             self.showElements = function() {
 
@@ -151,103 +132,6 @@ angular.module('FieldDoc')
 
             };
 
-            self.saveProgram = function() {
-
-                self.status.processing = true;
-
-                self.scrubFeature(self.program);
-
-                if (self.programType) {
-
-                    self.program.properties.category_id = self.programType.id;
-
-                }
-
-                self.program.$update().then(function(successResponse) {
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Program changes saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(closeAlerts, 2000);
-
-                    self.showElements();
-
-                }, function(errorResponse) {
-
-                    // Error message
-
-                    self.alerts = [{
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Program changes could not be saved.',
-                        'prompt': 'OK'
-                    }];
-
-                    $timeout(closeAlerts, 2000);
-
-                    self.showElements();
-
-                });
-
-            };
-
-            self.deleteFeature = function() {
-
-                Program.delete({
-                    id: +self.deletionTarget.id
-                }).$promise.then(function(data) {
-
-                    self.alerts.push({
-                        'type': 'success',
-                        'flag': 'Success!',
-                        'msg': 'Successfully deleted this program.',
-                        'prompt': 'OK'
-                    });
-
-                    $timeout(closeRoute, 2000);
-
-                }).catch(function(errorResponse) {
-
-                    console.log('self.deleteFeature.errorResponse', errorResponse);
-
-                    if (errorResponse.status === 409) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Unable to delete “' + self.deletionTarget.properties.name + '”. There are pending tasks affecting this program.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else if (errorResponse.status === 403) {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'You don’t have permission to delete this program.',
-                            'prompt': 'OK'
-                        }];
-
-                    } else {
-
-                        self.alerts = [{
-                            'type': 'error',
-                            'flag': 'Error!',
-                            'msg': 'Something went wrong while attempting to delete this program.',
-                            'prompt': 'OK'
-                        }];
-
-                    }
-
-                    $timeout(closeAlerts, 2000);
-
-                });
-
-            };
 
             //
             // Verify Account information for proper UI element display
