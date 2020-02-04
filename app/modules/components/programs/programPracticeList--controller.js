@@ -8,8 +8,8 @@
      * @description
      */
     angular.module('FieldDoc')
-        .controller('ProgramPracticeListController', [
-             'Account',
+        .controller('ProgramSummaryController', [
+            'Account',
             '$location',
             '$timeout',
             '$log',
