@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1580840093725})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1580840557126})
 
 ;
 /**
@@ -29477,8 +29477,9 @@ angular.module('FieldDoc')
  */
 angular.module('FieldDoc')
     .controller('ProgramPracticeListController',
-        function(Account, Image, $location, $log, Program, $q,
-            $rootScope, $route, $scope, $timeout, $interval, user, Utility) {
+        function(Account, Image, $location, $log, Program, program, $q,
+            $rootScope, $route, $scope, $timeout, $interval, user,
+            Utility, SearchService) {
 
             var self = this;
 
@@ -29541,7 +29542,7 @@ angular.module('FieldDoc')
 
             self.loadProgram = function() {
 
-                Program.$promise.then(function(successResponse) {
+                program.$promise.then(function(successResponse) {
 
                     console.log('self.program', successResponse);
 
