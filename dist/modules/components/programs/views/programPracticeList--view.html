@@ -50,7 +50,7 @@
                         <h2>Practices Types</h2>
 
                         <p>
-                    Showing <b>{{ page.program.practices.length }}</b> of <b>{{ page.availableFeatures.length }}</b> total practices types in program <b>{{page.program.name}}</b>.
+                    Showing <b>{{ practiceList.length }}</b> of <b>{{ page.program.practices.length }}</b> total practices types in program <b>{{page.program.name}}</b>.
                 </p>
 
                            <div class="collection-search reveal fade-in t0" style="border: 0px solid red;
@@ -69,7 +69,7 @@
                         <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
 
                             <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;"
-                                data-ng-repeat="practice in page.program.practices | orderBy:'name' | filter: page.queryToken"
+                                data-ng-repeat="practice in practiceList = (page.program.practices | orderBy:'name' | filter: page.queryToken)"
                                >
 
                                 <div class="card--content" >
