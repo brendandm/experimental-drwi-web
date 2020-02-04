@@ -6,10 +6,24 @@
  * @description
  */
 angular.module('FieldDoc')
-    .controller('ProgramPracticeListController',
-        function(Account, Image, $location, $log, Program, program, $q,
-            $rootScope, $route, $scope, $timeout, $interval, user,
-            Utility, SearchService) {
+    .controller('ProgramPracticeListController', [
+            'Account',
+            '$location',
+            '$timeout',
+            '$log',
+            '$rootScope',
+            '$route',
+            'Utility',
+            'user',
+            '$window',
+            'mapbox',
+            'Program',
+            'Project',
+            'program',
+            'LayerService',
+            function(Account, $location, $timeout, $log, $rootScope,
+                $route, Utility, user, $window, mapbox, Program,
+                Project, program, LayerService) {
 
             var self = this;
 
