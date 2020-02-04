@@ -7,7 +7,7 @@
  */
 angular.module('FieldDoc')
     .controller('ProgramPracticeListController',
-        function(Account, Image, $location, $log, Program, programs, $q,
+        function(Account, Image, $location, $log, Program, program, $q,
             $rootScope, $route, $scope, $timeout, $interval, user,
             Utility, SearchService) {
 
@@ -70,11 +70,9 @@ angular.module('FieldDoc')
 
             };
 
-            self.loadProgram = function() {
+ self.loadProgram = function() {
 
-                programs({
-                    id: self.programId
-                }).$promise.then(function(successResponse) {
+                program.$promise.then(function(successResponse) {
 
                     console.log('self.program', successResponse);
 
