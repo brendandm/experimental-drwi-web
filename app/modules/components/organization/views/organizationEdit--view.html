@@ -8,7 +8,7 @@
 
         <h1 class="inset">Edit Organization</h1>
 
-        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading">
+        <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && $root.user.properties.is_admin">
 
             <div class="add--new--wrapper"  data-ng-if="!$root.user.properties.is_manager">
                     <span>Back to organization summary</span>

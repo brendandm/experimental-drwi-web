@@ -12,7 +12,7 @@
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading" style="border:0px solid red;">
 
         <!--    <section class="reveal fade-in t0 ng-scope" style="padding: 1em 0 0;"> -->
-                <div class="add--new--wrapper"  data-ng-if="$root.user.properties.is_admin || page.organizationProfile.id == page.user.properties.organization.id">
+                <div class="add--new--wrapper"  data-ng-if="$root.user.properties.is_admin">
                     <span>Edit organization</span>
                     <a class="add--new--btn" href="/organization" data-ng-class="{viewing: $root.viewState.organizationProfile}">
                         <i class="material-icons">
@@ -194,7 +194,7 @@
                                             dashboard
                                             </i>
                                         </a>
-                                        <a class="snapshot--title" href="/projects/{{ project.id }}/edit" title="Edit project" data-ng-if="$root.user.properties.is_admin || page.organizationProfile.id == page.user.properties.organization.id">
+                                        <a class="snapshot--title" href="/projects/{{ project.id }}/edit" title="Edit project" data-ng-if="$root.user.properties.is_admin">
                                             <i class="material-icons">
                                             edit
                                             </i>
