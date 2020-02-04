@@ -63,7 +63,10 @@
                     <form role="form" class="form" style="position:relative; overflow: visible;" id="form--PracticeEdit" name="form--PracticeEdit" data-ng-submit="page.savePractice()" autocomplete="off">
 
                         <!-- Practice Name -->
-
+                         <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+                            Use the below form to enter a name, description, practice type on privacy status for your Practice.
+                             <a href="/program/{{page.practice.project.program_id}}">Click here</a> to view a full list of Practices Types available from this funder.
+                         </p>
                         <div class="form-element">
                             <span class="meta-label"><b>Name</b></span>
                             <input type="text" data-ng-model="page.practice.name" class="form-control animate" id="name" name="name" placeholder="Practice name" />

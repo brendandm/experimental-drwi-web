@@ -71,29 +71,6 @@ angular.module('FieldDoc')
                 }
             })
 
-              .when('/programs/:programId/practices', {
-                templateUrl: '/modules/components/programs/views/programPracticeList--view.html?t=' + environment.version,
-                controller: 'ProgramPracticeListController',
-                controllerAs: 'page',
-                resolve: {
-                    user: function(Account, $rootScope, $document) {
-
-                        $rootScope.targetPath = document.location.pathname;
-
-                        if (Account.userObject && !Account.userObject.id) {
-                            return Account.getUser();
-                        }
-
-                        return Account.userObject;
-
-                    },
-                    program: function(Program, $route) {
-                        return Program.get({
-                            id: $route.current.params.programId
-                        });
-                    }
-                }
-            })
 
 
             .when('/programs/:programId/edit', {
