@@ -59,7 +59,7 @@ angular.module('FieldDoc')
 
             /*START Pagniation vars*/
             self.limit = 20;
-            self.page = 0;
+            self.page = 1;
              /*END Pagniation vars*/
 
             self.showElements = function() {
@@ -172,7 +172,7 @@ angular.module('FieldDoc')
                 var data = {
                     combine: 'true',
                     limit:  self.limit,
-                    page:   self.page   
+                    page:   self.page
                 };
 
                 for (var key in self.filters) {
