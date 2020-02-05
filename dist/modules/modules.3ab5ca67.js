@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1580926566045})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1580928423315})
 
 ;
 /**
@@ -4399,6 +4399,11 @@ angular.module('FieldDoc')
                 loading: true
             };
 
+            /*START Pagniation vars*/
+            self.limit = 20;
+            self.page = 0;
+             /*END Pagniation vars*/
+             
             self.showElements = function() {
 
                 $timeout(function() {
@@ -4507,7 +4512,9 @@ angular.module('FieldDoc')
                     'self.buildFilter --> Starting...');
 
                 var data = {
-                    combine: 'true'
+                    combine: 'true',
+                    limit:  20,
+                    page:   0
                 };
 
                 for (var key in self.filters) {

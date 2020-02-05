@@ -57,6 +57,11 @@ angular.module('FieldDoc')
                 loading: true
             };
 
+            /*START Pagniation vars*/
+            self.limit = 20;
+            self.page = 0;
+             /*END Pagniation vars*/
+             
             self.showElements = function() {
 
                 $timeout(function() {
@@ -165,7 +170,9 @@ angular.module('FieldDoc')
                     'self.buildFilter --> Starting...');
 
                 var data = {
-                    combine: 'true'
+                    combine: 'true',
+                    limit:  20,
+                    page:   0
                 };
 
                 for (var key in self.filters) {
