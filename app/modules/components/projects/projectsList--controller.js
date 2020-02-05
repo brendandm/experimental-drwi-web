@@ -61,7 +61,7 @@ angular.module('FieldDoc')
             self.limit = 20;
             self.page = 0;
              /*END Pagniation vars*/
-             
+
             self.showElements = function() {
 
                 $timeout(function() {
@@ -171,8 +171,8 @@ angular.module('FieldDoc')
 
                 var data = {
                     combine: 'true',
-                    limit:  20,
-                    page:   0
+                    limit:  self.limit,
+                    page:   self.page   
                 };
 
                 for (var key in self.filters) {
