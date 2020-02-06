@@ -164,12 +164,13 @@
                  <a  ng-if="!((page.page) == 1)"
                         data-ng-click="page.getPage(1)"
                         title="Previous Page"
-                        style="margin-top:-15px; margin-left:30px;">
+                        class="pagination_active">
                          <i  class="material-icons">
                              first_page
                          </i>
                     </a>
-                    <a ng-if="((page.page) == 1)">
+                    <a  ng-if="((page.page) == 1)"
+                        class="pagination_inactive">
                           <i  class="material-icons" style="color:#cccccc">
                              first_page
                          </i>
@@ -179,12 +180,13 @@
                     <a  ng-if="!((page.page) == 1)"
                         data-ng-click="page.getPage((page.page) - 1 )"
                         title="Previous Page"
-                        style="margin-top:-15px; margin-left:30px;">
+                        class="pagination_active">
                          <i  class="material-icons">
                              chevron_right
                          </i>
                     </a>
-                    <a ng-if="((page.page) == 1)">
+                    <a  ng-if="((page.page) == 1)"
+                        class="pagination_inactive">
                           <i  class="material-icons" style="color:#cccccc">
                              chevron_right
                          </i>
@@ -196,12 +198,13 @@
                     <a  ng-if="((page.page) < page.summary.page_count)"
                         data-ng-click="page.getPage((page.page) + 1 )"
                         title="Next Page"
-                        style="margin-top:-15px; margin-left:30px;">
+                        class="pagination_active">
                             <i class="material-icons" >
                                  chevron_left
                              </i>
                     </a>
-                    <a ng-if="((page.page) == page.summary.page_count)">
+                    <a  ng-if="((page.page) == page.summary.page_count)"
+                        class="pagination_inactive">
                             <i class="material-icons" style="color:#cccccc">
                                  chevron_left
                              </i>
@@ -210,12 +213,13 @@
                      <a  ng-if="((page.page) < page.summary.page_count)"
                         data-ng-click="page.getPage(page.summary.page_count)"
                         title="Next Page"
-                        style="margin-top:-15px; margin-left:30px;">
+                        class="pagination_active">
                             <i class="material-icons" >
                                  last_page
                              </i>
                     </a>
-                    <a ng-if="((page.page) == page.summary.page_count)">
+                    <a  ng-if="((page.page) == page.summary.page_count)"
+                        class="pagination_inactive">
                             <i class="material-icons" style="color:#cccccc">
                                  last_page
                              </i>
