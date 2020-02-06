@@ -158,6 +158,22 @@
 
             </div>
 
+            <div>
+                 <a  data-ng-click="page.getPage((page.page) - 1 )" title="Previous Page" style="margin-top:-15px; margin-left:30px;">
+                     <i class="material-icons">
+                         arrow_back_ios
+                     </i>
+                 </a>
+
+                <a  data-ng-click="page.getPage((page.page) + 1 )" title="Next Page" style="margin-top:-15px; margin-left:30px;">
+                     <i class="material-icons">
+                         arrow_forward_ios
+                     </i>
+                 </a>
+
+            </div>
+
+
             <div class="features--container" data-ng-if="!page.status.loading">
 
                 <ul class="snapshot--cards list-unstyled" style="margin-top: 2em;">
