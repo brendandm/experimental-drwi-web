@@ -255,7 +255,7 @@ angular.module('FieldDoc')
 
             self.getPage = function(page){
                 console.log("PAGE",page);
-                console.log("LIMIT",limit);
+               // console.log("LIMIT",limit);
 
                 if(page < 1){
                     self.page = 1;
