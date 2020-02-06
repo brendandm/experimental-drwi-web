@@ -259,8 +259,8 @@ angular.module('FieldDoc')
 
                 if(page < 1){
                     self.page = 1;
-                }else if(page > self.projects.summary.page_count){
-                    self.page = self.projects.summary.page_count;
+                }else if(page > self.summary.page_count){
+                    self.page = self.summary.page_count;
                 }else{
                      self.page   = page;
 

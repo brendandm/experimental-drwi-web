@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1580959018917})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1580959192719})
 
 ;
 /**
@@ -4601,8 +4601,8 @@ angular.module('FieldDoc')
 
                 if(page < 1){
                     self.page = 1;
-                }else if(page > self.projects.summary.page_count){
-                    self.page = self.projects.summary.page_count;
+                }else if(page > self.summary.page_count){
+                    self.page = self.summary.page_count;
                 }else{
                      self.page   = page;
 
