@@ -58,8 +58,29 @@ angular.module('FieldDoc')
             };
 
             /*START Pagniation vars*/
-            self.limit = 20;
+            self.limit = 12;
             self.page = 1;
+
+            self.changeLimit = function(limit){
+                self.limit = limit;
+                self.loadProjects();
+            }
+
+             self.getPage = function(page){
+                console.log("PAGE",page);
+               // console.log("LIMIT",limit);
+
+                if(page < 1){
+                    self.page = 1;
+                }else if(page > self.summary.page_count){
+                    self.page = self.summary.page_count;
+                }else{
+                     self.page   = page;
+
+                     self.loadProjects();
+                }
+
+            };
              /*END Pagniation vars*/
 
             self.showElements = function() {
@@ -253,25 +274,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.getPage = function(page){
-                console.log("PAGE",page);
-               // console.log("LIMIT",limit);
 
-                if(page < 1){
-                    self.page = 1;
-                }else if(page > self.summary.page_count){
-                    self.page = self.summary.page_count;
-                }else{
-                     self.page   = page;
-
-                     self.loadProjects();
-                }
-
-
-              //  self.limit  = limit;
-
-
-            };
 
             self.loadTags = function() {
 

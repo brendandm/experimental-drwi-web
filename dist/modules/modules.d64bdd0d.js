@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1581010046670})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1581011136431})
 
 ;
 /**
@@ -4400,8 +4400,29 @@ angular.module('FieldDoc')
             };
 
             /*START Pagniation vars*/
-            self.limit = 20;
+            self.limit = 12;
             self.page = 1;
+
+            self.changeLimit = function(limit){
+                self.limit = limit;
+                self.loadProjects();
+            }
+
+             self.getPage = function(page){
+                console.log("PAGE",page);
+               // console.log("LIMIT",limit);
+
+                if(page < 1){
+                    self.page = 1;
+                }else if(page > self.summary.page_count){
+                    self.page = self.summary.page_count;
+                }else{
+                     self.page   = page;
+
+                     self.loadProjects();
+                }
+
+            };
              /*END Pagniation vars*/
 
             self.showElements = function() {
@@ -4595,25 +4616,7 @@ angular.module('FieldDoc')
 
             };
 
-            self.getPage = function(page){
-                console.log("PAGE",page);
-               // console.log("LIMIT",limit);
 
-                if(page < 1){
-                    self.page = 1;
-                }else if(page > self.summary.page_count){
-                    self.page = self.summary.page_count;
-                }else{
-                     self.page   = page;
-
-                     self.loadProjects();
-                }
-
-
-              //  self.limit  = limit;
-
-
-            };
 
             self.loadTags = function() {
 
