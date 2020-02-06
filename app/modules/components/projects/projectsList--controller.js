@@ -253,6 +253,13 @@ angular.module('FieldDoc')
 
             };
 
+            self.getPage = function(page,limit){
+                self.page   = page;
+                self.limit  = limit;
+
+                self.loadProjects();
+            };
+
             self.loadTags = function() {
 
                 Tag.collection({}).$promise.then(function(successResponse) {
