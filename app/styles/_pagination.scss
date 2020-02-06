@@ -9,9 +9,15 @@
 
 .pagination_active{
     width: 30px;
+    border: 1px solid green;
+    float: left;
+    display: inline-block;
 }
 
 .pagination_inactive{
     width: 30px;
     color: #cccccc;
+    border: 1px solid red;
+    float: left;
+    display: inline-block;
 }
