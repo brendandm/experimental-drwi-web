@@ -253,14 +253,24 @@ angular.module('FieldDoc')
 
             };
 
-            self.getPage = function(page,limit){
+            self.getPage = function(page){
                 console.log("PAGE",page);
                 console.log("LIMIT",limit);
 
-                self.page   = page;
-                self.limit  = limit;
+                if(page < 1){
+                    self.page = 1;
+                }else if(page > self.projects.summary.page_count){
+                    self.page = self.projects.summary.page_count;
+                }else{
+                     self.page   = page;
 
-                self.loadProjects();
+                     self.loadProjects();
+                }
+
+
+              //  self.limit  = limit;
+
+
             };
 
             self.loadTags = function() {
