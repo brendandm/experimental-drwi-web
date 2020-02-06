@@ -147,10 +147,12 @@
             <div>
 
                  <button data-ng-click="page.getPage((page.page) - 1 )" title="Previous Page" style="margin-top:-15px; margin-left:30px;">
-                            <nobr>Prev</nobr>
+                     <span ng-if="((page.page) - 1) == 1"><nobr>First</nobr></span>
+                     <span ng-if="!((page.page) - 1) == 1"><nobr>Prev</nobr></span>
                  </button>
                  <button data-ng-click="page.getPage((page.page) + 1 )" title="Next Page" style="margin-top:-15px; margin-left:30px;" >
-                            <nobr>Next</nobr>
+                            <span ng-if="((page.page) + 1) == page.summary.page_count"><nobr>Last</nobr></span>
+                     <span ng-if="!((page.page) + 1) == page.summary.page_count"><nobr>Next</nobr></span>
                  </button>
 
 
