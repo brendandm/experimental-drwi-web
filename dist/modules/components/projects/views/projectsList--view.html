@@ -233,6 +233,36 @@
                              </i>
                     </a>
 
+
+
+                 <div class="collection-search reveal fade-in t0" style="border: 0px solid red;
+                                                                        justify-content:left;
+                                                                        align-items:left;
+                                                                        overflow: auto;
+                                                                        flex-wrap: wrap;
+                                                                         "
+                 >
+
+                     <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search your practices">
+
+                     <div class="collection-filter-group">
+                        <button data-ng-click="" title="Show 12 features" style="margin-top:-15px; margin-left:30px;">
+                            <nobr>12</nobr>
+                        </button>
+                     </div>
+                     <div class="collection-filter-group">
+                        <button data-ng-click="" title="Show 24 features" style="margin-top:-15px; margin-left:30px;">
+                            <nobr>24</nobr>
+                        </button>
+                     </div>
+                     <div class="collection-filter-group">
+                        <button data-ng-click="" title="Show 48 features" style="margin-top:-15px; margin-left:30px;">
+                            <nobr>48</nobr>
+                        </button>
+                     </div>
+
+                </div>
+
             </div>
 
             <!--END PAGINATION -->

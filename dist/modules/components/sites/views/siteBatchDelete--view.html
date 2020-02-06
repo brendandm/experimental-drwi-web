@@ -98,18 +98,11 @@
                      <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search your practices">
 
                      <div class="collection-filter-group">
-                        <button data-ng-click="" title="Show 12 features" style="margin-top:-15px; margin-left:30px;">
-                            <nobr>12</nobr>
+                        <button data-ng-click="page.removeAllFromDeleteQueue()" title="Remove all from batch delete" style="margin-top:-15px; margin-left:30px;">
+                            <nobr>Deselect All</nobr>
                         </button>
-                     </div>
-                     <div class="collection-filter-group">
-                        <button data-ng-click="" title="Show 24 features" style="margin-top:-15px; margin-left:30px;">
-                            <nobr>24</nobr>
-                        </button>
-                     </div>
-                     <div class="collection-filter-group">
-                        <button data-ng-click="" title="Show 48 features" style="margin-top:-15px; margin-left:30px;">
-                            <nobr>48</nobr>
+                        <button data-ng-click="page.addAllToDeleteQueue()" title="Add all to batch delete" style="margin-top:-15px; margin-left:30px;" >
+                            <nobr>Select All</nobr>
                         </button>
                      </div>
 
