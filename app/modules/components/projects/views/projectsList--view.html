@@ -159,11 +159,15 @@
             </div>
             -->
 
+            <!-- START PAGINATION  -->
             <div style="
                     border:1px solid purple;
                     float:right;
                     display: inline-block;"
             >
+
+
+
                 <!-- FIRST PAGE -->
                  <a  ng-if="!((page.page) == 1)"
                         data-ng-click="page.getPage(1)"
@@ -231,6 +235,7 @@
 
             </div>
 
+            <!--END PAGINATION -->
 
 
             <div class="features--container" data-ng-if="!page.status.loading">
