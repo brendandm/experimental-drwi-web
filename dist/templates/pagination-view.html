@@ -1,0 +1,140 @@
+ <!-- START PAGINATION  -->
+                <div style="
+                        border:1px solid purple;
+                        float:right;
+                        display: block;
+                        width: 50%;
+                        position: relative;
+                        margin-right:0px;
+                        margin-top: 10px;
+                        right: 0px;
+                        min-width: 700px;
+
+                    "
+                >
+
+
+
+                    <div>
+                        <!-- LAST PAGE -->
+                             <a  ng-if="((page.page) < page.summary.page_count)"
+                                data-ng-click="page.getPage(page.summary.page_count)"
+                                title="Next Page"
+                                class="pagination_active">
+                                    <i class="material-icons" >
+                                         last_page
+                                     </i>
+                            </a>
+                            <a  ng-if="((page.page) == page.summary.page_count)"
+                                class="pagination_inactive">
+                                    <i class="material-icons" style="color:#cccccc">
+                                         last_page
+                                     </i>
+                            </a>
+                         <!-- NEXT PAGE -->
+                            <a  ng-if="((page.page) < page.summary.page_count)"
+                                data-ng-click="page.getPage((page.page) + 1 )"
+                                title="Next Page"
+                                class="pagination_active">
+                                    <i class="material-icons" >
+                                         chevron_right
+                                     </i>
+                            </a>
+                            <a  ng-if="((page.page) == page.summary.page_count)"
+                                class="pagination_inactive">
+                                    <i class="material-icons" style="color:#cccccc">
+                                         chevron_right
+                                     </i>
+                            </a>
+
+                        <!-- START VIEW COUNT -->
+                             <span><a style="width: 250px;
+                                        border: 1px solid green;
+                                        float: right;
+                                        display: inline-block;
+                                        margin: 0px 10px 0px 10px;
+                                        color: #000000;
+
+                                        text-align:center
+                                ">
+                                Showing {{page.viewCountLow}} to {{page.viewCountHigh}} of {{page.summary.feature_count}}
+                             </a></span>
+                        <!-- END VIEW COUNT s-->
+
+                        <!-- PREVIOUS PAGE -->
+                            <a  ng-if="!((page.page) == 1)"
+                                data-ng-click="page.getPage((page.page) - 1 )"
+                                title="Previous Page"
+                                class="pagination_active">
+                                 <i  class="material-icons">
+                                     chevron_left
+                                 </i>
+                            </a>
+                            <a  ng-if="((page.page) == 1)"
+                                class="pagination_inactive">
+                                  <i  class="material-icons" style="color:#cccccc">
+                                     chevron_left
+                                 </i>
+                            </a>
+                        <!-- FIRST PAGE -->
+                        <a  ng-if="!((page.page) == 1)"
+                                data-ng-click="page.getPage(1)"
+                                title="Previous Page"
+                                class="pagination_active">
+                                 <i  class="material-icons">
+                                     first_page
+                                 </i>
+                            </a>
+                            <a  ng-if="((page.page) == 1)"
+                                class="pagination_inactive">
+                                  <i  class="material-icons" style="color:#cccccc">
+                                     first_page
+                                 </i>
+                            </a>
+
+
+                    </div>
+                     <div>
+                          <span>
+                             <a ng-if="page.limit != 48" data-ng-click="page.changeLimit(48)" class="pagination_active pagination_showCount">
+                                48
+                            </a>
+                             <a ng-if="page.limit == 48" class="pagination_inactive pagination_showCount">
+                                48
+                            </a>
+                         </span>
+                          <span>
+                             <a ng-if="page.limit != 24" data-ng-click="page.changeLimit(24)" class="pagination_active pagination_showCount">
+                                24
+                            </a>
+                             <a ng-if="page.limit == 24" class="pagination_inactive pagination_showCount">
+                                24
+                            </a>
+                        </span>
+                          <span>
+                             <a ng-if="page.limit != 12" data-ng-click="page.changeLimit(12)" class="pagination_active pagination_showCount">
+                                12
+                            </a>
+                              <a ng-if="page.limit == 12" class="pagination_inactive pagination_showCount">
+                                12
+                            </a>
+                        </span>
+                         <span><a style="width: 30px;
+                                        border: 1px solid green;
+                                        float: right;
+                                        display: inline-block;
+                                        margin: 0px 10px 0px 10px;
+                                        color: #000000;
+                                        width: 60px;
+                                ">
+                             Show:</a></span>
+
+
+
+
+
+                    </div>
+
+                </div>
+
+                <!--END PAGINATION -->
