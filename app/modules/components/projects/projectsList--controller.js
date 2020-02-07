@@ -69,17 +69,23 @@ angular.module('FieldDoc')
           //  self.viewCountHigh = self.limit
 
             self.calculateViewCount = function(){
+               console.log("A");
                if(self.page > 1){
+                    console.log("B");
                     self.viewCountLow = ((self.page-1) * self.limit);
                     if(self.page == 1){
+                         console.log("C");
                         self.viewCountHigh = self.limit;
                     }else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                         console.log("D");
                         self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
 
                     }else{
+                         console.log("E");
                         self.viewCountHigh = self.summary.feature_count;
                     }
                }else{
+                    console.log("F");
                     self.viewCountLow = 1;
                }
 
