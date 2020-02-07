@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1581058269792})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1581059848449})
 
 ;
 /**
@@ -4415,6 +4415,7 @@ angular.module('FieldDoc')
                     self.viewCountLow = ((self.page-1) * self.limit);
                     if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
                         self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
+                       
                     }else{
                         self.viewCountHigh = self.summary.feature_count;
                     }
