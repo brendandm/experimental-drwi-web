@@ -141,28 +141,28 @@
 
 
                      <div>
-                       <span>Show:</span>
-                         <span>
-                             <a ng-if="page.limit != 12" data-ng-click="page.changeLimit(12)" class="pagination_active pagination_showCount">
+                       <span class="pagination_showCount">Show:</span>
+                         <span class="pagination_showCount">
+                             <a ng-if="page.limit != 12" data-ng-click="page.changeLimit(12)" class="pagination_active ">
                                 12
                             </a>
-                              <a ng-if="page.limit == 12" class="pagination_inactive pagination_showCount">
+                              <a ng-if="page.limit == 12" class="pagination_inactive ">
                                 12
                             </a>
                         </span>
-                         <span>
-                             <a ng-if="page.limit != 24" data-ng-click="page.changeLimit(24)" class="pagination_active pagination_showCount">
+                         <span class="pagination_showCount">
+                             <a ng-if="page.limit != 24" data-ng-click="page.changeLimit(24)" class="pagination_active">
                                 24
                             </a>
-                             <a ng-if="page.limit == 24" class="pagination_inactive pagination_showCount">
+                             <a ng-if="page.limit == 24" class="pagination_inactive ">
                                 24
                             </a>
                         </span>
-                         <span>
-                             <a ng-if="page.limit != 48" data-ng-click="page.changeLimit(48)" class="pagination_active pagination_showCount">
+                         <span class="pagination_showCount">
+                             <a ng-if="page.limit != 48" data-ng-click="page.changeLimit(48)" class="pagination_active">
                                 48
                             </a>
-                             <a ng-if="page.limit == 48" class="pagination_inactive pagination_showCount">
+                             <a ng-if="page.limit == 48" class="pagination_inactive ">
                                 48
                             </a>
                          </span>
