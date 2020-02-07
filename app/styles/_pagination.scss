@@ -9,7 +9,7 @@
 
 .pagination_active{
     width: 30px;
-    border: 1px solid green;
+    border: 0px solid green;
     float: right;
     display: inline-block;
     margin: 0px 10px 0px 10px;
@@ -21,7 +21,7 @@
 .pagination_inactive{
     width: 30px;
     color: #cccccc;
-    border: 1px solid red;
+    border: 0px solid red;
     float: right;
     display: inline-block;
     margin: 0px 10px 0px 10px;
