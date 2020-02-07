@@ -95,7 +95,7 @@ angular.module('FieldDoc')
                     }else{
                          console.log("G");
                         self.viewCountLow = 1;
-                        self.viewCountHight = self.summary.feature_count;
+                        self.viewCountHigh = self.summary.feature_count;
 
                     }
 
