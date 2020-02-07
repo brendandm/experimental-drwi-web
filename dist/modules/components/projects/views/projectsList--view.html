@@ -172,6 +172,20 @@
                                          chevron_right
                                      </i>
                             </a>
+
+                        <!-- START VIEW COUNT -->
+                             <span><a style="width: 30px;
+                                        border: 1px solid green;
+                                        float: right;
+                                        display: inline-block;
+                                        margin: 0px 10px 0px 10px;
+                                        color: #000000;
+                                        width: 60px;
+                                ">
+                                Showing {{page.viewCountLow}} of {{page.viewCountHigh}}
+                             </a></span>
+                        <!-- END VIEW COUNT s-->
+
                         <!-- PREVIOUS PAGE -->
                             <a  ng-if="!((page.page) == 1)"
                                 data-ng-click="page.getPage((page.page) - 1 )"

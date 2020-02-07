@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1581053191068})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1581054689566})
 
 ;
 /**
@@ -4403,8 +4403,30 @@ angular.module('FieldDoc')
             self.limit = 12;
             self.page = 1;
 
+            self.viewCountLow = self.page;
+            self.viewCountHigh =  self.limit;
+
+
+          //  self.viewCountLow = self.page * self.limit;
+          //  self.viewCountHigh = self.limit
+
+            self.calculateViewCount = function(){
+               if(self.page > 1){
+                    self.viewCountLow = (self.page * self.limit);
+                    if(self.summary.feature_count > ((self.page * self.limit)_self.limit)){
+                        self.viewCountHigh = ((self.page * self.limit)_self.limit));
+                    }else{
+                        self.viewCountHigh = self.summary.feature_count;
+                    }
+               }else{
+                    self.viewCountLow = 1;
+               }
+
+            }
+
             self.changeLimit = function(limit){
                 self.limit = limit;
+                self.
                 self.loadProjects();
             }
 
@@ -4603,6 +4625,8 @@ angular.module('FieldDoc')
                         $scope.projectStore.setProjects(successResponse.features);
 
                     }
+
+                     self.calculateViewCount();
 
                     self.showElements();
 

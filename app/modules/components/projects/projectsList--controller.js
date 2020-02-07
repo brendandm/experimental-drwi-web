@@ -61,8 +61,30 @@ angular.module('FieldDoc')
             self.limit = 12;
             self.page = 1;
 
+            self.viewCountLow = self.page;
+            self.viewCountHigh =  self.limit;
+
+
+          //  self.viewCountLow = self.page * self.limit;
+          //  self.viewCountHigh = self.limit
+
+            self.calculateViewCount = function(){
+               if(self.page > 1){
+                    self.viewCountLow = (self.page * self.limit);
+                    if(self.summary.feature_count > ((self.page * self.limit)_self.limit)){
+                        self.viewCountHigh = ((self.page * self.limit)_self.limit));
+                    }else{
+                        self.viewCountHigh = self.summary.feature_count;
+                    }
+               }else{
+                    self.viewCountLow = 1;
+               }
+
+            }
+
             self.changeLimit = function(limit){
                 self.limit = limit;
+                self.
                 self.loadProjects();
             }
 
@@ -261,6 +283,8 @@ angular.module('FieldDoc')
                         $scope.projectStore.setProjects(successResponse.features);
 
                     }
+
+                     self.calculateViewCount();
 
                     self.showElements();
 
