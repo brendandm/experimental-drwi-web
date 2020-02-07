@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1581060826097})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1581061072941})
 
 ;
 /**
@@ -4430,9 +4430,17 @@ angular.module('FieldDoc')
                          self.viewCountLow = ((self.page-1) * self.limit)+1;
                     }
                }else{
-                    console.log("F");
-                    self.viewCountLow = 1;
-                    self.viewCountHigh = self.limit;
+                    if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                         console.log("F");
+                          self.viewCountLow = 1;
+                          self.viewCountHigh = self.limit;
+                    }else{
+                         console.log("G");
+                        self.viewCountLow = 1;
+                        self.viewCountHight = self.summary.feature_count;
+
+                    }
+
                }
 
             }
