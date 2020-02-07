@@ -84,7 +84,7 @@ angular.module('FieldDoc')
 
             self.changeLimit = function(limit){
                 self.limit = limit;
-                self.
+                self.page = 1;
                 self.loadProjects();
             }
 
