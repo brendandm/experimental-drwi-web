@@ -90,6 +90,7 @@ angular.module('FieldDoc')
                }else{
                     console.log("F");
                     self.viewCountLow = 1;
+                    self.viewCountHigh = self.limit;
                }
 
             }
