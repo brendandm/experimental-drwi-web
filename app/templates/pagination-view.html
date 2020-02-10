@@ -35,13 +35,13 @@
                             <a  ng-if="((page.page) < page.summary.page_count)"
                                 data-ng-click="page.getPage((page.page) + 1 )"
                                 title="Next Page"
-                                class="pagination_active" style="margin-right:0px;">
+                                class="pagination_active" style="margin-left:0px;">
                                     <i class="material-icons" >
                                          chevron_right
                                      </i>
                             </a>
                             <a  ng-if="((page.page) == page.summary.page_count)"
-                                class="pagination_inactive" style="margin-right:0px;">
+                                class="pagination_inactive" style="margin-left:0px;">
                                     <i class="material-icons" style="color:#cccccc">
                                          chevron_right
                                      </i>
@@ -65,13 +65,13 @@
                             <a  ng-if="!((page.page) == 1)"
                                 data-ng-click="page.getPage((page.page) - 1 )"
                                 title="Previous Page"
-                                class="pagination_active" style="margin-left:0px;">
+                                class="pagination_active" style="margin-right:0px;">
                                  <i  class="material-icons">
                                      chevron_left
                                  </i>
                             </a>
                             <a  ng-if="((page.page) == 1)"
-                                class="pagination_inactive" style="margin-left:0px;">
+                                class="pagination_inactive" style="margin-right:0px;">
                                   <i  class="material-icons" style="color:#cccccc">
                                      chevron_left
                                  </i>
