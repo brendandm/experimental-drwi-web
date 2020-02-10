@@ -403,6 +403,13 @@ angular.module('FieldDoc')
 
                     self.sites = successResponse.features;
 
+                     self.summary = successResponse.summary;
+
+                    self.summary.organizations.unshift({
+                        id: 0,
+                        name: 'All organizations'
+                    });
+
                     // var siteCollection = {
                     //     'type': 'FeatureCollection',
                     //     'features': self.sites

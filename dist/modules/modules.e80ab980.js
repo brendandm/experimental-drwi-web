@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1581325574752})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1581325799053})
 
 ;
 /**
@@ -5283,6 +5283,13 @@ angular.module('FieldDoc')
                     console.log('Project sites --> ', successResponse);
 
                     self.sites = successResponse.features;
+
+                     self.summary = successResponse.summary;
+
+                    self.summary.organizations.unshift({
+                        id: 0,
+                        name: 'All organizations'
+                    });
 
                     // var siteCollection = {
                     //     'type': 'FeatureCollection',
