@@ -666,35 +666,35 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li data-ng-class="{active: $root.toolbarState.dashboard}">
-                <a href="/projects/{{ page.project.id }}">
+                <a href="/projects/{{ page.project.id }}" title="Summary">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <a href="/projects/{{ page.project.id }}/edit">
+                <a href="/projects/{{ page.project.id }}/edit" title="Edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.grant}">
-                <a href="/projects/{{ page.project.id }}/grant">
+                <a href="/projects/{{ page.project.id }}/grant" title="Program">
                     <i class="material-icons">
                         account_balance
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <a href="/projects/{{ page.project.id }}/users">
+                <a href="/projects/{{ page.project.id }}/users" title="Collaborators">
                     <i class="material-icons">
                         group
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/projects/{{ page.project.id }}/partnerships">
+                <a href="/projects/{{ page.project.id }}/partnerships" title="Partnerships">
                     <i class="material-icons">
                         group_work
                     </i>
@@ -708,21 +708,21 @@
                 </a>
             </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/projects/{{ page.project.id }}/targets">
+                <a href="/projects/{{ page.project.id }}/targets" title="Metrics">
                     <i class="material-icons">
                         multiline_chart
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/projects/{{ page.project.id }}/tags">
+                <a href="/projects/{{ page.project.id }}/tags" title="Tags">
                     <i class="material-icons">
                         local_offer
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit">
-                <a href="#" data-ng-click="page.print()">
+                <a href="#" data-ng-click="page.print()" title="Print">
                     <i class="material-icons">
                         print
                     </i>
@@ -732,10 +732,10 @@
                 <div class="confirm--delete--popup" data-ng-if="page.deletionTarget && page.deletionTarget.feature.id === page.project.id && page.deletionTarget.collection === 'project'">
                     <p>Do you want to delete this project?</p>
                     <div class="actions">
-                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('project')">
+                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('project')" title="Delete">
                             Yes
                         </a>
-                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()" title="Delete">
                             Cancel
                         </a>
                     </div>
