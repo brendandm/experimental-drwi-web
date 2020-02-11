@@ -360,6 +360,12 @@
 
                             self.showElements();
 
+                            self.loadMetrics();
+
+//                          self.loadTags();
+
+                            self.tags = Utility.processTags(self.site.tags);
+
                         }, function(errorResponse) {
 
                             self.showElements();
@@ -368,7 +374,7 @@
 
                 };
 
-                self.loadSite = function() {
+        /*        self.loadSite = function() {
 
                     console.log("LOAD SITE");
 
@@ -409,6 +415,10 @@
 
                             self.practices = successResponse.features;
 
+                            self.summary = successResponse.summary;
+
+                            console.log("SUMMARY", self.summary);
+
                             console.log('self.practices', successResponse);
 
                             self.showElements();
@@ -431,6 +441,7 @@
 
                 };
 
+                */
                 self.createPractice = function() {
 
                     self.practice = new Practice({
