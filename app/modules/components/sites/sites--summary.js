@@ -354,6 +354,7 @@
 
                             self.summary = successResponse.summary;
 
+                            console.log("SUMMARY", self.summary);
 
                             console.log('self.practices', successResponse);
 
