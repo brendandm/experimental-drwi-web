@@ -41,20 +41,20 @@
                                     /
                             </nobr>
                             <nobr data-ng-if="page.report.report_date">
-                                Report <a href="/reports/{{page.report.id}}/edit">{{page.report.report_date | date}}</a>
+                                Report: <a href="/reports/{{page.report.id}}/edit">{{page.report.report_date | date}}</a>
 
                             </nobr>
                              <nobr data-ng-if="!page.report.report_date">
-                                Report <a href="/reports/{{page.report.id}}/edit">{{page.report.measurement_period}}</a>
+                                Report: <a href="/reports/{{page.report.id}}/edit">{{page.report.measurement_period}}</a>
 
                             </nobr>
                         </p>
                     </article>
                 </div>
         </div>
-
-        <h1 class="inset reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">Edit report</h1>
-
+        <div class="breadcrumb-header-wrapper">
+            <h1 class="inset breadcrumb-header reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">Edit report</h1>
+        </div>
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
 
             <article class="feature-detail">
