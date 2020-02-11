@@ -8,7 +8,7 @@
 angular.module('FieldDoc')
     .controller('ProjectsController',
         function(Account, $location, $log, Project, Tag,
-            projects, $rootScope, $scope, Site, user, mapbox,
+             $rootScope, $scope, Site, user, mapbox,
             ProjectStore, FilterStore, $interval, $timeout, Utility) {
 
             $scope.filterStore = FilterStore;

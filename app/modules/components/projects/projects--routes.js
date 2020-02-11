@@ -18,11 +18,12 @@ angular.module('FieldDoc')
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
-                    projects: function($location, Project, $rootScope) {
+                /*    projects: function($location, Project, $rootScope) {
 
                         return Project.collection({});
 
                     },
+                    */
                     user: function(Account, $rootScope, $document) {
 
                         $rootScope.targetPath = document.location.pathname;
