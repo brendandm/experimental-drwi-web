@@ -95,7 +95,7 @@
             self.changeLimit = function(limit){
                 self.limit = limit;
                 self.page = 1;
-                self.loadSites();
+                self.loadPractices();
             }
 
              self.getPage = function(page){
@@ -109,7 +109,7 @@
                 }else{
                      self.page   = page;
 
-                     self.loadSites();
+                     self.loadPractices();
                 }
 
             };

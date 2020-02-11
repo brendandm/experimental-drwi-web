@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1581447352545})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1581447581044})
 
 ;
 /**
@@ -10864,7 +10864,7 @@ angular.module('FieldDoc')
             self.changeLimit = function(limit){
                 self.limit = limit;
                 self.page = 1;
-                self.loadSites();
+                self.loadPractices();
             }
 
              self.getPage = function(page){
@@ -10878,7 +10878,7 @@ angular.module('FieldDoc')
                 }else{
                      self.page   = page;
 
-                     self.loadSites();
+                     self.loadPractices();
                 }
 
             };
