@@ -157,14 +157,14 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;">
         <ul>
             <li data-ng-class="{active: $root.toolbarState.dashboard}">
-                <a href="/practices/{{ page.practice.id }}">
+                <a href="/practices/{{ page.practice.id }}" title="Summary">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li>
-                <a href="/practices/{{ page.practice.id }}/edit">
+                <a href="/practices/{{ page.practice.id }}/edit" title="Edit">
                     <i class="material-icons">
                         edit
                     </i>
@@ -182,7 +182,7 @@
                         </a>
                     </div>
                 </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.report)">
+                <a href="#" data-ng-click="page.confirmDelete(page.report)" title="Delete">
                     <i class="material-icons">
                         delete
                     </i>

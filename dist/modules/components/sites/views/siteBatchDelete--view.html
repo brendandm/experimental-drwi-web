@@ -258,35 +258,35 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li data-ng-class="{active: $root.toolbarState.dashboard}">
-                <a href="/sites/{{ page.site.id }}">
+                <a href="/sites/{{ page.site.id }}" title="Summary">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/sites/{{ page.site.id }}/edit">
+                <a href="/sites/{{ page.site.id }}/edit" title="Edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
-                <a href="/sites/{{ page.site.id }}/location">
+                <a href="/sites/{{ page.site.id }}/location" title="Location">
                     <i class="material-icons">
                         location_on
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.viewGeographies}">
-                <a href="/sites/{{ page.site.id }}/geographies">
+                <a href="/sites/{{ page.site.id }}/geographies" title="Geography">
                     <i class="material-icons">
                         public
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.partnerships}">
-                <a href="/sites/{{ page.site.id }}/partnerships">
+                <a href="/sites/{{ page.site.id }}/partnerships" title="Partnerships">
                     <i class="material-icons">
                         group_work
                     </i>
@@ -300,7 +300,7 @@
                 </a>
             </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/sites/{{ page.site.id }}/tags">
+                <a href="/sites/{{ page.site.id }}/tags" title="Tags">
                     <i class="material-icons">
                         local_offer
                     </i>
@@ -318,7 +318,7 @@
                         </a>
                     </div>
                 </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.site)">
+                <a href="#" data-ng-click="page.confirmDelete(page.site)" title="Delete">
                     <i class="material-icons">
                         delete
                     </i>

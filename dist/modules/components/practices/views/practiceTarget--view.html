@@ -343,42 +343,42 @@
     <nav id="toolbar" class="toolbar" style="float: none; width: auto;" data-ng-if="$root.user.id">
         <ul>
             <li>
-                <a href="/practices/{{ page.practice.id }}">
+                <a href="/practices/{{ page.practice.id }}" title="Summary">
                     <i class="material-icons">
                         dashboard
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/practices/{{ page.practice.id }}/edit">
+                <a href="/practices/{{ page.practice.id }}/edit" title="Edit">
                     <i class="material-icons">
                         edit
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
-                <a href="/practices/{{ page.practice.id }}/location">
+                <a href="/practices/{{ page.practice.id }}/location" title="Location">
                     <i class="material-icons">
                         location_on
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editPhotos}">
-                <a href="/practices/{{ page.practice.id }}/photos">
+                <a href="/practices/{{ page.practice.id }}/photos" title="Photos">
                     <i class="material-icons">
                         insert_photo
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTargets}">
-                <a href="/practices/{{ page.practice.id }}/targets">
+                <a href="/practices/{{ page.practice.id }}/targets" title="Metrics">
                     <i class="material-icons">
                         multiline_chart
                     </i>
                 </a>
             </li>
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editTags}">
-                <a href="/practices/{{ page.practice.id }}/tags">
+                <a href="/practices/{{ page.practice.id }}/tags" title="Tags">
                     <i class="material-icons">
                         local_offer
                     </i>
@@ -396,7 +396,7 @@
                         </a>
                     </div>
                 </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.practice)">
+                <a href="#" data-ng-click="page.confirmDelete(page.practice)" title="Delete">
                     <i class="material-icons">
                         delete
                     </i>
