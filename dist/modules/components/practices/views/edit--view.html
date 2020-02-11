@@ -24,6 +24,35 @@
 
         </section>
 
+        <div class="main--ui breadcrumb-ui">
+           <div class="group">
+                    <article class="breadcrumb" >
+                        <p>
+                            <nobr>
+                                Project: <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
+                                    /
+                            </nobr>
+                            <nobr>
+                                   <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
+                                Site: <a href="/sites/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
+                                    /
+                            </nobr>
+                                Practice: <a href="/practices/{{page.practice.id}}">{{ page.practice.name }}</a>
+                                    /
+                            </nobr>
+                            <nobr data-ng-if="page.report.report_date">
+                                Report <a href="/reports/{{page.report.id}}/edit">{{page.report.report_date | date}}</a>
+
+                            </nobr>
+                             <nobr data-ng-if="!page.report.report_date">
+                                Report <a href="/reports/{{page.report.id}}/edit">{{page.report.measurement_period}}</a>
+
+                            </nobr>
+                        </p>
+                    </article>
+                </div>
+        </div>
+
         <h1 class="inset reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">Edit report</h1>
 
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
