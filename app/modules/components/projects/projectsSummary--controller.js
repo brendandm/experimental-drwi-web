@@ -394,7 +394,8 @@ angular.module('FieldDoc')
                 Project.sites({
 
                     id: self.project.id,
-
+                    limit:  self.limit,
+                    page:   self.page,
                     currentTime: Date.UTC()
 
                 }).$promise.then(function(successResponse) {
