@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1581445834442})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1581446279802})
 
 ;
 /**
@@ -10813,6 +10813,79 @@ angular.module('FieldDoc')
 
                 }
 
+
+           /*START Pagniation vars*/
+            self.limit = 12;
+            self.page = 1;
+
+            self.viewCountLow = self.page;
+            self.viewCountHigh =  self.limit;
+
+
+            self.calculateViewCount = function(){
+               console.log("A");
+               if(self.page > 1){
+                    console.log("B");
+
+                    if(self.page == 1){
+                         console.log("C");
+                        self.viewCountHigh = self.limit;
+                         self.viewCountLow = ((self.page-1) * self.limit);
+                    }
+                    else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                         console.log("D");
+                        self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
+                         self.viewCountLow = ((self.page-1) * self.limit)+1;
+
+                    }
+                    else{
+                         console.log("E");
+                        self.viewCountHigh = self.summary.feature_count;
+                         self.viewCountLow = ((self.page-1) * self.limit)+1;
+                    }
+               }
+               else{
+                    if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                         console.log("F");
+                          self.viewCountLow = 1;
+                          self.viewCountHigh = self.limit;
+                    }
+                    else{
+                         console.log("G");
+                        self.viewCountLow = 1;
+                        self.viewCountHigh = self.summary.feature_count;
+
+                    }
+
+               }
+
+            }
+
+            self.changeLimit = function(limit){
+                self.limit = limit;
+                self.page = 1;
+                self.loadSites();
+            }
+
+             self.getPage = function(page){
+                console.log("PAGE",page);
+               // console.log("LIMIT",limit);
+
+                if(page < 1){
+                    self.page = 1;
+                }else if(page > self.summary.page_count){
+                    self.page = self.summary.page_count;
+                }else{
+                     self.page   = page;
+
+                     self.loadSites();
+                }
+
+            };
+             /*END Pagniation vars*/
+
+
+
                 self.showElements = function() {
 
                     $timeout(function() {
@@ -11038,7 +11111,8 @@ angular.module('FieldDoc')
                 self.loadPractices = function(){
                      Site.practices({
                             id: self.site.id,
-
+                             limit:  self.limit,
+                             page:   self.page,
                             currentTime: Date.UTC()
 
                         }).$promise.then(function(successResponse) {
@@ -11046,6 +11120,9 @@ angular.module('FieldDoc')
                             console.log("PRACTICE RESPONSE");
 
                             self.practices = successResponse.features;
+
+                            self.summary = successResponse.summary;
+
 
                             console.log('self.practices', successResponse);
 
