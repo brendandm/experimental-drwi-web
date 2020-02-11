@@ -360,6 +360,9 @@
 
                             self.showElements();
 
+                            self.calculateViewCount();
+
+
                             self.loadMetrics();
 
 //                          self.loadTags();
