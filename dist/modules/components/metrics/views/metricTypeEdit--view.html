@@ -100,7 +100,7 @@
                 </a>
             </li> -->
             <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.edit}">
-                <a href="/metric-types/{{ page.metricType.id }}/edit">
+                <a href="/metric-types/{{ page.metricType.id }}/edit" title="Edit">
                     <i class="material-icons">
                         edit
                     </i>
@@ -118,7 +118,7 @@
                         </a>
                     </div>
                 </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.metricType)">
+                <a href="#" data-ng-click="page.confirmDelete(page.metricType)" title="Delete">
                     <i class="material-icons">
                         delete
                     </i>
