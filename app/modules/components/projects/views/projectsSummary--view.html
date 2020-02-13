@@ -390,15 +390,16 @@
                                     position:relative;
                                     float: right;
                                     display:inline-block;
-                                    width:200px;
+                                    width:56px;
                                     height: 56px;
+                                    bottom:-28px;
 
                                    "
                            class="add--new--wrapper"
                            data-ng-if="page.permissions.can_edit"
                       >
-                        <span style="">Create site</span>
-                        <a class="add--new--btn" data-ng-click="page.createSite()" style="float:right; width:56px; height:56px;">
+                        <!--<span style="">Create site</span>-->
+                        <a title="Create site" class="add--new--btn" data-ng-click="page.createSite()" style="float:right; width:56px; height:56px;">
                             <i class="material-icons" >
                             add
                             </i>
