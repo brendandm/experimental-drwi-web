@@ -393,6 +393,7 @@
                                     width:56px;
                                     height: 56px;
                                     top:0px;
+                                    margin-right:30px;
 
                                    "
                            class="add--new--wrapper"
@@ -408,8 +409,8 @@
                  </div>
 
                 <div style="border:1px solid green; height:56px;">
-                    <div style="margin-top:24px; border:0px solid red;float:right; display:inline-block" data-ng-if="page.permissions.can_edit">
-                        <a class="snapshot--title"
+                    <div style="margin-left:30px; margin-top:24px; border:0px solid red;float:right; display:inline-block" data-ng-if="page.permissions.can_edit">
+                        <a class="snapshot--title" title="Batch Delete"
                            href="/projects/{{ page.project.id }}/batchDelete"
                            >
                                 <i class="material-icons" style="color:#666666;">
