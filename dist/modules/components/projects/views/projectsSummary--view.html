@@ -378,14 +378,52 @@
 
             </div>
 
-            <section class="reveal fade-in t3" style="padding: 0;">
+            <section class="reveal fade-in t3" style="padding: 0; overflow:hidden;">
 
                  <div style="border:0px solid red;">
                     <div style="border:0px solid red; float:left; display:inline-block">
                          <h2>Sites</h2>
                     </div>
-                    <div style="margin-top:24px; border:0px solid red;float:right; display:inline-block" data-ng-if="page.permissions.can_edit">
-                        <a class="snapshot--title"
+
+
+                      <div style="  border:0px solid purple;
+                                    position:relative;
+                                    float: right;
+                                    display:inline-block;
+                                    width:56px;
+                                    height: 56px;
+                                    top:10px;
+                                    margin-left:30px;
+
+                                   "
+                           class="add--new--wrapper"
+                           data-ng-if="page.permissions.can_edit"
+                      >
+                        <!--<span style="">Create site</span>-->
+                        <a title="Create site" class="add--new--btn" data-ng-click="page.createSite()" style="float:right; width:56px; height:56px;">
+                            <i class="material-icons" >
+                            add
+                            </i>
+                        </a>
+                    </div>
+                 </div>
+
+                <div style="    border:0px solid green;
+                                height:56px;
+                                display:block;
+                                min-width:740px;
+                            "
+                >
+                    <div style="
+                                margin-left:30px;
+                                margin-top:24px;
+                                border:0px solid red;
+                                float:right;
+
+                                "
+                         data-ng-if="page.permissions.can_edit"
+                    >
+                        <a class="snapshot--title" title="Batch Delete"
                            href="/projects/{{ page.project.id }}/batchDelete"
                            >
                                 <i class="material-icons" style="color:#666666;">
@@ -396,89 +434,104 @@
 
                     </div>
 
+                    <div data-ng-include="'/templates/pagination-view.html'"></div>
+
                 </div>
 
-                <ul class="snapshot--cards list-unstyled">
+                <div>
 
-                    <li class="card" data-ng-repeat="site in page.sites track by $index">
+                    <div style="border:0px solid red; display:inline-block; margin-top:10px;">
+                        <ul class="snapshot--cards list-unstyled">
 
-                        <div class="card--content">
+                            <li class="card" data-ng-repeat="site in page.sites track by $index">
 
-                            <div style="position:relative;">
+                                <div class="card--content">
 
-                              <img data-ng-if="site.staticURL" data-ng-src="{{ site.staticURL }}" width="auto" height="auto" />
+                                    <div style="position:relative;">
 
-
-                                <img data-ng-if="!site.staticURL" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,5/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
-
-
-                                <!--<div id="site-geography-preview-{{ $index }}" style="width: 100%; height: 200px;"></div>-->
+                                      <img data-ng-if="site.staticURL" data-ng-src="{{ site.staticURL }}" width="auto" height="auto" />
 
 
-                                <!-- <leaflet id="site-geography-preview-{{ $index }}" style="width: 100%; height: 200px;" defaults="page.previewMap.defaults" layers="page.previewMap.layers" bounds="site.bounds" geojson="site.geojson"></leaflet> -->
+                                        <img data-ng-if="!site.staticURL" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,5/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
 
-                            </div>
 
-                            <div class="name" style="background: #fff;">
-                                <span>{{ site.properties.name || 'Un-named' }}</span>
-                            </div>
+                                        <!--<div id="site-geography-preview-{{ $index }}" style="width: 100%; height: 200px;"></div>-->
 
-                            <div class="body">
 
-                                <div class="confirm--delete" data-ng-if="page.deletionTarget && page.deletionTarget.feature.properties.id === site.properties.id && page.deletionTarget.collection === 'site'">
-                                    <p>Do you want to delete this site?</p>
-                                    <div class="actions" style="flex: 0;">
-                                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('site', $index)">
-                                            Yes
-                                        </a>
-                                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
-                                            Cancel
-                                        </a>
+                                        <!-- <leaflet id="site-geography-preview-{{ $index }}" style="width: 100%; height: 200px;" defaults="page.previewMap.defaults" layers="page.previewMap.layers" bounds="site.bounds" geojson="site.geojson"></leaflet> -->
+
+                                    </div>
+
+                                    <div class="name" style="background: #fff;">
+                                        <span>{{ site.properties.name || 'Un-named' }}</span>
+                                    </div>
+
+                                    <div class="body">
+
+                                        <div class="confirm--delete" data-ng-if="page.deletionTarget && page.deletionTarget.feature.properties.id === site.properties.id && page.deletionTarget.collection === 'site'">
+                                            <p>Do you want to delete this site?</p>
+                                            <div class="actions" style="flex: 0;">
+                                                <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('site', $index)">
+                                                    Yes
+                                                </a>
+                                                <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                                                    Cancel
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <p>{{ (site.properties.description || 'No description') | truncate:80 }}</p>
+                                        <div class="actions">
+                                            <a class="snapshot--title" href="/sites/{{ site.properties.id }}" title="Site summary">
+                                                <i class="material-icons">
+                                                    dashboard
+                                                </i>
+                                            </a>
+                                            <a class="snapshot--title" href="/sites/{{ site.properties.id }}/edit" title="Edit site" data-ng-if="page.permissions.can_edit">
+                                                <i class="material-icons">
+                                                    edit
+                                                </i>
+                                            </a>
+                                            <a class="snapshot--title" href="/sites/{{ site.properties.id }}/location" title="Edit location" data-ng-if="page.permissions.can_edit">
+                                                <i class="material-icons">
+                                                    location_on
+                                                </i>
+                                            </a>
+                                            <a class="snapshot--title" href="#" title="Delete site" data-ng-click="page.confirmDelete(site, 'site')" data-ng-if="page.permissions.can_edit">
+                                                <i class="material-icons">
+                                                    delete
+                                                </i>
+                                            </a>
+                                        </div>
+                                        <span><time datetime="{{ site.properties.modified_on }}" title="{{ site.properties.modified_on }}">Last updated on {{ site.properties.modified_on | date : 'mediumDate' }}</time></span>
+                                    </div>
+
+                                </div>
+
+                            </li>
+
+                         <!--   <li class="card" data-ng-if="page.permissions.can_edit">
+                                <div class="card--content">
+                                    <div class="body">
+                                        <button type="button" class="snapshot--title" data-ng-click="page.createSite()" title="Create site">
+                                            <i class="material-icons">
+                                                add
+                                            </i>
+                                        </button>
                                     </div>
                                 </div>
-                                <p>{{ (site.properties.description || 'No description') | truncate:80 }}</p>
-                                <div class="actions">
-                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}" title="Site summary">
-                                        <i class="material-icons">
-                                            dashboard
-                                        </i>
-                                    </a>
-                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/edit" title="Edit site" data-ng-if="page.permissions.can_edit">
-                                        <i class="material-icons">
-                                            edit
-                                        </i>
-                                    </a>
-                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/location" title="Edit location" data-ng-if="page.permissions.can_edit">
-                                        <i class="material-icons">
-                                            location_on
-                                        </i>
-                                    </a>
-                                    <a class="snapshot--title" href="#" title="Delete site" data-ng-click="page.confirmDelete(site, 'site')" data-ng-if="page.permissions.can_edit">
-                                        <i class="material-icons">
-                                            delete
-                                        </i>
-                                    </a>
-                                </div>
-                                <span><time datetime="{{ site.properties.modified_on }}" title="{{ site.properties.modified_on }}">Last updated on {{ site.properties.modified_on | date : 'mediumDate' }}</time></span>
-                            </div>
+                            </li>
+                          -->
 
-                        </div>
-
-                    </li>
-
-                    <li class="card" data-ng-if="page.permissions.can_edit">
-                        <div class="card--content">
-                            <div class="body">
-                                <button type="button" class="snapshot--title" data-ng-click="page.createSite()" title="Create site">
-                                    <i class="material-icons">
-                                        add
-                                    </i>
-                                </button>
-                            </div>
-                        </div>
-                    </li>
-
-                </ul>
+                        </ul>
+                    </div>
+                </div>
+                <div style="
+                        margin-top  :-20px;
+                        min-width   :740px;
+                    "
+                >
+                    <div data-ng-include="'/templates/pagination-view.html'"></div>
+                </div>
 
             </section>
 
@@ -535,7 +588,6 @@
                 </div>
 
             </section>
-
 
             <section class="reveal fade-in t0" style="padding: 1em 0 0; border:0px solid red; "
              data-ng-if="page.permissions.can_edit"

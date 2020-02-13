@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1581437356748})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1581583277845})
 
 ;
 /**
@@ -3903,11 +3903,12 @@ angular.module('FieldDoc')
                 controllerAs: 'page',
                 reloadOnSearch: false,
                 resolve: {
-                    projects: function($location, Project, $rootScope) {
+                /*    projects: function($location, Project, $rootScope) {
 
                         return Project.collection({});
 
                     },
+                    */
                     user: function(Account, $rootScope, $document) {
 
                         $rootScope.targetPath = document.location.pathname;
@@ -4350,7 +4351,7 @@ angular.module('FieldDoc')
 angular.module('FieldDoc')
     .controller('ProjectsController',
         function(Account, $location, $log, Project, Tag,
-            projects, $rootScope, $scope, Site, user, mapbox,
+             $rootScope, $scope, Site, user, mapbox,
             ProjectStore, FilterStore, $interval, $timeout, Utility) {
 
             $scope.filterStore = FilterStore;
@@ -4399,6 +4400,68 @@ angular.module('FieldDoc')
                 loading: true
             };
 
+            /*START Pagniation vars*/
+            self.limit = 12;
+            self.page = 1;
+
+            self.viewCountLow = self.page;
+            self.viewCountHigh =  self.limit;
+
+
+          //  self.viewCountLow = self.page * self.limit;
+          //  self.viewCountHigh = self.limit
+
+            self.calculateViewCount = function(){
+               if(self.page > 1){
+
+                    if(self.page == 1){
+                        self.viewCountHigh = self.limit;
+                         self.viewCountLow = ((self.page-1) * self.limit);
+                    }else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                        self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
+                         self.viewCountLow = ((self.page-1) * self.limit)+1;
+
+                    }else{
+                        self.viewCountHigh = self.summary.feature_count;
+                         self.viewCountLow = ((self.page-1) * self.limit)+1;
+                    }
+               }else{
+                    if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                          self.viewCountLow = 1;
+                          self.viewCountHigh = self.limit;
+                    }else{
+                        self.viewCountLow = 1;
+                        self.viewCountHigh = self.summary.feature_count;
+
+                    }
+
+               }
+
+            }
+
+            self.changeLimit = function(limit){
+                self.limit = limit;
+                self.page = 1;
+                self.loadProjects();
+            }
+
+             self.getPage = function(page){
+                console.log("PAGE",page);
+               // console.log("LIMIT",limit);
+
+                if(page < 1){
+                    self.page = 1;
+                }else if(page > self.summary.page_count){
+                    self.page = self.summary.page_count;
+                }else{
+                     self.page   = page;
+
+                     self.loadProjects();
+                }
+
+            };
+             /*END Pagniation vars*/
+
             self.showElements = function() {
 
                 $timeout(function() {
@@ -4407,7 +4470,7 @@ angular.module('FieldDoc')
 
                     self.status.processing = false;
 
-                }, 1000);
+                }, 250);
 
             };
 
@@ -4507,7 +4570,9 @@ angular.module('FieldDoc')
                     'self.buildFilter --> Starting...');
 
                 var data = {
-                    combine: 'true'
+                    combine: 'true',
+                    limit:  self.limit,
+                    page:   self.page
                 };
 
                 for (var key in self.filters) {
@@ -4576,6 +4641,8 @@ angular.module('FieldDoc')
 
                     }
 
+                     self.calculateViewCount();
+
                     self.showElements();
 
                 }, function(errorResponse) {
@@ -4587,6 +4654,8 @@ angular.module('FieldDoc')
                 });
 
             };
+
+
 
             self.loadTags = function() {
 
@@ -4791,7 +4860,7 @@ angular.module('FieldDoc')
 
                     // self.loadProjects();
 
-                    self.inspectSearchParams();
+                //    self.inspectSearchParams();
 
                     self.loadTags();
 
@@ -4859,6 +4928,76 @@ angular.module('FieldDoc')
                 $window.print();
 
             };
+
+            /*START Pagniation vars*/
+            self.limit = 12;
+            self.page = 1;
+
+            self.viewCountLow = self.page;
+            self.viewCountHigh =  self.limit;
+
+
+            self.calculateViewCount = function(){
+               console.log("A");
+               if(self.page > 1){
+                    console.log("B");
+
+                    if(self.page == 1){
+                         console.log("C");
+                        self.viewCountHigh = self.limit;
+                         self.viewCountLow = ((self.page-1) * self.limit);
+                    }
+                    else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                         console.log("D");
+                        self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
+                         self.viewCountLow = ((self.page-1) * self.limit)+1;
+
+                    }
+                    else{
+                         console.log("E");
+                        self.viewCountHigh = self.summary.feature_count;
+                         self.viewCountLow = ((self.page-1) * self.limit)+1;
+                    }
+               }
+               else{
+                    if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                         console.log("F");
+                          self.viewCountLow = 1;
+                          self.viewCountHigh = self.limit;
+                    }
+                    else{
+                         console.log("G");
+                        self.viewCountLow = 1;
+                        self.viewCountHigh = self.summary.feature_count;
+
+                    }
+
+               }
+
+            }
+
+            self.changeLimit = function(limit){
+                self.limit = limit;
+                self.page = 1;
+                self.loadSites();
+            }
+
+             self.getPage = function(page){
+                console.log("PAGE",page);
+               // console.log("LIMIT",limit);
+
+                if(page < 1){
+                    self.page = 1;
+                }else if(page > self.summary.page_count){
+                    self.page = self.summary.page_count;
+                }else{
+                     self.page   = page;
+
+                     self.loadSites();
+                }
+
+            };
+             /*END Pagniation vars*/
 
             self.showElements = function(createMap) {
 
@@ -5130,7 +5269,8 @@ angular.module('FieldDoc')
                 Project.sites({
 
                     id: self.project.id,
-
+                    limit:  self.limit,
+                    page:   self.page,
                     currentTime: Date.UTC()
 
                 }).$promise.then(function(successResponse) {
@@ -5139,12 +5279,21 @@ angular.module('FieldDoc')
 
                     self.sites = successResponse.features;
 
+                     self.summary = successResponse.summary;
+
+                    self.summary.organizations.unshift({
+                        id: 0,
+                        name: 'All organizations'
+                    });
+
                     // var siteCollection = {
                     //     'type': 'FeatureCollection',
                     //     'features': self.sites
                     // };
 
                     self.showElements(true);
+
+                    self.calculateViewCount();
 
                     // self.populateMap(self.map, siteCollection, null, true);
 
@@ -10660,6 +10809,79 @@ angular.module('FieldDoc')
 
                 }
 
+
+           /*START Pagniation vars*/
+            self.limit = 12;
+            self.page = 1;
+
+            self.viewCountLow = self.page;
+            self.viewCountHigh =  self.limit;
+
+
+            self.calculateViewCount = function(){
+               console.log("A");
+               if(self.page > 1){
+                    console.log("B");
+
+                    if(self.page == 1){
+                         console.log("C");
+                        self.viewCountHigh = self.limit;
+                         self.viewCountLow = ((self.page-1) * self.limit);
+                    }
+                    else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                         console.log("D");
+                        self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
+                         self.viewCountLow = ((self.page-1) * self.limit)+1;
+
+                    }
+                    else{
+                         console.log("E");
+                        self.viewCountHigh = self.summary.feature_count;
+                         self.viewCountLow = ((self.page-1) * self.limit)+1;
+                    }
+               }
+               else{
+                    if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                         console.log("F");
+                          self.viewCountLow = 1;
+                          self.viewCountHigh = self.limit;
+                    }
+                    else{
+                         console.log("G");
+                        self.viewCountLow = 1;
+                        self.viewCountHigh = self.summary.feature_count;
+
+                    }
+
+               }
+
+            }
+
+            self.changeLimit = function(limit){
+                self.limit = limit;
+                self.page = 1;
+                self.loadPractices();
+            }
+
+             self.getPage = function(page){
+                console.log("PAGE",page);
+               // console.log("LIMIT",limit);
+
+                if(page < 1){
+                    self.page = 1;
+                }else if(page > self.summary.page_count){
+                    self.page = self.summary.page_count;
+                }else{
+                     self.page   = page;
+
+                     self.loadPractices();
+                }
+
+            };
+             /*END Pagniation vars*/
+
+
+
                 self.showElements = function() {
 
                     $timeout(function() {
@@ -10885,7 +11107,8 @@ angular.module('FieldDoc')
                 self.loadPractices = function(){
                      Site.practices({
                             id: self.site.id,
-
+                             limit:  self.limit,
+                             page:   self.page,
                             currentTime: Date.UTC()
 
                         }).$promise.then(function(successResponse) {
@@ -10894,9 +11117,22 @@ angular.module('FieldDoc')
 
                             self.practices = successResponse.features;
 
+                            self.summary = successResponse.summary;
+
+                            console.log("SUMMARY", self.summary);
+
                             console.log('self.practices', successResponse);
 
                             self.showElements();
+
+                            self.calculateViewCount();
+
+
+                            self.loadMetrics();
+
+//                          self.loadTags();
+
+                            self.tags = Utility.processTags(self.site.tags);
 
                         }, function(errorResponse) {
 
@@ -10906,7 +11142,7 @@ angular.module('FieldDoc')
 
                 };
 
-                self.loadSite = function() {
+        /*        self.loadSite = function() {
 
                     console.log("LOAD SITE");
 
@@ -10947,6 +11183,10 @@ angular.module('FieldDoc')
 
                             self.practices = successResponse.features;
 
+                            self.summary = successResponse.summary;
+
+                            console.log("SUMMARY", self.summary);
+
                             console.log('self.practices', successResponse);
 
                             self.showElements();
@@ -10969,6 +11209,7 @@ angular.module('FieldDoc')
 
                 };
 
+                */
                 self.createPractice = function() {
 
                     self.practice = new Practice({

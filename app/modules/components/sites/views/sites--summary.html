@@ -370,17 +370,54 @@
 
             </div>
 
-            <section class="reveal fade-in t3" style="padding: 0;">
+            <section class="reveal fade-in t3" style="padding: 0; overflow:hidden;">
 
                  <div style="border:0px solid red;">
                     <div style="border:0px solid red; float:left; display:inline-block">
                          <h2>Practices</h2>
                     </div>
-                    <div style="margin-top:24px; border:0px solid red;float:right; display:inline-block">
-                        <a class="snapshot--title"
+
+                         <div style="  border:0px solid purple;
+                                        position:relative;
+                                        float: right;
+                                        display:inline-block;
+                                        width:56px;
+                                        height: 56px;
+                                        top:10px;
+                                        margin-left:30px;
+
+                                       "
+                               class="add--new--wrapper"
+                               data-ng-if="page.permissions.can_edit"
+                          >
+                            <!--<span style="">Create site</span>-->
+                            <a title="Create practice" class="add--new--btn" data-ng-click="page.createPractice()" style="float:right; width:56px; height:56px;">
+                                <i class="material-icons" >
+                                add
+                                </i>
+                            </a>
+   </div>
+                 </div>
+
+                <div style="    border:0px solid green;
+                                height:56px;
+                                display:block;
+                                min-width:740px;
+                            "
+                >
+                    <div style="
+                                margin-left:30px;
+                                margin-top:24px;
+                                border:0px solid red;
+                                float:right;
+
+                                "
+                         data-ng-if="page.permissions.can_edit"
+                    >
+                        <a class="snapshot--title" title="Batch Delete"
                            href="/sites/{{ page.site.id }}/batchDelete"
                            >
-                                <i class="material-icons" style="color:#666666;" data-ng-if="page.permissions.can_edit">
+                                <i class="material-icons" style="color:#666666;">
                                       delete_sweep
                                 </i>
                         </a>
@@ -388,11 +425,12 @@
 
                     </div>
 
+                    <div  data-ng-include="'/templates/pagination-view.html'"></div>
+
                 </div>
-
-
-
-                <ul class="snapshot--cards list-unstyled">
+                <div style="padding-top:10px;">
+                   <div style="border:0px solid blue; display:block;">
+                     <ul class="snapshot--cards list-unstyled">
 
                     <li class="card" data-ng-repeat="practice in page.practices track by $index">
 
@@ -459,6 +497,7 @@
 
                     </li>
 
+                   <!--
                     <li class="card" data-ng-if="page.permissions.can_edit">
                         <div class="card--content">
                             <div class="body">
@@ -470,9 +509,18 @@
                             </div>
                         </div>
                     </li>
+                    -->
 
                 </ul>
-
+                    </div>
+                </div>
+                 <div style="
+                        margin-top  :-20px;
+                        min-width   :740px;
+                    "
+                >
+                    <div data-ng-include="'/templates/pagination-view.html'"></div>
+                </div>
             </section>
 
             <section class="reveal fade-in t0" style="padding: 1em 0 0;" data-ng-if="!page.status.loading && page.pendingTasks.length">
