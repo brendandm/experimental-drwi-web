@@ -370,14 +370,14 @@
 
             </div>
 
-            <section class="reveal fade-in t3" style="padding: 0;">
+            <section class="reveal fade-in t3" style="padding: 0; overflow:hidden;">
 
                  <div style="border:0px solid red;">
                     <div style="border:0px solid red; float:left; display:inline-block">
                          <h2>Practices</h2>
                     </div>
 
-                         <div style="  border:1px solid purple;
+                         <div style="  border:0px solid purple;
                                         position:relative;
                                         float: right;
                                         display:inline-block;
@@ -399,7 +399,7 @@
    </div>
                  </div>
 
-                <div style="    border:1px solid green;
+                <div style="    border:0px solid green;
                                 height:56px;
                                 display:block;
                                 min-width:740px;
@@ -428,8 +428,8 @@
                     <div  data-ng-include="'/templates/pagination-view.html'"></div>
 
                 </div>
-                <div>
-                   <div style="border:1px solid blue; display:block; margin-top:10px;">
+                <div style="padding-top:10px;">
+                   <div style="border:0px solid blue; display:block;">
                      <ul class="snapshot--cards list-unstyled">
 
                     <li class="card" data-ng-repeat="practice in page.practices track by $index">
