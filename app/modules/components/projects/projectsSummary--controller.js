@@ -404,7 +404,7 @@ angular.module('FieldDoc')
 
                     self.sites = successResponse.features;
 
-                     self.summary = successResponse.summary;
+                    self.summary = successResponse.summary;
 
                     self.summary.organizations.unshift({
                         id: 0,
