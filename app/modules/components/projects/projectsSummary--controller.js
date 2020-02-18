@@ -418,7 +418,6 @@ angular.module('FieldDoc')
 
                     self.showElements(true);
 
-                    self.calculateViewCount();
 
                     // self.populateMap(self.map, siteCollection, null, true);
 
