@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582005715234})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582009542988})
 
 ;
 /**
@@ -9296,6 +9296,25 @@ angular.module('FieldDoc')
                 console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
 
             };
+
+            self.showMarkedForDeletion = function(){
+                  self.availableFeaturesFeatures.forEach(function(af, af_i) {
+                       self.selectedFeatures.forEach(function(sf, sf_i) {
+                             var markedKey = "marked_for_deletion";
+                             var markedVal = true;
+                             if(af.id == sf.id){
+                                self.availableFeatures[af_i][markedKey] = markedVal;
+                             }else{
+                                self.availableFeatures[af_i][markedKey] = false;
+                             }
+
+
+                        });
+
+                  });
+
+            };
+
              /*END Pagniation vars*/
 
 
@@ -9375,6 +9394,8 @@ angular.module('FieldDoc')
                         self.showElements(true);
 
                         self.calculateViewCount();
+
+                        self.showMarkedForDeletion();
 
                        //;
 

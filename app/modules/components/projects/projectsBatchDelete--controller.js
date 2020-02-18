@@ -106,6 +106,25 @@
                 console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
 
             };
+
+            self.showMarkedForDeletion = function(){
+                  self.availableFeaturesFeatures.forEach(function(af, af_i) {
+                       self.selectedFeatures.forEach(function(sf, sf_i) {
+                             var markedKey = "marked_for_deletion";
+                             var markedVal = true;
+                             if(af.id == sf.id){
+                                self.availableFeatures[af_i][markedKey] = markedVal;
+                             }else{
+                                self.availableFeatures[af_i][markedKey] = false;
+                             }
+
+
+                        });
+
+                  });
+
+            };
+
              /*END Pagniation vars*/
 
 
@@ -185,6 +204,8 @@
                         self.showElements(true);
 
                         self.calculateViewCount();
+
+                        self.showMarkedForDeletion();
 
                        //;
 
