@@ -112,12 +112,13 @@
                        self.selectedFeatures.forEach(function(sf, sf_i) {
                              var markedKey = "marked_for_deletion";
                              var markedVal = true;
-                             console.log("ID CHECK: "+af.properties.id+"--"+sf.properties.id);
+
 
                              if(af.properties.id == sf.properties.id){
                                 self.availableFeatures[af_i][markedKey] = markedVal;
+                                 console.log("ID CHECK: "+af.properties.id+"--"+sf.properties.id);
                              }else{
-                                self.availableFeatures[af_i][markedKey] = false;
+                           //     self.availableFeatures[af_i][markedKey] = false;
                              }
 
 
