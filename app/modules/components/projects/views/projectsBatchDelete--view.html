@@ -97,20 +97,21 @@
                         <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search your sites">
                <!--     </div> -->
                     <div class="collection-filter-group">
-                        <div style="
+                     <!--   <div style="
                                     float   :  left;
                                     display :  inline-block;
                                     border  :   1px solid red;
                                     width   :   350px;
                                     "
-                        >
+                        >-->
                             <button data-ng-click="page.removeAllFromDeleteQueue()" title="Remove all from batch delete" style="margin-top:-15px; margin-left:30px;">
                                 <nobr>Deselect All</nobr>
                             </button>
                             <button data-ng-click="page.addAllToDeleteQueue()" title="Add all to batch delete" style="margin-top:-15px; margin-left:30px;" >
                                 <nobr>Select All</nobr>
                             </button>
-                        </div>
+                   <!--     </div>
+                   -->
 
                     </div>
                    <!--   <div style="    border:1px solid green;
