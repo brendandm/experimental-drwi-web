@@ -93,13 +93,14 @@
                                                                         flex-wrap: wrap;
                                                                          "
                  >
-
-                     <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search your sites">
-
+                    <div style="border:1px solid pink;">
+                        <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search your sites">
+                    </div>
                     <div class="collection-filter-group">
                         <div style="
                                     float   :  left;
                                     display :  block;
+                                    border  :   1px solid red;
                                     "
                         >
                             <button data-ng-click="page.removeAllFromDeleteQueue()" title="Remove all from batch delete" style="margin-top:-15px; margin-left:30px;">
@@ -108,7 +109,7 @@
                             <button data-ng-click="page.addAllToDeleteQueue()" title="Add all to batch delete" style="margin-top:-15px; margin-left:30px;" >
                                 <nobr>Select All</nobr>
                             </button>
-                         </div>
+                        </div>
                         <div style="    border:1px solid green;
                                     display:block;
                                     float:  right;
@@ -118,7 +119,7 @@
                                 "
                         >
                                 <div data-ng-include="'/templates/pagination-view.html'"></div>
-                         </div>
+                        </div>
                     </div>
 
                 </div>
