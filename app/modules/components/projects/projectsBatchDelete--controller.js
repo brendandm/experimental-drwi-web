@@ -112,6 +112,8 @@
                        self.selectedFeatures.forEach(function(sf, sf_i) {
                              var markedKey = "marked_for_deletion";
                              var markedVal = true;
+                             console.log("ID CHECK: "+af.id+"--"+sf.id);
+
                              if(af.id == sf.id){
                                 self.availableFeatures[af_i][markedKey] = markedVal;
                              }else{
