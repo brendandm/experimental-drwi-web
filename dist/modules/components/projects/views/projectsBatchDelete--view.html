@@ -97,23 +97,29 @@
                      <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search your sites">
 
                     <div class="collection-filter-group">
-                        <button data-ng-click="page.removeAllFromDeleteQueue()" title="Remove all from batch delete" style="margin-top:-15px; margin-left:30px;">
-                            <nobr>Deselect All</nobr>
-                        </button>
-                        <button data-ng-click="page.addAllToDeleteQueue()" title="Add all to batch delete" style="margin-top:-15px; margin-left:30px;" >
-                            <nobr>Select All</nobr>
-                        </button>
-                     </div>
-                    <div style="    border:1px solid green;
-                                display:block;
-                                float:  right;
-                                margin-right:30px;
+                        <div style="
+                                    float   :  left;
+                                    display :  block;
+                                    "
+                        >
+                            <button data-ng-click="page.removeAllFromDeleteQueue()" title="Remove all from batch delete" style="margin-top:-15px; margin-left:30px;">
+                                <nobr>Deselect All</nobr>
+                            </button>
+                            <button data-ng-click="page.addAllToDeleteQueue()" title="Add all to batch delete" style="margin-top:-15px; margin-left:30px;" >
+                                <nobr>Select All</nobr>
+                            </button>
+                         </div>
+                        <div style="    border:1px solid green;
+                                    display:block;
+                                    float:  right;
+                                    margin-right:30px;
 
 
-                            "
-                    >
-                            <div data-ng-include="'/templates/pagination-view.html'"></div>
-                     </div>
+                                "
+                        >
+                                <div data-ng-include="'/templates/pagination-view.html'"></div>
+                         </div>
+                    </div>
 
                 </div>
 
