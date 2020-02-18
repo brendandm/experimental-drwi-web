@@ -86,6 +86,8 @@
                 self.limit = limit;
                 self.page = 1;
                 self.loadSites();
+
+                 console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
             }
 
              self.getPage = function(page){
@@ -100,6 +102,8 @@
 
                      self.loadSites();
                 }
+
+                console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
 
             };
              /*END Pagniation vars*/
