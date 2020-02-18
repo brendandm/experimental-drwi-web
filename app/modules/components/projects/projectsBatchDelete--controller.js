@@ -85,7 +85,7 @@
             self.changeLimit = function(limit){
                 self.limit = limit;
                 self.page = 1;
-                self.loadProjects();
+                self.loadSites();
             }
 
              self.getPage = function(page){
@@ -98,7 +98,7 @@
                 }else{
                      self.page   = page;
 
-                     self.loadProjects();
+                     self.loadSites();
                 }
 
             };
