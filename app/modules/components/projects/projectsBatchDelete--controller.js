@@ -108,7 +108,7 @@
             };
 
             self.showMarkedForDeletion = function(){
-                  self.availableFeaturesFeatures.forEach(function(af, af_i) {
+                  self.availableFeatures.forEach(function(af, af_i) {
                        self.selectedFeatures.forEach(function(sf, sf_i) {
                              var markedKey = "marked_for_deletion";
                              var markedVal = true;
