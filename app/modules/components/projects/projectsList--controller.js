@@ -64,10 +64,6 @@ angular.module('FieldDoc')
             self.viewCountLow = self.page;
             self.viewCountHigh =  self.limit;
 
-
-          //  self.viewCountLow = self.page * self.limit;
-          //  self.viewCountHigh = self.limit
-
             self.calculateViewCount = function(){
                if(self.page > 1){
 
@@ -104,7 +100,6 @@ angular.module('FieldDoc')
 
              self.getPage = function(page){
                 console.log("PAGE",page);
-               // console.log("LIMIT",limit);
 
                 if(page < 1){
                     self.page = 1;

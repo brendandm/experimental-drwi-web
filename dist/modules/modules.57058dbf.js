@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1582059526089})
+.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1582100444879})
 
 ;
 /**
@@ -4407,10 +4407,6 @@ angular.module('FieldDoc')
             self.viewCountLow = self.page;
             self.viewCountHigh =  self.limit;
 
-
-          //  self.viewCountLow = self.page * self.limit;
-          //  self.viewCountHigh = self.limit
-
             self.calculateViewCount = function(){
                if(self.page > 1){
 
@@ -4447,7 +4443,6 @@ angular.module('FieldDoc')
 
              self.getPage = function(page){
                 console.log("PAGE",page);
-               // console.log("LIMIT",limit);
 
                 if(page < 1){
                     self.page = 1;
@@ -5279,7 +5274,7 @@ angular.module('FieldDoc')
 
                     self.sites = successResponse.features;
 
-                     self.summary = successResponse.summary;
+                    self.summary = successResponse.summary;
 
                     self.summary.organizations.unshift({
                         id: 0,
@@ -5293,7 +5288,6 @@ angular.module('FieldDoc')
 
                     self.showElements(true);
 
-                    self.calculateViewCount();
 
                     // self.populateMap(self.map, siteCollection, null, true);
 
@@ -9236,11 +9230,97 @@ angular.module('FieldDoc')
 
                 self.alerts = [];
 
-                    self.closeAlerts = function() {
+                self.closeAlerts = function() {
 
                         self.alerts = [];
 
                     };
+
+
+            /*START Pagniation vars*/
+            self.limit = 12;
+            self.page = 1;
+
+            self.viewCountLow = self.page;
+            self.viewCountHigh =  self.limit;
+
+            self.calculateViewCount = function(){
+               if(self.page > 1){
+
+                    if(self.page == 1){
+                        self.viewCountHigh = self.limit;
+                         self.viewCountLow = ((self.page-1) * self.limit);
+                    }else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                        self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
+                         self.viewCountLow = ((self.page-1) * self.limit)+1;
+
+                    }else{
+                        self.viewCountHigh = self.summary.feature_count;
+                         self.viewCountLow = ((self.page-1) * self.limit)+1;
+                    }
+               }else{
+                    if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                          self.viewCountLow = 1;
+                          self.viewCountHigh = self.limit;
+                    }else{
+                        self.viewCountLow = 1;
+                        self.viewCountHigh = self.summary.feature_count;
+
+                    }
+
+               }
+
+            }
+
+            self.changeLimit = function(limit){
+                self.limit = limit;
+                self.page = 1;
+                self.loadSites();
+
+                 console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
+            }
+
+             self.getPage = function(page){
+                console.log("PAGE",page);
+
+                if(page < 1){
+                    self.page = 1;
+                }else if(page > self.summary.page_count){
+                    self.page = self.summary.page_count;
+                }else{
+                     self.page   = page;
+
+                     self.loadSites();
+                }
+
+                console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
+
+            };
+
+            self.showMarkedForDeletion = function(){
+                  self.availableFeatures.forEach(function(af, af_i) {
+                       self.selectedFeatures.forEach(function(sf, sf_i) {
+                             var markedKey = "marked_for_deletion";
+                             var markedVal = true;
+
+
+                             if(af.properties.id == sf.properties.id){
+                                self.availableFeatures[af_i][markedKey] = markedVal;
+                                 console.log("ID CHECK: "+af.properties.id+"--"+sf.properties.id);
+                             }else{
+                           //     self.availableFeatures[af_i][markedKey] = false;
+                             }
+
+
+                        });
+
+                  });
+
+            };
+
+             /*END Pagniation vars*/
+
+
 
                 self.loadProject = function() {
 
@@ -9288,9 +9368,10 @@ angular.module('FieldDoc')
 
                     Project.sites({
 
-                        id: self.project.id,
-
-                        currentTime: Date.UTC()
+                        id          : self.project.id,
+                        limit       : self.limit,
+                        page        : self.page,
+                        currentTime : Date.UTC()
 
                     }).$promise.then(function(successResponse) {
 
@@ -9298,7 +9379,11 @@ angular.module('FieldDoc')
 
                         self.sites = successResponse.features;
 
-                         self.availableFeatures = self.sites;
+                        self.summary = successResponse.summary;
+
+                        console.log("SUMMARY", self.summary);
+
+                        self.availableFeatures = self.sites;
 
                         console.log('self.availableFeatures',self.availableFeatures);
 
@@ -9311,7 +9396,11 @@ angular.module('FieldDoc')
 
                         self.showElements(true);
 
-                       ;
+                        self.calculateViewCount();
+
+                        self.showMarkedForDeletion();
+
+                       //;
 
                     }, function(errorResponse) {
 
@@ -14816,6 +14905,91 @@ angular.module('FieldDoc')
                 };
 
 
+                /*START Pagniation vars*/
+                self.limit = 12;
+                self.page = 1;
+
+                self.viewCountLow = self.page;
+                self.viewCountHigh =  self.limit;
+
+                self.calculateViewCount = function(){
+                   if(self.page > 1){
+
+                        if(self.page == 1){
+                            self.viewCountHigh = self.limit;
+                             self.viewCountLow = ((self.page-1) * self.limit);
+                        }else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                            self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
+                             self.viewCountLow = ((self.page-1) * self.limit)+1;
+
+                        }else{
+                            self.viewCountHigh = self.summary.feature_count;
+                             self.viewCountLow = ((self.page-1) * self.limit)+1;
+                        }
+                   }else{
+                        if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                              self.viewCountLow = 1;
+                              self.viewCountHigh = self.limit;
+                        }else{
+                            self.viewCountLow = 1;
+                            self.viewCountHigh = self.summary.feature_count;
+
+                        }
+
+                   }
+
+                }
+
+                self.changeLimit = function(limit){
+                    self.limit = limit;
+                    self.page = 1;
+                    self.loadPractices();
+
+                     console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
+                }
+
+                 self.getPage = function(page){
+                    console.log("PAGE",page);
+
+                    if(page < 1){
+                        self.page = 1;
+                    }else if(page > self.summary.page_count){
+                        self.page = self.summary.page_count;
+                    }else{
+                         self.page   = page;
+
+                         self.loadPractices();
+                    }
+
+                    console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
+
+                };
+
+                self.showMarkedForDeletion = function(){
+                      self.availableFeatures.forEach(function(af, af_i) {
+                           self.selectedFeatures.forEach(function(sf, sf_i) {
+                                 var markedKey = "marked_for_deletion";
+                                 var markedVal = true;
+
+
+                                 if(af.properties.id == sf.properties.id){
+                                    self.availableFeatures[af_i][markedKey] = markedVal;
+                                     console.log("ID CHECK: "+af.properties.id+"--"+sf.properties.id);
+                                 }else{
+                               //     self.availableFeatures[af_i][markedKey] = false;
+                                 }
+
+
+                            });
+
+                      });
+
+                };
+
+                 /*END Pagniation vars*/
+
+
+
 
                 self.loadSite = function() {
 
@@ -14870,7 +15044,8 @@ angular.module('FieldDoc')
                 self.loadPractices = function(){
                      Site.practices({
                             id: self.site.id,
-
+                            limit       : self.limit,
+                            page        : self.page,
                             currentTime: Date.UTC()
 
                         }).$promise.then(function(successResponse) {
@@ -14878,6 +15053,8 @@ angular.module('FieldDoc')
                             console.log("PRACTICE RESPONSE");
 
                             self.practices = successResponse.features;
+
+                            self.summary = successResponse.summary;
 
                             console.log('self.practices', successResponse);
 
@@ -14893,6 +15070,10 @@ angular.module('FieldDoc')
                             console.log('self.availableFeatures', self.availableFeatures);
 
                             self.showElements();
+
+                             self.calculateViewCount();
+
+                            self.showMarkedForDeletion();
 
                         }, function(errorResponse) {
 

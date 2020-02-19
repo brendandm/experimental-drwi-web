@@ -404,7 +404,7 @@ angular.module('FieldDoc')
 
                     self.sites = successResponse.features;
 
-                     self.summary = successResponse.summary;
+                    self.summary = successResponse.summary;
 
                     self.summary.organizations.unshift({
                         id: 0,
@@ -418,7 +418,6 @@ angular.module('FieldDoc')
 
                     self.showElements(true);
 
-                    self.calculateViewCount();
 
                     // self.populateMap(self.map, siteCollection, null, true);
 

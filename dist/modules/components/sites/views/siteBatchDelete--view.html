@@ -44,7 +44,7 @@
 
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate">
 
-            <section class="reveal fade-in t3" style="padding: 0;">
+            <section class="reveal fade-in t3" style="padding: 0; overflow:hidden;">
 
                    <!--     <h1>{{ page.site.name || 'Un-named' }}</h1> -->
 
@@ -88,23 +88,53 @@
 
 
                  <div class="collection-search reveal fade-in t0" style="border: 0px solid red;
-                                                                        justify-content:left;
-                                                                        align-items:left;
-                                                                        overflow: auto;
+                                                                       float:left;
+                                                                       display:block;
+                                                                       width: 100%;
+                                                                        overflow: hidden;
                                                                         flex-wrap: wrap;
+                                                                        min-width:730px;
                                                                          "
+
                  >
 
                      <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search your practices">
 
-                     <div class="collection-filter-group">
-                        <button data-ng-click="page.removeAllFromDeleteQueue()" title="Remove all from batch delete" style="margin-top:-15px; margin-left:30px;">
-                            <nobr>Deselect All</nobr>
-                        </button>
-                        <button data-ng-click="page.addAllToDeleteQueue()" title="Add all to batch delete" style="margin-top:-15px; margin-left:30px;" >
-                            <nobr>Select All</nobr>
-                        </button>
+                     <div class="collection-filter-group"  style="
+                                                            border: 0px solid blue;
+                                                            width: 15%;
+                                                            min-width: 400px;
+                                                            margin-right: 0px;
+
+                                                            float:left;
+                                                            clear:right;">
+                         <nobr>
+                            <button data-ng-click="page.removeAllFromDeleteQueue()" title="Remove all from batch delete" style="margin-top:-15px; margin-left:30px;">
+                                <nobr>Deselect All</nobr>
+                            </button>
+                            <button data-ng-click="page.addAllToDeleteQueue()" title="Add all to batch delete" style="margin-top:-15px; margin-left:30px;" >
+                                <nobr>Select All</nobr>
+                            </button>
+                         </nobr>
                      </div>
+
+                      <div style="
+                                float:right;
+                                display:inline-block;
+                                border: 0px solid red;
+                                height:70px;
+                                width: 35%;
+                                min-width:740px;
+                                right: 0px;
+                                position:relative;
+                                overflow: hidden;
+                                justify-content: right;
+                                margin-top:-15px;
+                                  margin-right:30px;
+
+                                ">
+                                <div data-ng-include="'/templates/pagination-view.html'"></div>
+                        </div>
 
                 </div>
 
@@ -197,7 +227,13 @@
                 </ul>
 
 
-                <div class="save--action--wrapper save--action--bottom" style="position: relative; z-index: 9999;">
+                 <div style="   min-width:740px;
+                                margin-top:-10px;
+                                margin-right:30px;
+                                "
+                      data-ng-include="'/templates/pagination-view.html'"></div>
+
+                <div class="save--action--wrapper save--action--bottom" style="position: relative; z-index: 9999; height:200px;">
 
                         <div style="border:0px solid green;">
                             <button type="submit" data-ng-if="page.selectedFeatures.length == 0" style="background-color:#cccccc;">
