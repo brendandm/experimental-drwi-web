@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582097824294})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582098049233})
 
 ;
 /**
@@ -14905,6 +14905,91 @@ angular.module('FieldDoc')
                 };
 
 
+                /*START Pagniation vars*/
+                self.limit = 12;
+                self.page = 1;
+
+                self.viewCountLow = self.page;
+                self.viewCountHigh =  self.limit;
+
+                self.calculateViewCount = function(){
+                   if(self.page > 1){
+
+                        if(self.page == 1){
+                            self.viewCountHigh = self.limit;
+                             self.viewCountLow = ((self.page-1) * self.limit);
+                        }else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                            self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
+                             self.viewCountLow = ((self.page-1) * self.limit)+1;
+
+                        }else{
+                            self.viewCountHigh = self.summary.feature_count;
+                             self.viewCountLow = ((self.page-1) * self.limit)+1;
+                        }
+                   }else{
+                        if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                              self.viewCountLow = 1;
+                              self.viewCountHigh = self.limit;
+                        }else{
+                            self.viewCountLow = 1;
+                            self.viewCountHigh = self.summary.feature_count;
+
+                        }
+
+                   }
+
+                }
+
+                self.changeLimit = function(limit){
+                    self.limit = limit;
+                    self.page = 1;
+                    self.loadPractices();
+
+                     console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
+                }
+
+                 self.getPage = function(page){
+                    console.log("PAGE",page);
+
+                    if(page < 1){
+                        self.page = 1;
+                    }else if(page > self.summary.page_count){
+                        self.page = self.summary.page_count;
+                    }else{
+                         self.page   = page;
+
+                         self.loadPractices();
+                    }
+
+                    console.log("PAGE CHANGE SELECTED FEATURES", self.selectedFeatures);
+
+                };
+
+                self.showMarkedForDeletion = function(){
+                      self.availableFeatures.forEach(function(af, af_i) {
+                           self.selectedFeatures.forEach(function(sf, sf_i) {
+                                 var markedKey = "marked_for_deletion";
+                                 var markedVal = true;
+
+
+                                 if(af.properties.id == sf.properties.id){
+                                    self.availableFeatures[af_i][markedKey] = markedVal;
+                                     console.log("ID CHECK: "+af.properties.id+"--"+sf.properties.id);
+                                 }else{
+                               //     self.availableFeatures[af_i][markedKey] = false;
+                                 }
+
+
+                            });
+
+                      });
+
+                };
+
+                 /*END Pagniation vars*/
+
+
+
 
                 self.loadSite = function() {
 
@@ -14982,6 +15067,10 @@ angular.module('FieldDoc')
                             console.log('self.availableFeatures', self.availableFeatures);
 
                             self.showElements();
+
+                             self.calculateViewCount();
+
+                            self.showMarkedForDeletion();
 
                         }, function(errorResponse) {
 
