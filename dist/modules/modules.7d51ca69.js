@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582148688046})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582226472296})
 
 ;
 /**
@@ -4931,7 +4931,6 @@ angular.module('FieldDoc')
             self.viewCountLow = self.page;
             self.viewCountHigh =  self.limit;
 
-
             self.calculateViewCount = function(){
                console.log("A");
                if(self.page > 1){
@@ -4993,6 +4992,97 @@ angular.module('FieldDoc')
 
             };
              /*END Pagniation vars*/
+
+
+
+            /*START Practices Pagination vars*/
+
+            self.practicesLimit = 12;
+            self.practicesPage = 1;
+
+            self.practicesViewCountLow = self.practicesPage;
+            self.practicesViewCountHigh =  self.practicesLimit;
+
+            self.practicesCalculateViewCount = function(){
+               console.log("A");
+               if(self.page > 1){
+                    console.log("B");
+
+                    if(self.practicesPage == 1){
+                         console.log("C");
+                        self.practicesViewCountHigh = self.practicesLimit;
+                         self.practicesViewCountLow = ((self.practicesPage-1) * self.practicesLimit);
+                    }
+                    else if( self.practicesSummary.feature_count > ((self.practicesPage-1) * self.practicesLimit) + self.practicesLimit ){
+                         console.log("D");
+                        self.practicesViewCountHigh = ((self.page-1) * self.practicesLimit) +self.practicesLimit;
+                         self.practicesViewCountLow = ((self.page-1) * self.practicesLimit)+1;
+
+                    }
+                    else{
+                         console.log("E");
+                        self.practicesViewCountHigh = self.practicesSummary.feature_count;
+                         self.practicesViewCountLow = ((self.practicesPage-1) * self.practicesLimit)+1;
+                    }
+               }
+               else{
+                    if( self.practicesSummary.feature_count > ((self.page-1) * self.practicesLimit) + self.practicesLimit ){
+                         console.log("F");
+                          self.viewCountLow = 1;
+                          self.viewCountHigh = self.limit;
+                    }
+                    else{
+                         console.log("G");
+                        self.practicesViewCountLow = 1;
+                        self.practicesViewCountHigh = self.practicesSummary.feature_count;
+
+                    }
+
+               }
+
+            }
+
+
+            /*END Practices Pagination vars*/
+
+
+            /* START PRACTICES PANEL */
+                self.loadPractices = function(){
+                     Site.practices({
+                            id: self.site.id,
+                             limit:  self.limit,
+                             page:   self.page,
+                            currentTime: Date.UTC()
+
+                        }).$promise.then(function(successResponse) {
+
+                            console.log("PRACTICE RESPONSE");
+
+                            self.practices = successResponse.features;
+
+                            self.practicesSummary = successResponse.summary;
+
+                            console.log("SUMMARY", self.practicesSummary);
+
+                            console.log('self.practices', successResponse);
+
+                          //  self.showElements();
+
+                            self.practicesCalculateViewCount();
+
+                      //      self.loadMetrics();
+
+                     //       self.tags = Utility.processTags(self.site.tags);
+
+                        }, function(errorResponse) {
+
+                            self.showElements();
+
+                        });
+
+                };
+            /* END PRACTICES PANEL */
+
 
             self.showElements = function(createMap) {
 
@@ -5086,6 +5176,8 @@ angular.module('FieldDoc')
                         self.loadMetrics();
 
                         self.loadSites();
+
+                        self.loadPractices();
 
 //                        self.loadTags();
 
@@ -5257,6 +5349,9 @@ angular.module('FieldDoc')
 
             };
 
+
+ /* START SITES PANEL */
+
             self.loadSites = function() {
 
                 console.log('self.loadSites --> Starting...');
@@ -5302,6 +5397,8 @@ angular.module('FieldDoc')
                 });
 
             };
+
+ /* END SITES PANEL */
 
 //            self.processTags = function(arr) {
 //
