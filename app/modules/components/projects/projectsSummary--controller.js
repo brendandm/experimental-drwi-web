@@ -178,10 +178,10 @@ angular.module('FieldDoc')
 
             /* START PRACTICES PANEL */
                 self.loadPractices = function(){
-                     Site.practices({
-                            id: self.site.id,
-                             limit:  self.limit,
-                             page:   self.page,
+                     project.practices({
+                            id: self.project.id,
+                             limit:  self.practicesLimit,
+                             page:   self.practicesPage,
                             currentTime: Date.UTC()
 
                         }).$promise.then(function(successResponse) {
@@ -307,7 +307,6 @@ angular.module('FieldDoc')
 
                         self.loadSites();
 
-                        self.loadPractices();
 
 //                        self.loadTags();
 

@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582226472296})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582226794887})
 
 ;
 /**
@@ -5048,10 +5048,10 @@ angular.module('FieldDoc')
 
             /* START PRACTICES PANEL */
                 self.loadPractices = function(){
-                     Site.practices({
-                            id: self.site.id,
-                             limit:  self.limit,
-                             page:   self.page,
+                     project.practices({
+                            id: self.project.id,
+                             limit:  self.practicesLimit,
+                             page:   self.practicesPage,
                             currentTime: Date.UTC()
 
                         }).$promise.then(function(successResponse) {
@@ -5177,7 +5177,6 @@ angular.module('FieldDoc')
 
                         self.loadSites();
 
-                        self.loadPractices();
 
 //                        self.loadTags();
 
