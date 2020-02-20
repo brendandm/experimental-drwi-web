@@ -15,21 +15,9 @@ angular.module('FieldDoc')
 
                 arr.forEach(function(feature) {
 
-                    console.log(
-                        'MapManager.addLayers --> feature',
-                        feature);
-
                     var spec = feature.layer_spec || {};
 
-                    console.log(
-                        'MapManager.addLayers --> spec',
-                        spec);
-
                     feature.spec = spec;
-
-                    console.log(
-                        'MapManager.addLayers --> feature.spec',
-                        feature.spec);
 
                     if (!feature.selected ||
                         typeof feature.selected === 'undefined') {
@@ -90,20 +78,12 @@ angular.module('FieldDoc')
 
                 }
 
-                console.log('MapManager.populateMap --> feature', feature);
-
                 var geojson = attribute ? feature[attribute] : feature;
-
-                console.log('MapManager.populateMap --> geojson', geojson);
 
                 if (geojson !== null &&
                     typeof geojson !== 'undefined') {
 
                     var geometryType = geojson.geometry ? geojson.geometry.type : geojson.type;
-
-                    console.log(
-                        'MapManager.populateMap --> geometryType',
-                        geometryType);
 
                     var bounds = turf.bbox(geojson);
 
@@ -224,11 +204,7 @@ angular.module('FieldDoc')
 
                 }
 
-                console.log('MapManager.populateMap --> feature', feature);
-
                 var geojson = attribute ? feature[attribute] : feature;
-
-                console.log('MapManager.populateMap --> geojson', geojson);
 
                 if (geojson !== null &&
                     typeof geojson !== 'undefined') {
