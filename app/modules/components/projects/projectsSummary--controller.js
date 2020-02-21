@@ -178,7 +178,7 @@ angular.module('FieldDoc')
 
             /* START PRACTICES PANEL */
                 self.loadPractices = function(){
-                     project.practices({
+                     Project.practices({
                             id: self.project.id,
                              limit:  self.practicesLimit,
                              page:   self.practicesPage,
