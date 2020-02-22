@@ -172,6 +172,28 @@ angular.module('FieldDoc')
 
             }
 
+             self.practicesChangeLimit = function(limit){
+                self.practicesLimit = limit;
+                self.practicesPage = 1;
+                self.loadPractices();
+            }
+
+             self.practicesGetPage = function(page){
+                console.log("PAGE",page);
+               // console.log("LIMIT",limit);
+
+                if(page < 1){
+                    self.practicesPage = 1;
+                }else if(page > self.practicesSummary.page_count){
+                    self.page = self.practicesSummary.page_count;
+                }else{
+                     self.practicesPage   = page;
+
+                     self.loadPractices();
+                }
+
+            };
+
 
             /*END Practices Pagination vars*/
 
