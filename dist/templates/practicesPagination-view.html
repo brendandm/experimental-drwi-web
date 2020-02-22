@@ -18,7 +18,7 @@
                     <div>
                         <!-- LAST PAGE -->
                              <a  ng-if="((page.page) < page.practicesSummary.page_count)"
-                                data-ng-click="page.getPage(page.practicesSummary.page_count)"
+                                data-ng-click="page.practicesGetPage(page.practicesSummary.page_count)"
                                 title="Next Page"
                                 class="pagination_active">
                                     <i class="material-icons" >
@@ -63,7 +63,7 @@
 
                         <!-- PREVIOUS PAGE -->
                             <a  ng-if="!((page.page) == 1)"
-                                data-ng-click="page.practicsGetPage((page.practicesPage) - 1 )"
+                                data-ng-click="page.practicesGetPage((page.practicesPage) - 1 )"
                                 title="Previous Page"
                                 class="pagination_active" style="margin-right:0px;">
                                  <i  class="material-icons">
