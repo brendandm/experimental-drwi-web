@@ -329,7 +329,7 @@ angular.module('FieldDoc')
 
                         self.loadSites();
 
-               //         self.loadPractices();
+                        self.loadPractices();
 
 //                        self.loadTags();
 
