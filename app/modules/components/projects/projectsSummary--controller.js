@@ -368,7 +368,7 @@ angular.module('FieldDoc')
 
                     self.practice = new Practice({
                         'practice_type': 'Custom',
-                       // 'site_id': self.site.id,
+                        'site_id': null,
                         'project_id': self.project.id,
                         'organization_id': self.project.organization_id
                     });
