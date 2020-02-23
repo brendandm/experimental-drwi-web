@@ -360,6 +360,31 @@ angular.module('FieldDoc')
 
             };
 
+
+            self.createPractice = function() {
+
+                    console.log("self.project.id",self.project.id);
+                    console.log("self.project.organization_id",self.project.organization_id);
+
+                    self.practice = new Practice({
+                        'practice_type': 'Custom',
+                       // 'site_id': self.site.id,
+                        'project_id': self.project.id,
+                        'organization_id': self.project.organization_id
+                    });
+
+                    self.practice.$save(function(successResponse) {
+
+                        $location.path('/practices/' + successResponse.id + '/edit');
+
+                    }, function(errorResponse) {
+
+                        console.error('Unable to create your practice, please try again later');
+
+                    });
+
+            };
+
             self.createSite = function() {
 
                 self.site = new Site({
