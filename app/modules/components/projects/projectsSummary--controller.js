@@ -685,8 +685,8 @@ angular.module('FieldDoc')
                         'self.createStaticMapUrls --> feature, index',
                         feature,
                         index);
-                     console.log();
-                         if (feature.properties.project.extent) {
+                    // console.log();
+                      //   if (feature.properties.project.extent) {
                             console.log("A 3");
                             if(feature.geometry != null){
                                 console.log("A 4");
@@ -716,7 +716,9 @@ angular.module('FieldDoc')
                                 console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
                             }
 
-                        }
+                    //    }else{
+                     //      console.log("A 7");
+                     //   }
 
                 });
 

@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582485443134})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582486110690})
 
 ;
 /**
@@ -5555,8 +5555,8 @@ angular.module('FieldDoc')
                         'self.createStaticMapUrls --> feature, index',
                         feature,
                         index);
-                     console.log();
-                         if (feature.properties.project.extent) {
+                    // console.log();
+                      //   if (feature.properties.project.extent) {
                             console.log("A 3");
                             if(feature.geometry != null){
                                 console.log("A 4");
@@ -5586,7 +5586,9 @@ angular.module('FieldDoc')
                                 console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
                             }
 
-                        }
+                    //    }else{
+                     //      console.log("A 7");
+                     //   }
 
                 });
 
