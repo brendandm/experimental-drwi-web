@@ -677,7 +677,7 @@ angular.module('FieldDoc')
                 adds return to site[] as staticURL property
                 if no site geometry, adds default URL to site[].staticURL
             */
-            self.createStaticMapURLs = function(arr){
+            self.createStaticMapURLs = function(arr, feature_type){
                 console.log("createStaticMapURLS -> arr", arr)
 
                 arr.forEach(function(feature, index) {
@@ -702,9 +702,21 @@ angular.module('FieldDoc')
 
                                 console.log('feature.staticURL',feature.staticURL);
 
-                                self.sites[index].staticURL = feature.staticURL;
+                                if(feature_type == "site"){
 
-                                console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
+                                     self.sites[index].staticURL = feature.staticURL;
+
+                                     console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
+
+                                }else if(feature_type == "practice"){
+
+                                     self.practices[index].staticURL = feature.staticURL;
+
+                                     console.log("self.practices"+index+".staticURL",self.practices[index].staticURL);
+
+                                }
+
+
 
                             }else{
                                 console.log("A 6");
