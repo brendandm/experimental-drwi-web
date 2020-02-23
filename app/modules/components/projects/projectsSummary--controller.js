@@ -261,6 +261,11 @@ angular.module('FieldDoc')
                          //       self.addMapPreviews(self.sites);
 
                             }
+                            if (self.practices && self.practices.length) {
+                                self.createStaticMapURLs(self.practices);
+                         //       self.addMapPreviews(self.sites);
+
+                            }
 
                         }, 500);
 
