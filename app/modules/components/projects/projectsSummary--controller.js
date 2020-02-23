@@ -375,6 +375,8 @@ angular.module('FieldDoc')
 
                     self.practice.$save(function(successResponse) {
 
+                        console.log("Practice", successResponse);
+
                         $location.path('/practices/' + successResponse.id + '/edit');
 
                     }, function(errorResponse) {
