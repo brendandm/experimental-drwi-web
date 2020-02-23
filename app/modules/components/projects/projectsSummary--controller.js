@@ -257,11 +257,13 @@ angular.module('FieldDoc')
                             self.createMap(self.mapOptions);
 
                             if (self.sites && self.sites.length) {
+                                console.log("A 1");
                                 self.createStaticMapURLs(self.sites);
                          //       self.addMapPreviews(self.sites);
 
                             }
                             if (self.practices && self.practices.length) {
+                                console.log("A 2");
                                 self.createStaticMapURLs(self.practices);
                          //       self.addMapPreviews(self.sites);
 
@@ -685,12 +687,13 @@ angular.module('FieldDoc')
                         index);
                      console.log();
                          if (feature.properties.project.extent) {
-
+                            console.log("A 3");
                             if(feature.geometry != null){
-
+                                console.log("A 4");
                                 feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
 
                                 if(feature.staticURL.length >= 4096){
+                                        console.log("A 5");
                                        feature.staticURL = ['https://api.mapbox.com/styles/v1',
                                                             '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
                                                             'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
@@ -704,7 +707,7 @@ angular.module('FieldDoc')
                                 console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
 
                             }else{
-
+                                console.log("A 6");
                                 self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
                                                             '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
                                                             'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
