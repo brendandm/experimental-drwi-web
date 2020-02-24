@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582555472247})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582555662063})
 
 ;
 /**
@@ -5600,13 +5600,13 @@ angular.module('FieldDoc')
                                 console.log('feature.staticURL',feature.staticURL);
 
                                 if(feature_type == "site"){
-
+                                    console.log("A 7");
                                      self.sites[index].staticURL = feature.staticURL;
 
                                      console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
 
                                 }else if(feature_type == "practice"){
-
+                                     console.log("A 8");
                                      self.practices[index].staticURL = feature.staticURL;
 
                                      console.log("self.practices"+index+".staticURL",self.practices[index].staticURL);
