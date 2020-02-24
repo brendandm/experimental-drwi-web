@@ -652,7 +652,9 @@ angular.module('FieldDoc')
 
                     // self.createMap();
 
-                    self.loadSite();
+                //    self.loadSite();
+
+                    self.loadPractice();
 
                     self.fetchTasks();
 
