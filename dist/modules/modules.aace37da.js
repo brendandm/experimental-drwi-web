@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582567602166})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582568020157})
 
 ;
 /**
@@ -5619,12 +5619,26 @@ angular.module('FieldDoc')
 
                             }else{
                                 console.log("A 6");
-                                self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
-                                                            '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
-                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                                                        ].join('');
+                                 if(feature_type == "site"){
+                                     console.log("A 9");
+                                    self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                                            ].join('');
 
-                                console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
+                                    console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
+
+                                 }
+                                 if(feature_type == "practice"){
+                                    console.log("A 10");
+                                     self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                                            ].join('');
+
+                                    console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
+                                 }
+
                             }
 
                     //    }else{

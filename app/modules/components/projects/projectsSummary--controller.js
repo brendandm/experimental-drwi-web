@@ -749,12 +749,26 @@ angular.module('FieldDoc')
 
                             }else{
                                 console.log("A 6");
-                                self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
-                                                            '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
-                                                            'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
-                                                        ].join('');
+                                 if(feature_type == "site"){
+                                     console.log("A 9");
+                                    self.sites[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                                            ].join('');
 
-                                console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
+                                    console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
+
+                                 }
+                                 if(feature_type == "practice"){
+                                    console.log("A 10");
+                                     self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
+                                                                '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
+                                                                'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
+                                                            ].join('');
+
+                                    console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
+                                 }
+
                             }
 
                     //    }else{
