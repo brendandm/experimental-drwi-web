@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582556902288})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582557952218})
 
 ;
 /**
@@ -5585,6 +5585,7 @@ angular.module('FieldDoc')
                     // console.log();
                       //   if (feature.properties.project.extent) {
                             console.log("A 3");
+                            console.log("geometry", feature.geometry);
                             if(feature.geometry != null){
                                 console.log("A 4");
                                 feature.staticURL = Utility.buildStaticMapURL(feature.geometry);

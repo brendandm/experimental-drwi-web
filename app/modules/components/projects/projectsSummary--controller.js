@@ -715,6 +715,7 @@ angular.module('FieldDoc')
                     // console.log();
                       //   if (feature.properties.project.extent) {
                             console.log("A 3");
+                            console.log("geometry", feature.geometry);
                             if(feature.geometry != null){
                                 console.log("A 4");
                                 feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
