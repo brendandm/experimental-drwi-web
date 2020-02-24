@@ -340,7 +340,8 @@
                 self.loadMetrics = function() {
 
                     Practice.progress({
-                        id: self.practice.id
+                        id: self.practice.id,
+                        site: self.practice.site.id
                     }).$promise.then(function(successResponse) {
 
                         console.log('Practice metrics', successResponse);
