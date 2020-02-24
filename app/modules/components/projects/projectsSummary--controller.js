@@ -736,7 +736,8 @@ angular.module('FieldDoc')
 
                                      console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
 
-                                }else if(feature_type == "practice"){
+                                }
+                                if(feature_type == "practice"){
                                      console.log("A 8");
                                      self.practices[index].staticURL = feature.staticURL;
 

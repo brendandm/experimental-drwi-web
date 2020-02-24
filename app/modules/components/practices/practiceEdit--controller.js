@@ -331,8 +331,8 @@ angular.module('FieldDoc')
                     can_edit: false
                 };
 
-                self.loadSite();
-
+            //    self.loadSite();
+                self.loadPractice();
             });
 
         } else {
