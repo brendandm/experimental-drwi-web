@@ -258,15 +258,19 @@
 
                             self.practices = successResponse.features;
 
+                            self.availableFeatures = self.practices;
+
                             self.summary = successResponse.summary;
 
                             console.log("SUMMARY", self.summary);
 
                             console.log('self.practices', successResponse);
 
-                          //  self.showElements();
+                            self.showElements(true);
 
                             self.calculateViewCount();
+
+                             self.showMarkedForDeletion();
 
                       //      self.loadMetrics();
 
