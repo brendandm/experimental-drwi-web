@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582601450166})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582601775644})
 
 ;
 /**
@@ -10022,7 +10022,7 @@ angular.module('FieldDoc')
 
                             $rootScope.page.title = 'Project Batch Delete';
 
-                            self.loadSites();
+                            self.loadPractices();
 
                         }
 
@@ -10040,6 +10040,116 @@ angular.module('FieldDoc')
 
                 };
 
+            /*START Pagniation vars*/
+            self.limit = 12;
+            self.page = 1;
+
+            self.viewCountLow = self.page;
+            self.viewCountHigh =  self.limit;
+
+            self.calculateViewCount = function(){
+               console.log("A");
+               if(self.page > 1){
+                    console.log("B");
+
+                    if(self.page == 1){
+                         console.log("C");
+                        self.viewCountHigh = self.limit;
+                         self.viewCountLow = ((self.page-1) * self.limit);
+                    }
+                    else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                         console.log("D");
+                        self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
+                         self.viewCountLow = ((self.page-1) * self.limit)+1;
+
+                    }
+                    else{
+                         console.log("E");
+                        self.viewCountHigh = self.summary.feature_count;
+                         self.viewCountLow = ((self.page-1) * self.limit)+1;
+                    }
+               }
+               else{
+                    if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
+                         console.log("F");
+                          self.viewCountLow = 1;
+                          self.viewCountHigh = self.limit;
+                    }
+                    else{
+                         console.log("G");
+                        self.viewCountLow = 1;
+                        self.viewCountHigh = self.summary.feature_count;
+
+                    }
+
+               }
+
+            }
+
+            self.changeLimit = function(limit){
+                self.limit = limit;
+                self.page = 1;
+                self.loadPractices();
+            }
+
+             self.getPage = function(page){
+                console.log("PAGE",page);
+               // console.log("LIMIT",limit);
+
+                if(page < 1){
+                    self.page = 1;
+                }else if(page > self.summary.page_count){
+                    self.page = self.summary.page_count;
+                }else{
+                     self.page   = page;
+
+                     self.loadPractices();
+                }
+
+            };
+             /*END Pagniation vars*/
+
+
+
+
+                 /* START PRACTICES PANEL */
+                self.loadPractices = function(){
+                     Project.practices({
+                            id: self.project.id,
+                             limit:  self.practicesLimit,
+                             page:   self.practicesPage,
+                            currentTime: Date.UTC()
+
+                        }).$promise.then(function(successResponse) {
+
+                            console.log("PRACTICE RESPONSE");
+
+                            self.practices = successResponse.features;
+
+                            self.summary = successResponse.summary;
+
+                            console.log("SUMMARY", self.summary);
+
+                            console.log('self.practices', successResponse);
+
+                          //  self.showElements();
+
+                            self.calculateViewCount();
+
+                      //      self.loadMetrics();
+
+                     //       self.tags = Utility.processTags(self.site.tags);
+
+                        }, function(errorResponse) {
+
+                            self.showElements();
+
+                        });
+
+                };
+            /* END PRACTICES PANEL */
+
+/*
                 self.loadSites = function() {
 
                     console.log('self.loadSites --> Starting...');
@@ -10091,7 +10201,7 @@ angular.module('FieldDoc')
                 };
 
 
-
+*/
 
                 self.showElements = function() {
 
@@ -10253,7 +10363,7 @@ angular.module('FieldDoc')
 
 
                         self.selectedFeatures = [];
-                        self.loadSites();
+                        self.loadPractices();
 
                     }, function(errorResponse) {
 
