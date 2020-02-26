@@ -370,16 +370,17 @@
                 if no site geometry, adds default URL to practices[].staticURL
             */
                 self.createStaticMapURLs = function(arr){
-
+                    console.log("11");
                     arr.forEach(function(feature, index) {
-
+                         console.log("22");
                          if (feature.properties.project.extent) {
-
+                             console.log("33");
                             if(feature.geometry != null){
-
+                                 console.log("44");
                                 feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
 
                                 if(feature.staticURL.length >= 4096){
+                                        console.log("55");
                                        feature.staticURL = ['https://api.mapbox.com/styles/v1',
                                                             '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
                                                             'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
@@ -389,7 +390,7 @@
                                 self.practices[index].staticURL = feature.staticURL;
 
                             }else{
-
+                                 console.log("66");
                                 self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
                                                             '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
                                                             'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
