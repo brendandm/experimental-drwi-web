@@ -248,8 +248,8 @@
                 self.loadPractices = function(){
                      Project.practices({
                             id: self.project.id,
-                             limit:  self.practicesLimit,
-                             page:   self.practicesPage,
+                             limit:  self.limit,
+                             page:   self.page,
                             currentTime: Date.UTC()
 
                         }).$promise.then(function(successResponse) {
