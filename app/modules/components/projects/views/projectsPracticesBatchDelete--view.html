@@ -8,7 +8,7 @@
 
         <div class="progress--modal reveal fade-in t0" data-ng-if="page.status.loading">
             <div class="progress--container">
-                <p style="font-weight: bold;" class="color-pulse">Loading sites&hellip;</p>
+                <p style="font-weight: bold;" class="color-pulse">Loading practices&hellip;</p>
             </div>
         </div>
 
@@ -30,7 +30,7 @@
                         <nobr>
                             Project: <a href="/projects/{{page.project.id}}">{{page.project.name}}</a>
                                 /
-                            Delete Sites
+                            Delete Practices
 
                         </nobr>
                     </article>
@@ -38,7 +38,7 @@
         </div>
 
         <h1 class="inset" data-ng-if="!page.status.loading && !page.makePrivate">
-            Delete Sites</h1>
+            Delete Practices</h1>
 
         <div class="main--ui reveal fade-in t0" data-ng-if="!page.status.loading && !page.makePrivate" style="overflow:hidden;">
 
@@ -46,8 +46,8 @@
 
                    <!--     <h1>{{ page.site.name || 'Un-named' }}</h1> -->
 
-                        <p data-ng-if="page.site.id && page.site.last_modified_by.first_name && page.site.last_modified_by.last_name" class="label modtime">
-                            Last modified by {{ page.site.last_modified_by.first_name }} {{ page.site.last_modified_by.last_name }} on {{ page.site.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.site.modified_on | localTime | date:'h:mma' }}</span>
+                        <p data-ng-if="page.practice.id && page.practice.last_modified_by.first_name && page.practice.last_modified_by.last_name" class="label modtime">
+                            Last modified by {{ page.practice.last_modified_by.first_name }} {{ page.practice.last_modified_by.last_name }} on {{ page.practice.modified_on | date:'fullDate' }} at <span class="lowercase">{{ page.practice.modified_on | localTime | date:'h:mma' }}</span>
                         </p>
 
                    <!--     <p data-ng-if="page.project.id && page.project.program">
@@ -65,12 +65,12 @@
 
                         <p style="max-width:800px; text-align:justify">
                             <strong>Instructions:</strong><br>
-                            Select one or more sites for deletion by
-                            clicking the <sub><i class="material-icons" style="color:#666666; font-size:20px;"> delete</i></sub> at the bottom of the site's thumbnail.
+                            Select one or more practices for deletion by
+                            clicking the <sub><i class="material-icons" style="color:#666666; font-size:20px;"> delete</i></sub> at the bottom of the practice's thumbnail.
                             After making your selection,
                             click the <sub><i class="material-icons" style="color:#666666; font-size:20px;">delete_sweep</i></sub>
                             at the bottom of the page to start the deletion.
-                            Please note, deleting a site or sites will also delete all practices and reports thereunder.
+                            Please note, deleting a practice will also delete all reports thereunder.
                         </p>
 
 
@@ -79,9 +79,9 @@
 
             <!-- Unselected Sites -->
             <section class="reveal fade-in t3" style="padding: 0; overflow:auto;" data-ng-if="page.permissions.can_edit">
-                <h2>Sites</h2>
+                <h2>Practicea</h2>
                 <p>
-                    Showing <b>{{ siteList.length }}</b> of <b>{{ page.availableFeatures.length }}</b> total sites in project <b>{{page.project.name}}</b>.
+                    Showing <b>{{ practiceList.length }}</b> of <b>{{ page.availableFeatures.length }}</b> total practices in project <b>{{page.project.name}}</b>.
                 </p>
 
 
@@ -100,7 +100,7 @@
                                                                          "
                  >
                  <!--   <div style="border:1px solid pink;">-->
-                        <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search your sites">
+                        <input style="float:left; display:inline-block; clear:right;" type="text" class="search-bar list-filter" data-ng-if="!page.status.loading" data-ng-model="page.queryToken" placeholder="Search your practices">
                <!--     </div> -->
                     <div class="collection-filter-group" style="
                                                             border: 0px solid blue;
@@ -164,56 +164,56 @@
 
                 <ul class="snapshot--cards list-unstyled">
 
-                    <li class="card" data-ng-repeat="site in siteList = (page.availableFeatures | orderBy:'-modified_on' | filter: page.queryToken)">
+                    <li class="card" data-ng-repeat="practice in practiceList = (page.availableFeatures | orderBy:'-modified_on' | filter: page.queryToken)">
 
                         <div class="card--content">
 
                             <div style="position:relative;">
 
-                                <img data-ng-if="site.staticURL" data-ng-src="{{ site.staticURL }}" width="auto" height="auto" />
+                                <img data-ng-if="practice.staticURL" data-ng-src="{{ practice.staticURL }}" width="auto" height="auto" />
 
-                                <img data-ng-if="!site.staticURL" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,5/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
+                                <img data-ng-if="!practice.staticURL" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,5/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
 
                             </div>
 
                             <div class="name" style="background: #fff;">
-                                <span>{{ site.properties.name || site.properties.category || 'Un-named' }}</span>
+                                <span>{{ practice.properties.name || practice.properties.category || 'Un-named' }}</span>
                             </div>
 
                             <div class="body">
 
 
-                                <p>{{ (site.properties.description || site.properties.annotation || 'No description') | truncate:80 }}</p>
+                                <p>{{ (practice.properties.description || practice.properties.annotation || 'No description') | truncate:80 }}</p>
                                 <div class="actions">
-                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}" title="Site summary">
+                                    <a class="snapshot--title" href="/practices/{{ practice.properties.id }}" title="Practice summary">
                                         <i class="material-icons">
                                             dashboard
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/edit" title="Edit site" data-ng-if="page.permissions.can_edit">
+                                    <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/edit" title="Edit practice" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             edit
                                         </i>
                                     </a>
-                                    <a class="snapshot--title" href="/sites/{{ site.properties.id }}/location" title="Edit location" data-ng-if="page.permissions.can_edit">
+                                    <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/location" title="Edit location" data-ng-if="page.permissions.can_edit">
                                         <i class="material-icons">
                                             location_on
                                         </i>
                                     </a>
 
                                     <a class="snapshot--title"
-                                       data-ng-click="page.addToDeleteQueue(site.properties.id)"
+                                       data-ng-click="page.addToDeleteQueue(practice.properties.id)"
                                        title="Add to batch delete"
-                                       data-ng-if="!site.marked_for_deletion"
+                                       data-ng-if="!practice.marked_for_deletion"
                                     >
                                         <i class="material-icons" style=" padding: 3px; 3px; 0 3px;">
                                             delete
                                         </i>
                                     </a>
                                      <a class="snapshot--title"
-                                        data-ng-click="page.removeFromDeleteQueue(site.properties.id)"
+                                        data-ng-click="page.removeFromDeleteQueue(practice.properties.id)"
                                         title="Remove from batch delete"
-                                        data-ng-if="site.marked_for_deletion"
+                                        data-ng-if="practice.marked_for_deletion"
                                      >
                                           <i class="material-icons" style="width: 30px;
                                                                         height: 30px;
@@ -230,8 +230,8 @@
                                         <!--    -->
                                     </a>
                                 </div>
-                                <span><time datetime="{{ site.properties.created_on }}" title="{{ site.properties.created_on }}">
-                                        Created on {{ site.properties.created_on | date }}</time></span>
+                                <span><time datetime="{{ practice.properties.created_on }}" title="{{ practice.properties.created_on }}">
+                                        Created on {{ practice.properties.created_on | date }}</time></span>
                             </div>
 
                         </div>
@@ -273,12 +273,12 @@
                             <p>Do you want to delete
                                 <ng-pluralize count="page.selectedFeatures.length" when="{'one': 'this','other': 'these'}" ></ng-pluralize>
                                     <strong>{{ (page.selectedFeatures.length | number) || 0 }}</strong>
-                                <ng-pluralize count="page.selectedFeatures.length" when="{'one': 'site','other': 'sites'}"></ng-pluralize>
+                                <ng-pluralize count="page.selectedFeatures.length" when="{'one': 'practice','other': 'practices'}"></ng-pluralize>
                                     ?
                                    <br> <small>*This action cannot be undone.<br>
                                     Any practices and reports under
                                     <ng-pluralize count="page.selectedFeatures.length" when="{'one': 'this','other': 'these'}" ></ng-pluralize>
-                                    <ng-pluralize count="page.selectedFeatures.length" when="{'one': 'site','other': 'sites'}"></ng-pluralize>
+                                    <ng-pluralize count="page.selectedFeatures.length" when="{'one': 'practice','other': 'practices'}"></ng-pluralize>
                                     <br>will also be deleted.
 
 
@@ -374,7 +374,7 @@
             -->
             <li data-ng-if="page.permissions.can_edit">
                 <div class="confirm--delete--popup" data-ng-if="page.deletionTarget">
-                    <p>Do you want to delete this site?</p>
+                    <p>Do you want to delete this practice?</p>
                     <div class="actions">
                         <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature()">
                             Yes
@@ -384,7 +384,7 @@
                         </a>
                     </div>
                 </div>
-                <a href="#" data-ng-click="page.confirmDelete(page.site)" title="Delete">
+                <a href="#" data-ng-click="page.confirmDelete(page.practice)" title="Delete">
                     <i class="material-icons">
                         delete
                     </i>
