@@ -351,7 +351,7 @@
 
                             if (self.practices && self.practices.length) {
 
-                                self.createStaticMapURLs(self.practices);
+                                self.createStaticMapURLs(self.practices,"practice");
 
                             }
 
