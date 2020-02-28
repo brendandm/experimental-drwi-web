@@ -492,7 +492,7 @@
                         self.alerts = [{
                             'type': 'success',
                             'flag': 'Success!',
-                            'msg': 'Sites deleted from project.',
+                            'msg': 'Practices deleted from project.',
                             'prompt': 'OK'
                         }];
 
