@@ -194,6 +194,18 @@
                         
                     </li>
 
+                    <li data-ng-if="!page.projects.length" class="card" data-ng-if="page.permissions.can_edit">
+                        <div class="card--content">
+                            <div class="body">
+                                <a href="projects/collection/new" title="Create practice">
+                                    <i class="material-icons">
+                                        add
+                                    </i>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+
                 </ul>
 
             </div>
