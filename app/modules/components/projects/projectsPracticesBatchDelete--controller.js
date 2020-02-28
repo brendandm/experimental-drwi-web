@@ -484,7 +484,8 @@
 
                     Batch.batchDelete({
                         featureType: 'project',
-                        id: self.project.id
+                        id: self.project.id,
+                        currentTime: Date.UTC()
                     },data).$promise.then(function(successResponse) {
 
                         console.log('Batch.practiceDelete', successResponse);
