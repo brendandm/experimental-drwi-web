@@ -518,8 +518,8 @@
 
                     </li>
 
-                   <!--
-                    <li class="card" data-ng-if="page.permissions.can_edit">
+
+                    <li data-ng-if="!page.practices.length" class="card" data-ng-if="page.permissions.can_edit">
                         <div class="card--content">
                             <div class="body">
                                 <button type="button" class="snapshot--title" data-ng-click="page.createPractice()" title="Create practice">
@@ -530,7 +530,7 @@
                             </div>
                         </div>
                     </li>
-                    -->
+
 
                 </ul>
                     </div>
@@ -683,7 +683,7 @@
 
                             </li>
 
-                         <!--   <li class="card" data-ng-if="page.permissions.can_edit">
+                            <li dta-ng-if="!page.sites.length"class="card" data-ng-if="page.permissions.can_edit">
                                 <div class="card--content">
                                     <div class="body">
                                         <button type="button" class="snapshot--title" data-ng-click="page.createSite()" title="Create site">
@@ -694,7 +694,7 @@
                                     </div>
                                 </div>
                             </li>
-                          -->
+
 
                         </ul>
                     </div>
