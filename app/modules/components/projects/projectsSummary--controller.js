@@ -771,7 +771,7 @@ angular.module('FieldDoc')
                                                                 'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
                                                             ].join('');
 
-                                    console.log("self.sites"+index+".staticURL",self.sites[index].staticURL);
+                                    console.log("self.sites"+index+".staticURL",self.practices[index].staticURL);
                                  }
 
                             }
