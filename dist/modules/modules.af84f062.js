@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582912405313})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582913013678})
 
 ;
 /**
@@ -10053,35 +10053,35 @@ angular.module('FieldDoc')
             self.viewCountHigh =  self.limit;
 
             self.calculateViewCount = function(){
-               console.log("A");
+               console.log("MEOW A");
                if(self.page > 1){
-                    console.log("B");
+                    console.log("MEOW B");
 
                     if(self.page == 1){
-                         console.log("C");
+                         console.log("MEOW C");
                         self.viewCountHigh = self.limit;
                          self.viewCountLow = ((self.page-1) * self.limit);
                     }
                     else if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                         console.log("D");
+                         console.log("MEOW D");
                         self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
                          self.viewCountLow = ((self.page-1) * self.limit)+1;
 
                     }
                     else{
-                         console.log("E");
+                         console.log("MEOW E");
                         self.viewCountHigh = self.summary.feature_count;
                          self.viewCountLow = ((self.page-1) * self.limit)+1;
                     }
                }
                else{
                     if( self.summary.feature_count > ((self.page-1) * self.limit) + self.limit ){
-                         console.log("F");
+                         console.log("MEOW F");
                           self.viewCountLow = 1;
                           self.viewCountHigh = self.limit;
                     }
                     else{
-                         console.log("G");
+                         console.log("MEOW G");
                         self.viewCountLow = 1;
                         self.viewCountHigh = self.summary.feature_count;
 
