@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582906272488})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582907029471})
 
 ;
 /**
@@ -10237,18 +10237,18 @@ angular.module('FieldDoc')
                 adds return to practices[] as staticURL property
                 if no site geometry, adds default URL to practices[].staticURL
             */
-                self.createStaticMapURLs = function(arr){
-                    console.log("11");
+                self.createStaticMapURLs = function(arr,feature_type){
+                //    console.log("11");
                     arr.forEach(function(feature, index) {
-                         console.log("22");
+                //         console.log("22");
                          if (feature.properties.project.extent) {
-                             console.log("33");
+                //             console.log("33");
                             if(feature.geometry != null){
-                                 console.log("44");
-                                feature.staticURL = Utility.buildStaticMapURL(feature.geometry);
+                //                 console.log("44");
+                                feature.staticURL = Utility.buildStaticMapURL(feature.geometry,feature_type);
 
                                 if(feature.staticURL.length >= 4096){
-                                        console.log("55");
+                //                        console.log("55");
                                        feature.staticURL = ['https://api.mapbox.com/styles/v1',
                                                             '/mapbox/streets-v11/static/-76.4034,38.7699,3.67/400x200?access_token=',
                                                             'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
@@ -10258,7 +10258,7 @@ angular.module('FieldDoc')
                                 self.practices[index].staticURL = feature.staticURL;
 
                             }else{
-                                 console.log("66");
+                  //               console.log("66");
                                 self.practices[index].staticURL = ['https://api.mapbox.com/styles/v1',
                                                             '/mapbox/streets-v11/static/0,0,3,0/400x200?access_token=',
                                                             'pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw'
