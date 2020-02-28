@@ -483,9 +483,8 @@
                    var data  = {collection: self.selectedFeatures};
 
                     Batch.batchDelete({
-                        featureType: 'project',
+                        featureType: 'site',
                         id: self.project.id,
-                        currentTime: Date.UTC()
                     },data).$promise.then(function(successResponse) {
 
                         console.log('Batch.practiceDelete', successResponse);
