@@ -234,7 +234,7 @@
                     self.page = self.summary.page_count;
                 }else{
                      self.page   = page;
-
+                     //console.log("self.selectedFeatures",)
                      self.loadPractices();
                 }
 
@@ -452,9 +452,10 @@
                     var i = 0
                     self.availableFeatures.forEach(function(feature){
                         self.availableFeatures[i].marked_for_deletion = true;
+                        self.selectedFeatures.push(self.availableFeatures[i]);
                         i = i+1;
                     });
-                    self.selectedFeatures = self.availableFeatures;
+                    //self.selectedFeatures = self.availableFeatures;
 
                 };
 

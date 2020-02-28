@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582903133864})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582904521926})
 
 ;
 /**
@@ -10102,7 +10102,7 @@ angular.module('FieldDoc')
                     self.page = self.summary.page_count;
                 }else{
                      self.page   = page;
-
+                     //console.log("self.selectedFeatures",)
                      self.loadPractices();
                 }
 
@@ -10320,9 +10320,10 @@ angular.module('FieldDoc')
                     var i = 0
                     self.availableFeatures.forEach(function(feature){
                         self.availableFeatures[i].marked_for_deletion = true;
+                        self.selectedFeatures.push(self.availableFeatures[i]);
                         i = i+1;
                     });
-                    self.selectedFeatures = self.availableFeatures;
+                    //self.selectedFeatures = self.availableFeatures;
 
                 };
 
