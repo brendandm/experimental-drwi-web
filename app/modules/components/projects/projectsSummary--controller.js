@@ -79,8 +79,9 @@ angular.module('FieldDoc')
                  /*   }else if((self.summary.feature_count < ((self.page-1) * self.limit) + self.limit) && self.page == 1){
                           self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
                          self.viewCountLow = ((self.page-1) * self.limit)+1;
-                    }
+
                     */
+                    }
                     else{
                          console.log("E");
                         self.viewCountHigh = self.summary.feature_count;
