@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582907377852})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1582908045401})
 
 ;
 /**
@@ -4971,7 +4971,11 @@ angular.module('FieldDoc')
                         self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
                          self.viewCountLow = ((self.page-1) * self.limit)+1;
 
+                 /*   }else if((self.summary.feature_count < ((self.page-1) * self.limit) + self.limit) && self.page == 1){
+                          self.viewCountHigh = ((self.page-1) * self.limit) +self.limit;
+                         self.viewCountLow = ((self.page-1) * self.limit)+1;
                     }
+                    */
                     else{
                          console.log("E");
                         self.viewCountHigh = self.summary.feature_count;
@@ -5029,35 +5033,35 @@ angular.module('FieldDoc')
             self.practicesViewCountHigh =  self.practicesLimit;
 
             self.practicesCalculateViewCount = function(){
-               console.log("A");
+            //   console.log("A");
                if(self.page > 1){
-                    console.log("B");
+              //      console.log("B");
 
                     if(self.practicesPage == 1){
-                         console.log("C");
+                //         console.log("C");
                         self.practicesViewCountHigh = self.practicesLimit;
                          self.practicesViewCountLow = ((self.practicesPage-1) * self.practicesLimit);
                     }
                     else if( self.practicesSummary.feature_count > ((self.practicesPage-1) * self.practicesLimit) + self.practicesLimit ){
-                         console.log("D");
+                  //       console.log("D");
                         self.practicesViewCountHigh = ((self.page-1) * self.practicesLimit) +self.practicesLimit;
                          self.practicesViewCountLow = ((self.page-1) * self.practicesLimit)+1;
 
                     }
                     else{
-                         console.log("E");
+                    //     console.log("E");
                         self.practicesViewCountHigh = self.practicesSummary.feature_count;
                          self.practicesViewCountLow = ((self.practicesPage-1) * self.practicesLimit)+1;
                     }
                }
                else{
                     if( self.practicesSummary.feature_count > ((self.page-1) * self.practicesLimit) + self.practicesLimit ){
-                         console.log("F");
+                   //      console.log("F");
                           self.viewCountLow = 1;
                           self.viewCountHigh = self.limit;
                     }
                     else{
-                         console.log("G");
+                   //      console.log("G");
                         self.practicesViewCountLow = 1;
                         self.practicesViewCountHigh = self.practicesSummary.feature_count;
 
