@@ -112,6 +112,43 @@
                         </p>
                 -->
                 </li>
+                <!-- START HANDLING FOR COUNT BASED UNIT TYPES -->
+                <li style="height:63px; margin-bottom:20px;" data-ng-if="(
+                                                (page.practice.extent.calculated.converted && !page.practice.custom_extent)
+                                                    && (page.practice.category.unit.dimension == 'count')
+                                                    && (page.practice.geometry.type == 'Polygon')
+                                            )"
+                >
+                          <div data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" style="text-transform:capitalize;">Calculated Area Value</div>
+                         <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.extent.calculated.converted | number:2}} </span>
+
+                         <span style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
+                              <nobr  >
+                                     square meters
+                                </nobr>
+                         </span>
+                </li>
+
+                 <li style="height:63px; margin-bottom:20px;" data-ng-if="(
+                                                (page.practice.extent.calculated.converted && !page.practice.custom_extent)
+                                                    && (page.practice.category.unit.dimension == 'count')
+                                                    && (page.practice.geometry.type == 'LineString')
+                                            )"
+                >
+                          <div data-ng-if="page.practice_category.unit.unit.plural != 'acres' && page.practice_category.unit.unit.plural != 'linear feet'" style="text-transform:capitalize;">Calculated Area Value</div>
+                         <span style="margin-right: 20px; text-transform:capitalize;">{{page.practice.extent.calculated.converted | number:2}} </span>
+
+                         <span style="text-align: left; width: auto; margin-right: 20px; text-transform:capitalize;">
+                              <nobr  >
+                                     linear meters
+                                </nobr>
+                         </span>
+                </li>
+
+                  <!-- END HANDLING FOR COUNT BASED UNIT TYPES -->
+
+
+
                  <li style="height:63px; margin-bottom:20px;" data-ng-if="page.practice.extent.calculated.converted && page.geometryMismatch == false">
 
                      <div data-ng-if="page.practice_category.unit.unit.plural == 'acres' || page.practice_category.unit.unit.plural == 'linear feet'" style="text-transform:capitalize;">Calculated {{page.practice_category.unit.dimension}} Value</div>
