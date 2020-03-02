@@ -114,7 +114,7 @@
                 </li>
                 <!-- START HANDLING FOR COUNT BASED UNIT TYPES -->
                 <li style="height:63px; margin-bottom:20px;" data-ng-if="(
-                                                (page.practice.extent.calculated.converted && !page.practice.custom_extent)
+                                                (page.practice.extent.calculated.converted)
                                                     && (page.practice.category.unit.dimension == 'count')
                                                     && (page.practice.geometry.type == 'Polygon')
                                             )"
@@ -130,7 +130,7 @@
                 </li>
 
                  <li style="height:63px; margin-bottom:20px;" data-ng-if="(
-                                                (page.practice.extent.calculated.converted && !page.practice.custom_extent)
+                                                (page.practice.extent.calculated.converted)
                                                     && (page.practice.category.unit.dimension == 'count')
                                                     && (page.practice.geometry.type == 'LineString')
                                             )"
