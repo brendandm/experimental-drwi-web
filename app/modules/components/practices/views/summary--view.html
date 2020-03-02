@@ -74,7 +74,7 @@
                             <strong>Practice Type:</strong> {{ page.practice.category.name }}
                         </p>
 
-                            <p data-ng-if="((page.practice.extent.calculated.converted && !page.practice.custom_extent) && (page.practice_category.unit.dimension != 'count'))" style="text-transform:capitalize;">
+                            <p data-ng-if="((page.practice.extent.calculated.converted && !page.practice.custom_extent) && (page.practice.category.unit.dimension != 'count'))" style="text-transform:capitalize;">
                                 <strong>Practice {{page.practice.category.unit.dimension}} extent:</strong>
                                 {{ page.practice.extent.calculated.converted | number:2 }} {{page.practice.category.unit.unit.plural}}
                                <!-- {{ calculated_extent.practice.calculated_extent }} -->
@@ -82,7 +82,7 @@
 
                              <p data-ng-if="(
                                                 (page.practice.extent.calculated.converted && !page.practice.custom_extent)
-                                                    && (page.practice_category.unit.dimension == 'count')
+                                                    && (page.practice.  category.unit.dimension == 'count')
                                                     && (page.practice.geometry.type == 'LineString')
                                             )
 
@@ -93,7 +93,7 @@
 
                              <p data-ng-if="(
                                                 (page.practice.extent.calculated.converted && !page.practice.custom_extent)
-                                                    && (page.practice_category.unit.dimension == 'count')
+                                                    && (page.practice.category.unit.dimension == 'count')
                                                     && (page.practice.geometry.type == 'Polygon')
                                             )
 
