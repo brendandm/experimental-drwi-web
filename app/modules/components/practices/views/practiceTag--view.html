@@ -166,7 +166,7 @@
                     </i>
                 </a>
             </li>
-            <li data-ng-if="page.permissions.can_edit" data-ng-class="{active: $root.toolbarState.editLocation}">
+            <li data-ng-if="page.permissions.can_edit && page.practice.category" data-ng-class="{active: $root.toolbarState.editLocation}">
                 <a href="/practices/{{ page.practice.id }}/location" title="Location">
                     <i class="material-icons">
                         location_on
