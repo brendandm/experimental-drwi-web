@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1583343124929})
+.constant('environment', {name:'local',apiUrl:'http://127.0.0.1:5000',castUrl:'http://127.0.0.1:4000',dnrUrl:'http://127.0.0.1:4000',siteUrl:'http://127.0.0.1:9000',clientId:'sL3yMmmnSNszktuQGVBCasZ6mCy7DahS',version:1584468937537})
 
 ;
 /**
@@ -16599,6 +16599,8 @@ angular.module('FieldDoc')
 
                 $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
+                 self.loadSites();
+
                 //
                 // Load practice types
                 //
@@ -16637,6 +16639,43 @@ angular.module('FieldDoc')
             });
 
         };
+
+
+           self.loadSites = function() {
+
+                console.log('self.loadSites --> Starting...');
+
+                Project.sites({
+
+                    id: self.practice.project.id,
+
+                    currentTime: Date.UTC()
+
+                }).$promise.then(function(successResponse) {
+
+                    console.log('Project sites --> ', successResponse);
+
+                    self.sites = successResponse.features;
+
+
+               ///     self.showElements(true);
+
+
+                    // self.populateMap(self.map, siteCollection, null, true);
+
+                    // self.addMapPreviews(self.sites);
+
+                }, function(errorResponse) {
+
+                    console.log('loadSites.errorResponse', errorResponse);
+
+                 //   self.showElements(false);
+
+                });
+
+            };
+
+
 
         self.scrubFeature = function(feature) {
 
@@ -16804,6 +16843,10 @@ angular.module('FieldDoc')
             self.practice.category_id = $item.id;
 
         };
+
+
+
+
 
         //
         // Verify Account information for proper UI element display

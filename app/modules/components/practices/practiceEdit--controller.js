@@ -109,6 +109,8 @@ angular.module('FieldDoc')
 
                 $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
+                 self.loadSites();
+
                 //
                 // Load practice types
                 //
@@ -147,6 +149,43 @@ angular.module('FieldDoc')
             });
 
         };
+
+
+           self.loadSites = function() {
+
+                console.log('self.loadSites --> Starting...');
+
+                Project.sites({
+
+                    id: self.practice.project.id,
+
+                    currentTime: Date.UTC()
+
+                }).$promise.then(function(successResponse) {
+
+                    console.log('Project sites --> ', successResponse);
+
+                    self.sites = successResponse.features;
+
+
+               ///     self.showElements(true);
+
+
+                    // self.populateMap(self.map, siteCollection, null, true);
+
+                    // self.addMapPreviews(self.sites);
+
+                }, function(errorResponse) {
+
+                    console.log('loadSites.errorResponse', errorResponse);
+
+                 //   self.showElements(false);
+
+                });
+
+            };
+
+
 
         self.scrubFeature = function(feature) {
 
@@ -314,6 +353,10 @@ angular.module('FieldDoc')
             self.practice.category_id = $item.id;
 
         };
+
+
+
+
 
         //
         // Verify Account information for proper UI element display
