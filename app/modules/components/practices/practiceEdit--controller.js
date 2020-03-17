@@ -89,6 +89,8 @@ angular.module('FieldDoc')
 
                 self.practice = successResponse;
 
+                self.project = self.practice.id;
+
                 if (!successResponse.permissions.read &&
                     !successResponse.permissions.write) {
 
@@ -139,6 +141,8 @@ angular.module('FieldDoc')
                     self.showElements();
 
                 });
+
+                self.loadSites();
 
             }, function(errorResponse) {
 
@@ -314,6 +318,45 @@ angular.module('FieldDoc')
             self.practice.category_id = $item.id;
 
         };
+
+
+
+        /*
+        START LOAD PROJECT SITES
+        */
+       self.loadSites = function() {
+
+                console.log('self.loadSites --> Starting...');
+
+                Project.sites({
+
+                    id: self.project.id,
+                    currentTime: Date.UTC()
+
+                }).$promise.then(function(successResponse) {
+
+                    console.log('Project sites --> ', successResponse);
+
+                    self.sites = successResponse.features;
+
+
+
+
+                    // self.populateMap(self.map, siteCollection, null, true);
+
+                    // self.addMapPreviews(self.sites);
+
+                }, function(errorResponse) {
+
+                    console.log('loadSites.errorResponse', errorResponse);
+
+
+                });
+
+            };
+        /*
+        END LOAD PROJECT SITES
+        */
 
         //
         // Verify Account information for proper UI element display

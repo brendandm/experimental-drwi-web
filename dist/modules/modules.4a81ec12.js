@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'production',apiUrl:'https://api.fielddoc.org',siteUrl:'https://www.fielddoc.org',clientId:'lynCelX7eoAV1i7pcltLRcNXHvUDOML405kXYeJ1',version:1583343257967})
+.constant('environment', {name:'local',apiUrl:'http://127.0.0.1:5000',castUrl:'http://127.0.0.1:4000',dnrUrl:'http://127.0.0.1:4000',siteUrl:'http://127.0.0.1:9000',clientId:'sL3yMmmnSNszktuQGVBCasZ6mCy7DahS',version:1584468755081})
 
 ;
 /**
@@ -15777,6 +15777,8 @@ angular.module('FieldDoc')
 
                 self.practice = successResponse;
 
+                self.project = self.practice.id;
+
                 if (!successResponse.permissions.read &&
                     !successResponse.permissions.write) {
 
@@ -15827,6 +15829,8 @@ angular.module('FieldDoc')
                     self.showElements();
 
                 });
+
+                self.loadSites();
 
             }, function(errorResponse) {
 
@@ -16002,6 +16006,45 @@ angular.module('FieldDoc')
             self.practice.category_id = $item.id;
 
         };
+
+
+
+        /*
+        START LOAD PROJECT SITES
+        */
+       self.loadSites = function() {
+
+                console.log('self.loadSites --> Starting...');
+
+                Project.sites({
+
+                    id: self.project.id,
+                    currentTime: Date.UTC()
+
+                }).$promise.then(function(successResponse) {
+
+                    console.log('Project sites --> ', successResponse);
+
+                    self.sites = successResponse.features;
+
+
+
+
+                    // self.populateMap(self.map, siteCollection, null, true);
+
+                    // self.addMapPreviews(self.sites);
+
+                }, function(errorResponse) {
+
+                    console.log('loadSites.errorResponse', errorResponse);
+
+
+                });
+
+            };
+        /*
+        END LOAD PROJECT SITES
+        */
 
         //
         // Verify Account information for proper UI element display
