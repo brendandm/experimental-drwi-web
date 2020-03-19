@@ -106,6 +106,43 @@
 
                         </div>
 
+
+                        <div data-ng-if="page.sites">
+
+                            <div style="padding-top: 2em; margin: 2em 0; border-top: 1px solid #e0e0e0;" >
+
+                                <p style="font-style: normal; font-size: 1em; color: #212121; margin: 0 0 2em;">
+                                    <strong>Sites</strong>
+                                </p>
+
+                                <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+
+                                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="site in page.sites | orderBy:'name'">
+
+                                        <div class="card--content">
+
+                                            <label class="name" for="site-{{ site.id }}">
+                                                {{ site.name }}
+                                                <input type="checkbox" id="site-{{ site.id }}" name="site-{{ site.id }}" data-ng-model="site.selected" data-ng-checked="site.selected" />
+                                            </label>
+
+                                            <div class="body">
+                                                <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (site.description || 'No description') | truncate:250 }}</p>
+                                            </div>
+
+                                        </div>
+
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                        </div>
+
+
+
+
                         <h2 class="">Privacy</h2>
 
                         <div class="scope--control">
