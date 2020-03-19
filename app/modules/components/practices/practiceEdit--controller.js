@@ -354,6 +354,16 @@ angular.module('FieldDoc')
 
         };
 
+         self.setSite = function($item, $model, $label) {
+
+            console.log('self.site', $item);
+
+            self.site = $item;
+
+            self.site.id = $item.properties.id;
+
+        };
+
 
 
 
