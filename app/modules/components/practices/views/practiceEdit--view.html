@@ -111,7 +111,11 @@
 
                             <span class="meta-label"><b>Practice type</b></span>
 
-                            <input id="site_id" name="site_id" type="text" placeholder="Search project sites" data-ng-model="page.sites" uib-typeahead="site as site.properties.name for site in page.sites | filter:{name: $viewValue} | limitTo:5" typeahead-on-select="page.setSite($item,$model,$label)" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html" />
+                            <input id="site_id" name="site_id" type="text" placeholder="Search project sites" data-ng-model="page.sites"
+                                   uib-typeahead="site as site.properties.name for site in page.sites | filter:{properties.name: $viewValue} | limitTo:5"
+                                   typeahead-on-select="page.setSite($item,$model,$label)"
+                                   typeahead-min-length="0"
+                                   typeahead-template-url="templates/search--tpl.html" />
 
                             <p data-ng-if="page.practice.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
                                 {{ page.practice.category.description || page.practiceType.description }}
