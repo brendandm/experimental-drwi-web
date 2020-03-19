@@ -115,7 +115,7 @@
 
                             <input id="site_id" name="site_id" type="text" placeholder="Search project sites" data-ng-model="page.site"
                                    uib-typeahead="site as site.name for site.properties in page.sites | filter:{name: $viewValue} | limitTo:5"
-                                   typeahead-on-select="page.setSite($item,$model,$label)"
+                                   typeahead-on-select="page.setSite($item)"
                                    typeahead-min-length="0"
                                    typeahead-template-url="templates/search--tpl.html" />
 
