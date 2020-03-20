@@ -177,7 +177,11 @@ angular.module('FieldDoc')
                    successResponse.features.forEach(function(item){
                         sites.push(item.properties);
                     });
-
+                    site.push(
+                                {
+                                    "name"  :   "None - No site selected for this Practice",
+                                    "id"    :   null
+                                });
                     self.sites = sites;
 
 
