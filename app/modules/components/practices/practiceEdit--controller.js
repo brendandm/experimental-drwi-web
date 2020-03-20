@@ -179,7 +179,7 @@ angular.module('FieldDoc')
                     });
                     sites.push(
                                 {
-                                    "name"  :   "None - No site selected for this Practice",
+                                    "name"  :   "None - this Practice is not associated with a Site",
                                     "id"    :   null
                                 });
                     self.sites = sites;
