@@ -165,7 +165,10 @@ angular.module('FieldDoc')
 
                     console.log('Project sites --> ', successResponse);
 
-                    self.sites = successResponse.features;
+                  //
+                    successResponse.features.forEach(function(item){
+                        self.sites.push(item.properties);
+                    });
 
 
                ///     self.showElements(true);
