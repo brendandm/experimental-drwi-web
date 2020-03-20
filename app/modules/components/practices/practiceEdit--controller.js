@@ -369,7 +369,7 @@ angular.module('FieldDoc')
 
             self.site = $item;
 
-            self.site.id = $item.properties.id;
+            self.site.id = $item.id;
 
         };
 
