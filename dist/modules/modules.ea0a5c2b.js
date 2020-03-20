@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1584711333225})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1584711637212})
 
 ;
 /**
@@ -16655,12 +16655,16 @@ angular.module('FieldDoc')
 
                     console.log('Project sites --> ', successResponse);
 
-                    self.sites = successResponse.features;
+                 //   self.sites = successResponse.features;
 
-                  //
-           //         successResponse.features.forEach(function(item){
-           //             self.sites.push(item.properties);
-           //         });
+                    //self.sites = [];
+
+                  var sites = [];
+                   successResponse.features.forEach(function(item){
+                        sites.push(item.properties);
+                    });
+
+                    self.sites = sites;
 
 
                ///     self.showElements(true);
