@@ -107,6 +107,10 @@ angular.module('FieldDoc')
 
                 }
 
+                if (successResponse.site_id){
+                    self.site = successResponse.site;
+                }
+
                 $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
 
                  self.loadSites();
@@ -369,7 +373,7 @@ angular.module('FieldDoc')
 
             self.site = $item;
 
-            self.site.id = $item.id;
+            self.practice.site_id = $item.id;
 
         };
 
