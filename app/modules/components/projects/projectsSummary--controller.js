@@ -1122,7 +1122,7 @@ angular.module('FieldDoc')
 
                         });
 
-                        self.practices.forEach(function(feature) {
+                        self.practices.features.forEach(function(feature) {
 
                             MapManager.addFeature(
                                 self.map,
