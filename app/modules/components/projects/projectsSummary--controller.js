@@ -1122,6 +1122,17 @@ angular.module('FieldDoc')
 
                         });
 
+                        self.practices.forEach(function(feature) {
+
+                            MapManager.addFeature(
+                                self.map,
+                                feature,
+                                'geometry',
+                                true,
+                                false);
+
+                        });
+
                     }
 
                 });
