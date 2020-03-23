@@ -1125,7 +1125,7 @@ angular.module('FieldDoc')
 
 
                     }
-                    console.log("ADD PRACTICES TO MAP);
+                    console.log("ADD PRACTICES TO MAP");
                     console.log("SELF.PRACTIES",self.practices);
 
                     if (self.practices && Array.isArray(self.practices)) {
@@ -1139,7 +1139,7 @@ angular.module('FieldDoc')
                                 'geometry',
                                 true,
                                 false
-                               // 'practice'
+                                'practice'
                                 );
 
                         });

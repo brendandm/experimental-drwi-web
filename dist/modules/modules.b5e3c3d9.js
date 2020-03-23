@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1584976098297})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1584976392548})
 
 ;
 /**
@@ -6020,7 +6020,7 @@ angular.module('FieldDoc')
 
 
                     }
-                    console.log("ADD PRACTICES TO MAP);
+                    console.log("ADD PRACTICES TO MAP");
                     console.log("SELF.PRACTIES",self.practices);
 
                     if (self.practices && Array.isArray(self.practices)) {
@@ -6034,7 +6034,7 @@ angular.module('FieldDoc')
                                 'geometry',
                                 true,
                                 false
-                               // 'practice'
+                                'practice'
                                 );
 
                         });
