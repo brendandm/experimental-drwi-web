@@ -1103,7 +1103,7 @@ angular.module('FieldDoc')
                         self.fetchLayers();
 
                     }
-                    console.log("ADD SITES TO MAP);
+                    console.log("ADD SITES TO MAP");
                     if (self.sites && Array.isArray(self.sites)) {
 
                         var siteCollection = {
