@@ -1138,8 +1138,8 @@ angular.module('FieldDoc')
                                 feature,
                                 'geometry',
                                 true,
-                                false,
-                                'practice'
+                                false
+                               // 'practice'
                                 );
 
                         });
