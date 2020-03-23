@@ -1103,7 +1103,7 @@ angular.module('FieldDoc')
                         self.fetchLayers();
 
                     }
-
+                    console.log("ADD SITES TO MAP);
                     if (self.sites && Array.isArray(self.sites)) {
 
                         var siteCollection = {
@@ -1122,6 +1122,15 @@ angular.module('FieldDoc')
 
                         });
 
+
+
+                    }
+                    console.log("ADD PRACTICES TO MAP);
+                    console.log("SELF.PRACTIES",self.practices);
+
+                    if (self.practices && Array.isArray(self.practices)) {
+
+
                         self.practices.forEach(function(feature) {
 
                             MapManager.addFeature(
@@ -1132,9 +1141,7 @@ angular.module('FieldDoc')
                                 false);
 
                         });
-
                     }
-
                 });
 
             };

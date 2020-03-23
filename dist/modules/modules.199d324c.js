@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1584761553840})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1584975676343})
 
 ;
 /**
@@ -5998,7 +5998,7 @@ angular.module('FieldDoc')
                         self.fetchLayers();
 
                     }
-
+                    console.log("ADD SITES TO MAP);
                     if (self.sites && Array.isArray(self.sites)) {
 
                         var siteCollection = {
@@ -6017,6 +6017,15 @@ angular.module('FieldDoc')
 
                         });
 
+
+
+                    }
+                    console.log("ADD PRACTICES TO MAP);
+                    console.log("SELF.PRACTIES",self.practices);
+
+                    if (self.practices && Array.isArray(self.practices)) {
+
+
                         self.practices.forEach(function(feature) {
 
                             MapManager.addFeature(
@@ -6027,9 +6036,7 @@ angular.module('FieldDoc')
                                 false);
 
                         });
-
                     }
-
                 });
 
             };
