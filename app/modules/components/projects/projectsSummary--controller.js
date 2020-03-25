@@ -1080,6 +1080,8 @@ angular.module('FieldDoc')
 
                 self.map.on('load', function() {
 
+                    console.log("Loading Map");
+
                     var nav = new mapboxgl.NavigationControl();
 
                     self.map.addControl(nav, 'top-left');
@@ -1111,7 +1113,7 @@ angular.module('FieldDoc')
                     }
                     console.log("ADD SITES TO MAP");
                     if (self.sites && Array.isArray(self.sites)) {
-
+                        console.log("There are Sites");
                         var siteCollection = {
                             'type': 'FeatureCollection',
                             'features': self.sites
@@ -1135,7 +1137,7 @@ angular.module('FieldDoc')
                     console.log("SELF.PRACTIES",self.practices);
 
                     if (self.practices && Array.isArray(self.practices)) {
-
+                         console.log("There are Practices");
 
                         self.practices.forEach(function(feature) {
 

@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585144704785})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585145876877})
 
 ;
 /**
@@ -5975,6 +5975,8 @@ angular.module('FieldDoc')
 
                 self.map.on('load', function() {
 
+                    console.log("Loading Map");
+
                     var nav = new mapboxgl.NavigationControl();
 
                     self.map.addControl(nav, 'top-left');
@@ -6006,7 +6008,7 @@ angular.module('FieldDoc')
                     }
                     console.log("ADD SITES TO MAP");
                     if (self.sites && Array.isArray(self.sites)) {
-
+                        console.log("There are Sites");
                         var siteCollection = {
                             'type': 'FeatureCollection',
                             'features': self.sites
@@ -6030,7 +6032,7 @@ angular.module('FieldDoc')
                     console.log("SELF.PRACTIES",self.practices);
 
                     if (self.practices && Array.isArray(self.practices)) {
-
+                         console.log("There are Practices");
 
                         self.practices.forEach(function(feature) {
 
