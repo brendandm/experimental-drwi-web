@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585158947747})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585159030905})
 
 ;
 /**
@@ -6041,12 +6041,12 @@ angular.module('FieldDoc')
                                                 "creator_id": 717,
                                                 "description":null,
                                                 "email": "info@chesapeakecommons.org"
-                                            }
+                                            },
                                             "organization_id": 190,
                                             "practice_type": "Custom",
                                             "private": false,
                                             "project": {
-                                                }
+                                                },
                                             "project_id": 0,
                                             "site": {},
                                             "site_id": 13206

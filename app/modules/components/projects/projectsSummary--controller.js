@@ -1146,12 +1146,12 @@ angular.module('FieldDoc')
                                                 "creator_id": 717,
                                                 "description":null,
                                                 "email": "info@chesapeakecommons.org"
-                                            }
+                                            },
                                             "organization_id": 190,
                                             "practice_type": "Custom",
                                             "private": false,
                                             "project": {
-                                                }
+                                                },
                                             "project_id": 0,
                                             "site": {},
                                             "site_id": 13206
