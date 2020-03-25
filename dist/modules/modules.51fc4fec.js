@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585143871030})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585144431332})
 
 ;
 /**
@@ -5147,8 +5147,10 @@ angular.module('FieldDoc')
                     if (createMap) {
 
                         console.log("CREATE MAP");
-                        
+
                         $timeout(function() {
+
+                            console.log("MAKING THE MAP");
 
                             if (!self.mapOptions) {
 
@@ -5469,7 +5471,7 @@ angular.module('FieldDoc')
                     //     'features': self.sites
                     // };
 
-                    self.showElements(true);
+                    self.showElements();
 
 
                     // self.populateMap(self.map, siteCollection, null, true);

@@ -252,8 +252,10 @@ angular.module('FieldDoc')
                     if (createMap) {
 
                         console.log("CREATE MAP");
-                        
+
                         $timeout(function() {
+
+                            console.log("MAKING THE MAP");
 
                             if (!self.mapOptions) {
 
@@ -574,7 +576,7 @@ angular.module('FieldDoc')
                     //     'features': self.sites
                     // };
 
-                    self.showElements(true);
+                    self.showElements();
 
 
                     // self.populateMap(self.map, siteCollection, null, true);
