@@ -562,7 +562,11 @@ angular.module('FieldDoc')
 
                     console.log('Project sites --> ', successResponse);
 
+                   // console.log();
+
                     self.sites = successResponse.features;
+
+                     console.log("self.sites",self.sites);
 
                     self.summary = successResponse.summary;
 
@@ -576,7 +580,7 @@ angular.module('FieldDoc')
                     //     'features': self.sites
                     // };
 
-                    self.showElements();
+                    self.showElements(true);
 
 
                     // self.populateMap(self.map, siteCollection, null, true);
