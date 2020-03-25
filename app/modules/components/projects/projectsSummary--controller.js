@@ -1148,7 +1148,7 @@ angular.module('FieldDoc')
                          console.log("There are Practices");
 
                         self.practices.forEach(function(feature) {
-
+                            console.log("adding practice feature -->",feature);
                             MapManager.addFeature(
                                 self.map,
                                 feature,
