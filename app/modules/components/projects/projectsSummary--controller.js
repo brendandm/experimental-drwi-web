@@ -223,7 +223,7 @@ angular.module('FieldDoc')
 
                             console.log('self.practices', successResponse);
 
-                          //  self.showElements();
+                            self.showElements(true);
 
                             self.practicesCalculateViewCount();
 
