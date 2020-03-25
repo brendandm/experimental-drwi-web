@@ -1131,7 +1131,7 @@ angular.module('FieldDoc')
                                             "calculating": false,
                                             "category_id": 787,
                                             "created_on": "2020-03-24T10:54:22.546462",
-                                            "creator_id" 35
+                                            "creator_id": 35
                                             "custom_extent": null
                                             "description": null
                                             "id": 0
