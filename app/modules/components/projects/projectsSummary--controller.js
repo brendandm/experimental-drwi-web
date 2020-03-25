@@ -1156,7 +1156,8 @@ angular.module('FieldDoc')
                                             "site": {},
                                             "site_id": 13206
                                        },
-                                "type": "Feature",
+                                    "type": "Feature"
+                                }
                                 'geometry',
                                 true,
                                 false);
