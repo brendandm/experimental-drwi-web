@@ -1121,6 +1121,7 @@ angular.module('FieldDoc')
                     }
 
 
+                  /*
                      MapManager.addFeature(
                                 self.map,
                                 {
@@ -1161,7 +1162,7 @@ angular.module('FieldDoc')
                                 'geometry',
                                 true,
                                 false);
-
+                    */
                     console.log("ADD SITES TO MAP");
 
                     if (self.sites.length && Array.isArray(self.sites)) {
@@ -1172,7 +1173,7 @@ angular.module('FieldDoc')
                         };
 
                         self.sites.forEach(function(feature) {
-
+                              console.log("adding site feature -->",feature);
                             MapManager.addFeature(
                                 self.map,
                                 feature,

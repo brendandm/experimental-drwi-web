@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585159281359})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585159428943})
 
 ;
 /**
@@ -6016,6 +6016,7 @@ angular.module('FieldDoc')
                     }
 
 
+                  /*
                      MapManager.addFeature(
                                 self.map,
                                 {
@@ -6056,7 +6057,7 @@ angular.module('FieldDoc')
                                 'geometry',
                                 true,
                                 false);
-
+                    */
                     console.log("ADD SITES TO MAP");
 
                     if (self.sites.length && Array.isArray(self.sites)) {
@@ -6067,7 +6068,7 @@ angular.module('FieldDoc')
                         };
 
                         self.sites.forEach(function(feature) {
-
+                              console.log("adding site feature -->",feature);
                             MapManager.addFeature(
                                 self.map,
                                 feature,
