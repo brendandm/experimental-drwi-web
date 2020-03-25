@@ -1140,6 +1140,8 @@ angular.module('FieldDoc')
 
 
 
+                    }else{
+                        console.log("no sites");
                     }
                     console.log("ADD PRACTICES TO MAP");
                     console.log("SELF.PRACTIES",self.practices);
@@ -1150,6 +1152,7 @@ angular.module('FieldDoc')
                         self.practices.forEach(function(feature) {
                             console.log("adding practice feature -->",feature);
                             MapManager.addFeature(
+
                                 self.map,
                                 feature,
                                 'geometry',
@@ -1159,6 +1162,8 @@ angular.module('FieldDoc')
                                 );
 
                         });
+                    }else{
+                        console.log("no practices");
                     }
                 });
 
