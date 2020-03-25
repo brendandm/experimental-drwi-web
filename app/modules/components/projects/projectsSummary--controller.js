@@ -251,6 +251,8 @@ angular.module('FieldDoc')
 
                     if (createMap) {
 
+                        console.log("CREATE MAP");
+                        
                         $timeout(function() {
 
                             if (!self.mapOptions) {
