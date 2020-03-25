@@ -1062,6 +1062,8 @@ angular.module('FieldDoc')
 
             self.createMap = function(options) {
 
+                console.log("MAP MAP MAP");
+
                 if (!options) return;
 
                 console.log('self.createMap --> Starting...');
