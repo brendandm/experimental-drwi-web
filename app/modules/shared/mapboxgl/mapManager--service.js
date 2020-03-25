@@ -15,6 +15,8 @@ angular.module('FieldDoc')
 
                 arr.forEach(function(feature) {
 
+                    console.log("Layer Spec",feature);
+
                     var spec = feature.layer_spec || {};
 
                     feature.spec = spec;
