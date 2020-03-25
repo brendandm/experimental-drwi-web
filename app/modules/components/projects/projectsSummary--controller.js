@@ -1143,11 +1143,17 @@ angular.module('FieldDoc')
                     }else{
                         console.log("no sites");
                     }
+
                     console.log("ADD PRACTICES TO MAP");
                     console.log("SELF.PRACTIES",self.practices);
 
                     if (self.practices.length && Array.isArray(self.practices)) {
                          console.log("There are Practices");
+
+                        var practiceCollection = {
+                            'type': 'FeatureCollection',
+                            'features': self.practices
+                        };
 
                         self.practices.forEach(function(feature) {
                             console.log("adding practice feature -->",feature);
