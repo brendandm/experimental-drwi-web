@@ -345,7 +345,7 @@ angular.module('FieldDoc')
 
                         self.loadSites();
 
-                        self.loadPractices();
+                       //  self.loadPractices();
 
 //                        self.loadTags();
 
@@ -575,12 +575,14 @@ angular.module('FieldDoc')
                         name: 'All organizations'
                     });
 
+                     self.loadPractices();
+
                     // var siteCollection = {
                     //     'type': 'FeatureCollection',
                     //     'features': self.sites
                     // };
 
-                    self.showElements(true);
+                   // self.showElements(true);
 
 
                     // self.populateMap(self.map, siteCollection, null, true);

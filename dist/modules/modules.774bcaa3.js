@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585148444985})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585156009230})
 
 ;
 /**
@@ -5240,7 +5240,7 @@ angular.module('FieldDoc')
 
                         self.loadSites();
 
-                        self.loadPractices();
+                       //  self.loadPractices();
 
 //                        self.loadTags();
 
@@ -5470,12 +5470,14 @@ angular.module('FieldDoc')
                         name: 'All organizations'
                     });
 
+                     self.loadPractices();
+
                     // var siteCollection = {
                     //     'type': 'FeatureCollection',
                     //     'features': self.sites
                     // };
 
-                    self.showElements(true);
+                   // self.showElements(true);
 
 
                     // self.populateMap(self.map, siteCollection, null, true);
