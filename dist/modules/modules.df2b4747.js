@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585156009230})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585156311504})
 
 ;
 /**
@@ -5128,7 +5128,7 @@ angular.module('FieldDoc')
 
                         }, function(errorResponse) {
 
-                            self.showElements();
+                            self.showElements(false);
 
                         });
 
@@ -5488,7 +5488,9 @@ angular.module('FieldDoc')
 
                     console.log('loadSites.errorResponse', errorResponse);
 
-                    self.showElements(false);
+                    self.loadPractices();
+
+               //     self.showElements(false);
 
                 });
 
@@ -6013,7 +6015,7 @@ angular.module('FieldDoc')
 
                     }
                     console.log("ADD SITES TO MAP");
-                    if (self.sites && Array.isArray(self.sites)) {
+                    if (self.sites.length && Array.isArray(self.sites)) {
                         console.log("There are Sites");
                         var siteCollection = {
                             'type': 'FeatureCollection',
@@ -6037,7 +6039,7 @@ angular.module('FieldDoc')
                     console.log("ADD PRACTICES TO MAP");
                     console.log("SELF.PRACTIES",self.practices);
 
-                    if (self.practices && Array.isArray(self.practices)) {
+                    if (self.practices.length && Array.isArray(self.practices)) {
                          console.log("There are Practices");
 
                         self.practices.forEach(function(feature) {

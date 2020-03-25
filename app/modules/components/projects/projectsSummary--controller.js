@@ -233,7 +233,7 @@ angular.module('FieldDoc')
 
                         }, function(errorResponse) {
 
-                            self.showElements();
+                            self.showElements(false);
 
                         });
 
@@ -593,7 +593,9 @@ angular.module('FieldDoc')
 
                     console.log('loadSites.errorResponse', errorResponse);
 
-                    self.showElements(false);
+                    self.loadPractices();
+
+               //     self.showElements(false);
 
                 });
 
@@ -1118,7 +1120,7 @@ angular.module('FieldDoc')
 
                     }
                     console.log("ADD SITES TO MAP");
-                    if (self.sites && Array.isArray(self.sites)) {
+                    if (self.sites.length && Array.isArray(self.sites)) {
                         console.log("There are Sites");
                         var siteCollection = {
                             'type': 'FeatureCollection',
@@ -1142,7 +1144,7 @@ angular.module('FieldDoc')
                     console.log("ADD PRACTICES TO MAP");
                     console.log("SELF.PRACTIES",self.practices);
 
-                    if (self.practices && Array.isArray(self.practices)) {
+                    if (self.practices.length && Array.isArray(self.practices)) {
                          console.log("There are Practices");
 
                         self.practices.forEach(function(feature) {
