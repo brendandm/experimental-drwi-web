@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585157338117})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585157616752})
 
 ;
 /**
@@ -6014,7 +6014,9 @@ angular.module('FieldDoc')
                         self.fetchLayers();
 
                     }
+
                     console.log("ADD SITES TO MAP");
+
                     if (self.sites.length && Array.isArray(self.sites)) {
                         console.log("There are Sites");
                         var siteCollection = {
@@ -34733,6 +34735,8 @@ angular.module('FieldDoc')
                     if (feature.spec.id) {
 
                         try {
+
+                            console.log("'MapManager.addLayers",feature.spec);
 
                             map.addLayer(feature.spec);
 

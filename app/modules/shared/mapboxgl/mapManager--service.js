@@ -34,6 +34,8 @@ angular.module('FieldDoc')
 
                         try {
 
+                            console.log("'MapManager.addLayers",feature.spec);
+
                             map.addLayer(feature.spec);
 
                         } catch (error) {
