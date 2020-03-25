@@ -1157,7 +1157,7 @@ angular.module('FieldDoc')
                                             "site_id": 13206
                                        },
                                     "type": "Feature"
-                                }
+                                },
                                 'geometry',
                                 true,
                                 false);
