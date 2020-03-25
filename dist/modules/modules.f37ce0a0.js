@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585158680632})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585158771264})
 
 ;
 /**
@@ -6019,7 +6019,7 @@ angular.module('FieldDoc')
                      MapManager.addFeature(
                                 self.map,
                                 {
-                                    "geometry": {"coordinates": Array(1), "type": "Polygon"}
+                                    "geometry": {"coordinates": [], "type": "Polygon"},
                                     "properties": {
                                             "area": 12420.8841916765,
                                             "calculated_extent": 12420.8841916765,

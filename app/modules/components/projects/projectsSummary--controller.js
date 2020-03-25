@@ -1124,7 +1124,7 @@ angular.module('FieldDoc')
                      MapManager.addFeature(
                                 self.map,
                                 {
-                                    "geometry": {"coordinates": Array(1), "type": "Polygon"}
+                                    "geometry": {"coordinates": [], "type": "Polygon"},
                                     "properties": {
                                             "area": 12420.8841916765,
                                             "calculated_extent": 12420.8841916765,
