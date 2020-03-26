@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585239450292})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585239856297})
 
 ;
 /**
@@ -4908,7 +4908,8 @@ angular.module('FieldDoc')
             $scope, $location, mapbox, Site, user, $window, $timeout,
             Practice, project, sites, Utility, $interval, LayerService,
             MapManager,
-            Shapefile, Task
+            Shapefile, Task,
+            ngAnimate, ui.bootstrap
             ) {
 
             var self = this;

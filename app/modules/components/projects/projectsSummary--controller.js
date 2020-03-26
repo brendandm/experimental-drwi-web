@@ -13,7 +13,8 @@ angular.module('FieldDoc')
             $scope, $location, mapbox, Site, user, $window, $timeout,
             Practice, project, sites, Utility, $interval, LayerService,
             MapManager,
-            Shapefile, Task
+            Shapefile, Task,
+            ngAnimate, ui.bootstrap
             ) {
 
             var self = this;
