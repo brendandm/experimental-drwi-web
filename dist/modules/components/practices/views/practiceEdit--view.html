@@ -119,9 +119,16 @@
                                    typeahead-min-length="0"
                                    typeahead-template-url="templates/search--tpl.html" />
 
-                            <p data-ng-if="page.practice.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
+
+                            <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
+                                Sites are an optional way to organize your practices.
+                                To use sites you must first create your site(s) from the
+                                <a href="/projects/{{page.practice.project.id}}">Project Summary</a> page.
+                            </p>
+                           <!-- <p data-ng-if="page.practice.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
                                 {{ page.practice.site.description || 'No description' }}
                             </p>
+                            -->
 
                         <!--   <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;" data-ng-if="page.practiceType.model.id || page.practice.category.model.id">
                                 This practice type is linked to an automated model that calculates estimated values for various environmental metrics. Click <a href="/models/{{ page.practiceType.model.id || page.practice.category.model.id }}" title="{{ page.practiceType.model.name || page.practice.category.model.name }}">here</a> to learn more about the model.
