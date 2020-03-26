@@ -14,7 +14,7 @@ angular.module('FieldDoc')
             Practice, project, sites, Utility, $interval, LayerService,
             MapManager,
             Shapefile, Task,
-            ngAnimate, ui.bootstrap
+            'ngAnimate', 'ui.bootstrap'
             ) {
 
             var self = this;
