@@ -7,14 +7,14 @@
  * # ProjectviewController
  * Controller of the FieldDoc
  */
+angular.module('FieldDoc', ['ngAnimate', 'ui.bootstrap']);
 angular.module('FieldDoc')
-    .controller('ProjectSummaryController',
+    .controller('ProjectSummaryController'
         function(Account, Notifications, $rootScope, Project, $routeParams,
             $scope, $location, mapbox, Site, user, $window, $timeout,
             Practice, project, sites, Utility, $interval, LayerService,
             MapManager,
-            Shapefile, Task,
-            'ngAnimate', 'ui.bootstrap'
+            Shapefile, Task
             ) {
 
             var self = this;
