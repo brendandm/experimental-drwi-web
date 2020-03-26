@@ -7,7 +7,6 @@
  * # ProjectviewController
  * Controller of the FieldDoc
  */
-
 angular.module('FieldDoc')
     .controller('ProjectSummaryController',
         function(Account, Notifications, $rootScope, Project, $routeParams,
