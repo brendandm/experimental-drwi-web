@@ -110,7 +110,10 @@ angular.module('FieldDoc')
                     'tasks'
                 ].join(',');
 
-                site.$promise.then(function(successResponse) {
+                site({
+                    id: self.properties.practice.site.id
+
+                }).$promise.then(function(successResponse) {
 
                     console.log('self.site YES', successResponse);
 
