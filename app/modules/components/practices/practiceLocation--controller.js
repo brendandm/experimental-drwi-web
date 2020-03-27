@@ -624,19 +624,26 @@ angular.module('FieldDoc')
  
                     document.getElementById('geocoder').appendChild(geocoder.onAdd(self.map));
 
-                  //  self.populateMap(self.map, self.practice);
 
-                    console.log("ADDING THE MAP");
+                   console.log("ADDING THE MAP");
 
-                      MapManager.addFeature(
+
+                     if(self.site != undefined){
+                         MapManager.addFeature(
 
                                 self.map,
-                                self.practice,
+                                self.site,
                                 'geometry',
                                 true,
                                 false,
-                                'practice'
+                                'site'
                                 );
+                    }
+
+                    self.populateMap(self.map, self.practice);
+
+
+
 
                     self.map.on('draw.create', self.updateGeometry);
                     self.map.on('draw.delete', self.updateGeometry);

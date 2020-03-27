@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585328064984})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585328436993})
 
 ;
 /**
@@ -18438,19 +18438,26 @@ angular.module('FieldDoc')
  
                     document.getElementById('geocoder').appendChild(geocoder.onAdd(self.map));
 
-                  //  self.populateMap(self.map, self.practice);
 
-                    console.log("ADDING THE MAP");
+                   console.log("ADDING THE MAP");
 
-                      MapManager.addFeature(
+
+                     if(self.site != undefined){
+                         MapManager.addFeature(
 
                                 self.map,
-                                self.practice,
+                                self.site,
                                 'geometry',
                                 true,
                                 false,
-                                'practice'
+                                'site'
                                 );
+                    }
+
+                    self.populateMap(self.map, self.practice);
+
+
+
 
                     self.map.on('draw.create', self.updateGeometry);
                     self.map.on('draw.delete', self.updateGeometry);
