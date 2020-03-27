@@ -10,7 +10,7 @@ angular.module('FieldDoc')
         function(Account, Image, $location, $log, mapbox, Media,
             Site, Practice, practice, $q, $rootScope, $route,
             $scope, $timeout, $interval, site, user, Shapefile,
-            Utility, Task, LayerService) {
+            Utility, Task, LayerService, MapManager) {
 
             var self = this;
 
