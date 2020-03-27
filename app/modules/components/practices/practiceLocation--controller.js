@@ -111,7 +111,7 @@ angular.module('FieldDoc')
                 ].join(',');
 
                 site({
-                    id: self.properties.practice.site.id
+                    id: self.practice.properties.site.id
 
                 }).$promise.then(function(successResponse) {
 
