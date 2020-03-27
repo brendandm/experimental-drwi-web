@@ -112,7 +112,7 @@ angular.module('FieldDoc')
 
                 site.$promise.then(function(successResponse) {
 
-                    console.log('self.site', successResponse);
+                    console.log('self.site YES', successResponse);
 
                     self.site = successResponse;
 
