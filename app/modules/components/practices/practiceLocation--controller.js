@@ -64,7 +64,7 @@ angular.module('FieldDoc')
                     'allocations',
                     'creator',
                     'counties',
-              //      'geographies',
+                    'geographies',
                     'last_modified_by',
                     'watersheds',
                     'partnerships',
@@ -79,6 +79,8 @@ angular.module('FieldDoc')
                     format: 'geojson',
              //       exclude: exclude
                 }).$promise.then(function(successResponse) {
+
+                    console.log("THIS IS A CONSOLE LOG");
 
                     console.log('self.site', successResponse);
 
