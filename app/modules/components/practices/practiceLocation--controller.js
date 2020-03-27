@@ -110,9 +110,7 @@ angular.module('FieldDoc')
                     'tasks'
                 ].join(',');
 
-                site({
-                 //   exclude: exclude
-                    }).$promise.then(function(successResponse) {
+                site.$promise.then(function(successResponse) {
 
                     console.log('self.site', successResponse);
 
