@@ -627,12 +627,12 @@ angular.module('FieldDoc')
 
                    console.log("ADDING THE MAP");
 
+                    console.log("SITE",self.site);
 
 
                     self.populateMap(self.map, self.practice);
 
 
-                    console.log(self.site);
                      if(self.site != null){
                         console.log("There is a map")
                          MapManager.addFeature(
