@@ -626,6 +626,8 @@ angular.module('FieldDoc')
 
                   //  self.populateMap(self.map, self.practice);
 
+                    console.log("ADDING THE MAP");
+
                       MapManager.addFeature(
 
                                 self.map,
