@@ -110,7 +110,7 @@ angular.module('FieldDoc')
                     'tasks'
                 ].join(',');
 
-                site({
+                site.getSingle({
                     id: self.practice.properties.site.id
 
                 }).$promise.then(function(successResponse) {
