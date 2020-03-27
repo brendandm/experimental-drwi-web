@@ -64,7 +64,7 @@ angular.module('FieldDoc')
                     'allocations',
                     'creator',
                     'counties',
-                    'geographies',
+              //      'geographies',
                     'last_modified_by',
                     'watersheds',
                     'partnerships',
@@ -77,7 +77,7 @@ angular.module('FieldDoc')
                 Practice.site({
                     id: $route.current.params.practiceId,
                     format: 'geojson',
-                    exclude: exclude
+             //       exclude: exclude
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.site', successResponse);
