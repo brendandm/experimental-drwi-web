@@ -632,7 +632,7 @@ angular.module('FieldDoc')
                     self.populateMap(self.map, self.practice);
 
 
-
+                    console.log(self.site);
                      if(self.site != null){
                         console.log("There is a map")
                          MapManager.addFeature(
