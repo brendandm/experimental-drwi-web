@@ -111,7 +111,7 @@ angular.module('FieldDoc')
                 ].join(',');
 
                 site({
-                    exclude: exclude
+                 //   exclude: exclude
                     }).$promise.then(function(successResponse) {
 
                     console.log('self.site', successResponse);
