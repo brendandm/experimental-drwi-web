@@ -675,7 +675,8 @@ angular.module('FieldDoc')
 
 
                      if(self.site != null){
-                        console.log("There is a map")
+                        console.log("There is a site");
+                        console.log("site",self.site);
                          MapManager.addFeature(
 
                                 self.map,
