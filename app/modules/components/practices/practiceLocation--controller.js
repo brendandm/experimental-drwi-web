@@ -628,7 +628,13 @@ angular.module('FieldDoc')
                    console.log("ADDING THE MAP");
 
 
-                     if(self.site != undefined){
+
+                    self.populateMap(self.map, self.practice);
+
+
+
+                     if(self.site != null){
+                        console.log("There is a map")
                          MapManager.addFeature(
 
                                 self.map,
@@ -639,11 +645,6 @@ angular.module('FieldDoc')
                                 'site'
                                 );
                     }
-
-                    self.populateMap(self.map, self.practice);
-
-
-
 
                     self.map.on('draw.create', self.updateGeometry);
                     self.map.on('draw.delete', self.updateGeometry);
