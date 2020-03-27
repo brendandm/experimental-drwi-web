@@ -111,8 +111,9 @@ angular.module('FieldDoc')
                 ].join(',');
 
                 site.getSingle({
-                    id: self.practice.properties.site.id
-
+                    id: self.practice.properties.site.id,
+                    format: 'geojson',
+                    exclude: exclude
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.site YES', successResponse);
@@ -200,9 +201,9 @@ angular.module('FieldDoc')
 
                         if (self.pendingTasks.length < 1) {
 
-                         //   self.loadSite();
+                            self.loadSite();
 
-                           self.loadSiteDirect();
+                        //   self.loadSiteDirect();
 
                             $interval.cancel(self.taskPoll);
 
@@ -224,8 +225,8 @@ angular.module('FieldDoc')
 
                 }
 
-                self.loadSiteDirect();
-                //self.loadSite();
+                // self.loadSiteDirect();
+                self.loadSite();
 
             };
 
