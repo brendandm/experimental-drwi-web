@@ -76,8 +76,8 @@ angular.module('FieldDoc')
 
                 Practice.site({
                     id: $route.current.params.practiceId,
-                    format: 'geojson',
-             //       exclude: exclude
+             //       format: 'geojson',
+                    exclude: exclude
                 }).$promise.then(function(successResponse) {
 
                     console.log("THIS IS A CONSOLE LOG");
@@ -112,10 +112,10 @@ angular.module('FieldDoc')
                     'tasks'
                 ].join(',');
 
-                site.getSingle({
+                site({
                     id: self.practice.properties.site.id,
-                    format: 'geojson',
-                    exclude: exclude
+                    format: 'geojson'
+                  //  exclude: exclude
                 }).$promise.then(function(successResponse) {
 
                     console.log('self.site YES', successResponse);
