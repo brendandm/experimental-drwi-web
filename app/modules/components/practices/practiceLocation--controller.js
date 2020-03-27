@@ -94,6 +94,40 @@ angular.module('FieldDoc')
 
             };
 
+            self.loadSiteDirect = function(){
+
+                 var exclude = [
+                    'allocations',
+                    'creator',
+                    'counties',
+                    'geographies',
+                    'last_modified_by',
+                    'watersheds',
+                    'partnerships',
+                    'practices',
+                    'project',
+                    'tags',
+                    'tasks'
+                ].join(',');
+
+                site({
+                    exclude: exclude
+                    }).$promise.then(function(successResponse) {
+
+                    console.log('self.site', successResponse);
+
+                    self.site = successResponse;
+
+                    self.loadPractice();
+
+                }, function(errorResponse) {
+
+                    //
+
+                });
+            }
+
+
             self.loadPractice = function() {
 
                 Practice.get({
@@ -165,7 +199,9 @@ angular.module('FieldDoc')
 
                         if (self.pendingTasks.length < 1) {
 
-                            self.loadSite();
+                         //   self.loadSite();
+
+                           self.loadSiteDirect();
 
                             $interval.cancel(self.taskPoll);
 
@@ -187,7 +223,8 @@ angular.module('FieldDoc')
 
                 }
 
-                self.loadSite();
+                self.loadSiteDirect();
+                //self.loadSite();
 
             };
 

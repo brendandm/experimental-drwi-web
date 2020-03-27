@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585328913880})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585334025630})
 
 ;
 /**
@@ -17908,6 +17908,40 @@ angular.module('FieldDoc')
 
             };
 
+            self.loadSiteDirect = function(){
+
+                 var exclude = [
+                    'allocations',
+                    'creator',
+                    'counties',
+                    'geographies',
+                    'last_modified_by',
+                    'watersheds',
+                    'partnerships',
+                    'practices',
+                    'project',
+                    'tags',
+                    'tasks'
+                ].join(',');
+
+                site({
+                    exclude: exclude
+                    }).$promise.then(function(successResponse) {
+
+                    console.log('self.site', successResponse);
+
+                    self.site = successResponse;
+
+                    self.loadPractice();
+
+                }, function(errorResponse) {
+
+                    //
+
+                });
+            }
+
+
             self.loadPractice = function() {
 
                 Practice.get({
@@ -17979,7 +18013,9 @@ angular.module('FieldDoc')
 
                         if (self.pendingTasks.length < 1) {
 
-                            self.loadSite();
+                         //   self.loadSite();
+
+                           self.loadSiteDirect();
 
                             $interval.cancel(self.taskPoll);
 
@@ -18001,7 +18037,8 @@ angular.module('FieldDoc')
 
                 }
 
-                self.loadSite();
+                self.loadSiteDirect();
+                //self.loadSite();
 
             };
 
