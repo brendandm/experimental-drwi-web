@@ -518,7 +518,7 @@ angular.module('FieldDoc')
                             properties: {},
                             geometry: practice.geometry,
                             paint: {
-                                    'fill-color': '#06aadf',
+                                    'fill-color': '#df063e',
                                     'fill-opacity': 0.4
                                 }
                         };
