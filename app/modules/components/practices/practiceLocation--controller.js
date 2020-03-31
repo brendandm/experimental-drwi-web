@@ -516,7 +516,11 @@ angular.module('FieldDoc')
                             id: 'practice-' + practice.id,
                             type: 'Feature',
                             properties: {},
-                            geometry: practice.geometry
+                            geometry: practice.geometry,
+                            paint: {
+                                    'fill-color': '#06aadf',
+                                    'fill-opacity': 0.4
+                                }
                         };
 
                         self.drawControls.add(feature);
@@ -657,13 +661,7 @@ angular.module('FieldDoc')
                             polygon: true,
                             trash: true
                         },
-                         styles: [{
-                              'paint': {
-                                    'fill-color': '#fbb03b',
-                                    'fill-outline-color': '#fbb03b',
-                                    'fill-opacity': 0.1
-                              }
-                            }]
+
 
                     });
 
