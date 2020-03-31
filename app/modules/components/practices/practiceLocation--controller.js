@@ -76,7 +76,7 @@ angular.module('FieldDoc')
 
                 Practice.site({
                     id: $route.current.params.practiceId,
-             //       format: 'geojson',
+                    format: 'geojson',
                     exclude: exclude
                 }).$promise.then(function(successResponse) {
 
@@ -529,6 +529,23 @@ angular.module('FieldDoc')
 
                     }
 
+                }
+
+                if(self.site.geometry !== null &&
+                    self.site.geometry !== 'undefined'){
+
+                    console.log("ADDING SITE TO MAP");
+
+                    MapManager.addFeature(
+                                self.map,
+                                self.site,
+                                'geometry',
+                                true,
+                                false,
+                                "site");
+
+                }else{
+                    console.log("No Site can be added to Map");
                 }
 
             };
