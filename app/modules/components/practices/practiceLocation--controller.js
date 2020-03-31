@@ -656,7 +656,20 @@ angular.module('FieldDoc')
                             point: true,
                             polygon: true,
                             trash: true
-                        }
+                        },
+                         styles: [{
+                              'paint': {
+                                'fill-color': [
+                                  "case",
+                                  ['==', ['get', "user_class_id"], 1], "#00ff00",
+                                  ['==', ['get', "user_class_id"], 2], "#0000ff",
+                                  '#ff0000'
+                                ],
+                                'fill-outline-color': '#3bb2d0',
+                                'fill-opacity': 0.5
+                              }
+                            }]
+
                     });
 
                     console.log('drawControls', self.drawControls);

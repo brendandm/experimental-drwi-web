@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585676560261})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585677100291})
 
 ;
 /**
@@ -18470,7 +18470,20 @@ angular.module('FieldDoc')
                             point: true,
                             polygon: true,
                             trash: true
-                        }
+                        },
+                         styles: [{
+                              'paint': {
+                                'fill-color': [
+                                  "case",
+                                  ['==', ['get', "user_class_id"], 1], "#00ff00",
+                                  ['==', ['get', "user_class_id"], 2], "#0000ff",
+                                  '#ff0000'
+                                ],
+                                'fill-outline-color': '#3bb2d0',
+                                'fill-opacity': 0.5
+                              }
+                            }]
+
                     });
 
                     console.log('drawControls', self.drawControls);
