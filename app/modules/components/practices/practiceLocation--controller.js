@@ -535,7 +535,7 @@ angular.module('FieldDoc')
 
                 }
 
-                if(self.site.geometry !== null &&
+          /*      if(self.site.geometry !== null &&
                     self.site.geometry !== 'undefined'){
 
                     console.log("ADDING SITE TO MAP");
@@ -551,7 +551,7 @@ angular.module('FieldDoc')
                 }else{
                     console.log("No Site can be added to Map");
                 }
-
+            */
             };
 
             self.updateGeometry = function updateArea(e) {
