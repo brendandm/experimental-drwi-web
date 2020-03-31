@@ -516,7 +516,7 @@ angular.module('FieldDoc')
                             id: 'practice-' + practice.id,
                             type: 'Feature',
                             properties: {
-                                 paint: {
+                                 'paint': {
                                     'fill-color': '#df063e',
                                     'fill-opacity': 0.4
                                 }
