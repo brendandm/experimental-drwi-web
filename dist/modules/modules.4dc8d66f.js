@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585678002337})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585679077299})
 
 ;
 /**
@@ -18329,12 +18329,14 @@ angular.module('FieldDoc')
                         var feature = {
                             id: 'practice-' + practice.id,
                             type: 'Feature',
-                            properties: {},
-                            geometry: practice.geometry,
-                            paint: {
+                            properties: {
+                                 paint: {
                                     'fill-color': '#df063e',
                                     'fill-opacity': 0.4
                                 }
+                            },
+                            geometry: practice.geometry
+
                         };
 
                         self.drawControls.add(feature);
@@ -18477,6 +18479,7 @@ angular.module('FieldDoc')
                         },
 
 
+
                     });
 
                     console.log('drawControls', self.drawControls);
@@ -18506,6 +18509,7 @@ angular.module('FieldDoc')
                    console.log("ADDING THE MAP");
 
                     console.log("SITE",self.site);
+
 
 
                     self.populateMap(self.map, self.practice);

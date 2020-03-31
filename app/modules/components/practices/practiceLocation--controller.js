@@ -515,12 +515,14 @@ angular.module('FieldDoc')
                         var feature = {
                             id: 'practice-' + practice.id,
                             type: 'Feature',
-                            properties: {},
-                            geometry: practice.geometry,
-                            paint: {
+                            properties: {
+                                 paint: {
                                     'fill-color': '#df063e',
                                     'fill-opacity': 0.4
                                 }
+                            },
+                            geometry: practice.geometry
+
                         };
 
                         self.drawControls.add(feature);
@@ -663,6 +665,7 @@ angular.module('FieldDoc')
                         },
 
 
+
                     });
 
                     console.log('drawControls', self.drawControls);
@@ -692,6 +695,7 @@ angular.module('FieldDoc')
                    console.log("ADDING THE MAP");
 
                     console.log("SITE",self.site);
+
 
 
                     self.populateMap(self.map, self.practice);
