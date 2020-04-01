@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585773651904})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585774690781})
 
 ;
 /**
@@ -18515,8 +18515,8 @@ angular.module('FieldDoc')
                                             ['!=', 'mode', 'static']
                                         ],
                                         'paint': {
-                                            'fill-color': '#3bb2d0',
-                                            'fill-outline-color': '#3bb2d0',
+                                            'fill-color': '#df063e',
+                                            'fill-outline-color': '#df063e',
                                             'fill-opacity': 0.1
                                         }
                                     },
@@ -18527,8 +18527,8 @@ angular.module('FieldDoc')
                                             ['==', '$type', 'Polygon']
                                         ],
                                         'paint': {
-                                            'fill-color': '#fbb03b',
-                                            'fill-outline-color': '#fbb03b',
+                                            'fill-color': '#df063e',
+                                            'fill-outline-color': '#df063e',
                                             'fill-opacity': 0.1
                                         }
                                     },
@@ -18540,7 +18540,7 @@ angular.module('FieldDoc')
                                         ],
                                         'paint': {
                                             'circle-radius': 3,
-                                            'circle-color': '#fbb03b'
+                                            'circle-color': '#df063e'
                                         }
                                     },
                                     {
@@ -18555,7 +18555,7 @@ angular.module('FieldDoc')
                                             'line-join': 'round'
                                         },
                                         'paint': {
-                                            'line-color': '#3bb2d0',
+                                            'line-color': '#df063e',
                                             'line-width': 2
                                         }
                                     },
@@ -18570,7 +18570,7 @@ angular.module('FieldDoc')
                                             'line-join': 'round'
                                         },
                                         'paint': {
-                                            'line-color': '#fbb03b',
+                                            'line-color': '#df063e',
                                             'line-dasharray': [0.2, 2],
                                             'line-width': 2
                                         }
@@ -18587,7 +18587,7 @@ angular.module('FieldDoc')
                                             'line-join': 'round'
                                         },
                                         'paint': {
-                                            'line-color': '#3bb2d0',
+                                            'line-color': '#df063e',
                                             'line-width': 2
                                         }
                                     },
@@ -18602,7 +18602,7 @@ angular.module('FieldDoc')
                                             'line-join': 'round'
                                         },
                                         'paint': {
-                                            'line-color': '#fbb03b',
+                                            'line-color': '#df063e',
                                             'line-dasharray': [0.2, 2],
                                             'line-width': 2
                                         }
@@ -18616,7 +18616,7 @@ angular.module('FieldDoc')
                                         ],
                                         'paint': {
                                             'circle-radius': 5,
-                                            'circle-color': '#fff'
+                                            'circle-color': '#df063e'
                                         }
                                     },
                                     {
@@ -18628,7 +18628,7 @@ angular.module('FieldDoc')
                                         ],
                                         'paint': {
                                             'circle-radius': 3,
-                                            'circle-color': '#fbb03b'
+                                            'circle-color': '#df063e'
                                         }
                                     },
                                     {
@@ -18642,7 +18642,7 @@ angular.module('FieldDoc')
                                         'paint': {
                                             'circle-radius': 5,
                                             'circle-opacity': 1,
-                                            'circle-color': '#fff'
+                                            'circle-color': '#df063e'
                                         }
                                     },
                                     {
@@ -18655,7 +18655,7 @@ angular.module('FieldDoc')
                                         ],
                                         'paint': {
                                             'circle-radius': 3,
-                                            'circle-color': '#3bb2d0'
+                                            'circle-color': '#df063e'
                                         }
                                     },
                                     {
@@ -18667,7 +18667,7 @@ angular.module('FieldDoc')
                                         ],
                                         'paint': {
                                             'circle-radius': 7,
-                                            'circle-color': '#fff'
+                                            'circle-color': '#df063e'
                                         }
                                     },
                                     {
@@ -18679,7 +18679,7 @@ angular.module('FieldDoc')
                                         ],
                                         'paint': {
                                             'circle-radius': 5,
-                                            'circle-color': '#fbb03b'
+                                            'circle-color': '#df063e'
                                         }
                                     },
                                     {
