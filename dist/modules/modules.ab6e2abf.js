@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585774945700})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585775220618})
 
 ;
 /**
@@ -18318,14 +18318,14 @@ angular.module('FieldDoc')
                 if (practice.geometry !== null &&
                     typeof practice.geometry !== 'undefined') {
 
-                    if(self.site.geometry == null
-                        || self.site.geometry == 'undefined'){
+                  //  if(self.site.geometry == null
+                  //      || self.site.geometry == 'undefined'){
                             var bounds = turf.bbox(practice.geometry);
 
                             map.fitBounds(bounds, {
                                 padding: 40
                             });
-                    }
+                  //  }
 
                     if (self.drawControls) {
 
@@ -18475,12 +18475,15 @@ angular.module('FieldDoc')
 
                       if(self.site != null && self.site.geometry != null){
 
-                         var bounds = turf.bbox(self.site.geometry);
+                        if(self.practice.geometry == null
+                           || self.practice.geometry == 'undefined'
+                        ){
+                             var bounds = turf.bbox(self.site.geometry);
 
-                         self.map.fitBounds(bounds, {
-                            padding: 40
-                         });
-
+                             self.map.fitBounds(bounds, {
+                                padding: 40
+                             });
+                        }
                         console.log("There is a site");
                         console.log("site",self.site);
                          MapManager.addFeature(
