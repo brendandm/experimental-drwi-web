@@ -709,7 +709,7 @@ angular.module('FieldDoc')
 
                          var bounds = turf.bbox(self.site.geometry);
 
-                         map.fitBounds(bounds, {
+                         self.map.fitBounds(bounds, {
                             padding: 40
                          });
 
