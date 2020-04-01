@@ -659,6 +659,30 @@ angular.module('FieldDoc')
 
                 self.map.on('load', function () {
 
+                      if(self.site != null && self.site.geometry != null){
+
+                         var bounds = turf.bbox(self.site.geometry);
+
+                         self.map.fitBounds(bounds, {
+                            padding: 40
+                         });
+
+                        console.log("There is a site");
+                        console.log("site",self.site);
+                         MapManager.addFeature(
+
+                                self.map,
+                                self.site,
+                                'geometry',
+                                true,
+                                false,
+                                'site'
+                                );
+                    }
+
+
+
+
                     self.drawControls = new MapboxDraw({
                         displayControlsDefault: false,
                         controls: {
@@ -713,28 +737,6 @@ angular.module('FieldDoc')
                    console.log("ADDING THE MAP");
 
                     console.log("SITE",self.site);
-
-
-                     if(self.site != null && self.site.geometry != null){
-
-                         var bounds = turf.bbox(self.site.geometry);
-
-                         self.map.fitBounds(bounds, {
-                            padding: 40
-                         });
-
-                        console.log("There is a site");
-                        console.log("site",self.site);
-                         MapManager.addFeature(
-
-                                self.map,
-                                self.site,
-                                'geometry',
-                                true,
-                                false,
-                                'site'
-                                );
-                    }
 
 
 
