@@ -700,9 +700,20 @@ angular.module('FieldDoc')
                           //      ['!=', 'mode', 'static']
                          //     ],
                               'paint': {
-                                'fill-color':  '#ff0000',
-                                'fill-outline-color': '#3bb2d0',
+                                'fill-color':  '#df063e',
+                                'fill-outline-color': '#df063e',
                                 'fill-opacity': 0.5
+                              },
+                                'id': 'gl-draw-polygon-fill-active',
+                              'type': 'fill',
+                           //   'filter': ['all', ['==', 'active', 'false'],
+                          //      ['==', '$type', 'Polygon'],
+                          //      ['!=', 'mode', 'static']
+                         //     ],
+                              'paint': {
+                                'fill-color':  '#df063e',
+                                'fill-outline-color': '#df063e',
+                                'fill-opacity': 0.25
                               }
                             }]
 
