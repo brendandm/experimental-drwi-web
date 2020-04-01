@@ -695,9 +695,9 @@ angular.module('FieldDoc')
                         styles: [{
                               'id': 'gl-draw-polygon-fill-inactive',
                               'type': 'fill',
-                              'filter': ['all', ['==', 'active', 'false'],
-                                ['==', '$type', 'Polygon'],
-                                ['!=', 'mode', 'static']
+                           //   'filter': ['all', ['==', 'active', 'false'],
+                          //      ['==', '$type', 'Polygon'],
+                          //      ['!=', 'mode', 'static']
                               ],
                               'paint': {
                                 'fill-color':  '#ff0000',

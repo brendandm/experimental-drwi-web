@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585772279670})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585772528868})
 
 ;
 /**
@@ -18509,9 +18509,9 @@ angular.module('FieldDoc')
                         styles: [{
                               'id': 'gl-draw-polygon-fill-inactive',
                               'type': 'fill',
-                              'filter': ['all', ['==', 'active', 'false'],
-                                ['==', '$type', 'Polygon'],
-                                ['!=', 'mode', 'static']
+                           //   'filter': ['all', ['==', 'active', 'false'],
+                          //      ['==', '$type', 'Polygon'],
+                          //      ['!=', 'mode', 'static']
                               ],
                               'paint': {
                                 'fill-color':  '#ff0000',
