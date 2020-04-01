@@ -698,7 +698,7 @@ angular.module('FieldDoc')
                            //   'filter': ['all', ['==', 'active', 'false'],
                           //      ['==', '$type', 'Polygon'],
                           //      ['!=', 'mode', 'static']
-                              ],
+                         //     ],
                               'paint': {
                                 'fill-color':  '#ff0000',
                                 'fill-outline-color': '#3bb2d0',
