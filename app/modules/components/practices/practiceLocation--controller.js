@@ -715,10 +715,6 @@ angular.module('FieldDoc')
                     console.log("SITE",self.site);
 
 
-
-                    self.populateMap(self.map, self.practice);
-
-
                      if(self.site != null && self.site.geometry != null){
 
                          var bounds = turf.bbox(self.site.geometry);
@@ -739,6 +735,12 @@ angular.module('FieldDoc')
                                 'site'
                                 );
                     }
+
+
+
+                    self.populateMap(self.map, self.practice);
+
+
 
                     self.map.on('draw.create', self.updateGeometry);
                     self.map.on('draw.delete', self.updateGeometry);

@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585771892692})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585772141996})
 
 ;
 /**
@@ -18529,10 +18529,6 @@ angular.module('FieldDoc')
                     console.log("SITE",self.site);
 
 
-
-                    self.populateMap(self.map, self.practice);
-
-
                      if(self.site != null && self.site.geometry != null){
 
                          var bounds = turf.bbox(self.site.geometry);
@@ -18553,6 +18549,12 @@ angular.module('FieldDoc')
                                 'site'
                                 );
                     }
+
+
+
+                    self.populateMap(self.map, self.practice);
+
+
 
                     self.map.on('draw.create', self.updateGeometry);
                     self.map.on('draw.delete', self.updateGeometry);
