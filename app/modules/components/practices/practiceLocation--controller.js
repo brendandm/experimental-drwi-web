@@ -504,11 +504,14 @@ angular.module('FieldDoc')
                 if (practice.geometry !== null &&
                     typeof practice.geometry !== 'undefined') {
 
-                    var bounds = turf.bbox(practice.geometry);
+                    if(self.site.geometry == null
+                        || self.site.geometry == 'undefined'){
+                            var bounds = turf.bbox(practice.geometry);
 
-                    map.fitBounds(bounds, {
-                        padding: 40
-                    });
+                            map.fitBounds(bounds, {
+                                padding: 40
+                            });
+                    }
 
                     if (self.drawControls) {
 
@@ -702,7 +705,14 @@ angular.module('FieldDoc')
                     self.populateMap(self.map, self.practice);
 
 
-                     if(self.site != null){
+                     if(self.site != null && self.site.geometry != null){
+
+                         var bounds = turf.bbox(self.site.geometry);
+
+                         map.fitBounds(bounds, {
+                            padding: 40
+                         });
+
                         console.log("There is a site");
                         console.log("site",self.site);
                          MapManager.addFeature(
