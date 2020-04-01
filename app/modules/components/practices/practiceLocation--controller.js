@@ -680,7 +680,7 @@ angular.module('FieldDoc')
                                 'fill-outline-color': '#3bb2d0',
                                 'fill-opacity': 0.5
                               }
-                            }
+                            }]
 
 
 
