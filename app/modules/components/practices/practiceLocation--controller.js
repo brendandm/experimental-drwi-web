@@ -703,7 +703,7 @@ angular.module('FieldDoc')
                                         'paint': {
                                             'fill-color': '#df063e',
                                             'fill-outline-color': '#df063e',
-                                            'fill-opacity': 0.1
+                                            'fill-opacity': 0.5
                                         }
                                     },
                                     {
