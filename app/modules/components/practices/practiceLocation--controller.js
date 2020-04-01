@@ -704,6 +704,7 @@ angular.module('FieldDoc')
                                 'fill-outline-color': '#df063e',
                                 'fill-opacity': 0.5
                               },
+                              {
                                 'id': 'gl-draw-polygon-fill-active',
                               'type': 'fill',
                            //   'filter': ['all', ['==', 'active', 'false'],
