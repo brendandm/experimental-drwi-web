@@ -109,7 +109,7 @@ angular.module('FieldDoc')
                     }
 
                     if (fitBounds) {
-                         console.log("I");
+                      //   console.log("I");
                         map.fitBounds(bounds, {
                             padding: 40
                         });
@@ -119,7 +119,7 @@ angular.module('FieldDoc')
                     if (addToMap) {
                          console.log("J");
                         if (geometryType === 'Point') {
-                            console.log("K");
+                        //    console.log("K");
                             map.addLayer({
                                 'id': 'feature-circle-' + Date.now(),
                                 'type': 'circle',
@@ -143,7 +143,7 @@ angular.module('FieldDoc')
                             });
 
                         } else if (geometryType.indexOf('Line') >= 0) {
-                             console.log("L");
+                        //     console.log("L");
                             map.addLayer({
                                 'id': 'feature-line-' + Date.now(),
                                 'type': 'line',
@@ -164,7 +164,7 @@ angular.module('FieldDoc')
                             });
 
                         } else {
-                             console.log("M");
+                         //    console.log("M");
                             map.addLayer({
                                 'id': 'feature-' + Date.now(),
                                 'type': 'fill',
