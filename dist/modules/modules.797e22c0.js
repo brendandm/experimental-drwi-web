@@ -125,7 +125,7 @@ angular.module('FieldDoc')
 
  angular.module('config', [])
 
-.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1585775756830})
+.constant('environment', {name:'development',apiUrl:'https://dev.api.fielddoc.org',castUrl:'https://dev.cast.fielddoc.chesapeakecommons.org',dnrUrl:'https://dev.dnr.fielddoc.chesapeakecommons.org',siteUrl:'https://dev.fielddoc.org',clientId:'2yg3Rjc7qlFCq8mXorF9ldWFM4752a5z',version:1588201525171})
 
 ;
 /**
@@ -35192,7 +35192,7 @@ angular.module('FieldDoc')
                     }
 
                     if (fitBounds) {
-                         console.log("I");
+                      //   console.log("I");
                         map.fitBounds(bounds, {
                             padding: 40
                         });
@@ -35202,7 +35202,7 @@ angular.module('FieldDoc')
                     if (addToMap) {
                          console.log("J");
                         if (geometryType === 'Point') {
-                            console.log("K");
+                        //    console.log("K");
                             map.addLayer({
                                 'id': 'feature-circle-' + Date.now(),
                                 'type': 'circle',
@@ -35226,7 +35226,7 @@ angular.module('FieldDoc')
                             });
 
                         } else if (geometryType.indexOf('Line') >= 0) {
-                             console.log("L");
+                        //     console.log("L");
                             map.addLayer({
                                 'id': 'feature-line-' + Date.now(),
                                 'type': 'line',
@@ -35247,7 +35247,7 @@ angular.module('FieldDoc')
                             });
 
                         } else {
-                             console.log("M");
+                         //    console.log("M");
                             map.addLayer({
                                 'id': 'feature-' + Date.now(),
                                 'type': 'fill',
