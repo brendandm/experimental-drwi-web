@@ -452,6 +452,31 @@ angular.module('FieldDoc')
 
                     }
                 })
+                .when('/projects/:projectId/batchPracticeDelete', {
+                    templateUrl: '/modules/components/projects/views/projectsPracticesBatchDelete--view.html?t=' + environment.version,
+                    controller: 'ProjectsPracticesBatchDeleteController',
+                    controllerAs: 'page',
+                    resolve: {
+                        user: function(Account, $rootScope, $document) {
+
+                            $rootScope.targetPath = document.location.pathname;
+
+                            if (Account.userObject && !Account.userObject.id) {
+                                return Account.getUser();
+                            }
+
+                            return Account.userObject;
+
+                        },
+                        project: function(Project, $route) {
+                            return Project.get({
+                                id: $route.current.params.projectId,
+                                format: 'geojson'
+                            });
+                        },
+
+                    }
+                })
 
             ;
 

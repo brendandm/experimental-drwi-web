@@ -1,0 +1,140 @@
+ <!-- START PAGINATION  -->
+                <div style="
+                        border:0px solid purple;
+                        float:right;
+                        display: block;
+                        width: 60%;
+                        position: relative;
+                        margin-right:0px;
+                        margin-top: 25px;
+                        right: 0px;
+                        min-width: 740px;
+
+                    "
+                >
+
+
+
+                    <div>
+                        <!-- LAST PAGE -->
+                             <a  ng-if="((page.practicesPage) < page.practicesSummary.page_count)"
+                                data-ng-click="page.practicesGetPage(page.practicesSummary.page_count)"
+                                title="Next Page"
+                                class="pagination_active">
+                                    <i class="material-icons" >
+                                         last_page
+                                     </i>
+                            </a>
+                            <a  ng-if="((page.practicesPage) == page.practicesSummary.page_count)"
+                                class="pagination_inactive">
+                                    <i class="material-icons" style="color:#cccccc">
+                                         last_page
+                                     </i>
+                            </a>
+                         <!-- NEXT PAGE -->
+                            <a  ng-if="((page.practicesPage) < page.practicesSummary.page_count)"
+                                data-ng-click="page.practicesGetPage((page.practicesPage) + 1 )"
+                                title="Next Page"
+                                class="pagination_active" style="margin-left:0px;">
+                                    <i class="material-icons" >
+                                         chevron_right
+                                     </i>
+                            </a>
+                            <a  ng-if="((page.practicesPage) == page.practicesSummary.page_count)"
+                                class="pagination_inactive" style="margin-left:0px;">
+                                    <i class="material-icons" style="color:#cccccc">
+                                         chevron_right
+                                     </i>
+                            </a>
+
+                        <!-- START VIEW COUNT -->
+                             <span style="width: 250px;
+                                        border: 0px solid green;
+                                        float: right;
+                                        display: inline-block;
+                                        margin: 0px 10px 0px 10px;
+                                        color: #888888;
+
+                                        text-align:center
+                                ">
+                                Showing {{page.practicesViewCountLow}} to {{page.practicesViewCountHigh}} of {{page.practicesSummary.feature_count}}
+                             </span>
+                        <!-- END VIEW COUNT s-->
+
+                        <!-- PREVIOUS PAGE -->
+                            <a  ng-if="!((page.practicesPage) == 1)"
+                                data-ng-click="page.practicesGetPage((page.practicesPage) - 1 )"
+                                title="Previous Page"
+                                class="pagination_active" style="margin-right:0px;">
+                                 <i  class="material-icons">
+                                     chevron_left
+                                 </i>
+                            </a>
+                            <a  ng-if="((page.practicesPage) == 1)"
+                                class="pagination_inactive" style="margin-right:0px;">
+                                  <i  class="material-icons" style="color:#cccccc">
+                                     chevron_left
+                                 </i>
+                            </a>
+                        <!-- FIRST PAGE -->
+                        <a  ng-if="!((page.practicesPage) == 1)"
+                                data-ng-click="page.practicesGetPage(1)"
+                                title="Previous Page"
+                                class="pagination_active" style="margin-left:40px;">
+                                 <i  class="material-icons">
+                                     first_page
+                                 </i>
+                            </a>
+                            <a  ng-if="((page.practicesPage) == 1)"
+                                class="pagination_inactive" style="margin-left:40px;">
+                                  <i  class="material-icons" style="color:#cccccc">
+                                     first_page
+                                 </i>
+                            </a>
+
+
+                    </div>
+                     <div style="border:0px solid red; margin-right: 30px;">
+                          <span >
+                             <a ng-if="page.practicesLimit != 48" data-ng-click="page.practicesChangeLimit(48)" class="pagination_active pagination_showCount">
+                                48
+                            </a>
+                             <a ng-if="page.practicesLimit == 48" class="pagination_inactive pagination_showCount">
+                                48
+                            </a>
+                         </span>
+                          <span>
+                             <a ng-if="page.practicesLimit != 24" data-ng-click="page.practicesChangeLimit(24)" class="pagination_active pagination_showCount">
+                                24
+                            </a>
+                             <a ng-if="page.practicesLimit == 24" class="pagination_inactive pagination_showCount">
+                                24
+                            </a>
+                        </span>
+                          <span>
+                             <a ng-if="page.practicesLimit != 12" data-ng-click="page.practicesChangeLimit(12)" class="pagination_active pagination_showCount">
+                                12
+                            </a>
+                              <a ng-if="page.practicesLimit == 12" class="pagination_inactive pagination_showCount">
+                                12
+                            </a>
+                        </span>
+                         <span style="width: 30px;
+                                        border: 0px solid green;
+                                        float: right;
+                                        display: inline-block;
+                                        margin: 0px 10px 0px 10px;
+                                        color: #888888;
+                                        width: 60px;
+                                ">
+                             Show:</span>
+
+
+
+
+
+                    </div>
+
+                </div>
+
+                <!--END PAGINATION -->

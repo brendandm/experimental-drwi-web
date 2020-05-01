@@ -32,9 +32,9 @@
                                 Project: <a href="/projects/{{page.practice.properties.project.properties.id}}">{{page.practice.properties.project.properties.name}}</a>
                                     /
                             </nobr>
-                            <nobr>
+                            <nobr data-ng-if="page.practice.properties.site.properties.id != null">
                                    <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
-                                Site: <a href="/sites/{{page.site.properties.id}}">{{page.site.properties.name}}</a>
+                                Site: <a href="/sites/{{page.practice.properties.site.properties.id}}">{{page.practice.properties.site.properties.name}}</a>
                                     /
                             </nobr>
                             <nobr>

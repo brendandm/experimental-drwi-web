@@ -380,7 +380,7 @@
                          <h2>Practices</h2>
                     </div>
 
-                         <div style="  border:0px solid purple;
+                     <div style="  border:0px solid purple;
                                         position:relative;
                                         float: right;
                                         display:inline-block;
@@ -399,7 +399,9 @@
                                 add
                                 </i>
                             </a>
-   </div>
+
+                     </div>
+
                  </div>
 
                 <div style="    border:0px solid green;
@@ -500,8 +502,8 @@
 
                     </li>
 
-                   <!--
-                    <li class="card" data-ng-if="page.permissions.can_edit">
+
+                    <li data-ng-if="!page.practices.length" class="card" data-ng-if="page.permissions.can_edit">
                         <div class="card--content">
                             <div class="body">
                                 <button type="button" class="snapshot--title" data-ng-click="page.createPractice()" title="Create practice">
@@ -512,7 +514,7 @@
                             </div>
                         </div>
                     </li>
-                    -->
+
 
                 </ul>
                     </div>

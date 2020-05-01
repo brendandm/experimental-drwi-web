@@ -7,7 +7,7 @@
  */
 angular.module('FieldDoc')
     .controller('PracticeEditController', function(Account, Image,$location,
-        $log, Media, Practice, PracticeType, practice, $q, $rootScope, $route,
+        $log, Media, Practice, PracticeType, practice, Project, $q, $rootScope, $route,
         $scope, $timeout, $interval, site, user, Utility) {
 
         var self = this;
@@ -89,8 +89,6 @@ angular.module('FieldDoc')
 
                 self.practice = successResponse;
 
-                self.project = self.practice.id;
-
                 if (!successResponse.permissions.read &&
                     !successResponse.permissions.write) {
 
@@ -109,7 +107,13 @@ angular.module('FieldDoc')
 
                 }
 
+                if (successResponse.site_id){
+                    self.site = successResponse.site;
+                }
+
                 $rootScope.page.title = self.practice.name ? self.practice.name : 'Un-named Practice';
+
+                 self.loadSites();
 
                 //
                 // Load practice types
@@ -142,8 +146,6 @@ angular.module('FieldDoc')
 
                 });
 
-                self.loadSites();
-
             }, function(errorResponse) {
 
                 //
@@ -151,6 +153,56 @@ angular.module('FieldDoc')
             });
 
         };
+
+
+           self.loadSites = function() {
+
+                console.log('self.loadSites --> Starting...');
+
+                Project.sites({
+
+                    id: self.practice.project.id,
+
+                    currentTime: Date.UTC()
+
+                }).$promise.then(function(successResponse) {
+
+                    console.log('Project sites --> ', successResponse);
+
+                 //   self.sites = successResponse.features;
+
+                    //self.sites = [];
+
+                  var sites = [];
+                   successResponse.features.forEach(function(item){
+                        sites.push(item.properties);
+                    });
+                    sites.push(
+                                {
+                                    "name"  :   "None - this Practice is not associated with a Site",
+                                    "id"    :   null
+                                });
+                    self.sites = sites;
+
+
+               ///     self.showElements(true);
+
+
+                    // self.populateMap(self.map, siteCollection, null, true);
+
+                    // self.addMapPreviews(self.sites);
+
+                }, function(errorResponse) {
+
+                    console.log('loadSites.errorResponse', errorResponse);
+
+                 //   self.showElements(false);
+
+                });
+
+            };
+
+
 
         self.scrubFeature = function(feature) {
 
@@ -319,44 +371,19 @@ angular.module('FieldDoc')
 
         };
 
+         self.setSite = function($item) {
 
+            console.log('self.site', $item);
 
-        /*
-        START LOAD PROJECT SITES
-        */
-       self.loadSites = function() {
+            self.site = $item;
 
-                console.log('self.loadSites --> Starting...');
+            self.practice.site_id = $item.id;
 
-                Project.sites({
-
-                    id: self.project.id,
-                    currentTime: Date.UTC()
-
-                }).$promise.then(function(successResponse) {
-
-                    console.log('Project sites --> ', successResponse);
-
-                    self.sites = successResponse.features;
+        };
 
 
 
 
-                    // self.populateMap(self.map, siteCollection, null, true);
-
-                    // self.addMapPreviews(self.sites);
-
-                }, function(errorResponse) {
-
-                    console.log('loadSites.errorResponse', errorResponse);
-
-
-                });
-
-            };
-        /*
-        END LOAD PROJECT SITES
-        */
 
         //
         // Verify Account information for proper UI element display
@@ -374,8 +401,8 @@ angular.module('FieldDoc')
                     can_edit: false
                 };
 
-                self.loadSite();
-
+            //    self.loadSite();
+                self.loadPractice();
             });
 
         } else {

@@ -15,21 +15,11 @@ angular.module('FieldDoc')
 
                 arr.forEach(function(feature) {
 
-                    console.log(
-                        'MapManager.addLayers --> feature',
-                        feature);
+                    console.log("Layer Spec",feature);
 
                     var spec = feature.layer_spec || {};
 
-                    console.log(
-                        'MapManager.addLayers --> spec',
-                        spec);
-
                     feature.spec = spec;
-
-                    console.log(
-                        'MapManager.addLayers --> feature.spec',
-                        feature.spec);
 
                     if (!feature.selected ||
                         typeof feature.selected === 'undefined') {
@@ -45,6 +35,8 @@ angular.module('FieldDoc')
                     if (feature.spec.id) {
 
                         try {
+
+                            console.log("'MapManager.addLayers",feature.spec);
 
                             map.addLayer(feature.spec);
 
@@ -65,9 +57,12 @@ angular.module('FieldDoc')
             },
             addFeature: function(map, feature, attribute, addToMap, fitBounds, featureType = null) {
 
-                if (fitBounds === null ||
-                    typeof fitBounds === 'undefined') {
+                console.log("A");
 
+                if (fitBounds === null ||
+
+                    typeof fitBounds === 'undefined') {
+                     console.log("B");
                     fitBounds = true;
 
                 }
@@ -78,37 +73,31 @@ angular.module('FieldDoc')
                 var geometryLineColor           = 'rgba(6, 170, 223, 0.8)';
 
                 if(featureType != null){
+                     console.log("C");
                     if(featureType == 'site'){
-
+                         console.log("D");
                     }else if(featureType == 'practice'){
+                         console.log("E");
                         //df063e
                         geometryFillColor = '#df063e';
                         geometryCircleStrokeColor = 'rgba(223, 6, 62, 0.5)';
                         geometryLineColor = 'rgba(223, 6, 62, 0.8)';
                     }
                 }else{
-
+                         console.log("F");
                 }
-
-                console.log('MapManager.populateMap --> feature', feature);
 
                 var geojson = attribute ? feature[attribute] : feature;
 
-                console.log('MapManager.populateMap --> geojson', geojson);
-
                 if (geojson !== null &&
                     typeof geojson !== 'undefined') {
-
+                     console.log("G");
                     var geometryType = geojson.geometry ? geojson.geometry.type : geojson.type;
-
-                    console.log(
-                        'MapManager.populateMap --> geometryType',
-                        geometryType);
 
                     var bounds = turf.bbox(geojson);
 
                     if (geometryType === 'Point') {
-
+                         console.log("H");
                         var buffer = turf.buffer(
                             geojson,
                             0.5, {
@@ -120,7 +109,7 @@ angular.module('FieldDoc')
                     }
 
                     if (fitBounds) {
-
+                      //   console.log("I");
                         map.fitBounds(bounds, {
                             padding: 40
                         });
@@ -128,9 +117,9 @@ angular.module('FieldDoc')
                     }
 
                     if (addToMap) {
-
+                         console.log("J");
                         if (geometryType === 'Point') {
-
+                        //    console.log("K");
                             map.addLayer({
                                 'id': 'feature-circle-' + Date.now(),
                                 'type': 'circle',
@@ -154,7 +143,7 @@ angular.module('FieldDoc')
                             });
 
                         } else if (geometryType.indexOf('Line') >= 0) {
-
+                        //     console.log("L");
                             map.addLayer({
                                 'id': 'feature-line-' + Date.now(),
                                 'type': 'line',
@@ -175,7 +164,7 @@ angular.module('FieldDoc')
                             });
 
                         } else {
-
+                         //    console.log("M");
                             map.addLayer({
                                 'id': 'feature-' + Date.now(),
                                 'type': 'fill',
@@ -224,11 +213,7 @@ angular.module('FieldDoc')
 
                 }
 
-                console.log('MapManager.populateMap --> feature', feature);
-
                 var geojson = attribute ? feature[attribute] : feature;
-
-                console.log('MapManager.populateMap --> geojson', geojson);
 
                 if (geojson !== null &&
                     typeof geojson !== 'undefined') {

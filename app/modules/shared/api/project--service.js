@@ -43,6 +43,11 @@
                     isArray: false,
                     url: environment.apiUrl.concat('/v1/data/project/:id/sites')
                 },
+                 practices: {
+                    method: 'GET',
+                    isArray: false,
+                    url: environment.apiUrl.concat('/v1/data/project/:id/practices')
+                },
                 members: {
                     method: 'GET',
                     isArray: false,

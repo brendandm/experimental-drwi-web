@@ -34,7 +34,7 @@
                                 Project: <a href="/projects/{{page.practice.project.id}}">{{page.practice.project.name}}</a>
                                     /
                             </nobr>
-                            <nobr>
+                            <nobr data-ng-if="page.practice.site.id">
                                    <!-- <sub><i class="icon material-icons" style=""> chevron_right</i></sub> -->
                                 Site: <a href="/sites/{{page.practice.site.id}}">{{page.practice.site.name}}</a>
                                     /
@@ -94,7 +94,9 @@
 
                             <span class="meta-label"><b>Practice type</b></span>
 
-                            <input id="practice_type_id" name="practice_type_id" type="text" placeholder="Search categories" data-ng-model="page.practiceType" uib-typeahead="practiceType as practiceType.name for practiceType in page.practiceTypes | filter:{name: $viewValue} | limitTo:5" typeahead-on-select="page.setPracticeType($item,$model,$label)" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html" />
+                            <input id="practice_type_id" name="practice_type_id" type="text" placeholder="Search categories" data-ng-model="page.practiceType"
+                                   uib-typeahead="practiceType as practiceType.name for practiceType in page.practiceTypes | filter:{name: $viewValue} | limitTo:5"
+                                   typeahead-on-select="page.setPracticeType($item,$model,$label)" typeahead-min-length="0" typeahead-template-url="templates/search--tpl.html" />
 
                             <p data-ng-if="page.practice.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
                                 {{ page.practice.category.description || page.practiceType.description }}
@@ -105,6 +107,74 @@
                             </p>
 
                         </div>
+
+
+                        <div class="form-element">
+
+                            <span class="meta-label"><b>Site</b></span>
+
+                            <input id="site_id" name="site_id" type="text" placeholder="Search project sites" data-ng-model="page.site"
+                                   uib-typeahead="site as site.name for site in page.sites | filter:{name: $viewValue} | limitTo:5"
+                                   typeahead-on-select="page.setSite($item)"
+                                   typeahead-min-length="0"
+                                   typeahead-template-url="templates/search--tpl.html" />
+
+
+                            <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
+                                Sites are an optional way to organize your practices.
+                                To use sites you must first create your site(s) from <the></the>
+                                <a href="/projects/{{page.practice.project.id}}">Project Summary</a> page.
+                                If you do not wish to use a site with this practice, either leave this
+                                field blank or select 'None'.
+                            </p>
+                           <!-- <p data-ng-if="page.practice.category_id" style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;">
+                                {{ page.practice.site.description || 'No description' }}
+                            </p>
+                            -->
+
+                        <!--   <p style="font-style: normal; color: #616161; font-size: 0.9em; margin-top: 1em;" data-ng-if="page.practiceType.model.id || page.practice.category.model.id">
+                                This practice type is linked to an automated model that calculates estimated values for various environmental metrics. Click <a href="/models/{{ page.practiceType.model.id || page.practice.category.model.id }}" title="{{ page.practiceType.model.name || page.practice.category.model.name }}">here</a> to learn more about the model.
+                            </p>
+                        -->
+                        </div>
+
+
+<!--
+                        <div data-ng-if="page.sites">
+
+                            <div style="padding-top: 2em; margin: 2em 0; border-top: 1px solid #e0e0e0;" >
+
+                                <p style="font-style: normal; font-size: 1em; color: #212121; margin: 0 0 2em;">
+                                    <strong>Sites</strong>
+                                </p>
+
+                                <ul class="selectable-group-items list-unstyled" style="margin-top: 2em;">
+
+                                    <li class="card reveal fade-in" style="animation-delay: {{ $index * 100 }}ms; min-height: 0;" data-ng-repeat="site in page.sites | orderBy:'name'">
+
+                                        <div class="card--content">
+
+                                            <label class="name">
+                                                {{ site.properties.name }}
+                                                <input type="checkbox" data-ng-model="site.selected" data-ng-checked="site.selected" />
+                                            </label>
+
+                                            <div class="body">
+                                                <p style="font-style: normal; font-size: 1em; color: #616161; padding: 0 0 1em; margin: 0;">{{ (site.properties.description || 'No description') | truncate:250 }}</p>
+                                            </div>
+
+                                        </div>
+
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                        </div>
+-->
+
+
 
                         <h2 class="">Privacy</h2>
 

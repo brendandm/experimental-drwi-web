@@ -382,11 +382,376 @@
 
             </div>
 
+            <!-- START PRACTICES PANEL-->
+
+            <section class="reveal fade-in t3"
+                     style="    padding         :   0       ;
+                                overflow        :   hidden  ;
+                                margin-bottom   :   50px    ;
+                            "
+            >
+
+                 <div style="border:0px solid red;">
+                    <div style="border:0px solid red; float:left; display:inline-block">
+                        <span style="display:block;float:left;"><h2>Practices</h2></span>
+                        <span style="
+                                    display:block;
+                                    float:left;
+                                    color:#cccccc;
+                                    border:0px solid red;
+                                    margin-top:30px;
+                                    margin-left:15px;
+                                    ">
+                            ( <i>required</i> )</span>
+                    </div>
+
+                     <div style="  border:0px solid purple;
+                                        position:relative;
+                                        float: right;
+                                        display:inline-block;
+                                        width:56px;
+                                        height: 56px;
+                                        top:10px;
+                                        margin-left:30px;
+
+                                       "
+                               class="add--new--wrapper"
+                               data-ng-if="page.permissions.can_edit"
+                          >
+                            <!--<span style="">Create site</span>-->
+                            <a title="Create practice" class="add--new--btn" data-ng-click="page.createPractice()" style="float:right; width:56px; height:56px;">
+                                <i class="material-icons" >
+                                add
+                                </i>
+                            </a>
+
+                     </div>
+
+                 </div>
+
+                <div style="    border:0px solid green;
+                                height:56px;
+                                display:block;
+                                min-width:740px;
+                            "
+                >
+                    <div style="
+                                margin-left:30px;
+                                margin-top:24px;
+                                border:0px solid red;
+                                float:right;
+
+                                "
+                         data-ng-if="page.permissions.can_edit"
+                    >
+                        <a class="snapshot--title" title="Batch Delete"
+                           href="/projects/{{ page.project.id }}/batchPracticeDelete"
+                           >
+                                <i class="material-icons" style="color:#666666;">
+                                      delete_sweep
+                                </i>
+                        </a>
+
+
+                    </div>
+
+                    <div  data-ng-include="'/templates/practicesPagination-view.html'"></div>
+
+                </div>
+                <div style="padding-top:10px;">
+                   <div style="border:0px solid blue; display:block;">
+                     <ul class="snapshot--cards list-unstyled">
+
+                    <li class="card" data-ng-repeat="practice in page.practices track by $index">
+
+                        <div class="card--content">
+
+                            <div style="position:relative;">
+
+                                <img data-ng-if="practice.staticURL" data-ng-src="{{ practice.staticURL }}" width="auto" height="auto" />
+
+                                <img data-ng-if="!practice.staticURL" data-ng-src="https://api.mapbox.com/styles/v1/mapbox/streets-v10/static/-98.5795,39.828175,5/400x200@2x?access_token=pk.eyJ1IjoiYm1jaW50eXJlIiwiYSI6IjdST3dWNVEifQ.ACCd6caINa_d4EdEZB_dJw" width="auto" height="auto" />
+
+                            </div>
+
+                            <div class="name" style="background: #fff;">
+                                <span>{{ practice.properties.name || practice.properties.category || 'Un-named' }}</span>
+                            </div>
+
+                            <div class="body">
+
+                                <div class="confirm--delete" data-ng-if="page.deletionTarget && page.deletionTarget.feature.properties.id === practice.properties.id && page.deletionTarget.collection === 'practice'">
+                                    <p>Do you want to delete this practice?</p>
+                                    <div class="actions" style="flex: 0;">
+                                        <a class="snapshot--title" href="#" title="Delete forever" data-ng-click="page.deleteFeature('practice', $index)">
+                                            Yes
+                                        </a>
+                                        <a class="snapshot--title" href="#" title="Cancel" data-ng-click="page.cancelDelete()">
+                                            Cancel
+                                        </a>
+                                    </div>
+                                </div>
+                                <p>{{ (practice.properties.description || practice.properties.annotation || 'No description') | truncate:80 }}</p>
+                                <div class="actions">
+                                    <a class="snapshot--title" href="/practices/{{ practice.properties.id }}" title="Practice summary">
+                                        <i class="material-icons">
+                                            dashboard
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/photos" title="Practice photos">
+                                        <i class="material-icons">
+                                            insert_photo
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/edit" title="Edit practice" data-ng-if="page.permissions.can_edit">
+                                        <i class="material-icons">
+                                            edit
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="/practices/{{ practice.properties.id }}/location" title="Edit location" data-ng-if="page.permissions.can_edit">
+                                        <i class="material-icons">
+                                            location_on
+                                        </i>
+                                    </a>
+                                    <a class="snapshot--title" href="#" title="Delete practice" data-ng-click="page.confirmDelete(practice, 'practice')" data-ng-if="page.permissions.can_edit">
+                                        <i class="material-icons">
+                                            delete
+                                        </i>
+                                    </a>
+                                </div>
+                                <span><time datetime="{{ practice.properties.created_on }}" title="{{ practice.properties.created_on }}">
+                                        Created on {{ practice.properties.created_on | date }}</time></span>
+                            </div>
+
+                        </div>
+
+                    </li>
+
+
+                    <li data-ng-if="!page.practices.length" class="card" data-ng-if="page.permissions.can_edit">
+                        <div class="card--content">
+                            <div class="body">
+                                <button type="button" class="snapshot--title" data-ng-click="page.createPractice()" title="Create practice">
+                                    <i class="material-icons">
+                                        add
+                                    </i>
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+
+
+                </ul>
+                    </div>
+                </div>
+                 <div style="
+                        margin-top  :-20px;
+                        min-width   :740px;
+                    "
+                >
+                    <div data-ng-include="'/templates/practicesPagination-view.html'"></div>
+                </div>
+            </section>
+
+             <section class="reveal fade-in t0" style="padding: 1em 0 0;" data-ng-if="!page.status.loading && page.pendingTasks.length">
+
+                <h2 style="width: 100%; display: flex; flex-flow: row nowrap; align-items: center; text-align: left;">
+                    Active tasks
+                    <a href="#" data-ng-click="page.hideTasks()" style="display: inline-block; font-size: 0.5em; margin-left: 1em;">Dismiss</a>
+                </h2>
+
+                <!-- <a href="#" data-ng-click="page.hideTasks()">Dismiss</a> -->
+
+                <div class="features--container" style="padding: 0;">
+
+                    <table class="features clearfix">
+                        <thead>
+                            <tr class="table-row clearfix">
+                                <th class="table-heading" style="text-align: left;">
+                                    Date
+                                </th>
+                                <th class="table-heading" style="text-align: left;">
+                                    User
+                                </th>
+                                <th class="table-heading" style="text-align: left;">
+                                    Annotation
+                                </th>
+                                <th class="table-heading" style="text-align: left;">
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row clearfix" data-ng-repeat="task in page.pendingTasks | orderBy: '-start'">
+                                <td>
+                                    <time datetime="{{ task.start }}Z" title="{{ task.start }}Z">{{ task.start | date:'fullDate' }} at <span class="lowercase" style="display: inline-flex; padding-bottom: 0;">{{ task.start | date:'mediumTime' }}</span> UTC</time>
+                                </td>
+                                <td>
+                                    <a data-ng-href="profiles/{{ task.user.id }}" style="display: inline; color: #333; font-weight: bold;">{{ task.creator.first_name }} {{ task.creator.last_name }}</a>
+                                </td>
+                                <td class="truncate" style="text-align: left;">
+                                    {{ task.annotation }}
+                                </td>
+                                <td style="color: #616161; vertical-align: middle;">
+                                    <span>{{ task.status }}</span>
+                                    <span data-ng-repeat="error in task.errors">({{ error.message }})</span>
+                                    <!-- <i class="material-icons">
+                                    remove_circle
+                                    </i> -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </section>
+
+            <!--
+                START PRACTICE BATCH UPLOAD
+            -->
+
+            <section class="reveal fade-in t0" style="padding: 1em 0 0; border:0px solid red; "
+                data-ng-if="page.permissions.can_edit"
+            >
+
+                <form role="form" class="form" id="form--practice-collection" name="form--practice-collection"
+                      style="position: relative; display:block; border:0px solid purple;
+                             width:100%; min-width:300px; max-width:1200px; " data-ng-submit="page.uploadPracticeShapefile()" >
+
+                    <!-- START Accordion Test -->
+                    <!--
+                    <uib-accordion >
+                        <div uib-accordion-group class="panel-default" heading="Practice Batch Upload">
+                            <div class="form-field" style="border:0px solid blue; float:left; display:inline block; width:100%;">
+
+                        <p style="font-style: normal; font-size: 1em; margin-top: 1.5em; border:0px solid green;">
+                            <strong>Practice Batch Import</strong>
+                        </p>
+
+                        <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+
+                            Batch Uploads allow you to upload polygons for multiple practices simultaneously.
+                            After upload, each record will display as a separate practice tile.
+
+                        </p>
+                        <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+
+                            FieldDoc accepts .zip files that archive  ESRI .shp, .shx, .dbg and a .prj file. The project should be WGS1984.
+                            GeoJSON files must use the json or .geojson file extensions and follow the format described in this specification.
+
+                        </p>
+
+                          <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+
+                            Batch Uploads do not support Z-Dimensions.
+                              If your file contains a Z-Dimensions, please remove it prior to uploading to avoid potential errors.
+
+                        </p>
+
+                        <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+
+                           Batch importing is optimized for 500 practices or less. Refer to our help documentation for more guidance on batch imports and upload requirements.
+
+                        </p>
+
+                        <input type="file" class="form-control" id="practiceShapefile" name="practiceShapefile" file-upload file-model="page.practiceFileImport" />
+
+                    </div>
+                            <div class="save--action--wrapper save--action--bottom">
+                        <button type="submit" data-ng-disabled="page.status.processing">
+                            <i class="material-icons" data-ng-if="page.status.processing">
+                                more_horiz
+                            </i>
+                            <i class="material-icons" data-ng-if="!page.status.processing" >
+                                done
+                            </i>
+                        </button>
+                    </div>
+                        </div>
+                     </uib-accordion>
+                    -->
+
+                     <!-- END Accordion Test -->
+
+                    <!-- Shapefile input -->
+
+                    <div class="form-field" style="border:0px solid blue; float:left; display:inline block; width:100%;">
+
+                        <p style="font-style: normal; font-size: 1em; margin-top: 1.5em; border:0px solid green;">
+                            <strong>Practice Batch Import</strong>
+                        </p>
+
+                        <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+
+                            Batch Uploads allow you to upload polygons for multiple practices simultaneously.
+                            After upload, each record will display as a separate practice tile.
+
+                        </p>
+                        <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+
+                            FieldDoc accepts .zip files that archive  ESRI .shp, .shx, .dbg and a .prj file. The project should be WGS1984.
+                            GeoJSON files must use the json or .geojson file extensions and follow the format described in this specification.
+
+                        </p>
+
+                          <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+
+                            Batch Uploads do not support Z-Dimensions.
+                              If your file contains a Z-Dimensions, please remove it prior to uploading to avoid potential errors.
+
+                        </p>
+
+                        <p style="font-style: normal; font-size: 1em; margin-top: 1em; color: #616161;">
+
+                           Batch importing is optimized for 500 practices or less. Refer to our help documentation for more guidance on batch imports and upload requirements.
+
+                        </p>
+
+                        <input type="file" class="form-control" id="practiceShapefile" name="practiceShapefile" file-upload file-model="page.practiceFileImport" />
+
+                    </div>
+
+
+                    <div class="save--action--wrapper save--action--bottom">
+                        <button type="submit" data-ng-disabled="page.status.processing">
+                            <i class="material-icons" data-ng-if="page.status.processing">
+                                more_horiz
+                            </i>
+                            <i class="material-icons" data-ng-if="!page.status.processing" >
+                                done
+                            </i>
+                        </button>
+                    </div>
+
+                </form>
+
+            </section>
+
+             <!--
+                END PRACTICE BATCH UPLOAD
+            -->
+
+
+
+            <!-- END PRACTICE PANEL -->
+
+
+
             <section class="reveal fade-in t3" style="padding: 0; overflow:hidden;">
 
                  <div style="border:0px solid red;">
                     <div style="border:0px solid red; float:left; display:inline-block">
-                         <h2>Sites</h2>
+                          <span style="display:block;float:left;"><h2>Sites</h2></span>
+                        <span style="
+                                    display:block;
+                                    float:left;
+                                    color:#cccccc;
+                                    border:0px solid red;
+                                    margin-top:30px;
+                                    margin-left:15px;
+                                    ">
+                            ( <i>optional</i> )</span>
                     </div>
 
 
@@ -513,7 +878,7 @@
 
                             </li>
 
-                         <!--   <li class="card" data-ng-if="page.permissions.can_edit">
+                            <li data-ng-if="!page.sites.length"class="card" data-ng-if="page.permissions.can_edit">
                                 <div class="card--content">
                                     <div class="body">
                                         <button type="button" class="snapshot--title" data-ng-click="page.createSite()" title="Create site">
@@ -524,7 +889,7 @@
                                     </div>
                                 </div>
                             </li>
-                          -->
+
 
                         </ul>
                     </div>
